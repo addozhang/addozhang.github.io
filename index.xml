@@ -855,6 +855,15 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
     </item>
     
     <item>
+      <title>关于我</title>
+      <link>http://localhost:1313/about/</link>
+      <pubDate>Thu, 30 Mar 2017 10:04:10 +0000</pubDate>
+      
+      <guid>http://localhost:1313/about/</guid>
+      <description>Addo Zhang 码农一枚</description>
+    </item>
+    
+    <item>
       <title>Key长度对Redis性能影响</title>
       <link>http://localhost:1313/redis-performance-key-length/</link>
       <pubDate>Thu, 16 Mar 2017 10:37:03 +0800</pubDate>
