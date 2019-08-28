@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>深入剖析HashSet和HashMap实现 - 乱世浮生</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Addo Zhang" /><meta name="description" content="HashSet是一个包含非重复元素的集合，如何实现的，要从底层实现代码看起。 背景 首先非重复元素如何定义，看Set的描述： More formally, sets contain no pair of elements e1 and" /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with even 4.0.0" />
+
+
+<link rel="canonical" href="http://localhost:1313/deep-in-implementation-of-hashset/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="深入剖析HashSet和HashMap实现" />
+<meta property="og:description" content="HashSet是一个包含非重复元素的集合，如何实现的，要从底层实现代码看起。 背景 首先非重复元素如何定义，看Set的描述： More formally, sets contain no pair of elements e1 and" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/deep-in-implementation-of-hashset/" />
+<meta property="article:published_time" content="2016-07-11T14:57:16+08:00" />
+<meta property="article:modified_time" content="2016-07-11T14:57:16+08:00" />
+<meta itemprop="name" content="深入剖析HashSet和HashMap实现">
+<meta itemprop="description" content="HashSet是一个包含非重复元素的集合，如何实现的，要从底层实现代码看起。 背景 首先非重复元素如何定义，看Set的描述： More formally, sets contain no pair of elements e1 and">
+
+
+<meta itemprop="datePublished" content="2016-07-11T14:57:16&#43;08:00" />
+<meta itemprop="dateModified" content="2016-07-11T14:57:16&#43;08:00" />
+<meta itemprop="wordCount" content="2786">
+
+
+
+<meta itemprop="keywords" content="Java," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="深入剖析HashSet和HashMap实现"/>
+<meta name="twitter:description" content="HashSet是一个包含非重复元素的集合，如何实现的，要从底层实现代码看起。 背景 首先非重复元素如何定义，看Set的描述： More formally, sets contain no pair of elements e1 and"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">乱世浮生</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">乱世浮生</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">深入剖析HashSet和HashMap实现</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-07-11 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#背景">背景</a></li>
+<li><a href="#hashset的底层实现">HashSet的底层实现</a></li>
+<li><a href="#hashmap的底层实现">HashMap的底层实现</a>
+<ul>
+<li><a href="#entry元素">Entry元素</a></li>
+<li><a href="#添加元素">添加元素</a></li>
+<li><a href="#扩充table">扩充table</a></li>
+<li><a href="#计算hash值">计算hash值</a></li>
+<li><a href="#计算元素位置">计算元素位置</a></li>
+<li><a href="#添加entry">添加entry</a></li>
+<li><a href="#resize">resize</a></li>
+<li><a href="#reindex">reindex</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>HashSet是一个包含非重复元素的集合，如何实现的，要从底层实现代码看起。</p>
+
+<h4 id="背景">背景</h4>
+
+<p>首先非重复元素如何定义，看Set的描述：</p>
+
+<blockquote>
+<p>More formally, sets contain no pair of elements e1 and e2 such that e1.equals(e2), and at most one null element.</p>
+
+<p>Set不会找到两个元素，并且两个元素满足e1.equals(e2)为true；并且最多只有一个null元素。</p>
+</blockquote>
+
+<p>如果没有重写equals方法，查看Object类中equal方法的实现，==比较的其实是两个对象在内存中的地址。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">boolean</span> <span class="n">equals</span><span class="p">(</span><span class="n">Object</span> <span class="nf">obj</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">obj</span><span class="p">);</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>说起equals方法，就不得不说hashCode方法了。Java中对于hashCode有个常规协定</p>
+
+<blockquote>
+<p>The general contract of hashCode is:</p>
+
+<ul>
+<li><p>Whenever it is invoked on the same object more than once during an execution of a Java application, the hashCode method must consistently return the same integer, provided no information used in equals comparisons on the object is modified. This integer need not remain consistent from one execution of an application to another execution of the same application.</p></li>
+
+<li><p>If two objects are equal according to the equals(Object) method, then calling the hashCode method on each of the two objects must produce the same integer result.</p></li>
+
+<li><p>It is not required that if two objects are unequal according to the equals(java.lang.Object) method, then calling the hashCode method on each of the two objects must produce distinct integer results. However, the programmer should be aware that producing distinct integer results for unequal objects may improve the performance of hash tables.</p></li>
+
+<li><p>程序执行期间，在同一个对象上执行多次hashCode方法，都返回相同的整数，前提是equals比较中所使用的字段没有被修改。跨应用中的hashCode方法调用返回的整数不要求相同。</p></li>
+
+<li><p>如果两个对象根据equals方法比较相同，那hashCode返回的整数也必须相同。</p></li>
+
+<li><p>如果两个对象equals方法比较不相同，调用hashCode返回的整数不需要不同。但是程序员应该知道为不相等的对象生成不同的整数可以提高哈希表的性能。</p></li>
+</ul>
+</blockquote>
+
+<h4 id="hashset的底层实现">HashSet的底层实现</h4>
+
+<p>HashSet的底层是通过HashMap实现的，将元素作为map的key以达到去重的目的，value使用的是同一个虚拟的Object实例。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="nf">transient</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">E</span><span class="p">,</span><span class="n">Object</span><span class="o">&gt;</span> <span class="nf">map</span><span class="p">;</span>
+
+<span class="c1">// Dummy value to associate with an Object in the backing Map
+</span><span class="c1"></span><span class="kd">private</span> <span class="nf">static</span> <span class="kd">final</span> <span class="nf">Object</span> <span class="n">PRESENT</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="p">();</span>
+
+<span class="kd">public</span> <span class="nf">boolean</span> <span class="n">add</span><span class="p">(</span><span class="n">E</span> <span class="nf">e</span><span class="p">)</span> <span class="p">{</span>
+   <span class="k">return</span> <span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">PRESENT</span><span class="p">)</span><span class="o">==</span><span class="kc">null</span><span class="p">;</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="hashmap的底层实现">HashMap的底层实现</h4>
+
+<p>{% asset_img hashmap-structure.jpg %}</p>
+
+<p>到最后我们要看HashMap的实现了，简单说就是一个<strong>数组</strong>+<strong>链表</strong>的结合。</p>
+
+<ul>
+<li>默认初始容量16</li>
+<li>默认负荷系数0.75</li>
+<li>Entry数组</li>
+<li>大小</li>
+<li>阈值：初始值等于初始容量</li>
+
+<li><p>负荷系数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">static</span> <span class="nf">final</span> <span class="kt">int</span> <span class="nf">DEFAULT_INITIAL_CAPACITY</span> <span class="o">=</span> <span class="n">1</span> <span class="o">&lt;&lt;</span> <span class="n">4</span><span class="p">;</span>
+<span class="kd">static</span> <span class="nf">final</span> <span class="kt">float</span> <span class="nf">DEFAULT_LOAD_FACTOR</span> <span class="o">=</span> <span class="n">0</span><span class="p">.</span><span class="na">75f</span><span class="p">;</span>
+<span class="kd">static</span> <span class="nf">final</span> <span class="n">Entry</span><span class="o">&lt;?</span><span class="p">,</span><span class="o">?&gt;</span><span class="p">[]</span> <span class="n">EMPTY_TABLE</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="kd">transient</span> <span class="nf">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span><span class="p">[]</span> <span class="nf">table</span> <span class="o">=</span> <span class="p">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span><span class="p">[])</span> <span class="n">EMPTY_TABLE</span><span class="p">;</span>
+<span class="kd">transient</span> <span class="nf">int</span> <span class="n">size</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">threshold</span><span class="p">;</span>
+<span class="kd">final</span> <span class="nf">float</span> <span class="n">loadFactor</span><span class="p">;</span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+
+<h5 id="entry元素">Entry元素</h5>
+
+<p>Entry是链表的结果，key为Map中的key，value为Map中的value，hash为key的hash结果，next为下一个元素。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">static</span> <span class="nf">class</span> <span class="n">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="nf">implements</span> <span class="n">Map</span><span class="p">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">final</span> <span class="nf">K</span> <span class="n">key</span><span class="p">;</span>
+    <span class="n">V</span> <span class="nf">value</span><span class="p">;</span>
+    <span class="n">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="nf">next</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="nf">hash</span><span class="p">;</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h5 id="添加元素">添加元素</h5>
+
+<ul>
+<li>如果数组为空（即map初始化后第一次添加元素）扩充table</li>
+<li>如果key为null，则调用putForNullKey方法，null位于table的下标0处</li>
+<li>算出key的hash值</li>
+<li>通过hash值算出元素在table中的下标值
+
+<ul>
+<li>如果该位置元素不为空，然后需要比较元素的hash值和上面算出的hash值是否相等，同时元素的key对象和要出入的key是否为同一对象（相同的地址 ==比较为true）或者equals方法是否为true。如果满足条件，则更新该entry的value值；若不满足则遍历整个链表。</li>
+<li>如果为空直接添加新的entry。</li>
+</ul></li>
+</ul>
+
+<p><strong>JDK8此处有更新，见末尾</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">V</span> <span class="n">put</span><span class="p">(</span><span class="n">K</span> <span class="nf">key</span><span class="p">,</span> <span class="n">V</span> <span class="nf">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">table</span> <span class="o">==</span> <span class="n">EMPTY_TABLE</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">inflateTable</span><span class="p">(</span><span class="n">threshold</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">key</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">putForNullKey</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="nf">hash</span> <span class="o">=</span> <span class="n">hash</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="nf">i</span> <span class="o">=</span> <span class="n">indexFor</span><span class="p">(</span><span class="n">hash</span><span class="p">,</span> <span class="n">table</span><span class="p">.</span><span class="na">length</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="nf">e</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="n">i</span><span class="p">];</span> <span class="n">e</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">;</span> <span class="n">e</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="na">next</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">Object</span> <span class="nf">k</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">hash</span> <span class="o">==</span> <span class="n">hash</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="n">k</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="na">key</span><span class="p">)</span> <span class="o">==</span> <span class="n">key</span> <span class="o">||</span> <span class="n">key</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">k</span><span class="p">)))</span> <span class="p">{</span>
+            <span class="n">V</span> <span class="nf">oldValue</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="na">value</span><span class="p">;</span>
+            <span class="n">e</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+            <span class="n">e</span><span class="p">.</span><span class="na">recordAccess</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+            <span class="k">return</span> <span class="n">oldValue</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">modCount</span><span class="o">++</span><span class="p">;</span>
+    <span class="n">addEntry</span><span class="p">(</span><span class="n">hash</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+    <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h5 id="扩充table">扩充table</h5>
+
+<p>对toSzie算出最小的2的幂值，用了Integer.highestOneBit((toSize -1) &lt;&lt; 1)。减一之后左移一位，然后取最高位值，其余为补0。</p>
+
+<p>为什么数组长度必须为2的幂值，请继续看。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="cm">/**
+</span><span class="cm"> * 扩充table
+</span><span class="cm">**/</span>
+<span class="kd">private</span> <span class="nf">void</span> <span class="n">inflateTable</span><span class="p">(</span><span class="kt">int</span> <span class="nf">toSize</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Find a power of 2 &gt;= toSize
+</span><span class="c1"></span>    <span class="kt">int</span> <span class="nf">capacity</span> <span class="o">=</span> <span class="n">roundUpToPowerOf2</span><span class="p">(</span><span class="n">toSize</span><span class="p">);</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">Math</span><span class="p">.</span><span class="na">min</span><span class="p">(</span><span class="n">capacity</span> <span class="o">*</span> <span class="n">loadFactor</span><span class="p">,</span> <span class="n">MAXIMUM_CAPACITY</span> <span class="o">+</span> <span class="n">1</span><span class="p">);</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Entry</span><span class="p">[</span><span class="n">capacity</span><span class="p">];</span>
+    <span class="n">initHashSeedAsNeeded</span><span class="p">(</span><span class="n">capacity</span><span class="p">);</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h5 id="计算hash值">计算hash值</h5>
+
+<p>hashSeed值为0，将key的hashCode值做多次位移和异或运算</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">final</span> <span class="nf">int</span> <span class="n">hash</span><span class="p">(</span><span class="n">Object</span> <span class="nf">k</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="nf">h</span> <span class="o">=</span> <span class="n">hashSeed</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">0</span> <span class="o">!=</span> <span class="n">h</span> <span class="o">&amp;&amp;</span> <span class="n">k</span> <span class="nf">instanceof</span> <span class="n">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">sun</span><span class="p">.</span><span class="na">misc</span><span class="p">.</span><span class="na">Hashing</span><span class="p">.</span><span class="na">stringHash32</span><span class="p">((</span><span class="n">String</span><span class="p">)</span> <span class="n">k</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">h</span> <span class="o">^=</span> <span class="n">k</span><span class="p">.</span><span class="na">hashCode</span><span class="p">();</span>
+    <span class="c1">// This function ensures that hashCodes that differ only by
+</span><span class="c1"></span>    <span class="c1">// constant multiples at each bit position have a bounded
+</span><span class="c1"></span>    <span class="c1">// number of collisions (approximately 8 at default load factor).
+</span><span class="c1"></span>    <span class="n">h</span> <span class="o">^=</span> <span class="p">(</span><span class="n">h</span> <span class="o">&gt;&gt;&gt;</span> <span class="n">20</span><span class="p">)</span> <span class="o">^</span> <span class="p">(</span><span class="n">h</span> <span class="o">&gt;&gt;&gt;</span> <span class="n">12</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">h</span> <span class="o">^</span> <span class="p">(</span><span class="n">h</span> <span class="o">&gt;&gt;&gt;</span> <span class="n">7</span><span class="p">)</span> <span class="o">^</span> <span class="p">(</span><span class="n">h</span> <span class="o">&gt;&gt;&gt;</span> <span class="n">4</span><span class="p">);</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h5 id="计算元素位置">计算元素位置</h5>
+
+<p>这里的逻辑很简单：将hash值跟数组长度-1做了按位与。</p>
+
+<p>在进行查找的时候是通过key的hash值，如果我们将元素的位置分布得尽量均匀一些，尽量做到每个位置上只有一个元素，达到O(1)的查找。这种查找通过取余就可以做到，在Java中如何做到比较快的取余呢，答案是位与运算。</p>
+
+<p>上面扩充数组的时候我们保证长度为2的幂值，那减一之后就是每位都是<strong>1</strong>。做位与运算就能保证低位不同的hash值会落在不同的位置上，降低冲突（碰撞），最大程度做到均匀分布，减少链表的出现（查找变成O(n)）。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">static</span> <span class="nf">int</span> <span class="n">indexFor</span><span class="p">(</span><span class="kt">int</span> <span class="nf">h</span><span class="p">,</span> <span class="kt">int</span> <span class="nf">length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// assert Integer.bitCount(length) == 1 : &#34;length must be a non-zero power of 2&#34;;
+</span><span class="c1"></span>    <span class="k">return</span> <span class="n">h</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="n">1</span><span class="p">);</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h5 id="添加entry">添加entry</h5>
+
+<p>添加新的元素时要检查元素个数是否达到阈值，否则要做扩容处理，新table的容量为当前table长度的两倍。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kt">void</span> <span class="nf">addEntry</span><span class="p">(</span><span class="kt">int</span> <span class="nf">hash</span><span class="p">,</span> <span class="n">K</span> <span class="nf">key</span><span class="p">,</span> <span class="n">V</span> <span class="nf">value</span><span class="p">,</span> <span class="kt">int</span> <span class="nf">bucketIndex</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">size</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="kc">null</span> <span class="o">!=</span> <span class="n">table</span><span class="p">[</span><span class="n">bucketIndex</span><span class="p">]))</span> <span class="p">{</span>
+        <span class="n">resize</span><span class="p">(</span><span class="n">2</span> <span class="o">*</span> <span class="n">table</span><span class="p">.</span><span class="na">length</span><span class="p">);</span>
+        <span class="n">hash</span> <span class="o">=</span> <span class="p">(</span><span class="kc">null</span> <span class="o">!=</span> <span class="n">key</span><span class="p">)</span> <span class="o">?</span> <span class="n">hash</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">:</span> <span class="n">0</span><span class="p">;</span>
+        <span class="n">bucketIndex</span> <span class="o">=</span> <span class="n">indexFor</span><span class="p">(</span><span class="n">hash</span><span class="p">,</span> <span class="n">table</span><span class="p">.</span><span class="na">length</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">createEntry</span><span class="p">(</span><span class="n">hash</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">bucketIndex</span><span class="p">);</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h5 id="resize">resize</h5>
+
+<p>新table的容量为当前table长度的两倍（table.length &gt;= size），将旧数据中的数据迁移到新的数组中，迁移的过程中要重新计算元素在新数组中的位置。网上很多地方提到这个操作rehash，但我觉得reindex反而更恰当一些。JDK中对rehash有额外的定义，就是<strong>initHashSeedAsNeeded</strong>。当新的容量&gt;=<strong>jdk.map.althashing.threshold</strong>的配置时，会重新计算key的hash值，即hash(e.key)。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kt">void</span> <span class="nf">resize</span><span class="p">(</span><span class="kt">int</span> <span class="nf">newCapacity</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Entry</span><span class="p">[]</span> <span class="nf">oldTable</span> <span class="o">=</span> <span class="n">table</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="nf">oldCapacity</span> <span class="o">=</span> <span class="n">oldTable</span><span class="p">.</span><span class="na">length</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">oldCapacity</span> <span class="o">==</span> <span class="n">MAXIMUM_CAPACITY</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">threshold</span> <span class="o">=</span> <span class="n">Integer</span><span class="p">.</span><span class="na">MAX_VALUE</span><span class="p">;</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">Entry</span><span class="p">[]</span> <span class="nf">newTable</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Entry</span><span class="p">[</span><span class="n">newCapacity</span><span class="p">];</span>
+    <span class="n">transfer</span><span class="p">(</span><span class="n">newTable</span><span class="p">,</span> <span class="n">initHashSeedAsNeeded</span><span class="p">(</span><span class="n">newCapacity</span><span class="p">));</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">newTable</span><span class="p">;</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">Math</span><span class="p">.</span><span class="na">min</span><span class="p">(</span><span class="n">newCapacity</span> <span class="o">*</span> <span class="n">loadFactor</span><span class="p">,</span> <span class="n">MAXIMUM_CAPACITY</span> <span class="o">+</span> <span class="n">1</span><span class="p">);</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h5 id="reindex">reindex</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kt">void</span> <span class="nf">transfer</span><span class="p">(</span><span class="n">Entry</span><span class="p">[]</span> <span class="nf">newTable</span><span class="p">,</span> <span class="kt">boolean</span> <span class="nf">rehash</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="nf">newCapacity</span> <span class="o">=</span> <span class="n">newTable</span><span class="p">.</span><span class="na">length</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="nf">e</span> <span class="o">:</span> <span class="n">table</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">while</span><span class="p">(</span><span class="kc">null</span> <span class="o">!=</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="nf">next</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">rehash</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">e</span><span class="p">.</span><span class="na">hash</span> <span class="o">=</span> <span class="kc">null</span> <span class="o">==</span> <span class="n">e</span><span class="p">.</span><span class="na">key</span> <span class="o">?</span> <span class="n">0</span> <span class="o">:</span> <span class="n">hash</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">key</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="kt">int</span> <span class="nf">i</span> <span class="o">=</span> <span class="n">indexFor</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">hash</span><span class="p">,</span> <span class="n">newCapacity</span><span class="p">);</span>
+            <span class="n">e</span><span class="p">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">newTable</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="n">newTable</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="p">;</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="n">next</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<hr />
+
+<p>JDK8 update
+添加元素的时候，如果发生哈希冲突，会遍历链表。加入链表的长度大于TREEIFY_THRESHOLD（默认为8），会将链表转成<strong>红黑树</strong>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">final</span> <span class="nf">V</span> <span class="n">putVal</span><span class="p">(</span><span class="kt">int</span> <span class="nf">hash</span><span class="p">,</span> <span class="n">K</span> <span class="nf">key</span><span class="p">,</span> <span class="n">V</span> <span class="nf">value</span><span class="p">,</span> <span class="kt">boolean</span> <span class="nf">onlyIfAbsent</span><span class="p">,</span>
+               <span class="kt">boolean</span> <span class="nf">evict</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Node</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span><span class="p">[]</span> <span class="nf">tab</span><span class="p">;</span> <span class="n">Node</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="nf">p</span><span class="p">;</span> <span class="kt">int</span> <span class="nf">n</span><span class="p">,</span> <span class="n">i</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">tab</span> <span class="o">=</span> <span class="n">table</span><span class="p">)</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="n">tab</span><span class="p">.</span><span class="na">length</span><span class="p">)</span> <span class="o">==</span> <span class="n">0</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">tab</span> <span class="o">=</span> <span class="n">resize</span><span class="p">()).</span><span class="na">length</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">p</span> <span class="o">=</span> <span class="n">tab</span><span class="p">[</span><span class="n">i</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">hash</span><span class="p">])</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span>
+        <span class="n">tab</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">newNode</span><span class="p">(</span><span class="n">hash</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="n">Node</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="nf">e</span><span class="p">;</span> <span class="n">K</span> <span class="nf">k</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="na">hash</span> <span class="o">==</span> <span class="n">hash</span> <span class="o">&amp;&amp;</span>
+            <span class="p">((</span><span class="n">k</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="na">key</span><span class="p">)</span> <span class="o">==</span> <span class="n">key</span> <span class="o">||</span> <span class="p">(</span><span class="n">key</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">key</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">k</span><span class="p">))))</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="nf">instanceof</span> <span class="n">TreeNode</span><span class="p">)</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="p">((</span><span class="n">TreeNode</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span><span class="p">)</span><span class="n">p</span><span class="p">).</span><span class="na">putTreeVal</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">tab</span><span class="p">,</span> <span class="n">hash</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+        <span class="k">else</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="nf">binCount</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span> <span class="p">;</span> <span class="o">++</span><span class="n">binCount</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">((</span><span class="n">e</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="na">next</span><span class="p">)</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">p</span><span class="p">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">newNode</span><span class="p">(</span><span class="n">hash</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">binCount</span> <span class="o">&gt;=</span> <span class="n">TREEIFY_THRESHOLD</span> <span class="o">-</span> <span class="n">1</span><span class="p">)</span> <span class="c1">// -1 for 1st
+</span><span class="c1"></span>                        <span class="n">treeifyBin</span><span class="p">(</span><span class="n">tab</span><span class="p">,</span> <span class="n">hash</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">hash</span> <span class="o">==</span> <span class="n">hash</span> <span class="o">&amp;&amp;</span>
+                    <span class="p">((</span><span class="n">k</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="na">key</span><span class="p">)</span> <span class="o">==</span> <span class="n">key</span> <span class="o">||</span> <span class="p">(</span><span class="n">key</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">key</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">k</span><span class="p">))))</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">e</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">e</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// existing mapping for key
+</span><span class="c1"></span>            <span class="n">V</span> <span class="nf">oldValue</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="na">value</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">onlyIfAbsent</span> <span class="o">||</span> <span class="n">oldValue</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="n">e</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+            <span class="n">afterNodeAccess</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+            <span class="k">return</span> <span class="n">oldValue</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="o">++</span><span class="n">modCount</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">++</span><span class="n">size</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)</span>
+        <span class="n">resize</span><span class="p">();</span>
+    <span class="n">afterNodeInsertion</span><span class="p">(</span><span class="n">evict</span><span class="p">);</span>
+    <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">&lt;!----&gt;</span>
+<span class="kd">final</span> <span class="nf">void</span> <span class="n">treeifyBin</span><span class="p">(</span><span class="n">Node</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span><span class="p">[]</span> <span class="nf">tab</span><span class="p">,</span> <span class="kt">int</span> <span class="nf">hash</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="nf">n</span><span class="p">,</span> <span class="n">index</span><span class="p">;</span> <span class="n">Node</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="nf">e</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">tab</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="n">tab</span><span class="p">.</span><span class="na">length</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">MIN_TREEIFY_CAPACITY</span><span class="p">)</span>
+        <span class="n">resize</span><span class="p">();</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">((</span><span class="n">e</span> <span class="o">=</span> <span class="n">tab</span><span class="p">[</span><span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">hash</span><span class="p">])</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">TreeNode</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="nf">hd</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span> <span class="n">tl</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="n">TreeNode</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="nf">p</span> <span class="o">=</span> <span class="n">replacementTreeNode</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">tl</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="n">hd</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span>
+            <span class="k">else</span> <span class="p">{</span>
+                <span class="n">p</span><span class="p">.</span><span class="na">prev</span> <span class="o">=</span> <span class="n">tl</span><span class="p">;</span>
+                <span class="n">tl</span><span class="p">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="n">tl</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">((</span><span class="n">e</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="na">next</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">tab</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">hd</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="n">hd</span><span class="p">.</span><span class="na">treeify</span><span class="p">(</span><span class="n">tab</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>同样，get(key)的时候也会相应的从树中查找元素。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Addo Zhang</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-07-11
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/java/">Java</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/crlf-in-git/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Git回车换行</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/singleton-in-multi-threads-programming/">
+            <span class="next-text nav-default">多线程下的单例模式&#43;反汇编</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'addozhang';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:duwasai@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Addo Zhang</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

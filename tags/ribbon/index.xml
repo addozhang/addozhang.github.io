@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ribbon on 乱世浮生</title>
+    <link>http://localhost:1313/tags/ribbon/</link>
+    <description>Recent content in Ribbon on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 02 Aug 2018 08:55:43 +0800</lastBuildDate>
+    
+	<atom:link href="http://localhost:1313/tags/ribbon/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Zuul网关Ribbon重试</title>
+      <link>http://localhost:1313/ribbon-retry-in-zuul/</link>
+      <pubDate>Thu, 02 Aug 2018 08:55:43 +0800</pubDate>
+      
+      <guid>http://localhost:1313/ribbon-retry-in-zuul/</guid>
+      <description>相关配置 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 #如果路由转发请求发生超时(连接超时或处理超时), 只要超时时间的设置小于Hystrix的命令</description>
+    </item>
+    
+  </channel>
+</rss>

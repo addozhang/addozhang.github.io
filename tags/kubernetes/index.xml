@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kubernetes on 乱世浮生</title>
+    <link>http://localhost:1313/tags/kubernetes/</link>
+    <description>Recent content in Kubernetes on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 30 May 2018 12:10:32 +0800</lastBuildDate>
+    
+	<atom:link href="http://localhost:1313/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Kubernetes中的Nginx动态解析</title>
+      <link>http://localhost:1313/nginx-dynamic-domain-parse-in-kubernetes/</link>
+      <pubDate>Wed, 30 May 2018 12:10:32 +0800</pubDate>
+      
+      <guid>http://localhost:1313/nginx-dynamic-domain-parse-in-kubernetes/</guid>
+      <description>背景 Nginx运行在kubernets中, 反向代理service提供服务. kubernetes版本v1.9.1+a0ce1bc657. 问题:</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes — 持久卷</title>
+      <link>http://localhost:1313/kubernetes-persistent-volumes/</link>
+      <pubDate>Sun, 20 Aug 2017 22:25:40 +0800</pubDate>
+      
+      <guid>http://localhost:1313/kubernetes-persistent-volumes/</guid>
+      <description>Persistent Volume 译自Persistent Volumes 介绍 管理存储是管理计算的独特问题。 PersistentVolume子系统为用户和管理员提供了一个API，其中提</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes学习 — Macos安装Kubernetes</title>
+      <link>http://localhost:1313/install-kubernetes-on-macos/</link>
+      <pubDate>Thu, 17 Aug 2017 09:44:17 +0800</pubDate>
+      
+      <guid>http://localhost:1313/install-kubernetes-on-macos/</guid>
+      <description>Kubernetes 安装 macos 检查环境 1 sysctl -a | grep machdep.cpu.features | grep VMX 安装VirtualBox 1 http://download.virtualbox.org/virtualbox/5.1.26/Oracle_VM_VirtualBox_Extension_Pack-5.1.26-117224.vbox-extpack 安装minikube 1 curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.21.0/minikube-darwin-amd64 &amp;amp;&amp;amp; chmod +x minikube &amp;amp;&amp;amp; sudo mv minikube /usr/local/bin/ 创建集群 默认使用virtual</description>
+    </item>
+    
+  </channel>
+</rss>

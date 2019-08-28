@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Rabbitmq延迟队列实现 - 乱世浮生</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Addo Zhang" /><meta name="description" content="工作中很多场景需要用到定时任务、延迟任务，常用的方法用crontab job、Spring的Quartz，然后扫描整张数据库表，判断哪些数据需" /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with even 4.0.0" />
+
+
+<link rel="canonical" href="http://localhost:1313/rabbitmq-delay-queue-implementation/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Rabbitmq延迟队列实现" />
+<meta property="og:description" content="工作中很多场景需要用到定时任务、延迟任务，常用的方法用crontab job、Spring的Quartz，然后扫描整张数据库表，判断哪些数据需" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/rabbitmq-delay-queue-implementation/" />
+<meta property="article:published_time" content="2016-03-30T14:27:02+08:00" />
+<meta property="article:modified_time" content="2016-03-30T14:27:02+08:00" />
+<meta itemprop="name" content="Rabbitmq延迟队列实现">
+<meta itemprop="description" content="工作中很多场景需要用到定时任务、延迟任务，常用的方法用crontab job、Spring的Quartz，然后扫描整张数据库表，判断哪些数据需">
+
+
+<meta itemprop="datePublished" content="2016-03-30T14:27:02&#43;08:00" />
+<meta itemprop="dateModified" content="2016-03-30T14:27:02&#43;08:00" />
+<meta itemprop="wordCount" content="582">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Rabbitmq延迟队列实现"/>
+<meta name="twitter:description" content="工作中很多场景需要用到定时任务、延迟任务，常用的方法用crontab job、Spring的Quartz，然后扫描整张数据库表，判断哪些数据需"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">乱世浮生</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">乱世浮生</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Rabbitmq延迟队列实现</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-03-30 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+            <a href="/categories/%E8%BD%AF%E4%BB%B6/"> 软件 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+    <div class="post-content">
+      <div>工作中很多场景需要用到定时任务、延迟任务，常用的方法用crontab job、Spring的Quartz，然后扫描整张数据库表，判断哪些数据需要处理。控制的粒度没办法做到特定数据上。</div>
+<div>后来就想到了Rabbitmq，Rabbitmq本来不没有延迟队列的功能，但是有个[Dead Letter Exchange](https://www.rabbitmq.com/dlx.html)功能。</div>
+<div></div>
+<div>DLX是指队列中的消息在下面几种情况下会变为死信（dead letter），然后会被发布到另一个exchange中。</div>
+
+<ul>
+<li>在requeue=false的情况系，消息被client reject</li>
+<li>消息过期</li>
+<li>队列长度超过限制
+<div>有了DLX，就可以将需要延迟的操作设置下次执行时间（如消息的TTL时间）放入一个存储队列中，消息过期后会经由DLX进入监听的队列中。有消费方进行相关的操作，结束或者再次进入存储队列中。</div>
+<div></div>
+<div>Spring AMQP实现</div>
+<div></div>
+<div>Configuration:</div>
+<div>
+<div style="background-color: #2b2b2b; color: #a9b7c6; font-family: 'Menlo'; font-size: 9.0pt;"><span style="color: #e8bf6a;">&lt;</span><span style="color: #9876aa;">rabbit</span><span style="color: #e8bf6a;">:connection-factory </span><span style="color: #bababa;">id</span><span style="color: #6a8759;">=&ldquo;rabbitMQConnectionFactory&rdquo; </span><span style="color: #bababa;">requested-heartbeat</span><span style="color: #6a8759;">=&ldquo;&ldquo; </span><span style="color: #bababa;">host</span><span style="color: #6a8759;">=&ldquo;${rabbit.host}&rdquo;
+</span><span style="color: #6a8759;">                           </span><span style="color: #bababa;">port</span><span style="color: #6a8759;">=&ldquo;${rabbit.port}&rdquo;
+</span><span style="color: #6a8759;">                           </span><span style="color: #bababa;">username</span><span style="color: #6a8759;">=&ldquo;${rabbit.username}&ldquo; </span><span style="color: #bababa;">password</span><span style="color: #6a8759;">=&ldquo;${rabbit.password}&ldquo; </span><span style="color: #bababa;">publisher-confirms</span><span style="color: #6a8759;">=&ldquo;true&rdquo;
+</span><span style="color: #6a8759;">                           </span><span style="color: #bababa; background-color: #344134;">channel-cache-size</span><span style="color: #6a8759;">=&ldquo;10&rdquo;</span><span style="color: #e8bf6a;">/&gt;
+</span><span style="color: #e8bf6a;">
+</span><span style="color: #e8bf6a;">&lt;</span><span style="color: #9876aa;">rabbit</span><span style="color: #e8bf6a;">:admin </span><span style="color: #bababa;">connection-factory</span><span style="color: #6a8759;">=&ldquo;rabbitMQConnectionFactory&rdquo;</span><span style="color: #e8bf6a;">/&gt;</span></div>
+</div>
+<div></div>
+<div>
+<div style="background-color: #2b2b2b; color: #a9b7c6; font-family: 'Menlo'; font-size: 9.0pt;"><span style="color: #808080;">&lt;!&ndash;声明延时队列&ndash;&gt;
+</span><span style="color: #e8bf6a;">&lt;</span><span style="color: #9876aa;">rabbit</span><span style="color: #e8bf6a;">:queue </span><span style="color: #bababa;">id</span><span style="color: #6a8759;">=&ldquo;delayQueue&rdquo; </span><span style="color: #bababa;">name</span><span style="color: #6a8759;">=&ldquo;${rabbit.tracking.no.pre.track.delay.queue}&rdquo;</span><span style="color: #e8bf6a;">&gt;
+</span><span style="color: #e8bf6a;">    &lt;</span><span style="color: #9876aa;">rabbit</span><span style="color: #e8bf6a;">:queue-arguments&gt;
+</span><span style="color: #e8bf6a;">        &lt;entry </span><span style="color: #bababa;">key</span><span style="color: #6a8759;">=&ldquo;x-dead-letter-exchange&rdquo; </span><span style="color: #bababa;">value</span><span style="color: #6a8759;">=&ldquo;tracking_dead_exchange&rdquo;</span><span style="color: #e8bf6a;">/&gt;
+</span><span style="color: #e8bf6a;">    &lt;/</span><span style="color: #9876aa;">rabbit</span><span style="color: #e8bf6a;">:queue-arguments&gt;
+</span><span style="color: #e8bf6a;">&lt;/</span><span style="color: #9876aa;">rabbit</span><span style="color: #e8bf6a;">:queue&gt;
+</span><span style="color: #808080;">&lt;!&ndash;声明监听队列&ndash;&gt;
+</span><span style="color: #e8bf6a;">&lt;</span><span style="color: #9876aa;">rabbit</span><span style="color: #e8bf6a;">:queue </span><span style="color: #bababa;">id</span><span style="color: #6a8759;">=&ldquo;preTrackingQueue&rdquo; </span><span style="color: #bababa;">name</span><span style="color: #6a8759;">=&ldquo;${rabbit.tracking.no.pre.track.queue}&rdquo;</span><span style="color: #e8bf6a;">/&gt;</span></div>
+</div>
+<div></div>
+<div>
+<div style="background-color: #2b2b2b; color: #a9b7c6; font-family: 'Menlo'; font-size: 9.0pt;"><span style="color: #808080;">&lt;!&ndash;声明DLX&ndash;&gt;
+</span><span style="color: #e8bf6a;">&lt;</span><span style="color: #9876aa;">rabbit</span><span style="color: #e8bf6a;">:topic-exchange </span><span style="color: #bababa;">name</span><span style="color: #6a8759;">=&ldquo;tracking_dead_exchange&rdquo;</span><span style="color: #e8bf6a;">&gt;
+</span><span style="color: #e8bf6a;">    &lt;</span><span style="color: #9876aa;">rabbit</span><span style="color: #e8bf6a;">:bindings&gt;
+</span><span style="color: #e8bf6a;">        &lt;</span><span style="color: #9876aa;">rabbit</span><span style="color: #e8bf6a;">:binding </span><span style="color: #bababa;">pattern</span><span style="color: #6a8759;">=&ldquo;#&ldquo; </span><span style="color: #bababa;">queue</span><span style="color: #6a8759;">=&ldquo;${rabbit.tracking.no.pre.track.queue}&rdquo;</span><span style="color: #e8bf6a;">/&gt;
+</span><span style="color: #e8bf6a;">    &lt;/</span><span style="color: #9876aa;">rabbit</span><span style="color: #e8bf6a;">:bindings&gt;
+</span><span style="color: #e8bf6a;">&lt;/</span><span style="color: #9876aa;">rabbit</span><span style="color: #e8bf6a;">:topic-exchange&gt;</span></div>
+</div>
+<div></div>
+<div></div>
+<div>
+<div style="background-color: #2b2b2b; color: #a9b7c6; font-family: 'Menlo'; font-size: 9.0pt;"><span style="color: #e8bf6a;">&lt;</span><span style="color: #9876aa;">rabbit</span><span style="color: #e8bf6a;">:listener-container </span><span style="color: #bababa;">connection-factory</span><span style="color: #6a8759;">=&ldquo;rabbitMQConnectionFactory&rdquo;
+</span><span style="color: #6a8759;">                           </span><span style="color: #bababa;">concurrency</span><span style="color: #6a8759;">=&ldquo;1&rdquo;
+</span><span style="color: #6a8759;">                           </span><span style="color: #bababa;">prefetch</span><span style="color: #6a8759;">=&ldquo;1&rdquo;
+</span><span style="color: #6a8759;">                           </span><span style="color: #bababa;">acknowledge</span><span style="color: #6a8759;">=&ldquo;auto&rdquo;
+</span><span style="color: #6a8759;">                           </span><span style="color: #bababa;">message-converter</span><span style="color: #6a8759;">=&ldquo;jackson2JsonMessageConverter&rdquo;</span><span style="color: #e8bf6a;">&gt;
+</span><span style="color: #e8bf6a;">    &lt;</span><span style="color: #9876aa;">rabbit</span><span style="color: #e8bf6a;">:listener </span><span style="color: #bababa;">ref</span><span style="color: #6a8759;">=&ldquo;trackingListener&rdquo; </span><span style="color: #bababa;">method</span><span style="color: #6a8759;">=&ldquo;handleMessage&rdquo; </span><span style="color: #bababa;">queues</span><span style="color: #6a8759;">=&ldquo;preTrackingQueue&rdquo;</span><span style="color: #e8bf6a;">/&gt;
+</span><span style="color: #e8bf6a;">&lt;/</span><span style="color: #9876aa;">rabbit</span><span style="color: #e8bf6a;">:listener-container&gt;</span></div>
+</div>
+<div></div>
+<div>Code:</div>
+<div>
+<div style="background-color: #2b2b2b; color: #a9b7c6; font-family: 'Menlo'; font-size: 9.0pt;"><span style="color: #bbb529;">@Component
+</span><span style="color: #cc7832;">public class </span>TrackingListener{
+<span style="color: #cc7832;">private </span>Logger <span style="color: #9876aa;">LOGGER </span>= LoggerFactory.<span style="font-style: italic;">getLogger</span>(TrackingListener.<span style="color: #cc7832;">class</span>)<span style="color: #cc7832;">;
+</span><span style="color: #cc7832;">   </span> <span style="color: #bbb529;">@Autowired
+</span><span style="color: #bbb529;">   </span> <span style="color: #cc7832;">private </span>MessageConverter <span style="color: #9876aa;">jackson2JsonMessageConverter</span><span style="color: #cc7832;">;
+</span><span style="color: #cc7832;">   </span> <span style="color: #bbb529;">@Autowired
+</span><span style="color: #bbb529;">   </span> <span style="color: #cc7832;">private </span>RabbitTemplate <span style="color: #9876aa;">rabbitTemplate</span><span style="color: #cc7832;">;
+</span><span style="color: #cc7832;">   </span> <span style="color: #bbb529;">@Autowired
+</span><span style="color: #bbb529;">   </span> <span style="color: #cc7832;">private </span>Queue <span style="color: #9876aa;">delayQueue</span><span style="color: #cc7832;">;
+</span><span style="color: #cc7832;">
+</span><span style="color: #cc7832;">    public void </span><span style="color: #ffc66d;">handleMessage</span>(TrackingMessage trackingMessage){
+<span style="color: #9876aa;">LOGGER</span>.info(<span style="color: #6a8759;">&ldquo;In Function: TrackingListener.handleMessage(trackingMessage={})&rdquo;</span><span style="color: #cc7832;">, new </span>Object[]{trackingMessage})<span style="color: #cc7832;">;
+</span><span style="color: #cc7832;">       </span> String expiration = <span style="color: #6897bb;">60</span><em><span style="color: #6897bb;">60</span></em><span style="color: #6897bb;">1000 </span>+ <span style="color: #6a8759;">&rdquo;&rdquo;</span><span style="color: #cc7832;">;
+</span><span style="color: #cc7832;">        if</span>(trackingMessage.getRecordCount() == <span style="color: #6897bb;">2 </span>&amp;&amp; trackingMessage.getStatus() == <span style="color: #6897bb;">0</span>){
+<span style="color: #808080;">//更新运单及订单状态
+</span><span style="color: #808080;">           </span> trackingMessage.setStatus(<span style="color: #6897bb;">1</span>)<span style="color: #cc7832;">;
+</span><span style="color: #cc7832;">       </span> }
+MessageProperties messageProperties = <span style="color: #cc7832;">new </span>MessageProperties()<span style="color: #cc7832;">;
+</span><span style="color: #cc7832;">       </span> messageProperties.setExpiration(expiration)<span style="color: #cc7832;">; </span><span style="color: #808080;">//one hour
+</span><span style="color: #808080;">       </span> messageProperties.setTimestamp(<span style="color: #cc7832;">new </span>Date())<span style="color: #cc7832;">;
+</span><span style="color: #cc7832;">
+</span><span style="color: #cc7832;">       </span> <span style="color: #9876aa;">rabbitTemplate</span>.send(<span style="color: #9876aa;">delayQueue</span>.getName()<span style="color: #cc7832;">, </span><span style="color: #9876aa;">jackson2JsonMessageConverter</span>.toMessage(trackingMessage<span style="color: #cc7832;">, </span>messageProperties))<span style="color: #cc7832;">;
+</span><span style="color: #cc7832;">       </span> <span style="color: #9876aa;">LOGGER</span>.info(<span style="color: #6a8759;">&ldquo;End Function: TrackingListener.handleMessage()&rdquo;</span>)<span style="color: #cc7832;">;</span></div>
+</div></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Addo Zhang</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-03-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/use-kryo-in-spring-amqp-serialization/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">使用Kryo替换spring amqp的Java序列化</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/about-slf4j/">
+            <span class="next-text nav-default">关于SLF4J</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'addozhang';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:duwasai@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Addo Zhang</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

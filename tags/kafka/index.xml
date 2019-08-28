@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kafka on 乱世浮生</title>
+    <link>http://localhost:1313/tags/kafka/</link>
+    <description>Recent content in Kafka on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 18 Nov 2017 14:01:46 +0800</lastBuildDate>
+    
+	<atom:link href="http://localhost:1313/tags/kafka/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Kafka的消息可靠传递</title>
+      <link>http://localhost:1313/kafka-reliable-data-delivery/</link>
+      <pubDate>Sat, 18 Nov 2017 14:01:46 +0800</pubDate>
+      
+      <guid>http://localhost:1313/kafka-reliable-data-delivery/</guid>
+      <description>Kafka提供的基础保障可以用来构建可靠的系统, 却无法保证完全可靠. 需要在可靠性和吞吐之间做取舍. Kafka在分区上提供了消息的顺序保证. 生</description>
+    </item>
+    
+    <item>
+      <title>Kafka发送不同确认方式的性能差异</title>
+      <link>http://localhost:1313/kafka-producer-acknowledge-benchmark/</link>
+      <pubDate>Tue, 10 Oct 2017 11:49:58 +0800</pubDate>
+      
+      <guid>http://localhost:1313/kafka-producer-acknowledge-benchmark/</guid>
+      <description>背景 Kafka的性能众所周知，Producer支持acknowledge模式。即Kafka会想Producer返回消息发送的结果。但是在Ja</description>
+    </item>
+    
+    <item>
+      <title>Kafka消息消费一致性</title>
+      <link>http://localhost:1313/kafka-consumer-consistency/</link>
+      <pubDate>Tue, 26 Sep 2017 19:13:48 +0800</pubDate>
+      
+      <guid>http://localhost:1313/kafka-consumer-consistency/</guid>
+      <description>Kafka消费端的offset主要由consumer来控制, Kafka降每个consumer所监听的tocpic的partition的off</description>
+    </item>
+    
+    <item>
+      <title>Kafka 恰好一次发送和事务消费示例</title>
+      <link>http://localhost:1313/kafka-exactly-once-delivery-and-transactional-messaging-example/</link>
+      <pubDate>Fri, 22 Sep 2017 18:03:43 +0800</pubDate>
+      
+      <guid>http://localhost:1313/kafka-exactly-once-delivery-and-transactional-messaging-example/</guid>
+      <description>核心思想 生产端一致性: 开启幂等和事务, 包含重试, 发送确认, 同一个连接的最大未确认请求数. 消费端一致性: 通过设置读已提交的数据和同时处理完成每</description>
+    </item>
+    
+    <item>
+      <title>恰好一次发送和事务消息(译)</title>
+      <link>http://localhost:1313/kafka-exactly-once-delivery-and-transactional-messaging/</link>
+      <pubDate>Tue, 19 Sep 2017 19:13:26 +0800</pubDate>
+      
+      <guid>http://localhost:1313/kafka-exactly-once-delivery-and-transactional-messaging/</guid>
+      <description>Kafka提供“至少一次”交付语义, 这意味着发送的消息可以传送一次或多次. 人们真正想要的是“一次”语义,因为重复的消息没有被传递。 普遍地发声</description>
+    </item>
+    
+    <item>
+      <title>Kafka Producer配置解读</title>
+      <link>http://localhost:1313/kafka-producer-config/</link>
+      <pubDate>Tue, 19 Sep 2017 15:38:03 +0800</pubDate>
+      
+      <guid>http://localhost:1313/kafka-producer-config/</guid>
+      <description>按照重要性分类, 基于版本0.11.0.0 高 bootstrap.servers 一组host和port用于初始化连接. 不管这里配置了多少台server, 都只是用作发现整个集群全</description>
+    </item>
+    
+    <item>
+      <title>消费时offset被重置导致重复消费</title>
+      <link>http://localhost:1313/offset-be-reset-when-consuming/</link>
+      <pubDate>Mon, 20 Feb 2017 13:23:49 +0800</pubDate>
+      
+      <guid>http://localhost:1313/offset-be-reset-when-consuming/</guid>
+      <description>这是实际使用时遇到的问题：kafka api的版本是0.10，发现有重复消费问题；检查log后发现在commit offset的时候发生超时。 1</description>
+    </item>
+    
+    <item>
+      <title>Kafka Java生产者模型</title>
+      <link>http://localhost:1313/kafka-java-producer-model/</link>
+      <pubDate>Wed, 04 Jan 2017 16:33:02 +0800</pubDate>
+      
+      <guid>http://localhost:1313/kafka-java-producer-model/</guid>
+      <description>Producer初始化 初始化KafkaProducer实例，同时通过Config数据初始化MetaData、NetWorkClient、Ac</description>
+    </item>
+    
+  </channel>
+</rss>

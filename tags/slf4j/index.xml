@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>slf4j on 乱世浮生</title>
+    <link>http://localhost:1313/tags/slf4j/</link>
+    <description>Recent content in slf4j on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 18 Apr 2015 11:16:26 +0800</lastBuildDate>
+    
+	<atom:link href="http://localhost:1313/tags/slf4j/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>关于SLF4J</title>
+      <link>http://localhost:1313/about-slf4j/</link>
+      <pubDate>Sat, 18 Apr 2015 11:16:26 +0800</pubDate>
+      
+      <guid>http://localhost:1313/about-slf4j/</guid>
+      <description>Spring的功能越来越强大，同时也越来越臃肿。比如想快速搭建一个基于Spring的项目，解决依赖问题非常耗时。Spring的项目模板的出现</description>
+    </item>
+    
+  </channel>
+</rss>

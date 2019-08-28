@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Spring Cloud Zuul详解 - 乱世浮生</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Addo Zhang" /><meta name="description" content="Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看上一篇.
+实现 @EnableZuulProxy 与 @EnableZuulServer 二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用. Zuul server的路由都通过ZuulProperties进行配置.
+具体实现:  使用ZuulController(ServletWrappingController的子类)封装ZuulServlet实例, 处理从DispatcherServlet进来的请求. ZuulHandlerMapping负责注册handler mapping, 将Route的fullPath的请求交由ZuulController处理. 同时使用ServletRegistrationBean注册ZuulServlet, 默认使用/zuul作为urlMapping. 所有来自以/zuul开头的path的请求都会直接进入ZuulServlet, 不会进入DispatcherServlet.  使用注解  @EnableZuulProxy引入了ZuulProxyMarkerConfiguration, ZuulProxyMarkerConfiguration只做了一件事, 实例化了内部类Marker.
+1 2 3 4 5 6 7 8 9 10  @Configuration public class ZuulProxyMarkerConfiguration { @Bean public Marker zuulProxyMarkerBean() { return new Marker(); } class Marker { } }   @EnableZuulServer引入了ZuulServerMarkerConfiguration, ZuulServerMarkerConfiguration也只做了一件事: 实例化了内部类Marker
+1 2 3 4 5 6 7 8 9 10  @Configuration public class ZuulServerMarkerConfiguration { @Bean public Marker zuulServerMarkerBean() { return new Marker(); } class Marker { } }   " /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with even 4.0.0" />
+
+
+<link rel="canonical" href="http://localhost:1313/spring-cloud-zuul-breakdown/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Spring Cloud Zuul详解" />
+<meta property="og:description" content="Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看上一篇.
+
+实现
+
+@EnableZuulProxy 与 @EnableZuulServer
+二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用.
+Zuul server的路由都通过ZuulProperties进行配置.
+
+具体实现:
+
+
+使用ZuulController(ServletWrappingController的子类)封装ZuulServlet实例, 处理从DispatcherServlet进来的请求.
+ZuulHandlerMapping负责注册handler mapping, 将Route的fullPath的请求交由ZuulController处理.
+同时使用ServletRegistrationBean注册ZuulServlet, 默认使用/zuul作为urlMapping. 所有来自以/zuul开头的path的请求都会直接进入ZuulServlet, 不会进入DispatcherServlet.
+
+
+使用注解
+
+
+@EnableZuulProxy引入了ZuulProxyMarkerConfiguration, ZuulProxyMarkerConfiguration只做了一件事, 实例化了内部类Marker.
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+@Configuration
+public class ZuulProxyMarkerConfiguration {
+    @Bean
+    public Marker zuulProxyMarkerBean() {
+        return new Marker();
+    }
+
+    class Marker {
+    }
+}
+
+
+
+@EnableZuulServer引入了ZuulServerMarkerConfiguration, ZuulServerMarkerConfiguration也只做了一件事: 实例化了内部类Marker
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+@Configuration
+public class ZuulServerMarkerConfiguration {
+    @Bean
+    public Marker zuulServerMarkerBean() {
+        return new Marker();
+    }
+
+    class Marker {
+    }
+}
+
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/spring-cloud-zuul-breakdown/" />
+<meta property="article:published_time" content="2018-02-22T17:02:26+08:00" />
+<meta property="article:modified_time" content="2018-02-22T17:02:26+08:00" />
+<meta itemprop="name" content="Spring Cloud Zuul详解">
+<meta itemprop="description" content="Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看上一篇.
+
+实现
+
+@EnableZuulProxy 与 @EnableZuulServer
+二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用.
+Zuul server的路由都通过ZuulProperties进行配置.
+
+具体实现:
+
+
+使用ZuulController(ServletWrappingController的子类)封装ZuulServlet实例, 处理从DispatcherServlet进来的请求.
+ZuulHandlerMapping负责注册handler mapping, 将Route的fullPath的请求交由ZuulController处理.
+同时使用ServletRegistrationBean注册ZuulServlet, 默认使用/zuul作为urlMapping. 所有来自以/zuul开头的path的请求都会直接进入ZuulServlet, 不会进入DispatcherServlet.
+
+
+使用注解
+
+
+@EnableZuulProxy引入了ZuulProxyMarkerConfiguration, ZuulProxyMarkerConfiguration只做了一件事, 实例化了内部类Marker.
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+@Configuration
+public class ZuulProxyMarkerConfiguration {
+    @Bean
+    public Marker zuulProxyMarkerBean() {
+        return new Marker();
+    }
+
+    class Marker {
+    }
+}
+
+
+
+@EnableZuulServer引入了ZuulServerMarkerConfiguration, ZuulServerMarkerConfiguration也只做了一件事: 实例化了内部类Marker
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+@Configuration
+public class ZuulServerMarkerConfiguration {
+    @Bean
+    public Marker zuulServerMarkerBean() {
+        return new Marker();
+    }
+
+    class Marker {
+    }
+}
+
+
+">
+
+
+<meta itemprop="datePublished" content="2018-02-22T17:02:26&#43;08:00" />
+<meta itemprop="dateModified" content="2018-02-22T17:02:26&#43;08:00" />
+<meta itemprop="wordCount" content="5007">
+
+
+
+<meta itemprop="keywords" content="Spring Cloud,Zuul," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Spring Cloud Zuul详解"/>
+<meta name="twitter:description" content="Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看上一篇.
+
+实现
+
+@EnableZuulProxy 与 @EnableZuulServer
+二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用.
+Zuul server的路由都通过ZuulProperties进行配置.
+
+具体实现:
+
+
+使用ZuulController(ServletWrappingController的子类)封装ZuulServlet实例, 处理从DispatcherServlet进来的请求.
+ZuulHandlerMapping负责注册handler mapping, 将Route的fullPath的请求交由ZuulController处理.
+同时使用ServletRegistrationBean注册ZuulServlet, 默认使用/zuul作为urlMapping. 所有来自以/zuul开头的path的请求都会直接进入ZuulServlet, 不会进入DispatcherServlet.
+
+
+使用注解
+
+
+@EnableZuulProxy引入了ZuulProxyMarkerConfiguration, ZuulProxyMarkerConfiguration只做了一件事, 实例化了内部类Marker.
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+@Configuration
+public class ZuulProxyMarkerConfiguration {
+    @Bean
+    public Marker zuulProxyMarkerBean() {
+        return new Marker();
+    }
+
+    class Marker {
+    }
+}
+
+
+
+@EnableZuulServer引入了ZuulServerMarkerConfiguration, ZuulServerMarkerConfiguration也只做了一件事: 实例化了内部类Marker
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+@Configuration
+public class ZuulServerMarkerConfiguration {
+    @Bean
+    public Marker zuulServerMarkerBean() {
+        return new Marker();
+    }
+
+    class Marker {
+    }
+}
+
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">乱世浮生</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">乱世浮生</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Spring Cloud Zuul详解</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-02-22 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#实现">实现</a>
+<ul>
+<li><a href="#具体实现">具体实现:</a>
+<ul>
+<li><a href="#使用注解">使用注解</a></li>
+<li><a href="#enableautoconfiguration">EnableAutoConfiguration</a>
+<ul>
+<li><a href="#zuulserverautoconfiguration-详解">ZuulServerAutoConfiguration 详解</a></li>
+<li><a href="#zuulproxyautoconfiguration-详解">ZuulProxyAutoConfiguration 详解</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#配置项">配置项</a>
+<ul>
+<li>
+<ul>
+<li><a href="#zuul-servletpath">zuul.servletPath</a></li>
+<li><a href="#zuul-ignoredpatterns">zuul.ignoredPatterns</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#过滤器">过滤器</a>
+<ul>
+<li><a href="#zuulserverautoconfiguration">ZuulServerAutoConfiguration</a>
+<ul>
+<li><a href="#servletdetectionfilter">ServletDetectionFilter</a></li>
+<li><a href="#formbodywrapperfilter">FormBodyWrapperFilter</a></li>
+<li><a href="#debugfilter">DebugFilter</a></li>
+<li><a href="#servlet30wrapperfilter">Servlet30WrapperFilter</a></li>
+<li><a href="#sendresponsefilter">SendResponseFilter</a></li>
+</ul></li>
+<li><a href="#zuulproxyautoconfiguration">ZuulProxyAutoConfiguration</a>
+<ul>
+<li><a href="#predecorationfilter">PreDecorationFilter</a></li>
+<li><a href="#ribbonroutingfilter">RibbonRoutingFilter</a></li>
+<li><a href="#simplehostroutingfilter">SimpleHostRoutingFilter</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#监听器">监听器</a>
+<ul>
+<li>
+<ul>
+<li><a href="#zuulrefreshlistener">ZuulRefreshListener</a></li>
+<li><a href="#zuuldiscoveryrefreshlistener">ZuulDiscoveryRefreshListener</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看<a href="http://atbug.com/learn-netflix-zuul/">上一篇</a>.</p>
+
+<h2 id="实现">实现</h2>
+
+<p>@EnableZuulProxy 与 @EnableZuulServer
+二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用.
+Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
+
+<h3 id="具体实现">具体实现:</h3>
+
+<ol>
+<li>使用<code>ZuulController</code>(<code>ServletWrappingController</code>的子类)封装<code>ZuulServlet</code>实例, 处理从<code>DispatcherServlet</code>进来的请求.</li>
+<li><code>ZuulHandlerMapping</code>负责注册handler mapping, 将<code>Route</code>的<code>fullPath</code>的请求交由<code>ZuulController</code>处理.</li>
+<li>同时使用<code>ServletRegistrationBean</code>注册<code>ZuulServlet</code>, 默认使用<code>/zuul</code>作为urlMapping. 所有来自以<code>/zuul</code>开头的path的请求都会直接进入<code>ZuulServlet</code>, 不会进入<code>DispatcherServlet</code>.</li>
+</ol>
+
+<h4 id="使用注解">使用注解</h4>
+
+<ul>
+<li><p><code>@EnableZuulProxy</code>引入了<code>ZuulProxyMarkerConfiguration</code>, <code>ZuulProxyMarkerConfiguration</code>只做了一件事, 实例化了内部类<code>Marker</code>.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
+<span class="kd">public</span> <span class="nf">class</span> <span class="n">ZuulProxyMarkerConfiguration</span> <span class="p">{</span>
+    <span class="nd">@Bean</span>
+    <span class="kd">public</span> <span class="nf">Marker</span> <span class="n">zuulProxyMarkerBean</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Marker</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kd">class</span> <span class="nf">Marker</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div></li>
+
+<li><p><code>@EnableZuulServer</code>引入了<code>ZuulServerMarkerConfiguration</code>, <code>ZuulServerMarkerConfiguration</code>也只做了一件事: 实例化了内部类<code>Marker</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
+<span class="kd">public</span> <span class="nf">class</span> <span class="n">ZuulServerMarkerConfiguration</span> <span class="p">{</span>
+    <span class="nd">@Bean</span>
+    <span class="kd">public</span> <span class="nf">Marker</span> <span class="n">zuulServerMarkerBean</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Marker</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kd">class</span> <span class="nf">Marker</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+
+<h4 id="enableautoconfiguration">EnableAutoConfiguration</h4>
+
+<p>项目中使用<code>@EnableAutoConfiguration</code>注解, 开启Spring上下文对象的自动配置功能, 尝试去猜测和实例化你<strong>可能需要的</strong>bean.</p>
+
+<p>这个功能是基于classPath来完成的. 比如: 项目中引用了<code>tomcat-embedded.jar</code>, 你可能需要一个<code>TomcatEmbeddedServletContainerFactory</code>实例, 除非定义了自己的<code>EmbeddedServletContainerFactory</code>实例.</p>
+
+<p>我们来接着看, 在<code>spring-cloud-netflix-core</code>的<code>spring.factories</code>中的<code>org.springframework.boot.autoconfigure.EnableAutoConfiguration</code>实现中我们可以找到<code>org.springframework.cloud.netflix.zuul.ZuulProxyAutoConfiguration</code>和<code>org.springframework.cloud.netflix.zuul.ZuulServerAutoConfiguration</code></p>
+
+<ul>
+<li><p>ZuulServerAutoConfiguration
+它的初始化条件有两个:</p>
+
+<ul>
+<li><code>@ConditionalOnClass(ZuulServlet.class)</code>指定classpath中需要有<code>ZuulServlet.class</code>. 这个servlet负责对所有进入Zuul server的请求以及配置应用指定的<code>preRoute</code>, <code>route</code>, <code>postRoute</code>和<code>error</code>.</li>
+<li><code>@ConditionalOnBean(ZuulServerMarkerConfiguration.Marker.class)</code> 与<code>@EnableZuulServer</code>注解呼应.</li>
+</ul>
+
+<p>​<code>java
+@Configuration
+@EnableConfigurationProperties({ ZuulProperties.class })
+@ConditionalOnClass(ZuulServlet.class)
+@ConditionalOnBean(ZuulServerMarkerConfiguration.Marker.class)
+// Make sure to get the ServerProperties from the same place as a normal web app would
+@Import(ServerPropertiesAutoConfiguration.class)
+public class ZuulServerAutoConfiguration {
+    ...
+}
+​</code></p></li>
+
+<li><p>ZuulProxyAutoConfiguration
+它有一个初始化的条件<code>@ConditionalOnBean(ZuulProxyMarkerConfiguration.Marker.class)</code>, 就是上下文中需要有<code>ZuulProxyMarkerConfiguration.Marker</code>这个内部类的bean. 与<code>@EnableZuulProxy</code>注解呼应.</p>
+
+<p>初始化包括内置的filter, 以及Discovery, Ribbon等的初始化.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
+<span class="nd">@Import</span><span class="p">({</span> <span class="n">RibbonCommandFactoryConfiguration</span><span class="p">.</span><span class="na">RestClientRibbonConfiguration</span><span class="p">.</span><span class="na">class</span><span class="p">,</span>
+        <span class="n">RibbonCommandFactoryConfiguration</span><span class="p">.</span><span class="na">OkHttpRibbonConfiguration</span><span class="p">.</span><span class="na">class</span><span class="p">,</span>
+        <span class="n">RibbonCommandFactoryConfiguration</span><span class="p">.</span><span class="na">HttpClientRibbonConfiguration</span><span class="p">.</span><span class="na">class</span> <span class="p">})</span>
+<span class="nd">@ConditionalOnBean</span><span class="p">(</span><span class="n">ZuulProxyMarkerConfiguration</span><span class="p">.</span><span class="na">Marker</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<span class="kd">public</span> <span class="nf">class</span> <span class="n">ZuulProxyAutoConfiguration</span> <span class="nf">extends</span> <span class="n">ZuulServerAutoConfiguration</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>​</p></li>
+</ul>
+
+<h5 id="zuulserverautoconfiguration-详解">ZuulServerAutoConfiguration 详解</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">//声明配置
+</span><span class="c1"></span><span class="nd">@Configuration</span>
+<span class="c1">//配置ZuulProperties实例
+</span><span class="c1"></span><span class="nd">@EnableConfigurationProperties</span><span class="p">({</span> <span class="n">ZuulProperties</span><span class="p">.</span><span class="na">class</span> <span class="p">})</span>
+<span class="c1">//条件1 存在ZuulServlet.class
+</span><span class="c1"></span><span class="nd">@ConditionalOnClass</span><span class="p">(</span><span class="n">ZuulServlet</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<span class="c1">//条件2 存在ZuulServerMarkerConfiguration.Marker.class bean, 即应用使用@EnableZuulServer注解
+</span><span class="c1"></span><span class="nd">@ConditionalOnBean</span><span class="p">(</span><span class="n">ZuulServerMarkerConfiguration</span><span class="p">.</span><span class="na">Marker</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<span class="c1">//配置ServerProperties实例
+</span><span class="c1">// Make sure to get the ServerProperties from the same place as a normal web app would
+</span><span class="c1"></span><span class="nd">@Import</span><span class="p">(</span><span class="n">ServerPropertiesAutoConfiguration</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<span class="kd">public</span> <span class="nf">class</span> <span class="n">ZuulServerAutoConfiguration</span> <span class="p">{</span>
+
+	<span class="nd">@Autowired</span>
+	<span class="kd">protected</span> <span class="nf">ZuulProperties</span> <span class="n">zuulProperties</span><span class="p">;</span>
+
+	<span class="nd">@Autowired</span>
+	<span class="kd">protected</span> <span class="nf">ServerProperties</span> <span class="n">server</span><span class="p">;</span>
+
+	<span class="nd">@Autowired</span><span class="p">(</span><span class="n">required</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span>
+	<span class="kd">private</span> <span class="nf">ErrorController</span> <span class="n">errorController</span><span class="p">;</span>
+
+	<span class="nd">@Bean</span>
+	<span class="kd">public</span> <span class="nf">HasFeatures</span> <span class="n">zuulFeature</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">HasFeatures</span><span class="p">.</span><span class="na">namedFeature</span><span class="p">(</span><span class="s">&#34;Zuul (Simple)&#34;</span><span class="p">,</span> <span class="n">ZuulServerAutoConfiguration</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+	<span class="p">}</span>
+
+  <span class="c1">//复合结构的RouteLocator
+</span><span class="c1"></span>	<span class="nd">@Bean</span>
+	<span class="nd">@Primary</span>
+	<span class="kd">public</span> <span class="nf">CompositeRouteLocator</span> <span class="n">primaryRouteLocator</span><span class="p">(</span>
+			<span class="n">Collection</span><span class="o">&lt;</span><span class="n">RouteLocator</span><span class="o">&gt;</span> <span class="nf">routeLocators</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">CompositeRouteLocator</span><span class="p">(</span><span class="n">routeLocators</span><span class="p">);</span>
+	<span class="p">}</span>
+
+  <span class="c1">//没有SimpleRouteLocator.class的bean时, 使用zuulProperties实例化一个SimpleRouteLocator实例.
+</span><span class="c1"></span>	<span class="nd">@Bean</span>
+	<span class="nd">@ConditionalOnMissingBean</span><span class="p">(</span><span class="n">SimpleRouteLocator</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+	<span class="kd">public</span> <span class="nf">SimpleRouteLocator</span> <span class="n">simpleRouteLocator</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">SimpleRouteLocator</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">server</span><span class="p">.</span><span class="na">getServletPrefix</span><span class="p">(),</span>
+				<span class="k">this</span><span class="p">.</span><span class="na">zuulProperties</span><span class="p">);</span>
+	<span class="p">}</span>
+  
+  <span class="c1">//zuulController, 包装了一个ZuulServlet类型的servlet, 实现对ZuulServlet类型的servlet的初始化.
+</span><span class="c1"></span>	<span class="nd">@Bean</span>
+	<span class="kd">public</span> <span class="nf">ZuulController</span> <span class="n">zuulController</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">ZuulController</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="nd">@Bean</span>
+	<span class="kd">public</span> <span class="nf">ZuulHandlerMapping</span> <span class="n">zuulHandlerMapping</span><span class="p">(</span><span class="n">RouteLocator</span> <span class="nf">routes</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">ZuulHandlerMapping</span> <span class="nf">mapping</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZuulHandlerMapping</span><span class="p">(</span><span class="n">routes</span><span class="p">,</span> <span class="n">zuulController</span><span class="p">());</span>
+		<span class="n">mapping</span><span class="p">.</span><span class="na">setErrorController</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">errorController</span><span class="p">);</span>
+		<span class="k">return</span> <span class="n">mapping</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="nd">@Bean</span>
+	<span class="kd">public</span> <span class="nf">ApplicationListener</span><span class="o">&lt;</span><span class="n">ApplicationEvent</span><span class="o">&gt;</span> <span class="nf">zuulRefreshRoutesListener</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">ZuulRefreshListener</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="nd">@Bean</span>
+	<span class="nd">@ConditionalOnMissingBean</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;zuulServlet&#34;</span><span class="p">)</span>
+	<span class="kd">public</span> <span class="nf">ServletRegistrationBean</span> <span class="n">zuulServlet</span><span class="p">()</span> <span class="p">{</span>
+		<span class="n">ServletRegistrationBean</span> <span class="nf">servlet</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServletRegistrationBean</span><span class="p">(</span><span class="k">new</span> <span class="n">ZuulServlet</span><span class="p">(),</span>
+				<span class="k">this</span><span class="p">.</span><span class="na">zuulProperties</span><span class="p">.</span><span class="na">getServletPattern</span><span class="p">());</span>
+		<span class="c1">// The whole point of exposing this servlet is to provide a route that doesn&#39;t
+</span><span class="c1"></span>		<span class="c1">// buffer requests.
+</span><span class="c1"></span>		<span class="n">servlet</span><span class="p">.</span><span class="na">addInitParameter</span><span class="p">(</span><span class="s">&#34;buffer-requests&#34;</span><span class="p">,</span> <span class="s">&#34;false&#34;</span><span class="p">);</span>
+		<span class="k">return</span> <span class="n">servlet</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">// pre filters
+</span><span class="c1"></span>
+	<span class="nd">@Bean</span>
+	<span class="kd">public</span> <span class="nf">ServletDetectionFilter</span> <span class="n">servletDetectionFilter</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">ServletDetectionFilter</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="nd">@Bean</span>
+	<span class="kd">public</span> <span class="nf">FormBodyWrapperFilter</span> <span class="n">formBodyWrapperFilter</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">FormBodyWrapperFilter</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="nd">@Bean</span>
+	<span class="kd">public</span> <span class="nf">DebugFilter</span> <span class="n">debugFilter</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">DebugFilter</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="nd">@Bean</span>
+	<span class="kd">public</span> <span class="nf">Servlet30WrapperFilter</span> <span class="n">servlet30WrapperFilter</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">Servlet30WrapperFilter</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="c1">// post filters
+</span><span class="c1"></span>
+	<span class="nd">@Bean</span>
+	<span class="kd">public</span> <span class="nf">SendResponseFilter</span> <span class="n">sendResponseFilter</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">SendResponseFilter</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="nd">@Bean</span>
+	<span class="kd">public</span> <span class="nf">SendErrorFilter</span> <span class="n">sendErrorFilter</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">SendErrorFilter</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="nd">@Bean</span>
+	<span class="kd">public</span> <span class="nf">SendForwardFilter</span> <span class="n">sendForwardFilter</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">SendForwardFilter</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="nd">@Bean</span>
+	<span class="nd">@ConditionalOnProperty</span><span class="p">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&#34;zuul.ribbon.eager-load.enabled&#34;</span><span class="p">,</span> <span class="n">matchIfMissing</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span>
+	<span class="kd">public</span> <span class="nf">ZuulRouteApplicationContextInitializer</span> <span class="n">zuulRoutesApplicationContextInitiazer</span><span class="p">(</span>
+			<span class="n">SpringClientFactory</span> <span class="nf">springClientFactory</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">ZuulRouteApplicationContextInitializer</span><span class="p">(</span><span class="n">springClientFactory</span><span class="p">,</span>
+				<span class="n">zuulProperties</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="nd">@Configuration</span>
+	<span class="kd">protected</span> <span class="nf">static</span> <span class="kd">class</span> <span class="nf">ZuulFilterConfiguration</span> <span class="p">{</span>
+
+		<span class="nd">@Autowired</span>
+		<span class="kd">private</span> <span class="nf">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">ZuulFilter</span><span class="o">&gt;</span> <span class="nf">filters</span><span class="p">;</span>
+
+		<span class="nd">@Bean</span>
+		<span class="kd">public</span> <span class="nf">ZuulFilterInitializer</span> <span class="n">zuulFilterInitializer</span><span class="p">(</span>
+				<span class="n">CounterFactory</span> <span class="nf">counterFactory</span><span class="p">,</span> <span class="n">TracerFactory</span> <span class="nf">tracerFactory</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">FilterLoader</span> <span class="nf">filterLoader</span> <span class="o">=</span> <span class="n">FilterLoader</span><span class="p">.</span><span class="na">getInstance</span><span class="p">();</span>
+			<span class="n">FilterRegistry</span> <span class="nf">filterRegistry</span> <span class="o">=</span> <span class="n">FilterRegistry</span><span class="p">.</span><span class="na">instance</span><span class="p">();</span>
+			<span class="k">return</span> <span class="k">new</span> <span class="n">ZuulFilterInitializer</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">filters</span><span class="p">,</span> <span class="n">counterFactory</span><span class="p">,</span> <span class="n">tracerFactory</span><span class="p">,</span> <span class="n">filterLoader</span><span class="p">,</span> <span class="n">filterRegistry</span><span class="p">);</span>
+		<span class="p">}</span>
+
+	<span class="p">}</span>
+
+	<span class="nd">@Configuration</span>
+	<span class="nd">@ConditionalOnClass</span><span class="p">(</span><span class="n">CounterService</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+	<span class="kd">protected</span> <span class="nf">static</span> <span class="kd">class</span> <span class="nf">ZuulCounterFactoryConfiguration</span> <span class="p">{</span>
+
+		<span class="nd">@Bean</span>
+		<span class="nd">@ConditionalOnBean</span><span class="p">(</span><span class="n">CounterService</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+		<span class="kd">public</span> <span class="nf">CounterFactory</span> <span class="n">counterFactory</span><span class="p">(</span><span class="n">CounterService</span> <span class="nf">counterService</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="k">new</span> <span class="n">DefaultCounterFactory</span><span class="p">(</span><span class="n">counterService</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="nd">@Configuration</span>
+	<span class="kd">protected</span> <span class="nf">static</span> <span class="kd">class</span> <span class="nf">ZuulMetricsConfiguration</span> <span class="p">{</span>
+
+		<span class="nd">@Bean</span>
+		<span class="nd">@ConditionalOnMissingBean</span><span class="p">(</span><span class="n">CounterFactory</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+		<span class="kd">public</span> <span class="nf">CounterFactory</span> <span class="n">counterFactory</span><span class="p">()</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="k">new</span> <span class="n">EmptyCounterFactory</span><span class="p">();</span>
+		<span class="p">}</span>
+
+		<span class="nd">@ConditionalOnMissingBean</span><span class="p">(</span><span class="n">TracerFactory</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+		<span class="nd">@Bean</span>
+		<span class="kd">public</span> <span class="nf">TracerFactory</span> <span class="n">tracerFactory</span><span class="p">()</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="k">new</span> <span class="n">EmptyTracerFactory</span><span class="p">();</span>
+		<span class="p">}</span>
+
+	<span class="p">}</span>
+
+	<span class="kd">private</span> <span class="nf">static</span> <span class="kd">class</span> <span class="nf">ZuulRefreshListener</span>
+			<span class="kd">implements</span> <span class="nf">ApplicationListener</span><span class="o">&lt;</span><span class="n">ApplicationEvent</span><span class="o">&gt;</span> <span class="p">{</span>
+
+		<span class="nd">@Autowired</span>
+		<span class="kd">private</span> <span class="nf">ZuulHandlerMapping</span> <span class="n">zuulHandlerMapping</span><span class="p">;</span>
+
+		<span class="kd">private</span> <span class="nf">HeartbeatMonitor</span> <span class="n">heartbeatMonitor</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HeartbeatMonitor</span><span class="p">();</span>
+
+		<span class="nd">@Override</span>
+		<span class="kd">public</span> <span class="nf">void</span> <span class="n">onApplicationEvent</span><span class="p">(</span><span class="n">ApplicationEvent</span> <span class="nf">event</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">event</span> <span class="nf">instanceof</span> <span class="n">ContextRefreshedEvent</span>
+					<span class="o">||</span> <span class="n">event</span> <span class="nf">instanceof</span> <span class="n">RefreshScopeRefreshedEvent</span>
+					<span class="o">||</span> <span class="n">event</span> <span class="nf">instanceof</span> <span class="n">RoutesRefreshedEvent</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">this</span><span class="p">.</span><span class="na">zuulHandlerMapping</span><span class="p">.</span><span class="na">setDirty</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+			<span class="p">}</span>
+			<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">event</span> <span class="nf">instanceof</span> <span class="n">HeartbeatEvent</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">heartbeatMonitor</span><span class="p">.</span><span class="na">update</span><span class="p">(((</span><span class="n">HeartbeatEvent</span><span class="p">)</span> <span class="n">event</span><span class="p">).</span><span class="na">getValue</span><span class="p">()))</span> <span class="p">{</span>
+					<span class="k">this</span><span class="p">.</span><span class="na">zuulHandlerMapping</span><span class="p">.</span><span class="na">setDirty</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+	<span class="p">}</span>
+
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h5 id="zuulproxyautoconfiguration-详解">ZuulProxyAutoConfiguration 详解</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">​```java
+//声明配置
+@Configuration
+//引入RibbonCommandFactory配置
+@Import({ RibbonCommandFactoryConfiguration.RestClientRibbonConfiguration.class,
+        RibbonCommandFactoryConfiguration.OkHttpRibbonConfiguration.class,
+        RibbonCommandFactoryConfiguration.HttpClientRibbonConfiguration.class,
+        HttpClientConfiguration.class })
+//配置生效条件
+@ConditionalOnBean(ZuulProxyMarkerConfiguration.Marker.class)
+public class ZuulProxyAutoConfiguration extends ZuulServerAutoConfiguration {
+
+    @SuppressWarnings(&#34;rawtypes&#34;)
+    @Autowired(required = false)
+    private List&lt;RibbonRequestCustomizer&gt; requestCustomizers = Collections.emptyList();
+  //网关服务注册实例信息
+    @Autowired(required = false)
+    private Registration registration;
+  //服务发现客户端
+    @Autowired
+    private DiscoveryClient discovery;
+  //serviceId和路由的映射逻辑, 默认为相同
+    @Autowired
+    private ServiceRouteMapper serviceRouteMapper;
+
+    @Override
+    public HasFeatures zuulFeature() {
+        return HasFeatures.namedFeature(&#34;Zuul (Discovery)&#34;,
+                ZuulProxyAutoConfiguration.class);
+    }
+
+  //静态和动态路由寻址: 静态从配置文件获取, 动态通过服务发现客户端完成. 后者优先级更高
+    @Bean
+    @ConditionalOnMissingBean(DiscoveryClientRouteLocator.class)
+    public DiscoveryClientRouteLocator discoveryRouteLocator() {
+        return new DiscoveryClientRouteLocator(this.server.getServletPrefix(),
+                this.discovery, this.zuulProperties, this.serviceRouteMapper, this.registration);
+    }
+
+  //装饰过滤器
+    // pre filters
+    @Bean
+    public PreDecorationFilter preDecorationFilter(RouteLocator routeLocator,
+            ProxyRequestHelper proxyRequestHelper) {
+        return new PreDecorationFilter(routeLocator, this.server.getServletPrefix(),
+                this.zuulProperties, proxyRequestHelper);
+    }
+
+  //基于Ribbon路由过滤器
+    // route filters
+    @Bean
+    public RibbonRoutingFilter ribbonRoutingFilter(ProxyRequestHelper helper,
+            RibbonCommandFactory&lt;?&gt; ribbonCommandFactory) {
+        RibbonRoutingFilter filter = new RibbonRoutingFilter(helper, ribbonCommandFactory,
+                this.requestCustomizers);
+        return filter;
+    }
+
+  //基于host的路由过滤器
+    @Bean
+    @ConditionalOnMissingBean({SimpleHostRoutingFilter.class, CloseableHttpClient.class})
+    public SimpleHostRoutingFilter simpleHostRoutingFilter(ProxyRequestHelper helper,
+            ZuulProperties zuulProperties,
+            ApacheHttpClientConnectionManagerFactory connectionManagerFactory,
+            ApacheHttpClientFactory httpClientFactory) {
+        return new SimpleHostRoutingFilter(helper, zuulProperties,
+                connectionManagerFactory, httpClientFactory);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean({SimpleHostRoutingFilter.class})
+    public SimpleHostRoutingFilter simpleHostRoutingFilter2(ProxyRequestHelper helper,
+                                                           ZuulProperties zuulProperties,
+                                                           CloseableHttpClient httpClient) {
+        return new SimpleHostRoutingFilter(helper, zuulProperties,
+                httpClient);
+    }
+
+  //服务发现寻址刷新监听器
+    @Bean
+    public ApplicationListener&lt;ApplicationEvent&gt; zuulDiscoveryRefreshRoutesListener() {
+        return new ZuulDiscoveryRefreshListener();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ServiceRouteMapper.class)
+    public ServiceRouteMapper serviceRouteMapper() {
+        return new SimpleServiceRouteMapper();
+    }
+
+    @Configuration
+    @ConditionalOnMissingClass(&#34;org.springframework.boot.actuate.endpoint.Endpoint&#34;)
+    protected static class NoActuatorConfiguration {
+
+        @Bean
+        public ProxyRequestHelper proxyRequestHelper(ZuulProperties zuulProperties) {
+            ProxyRequestHelper helper = new ProxyRequestHelper();
+            helper.setIgnoredHeaders(zuulProperties.getIgnoredHeaders());
+            helper.setTraceRequestBody(zuulProperties.isTraceRequestBody());
+            return helper;
+        }
+
+    }
+
+    @Configuration
+    @ConditionalOnClass(Endpoint.class)
+    protected static class EndpointConfiguration {
+
+        @Autowired(required = false)
+        private TraceRepository traces;
+
+        @ConditionalOnEnabledEndpoint(&#34;routes&#34;)
+        @Bean
+        public RoutesEndpoint routesEndpoint(RouteLocator routeLocator) {
+            return new RoutesEndpoint(routeLocator);
+        }
+
+        @ConditionalOnEnabledEndpoint(&#34;routes&#34;)
+        @Bean
+        public RoutesMvcEndpoint routesMvcEndpoint(RouteLocator routeLocator,
+                RoutesEndpoint endpoint) {
+            return new RoutesMvcEndpoint(endpoint, routeLocator);
+        }
+
+        @ConditionalOnEnabledEndpoint(&#34;filters&#34;)
+        @Bean
+        public FiltersEndpoint filtersEndpoint() {
+            FilterRegistry filterRegistry = FilterRegistry.instance();
+            return new FiltersEndpoint(filterRegistry);
+        }
+
+        @Bean
+        public ProxyRequestHelper proxyRequestHelper(ZuulProperties zuulProperties) {
+            TraceProxyRequestHelper helper = new TraceProxyRequestHelper();
+            if (this.traces != null) {
+                helper.setTraces(this.traces);
+            }
+            helper.setIgnoredHeaders(zuulProperties.getIgnoredHeaders());
+            helper.setTraceRequestBody(zuulProperties.isTraceRequestBody());
+            return helper;
+        }
+    }
+
+    private static class ZuulDiscoveryRefreshListener
+            implements ApplicationListener&lt;ApplicationEvent&gt; {
+
+        private HeartbeatMonitor monitor = new HeartbeatMonitor();
+
+        @Autowired
+        private ZuulHandlerMapping zuulHandlerMapping;
+
+        @Override
+        public void onApplicationEvent(ApplicationEvent event) {
+            if (event instanceof InstanceRegisteredEvent) {
+                reset();
+            }
+            else if (event instanceof ParentHeartbeatEvent) {
+                ParentHeartbeatEvent e = (ParentHeartbeatEvent) event;
+                resetIfNeeded(e.getValue());
+            }
+            else if (event instanceof HeartbeatEvent) {
+                HeartbeatEvent e = (HeartbeatEvent) event;
+                resetIfNeeded(e.getValue());
+            }
+
+        }
+
+        private void resetIfNeeded(Object value) {
+            if (this.monitor.update(value)) {
+                reset();
+            }
+        }
+
+        private void reset() {
+            this.zuulHandlerMapping.setDirty(true);
+        }
+
+    }
+
+}
+​```</pre></td></tr></table>
+</div>
+</div>
+<h2 id="配置项">配置项</h2>
+
+<p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15192869619623.jpg" alt="" /></p>
+
+<h4 id="zuul-servletpath">zuul.servletPath</h4>
+
+<p>默认为<em>/zuul</em>, 注册ZuulServlet的时候作为urlMapping使用. 即所有来自以*/zuul*开头的path都会由ZuulServlet处理.</p>
+
+<h4 id="zuul-ignoredpatterns">zuul.ignoredPatterns</h4>
+
+<p>Zuul使用<code>ZuulController</code>封装了<code>ZuulServlet</code>. 所有进入Zuul的请求的入口都是<code>ZuulController</code>.
+<code>ZuulController</code>的<code>ZuulHandlerMapping</code>默认把<code>zuul.routes.[ITEM].path</code>的请求交给<code>ZuulServlet</code>处理. 如果找不到对应的path的route, 则会走其他的<code>DispatcherServlet</code></p>
+
+<p><code>zuul.ignoredPatterns</code>作用就是进入Zuul的请求, 只要match都会直接交由其他的<code>DispatcherServlet</code>处理, 而不需要先检查是否有对应path的route.</p>
+
+<p>&hellip;</p>
+
+<h2 id="过滤器">过滤器</h2>
+
+<p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15192707341614.jpg" alt="" /></p>
+
+<h3 id="zuulserverautoconfiguration">ZuulServerAutoConfiguration</h3>
+
+<h4 id="servletdetectionfilter">ServletDetectionFilter</h4>
+
+<p>检查请求的入口是<code>DispatcherServlet</code>还是<code>ZuulServlet</code>
+如果是<code>DispatcherServlet</code>进来的请求, 将<code>RequestContext</code>中的属性<code>isDispatcherServletRequest</code>设置为ture.</p>
+
+<p>检查的方法是判断<code>RequestContext</code>中的请求类型是否为<code>HttpServletRequestWrapper</code>类型, 因为<code>ZuulServlet</code>进来的请求会使用<code>HttpServletRequestWrapper</code>进行再次封装; 同时检查请求中中是否有<code>DispatcherServlet.CONTEXT</code>属性, 因为<code>DispatcherServlet</code>进来的请求会带有该属性.</p>
+
+<h4 id="formbodywrapperfilter">FormBodyWrapperFilter</h4>
+
+<p>为下游的服务解析表单数据, 并重新编码. 只针对multipart/form-data和application/x-www-form-urlencoded类型的请求.</p>
+
+<h4 id="debugfilter">DebugFilter</h4>
+
+<p>通过设置<code>zuul.debug.parameter</code>属性控制, 默认启用.
+执行时将上下文中的<code>debugRouting</code>和<code>debugRequest</code>设置为<code>true</code></p>
+
+<h4 id="servlet30wrapperfilter">Servlet30WrapperFilter</h4>
+
+<p>使用<code>Servlet30RequestWrapper</code>封装请求, 强制启用.</p>
+
+<h4 id="sendresponsefilter">SendResponseFilter</h4>
+
+<p>后执行的过滤器, 负责将代理请求的响应写入当前的请求的响应中.</p>
+
+<h3 id="zuulproxyautoconfiguration">ZuulProxyAutoConfiguration</h3>
+
+<h4 id="predecorationfilter">PreDecorationFilter</h4>
+
+<p>Pre类型的过滤器, 通过提供的RouteLocator决定将如何请求路由到哪里和如何路由. 同时为下游请求添加多个与代理相关的头信息. 当<code>RequestContext</code>中不存在<code>FORWARD_TO_KEY</code>和<code>SERVICE_ID_KEY</code>信息时生效.</p>
+
+<p>将路由判断结果写入<code>routeHost</code>, <code>FORWARD_TO_KEY</code>或者<code>SERVICE_ID_KEY</code>.</p>
+
+<h4 id="ribbonroutingfilter">RibbonRoutingFilter</h4>
+
+<p>Route类型的过滤器, 当<code>RequestContext</code>中<code>routeHost</code>为空, 且有<code>serviceId</code>值时生效.</p>
+
+<p>使用<code>RequestContext</code>构建<code>RibbonCommandContext</code>, 通过<code>RibbonCommandFactory</code>进而创建<code>RibbonCommand</code>并执行. 最后通过<code>ProxyRequestHelper</code>将响应结果记录到<code>RequestContext</code>中.</p>
+
+<h4 id="simplehostroutingfilter">SimpleHostRoutingFilter</h4>
+
+<p>Route类型的过滤器, 当<code>RequestContext</code>中的<code>routeHost</code>不为空时生效. 使用Apache的HttpClient发送请求</p>
+
+<h2 id="监听器">监听器</h2>
+
+<h4 id="zuulrefreshlistener">ZuulRefreshListener</h4>
+
+<p>通过监听应用程序事件(<code>ContextRefreshedEvent</code>, <code>RefreshScopeRefreshedEvent</code>, <code>RoutesRefreshedEvent</code>和<code>RoutesRefreshedEvent</code>)更新handler mapping的注册信息. 前两个事件在<code>ContextRefresh</code>时发出; 第三个是通过JMX重置路由时发出(参考<code>RoutesMvcEndpoint</code>); 最后一个是<code>DiscoveryClient</code>每次拉取服务注册信息后发出.</p>
+
+<p>收到事件后, 将<code>ZuulHandlerMapping</code>的<code>dirty</code>变量置为<code>true</code>, 当下次请求进来时, 检查到<code>dirty</code>为<code>true</code>, 就会重新注册url mapping.</p>
+
+<h4 id="zuuldiscoveryrefreshlistener">ZuulDiscoveryRefreshListener</h4>
+
+<p>监听应用程序事件(<code>InstanceRegisteredEvent</code>, <code>ParentHeartbeatEvent</code>和<code>HeartbeatEvent</code>)更新handler mapping的注册信息.</p>
+
+<p><code>InstanceRegisteredEvent</code>当前路由服务实例完成服务注册后发出的事件.
+<code>ParentHeartbeatEvent</code>当<code>DiscoveryClient</code>定位到*Config Server*服务的时候有<code>bootstrapContext</code>发给应用程序上下文的事件.
+<code>HeartbeatEvent</code>由<code>DiscoveryClient</code>每次拉取服务注册信息后发出.</p>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Addo Zhang</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-02-22
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/spring-cloud/">Spring Cloud</a>
+          <a href="/tags/zuul/">Zuul</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/install-minishift-on-mac/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">MacOS安装minishift</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/spring-cloud-service-registry-via-eureka/">
+            <span class="next-text nav-default">Spring Cloud - Eureka服务注册</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'addozhang';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:duwasai@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Addo Zhang</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>elasticsearch on 乱世浮生</title>
+    <link>http://localhost:1313/tags/elasticsearch/</link>
+    <description>Recent content in elasticsearch on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 06 Nov 2018 09:24:24 +0800</lastBuildDate>
+    
+	<atom:link href="http://localhost:1313/tags/elasticsearch/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Nginx实现Elasticsearch的HTTP基本认证</title>
+      <link>http://localhost:1313/elasticsearch-http-basic-authentication-via-nginx/</link>
+      <pubDate>Tue, 06 Nov 2018 09:24:24 +0800</pubDate>
+      
+      <guid>http://localhost:1313/elasticsearch-http-basic-authentication-via-nginx/</guid>
+      <description>Elasticssearch的HTTP基本认证实现有两种方案: x-pack和nginx反向代理. 前者收费, 后者不太适合生产使用. 如果仅仅是开</description>
+    </item>
+    
+  </channel>
+</rss>

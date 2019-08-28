@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>恰好一次发送和事务消息(译) - 乱世浮生</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Addo Zhang" /><meta name="description" content="Kafka提供“至少一次”交付语义, 这意味着发送的消息可以传送一次或多次. 人们真正想要的是“一次”语义,因为重复的消息没有被传递。 普遍地发声" /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with even 4.0.0" />
+
+
+<link rel="canonical" href="http://localhost:1313/kafka-exactly-once-delivery-and-transactional-messaging/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="恰好一次发送和事务消息(译)" />
+<meta property="og:description" content="Kafka提供“至少一次”交付语义, 这意味着发送的消息可以传送一次或多次. 人们真正想要的是“一次”语义,因为重复的消息没有被传递。 普遍地发声" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/kafka-exactly-once-delivery-and-transactional-messaging/" />
+<meta property="article:published_time" content="2017-09-19T19:13:26+08:00" />
+<meta property="article:modified_time" content="2017-09-19T19:13:26+08:00" />
+<meta itemprop="name" content="恰好一次发送和事务消息(译)">
+<meta itemprop="description" content="Kafka提供“至少一次”交付语义, 这意味着发送的消息可以传送一次或多次. 人们真正想要的是“一次”语义,因为重复的消息没有被传递。 普遍地发声">
+
+
+<meta itemprop="datePublished" content="2017-09-19T19:13:26&#43;08:00" />
+<meta itemprop="dateModified" content="2017-09-19T19:13:26&#43;08:00" />
+<meta itemprop="wordCount" content="6926">
+
+
+
+<meta itemprop="keywords" content="Kafka," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="恰好一次发送和事务消息(译)"/>
+<meta name="twitter:description" content="Kafka提供“至少一次”交付语义, 这意味着发送的消息可以传送一次或多次. 人们真正想要的是“一次”语义,因为重复的消息没有被传递。 普遍地发声"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">乱世浮生</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">乱世浮生</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">恰好一次发送和事务消息(译)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-09-19 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#producer-api改动">Producer API改动</a>
+<ul>
+<li><a href="#outofsequenceexception">OutOfSequenceException</a></li>
+<li><a href="#应用示例">应用示例</a></li>
+<li><a href="#新增配置">新增配置</a>
+<ul>
+<li><a href="#broker配置">Broker配置</a></li>
+<li><a href="#生产者配置">生产者配置</a></li>
+</ul></li>
+<li><a href="#消费者配置">消费者配置</a>
+<ul>
+<li><a href="#2">2</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#idempotent-producer">Idempotent Producer</a>
+<ul>
+<li><a href="#幂等生产者保障">幂等生产者保障</a></li>
+<li><a href="#事务保障">事务保障</a></li>
+</ul></li>
+<li><a href="#关键概念">关键概念</a></li>
+<li><a href="#数据流">数据流</a>
+<ul>
+<li><a href="#1-查找一个事务协调器-findcoordinatorrequest">1. 查找一个事务协调器 — FindCoordinatorRequest</a></li>
+<li><a href="#2-获取一个producer-id-initpidrequest">2. 获取一个Producer Id — InitPidRequest</a>
+<ul>
+<li><a href="#2-1当有指定transactionlid时">2.1当有指定TransactionlId时</a></li>
+<li><a href="#2-2当没有指定transactionalid">2.2当没有指定TransactionalId</a></li>
+</ul></li>
+<li><a href="#3-启动事务-begintransaction-api">3. 启动事务 — beginTransaction() API</a></li>
+<li><a href="#4-消费-转换-生产循环">4. 消费-转换-生产循环</a>
+<ul>
+<li><a href="#4-1-addpartitionstotxnrequest">4.1 AddPartitionsToTxnRequest</a></li>
+<li><a href="#4-2-producerequest">4.2 ProduceRequest</a></li>
+<li><a href="#4-3-addoffsetcommitstotxnrequest">4.3 AddOffsetCommitsToTxnRequest</a></li>
+<li><a href="#4-4-txnoffsetcommitrequest">4.4 TxnOffsetCommitRequest</a></li>
+</ul></li>
+<li><a href="#5-提交或者终结事务">5. 提交或者终结事务</a>
+<ul>
+<li><a href="#5-1-endtxnrquest">5.1 EndTxnRquest</a></li>
+<li><a href="#5-2-writetxnmarkerrequest">5.2 WriteTxnMarkerRequest</a></li>
+<li><a href="#5-3-writing-the-final-commit-or-abort-message">5.3 Writing the final Commit or Abort Message</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#简单的实现代码">简单的实现代码</a></li>
+<li><a href="#参考资料">参考资料</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>Kafka提供“至少一次”交付语义, 这意味着发送的消息可以传送一次或多次. 人们真正想要的是“一次”语义,因为重复的消息没有被传递。</p>
+
+<p>普遍地发声重复消息的情况有两种:</p>
+
+<ul>
+<li>如果客户端尝试向集群发送消息并获取网络错误, 则重试可能会导致重复. 如果在发送消息之前发生网络错误, 则不会发生重复. 但是, 如果在将消息附加到日志之后发生网络错误, 但在将响应发送给发件人之前, 发件人将不知道发生了什么. 唯一的选择是重试和冒险重复或放弃并声明消息丢失。</li>
+<li>如果客户端尝试向集群发送消息并获取网络错误, 则重试可能会导致重复. 如果在发送消息之前发生网络错误, 则不会发生重复. 但是, 如果在将消息附加到日志之后发生网络错误, 但在将响应发送给发件人之前, 发件人将不知道发生了什么. 唯一的选择是重试和冒险重复或放弃并声明消息丢失。</li>
+</ul>
+
+<p>第二种情况可以通过使用Kafka提供的偏移量由消费者处理. 他们可以将偏移量与其输出进行存储, 然后确保新消费者始终从最后存储的偏移量中提取. 或者, 他们可以使用偏移量作为一种关键字, 并使用它来对其输出的任何最终目标系统进行重复数据删除。</p>
+
+<h2 id="producer-api改动">Producer API改动</h2>
+
+<p><strong>KafkaProducer.java</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">interface</span> <span class="n">Producer</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="nf">extends</span> <span class="n">Closeable</span> <span class="p">{</span>
+   
+  <span class="cm">/**
+</span><span class="cm">   * Needs to be called before any of the other transaction methods. Assumes that
+</span><span class="cm">   * the transactional.id is specified in the producer configuration.
+</span><span class="cm">   *
+</span><span class="cm">   * This method does the following:
+</span><span class="cm">   *   1. Ensures any transactions initiated by previous instances of the producer
+</span><span class="cm">   *      are completed. If the previous instance had failed with a transaction in
+</span><span class="cm">   *      progress, it will be aborted. If the last transaction had begun completion,
+</span><span class="cm">   *      but not yet finished, this method awaits its completion.
+</span><span class="cm">   *   2. Gets the internal producer id and epoch, used in all future transactional
+</span><span class="cm">   *      messages issued by the producer.
+</span><span class="cm">   *
+</span><span class="cm">   * @throws IllegalStateException if the TransactionalId for the producer is not set
+</span><span class="cm">   *         in the configuration.
+</span><span class="cm">   */</span>
+  <span class="kt">void</span> <span class="nf">initTransactions</span><span class="p">()</span> <span class="kd">throws</span> <span class="nf">IllegalStateException</span><span class="p">;</span>
+   
+  <span class="cm">/**
+</span><span class="cm">   * Should be called before the start of each new transaction.
+</span><span class="cm">   *
+</span><span class="cm">   * @throws ProducerFencedException if another producer is with the same
+</span><span class="cm">   *         transactional.id is active.
+</span><span class="cm">   */</span>
+  <span class="kt">void</span> <span class="nf">beginTransaction</span><span class="p">()</span> <span class="kd">throws</span> <span class="nf">ProducerFencedException</span><span class="p">;</span>
+   
+  <span class="cm">/**
+</span><span class="cm">   * Sends a list of consumed offsets to the consumer group coordinator, and also marks
+</span><span class="cm">   * those offsets as part of the current transaction. These offsets will be considered
+</span><span class="cm">   * consumed only if the transaction is committed successfully.
+</span><span class="cm">   *
+</span><span class="cm">   * This method should be used when you need to batch consumed and produced messages
+</span><span class="cm">   * together, typically in a consume-transform-produce pattern.
+</span><span class="cm">   *
+</span><span class="cm">   * @throws ProducerFencedException if another producer is with the same
+</span><span class="cm">   *         transactional.id is active.
+</span><span class="cm">   */</span>
+  <span class="kt">void</span> <span class="nf">sendOffsetsToTransaction</span><span class="p">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">TopicPartition</span><span class="p">,</span> <span class="n">OffsetAndMetadata</span><span class="o">&gt;</span> <span class="nf">offsets</span><span class="p">,</span>
+                                <span class="n">String</span> <span class="nf">consumerGroupId</span><span class="p">)</span> <span class="kd">throws</span> <span class="nf">ProducerFencedException</span><span class="p">;</span>
+   
+  <span class="cm">/**
+</span><span class="cm">   * Commits the ongoing transaction.
+</span><span class="cm">   *
+</span><span class="cm">   * @throws ProducerFencedException if another producer is with the same
+</span><span class="cm">   *         transactional.id is active.
+</span><span class="cm">   */</span>
+  <span class="kt">void</span> <span class="nf">commitTransaction</span><span class="p">()</span> <span class="kd">throws</span> <span class="nf">ProducerFencedException</span><span class="p">;</span>
+   
+  <span class="cm">/**
+</span><span class="cm">   * Aborts the ongoing transaction.
+</span><span class="cm">   *
+</span><span class="cm">   * @throws ProducerFencedException if another producer is with the same
+</span><span class="cm">   *         transactional.id is active.
+</span><span class="cm"> 
+</span><span class="cm"> 
+</span><span class="cm">   */</span>
+  <span class="kt">void</span> <span class="nf">abortTransaction</span><span class="p">()</span> <span class="kd">throws</span> <span class="nf">ProducerFencedException</span><span class="p">;</span>
+ 
+ 
+  <span class="cm">/**
+</span><span class="cm">   * Send the given record asynchronously and return a future which will eventually contain the response information.
+</span><span class="cm">   *
+</span><span class="cm">   * @param record The record to send
+</span><span class="cm">   * @return A future which will eventually contain the response information
+</span><span class="cm">   *
+</span><span class="cm">   */</span>
+  <span class="kd">public</span> <span class="nf">Future</span><span class="o">&lt;</span><span class="n">RecordMetadata</span><span class="o">&gt;</span> <span class="nf">send</span><span class="p">(</span><span class="n">ProducerRecord</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="nf">record</span><span class="p">);</span>
+ 
+  <span class="cm">/**
+</span><span class="cm">   * Send a record and invoke the given callback when the record has been acknowledged by the server
+</span><span class="cm">   */</span>
+  <span class="kd">public</span> <span class="nf">Future</span><span class="o">&lt;</span><span class="n">RecordMetadata</span><span class="o">&gt;</span> <span class="nf">send</span><span class="p">(</span><span class="n">ProducerRecord</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="nf">record</span><span class="p">,</span> <span class="n">Callback</span> <span class="nf">callback</span><span class="p">);</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="outofsequenceexception">OutOfSequenceException</h3>
+
+<p>如果broker检测到数据丢失，生产者将抛出OutOfOrderSequenceException。 换句话说，如果它接收到大于其预期的序列的序列号。 未来将返回此异常，并传递给回调（如果有）。 这是一个致命的异常，新的Producer方法如send，beginTransaction，commitTransaction等将会抛出IlegalStateException。</p>
+
+<h3 id="应用示例">应用示例</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">class</span> <span class="n">KafkaTransactionsExample</span> <span class="p">{</span>
+  
+  <span class="kd">public</span> <span class="nf">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span> <span class="nf">args</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="n">KafkaConsumer</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="nf">consumer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KafkaConsumer</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">consumerConfig</span><span class="p">);</span>
+ 
+ 
+    <span class="c1">// Note that the ‘transactional.id’ configuration _must_ be specified in the
+</span><span class="c1"></span>    <span class="c1">// producer config in order to use transactions.
+</span><span class="c1"></span>    <span class="n">KafkaProducer</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="nf">producer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KafkaProducer</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">producerConfig</span><span class="p">);</span>
+ 
+    <span class="c1">// We need to initialize transactions once per producer instance. To use transactions,
+</span><span class="c1"></span>    <span class="c1">// it is assumed that the application id is specified in the config with the key
+</span><span class="c1"></span>    <span class="c1">// transactional.id.
+</span><span class="c1"></span>    <span class="c1">//
+</span><span class="c1"></span>    <span class="c1">// This method will recover or abort transactions initiated by previous instances of a
+</span><span class="c1"></span>    <span class="c1">// producer with the same app id. Any other transactional messages will report an error
+</span><span class="c1"></span>    <span class="c1">// if initialization was not performed.
+</span><span class="c1"></span>    <span class="c1">//
+</span><span class="c1"></span>    <span class="c1">// The response indicates success or failure. Some failures are irrecoverable and will
+</span><span class="c1"></span>    <span class="c1">// require a new producer  instance. See the documentation for TransactionMetadata for a
+</span><span class="c1"></span>    <span class="c1">// list of error codes.
+</span><span class="c1"></span>    <span class="n">producer</span><span class="p">.</span><span class="na">initTransactions</span><span class="p">();</span>
+     
+    <span class="k">while</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">ConsumerRecords</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="nf">records</span> <span class="o">=</span> <span class="n">consumer</span><span class="p">.</span><span class="na">poll</span><span class="p">(</span><span class="n">CONSUMER_POLL_TIMEOUT</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">records</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span> <span class="p">{</span>
+        <span class="c1">// Start a new transaction. This will begin the process of batching the consumed
+</span><span class="c1"></span>        <span class="c1">// records as well
+</span><span class="c1"></span>        <span class="c1">// as an records produced as a result of processing the input records.
+</span><span class="c1"></span>        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// We need to check the response to make sure that this producer is able to initiate
+</span><span class="c1"></span>        <span class="c1">// a new transaction.
+</span><span class="c1"></span>        <span class="n">producer</span><span class="p">.</span><span class="na">beginTransaction</span><span class="p">();</span>
+         
+        <span class="c1">// Process the input records and send them to the output topic(s).
+</span><span class="c1"></span>        <span class="n">List</span><span class="o">&lt;</span><span class="n">ProducerRecord</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">String</span><span class="o">&gt;&gt;</span> <span class="nf">outputRecords</span> <span class="o">=</span> <span class="n">processRecords</span><span class="p">(</span><span class="n">records</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">ProducerRecord</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="nf">outputRecord</span> <span class="o">:</span> <span class="n">outputRecords</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">producer</span><span class="p">.</span><span class="na">send</span><span class="p">(</span><span class="n">outputRecord</span><span class="p">);</span>
+        <span class="p">}</span>
+         
+        <span class="c1">// To ensure that the consumed and produced messages are batched, we need to commit
+</span><span class="c1"></span>        <span class="c1">// the offsets through
+</span><span class="c1"></span>        <span class="c1">// the producer and not the consumer.
+</span><span class="c1"></span>        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// If this returns an error, we should abort the transaction.
+</span><span class="c1"></span>         
+        <span class="n">sendOffsetsResult</span> <span class="o">=</span> <span class="n">producer</span><span class="p">.</span><span class="na">sendOffsetsToTransaction</span><span class="p">(</span><span class="n">getUncommittedOffsets</span><span class="p">());</span>
+         
+      
+        <span class="c1">// Now that we have consumed, processed, and produced a batch of messages, let&#39;s
+</span><span class="c1"></span>        <span class="c1">// commit the results.
+</span><span class="c1"></span>        <span class="c1">// If this does not report success, then the transaction will be rolled back.
+</span><span class="c1"></span>        <span class="n">producer</span><span class="p">.</span><span class="na">endTransaction</span><span class="p">();</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="新增配置">新增配置</h3>
+
+<h4 id="broker配置">Broker配置</h4>
+
+<table>
+<thead>
+<tr>
+<th>配置</th>
+<th>描述</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>transactional.id.timeout.ms</td>
+<td>事务协调器在主动过期生成器TransactionalId之前等待的最大时间（以ms为单位），而不从中接收任何事务状态更新。默认为604800000（7天）。 这允许定期的每周生产者工作来维护其ID。</td>
+</tr>
+
+<tr>
+<td>max.transaction.timeout.ms</td>
+<td>允许的最大的事务超时时间. 如果一个客户端的事务请求超出这个设置, broker会在InitPidRequest的时候返回一个InvalidTransactionTimeout. 这样可以防止客户端太大的超时，这可能会延迟消费者从包含在事务中的主题中读取消息. 默认值为900000（15分钟）。 这是在消息的交易需要发送的时间段内的保守上限。</td>
+</tr>
+
+<tr>
+<td>transaction.state.log.replication.factor</td>
+<td>事务状态主题(__transaction_state)的副本数, 默认为3</td>
+</tr>
+
+<tr>
+<td>transaction.state.log.num.partitions</td>
+<td>事务状态主题(__transaction_state)的的分区数, 默认为50</td>
+</tr>
+
+<tr>
+<td>transaction.state.log.min.isr</td>
+<td>事务状态主题的每个分区的最小数量的异步副本需要被视为联机的。 默认为2</td>
+</tr>
+
+<tr>
+<td>transaction.state.log.segment.bytes</td>
+<td>事务状态主题的段大小。默认值：104857600字节。100m</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="生产者配置">生产者配置</h4>
+
+<table>
+<thead>
+<tr>
+<th>配置</th>
+<th>描述</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>enable.idempotence</td>
+<td>是否启用幂等（默认情况下为false）。 如果禁用，生产者将不会在生成请求中设置PID字段，并且当前的生产者传递语义将生效。 请注意，必须启用幂等才能使用事务。当启用幂等时，我们强制执行acks = all，retries&gt; 1和max.inflight.requests.per.connection = 1。 没有这些配置的这些值，我们不能保证幂等。 如果这些设置未被应用程序显式覆盖，则在启用幂等时，生产者将设置acks = all，retries = Integer.MAX_VALUE和max.inflight.requests.per.connection = 1。</td>
+</tr>
+
+<tr>
+<td>transaction.timeout.ms</td>
+<td>在主动中止正在进行的事务之前，事务协调器将等待生产者的事务状态更新的最长时间（以ms为单位）。</td>
+</tr>
+
+<tr>
+<td>transactional.id</td>
+<td>用于事务传递的TransactionalId。 这使得可以跨越多个生产者会话的可靠性语义，因为它允许客户端保证在开始任何新事务之前使用相同的TransactionalId的事务已经完成。 如果没有提供TransactionalId，则生产者被限制为幂等传递。请注意，如果配置了TransactionalId，则必须启用enable.idempotence。默认值为空，这意味着无法使用事务。</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="消费者配置">消费者配置</h3>
+
+<table>
+<thead>
+<tr>
+<th>配置</th>
+<th>描述</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>isolation.level</td>
+<td>以下是可能的值（默认为read_uncommitted）：read_uncommitted：在偏移顺序中消费已提交和未提交的消息; read_committed：仅以偏移顺序消耗非事务性消息或已提交事务消息。 为了保持偏移顺序，该设置意味着我们必须缓冲消费者中的消息，直到我们看到给定事务中的所有消息。</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="2">2</h4>
+
+<h2 id="idempotent-producer">Idempotent Producer</h2>
+
+<h3 id="幂等生产者保障">幂等生产者保障</h3>
+
+<p>为了实现幂等生产者语义, 引入了<code>producer id</code>的概念, 下面称<code>PID</code>. 每个producer在初始化的时候会被分配一个唯一PID. PID的分配对用户来说是完全透明的, 且没有被客户端暴露.</p>
+
+<p>PID是从0开始单调递增的, 还有一个将要将要接受消息的主题分区的序号. 序号会随着producer向broker发送消息增长. broker在内存中维护着从每个PID中发过来的序号. 如果序号不是比上次提交PID/TopicParition组中的的序号大一, broker会拒绝producer的请求. 带有较小序号的消息会引发重复错误, producer可以忽略该错误. 带有较大的序号的消息会导致超出序号的错误, 意味着存在消息丢失, 这是致命的错误.</p>
+
+<p>为了保证每条消息都被恰好一次地持久化在log中, producer需要在失败的时候重试请求. 每个生产者实例都会得到一个新的唯一的PID, 因此我们只能在单一的生产者会话中保证幂等.</p>
+
+<p>这些幂等生成器语义对于无状态应用程序（如指标跟踪和审计）是非常有用的。</p>
+
+<h3 id="事务保障">事务保障</h3>
+
+<p>在核心上, 事务保证使应用程序能够以原子方式生成多个主题分区, 对这些主题分区的所有写入将成功或失败作为一个单元。</p>
+
+<p>此外, 由于消费者进度被记录为对偏移主题的写入, 所以利用上述能力来使得应用能够将消费和产生的消息批量化成单个原子单元. 只有整个“消费变换产品”全部执行, 才能将消息集合视为消费。</p>
+
+<p>为了跨多个生产者会话实现幂等, 需要提供一个在应用层面可以稳定的跨多个会话的transactionalId.  transactionalId由用户提供.</p>
+
+<p>有transactionalId后, Kafka可以保证:</p>
+
+<ol>
+<li>一个给定的transactionalId只有一个活跃的producer. 如果有新的使用同一个transactionalId的producer实例上线, 旧的实例会被隔离.</li>
+<li>跨应用会话的事务恢复, 当一个应用实例死掉后, broker会结束(取消或者提交)未完成的事务以保护新上线的实例, 在恢复工作之前将新实例置于干净的状态.</li>
+</ol>
+
+<p>注意这里提到的事务保障是从producer的角度. 在consumer端, 保障就会弱一些. 特别是, 我们不能保证承诺事务的所有消息都将一起被消费。原因如下:</p>
+
+<ol>
+<li>对于压缩主题, 事务的一些消息可能被较新版本覆盖。</li>
+<li>事务可能跨越日志段. 因此, 当旧段删除时, 我们可能会在事务的第一部分丢失一些消息。</li>
+<li>消费者可能会在事务中寻求任意的offset, 因此缺少一些初始消息。</li>
+<li>消费者可能不会从参与事务的所有分区中消费. 因此, 他们永远无法读取包含该事务的所有消息。</li>
+</ol>
+
+<h2 id="关键概念">关键概念</h2>
+
+<p>实现事务, 即确保一组消息以原子方式产生和消费, 我们介绍几个新概念：</p>
+
+<ol>
+<li>我们引进一个称为事务协调器(Transaction Coordinator)的新实体。与消费者组协调器类似, 每个生产者都被分配一个事务协调器, 所有分配PID和管理事务的逻辑都由事务协调器完成。</li>
+<li>我们引入一个名为事务日志(Transaction Log)的新的内部kafka主题(<strong>transaction_state)。与Consumer Offsets主题(</strong>consumer_offsets)类似, 事务日志是每个事务的持久和复制记录。事务日志是事务协调器的状态存储, 最新版本的日志的快照封装了每个活动事务的当前状态。</li>
+<li>我们引入控制消息(Control Messages)的概念。这些是写入用户主题的特殊消息, 由客户端处理, 但不会暴露给用户。例如, 它们被用于让broker向消费者表明先前提取的消息是否已经原子性地提交。以前在<a href="https://issues.apache.org/jira/browse/KAFKA-1639">这里</a>提出控制消息。</li>
+<li>我们引入了TransactionalId的概念, 使用户能够以持续的方式唯一地识别生产者。具有相同TransactionalId的生产者的不同实例将能够恢复（或中止）由上一个实例实例化的任何事务。</li>
+<li>我们引入生产者代(producer epoch)的概念, 这使我们能够确保只有一个具有给定的TransactionalId的生产者的合法活动实例, 从而使我们能够在发生故障的情况下维护事务保证。</li>
+</ol>
+
+<p>除了上述新概念之外, 我们还引入了新的请求类型, 新版本的现有请求以及新版本的核心消息格式, 以支持事务。所有这些的细节将推迟到其他文档。</p>
+
+<h2 id="数据流">数据流</h2>
+
+<p><img src="https://cwiki.apache.org/confluence/download/attachments/66854913/Kafka%20Transactions%20Data%20Flow.png?version=1&amp;modificationDate=1487185558000&amp;api=v2" alt="img" /></p>
+
+<p>在上图中, 尖锐的边框表示不同的机器. 底部的圆形盒子表示Kafka TopicPartitions, 而对角圆形的框代表在broker内部运行的逻辑实体。</p>
+
+<p>每个箭头表示RPC或写入Kafka主题. 这些操作按照每个箭头旁边的数字表示的顺序进行. 下面的部分编号为与上图中的操作相匹配, 并描述相关操作。</p>
+
+<h3 id="1-查找一个事务协调器-findcoordinatorrequest">1. 查找一个事务协调器 — FindCoordinatorRequest</h3>
+
+<p>事务协调器是分配PIDs和管理事务的核心组件, producer的第一件事是发送一个FindCoordinatorRequest请求(之前被称为GroupCoordinatorRequest, 但是现在更名为更一般的用法)到broker去获取其coordinator的位置. 译者补充比如ip, port.</p>
+
+<h3 id="2-获取一个producer-id-initpidrequest">2. 获取一个Producer Id — InitPidRequest</h3>
+
+<p>获取到coordinator位置之后, 下一步是获取producer的PID. 这个通过发送InitPidRequest请求到事务协调器完成.</p>
+
+<h4 id="2-1当有指定transactionlid时">2.1当有指定TransactionlId时</h4>
+
+<p>如果有配置transactionl.id, TransactionalId会随着InitPidRequest请求发出, 同时在2a中将PID和TransactionalId的对应关系保存在事务日志中. 这使我们能够将TransactionalId返回相同的PID给生产者的未来实例, 因此可以恢复或中止以前不完整的事务。</p>
+
+<p>除了返回PID之外, InitPidRequest还执行以下任务：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">    1. 提升PID的代, 使生产者的任何之前的僵尸实例被隔离起来, 不能处理事务.
+        2. 恢复(向前滚动或回滚)由生产者的上一个实例没有完成的任务事务.</pre></td></tr></table>
+</div>
+</div>
+<p>InitPIDRequest的处理是同步完成的. 一旦返回, producer可以发送数据和开始新的事务.</p>
+
+<h4 id="2-2当没有指定transactionalid">2.2当没有指定TransactionalId</h4>
+
+<p>如果没有配置TransactionalId, 会分配一个新的PID. 这是producer只在单一的session中实现了幂等语义和事务语义.</p>
+
+<h3 id="3-启动事务-begintransaction-api">3. 启动事务 — beginTransaction() API</h3>
+
+<p>新的<code>KafkaProducer</code>有一个beginTransaction()方法用来发出开始事务的信号. 生产者记录指示交易已经开始的本地状态, 但是在发送第一条记录之前, 在协调器看来事务还没有开始.</p>
+
+<h3 id="4-消费-转换-生产循环">4. 消费-转换-生产循环</h3>
+
+<p>在这个阶段, producer开始执行组成事务消费-转换-生产消息的流程. 这是一个很长的阶段, 可能包含多个请求</p>
+
+<h4 id="4-1-addpartitionstotxnrequest">4.1 AddPartitionsToTxnRequest</h4>
+
+<p>作为事务的一部分，生产者首次将新的TopicPartition作为事务的一部分发送给事务协调器。 协调器在步骤4.1a中记录了将此TopicPartition添加到事务中。 我们需要这些信息，以便我们可以将提交或中止标记写入每个TopicPartition（有关详细信息，请参阅第5.2节）。 如果这是添加到事务的第一个分区，协调器也将启动事务计时器。</p>
+
+<h4 id="4-2-producerequest">4.2 ProduceRequest</h4>
+
+<p>生产者通过一个或多个ProduceRequests（从生产者的发送方法触发）向用户的主题分区写入一堆消息。 这些请求包括如4.2a所示的PID，代和序号。</p>
+
+<h4 id="4-3-addoffsetcommitstotxnrequest">4.3 AddOffsetCommitsToTxnRequest</h4>
+
+<p>生产者有一个新的KafkaProducer.sendOffsetsToTransaction API方法，它可以批量消费和生成的消息。 此方法接受Map <TopicPartitions，OffsetAndMetadata>和groupId参数。</p>
+
+<p>sendOffsetsToTransaction方法向事务协调器发送一个带有groupId的AddOffsetCommitsToTxnRequests，从而可以在内部__consumer-offsets主题中推导出该消费者组的TopicPartition。 事务协调器将在步骤4.3a中将该主题分区添加到事务日志中。</p>
+
+<h4 id="4-4-txnoffsetcommitrequest">4.4 TxnOffsetCommitRequest</h4>
+
+<p>另外作为sendOffset的一部分，生产者将向消费者协调器发送一个TxnOffsetCommitRequest，以在__consumer-offsets主题中保留偏移量（步骤4.4a）。 消费者协调员通过使用作为该请求的一部分发送的PID和生产者代来验证生产者是否允许发出请求（而不是僵尸）。</p>
+
+<p>消费的offsets在事务提交之前不可见，这是我们现在将讨论的过程。</p>
+
+<h3 id="5-提交或者终结事务">5. 提交或者终结事务</h3>
+
+<p>一旦写入数据，用户必须调用KafkaProducer的新的commitTransaction或abortTransaction API方法。 这些方法将分别开始提交或中止事务。</p>
+
+<h4 id="5-1-endtxnrquest">5.1 EndTxnRquest</h4>
+
+<p>当生产者完成事务时，必须调用新引入的KafkaProducer.endTransaction或KafkaProducer.abortTransaction API方法。 前者使得<code>步骤4</code>中生产的数据可用于下游消费者。 后者有效地从日志中擦除生成的数据: 用户永远不可访问。 下游消费者将读取并丢弃已中止的消息。</p>
+
+<p>无论调用哪个生产者方法，生产者向事务协调器发出一个EndTxnRequest请求，附加数据指示事务是提交还是中止。 在收到此请求后，协调器：</p>
+
+<ol>
+<li>将PREPARE_COMMIT或PREPARE_ABORT消息写入事务日志。 (步骤5.1a)</li>
+<li>通过WriteTxnMarkerRequest开始向用户日志写入称为COMMIT(或ABORT)标记的命令消息的过程。 (见下文第5.2节)。</li>
+<li>最后将COMMITTED（或ABORTED）消息写入事务日志。 (见下文5.3)。</li>
+</ol>
+
+<h4 id="5-2-writetxnmarkerrequest">5.2 WriteTxnMarkerRequest</h4>
+
+<p>该请求由事务协调器发送给作为事务一部分的每个主题分配的leader. 在收到此请求后, 每个代理将向日志写入COMMIT(PID)或ABORT(PID)控制消息。 (步骤5.2a)</p>
+
+<p>该消息向消费者指示具有给定PID的消息是否必须传递给用户或丢弃。 因此，消费者将缓冲具有PID的消息，直到它读取相应的COMMIT或ABORT消息，此时它将分别递送或丢弃消息。</p>
+
+<p>请注意，如果__consumer-offsets主题是事务中的TopicPartition之一，则提交（或中止）标记也将写入日志，并且通知消费者协调器，以便在以下情况下实现这些偏移量 在中止情况下提交或忽略它们（左侧的步骤5.2a）。</p>
+
+<h4 id="5-3-writing-the-final-commit-or-abort-message">5.3 Writing the final Commit or Abort Message</h4>
+
+<p>在所有提交或中止标记写入数据日志之后，事务协调器将最后的COMMITTED或ABORTED消息写入事务日志，指示事务完成（图中的步骤5.3）。 此时，可以删除与事务日志中的事务有关的大多数消息。</p>
+
+<p>我们只需要保留完成的事务的PID以及时间戳，所以我们最终可以删除生产者的TransactionalId-&gt; PID映射。 请参阅下面的过期PID部分。</p>
+
+<h2 id="简单的实现代码">简单的实现代码</h2>
+
+<p><a href="http://atbug.com/kafka-exactly-once-delivery-and-transactional-messaging-example/">这里</a></p>
+
+<h2 id="参考资料">参考资料</h2>
+
+<ul>
+<li><a href="https://cwiki.apache.org/confluence/display/KAFKA/KIP-98+-+Exactly+Once+Delivery+and+Transactional+Messaging">Exactly Once Delivery and Transactional Messaging</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Addo Zhang</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-09-19
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/kafka/">Kafka</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/kafka-exactly-once-delivery-and-transactional-messaging-example/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Kafka 恰好一次发送和事务消费示例</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/kafka-producer-config/">
+            <span class="next-text nav-default">Kafka Producer配置解读</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'addozhang';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:duwasai@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Addo Zhang</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

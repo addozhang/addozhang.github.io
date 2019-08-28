@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>scala on 乱世浮生</title>
+    <link>http://localhost:1313/tags/scala/</link>
+    <description>Recent content in scala on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 11 Apr 2017 10:15:15 +0800</lastBuildDate>
+    
+	<atom:link href="http://localhost:1313/tags/scala/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Scala笔记：用函数字面量块调用高阶函数</title>
+      <link>http://localhost:1313/call-high-order-function-in-function-literal/</link>
+      <pubDate>Tue, 11 Apr 2017 10:15:15 +0800</pubDate>
+      
+      <guid>http://localhost:1313/call-high-order-function-in-function-literal/</guid>
+      <description>这里会用到几个概念高阶函数、函数字面量、参数组 高阶函数 high-order function 函数的一种，简单来说它包含了一个函数类型的参数或者返回值。 所谓的高阶是跟一阶函数相</description>
+    </item>
+    
+    <item>
+      <title>Scala笔记：def VS val</title>
+      <link>http://localhost:1313/def-vs-val-in-scala/</link>
+      <pubDate>Sun, 09 Apr 2017 08:24:40 +0800</pubDate>
+      
+      <guid>http://localhost:1313/def-vs-val-in-scala/</guid>
+      <description>先说原理： val修饰的在定义的时候执行 def修饰的在调用的时候执行 直观的例子： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 //注释</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Spring Cloud - Eureka服务注册 - 乱世浮生</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Addo Zhang" /><meta name="description" content="之前分析过Spring Cloud的Eureka服务发现, 今天分析一下服务注册.
+配置 BootstrapConfiguration EurekaDiscoveryClientConfigServiceBootstrapConfiguration spring-cloud-config环境中使用的配置
+引入EurekaDiscoveryClientConfiguration和EurekaClientAutoConfiguration
+EurekaDiscoveryClientConfiguration  在spring-cloud中(通过是否存在RefreshScopeRefreshedEvent.class判断), 添加RefreshScopeRefreshedEvent的listener. 收到事件后重新注册实例. 在eureka.client.healthcheck.enabled设置为true时, 注册EurekaHealthCheckHandlerbean. EurekaHealthCheckHandler负责将应用状态映射为实例状态InstanceStatus.  EurekaClientAutoConfiguration 支持spring-cloud和非spring-cloud环境, 在spring-cloud环境中, 下面两个bean要使用@RefreshScope标注
+ 实例化EurekaClientbean, 在spring-cloud中使用实现类CloudEurekaClient. 使用EurekaInstanceConfig实例, 实例化ApplicationInfoManagerbean " /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with even 4.0.0" />
+
+
+<link rel="canonical" href="http://localhost:1313/spring-cloud-service-registry-via-eureka/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Spring Cloud - Eureka服务注册" />
+<meta property="og:description" content="之前分析过Spring Cloud的Eureka服务发现, 今天分析一下服务注册.
+
+配置
+
+BootstrapConfiguration
+
+EurekaDiscoveryClientConfigServiceBootstrapConfiguration
+
+spring-cloud-config环境中使用的配置
+
+引入EurekaDiscoveryClientConfiguration和EurekaClientAutoConfiguration
+
+EurekaDiscoveryClientConfiguration
+
+
+在spring-cloud中(通过是否存在RefreshScopeRefreshedEvent.class判断), 添加RefreshScopeRefreshedEvent的listener. 收到事件后重新注册实例.
+在eureka.client.healthcheck.enabled设置为true时, 注册EurekaHealthCheckHandlerbean. EurekaHealthCheckHandler负责将应用状态映射为实例状态InstanceStatus.
+
+
+EurekaClientAutoConfiguration
+
+支持spring-cloud和非spring-cloud环境, 在spring-cloud环境中, 下面两个bean要使用@RefreshScope标注
+
+
+实例化EurekaClientbean, 在spring-cloud中使用实现类CloudEurekaClient.
+使用EurekaInstanceConfig实例, 实例化ApplicationInfoManagerbean
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/spring-cloud-service-registry-via-eureka/" />
+<meta property="article:published_time" content="2018-02-14T07:32:43+08:00" />
+<meta property="article:modified_time" content="2018-02-14T07:32:43+08:00" />
+<meta itemprop="name" content="Spring Cloud - Eureka服务注册">
+<meta itemprop="description" content="之前分析过Spring Cloud的Eureka服务发现, 今天分析一下服务注册.
+
+配置
+
+BootstrapConfiguration
+
+EurekaDiscoveryClientConfigServiceBootstrapConfiguration
+
+spring-cloud-config环境中使用的配置
+
+引入EurekaDiscoveryClientConfiguration和EurekaClientAutoConfiguration
+
+EurekaDiscoveryClientConfiguration
+
+
+在spring-cloud中(通过是否存在RefreshScopeRefreshedEvent.class判断), 添加RefreshScopeRefreshedEvent的listener. 收到事件后重新注册实例.
+在eureka.client.healthcheck.enabled设置为true时, 注册EurekaHealthCheckHandlerbean. EurekaHealthCheckHandler负责将应用状态映射为实例状态InstanceStatus.
+
+
+EurekaClientAutoConfiguration
+
+支持spring-cloud和非spring-cloud环境, 在spring-cloud环境中, 下面两个bean要使用@RefreshScope标注
+
+
+实例化EurekaClientbean, 在spring-cloud中使用实现类CloudEurekaClient.
+使用EurekaInstanceConfig实例, 实例化ApplicationInfoManagerbean
+">
+
+
+<meta itemprop="datePublished" content="2018-02-14T07:32:43&#43;08:00" />
+<meta itemprop="dateModified" content="2018-02-14T07:32:43&#43;08:00" />
+<meta itemprop="wordCount" content="1759">
+
+
+
+<meta itemprop="keywords" content="Spring,Eureka," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Spring Cloud - Eureka服务注册"/>
+<meta name="twitter:description" content="之前分析过Spring Cloud的Eureka服务发现, 今天分析一下服务注册.
+
+配置
+
+BootstrapConfiguration
+
+EurekaDiscoveryClientConfigServiceBootstrapConfiguration
+
+spring-cloud-config环境中使用的配置
+
+引入EurekaDiscoveryClientConfiguration和EurekaClientAutoConfiguration
+
+EurekaDiscoveryClientConfiguration
+
+
+在spring-cloud中(通过是否存在RefreshScopeRefreshedEvent.class判断), 添加RefreshScopeRefreshedEvent的listener. 收到事件后重新注册实例.
+在eureka.client.healthcheck.enabled设置为true时, 注册EurekaHealthCheckHandlerbean. EurekaHealthCheckHandler负责将应用状态映射为实例状态InstanceStatus.
+
+
+EurekaClientAutoConfiguration
+
+支持spring-cloud和非spring-cloud环境, 在spring-cloud环境中, 下面两个bean要使用@RefreshScope标注
+
+
+实例化EurekaClientbean, 在spring-cloud中使用实现类CloudEurekaClient.
+使用EurekaInstanceConfig实例, 实例化ApplicationInfoManagerbean
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">乱世浮生</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">乱世浮生</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Spring Cloud - Eureka服务注册</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-02-14 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#配置">配置</a>
+<ul>
+<li><a href="#bootstrapconfiguration">BootstrapConfiguration</a>
+<ul>
+<li><a href="#eurekadiscoveryclientconfigservicebootstrapconfiguration">EurekaDiscoveryClientConfigServiceBootstrapConfiguration</a>
+<ul>
+<li><a href="#eurekadiscoveryclientconfiguration">EurekaDiscoveryClientConfiguration</a></li>
+<li><a href="#eurekaclientautoconfiguration">EurekaClientAutoConfiguration</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#enableautoconfiguration">EnableAutoConfiguration</a>
+<ul>
+<li><a href="#eurekaclientconfigserverautoconfiguration">EurekaClientConfigServerAutoConfiguration</a></li>
+<li><a href="#eurekadiscoveryclientconfigserviceautoconfiguration">EurekaDiscoveryClientConfigServiceAutoConfiguration</a></li>
+<li><a href="#eurekaclientautoconfiguration-1">EurekaClientAutoConfiguration</a></li>
+<li><a href="#ribboneurekaautoconfiguration">RibbonEurekaAutoConfiguration</a></li>
+<li><a href="#eurekadiscoveryclientconfiguration-1">EurekaDiscoveryClientConfiguration</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#主要类">主要类</a>
+<ul>
+<li><a href="#serviceregistry">ServiceRegistry</a></li>
+<li><a href="#eurekaserviceregistry">EurekaServiceRegistry</a></li>
+<li><a href="#eurekaregistration">EurekaRegistration</a></li>
+<li><a href="#applicationinfomanager">ApplicationInfoManager</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>之前分析过<a href="http://atbug.com/spring-cloud-eureka-client-source-code-analysis/">Spring Cloud的Eureka服务发现</a>, 今天分析一下服务注册.</p>
+
+<h2 id="配置">配置</h2>
+
+<h3 id="bootstrapconfiguration">BootstrapConfiguration</h3>
+
+<h4 id="eurekadiscoveryclientconfigservicebootstrapconfiguration">EurekaDiscoveryClientConfigServiceBootstrapConfiguration</h4>
+
+<p>spring-cloud-config环境中使用的配置</p>
+
+<p>引入<code>EurekaDiscoveryClientConfiguration</code>和<code>EurekaClientAutoConfiguration</code></p>
+
+<h5 id="eurekadiscoveryclientconfiguration">EurekaDiscoveryClientConfiguration</h5>
+
+<ol>
+<li>在spring-cloud中(通过是否存在RefreshScopeRefreshedEvent.class判断), 添加<code>RefreshScopeRefreshedEvent</code>的listener. 收到事件后重新注册实例.</li>
+<li>在<code>eureka.client.healthcheck.enabled</code>设置为true时, 注册<code>EurekaHealthCheckHandler</code>bean. <code>EurekaHealthCheckHandler</code>负责将应用状态映射为实例状态<code>InstanceStatus</code>.</li>
+</ol>
+
+<h5 id="eurekaclientautoconfiguration">EurekaClientAutoConfiguration</h5>
+
+<p>支持spring-cloud和非spring-cloud环境, 在spring-cloud环境中, 下面两个bean要使用<code>@RefreshScope</code>标注</p>
+
+<ol>
+<li>实例化<code>EurekaClient</code>bean, 在spring-cloud中使用实现类<code>CloudEurekaClient</code>.</li>
+<li>使用<code>EurekaInstanceConfig</code>实例, 实例化<code>ApplicationInfoManager</code>bean</li>
+</ol>
+
+<h3 id="enableautoconfiguration">EnableAutoConfiguration</h3>
+
+<h4 id="eurekaclientconfigserverautoconfiguration">EurekaClientConfigServerAutoConfiguration</h4>
+
+<p>在spring-cloud-config的环境中, 将<code>configPath</code>加入到实例的metadata map中.</p>
+
+<h4 id="eurekadiscoveryclientconfigserviceautoconfiguration">EurekaDiscoveryClientConfigServiceAutoConfiguration</h4>
+
+<p>当config客户端希望通过服务发现寻找config服务的时候使用的引导配置</p>
+
+<p>在<code>spring.cloud.config.discovery.enabled</code>为<code>true</code>时, 关闭父application context里实例化的<code>EurekaClient</code>实例. 只使用当前上下文里的实例.</p>
+
+<h4 id="eurekaclientautoconfiguration-1">EurekaClientAutoConfiguration</h4>
+
+<p><strong>核心配置</strong>
+支持spring-cloud(支持动态配置)和非spring-cloud环境, <code>EurekaClient</code>和<code>EurekaInstanceConfig</code>两个bean要使用<code>@RefreshScope</code>标注</p>
+
+<ol>
+<li>实例化当前服务实例信息<code>EurekaInstanceConfigBean</code>的实例</li>
+<li>实例化<code>DiscoveryClient</code>的实现, 在这里是<code>EurekaDiscoveryClient</code></li>
+<li>实例化<code>EurekaServiceRegistry</code></li>
+<li>实例化<code>EurekaRegistration</code></li>
+<li>实例化<code>EurekaAutoServiceRegistration</code>, 这个类实现了StartLifecycle接口. 在ApplicationContext refresh或者shutdown之后注册或者注销当前实例</li>
+<li>实例化<code>EurekaClient</code>bean, 在spring-cloud中使用实现类<code>CloudEurekaClient</code></li>
+<li>使用<code>EurekaInstanceConfig</code>实例, 实例化<code>ApplicationInfoManager</code>bean</li>
+</ol>
+
+<p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15185619590053.jpg" alt="EurekaClientAutoConfiguration" /></p>
+
+<h4 id="ribboneurekaautoconfiguration">RibbonEurekaAutoConfiguration</h4>
+
+<p>当启用Eureka client(eureka.client.enable为true和ribbon.eureka.enabled为true时, 默认为true)时配置默认基于eureka的ribbon.
+使用<code>EurekaRibbonClientConfiguration</code>提供的配置: RibbonPing, ServerList, ServerIntrospector.</p>
+
+<h4 id="eurekadiscoveryclientconfiguration-1">EurekaDiscoveryClientConfiguration</h4>
+
+<p>提供监听<code>RefreshScopeRefreshedEvent</code>的监听器, 当事件发生时注销并重新注册(防止metadata发生改变)
+提供一个默认的EurekaHealthCheckHandler实例, 当bean不存在的且<code>eureka.client.healthcheck.enabled</code>为true时.</p>
+
+<h2 id="主要类">主要类</h2>
+
+<p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15185644052296.jpg" alt="" /></p>
+
+<h3 id="serviceregistry">ServiceRegistry</h3>
+
+<p>spring提供的服务实例注册和注销的接口.</p>
+
+<h3 id="eurekaserviceregistry">EurekaServiceRegistry</h3>
+
+<p>ServiceRegistry的Eureka实现. 注册和注销的实现是通过<code>EurekaRegistration</code>的<code>ApplicationInfoManager</code>修改实例状态实现的.</p>
+
+<h3 id="eurekaregistration">EurekaRegistration</h3>
+
+<p>通过实现<code>ServiceInstance</code>提供访问实例信息的接口,</p>
+
+<h3 id="applicationinfomanager">ApplicationInfoManager</h3>
+
+<p>提供修改实例状态的接口, 并通知状态变化的监听器.
+提供内部类<code>StatusChangeListener</code>.
+提供注册和注销状态变化监听器的接口, Eureka的<code>DiscoveryClient</code>中通过匿名类的方式实现了该接口, 当实例状态发生变化时, 刷新实例状态.</p>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Addo Zhang</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-02-14
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/spring/">Spring</a>
+          <a href="/tags/eureka/">Eureka</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/spring-cloud-zuul-breakdown/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Spring Cloud Zuul详解</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/learn-netflix-zuul/">
+            <span class="next-text nav-default">初识Netflix Zuul</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'addozhang';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:duwasai@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Addo Zhang</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

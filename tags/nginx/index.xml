@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>nginx on 乱世浮生</title>
+    <link>http://localhost:1313/tags/nginx/</link>
+    <description>Recent content in nginx on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 06 Nov 2018 09:24:24 +0800</lastBuildDate>
+    
+	<atom:link href="http://localhost:1313/tags/nginx/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Nginx实现Elasticsearch的HTTP基本认证</title>
+      <link>http://localhost:1313/elasticsearch-http-basic-authentication-via-nginx/</link>
+      <pubDate>Tue, 06 Nov 2018 09:24:24 +0800</pubDate>
+      
+      <guid>http://localhost:1313/elasticsearch-http-basic-authentication-via-nginx/</guid>
+      <description>Elasticssearch的HTTP基本认证实现有两种方案: x-pack和nginx反向代理. 前者收费, 后者不太适合生产使用. 如果仅仅是开</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes中的Nginx动态解析</title>
+      <link>http://localhost:1313/nginx-dynamic-domain-parse-in-kubernetes/</link>
+      <pubDate>Wed, 30 May 2018 12:10:32 +0800</pubDate>
+      
+      <guid>http://localhost:1313/nginx-dynamic-domain-parse-in-kubernetes/</guid>
+      <description>背景 Nginx运行在kubernets中, 反向代理service提供服务. kubernetes版本v1.9.1+a0ce1bc657. 问题:</description>
+    </item>
+    
+  </channel>
+</rss>

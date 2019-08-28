@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Kafka Producer配置解读 - 乱世浮生</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Addo Zhang" /><meta name="description" content="按照重要性分类, 基于版本0.11.0.0 高 bootstrap.servers 一组host和port用于初始化连接. 不管这里配置了多少台server, 都只是用作发现整个集群全" /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with even 4.0.0" />
+
+
+<link rel="canonical" href="http://localhost:1313/kafka-producer-config/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Kafka Producer配置解读" />
+<meta property="og:description" content="按照重要性分类, 基于版本0.11.0.0 高 bootstrap.servers 一组host和port用于初始化连接. 不管这里配置了多少台server, 都只是用作发现整个集群全" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/kafka-producer-config/" />
+<meta property="article:published_time" content="2017-09-19T15:38:03+08:00" />
+<meta property="article:modified_time" content="2017-09-19T15:38:03+08:00" />
+<meta itemprop="name" content="Kafka Producer配置解读">
+<meta itemprop="description" content="按照重要性分类, 基于版本0.11.0.0 高 bootstrap.servers 一组host和port用于初始化连接. 不管这里配置了多少台server, 都只是用作发现整个集群全">
+
+
+<meta itemprop="datePublished" content="2017-09-19T15:38:03&#43;08:00" />
+<meta itemprop="dateModified" content="2017-09-19T15:38:03&#43;08:00" />
+<meta itemprop="wordCount" content="2458">
+
+
+
+<meta itemprop="keywords" content="Kafka," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Kafka Producer配置解读"/>
+<meta name="twitter:description" content="按照重要性分类, 基于版本0.11.0.0 高 bootstrap.servers 一组host和port用于初始化连接. 不管这里配置了多少台server, 都只是用作发现整个集群全"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">乱世浮生</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">乱世浮生</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Kafka Producer配置解读</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-09-19 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#高">高</a>
+<ul>
+<li><a href="#bootstrap-servers">bootstrap.servers</a></li>
+<li><a href="#key-serializer">key.serializer</a></li>
+<li><a href="#value-serializer">value.serializer</a></li>
+<li><a href="#acks">acks</a></li>
+<li><a href="#buffer-memory">buffer.memory</a></li>
+<li><a href="#compression-type">compression.type</a></li>
+<li><a href="#retries">retries</a></li>
+</ul></li>
+<li><a href="#中">中</a>
+<ul>
+<li><a href="#batch-size">batch.size</a></li>
+<li><a href="#client-id">client.id</a></li>
+<li><a href="#linger-ms">linger.ms</a>
+<ul>
+<li><a href="#max-block-ms">max.block.ms</a></li>
+<li><a href="#max-request-size">max.request.size</a></li>
+<li><a href="#partitioner-class">partitioner.class</a></li>
+<li><a href="#request-timeout-ms">request.timeout.ms</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#低">低</a>
+<ul>
+<li>
+<ul>
+<li><a href="#enable-idempotence">enable.idempotence</a></li>
+<li><a href="#interceptor-classes">interceptor.classes</a></li>
+<li><a href="#max-in-flight-requests-per-connection">max.in.flight.requests.per.connection</a></li>
+<li><a href="#retry-backoff-ms">retry.backoff.ms</a></li>
+<li><a href="#transaction-timeout-ms">transaction.timeout.ms</a></li>
+<li><a href="#transactional-id">transactional.id</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>按照重要性分类, 基于版本0.11.0.0</p>
+
+<h2 id="高">高</h2>
+
+<h3 id="bootstrap-servers">bootstrap.servers</h3>
+
+<p>一组host和port用于初始化连接. 不管这里配置了多少台server, 都只是用作发现整个集群全部server信息. 这个配置不需要包含集群所有的机器信息. 但是最好多于一个, 以防服务器挂掉.</p>
+
+<h3 id="key-serializer">key.serializer</h3>
+
+<p>用来序列化key的<code>Serializer</code>接口的实现类.</p>
+
+<h3 id="value-serializer">value.serializer</h3>
+
+<p>用来序列化value的<code>Serializer</code>接口的实现类</p>
+
+<h3 id="acks">acks</h3>
+
+<p>producer希望leader返回的用于确认请求完成的确认数量. 可选值 all, -1, 0 1. 默认值为1</p>
+
+<ul>
+<li><code>acks=0</code> 不需要等待服务器的确认. 这是<code>retries</code>设置无效. 响应里来自服务端的offset总是-1. producer只管发不管发送成功与否。延迟低，容易丢失数据。</li>
+<li><code>acks=1</code> 表示leader写入成功（但是并没有刷新到磁盘）后即向producer响应。延迟中等，一旦leader副本挂了，就会丢失数据。</li>
+<li><code>acks=all</code>等待数据完成副本的复制, 等同于<code>-1</code>. 假如需要保证消息不丢失, 需要使用该设置. 同时需要设置<code>unclean.leader.election.enable</code>为true, 保证当ISR列表为空时, 选择其他存活的副本作为新的leader.</li>
+</ul>
+
+<h3 id="buffer-memory">buffer.memory</h3>
+
+<p>producer可以使用的最大内存来缓存等待发送到server端的消息.  如果消息速度大于producer交付到server端的阻塞时间<code>max.block.ms</code>,  将会抛出异常. 默认值33554432 byte (32m). 这个设置不是一个严格的边界, 因为producer除了用来缓存消息, 还要用来进行压缩.</p>
+
+<h3 id="compression-type">compression.type</h3>
+
+<p>producer压缩数据的类型, 默认为none, 就是不压缩. 可选<code>none</code>, <code>gzip</code>, <code>snappy</code> 和<code>lz4</code>.  压缩整个batch的数据, 因此batch的效果对压缩率也有影响. 更多的批处理意味着更好的压缩</p>
+
+<h3 id="retries">retries</h3>
+
+<p>设置大于零的值将导致客户端重新发送其发送失败并发生潜在的瞬时错误的记录. 相当于client在发送失败的时候会重新发行. 如果设置了<code>retries</code>而没有将<code>max.in.flight.request.per.connection</code>设置为1, 在两个batch发送到同一个partition时有可能打乱消息的发送顺序(第一个发送失败, 而第二个发送成功)</p>
+
+<h2 id="中">中</h2>
+
+<h3 id="batch-size">batch.size</h3>
+
+<p>producer会尝试批量发送属于同一个partition的消息以减少请求的数量. 这样可以提升客户端和服务端的性能. 默认大小是16348 byte (16k).</p>
+
+<p>发送到broker的请求可以包含多个batch, 每个batch的数据属于同一个partition.</p>
+
+<p>太小的batch会降低吞吐.  太大会浪费内存.</p>
+
+<h3 id="client-id">client.id</h3>
+
+<p>发送请求时传递给服务端的id字符. 用来追溯请求源, 除了使用ip/port. 服务端的请求日志中会包含一个合理的应用名. 默认为空</p>
+
+<h3 id="linger-ms">linger.ms</h3>
+
+<p>在正常负载的情况下, 要想减少请求的数量. 加上一个认为的延迟: 不是立即发送消息, 而是延迟等待更多的消息一起批量发送. 类似TCP中的Nagle算法. 当获得了<code>batch.size</code>的同一partition的消息会立即发送, 不管<code>linger.ms</code>的设置. 假如要发送的消息比较少, 会等待指定的时间以获取更多的消息.</p>
+
+<p>默认设置为0 ms(没有延迟).</p>
+
+<h4 id="max-block-ms">max.block.ms</h4>
+
+<p>控制<code>KafkaProducer.send()</code>和<code>KafkaProducer.partitionsFor()</code>的阻塞时间. 这些方法会因为buffer满了或者metadata不可用而阻塞. 用户设置在serializers或者partitioner中的阻塞不会计算在内.</p>
+
+<h4 id="max-request-size">max.request.size</h4>
+
+<p>请求的最大大小（以字节为单位）。 此设置将限制生产者在单个请求中发送的记录批次数，以避免发送巨大的请求。 这也是最大记录批量大小的上限。 请注意，服务器拥有自己的记录批量大小，可能与此不同。</p>
+
+<h4 id="partitioner-class">partitioner.class</h4>
+
+<p><code>Partitioner</code>接口的实现类, 默认是<code>org.apache.kafka.clients.producer.internals.DefaultPartitioner</code>. 需要处理数据倾斜等原因调整分区逻辑的时候使用.</p>
+
+<h4 id="request-timeout-ms">request.timeout.ms</h4>
+
+<p>配置控制客户端等待请求响应的最长时间。 如果在超时之前未收到响应，客户端将在必要时重新发送请求，如果重试耗尽，则该请求将失败。 这应该大于replica.lag.time.max.ms(broker配置)，以减少由于不必要的生产者重试引起的消息重复的可能性。</p>
+
+<h2 id="低">低</h2>
+
+<h4 id="enable-idempotence">enable.idempotence</h4>
+
+<p>设置为&rsquo;true&rsquo;, 将开启<code>exactly-once</code>模式. 设置为&rsquo;false&rsquo;(默认值), producer会因为borker失败等原因重试发送, 可能会导致消息重复.</p>
+
+<p>设置为&rsquo;true&rsquo;时需要结合<code>max.in.flight.requests.per.connection</code>设为&rsquo;1&rsquo;和<code>retires</code>不能为&rsquo;0&rsquo;, 同时<code>acks</code>需要设置为&rsquo;all&rsquo;或者&rdquo;-1&rsquo;.</p>
+
+<h4 id="interceptor-classes">interceptor.classes</h4>
+
+<p>一组<code>ProducerInterceptor</code>接口的实现类, 默认为null. 可以通过该接口的实现类去拦截(可能需要修改)producer要发送的消息在发送到服务端之前.</p>
+
+<h4 id="max-in-flight-requests-per-connection">max.in.flight.requests.per.connection</h4>
+
+<p>没有被确认unacknowledge的batch数, 如果设置大于1在<code>retries</code>设置了的情况下会出现消息发送顺序错误.</p>
+
+<h4 id="retry-backoff-ms">retry.backoff.ms</h4>
+
+<p>失败请求重试的间隔时间. 默认是100毫秒</p>
+
+<h4 id="transaction-timeout-ms">transaction.timeout.ms</h4>
+
+<p>事务协调器等待producer更新事务状态的最大毫秒数, 超过的话事务协调器会终止进行中的事务. 如果设置的时间大于broker的<code>max.transaction.timeout.ms</code>会收到<code>InvalidTransactionTimeout</code>错误.</p>
+
+<h4 id="transactional-id">transactional.id</h4>
+
+<p>用于事务传递的TransactionalId。 这使得可以跨越多个生产者会话的可靠性语义，因为它允许客户端保证在开始任何新事务之前使用相同的TransactionalId的事务已经完成。 如果没有提供TransactionalId，则生产者被限制为幂等传递。 请注意，如果配置了TransactionalId，则必须启用enable.idempotence。 默认值为空，这意味着无法使用事务。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Addo Zhang</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-09-19
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/kafka/">Kafka</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/kafka-exactly-once-delivery-and-transactional-messaging/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">恰好一次发送和事务消息(译)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/json-patch/">
+            <span class="next-text nav-default">JSON Patch</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'addozhang';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:duwasai@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Addo Zhang</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

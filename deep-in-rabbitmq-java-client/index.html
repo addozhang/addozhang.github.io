@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>探索Rabbitmq的Java客户端 - 乱世浮生</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Addo Zhang" /><meta name="description" content="AMQPConnection 实例初始化 创建Connection时会通过FrameHandlerFacotry创建一个SocketFrameHandler，Socket" /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with even 4.0.0" />
+
+
+<link rel="canonical" href="http://localhost:1313/deep-in-rabbitmq-java-client/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="探索Rabbitmq的Java客户端" />
+<meta property="og:description" content="AMQPConnection 实例初始化 创建Connection时会通过FrameHandlerFacotry创建一个SocketFrameHandler，Socket" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/deep-in-rabbitmq-java-client/" />
+<meta property="article:published_time" content="2016-10-09T09:20:07+08:00" />
+<meta property="article:modified_time" content="2016-10-09T09:20:07+08:00" />
+<meta itemprop="name" content="探索Rabbitmq的Java客户端">
+<meta itemprop="description" content="AMQPConnection 实例初始化 创建Connection时会通过FrameHandlerFacotry创建一个SocketFrameHandler，Socket">
+
+
+<meta itemprop="datePublished" content="2016-10-09T09:20:07&#43;08:00" />
+<meta itemprop="dateModified" content="2016-10-09T09:20:07&#43;08:00" />
+<meta itemprop="wordCount" content="2833">
+
+
+
+<meta itemprop="keywords" content="Java,Rabbitmq," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="探索Rabbitmq的Java客户端"/>
+<meta name="twitter:description" content="AMQPConnection 实例初始化 创建Connection时会通过FrameHandlerFacotry创建一个SocketFrameHandler，Socket"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">乱世浮生</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">乱世浮生</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">探索Rabbitmq的Java客户端</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-10-09 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#amqpconnection">AMQPConnection</a>
+<ul>
+<li><a href="#实例初始化">实例初始化</a></li>
+<li><a href="#启动连接">启动连接</a></li>
+</ul></li>
+<li><a href="#消息体">消息体</a></li>
+<li><a href="#消息发送和接收">消息发送和接收</a>
+<ul>
+<li><a href="#创建channel">创建Channel</a></li>
+<li><a href="#消息发送">消息发送</a></li>
+<li><a href="#消息接收">消息接收</a></li>
+</ul></li>
+<li><a href="#生产和消费">生产和消费</a>
+<ul>
+<li><a href="#生产">生产</a></li>
+<li><a href="#消费">消费</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h2 id="amqpconnection">AMQPConnection</h2>
+
+<h3 id="实例初始化">实例初始化</h3>
+
+<p>创建Connection时会通过FrameHandlerFacotry创建一个SocketFrameHandler，SocketFrameHandler对Socket进行了封装。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">AMQConnection</span><span class="p">(</span><span class="n">ConnectionParams</span> <span class="nf">params</span><span class="p">,</span> <span class="n">FrameHandler</span> <span class="nf">frameHandler</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">checkPreconditions</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">username</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="na">getUsername</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">password</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="na">getPassword</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_frameHandler</span> <span class="o">=</span> <span class="n">frameHandler</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_virtualHost</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="na">getVirtualHost</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_exceptionHandler</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="na">getExceptionHandler</span><span class="p">();</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="na">_clientProperties</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">Object</span><span class="o">&gt;</span><span class="p">(</span><span class="n">params</span><span class="p">.</span><span class="na">getClientProperties</span><span class="p">());</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">requestedFrameMax</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="na">getRequestedFrameMax</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">requestedChannelMax</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="na">getRequestedChannelMax</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">requestedHeartbeat</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="na">getRequestedHeartbeat</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">shutdownTimeout</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="na">getShutdownTimeout</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">saslConfig</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="na">getSaslConfig</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">executor</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="na">getExecutor</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">threadFactory</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="na">getThreadFactory</span><span class="p">();</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="na">_channelManager</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="na">_brokerInitiatedShutdown</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="na">_inConnectionNegotiation</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span> <span class="c1">// we start out waiting for the first protocol response
+</span><span class="c1"></span>    <span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="启动连接">启动连接</h3>
+
+<p>初始化WorkService和HeartBeatSender。</p>
+
+<p>创建一个channel0的AMQChannel，这个channel<strong>不会被ChannelManager管理</strong>。</p>
+
+<p>首先channel0会将一个BlockingRpcContinuation作为当前未完成的Rpc请求，用于接收<strong>handshake</strong>的响应。</p>
+
+<p>然后channel0会向socket中写入一条只有header的消息作为<strong>handshake</strong>，header中包含了客户端的版本号。</p>
+
+<p>紧接着会启动主循环线程，主循环会通过SocketFrameHandler从socket接收字节流。此时接收到的第一条数据是服务端响应handshake返回的Connection.Start信息（包含服务端版本、机制、基础信息）。</p>
+
+<p>主循环线程启动后，主线程会阻塞地等待服务端的handshake响应。拿到响应之后会对服务器回传的信息进行比对，然后发送Connection.StartOK的信息去服务端（这个请求也还是阻塞式的），等待服务端回传Connection.Tune（包含最大channel数、最大frame长度和heartbeat间隔）。将这些信息与实例初始化是的设置信息进行对比，初始化ChannelManager</p>
+
+<p>紧接着发送Connection.TuneOk和Connection.Open消息去服务端，完成connection的建立。</p>
+
+<blockquote>
+<p>Connection &gt; MainLoop &gt; readFrame</p>
+</blockquote>
+
+<h2 id="消息体">消息体</h2>
+
+<p>Frame是对AMQP消息的封装：包含frame的type、channel号、消息内容</p>
+
+<blockquote>
+<p>type|channelNumber|payloadSize|payload|frameEndMarker</p>
+</blockquote>
+
+<p>Payload包含了消息类型、消息头和消息主题</p>
+
+<blockquote>
+<p>method|header|body</p>
+</blockquote>
+
+<h2 id="消息发送和接收">消息发送和接收</h2>
+
+<p>消息的发送和接收都要channel来完成。</p>
+
+<h3 id="创建channel">创建Channel</h3>
+
+<p>通过Connection的ChannelManager来创建Channel，通过指定的ChannelNumber或者由分配器分配。创建好的Channel实例会放入ChannelManager的Map中，<strong>key为ChannelNumber</strong>。由此可见Channel是Connection唯一的。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">ChannelN</span> <span class="n">createChannel</span><span class="p">(</span><span class="n">AMQConnection</span> <span class="nf">connection</span><span class="p">);</span>
+<span class="kd">public</span> <span class="nf">ChannelN</span> <span class="n">createChannel</span><span class="p">(</span><span class="n">AMQConnection</span> <span class="nf">connection</span><span class="p">,</span> <span class="kt">int</span> <span class="nf">channelNumber</span><span class="p">);</span>
+<span class="kd">private</span> <span class="nf">ChannelN</span> <span class="n">addNewChannel</span><span class="p">(</span><span class="n">AMQConnection</span> <span class="nf">connection</span><span class="p">,</span> <span class="kt">int</span> <span class="nf">channelNumber</span><span class="p">);</span>
+<span class="kd">protected</span> <span class="nf">ChannelN</span> <span class="n">instantiateChannel</span><span class="p">(</span><span class="n">AMQConnection</span> <span class="nf">connection</span><span class="p">,</span> <span class="kt">int</span> <span class="nf">channelNumber</span><span class="p">,</span> <span class="n">ConsumerWorkService</span> <span class="nf">workService</span><span class="p">);</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>Channel实例化之后会调用Channel.open方法，发送Channel.Open去服务端（阻塞式），等待服务端响应Channel.OpenOk。</p>
+
+<h3 id="消息发送">消息发送</h3>
+
+<p>Channel.transmit 发送消息，调用AMQCommand.transmit完成发送。</p>
+
+<p>AMQCommand.transmit将消息封装成Frame，通过connection的SocketFrameHandler写入OutpuStream。</p>
+
+<h3 id="消息接收">消息接收</h3>
+
+<p>主循环线程在链接创建完成后会监听socket，从InputStream中读取二进制流封装成Frame。通过Frame中的ChannelNumber从ChannelManager中获取对应的Channel实例处理Frame。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="k">while</span> <span class="p">(</span><span class="n">_running</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Frame</span> <span class="nf">frame</span> <span class="o">=</span> <span class="n">_frameHandler</span><span class="p">.</span><span class="na">readFrame</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">frame</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_missedHeartbeats</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">frame</span><span class="p">.</span><span class="na">type</span> <span class="o">==</span> <span class="n">AMQP</span><span class="p">.</span><span class="na">FRAME_HEARTBEAT</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// Ignore it: we&#39;ve already just reset the heartbeat counter.
+</span><span class="c1"></span>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">frame</span><span class="p">.</span><span class="na">channel</span> <span class="o">==</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// the special channel
+</span><span class="c1"></span>                <span class="n">_channel0</span><span class="p">.</span><span class="na">handleFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">isOpen</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="c1">// If we&#39;re still _running, but not isOpen(), then we
+</span><span class="c1"></span>                    <span class="c1">// must be quiescing, which means any inbound frames
+</span><span class="c1"></span>                    <span class="c1">// for non-zero channels (and any inbound commands on
+</span><span class="c1"></span>                    <span class="c1">// channel zero that aren&#39;t Connection.CloseOk) must
+</span><span class="c1"></span>                    <span class="c1">// be discarded.
+</span><span class="c1"></span>                    <span class="n">ChannelManager</span> <span class="nf">cm</span> <span class="o">=</span> <span class="n">_channelManager</span><span class="p">;</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">cm</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">cm</span><span class="p">.</span><span class="na">getChannel</span><span class="p">(</span><span class="n">frame</span><span class="p">.</span><span class="na">channel</span><span class="p">).</span><span class="na">handleFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">);</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// Socket timeout waiting for a frame.
+</span><span class="c1"></span>        <span class="c1">// Maybe missed heartbeat.
+</span><span class="c1"></span>        <span class="n">handleSocketTimeout</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>Channel会使用已经准备好的AMQCommand处理Frame，并未下一个Frame准备新的AMQCommand。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">void</span> <span class="n">handleFrame</span><span class="p">(</span><span class="n">Frame</span> <span class="nf">frame</span><span class="p">)</span> <span class="kd">throws</span> <span class="nf">IOException</span> <span class="p">{</span>
+    <span class="n">AMQCommand</span> <span class="nf">command</span> <span class="o">=</span> <span class="n">_command</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">command</span><span class="p">.</span><span class="na">handleFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">))</span> <span class="p">{</span> <span class="c1">// a complete command has rolled off the assembly line
+</span><span class="c1"></span>        <span class="n">_command</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AMQCommand</span><span class="p">();</span> <span class="c1">// prepare for the next one
+</span><span class="c1"></span>        <span class="n">handleCompleteInboundCommand</span><span class="p">(</span><span class="n">command</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>AMQCommad会使用CommandAssembler依次从Frame的payload中检出对应的Method、Header和Body。如果检出了Body，整个Frame会被检出完成。如过未完成，会进入主循环再次处理直至完成。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">synchronized</span> <span class="kt">boolean</span> <span class="nf">handleFrame</span><span class="p">(</span><span class="n">Frame</span> <span class="nf">f</span><span class="p">)</span> <span class="kd">throws</span> <span class="nf">IOException</span>
+<span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">state</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="n">EXPECTING_METHOD</span><span class="o">:</span>          <span class="n">consumeMethodFrame</span><span class="p">(</span><span class="n">f</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="n">EXPECTING_CONTENT_HEADER</span><span class="o">:</span>  <span class="n">consumeHeaderFrame</span><span class="p">(</span><span class="n">f</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="n">EXPECTING_CONTENT_BODY</span><span class="o">:</span>    <span class="n">consumeBodyFrame</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>   <span class="k">break</span><span class="p">;</span>
+      <span class="k">default</span><span class="o">:</span>
+          <span class="k">throw</span> <span class="k">new</span> <span class="n">AssertionError</span><span class="p">(</span><span class="s">&#34;Bad Command State &#34;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="na">state</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">isComplete</span><span class="p">();</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>Frame被检出完后，会根据Method的类型进入不同的异步处理流程。</p>
+
+<p>Method在channel打开和关闭的情况下会以下的可能：</p>
+
+<blockquote>
+<p>Channel打开：Basic.Deliver, Basic.Return, Basic.Flow, Basic.Ack, Basic.Nack, Basic.RecoveryOk, Basic.Cancel</p>
+
+<p>Channel关闭：Channel.CloseOk</p>
+</blockquote>
+
+<h2 id="生产和消费">生产和消费</h2>
+
+<h3 id="生产">生产</h3>
+
+<p>调用Channel.basicPublish()方法，指定exchange、routingKey等信息，消息属性、消息体。封装成Baisc.Publish，放入AMQCommand，最后调用transmit方法完成发送。参考<a href="http://atbug.com/deep-in-rabbitmq-java-client/#消息发送">消息发送</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">void</span> <span class="n">basicPublish</span><span class="p">(</span><span class="n">String</span> <span class="nf">exchange</span><span class="p">,</span> <span class="n">String</span> <span class="nf">routingKey</span><span class="p">,</span>
+                         <span class="kt">boolean</span> <span class="nf">mandatory</span><span class="p">,</span> <span class="kt">boolean</span> <span class="nf">immediate</span><span class="p">,</span>
+                         <span class="n">BasicProperties</span> <span class="nf">props</span><span class="p">,</span> <span class="kt">byte</span><span class="p">[]</span> <span class="nf">body</span><span class="p">)</span>
+    <span class="kd">throws</span> <span class="nf">IOException</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">nextPublishSeqNo</span> <span class="o">&gt;</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">unconfirmedSet</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">getNextPublishSeqNo</span><span class="p">());</span>
+        <span class="n">nextPublishSeqNo</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">BasicProperties</span> <span class="nf">useProps</span> <span class="o">=</span> <span class="n">props</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">props</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">useProps</span> <span class="o">=</span> <span class="n">MessageProperties</span><span class="p">.</span><span class="na">MINIMAL_BASIC</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">transmit</span><span class="p">(</span><span class="k">new</span> <span class="n">AMQCommand</span><span class="p">(</span><span class="k">new</span> <span class="n">Basic</span><span class="p">.</span><span class="na">Publish</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span>
+                                <span class="p">.</span><span class="na">exchange</span><span class="p">(</span><span class="n">exchange</span><span class="p">)</span>
+                                <span class="p">.</span><span class="na">routingKey</span><span class="p">(</span><span class="n">routingKey</span><span class="p">)</span>
+                                <span class="p">.</span><span class="na">mandatory</span><span class="p">(</span><span class="n">mandatory</span><span class="p">)</span>
+                                <span class="p">.</span><span class="na">immediate</span><span class="p">(</span><span class="n">immediate</span><span class="p">)</span>
+                            <span class="p">.</span><span class="na">build</span><span class="p">(),</span>
+                            <span class="n">useProps</span><span class="p">,</span> <span class="n">body</span><span class="p">));</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="消费">消费</h3>
+
+<p>创建QueueingConsumer实例，然后调用Channel.basicConsume方法。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">queueingConsumer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QueueingConsumer</span><span class="p">(</span><span class="n">channel</span><span class="p">);</span>
+<span class="n">channel</span><span class="p">.</span><span class="na">basicConsume</span><span class="p">(</span><span class="s">&#34;queue_name&#34;</span><span class="p">,</span> <span class="n">queueingConsumer</span><span class="p">);</span>
+<span class="k">new</span> <span class="n">Thread</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nf">void</span> <span class="n">run</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">try</span> <span class="p">{</span>
+                <span class="kd">final</span> <span class="nf">QueueingConsumer</span><span class="p">.</span><span class="na">Delivery</span> <span class="n">delivery</span> <span class="o">=</span> <span class="n">queueingConsumer</span><span class="p">.</span><span class="na">nextDelivery</span><span class="p">();</span>
+                <span class="k">new</span> <span class="n">Thread</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="nd">@Override</span>
+                    <span class="kd">public</span> <span class="nf">void</span> <span class="n">run</span><span class="p">()</span> <span class="p">{</span>
+                      	<span class="k">try</span><span class="p">{</span>
+                            <span class="n">delivery</span><span class="p">.</span><span class="na">getEnvelope</span><span class="p">();</span><span class="c1">//消息头
+</span><span class="c1"></span>                            <span class="n">delivery</span><span class="p">.</span><span class="na">getProperties</span><span class="p">();</span><span class="c1">//消息属性
+</span><span class="c1"></span>                            <span class="n">delivery</span><span class="p">.</span><span class="na">getBody</span><span class="p">()</span><span class="err">；</span><span class="c1">//消息体
+</span><span class="c1"></span>                      	<span class="p">}</span><span class="k">finally</span><span class="p">{</span>
+                          <span class="c1">//channel.basicAck();
+</span><span class="c1"></span>                          <span class="c1">//channel.basicNack()
+</span><span class="c1"></span>                      	<span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}.</span><span class="na">start</span><span class="p">();</span>
+            <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">InterruptedException</span> <span class="nf">e</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}.</span><span class="na">start</span><span class="p">();</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>QueueingConsumer实现了Consumer接口。</p>
+
+<p>Channel.basicConsume方法会封装Channel.Consume消息发送到服务端（阻塞式），等待服务端的Channel.ConsumeOk响应（包含了服务端为Consumer分配的ConsumerTag）。然后将QueueingConsumer放入Map中，<strong>key为ConsumerTag</strong>。consumer是Channel唯一。</p>
+
+<p>当客户端接收到消息，参考<a href="http://atbug.com/deep-in-rabbitmq-java-client/#消息接收">消息接收</a>。Basic.Deliver类型的消息（consumerTag、deliveryTag、redelivered、exchange、routingKey）会进入消费处理流程。Channel根据ConsumerTag从Map中获取对应的QueueConsumer实例，由Channel的ConsumerDispatcher通过Connection初始化的WorkService创建新的处理线程，调用QueueConsumer实例的handleDelivery方法。QueueConsumer将消息封装成Delivery对象，放入BlockingQueue中。</p>
+
+<p>消费线程等待新的Delivery（阻塞式），之后创建新的线程完成消息的处理。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Addo Zhang</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-10-09
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/java/">Java</a>
+          <a href="/tags/rabbitmq/">Rabbitmq</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/flume-filechannel-overview/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Flume - FileChannel （一）</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/crlf-in-git/">
+            <span class="next-text nav-default">Git回车换行</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'addozhang';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:duwasai@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Addo Zhang</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

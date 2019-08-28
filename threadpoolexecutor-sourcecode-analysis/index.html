@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>TheadPoolExecutor源码分析 - 乱世浮生</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Addo Zhang" /><meta name="description" content="TheadPoolExecutor源码分析 ThreadPoolExecutor是多线程中经常用到的类，其使用一个线程池执行提交的任务。 实现 没" /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with even 4.0.0" />
+
+
+<link rel="canonical" href="http://localhost:1313/threadpoolexecutor-sourcecode-analysis/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="TheadPoolExecutor源码分析" />
+<meta property="og:description" content="TheadPoolExecutor源码分析 ThreadPoolExecutor是多线程中经常用到的类，其使用一个线程池执行提交的任务。 实现 没" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/threadpoolexecutor-sourcecode-analysis/" />
+<meta property="article:published_time" content="2017-02-20T09:56:07+08:00" />
+<meta property="article:modified_time" content="2017-02-20T09:56:07+08:00" />
+<meta itemprop="name" content="TheadPoolExecutor源码分析">
+<meta itemprop="description" content="TheadPoolExecutor源码分析 ThreadPoolExecutor是多线程中经常用到的类，其使用一个线程池执行提交的任务。 实现 没">
+
+
+<meta itemprop="datePublished" content="2017-02-20T09:56:07&#43;08:00" />
+<meta itemprop="dateModified" content="2017-02-20T09:56:07&#43;08:00" />
+<meta itemprop="wordCount" content="1358">
+
+
+
+<meta itemprop="keywords" content="Java," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="TheadPoolExecutor源码分析"/>
+<meta name="twitter:description" content="TheadPoolExecutor源码分析 ThreadPoolExecutor是多线程中经常用到的类，其使用一个线程池执行提交的任务。 实现 没"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">乱世浮生</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">乱世浮生</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">TheadPoolExecutor源码分析</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-02-20 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#theadpoolexecutor源码分析">TheadPoolExecutor源码分析</a>
+<ul>
+<li><a href="#实现">实现</a></li>
+<li><a href="#问题">问题</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="theadpoolexecutor源码分析">TheadPoolExecutor源码分析</h1>
+
+<p>ThreadPoolExecutor是多线程中经常用到的类，其使用一个线程池执行提交的任务。</p>
+
+<h2 id="实现">实现</h2>
+
+<p>没有特殊需求的情况下，通常都是用Executors类的静态方法如newCachedThreadPoll来初始化ThreadPoolExecutor实例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">static</span> <span class="n">ExecutorService</span> <span class="nf">newCachedThreadPool</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">0</span><span class="p">,</span> <span class="n">Integer</span><span class="p">.</span><span class="na">MAX_VALUE</span><span class="p">,</span>
+                                  <span class="n">60L</span><span class="p">,</span> <span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">,</span>
+                                  <span class="k">new</span> <span class="n">SynchronousQueue</span><span class="o">&lt;</span><span class="n">Runnable</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>从Executors的方法实现中看出，BlockingQueue使用的SynchronousQueue，底层使用了栈的实现。值得注意的是，这个SynchronousQueue是没有容量限制的，Executors也将maximumPoolSize设为Integer.MAX_VALUE。</p>
+
+<p>ThreadPoolExecutor的构造方法：</p>
+
+<p>按照javadoc的解释：</p>
+
+<ul>
+<li>corePoolSize是池中闲置的最小线程数</li>
+<li>maximumPoolSize是池中允许的最大线程数</li>
+<li>keepAliveTime是线程数大于最小线程数时，过量闲置线程的最大存活时间</li>
+<li>unit是上面存活时间的单位</li>
+
+<li><p>workQueue是用来暂时保存运行前的任务</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">ThreadPoolExecutor</span><span class="p">(</span><span class="kt">int</span> <span class="nf">corePoolSize</span><span class="p">,</span>
+                          <span class="kt">int</span> <span class="nf">maximumPoolSize</span><span class="p">,</span>
+                          <span class="kt">long</span> <span class="nf">keepAliveTime</span><span class="p">,</span>
+                          <span class="n">TimeUnit</span> <span class="nf">unit</span><span class="p">,</span>
+                          <span class="n">BlockingQueue</span><span class="o">&lt;</span><span class="n">Runnable</span><span class="o">&gt;</span> <span class="nf">workQueue</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">void</span> <span class="n">execute</span><span class="p">(</span><span class="n">Runnable</span> <span class="nf">command</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">command</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="n">NullPointerException</span><span class="p">();</span>
+<span class="kt">int</span> <span class="nf">c</span> <span class="o">=</span> <span class="n">ctl</span><span class="p">.</span><span class="na">get</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">workerCountOf</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">corePoolSize</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">addWorker</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="kc">true</span><span class="p">))</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">ctl</span><span class="p">.</span><span class="na">get</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">isRunning</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">workQueue</span><span class="p">.</span><span class="na">offer</span><span class="p">(</span><span class="n">command</span><span class="p">))</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="nf">recheck</span> <span class="o">=</span> <span class="n">ctl</span><span class="p">.</span><span class="na">get</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">isRunning</span><span class="p">(</span><span class="n">recheck</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">remove</span><span class="p">(</span><span class="n">command</span><span class="p">))</span>
+        <span class="n">reject</span><span class="p">(</span><span class="n">command</span><span class="p">);</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">workerCountOf</span><span class="p">(</span><span class="n">recheck</span><span class="p">)</span> <span class="o">==</span> <span class="n">0</span><span class="p">)</span>
+        <span class="n">addWorker</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">addWorker</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="kc">false</span><span class="p">))</span>
+    <span class="n">reject</span><span class="p">(</span><span class="n">command</span><span class="p">);</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+
+<p>除去第一个做任务非空检查的if。</p>
+
+<p>第二个if，检查当前使用的线程数是否超过corePoolSize。未超过，调用addWorker并指定第二个参数为true。addWorker会再次检查线程数是否超过corePoolSize，如果还未超过，则创建一个新的线程执行任务。</p>
+
+<p>第三个if，当目前使用的线程数大于等于corePoolSize，将任务保存到workQueue中。保存成功，再次检查是否需要再创建一个线程。</p>
+
+<p>最后一个else，调用addWorker并指定第二个参数为false。在创建线程前，检查当时线程数是否超过maximumPoolSize，为超过则创建一个新的线程。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="nf">boolean</span> <span class="n">addWorker</span><span class="p">(</span><span class="n">Runnable</span> <span class="nf">firstTask</span><span class="p">,</span> <span class="kt">boolean</span> <span class="nf">core</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">retry</span><span class="o">:</span>
+    <span class="k">for</span> <span class="p">(;;)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="nf">c</span> <span class="o">=</span> <span class="n">ctl</span><span class="p">.</span><span class="na">get</span><span class="p">();</span>
+        <span class="kt">int</span> <span class="nf">rs</span> <span class="o">=</span> <span class="n">runStateOf</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+        <span class="c1">// Check if queue empty only if necessary.
+</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="n">rs</span> <span class="o">&gt;=</span> <span class="n">SHUTDOWN</span> <span class="o">&amp;&amp;</span>
+            <span class="o">!</span> <span class="p">(</span><span class="n">rs</span> <span class="o">==</span> <span class="n">SHUTDOWN</span> <span class="o">&amp;&amp;</span>
+               <span class="n">firstTask</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span>
+               <span class="o">!</span> <span class="n">workQueue</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">()))</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(;;)</span> <span class="p">{</span>
+            <span class="kt">int</span> <span class="nf">wc</span> <span class="o">=</span> <span class="n">workerCountOf</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">wc</span> <span class="o">&gt;=</span> <span class="n">CAPACITY</span> <span class="o">||</span>
+                <span class="n">wc</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">core</span> <span class="o">?</span> <span class="n">corePoolSize</span> <span class="o">:</span> <span class="n">maximumPoolSize</span><span class="p">))</span>
+                <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">compareAndIncrementWorkerCount</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+                <span class="k">break</span> <span class="n">retry</span><span class="p">;</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">ctl</span><span class="p">.</span><span class="na">get</span><span class="p">();</span>  <span class="c1">// Re-read ctl
+</span><span class="c1"></span>            <span class="k">if</span> <span class="p">(</span><span class="n">runStateOf</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">!=</span> <span class="n">rs</span><span class="p">)</span>
+                <span class="k">continue</span> <span class="n">retry</span><span class="p">;</span>
+            <span class="c1">// else CAS failed due to workerCount change; retry inner loop
+</span><span class="c1"></span>        <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">...</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="问题">问题</h2>
+
+<p>一般场景下，不能使用Integer.MAX_VALUE如此大的线程数。所以需要使用构造器自己进行实例化。</p>
+
+<p>如指定corePoolSize=5、maximumPoolSize=20</p>
+
+<p>、keepAliveTime=60L、unit=TimeUnit.SECONDS、workQueue=new SynchronousQueue<Runnable>()。</p>
+
+<p>但是实际执行的时候，线程数一直是5。</p>
+
+<p>回头看ThreadPoolExecutor的实现，如果想要达到我们想要的效果需要程序进入最后的那个else。那重点就在第三个if里的workQueue.offer(command)。</p>
+
+<p>看BlockingQueue接口中该方法的描述：将元素插入到队列中，没有超过容量限制则插入并返回true。</p>
+
+<p>而使用的SynchronousQueue底层实现使用的栈没有容量限制，这就是为什么线程池中的线程数一直是corePoolSize。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Addo Zhang</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-02-20
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/java/">Java</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/offset-be-reset-when-consuming/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">消费时offset被重置导致重复消费</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/kafka-java-producer-model/">
+            <span class="next-text nav-default">Kafka Java生产者模型</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'addozhang';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:duwasai@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Addo Zhang</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>
