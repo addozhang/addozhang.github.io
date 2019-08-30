@@ -45,7 +45,7 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="http://localhost:1313/" />
 
-<meta property="og:updated_time" content="2019-08-27T14:29:12+00:00" />
+<meta property="og:updated_time" content="2019-08-30T11:10:46+08:00" />
 <meta itemprop="name" content="乱世浮生">
 <meta itemprop="description" content="知我者谓我何忧 不知我者谓我何求.">
 
@@ -116,6 +116,27 @@
       <div class="content-wrapper">
         <div id="content" class="content">
           <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/install-godep-issue-in-custom-gopath/">自定义GOPATH下安装godep失败</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-12-22 </span>
+      <div class="post-category">
+          <a href="/categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      我的环境变量是这样的: 1 2 3 4 export GOROOT=/usr/local/go export GOPATH=/Users/addo/Workspaces/go_w export GOBIN=$GOROOT/bin export PATH=$PATH:$GOBIN 使用下面的命令安装报错: go get -v github.com/tools/godep github.com/tools/godep (download) github.com/tools/godep/vendor/github.com/pmezard/go-difflib/difflib github.com/tools/godep/vendor/github.com/kr/fs github.com/tools/godep/vendor/github.com/kr/text github.com/tools/godep/vendor/golang.org/x/tools/go/vcs github.com/tools/godep/vendor/github.com/kr/pretty github.com/tools/godep go install github.com/tools/godep: open /usr/local/go/bin/godep: permission denied 默认是安装到$GOBIN目录下,
+    </div>
+    <div class="read-more">
+      <a href="/install-godep-issue-in-custom-gopath/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
     <article class="post">
   <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/glance-over-spring-boot-source/">SpringBoot源码 - 启动</a></h1>
@@ -196,27 +217,6 @@
     </div>
     <div class="read-more">
       <a href="/spring-cloud-eureka-client-source-code-analysis/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/learning-raft/">Raft算法学习</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2017-10-14 </span>
-      <div class="post-category">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      Raft 强一致性算法 名词 复制状态机 复制状态机是通过复制日志来实现的, 按照日志中的命令的顺序来执行这些命令. 相同的状态机执行相同的日志命令, 获得相同
-    </div>
-    <div class="read-more">
-      <a href="/learning-raft/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

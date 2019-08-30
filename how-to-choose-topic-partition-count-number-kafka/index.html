@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>博客最近半年没什么产出 - 乱世浮生</title>
+  <title>如何选择Kafka Topic的分区数 - 乱世浮生</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="Addo Zhang" /><meta name="description" content="上一篇日志更新还是在去年的12月, 至今有差不多10个月没有更新了. 不是说没有东西可写, 而且想写的东西很多. 工作太忙, 不忙的时候又太懒, 归根结" /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
+<meta name="author" content="Addo Zhang" /><meta name="description" content="在kafka中, topic的分区是并行计算的单元. 在producer端和broker端, 可以同时并发的写数据到不同的分区中. 在consume" /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
 
 
 
@@ -26,7 +26,7 @@
 <meta name="generator" content="Hugo 0.57.2 with even 4.0.0" />
 
 
-<link rel="canonical" href="http://localhost:1313/no-output-in-past-half-year/" />
+<link rel="canonical" href="http://localhost:1313/how-to-choose-topic-partition-count-number-kafka/" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -38,26 +38,26 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="博客最近半年没什么产出" />
-<meta property="og:description" content="上一篇日志更新还是在去年的12月, 至今有差不多10个月没有更新了. 不是说没有东西可写, 而且想写的东西很多. 工作太忙, 不忙的时候又太懒, 归根结" />
+<meta property="og:title" content="如何选择Kafka Topic的分区数" />
+<meta property="og:description" content="在kafka中, topic的分区是并行计算的单元. 在producer端和broker端, 可以同时并发的写数据到不同的分区中. 在consume" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://localhost:1313/no-output-in-past-half-year/" />
-<meta property="article:published_time" content="2019-08-27T14:29:12+00:00" />
-<meta property="article:modified_time" content="2019-08-27T14:29:12+00:00" />
-<meta itemprop="name" content="博客最近半年没什么产出">
-<meta itemprop="description" content="上一篇日志更新还是在去年的12月, 至今有差不多10个月没有更新了. 不是说没有东西可写, 而且想写的东西很多. 工作太忙, 不忙的时候又太懒, 归根结">
+<meta property="og:url" content="http://localhost:1313/how-to-choose-topic-partition-count-number-kafka/" />
+<meta property="article:published_time" content="2019-08-30T11:10:46+08:00" />
+<meta property="article:modified_time" content="2019-08-30T11:10:46+08:00" />
+<meta itemprop="name" content="如何选择Kafka Topic的分区数">
+<meta itemprop="description" content="在kafka中, topic的分区是并行计算的单元. 在producer端和broker端, 可以同时并发的写数据到不同的分区中. 在consume">
 
 
-<meta itemprop="datePublished" content="2019-08-27T14:29:12&#43;00:00" />
-<meta itemprop="dateModified" content="2019-08-27T14:29:12&#43;00:00" />
-<meta itemprop="wordCount" content="850">
+<meta itemprop="datePublished" content="2019-08-30T11:10:46&#43;08:00" />
+<meta itemprop="dateModified" content="2019-08-30T11:10:46&#43;08:00" />
+<meta itemprop="wordCount" content="480">
 
 
 
-<meta itemprop="keywords" content="随笔," />
+<meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="博客最近半年没什么产出"/>
-<meta name="twitter:description" content="上一篇日志更新还是在去年的12月, 至今有差不多10个月没有更新了. 不是说没有东西可写, 而且想写的东西很多. 工作太忙, 不忙的时候又太懒, 归根结"/>
+<meta name="twitter:title" content="如何选择Kafka Topic的分区数"/>
+<meta name="twitter:description" content="在kafka中, topic的分区是并行计算的单元. 在producer端和broker端, 可以同时并发的写数据到不同的分区中. 在consume"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -124,10 +124,10 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">博客最近半年没什么产出</h1>
+      <h1 class="post-title">如何选择Kafka Topic的分区数</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2019-08-27 </span>
+        <span class="post-time"> 2019-08-30 </span>
         <div class="post-category">
             <a href="/categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
             </div>
@@ -138,59 +138,56 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">文章目录</h2>
   <div class="post-toc-content always-active">
-    
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#参考">参考</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
   </div>
 </div>
     <div class="post-content">
-      <p>上一篇日志更新还是在去年的12月, 至今有差不多10个月没有更新了.</p>
+      
 
-<p>不是说没有东西可写, 而且想写的东西很多. 工作太忙, 不忙的时候又太懒, 归根结底还是太懒.</p>
+<p>在kafka中, topic的分区是并行计算的单元. 在producer端和broker端, 可以同时并发的写数据到不同的分区中.
+在consumer端, Kafka总是将某个分区分配个一个consumer线程. 因此同一个消费组内的并行度与分区数息息相关.</p>
 
-<p>过去一年多都是在做基础架构方面的工作, 围绕技术中台展开的. 有很多技术需要去学习, 也有很多问题要处理. 过程中一直有记笔记的习惯, 所以可以写的东西很多. 不过有些属于公司的部分还是不能写的, 必要的职业道德还是要有的.</p>
+<p>Partition分区数的大小, 更多直接影响到消费端的吞吐(一个分区只能同一消费组的一个消费者消费). 分区数小, 消费端的吞吐就低. 但是太大也会有其他的影响</p>
 
-<p>笔记记录一直在用<a href="https://zh.mweb.im">MWeb</a>, 并使用iCloud同步, 最近几个月也在结合<a href="https://mubu.com">幕布</a>整理思路和工作安排. 好用的软件我也比较喜欢分享, 记得最早在Workpress上的博客就分享了很多自己常用的软件. (有点扯远了~~~)</p>
+<p>原则:
+- 更多的分区可提高吞吐量
+- 分区数越多打开的文件句柄越多
+- 分区数越多降低可用性</p>
 
-<p>MWeb没有统计功能, 还有使用的是sqlite. 简单sql查询了下, 从去年这份工作开始有244篇笔记. 今年到现在有109篇. 当然有些笔记的内容比较少, 不得不说这一年多收获甚多.</p>
+<p>归根结底还是得有个度. 如何找出这个度?</p>
 
-<p>为什么今天又写了这么一篇, 源于阮一峰的<a href="http://www.ruanyifeng.com/blog/2019/08/weekly-issue-69.html">科技爱好者周刊：第 69 期</a>.</p>
+<p>有个粗略的计算公式: <code>max(t/p, t/c)</code>. <code>t</code>就是所预期吞吐量, <code>p</code>是当前生产端单个分区的吞吐, 那<code>c</code>就是消费端单个分区的吞吐.</p>
 
-<p>刊首语是&rdquo;一件事&rdquo;做得好&rdquo;比较好，还是&rdquo;做得快&rdquo;比较好？&rdquo;, 直接copy他的结论.</p>
+<p>比如单个partition的生产端吞吐是200, 消费端是100. 预期的吞吐是500, 那么partition的数量就是5.</p>
 
-<blockquote>
-<p>我很赞同<a href="http://jsomers.net/blog/speed-matters">一篇文章</a>的结论：做得快更好。</p>
+<p>单个分区的吞吐通常通过修改配置来提升, 比如生产端的批处理大小, 压缩算法, acknowledgement类型, 副本数等. 而在消费端则更依赖于消息的处理速度.</p>
 
-<blockquote>
-<p>做得快不仅可以让你在单位时间内完成更多的工作，而且 <strong>因为你工作得很快，所以你会觉得成本低，从而倾向于做更多。</strong></p>
-</blockquote>
+<h3 id="参考">参考</h3>
 
-<p>写一篇博客，你可能需要两天。这是很高的时间成本，你觉得太贵了，于是你很少写。但是，<strong>做好一件事的唯一方法，就是多做这件事。</strong> 做得越快，这件事的时间成本就越低，你会愿意做得更多。</p>
-
-<p>人们总是倾向于，多消费时间成本低的东西。网站很快，就会多访问；搜索很快，就会多搜索；文章很容易读懂，就会多读几篇。做得快的核心，就是要让时间成本降下来，从而多做。</p>
-</blockquote>
-
-<p>之前写博客的时候, 确实投入很多. 笔记记录的时候很随意, 但是发到博客中又要花不少的时间来整理语言. 总想写的大而美, 也正是因为这个原因导致大半年没有更新(其实也还是懒), 每次想写都因为要花时间而萌生退意.</p>
-
-<p>所以今后还是多写写, 小而美.</p>
-
-<p>虽然大半年没更新, 访问量居然还有提升.</p>
-
-<p><img src="https://i.loli.net/2019/08/27/XyNqw2HtTxFK6pP.jpg" alt="google analytics" /></p>
+<ul>
+<li><a href="https://www.confluent.io/blog/how-choose-number-topics-partitions-kafka-cluster">Confluent博客</a></li>
+<li><a href="https://engineering.linkedin.com/kafka/benchmarking-apache-kafka-2-million-writes-second-three-cheap-machines">Linkedin的benchmark</a></li>
+</ul>
 
     </div>
 
     
 <footer class="post-footer">
-      <div class="post-tags">
-          <a href="/tags/%E9%9A%8F%E7%AC%94/">随笔</a>
-          </div>
+      
       <nav class="post-nav">
-        <a class="prev" href="/how-to-choose-topic-partition-count-number-kafka/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">如何选择Kafka Topic的分区数</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/spring-boot-configuration-annotation/">
-            <span class="next-text nav-default">Spring Boot源码分析 - Configuration注解</span>
+        
+        <a class="next" href="/no-output-in-past-half-year/">
+            <span class="next-text nav-default">博客最近半年没什么产出</span>
             <span class="next-text nav-mobile">下一篇</span>
             <i class="iconfont icon-right"></i>
           </a>

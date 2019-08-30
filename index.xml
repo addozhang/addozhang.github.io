@@ -6,10 +6,19 @@
     <description>Recent content on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 27 Aug 2019 14:29:12 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 30 Aug 2019 11:10:46 +0800</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>如何选择Kafka Topic的分区数</title>
+      <link>http://localhost:1313/how-to-choose-topic-partition-count-number-kafka/</link>
+      <pubDate>Fri, 30 Aug 2019 11:10:46 +0800</pubDate>
+      
+      <guid>http://localhost:1313/how-to-choose-topic-partition-count-number-kafka/</guid>
+      <description>在kafka中, topic的分区是并行计算的单元. 在producer端和broker端, 可以同时并发的写数据到不同的分区中. 在consume</description>
+    </item>
     
     <item>
       <title>博客最近半年没什么产出</title>
