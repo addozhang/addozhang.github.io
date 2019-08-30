@@ -6,7 +6,7 @@
     <description>Recent content in 一致性 on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 26 Sep 2017 19:13:48 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 26 Sep 2017 19:13:48 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/%E4%B8%80%E8%87%B4%E6%80%A7/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Kafka消息消费一致性</title>
       <link>http://localhost:1313/kafka-consumer-consistency/</link>
-      <pubDate>Tue, 26 Sep 2017 19:13:48 +0800</pubDate>
+      <pubDate>Tue, 26 Sep 2017 19:13:48 +0000</pubDate>
       
       <guid>http://localhost:1313/kafka-consumer-consistency/</guid>
       <description>Kafka消费端的offset主要由consumer来控制, Kafka降每个consumer所监听的tocpic的partition的off</description>

@@ -6,7 +6,7 @@
     <description>Recent content in Go on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 01 Jan 2018 12:30:55 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 01 Jan 2018 12:30:55 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/go/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Go In Action 读书笔记 四</title>
       <link>http://localhost:1313/go-in-action-four/</link>
-      <pubDate>Mon, 01 Jan 2018 12:30:55 +0800</pubDate>
+      <pubDate>Mon, 01 Jan 2018 12:30:55 +0000</pubDate>
       
       <guid>http://localhost:1313/go-in-action-four/</guid>
       <description>&lt;p&gt;&lt;img src=&#34;https://talks.golang.org/2013/go4python/img/fib-go.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
@@ -30,7 +30,7 @@
     <item>
       <title>Go In Action 读书笔记 三</title>
       <link>http://localhost:1313/go-in-action-three/</link>
-      <pubDate>Mon, 01 Jan 2018 12:30:31 +0800</pubDate>
+      <pubDate>Mon, 01 Jan 2018 12:30:31 +0000</pubDate>
       
       <guid>http://localhost:1313/go-in-action-three/</guid>
       <description>&lt;h2 id=&#34;并发&#34;&gt;并发&lt;/h2&gt;
@@ -53,7 +53,7 @@
     <item>
       <title>Go In Action 读书笔记 二</title>
       <link>http://localhost:1313/go-in-action-two/</link>
-      <pubDate>Mon, 01 Jan 2018 12:28:04 +0800</pubDate>
+      <pubDate>Mon, 01 Jan 2018 12:28:04 +0000</pubDate>
       
       <guid>http://localhost:1313/go-in-action-two/</guid>
       <description>&lt;h2 id=&#34;go语言的类型系统&#34;&gt;Go语言的类型系统&lt;/h2&gt;
@@ -121,7 +121,7 @@
     <item>
       <title>Go In Action 读书笔记 一</title>
       <link>http://localhost:1313/go-in-action-one/</link>
-      <pubDate>Mon, 01 Jan 2018 12:27:10 +0800</pubDate>
+      <pubDate>Mon, 01 Jan 2018 12:27:10 +0000</pubDate>
       
       <guid>http://localhost:1313/go-in-action-one/</guid>
       <description>&lt;p&gt;&lt;img src=&#34;http://7xvxng.com1.z0.glb.clouddn.com/15142714785285.jpg&#34; alt=&#34;架构流程图&#34; /&gt;&lt;/p&gt;

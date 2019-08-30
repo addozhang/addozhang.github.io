@@ -6,7 +6,7 @@
     <description>Recent content in Netflix on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 24 Jun 2018 16:20:16 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 24 Jun 2018 16:20:16 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/netflix/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Hystrix工作原理三</title>
       <link>http://localhost:1313/hystrix-exception-handling/</link>
-      <pubDate>Sun, 24 Jun 2018 16:20:16 +0800</pubDate>
+      <pubDate>Sun, 24 Jun 2018 16:20:16 +0000</pubDate>
       
       <guid>http://localhost:1313/hystrix-exception-handling/</guid>
       <description>异常处理 Hystrix异常类型 HystrixRuntimeException HystrixBadRequestException HystrixTimeoutException RejectedExecutionException HystrixRuntimeException HystrixCommand失败时抛出, 不会触发fallback. HystrixBadRequestException 用提供的参数或状态表示错误的异常</description>
@@ -23,7 +23,7 @@
     <item>
       <title>Hystrix工作原理二</title>
       <link>http://localhost:1313/hystrix-isolation/</link>
-      <pubDate>Sun, 24 Jun 2018 16:18:52 +0800</pubDate>
+      <pubDate>Sun, 24 Jun 2018 16:18:52 +0000</pubDate>
       
       <guid>http://localhost:1313/hystrix-isolation/</guid>
       <description>隔离策略 线程和线程池 客户端(库, 网络调用等)在各自的线程上运行. 这种做法将他们与调用线程隔开, 因此调用者可以从一个耗时的依赖调用&amp;rdquo</description>
@@ -32,7 +32,7 @@
     <item>
       <title>初识Netflix Zuul</title>
       <link>http://localhost:1313/learn-netflix-zuul/</link>
-      <pubDate>Sun, 11 Feb 2018 10:07:18 +0800</pubDate>
+      <pubDate>Sun, 11 Feb 2018 10:07:18 +0000</pubDate>
       
       <guid>http://localhost:1313/learn-netflix-zuul/</guid>
       <description>&lt;p&gt;嵌入式的zuul代理&lt;/p&gt;

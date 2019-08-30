@@ -6,7 +6,7 @@
     <description>Recent content in Openshift on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 28 Aug 2018 09:14:12 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 28 Aug 2018 09:14:12 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/openshift/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Alpine容器安装Docker和OpenShift Client Tools</title>
       <link>http://localhost:1313/install-docker-and-openshift-client-tools-in-alpine-container/</link>
-      <pubDate>Tue, 28 Aug 2018 09:14:12 +0800</pubDate>
+      <pubDate>Tue, 28 Aug 2018 09:14:12 +0000</pubDate>
       
       <guid>http://localhost:1313/install-docker-and-openshift-client-tools-in-alpine-container/</guid>
       <description>安装Docker 1 2 3 4 5 6 7 8 9 10 11 12 13 echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/main&amp;#34; &amp;gt; /etc/apk/repositories echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/community&amp;#34; &amp;gt;&amp;gt; /etc/apk/repositories echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/testing&amp;#34; &amp;gt;&amp;gt; /etc/apk/repositories apk -U --no-cache \ --allow-untrusted add \ shadow \ docker \ py-pip \ openrc \ &amp;amp;&amp;amp; pip install docker-compose rc-update add docker boot 安装OpenShift Client Tools 需</description>
@@ -23,7 +23,7 @@
     <item>
       <title>MacOS安装minishift</title>
       <link>http://localhost:1313/install-minishift-on-mac/</link>
-      <pubDate>Fri, 23 Feb 2018 15:32:26 +0800</pubDate>
+      <pubDate>Fri, 23 Feb 2018 15:32:26 +0000</pubDate>
       
       <guid>http://localhost:1313/install-minishift-on-mac/</guid>
       <description>MacOS环境安装minishift 安装minishift cli 1 brew cask install minishift 使用virtualbox安装 安装的时候可以指定HTTP代理, 拉取墙外镜</description>
@@ -32,7 +32,7 @@
     <item>
       <title>如何在Openshift中使用hostPath</title>
       <link>http://localhost:1313/how-to-use-hostpath-in-openshift/</link>
-      <pubDate>Wed, 23 Aug 2017 19:29:51 +0800</pubDate>
+      <pubDate>Wed, 23 Aug 2017 19:29:51 +0000</pubDate>
       
       <guid>http://localhost:1313/how-to-use-hostpath-in-openshift/</guid>
       <description>使用openshift搭建的k8s的api创建Deployment，在启动的时候报下面的错误： Invalid value: &amp;ldquo;hostPath&amp;rdquo;: hostPath volumes are not allowed to be used] 解决方案： 一个方案是将u</description>

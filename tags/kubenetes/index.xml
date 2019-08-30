@@ -6,7 +6,7 @@
     <description>Recent content in Kubenetes on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 23 Aug 2017 19:29:51 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 23 Aug 2017 19:29:51 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/kubenetes/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>如何在Openshift中使用hostPath</title>
       <link>http://localhost:1313/how-to-use-hostpath-in-openshift/</link>
-      <pubDate>Wed, 23 Aug 2017 19:29:51 +0800</pubDate>
+      <pubDate>Wed, 23 Aug 2017 19:29:51 +0000</pubDate>
       
       <guid>http://localhost:1313/how-to-use-hostpath-in-openshift/</guid>
       <description>使用openshift搭建的k8s的api创建Deployment，在启动的时候报下面的错误： Invalid value: &amp;ldquo;hostPath&amp;rdquo;: hostPath volumes are not allowed to be used] 解决方案： 一个方案是将u</description>

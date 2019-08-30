@@ -6,7 +6,7 @@
     <description>Recent content in Flume on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 23 Nov 2016 09:23:57 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 23 Nov 2016 09:23:57 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/flume/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Flume - FileChannel （一）</title>
       <link>http://localhost:1313/flume-filechannel-overview/</link>
-      <pubDate>Wed, 23 Nov 2016 09:23:57 +0800</pubDate>
+      <pubDate>Wed, 23 Nov 2016 09:23:57 +0000</pubDate>
       
       <guid>http://localhost:1313/flume-filechannel-overview/</guid>
       <description>概述 当使用Flume的时候，每个流程都包含了输入源、通道和输出。一个典型的例子是一个web服务器将事件通过RPC（搬入AvroSource）</description>

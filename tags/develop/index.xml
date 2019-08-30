@@ -6,7 +6,7 @@
     <description>Recent content in develop on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 14 Sep 2016 09:16:10 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 14 Sep 2016 09:16:10 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/develop/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Git回车换行</title>
       <link>http://localhost:1313/crlf-in-git/</link>
-      <pubDate>Wed, 14 Sep 2016 09:16:10 +0800</pubDate>
+      <pubDate>Wed, 14 Sep 2016 09:16:10 +0000</pubDate>
       
       <guid>http://localhost:1313/crlf-in-git/</guid>
       <description>最近又个项目，checkout之后，没做任何改动前git status发现已经有modified了，通过git diff发现有两种改动： - warning: CRLF will</description>

@@ -6,7 +6,7 @@
     <description>Recent content in 多线程 on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 24 May 2017 06:50:44 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 24 May 2017 06:50:44 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>私有构造函数捕获模式</title>
       <link>http://localhost:1313/private-constructor-capture-idiom/</link>
-      <pubDate>Wed, 24 May 2017 06:50:44 +0800</pubDate>
+      <pubDate>Wed, 24 May 2017 06:50:44 +0000</pubDate>
       
       <guid>http://localhost:1313/private-constructor-capture-idiom/</guid>
       <description>《Java并发编程实践》的注解中有提到这一概念。 The private constructor exists to avoid the race condition that would occur if the copy constructor were implemented as this (p.x, p.y); this is an example of the private constructor capture idiom (Bloch and Gafter, 2005). 结合原文代码： 1 2 3</description>

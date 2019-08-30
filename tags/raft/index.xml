@@ -6,7 +6,7 @@
     <description>Recent content in Raft on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 14 Oct 2017 05:57:34 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 14 Oct 2017 05:57:34 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/raft/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Raft算法学习</title>
       <link>http://localhost:1313/learning-raft/</link>
-      <pubDate>Sat, 14 Oct 2017 05:57:34 +0800</pubDate>
+      <pubDate>Sat, 14 Oct 2017 05:57:34 +0000</pubDate>
       
       <guid>http://localhost:1313/learning-raft/</guid>
       <description>Raft 强一致性算法 名词 复制状态机 复制状态机是通过复制日志来实现的, 按照日志中的命令的顺序来执行这些命令. 相同的状态机执行相同的日志命令, 获得相同</description>

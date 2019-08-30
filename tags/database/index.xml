@@ -6,7 +6,7 @@
     <description>Recent content in Database on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 06 Apr 2017 22:54:17 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 06 Apr 2017 22:54:17 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/database/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Centos上安装Postgresql</title>
       <link>http://localhost:1313/install-postgresql-on-centos/</link>
-      <pubDate>Thu, 06 Apr 2017 22:54:17 +0800</pubDate>
+      <pubDate>Thu, 06 Apr 2017 22:54:17 +0000</pubDate>
       
       <guid>http://localhost:1313/install-postgresql-on-centos/</guid>
       <description>版本 Centos7 Postgresql9.2 Enable ssh service sshd start Open firewall for 22 firewall-cmd —state firewall-cmd —list-all firewall-cmd —permanent —zone=public —add-port=22/tcp firewall-cmd</description>

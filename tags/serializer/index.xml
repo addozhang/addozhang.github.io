@@ -6,7 +6,7 @@
     <description>Recent content in Serializer on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 02 Dec 2017 07:35:43 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 02 Dec 2017 07:35:43 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/serializer/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Java序列化工具性能对比</title>
       <link>http://localhost:1313/java-serval-serializer-benchmark/</link>
-      <pubDate>Sat, 02 Dec 2017 07:35:43 +0800</pubDate>
+      <pubDate>Sat, 02 Dec 2017 07:35:43 +0000</pubDate>
       
       <guid>http://localhost:1313/java-serval-serializer-benchmark/</guid>
       <description>最近在调整系统的性能, 系统中正使用Jackson作为序列化工具. 做了下与fastJson, Avro, ProtoStuff的序列化吞吐对比. 由于只是做</description>

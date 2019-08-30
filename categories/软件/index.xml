@@ -6,7 +6,7 @@
     <description>Recent content in 软件 on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 30 Mar 2016 14:27:02 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 30 Mar 2016 14:27:02 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/categories/%E8%BD%AF%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Rabbitmq延迟队列实现</title>
       <link>http://localhost:1313/rabbitmq-delay-queue-implementation/</link>
-      <pubDate>Wed, 30 Mar 2016 14:27:02 +0800</pubDate>
+      <pubDate>Wed, 30 Mar 2016 14:27:02 +0000</pubDate>
       
       <guid>http://localhost:1313/rabbitmq-delay-queue-implementation/</guid>
       <description>工作中很多场景需要用到定时任务、延迟任务，常用的方法用crontab job、Spring的Quartz，然后扫描整张数据库表，判断哪些数据需</description>
@@ -23,7 +23,7 @@
     <item>
       <title>日常工作中使用的chrome插件</title>
       <link>http://localhost:1313/chrome-extensions-for-daily-work/</link>
-      <pubDate>Sun, 09 Feb 2014 09:26:50 +0800</pubDate>
+      <pubDate>Sun, 09 Feb 2014 09:26:50 +0000</pubDate>
       
       <guid>http://localhost:1313/chrome-extensions-for-daily-work/</guid>
       <description>先说下背景，Java程序猿一枚，兼做hybrid app。所以日常工作中免不了要跟浏览器打交道，一般就只用chrome了，看中它的调试功能和庞</description>

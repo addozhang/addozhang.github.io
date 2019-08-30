@@ -6,7 +6,7 @@
     <description>Recent content in Rabbitmq on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 09 Oct 2016 09:20:07 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 09 Oct 2016 09:20:07 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/rabbitmq/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>探索Rabbitmq的Java客户端</title>
       <link>http://localhost:1313/deep-in-rabbitmq-java-client/</link>
-      <pubDate>Sun, 09 Oct 2016 09:20:07 +0800</pubDate>
+      <pubDate>Sun, 09 Oct 2016 09:20:07 +0000</pubDate>
       
       <guid>http://localhost:1313/deep-in-rabbitmq-java-client/</guid>
       <description>AMQPConnection 实例初始化 创建Connection时会通过FrameHandlerFacotry创建一个SocketFrameHandler，Socket</description>

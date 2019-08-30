@@ -6,7 +6,7 @@
     <description>Recent content in ops on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 12 Apr 2018 12:45:15 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 12 Apr 2018 12:45:15 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/ops/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>KVM安装手册</title>
       <link>http://localhost:1313/kvm-installation-note/</link>
-      <pubDate>Thu, 12 Apr 2018 12:45:15 +0800</pubDate>
+      <pubDate>Thu, 12 Apr 2018 12:45:15 +0000</pubDate>
       
       <guid>http://localhost:1313/kvm-installation-note/</guid>
       <description>&lt;h2 id=&#34;添加虚拟机流程&#34;&gt;添加虚拟机流程：&lt;/h2&gt;

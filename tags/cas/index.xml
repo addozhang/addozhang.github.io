@@ -6,7 +6,7 @@
     <description>Recent content in cas on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 18 Apr 2017 10:36:16 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 18 Apr 2017 10:36:16 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/cas/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Jasig CAS Web and Proxy flow</title>
       <link>http://localhost:1313/jasig-cas-web-and-proxy-flow/</link>
-      <pubDate>Tue, 18 Apr 2017 10:36:16 +0800</pubDate>
+      <pubDate>Tue, 18 Apr 2017 10:36:16 +0000</pubDate>
       
       <guid>http://localhost:1313/jasig-cas-web-and-proxy-flow/</guid>
       <description>最近因为需求在看CAS相关的只是，由于需要后端调用，用到proxy（代理）模式。整理了下web flow和proxy web flow的流程。 Web Flow Proxy Web</description>

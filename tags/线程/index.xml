@@ -6,7 +6,7 @@
     <description>Recent content in 线程 on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 19 Jul 2017 22:25:19 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 19 Jul 2017 22:25:19 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/%E7%BA%BF%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>暴力停止ExecutorService的线程</title>
       <link>http://localhost:1313/stop-a-thread-of-executor-service/</link>
-      <pubDate>Wed, 19 Jul 2017 22:25:19 +0800</pubDate>
+      <pubDate>Wed, 19 Jul 2017 22:25:19 +0000</pubDate>
       
       <guid>http://localhost:1313/stop-a-thread-of-executor-service/</guid>
       <description>停止，stop，这里说的是真的停止。如何优雅的结束，这里就不提了。 这里要用Thread.stop()。众所周知，stop()方法在JDK中是</description>

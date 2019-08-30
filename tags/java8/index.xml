@@ -6,7 +6,7 @@
     <description>Recent content in Java8 on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 13 Apr 2017 11:55:14 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 13 Apr 2017 11:55:14 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/java8/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>MetaspaceSize的坑</title>
       <link>http://localhost:1313/java8-metaspace-size-issue/</link>
-      <pubDate>Thu, 13 Apr 2017 11:55:14 +0800</pubDate>
+      <pubDate>Thu, 13 Apr 2017 11:55:14 +0000</pubDate>
       
       <guid>http://localhost:1313/java8-metaspace-size-issue/</guid>
       <description>这几天生产上有台机器的Metaspace一直在告警，Metaspace使用达到了97%。使用-XX:MetaspaceSize=512m，告</description>

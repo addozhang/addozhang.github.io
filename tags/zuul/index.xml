@@ -6,7 +6,7 @@
     <description>Recent content in Zuul on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 02 Aug 2018 08:55:43 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 02 Aug 2018 08:55:43 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/zuul/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Zuul网关Ribbon重试</title>
       <link>http://localhost:1313/ribbon-retry-in-zuul/</link>
-      <pubDate>Thu, 02 Aug 2018 08:55:43 +0800</pubDate>
+      <pubDate>Thu, 02 Aug 2018 08:55:43 +0000</pubDate>
       
       <guid>http://localhost:1313/ribbon-retry-in-zuul/</guid>
       <description>相关配置 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 #如果路由转发请求发生超时(连接超时或处理超时), 只要超时时间的设置小于Hystrix的命令</description>
@@ -23,7 +23,7 @@
     <item>
       <title>Spring Cloud Zuul详解</title>
       <link>http://localhost:1313/spring-cloud-zuul-breakdown/</link>
-      <pubDate>Thu, 22 Feb 2018 17:02:26 +0800</pubDate>
+      <pubDate>Thu, 22 Feb 2018 17:02:26 +0000</pubDate>
       
       <guid>http://localhost:1313/spring-cloud-zuul-breakdown/</guid>
       <description>&lt;p&gt;Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看&lt;a href=&#34;http://atbug.com/learn-netflix-zuul/&#34;&gt;上一篇&lt;/a&gt;.&lt;/p&gt;
@@ -106,7 +106,7 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
     <item>
       <title>初识Netflix Zuul</title>
       <link>http://localhost:1313/learn-netflix-zuul/</link>
-      <pubDate>Sun, 11 Feb 2018 10:07:18 +0800</pubDate>
+      <pubDate>Sun, 11 Feb 2018 10:07:18 +0000</pubDate>
       
       <guid>http://localhost:1313/learn-netflix-zuul/</guid>
       <description>&lt;p&gt;嵌入式的zuul代理&lt;/p&gt;

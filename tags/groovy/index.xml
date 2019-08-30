@@ -6,7 +6,7 @@
     <description>Recent content in Groovy on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 20 Apr 2018 12:18:46 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 20 Apr 2018 12:18:46 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/groovy/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Jenkins CI/CD (一) 基于角色的授权策略</title>
       <link>http://localhost:1313/using-role-based-authorization-strategy-in-jenkins/</link>
-      <pubDate>Fri, 20 Apr 2018 12:18:46 +0800</pubDate>
+      <pubDate>Fri, 20 Apr 2018 12:18:46 +0000</pubDate>
       
       <guid>http://localhost:1313/using-role-based-authorization-strategy-in-jenkins/</guid>
       <description>&lt;p&gt;最近开始客串运维做CI/CD的规划设计, 主要是基于&amp;rsquo;Pipeline as Code in Jenkins&amp;rsquo;. 整理了下思路和技术点, 慢慢的写.&lt;/p&gt;

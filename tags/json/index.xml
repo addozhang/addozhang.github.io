@@ -6,7 +6,7 @@
     <description>Recent content in JSON on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 27 Aug 2017 14:41:44 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 27 Aug 2017 14:41:44 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/json/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>JSON Patch</title>
       <link>http://localhost:1313/json-patch/</link>
-      <pubDate>Sun, 27 Aug 2017 14:41:44 +0800</pubDate>
+      <pubDate>Sun, 27 Aug 2017 14:41:44 +0000</pubDate>
       
       <guid>http://localhost:1313/json-patch/</guid>
       <description>JSON Path是在使用Kubernetes API的过程中首次使用的. 使用API做扩缩容的时候, 发送整个Deployment的全文不是个明智的做法</description>

@@ -6,7 +6,7 @@
     <description>Recent content in google on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 09 Feb 2014 09:26:50 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 09 Feb 2014 09:26:50 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/google/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>日常工作中使用的chrome插件</title>
       <link>http://localhost:1313/chrome-extensions-for-daily-work/</link>
-      <pubDate>Sun, 09 Feb 2014 09:26:50 +0800</pubDate>
+      <pubDate>Sun, 09 Feb 2014 09:26:50 +0000</pubDate>
       
       <guid>http://localhost:1313/chrome-extensions-for-daily-work/</guid>
       <description>先说下背景，Java程序猿一枚，兼做hybrid app。所以日常工作中免不了要跟浏览器打交道，一般就只用chrome了，看中它的调试功能和庞</description>

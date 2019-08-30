@@ -6,7 +6,7 @@
     <description>Recent content in Cassandra on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 18 May 2017 23:33:24 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 18 May 2017 23:33:24 +0000</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/tags/cassandra/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Docker快速构建Cassandra和Java操作</title>
       <link>http://localhost:1313/java-operate-cassandra-deployed-in-docker/</link>
-      <pubDate>Thu, 18 May 2017 23:33:24 +0800</pubDate>
+      <pubDate>Thu, 18 May 2017 23:33:24 +0000</pubDate>
       
       <guid>http://localhost:1313/java-operate-cassandra-deployed-in-docker/</guid>
       <description>搭建Cassandra 使用docker创建Cassandra，方便快捷 1 2 3 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table</description>
