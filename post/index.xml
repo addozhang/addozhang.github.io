@@ -6,10 +6,19 @@
     <description>Recent content in Posts on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 30 Aug 2019 11:10:46 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 22 Sep 2019 17:59:56 +0800</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Zipkin dependencies的坑之一: 耗时越来越长</title>
+      <link>http://localhost:1313/zipkin-dependencies-bug-one/</link>
+      <pubDate>Sun, 22 Sep 2019 17:59:56 +0800</pubDate>
+      
+      <guid>http://localhost:1313/zipkin-dependencies-bug-one/</guid>
+      <description>zipkin-dependencies是zipkin调用链的依赖分析工具. 系统上线时使用了当时的最新版本2.0.1, 运行一年之后随着服务的增</description>
+    </item>
     
     <item>
       <title>如何选择Kafka Topic的分区数</title>

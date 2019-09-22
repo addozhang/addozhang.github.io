@@ -45,7 +45,7 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="http://localhost:1313/" />
 
-<meta property="og:updated_time" content="2019-08-30T11:10:46+08:00" />
+<meta property="og:updated_time" content="2019-09-22T17:59:56+08:00" />
 <meta itemprop="name" content="乱世浮生">
 <meta itemprop="description" content="知我者谓我何忧 不知我者谓我何求.">
 
@@ -116,6 +116,66 @@
       <div class="content-wrapper">
         <div id="content" class="content">
           <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/go-in-action-one/">Go In Action 读书笔记 一</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-01-01 </span>
+      <div class="post-category">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15142714785285.jpg" alt="架构流程图" /></p>
+
+<h2 id="关键字">关键字</h2>
+
+<h3 id="var">var</h3>
+
+<p>变量使用<code>var</code>声明, 如果变量不是定义在任何一个函数作用域内, 这个变量就是包级变量.
+&gt; Go语言中, 所有变量都被初始化为其<strong>零值</strong>. 对于数值类型, 其零值是<strong>0</strong>;  对于字符串类型, 其零值是<strong>空字符串&rdquo;&rdquo;</strong>; 对于布尔类型, 其零值是<strong>false</strong>. 对于引用类型来说, 底层数据结构会被初始化对应的零值. 但是被生命被起零值的引用类型的变量, 会返回<strong>nil</strong>作为其值.</p>
+
+<h3 id="const">const</h3>
+
+<p>定义常量</p>
+
+<h3 id="interface">interface</h3>
+
+<p>声明接口</p>
+
+<h3 id="func">func</h3>
+
+<p>声明函数</p>
+
+<h3 id="defer">defer</h3>
+
+<p>安排后面的函数调用在当前函数返回时才执行.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">file</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">open</span><span class="p">(</span><span class="s">&#34;filePath&#34;</span><span class="p">)</span>
+<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span>
+    <span class="k">return</span>
+<span class="k">defer</span> <span class="nx">file</span><span class="p">.</span><span class="nb">close</span><span class="p">()</span>
+<span class="err">#</span> <span class="nx">more</span> <span class="nx">file</span> <span class="nx">operation</span></code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+    <div class="read-more">
+      <a href="/go-in-action-one/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
     <article class="post">
   <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/install-godep-issue-in-custom-gopath/">自定义GOPATH下安装godep失败</a></h1>
@@ -196,27 +256,6 @@
     </div>
     <div class="read-more">
       <a href="/kafka-reliable-data-delivery/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/spring-cloud-eureka-client-source-code-analysis/">Spring Cloud - Eureka Client源码分析</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2017-10-14 </span>
-      <div class="post-category">
-          <a href="/categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      准备做个Spring Cloud源码分析系列, 作为Spring Cloud的源码分析笔记. 这一篇是Eureka的客户端. 客户端 两种方式, 最终的实
-    </div>
-    <div class="read-more">
-      <a href="/spring-cloud-eureka-client-source-code-analysis/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>
