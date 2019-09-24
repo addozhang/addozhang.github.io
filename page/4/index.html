@@ -45,7 +45,7 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="http://localhost:1313/" />
 
-<meta property="og:updated_time" content="2019-09-22T17:59:56+08:00" />
+<meta property="og:updated_time" content="2019-09-22T18:27:37+08:00" />
 <meta itemprop="name" content="乱世浮生">
 <meta itemprop="description" content="知我者谓我何忧 不知我者谓我何求.">
 
@@ -116,6 +116,85 @@
       <div class="content-wrapper">
         <div id="content" class="content">
           <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/kvm-installation-note/">KVM安装手册</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-04-12 </span>
+      <div class="post-category">
+          <a href="/categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h2 id="添加虚拟机流程">添加虚拟机流程：</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">1. 配置网络
+2. 配置存储池
+3. 上传镜像
+4. 安装虚拟机，指定配置</pre></td></tr></table>
+</div>
+</div>
+<h3 id="安装kvm虚拟机">安装KVM虚拟机</h3>
+
+<h4 id="1-关闭防火墙-selinux">1. 关闭防火墙，selinux</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># service iptables stop</span>
+<span class="c1"># setenforce 0 临时关闭</span>
+<span class="c1"># chkconfig NetworkManager off</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="2-安装kvm虚拟机">2. 安装kvm虚拟机</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># yum install kvm libvirt libvirt-devel python-virtinst python-virtinst qemu-kvm virt-viewer bridge-utils virt-top libguestfs-tools ca-certificates audit-libs-python device-mapper-libs virt-install</span>
+<span class="c1"># 启动服务</span>
+<span class="c1"># service libvirtd restart</span>
+下载virtio-win-1.5.2-1.el6.noarch.rpm 如果不安装window虚拟机或者使用带virtio驱动的镜像可以不用安装
+<span class="c1"># rpm -ivh virtio-win-1.5.2-1.el6.noarch.rpm</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="3-libvirt在管理本地或远程hypervisor时的表现形式如下">3. Libvirt在管理本地或远程Hypervisor时的表现形式如下。</h4>
+
+<p>在libvirt内部管理了五部分：</p>
+
+<ul>
+<li>节点：所谓的节点就是我们的物理服务器，一个服务器代表一个节点，上边存放着Hyper和Domain</li>
+<li>Hypervisor：即VMM，指虚拟机的监控程序，在KVM中是一个加载了kvm.ko的标准Linux系统。</li>
+<li>域（Domain）：指虚拟机，一个域代表一个虚拟机（估计思路来源于Xen的Domain0）</li>
+<li>存储池（Storage Pool）：存储空间，支持多种协议和网络存储。作为虚拟机磁盘的存储源。</li>
+<li>卷组（Volume）：虚拟机磁盘在Host上的表现形式。
+上边的五部分，我们必须使用的是前三个，因为很多时候根据业务规则或应用的灵活性并没有使用卷组（其实就是有了编制的虚拟磁盘文件），也就没有必要使用存储池。</li>
+</ul>
+    </div>
+    <div class="read-more">
+      <a href="/kvm-installation-note/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
     <article class="post">
   <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/jenkins-cli-enable/">启用Jenkins CLI</a></h1>
@@ -270,53 +349,6 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
     </div>
     <div class="read-more">
       <a href="/spring-cloud-zuul-breakdown/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/spring-cloud-service-registry-via-eureka/">Spring Cloud - Eureka服务注册</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2018-02-14 </span>
-      <div class="post-category">
-          <a href="/categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <p>之前分析过<a href="http://atbug.com/spring-cloud-eureka-client-source-code-analysis/">Spring Cloud的Eureka服务发现</a>, 今天分析一下服务注册.</p>
-
-<h2 id="配置">配置</h2>
-
-<h3 id="bootstrapconfiguration">BootstrapConfiguration</h3>
-
-<h4 id="eurekadiscoveryclientconfigservicebootstrapconfiguration">EurekaDiscoveryClientConfigServiceBootstrapConfiguration</h4>
-
-<p>spring-cloud-config环境中使用的配置</p>
-
-<p>引入<code>EurekaDiscoveryClientConfiguration</code>和<code>EurekaClientAutoConfiguration</code></p>
-
-<h5 id="eurekadiscoveryclientconfiguration">EurekaDiscoveryClientConfiguration</h5>
-
-<ol>
-<li>在spring-cloud中(通过是否存在RefreshScopeRefreshedEvent.class判断), 添加<code>RefreshScopeRefreshedEvent</code>的listener. 收到事件后重新注册实例.</li>
-<li>在<code>eureka.client.healthcheck.enabled</code>设置为true时, 注册<code>EurekaHealthCheckHandler</code>bean. <code>EurekaHealthCheckHandler</code>负责将应用状态映射为实例状态<code>InstanceStatus</code>.</li>
-</ol>
-
-<h5 id="eurekaclientautoconfiguration">EurekaClientAutoConfiguration</h5>
-
-<p>支持spring-cloud和非spring-cloud环境, 在spring-cloud环境中, 下面两个bean要使用<code>@RefreshScope</code>标注</p>
-
-<ol>
-<li>实例化<code>EurekaClient</code>bean, 在spring-cloud中使用实现类<code>CloudEurekaClient</code>.</li>
-<li>使用<code>EurekaInstanceConfig</code>实例, 实例化<code>ApplicationInfoManager</code>bean</li>
-</ol>
-    </div>
-    <div class="read-more">
-      <a href="/spring-cloud-service-registry-via-eureka/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

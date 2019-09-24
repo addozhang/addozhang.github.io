@@ -6,10 +6,19 @@
     <description>Recent content in Posts on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 22 Sep 2019 17:59:56 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 22 Sep 2019 18:27:37 +0800</lastBuildDate>
     
 	<atom:link href="http://localhost:1313/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Zipkin dependencies的坑之二: 心跳超时和Executor OOM</title>
+      <link>http://localhost:1313/zipkin-dependencies-bug-two-timeout-and-oom/</link>
+      <pubDate>Sun, 22 Sep 2019 18:27:37 +0800</pubDate>
+      
+      <guid>http://localhost:1313/zipkin-dependencies-bug-two-timeout-and-oom/</guid>
+      <description>上回说为了解决吞吐问题, 将zipkin-dependencies的版本升级到了2.3.0. 好景不长, 从某一天开始作业运行报错: 1 2 3 4 5 6 7</description>
+    </item>
     
     <item>
       <title>Zipkin dependencies的坑之一: 耗时越来越长</title>
