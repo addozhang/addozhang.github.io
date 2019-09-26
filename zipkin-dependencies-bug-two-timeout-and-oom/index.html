@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2019-09-22T18:27:37&#43;08:00" />
 <meta itemprop="dateModified" content="2019-09-22T18:27:37&#43;08:00" />
-<meta itemprop="wordCount" content="132">
+<meta itemprop="wordCount" content="280">
 
 
 
@@ -145,7 +145,6 @@
 <li>
 <ul>
 <li><a href="#解决方案">解决方案</a></li>
-<li><a href="#tl-dr">TL;DR</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -184,20 +183,23 @@ java.lang.OutOfMemoryError: Java heap space
 </div>
 <h3 id="解决方案">解决方案</h3>
 
-<p>为spark指定配置:</p>
+<p>最新版本(2.3.0)目前不支持额外的spark和elasticsearch-spark的配置, 已经提交了<a href="https://github.com/openzipkin/zipkin-dependencies/pull/151">PR</a></p>
+
+<ol>
+<li><p>超时的解决方案: 为spark指定配置</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code class="language-properties" data-lang="properties"><span class="lnt">1
 </span><span class="lnt">2
-</span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-properties" data-lang="properties">es.input.max.docs.per.partitions=
-spark.executor.heartbeatInterval=600000
+<pre class="chroma"><code class="language-properties" data-lang="properties">spark.executor.heartbeatInterval=600000
 spark.network.timeout=600000</code></pre></td></tr></table>
 </div>
-</div>
-<h3 id="tl-dr">TL;DR</h3>
+</div></li>
+
+<li><p>OOM解决方案: 根据实际情况通过<code>es.input.max.docs.per.partition</code>配置executor的数量. 调整运行内存及<code>spark.executor.memory</code></p></li>
+</ol>
 
     </div>
 
