@@ -1,363 +1,115 @@
 <!DOCTYPE html>
-<html lang="zh-cn">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>笔记 · 乱世浮生</title>
-  <meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.57.2" />
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-<meta name="theme-color" content="#f8f5ec" />
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
-
-
-<meta name="author" content="Addo Zhang" /><meta name="description" content="知我者谓我何忧 不知我者谓我何求." /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
-
-
-
-
-
-
-<meta name="generator" content="Hugo 0.57.2 with even 4.0.0" />
-
-
-<link rel="canonical" href="http://localhost:1313/categories/%E7%AC%94%E8%AE%B0/" />
-  <link href="http://localhost:1313/categories/%E7%AC%94%E8%AE%B0/index.xml" rel="alternate" type="application/rss+xml" title="乱世浮生" />
-  <link href="http://localhost:1313/categories/%E7%AC%94%E8%AE%B0/index.xml" rel="feed" type="application/rss+xml" title="乱世浮生" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-
-
-<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
-
-
-<meta property="og:title" content="笔记" />
-<meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="http://localhost:1313/categories/%E7%AC%94%E8%AE%B0/" />
-
-<meta property="og:updated_time" content="2019-10-22T09:27:03+08:00" />
-<meta itemprop="name" content="笔记">
-<meta itemprop="description" content="知我者谓我何忧 不知我者谓我何求.">
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="笔记"/>
-<meta name="twitter:description" content="知我者谓我何忧 不知我者谓我何求."/>
-
-<!--[if lte IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
-<![endif]-->
-
-<!--[if lt IE 9]>
-  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-<![endif]-->
-
-</head>
-<body>
-  <div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="/" class="logo">乱世浮生</a>
-  </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list">
-    <a href="/">
-        <li class="mobile-menu-item">Home</li>
-      </a><a href="/post/">
-        <li class="mobile-menu-item">Archives</li>
-      </a><a href="/tags/">
-        <li class="mobile-menu-item">Tags</li>
-      </a><a href="/categories/">
-        <li class="mobile-menu-item">Categories</li>
-      </a><a href="/about/">
-        <li class="mobile-menu-item">About</li>
-      </a>
-  </ul>
-</nav>
-  <div class="container" id="mobile-panel">
-    <header id="header" class="header">
-        <div class="logo-wrapper">
-  <a href="/" class="logo">乱世浮生</a>
-</div>
-
-<nav class="site-navbar">
-  <ul id="menu" class="menu">
-    <li class="menu-item">
-        <a class="menu-item-link" href="/">Home</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/post/">Archives</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/tags/">Tags</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/categories/">Categories</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/about/">About</a>
-      </li>
-  </ul>
-</nav>
-    </header>
-
-    <main id="main" class="main">
-      <div class="content-wrapper">
-        <div id="content" class="content">
-          <section id="archive" class="archive">
-  <div class="archive-title category">
-        <h2 class="archive-name">笔记</h2>
-      </div>
-
-  <div class="archive-post">
-      <span class="archive-post-time">
-        2019-10-22
-      </span>
-      <span class="archive-post-title">
-        <a href="/spring-boot-2-2-0-release/" class="archive-post-link">
-          Spring Boot 2.2.0 发布
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2019-09-22
-      </span>
-      <span class="archive-post-title">
-        <a href="/zipkin-dependencies-bug-two-timeout-and-oom/" class="archive-post-link">
-          Zipkin dependencies的坑之二: 心跳超时和Executor OOM
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2019-09-22
-      </span>
-      <span class="archive-post-title">
-        <a href="/zipkin-dependencies-bug-one/" class="archive-post-link">
-          Zipkin dependencies的坑之一: 耗时越来越长
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2019-08-30
-      </span>
-      <span class="archive-post-title">
-        <a href="/how-to-choose-topic-partition-count-number-kafka/" class="archive-post-link">
-          如何选择Kafka Topic的分区数
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2019-08-27
-      </span>
-      <span class="archive-post-title">
-        <a href="/no-output-in-past-half-year/" class="archive-post-link">
-          博客最近半年没什么产出
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2018-12-10
-      </span>
-      <span class="archive-post-title">
-        <a href="/spring-boot-configuration-annotation/" class="archive-post-link">
-          Spring Boot源码分析 - Configuration注解
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2018-08-28
-      </span>
-      <span class="archive-post-title">
-        <a href="/install-docker-and-openshift-client-tools-in-alpine-container/" class="archive-post-link">
-          Alpine容器安装Docker和OpenShift Client Tools
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2018-08-02
-      </span>
-      <span class="archive-post-title">
-        <a href="/ribbon-retry-in-zuul/" class="archive-post-link">
-          Zuul网关Ribbon重试
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2018-06-24
-      </span>
-      <span class="archive-post-title">
-        <a href="/hystrix-exception-handling/" class="archive-post-link">
-          Hystrix工作原理三
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2018-06-24
-      </span>
-      <span class="archive-post-title">
-        <a href="/hystrix-isolation/" class="archive-post-link">
-          Hystrix工作原理二
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2018-06-04
-      </span>
-      <span class="archive-post-title">
-        <a href="/how-hystrix-works/" class="archive-post-link">
-          Hystrix工作原理一
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2018-06-01
-      </span>
-      <span class="archive-post-title">
-        <a href="/rsyslogd-high-cpu-trouble-shooting/" class="archive-post-link">
-          解决rsyslogd资源占用率高问题
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2018-05-30
-      </span>
-      <span class="archive-post-title">
-        <a href="/nginx-dynamic-domain-parse-in-kubernetes/" class="archive-post-link">
-          Kubernetes中的Nginx动态解析
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2018-05-05
-      </span>
-      <span class="archive-post-title">
-        <a href="/spring-cloud-ribbon-breakdown-1/" class="archive-post-link">
-          Spring Cloud Ribbon 详解
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2018-04-12
-      </span>
-      <span class="archive-post-title">
-        <a href="/kvm-installation-note/" class="archive-post-link">
-          KVM安装手册
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2018-04-09
-      </span>
-      <span class="archive-post-title">
-        <a href="/jenkins-cli-enable/" class="archive-post-link">
-          启用Jenkins CLI
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2018-03-15
-      </span>
-      <span class="archive-post-title">
-        <a href="/resolve-process-be-killed-after-jenkins-job-done/" class="archive-post-link">
-          Jenkins - 解决execute shell中启动的进程被在Job退出时被杀死问题
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2018-02-23
-      </span>
-      <span class="archive-post-title">
-        <a href="/install-minishift-on-mac/" class="archive-post-link">
-          MacOS安装minishift
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2018-02-22
-      </span>
-      <span class="archive-post-title">
-        <a href="/spring-cloud-zuul-breakdown/" class="archive-post-link">
-          Spring Cloud Zuul详解
-        </a>
-      </span>
-    </div><div class="archive-post">
-      <span class="archive-post-time">
-        2018-02-14
-      </span>
-      <span class="archive-post-title">
-        <a href="/spring-cloud-service-registry-via-eureka/" class="archive-post-link">
-          Spring Cloud - Eureka服务注册
-        </a>
-      </span>
-    </div>
-</section>
-
-<nav class="pagination">
   
-  <a class="next" href="/categories/%E7%AC%94%E8%AE%B0/page/2/">
-      <span class="next-text">下一页</span>
-      <i class="iconfont icon-right"></i>
-    </a>
-</nav>
-        </div>
-        
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-      </div>
+  <title>笔记 &middot; 乱世浮生</title>
+  <meta name="description" content="" />
+
+  
+  <link type="text/css" rel="stylesheet" href="http://localhost:1313/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="http://localhost:1313/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="http://localhost:1313/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="http://localhost:1313/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="http://localhost:1313/categories/%E7%AC%94%E8%AE%B0/index.xml" rel="alternate" type="application/rss+xml" title="乱世浮生" />
+  
+</head>
+
+  <body class="theme-base-08 ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="http://localhost:1313/"><h1>乱世浮生</h1></a>
+      <p class="lead">
+       知我者谓我何忧 不知我者谓我何求. 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="http://localhost:1313/">Home</a> </li>
+        <li><a href="/post/"> Archives </a></li><li><a href="/tags/"> Tags </a></li><li><a href="/categories/"> Categories </a></li><li><a href="/about/"> About </a></li>
+      </ul>
+    </nav>
+
+    <p>&copy; 2019. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <ul class="posts">
+<li>
+    <span><a href="http://localhost:1313/spring-boot-2-2-0-release/">Spring Boot 2.2.0 发布</a> <time class="pull-right post-list" datetime="2019-10-22T09:27:03&#43;0800">Tue, Oct 22, 2019</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/zipkin-dependencies-bug-two-timeout-and-oom/">Zipkin dependencies的坑之二: 心跳超时和Executor OOM</a> <time class="pull-right post-list" datetime="2019-09-22T18:27:37&#43;0800">Sun, Sep 22, 2019</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/zipkin-dependencies-bug-one/">Zipkin dependencies的坑之一: 耗时越来越长</a> <time class="pull-right post-list" datetime="2019-09-22T17:59:56&#43;0800">Sun, Sep 22, 2019</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/how-to-choose-topic-partition-count-number-kafka/">如何选择Kafka Topic的分区数</a> <time class="pull-right post-list" datetime="2019-08-30T11:10:46&#43;0800">Fri, Aug 30, 2019</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/no-output-in-past-half-year/">博客最近半年没什么产出</a> <time class="pull-right post-list" datetime="2019-08-27T14:29:12Z">Tue, Aug 27, 2019</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/spring-boot-configuration-annotation/">Spring Boot源码分析 - Configuration注解</a> <time class="pull-right post-list" datetime="2018-12-10T16:24:33Z">Mon, Dec 10, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/install-docker-and-openshift-client-tools-in-alpine-container/">Alpine容器安装Docker和OpenShift Client Tools</a> <time class="pull-right post-list" datetime="2018-08-28T09:14:12Z">Tue, Aug 28, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/ribbon-retry-in-zuul/">Zuul网关Ribbon重试</a> <time class="pull-right post-list" datetime="2018-08-02T08:55:43Z">Thu, Aug 2, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/hystrix-exception-handling/">Hystrix工作原理三</a> <time class="pull-right post-list" datetime="2018-06-24T16:20:16Z">Sun, Jun 24, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/hystrix-isolation/">Hystrix工作原理二</a> <time class="pull-right post-list" datetime="2018-06-24T16:18:52Z">Sun, Jun 24, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/how-hystrix-works/">Hystrix工作原理一</a> <time class="pull-right post-list" datetime="2018-06-04T08:47:40Z">Mon, Jun 4, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/rsyslogd-high-cpu-trouble-shooting/">解决rsyslogd资源占用率高问题</a> <time class="pull-right post-list" datetime="2018-06-01T09:32:28Z">Fri, Jun 1, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/nginx-dynamic-domain-parse-in-kubernetes/">Kubernetes中的Nginx动态解析</a> <time class="pull-right post-list" datetime="2018-05-30T12:10:32Z">Wed, May 30, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/spring-cloud-ribbon-breakdown-1/">Spring Cloud Ribbon 详解</a> <time class="pull-right post-list" datetime="2018-05-05T11:18:05Z">Sat, May 5, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/kvm-installation-note/">KVM安装手册</a> <time class="pull-right post-list" datetime="2018-04-12T12:45:15Z">Thu, Apr 12, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/jenkins-cli-enable/">启用Jenkins CLI</a> <time class="pull-right post-list" datetime="2018-04-09T11:16:38Z">Mon, Apr 9, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/resolve-process-be-killed-after-jenkins-job-done/">Jenkins - 解决execute shell中启动的进程被在Job退出时被杀死问题</a> <time class="pull-right post-list" datetime="2018-03-15T17:00:25Z">Thu, Mar 15, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/install-minishift-on-mac/">MacOS安装minishift</a> <time class="pull-right post-list" datetime="2018-02-23T15:32:26Z">Fri, Feb 23, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/spring-cloud-zuul-breakdown/">Spring Cloud Zuul详解</a> <time class="pull-right post-list" datetime="2018-02-22T17:02:26Z">Thu, Feb 22, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/spring-cloud-service-registry-via-eureka/">Spring Cloud - Eureka服务注册</a> <time class="pull-right post-list" datetime="2018-02-14T07:32:43Z">Wed, Feb 14, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/learn-netflix-zuul/">初识Netflix Zuul</a> <time class="pull-right post-list" datetime="2018-02-11T10:07:18Z">Sun, Feb 11, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/configurationproperties-requires-getter-or-not/">ConfigurationProperties到底需不需要getter</a> <time class="pull-right post-list" datetime="2018-02-07T15:53:21Z">Wed, Feb 7, 2018</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/install-godep-issue-in-custom-gopath/">自定义GOPATH下安装godep失败</a> <time class="pull-right post-list" datetime="2017-12-22T13:02:38Z">Fri, Dec 22, 2017</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/kafka-reliable-data-delivery/">Kafka的消息可靠传递</a> <time class="pull-right post-list" datetime="2017-11-18T14:01:46Z">Sat, Nov 18, 2017</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/spring-cloud-eureka-client-source-code-analysis/">Spring Cloud - Eureka Client源码分析</a> <time class="pull-right post-list" datetime="2017-10-14T22:04:59Z">Sat, Oct 14, 2017</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/java8-metaspace-size-issue/">MetaspaceSize的坑</a> <time class="pull-right post-list" datetime="2017-04-13T11:55:14Z">Thu, Apr 13, 2017</time></span>
+  </li><li>
+    <span><a href="http://localhost:1313/clean-speicified-keys-in-redis/">Redis清理缓存</a> <time class="pull-right post-list" datetime="2016-12-13T16:54:41Z">Tue, Dec 13, 2016</time></span>
+  </li>
+</ul>
     </main>
 
-    <footer id="footer" class="footer">
-      <div class="social-links">
-      <a href="mailto:duwasai@gmail.com" class="iconfont icon-email" title="email"></a>
-      <a href="https://github.com/addozhang" class="iconfont icon-github" title="github"></a>
-  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
-</div>
-
-<div class="copyright">
-  <span class="power-by">
-    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    主题 - 
-    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
-  </span>
-
-  
-
-  <span class="copyright-year">
-    &copy; 
-    2015 - 
-    2019
-    <span class="heart">
-      <i class="iconfont icon-heart"></i>
-    </span>
-    <span class="author">Addo Zhang</span>
-  </span>
-</div>
-    </footer>
-
-    <div class="back-to-top" id="back-to-top">
-      <i class="iconfont icon-up"></i>
-    </div>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
-<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
-
-
+    
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -369,11 +121,5 @@ if (!doNotTrack) {
 </script>
 <script async src='https://www.google-analytics.com/analytics.js'></script>
 
-
-
-
-
-
-
-</body>
+  </body>
 </html>
