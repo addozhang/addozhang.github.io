@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<?xml-stylesheet type="text/xsl" href="http://localhost:1313/sitemap.xsl"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
     <loc>http://localhost:1313/categories/</loc>
@@ -17,14 +16,14 @@
   </url>
   
   <url>
-    <loc>http://localhost:1313/spring-boot-2-2-0-release/</loc>
+    <loc>http://localhost:1313/tags/spring-boot/</loc>
     <lastmod>2019-10-22T09:27:03+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>http://localhost:1313/tags/spring-boot/</loc>
+    <loc>http://localhost:1313/spring-boot-2-2-0-release/</loc>
     <lastmod>2019-10-22T09:27:03+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -269,14 +268,14 @@
   </url>
   
   <url>
-    <loc>http://localhost:1313/tags/devops/</loc>
+    <loc>http://localhost:1313/categories/devops/</loc>
     <lastmod>2018-04-20T12:18:46+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>http://localhost:1313/categories/devops/</loc>
+    <loc>http://localhost:1313/tags/devops/</loc>
     <lastmod>2018-04-20T12:18:46+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
