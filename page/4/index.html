@@ -45,7 +45,7 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="http://localhost:1313/" />
 
-<meta property="og:updated_time" content="2019-09-22T18:27:37+08:00" />
+<meta property="og:updated_time" content="2019-10-22T09:27:03+08:00" />
 <meta itemprop="name" content="乱世浮生">
 <meta itemprop="description" content="知我者谓我何忧 不知我者谓我何求.">
 
@@ -116,6 +116,45 @@
       <div class="content-wrapper">
         <div id="content" class="content">
           <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/using-role-based-authorization-strategy-in-jenkins/">Jenkins CI/CD (一) 基于角色的授权策略</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-04-20 </span>
+      <div class="post-category">
+          <a href="/categories/devops/"> DevOps </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>最近开始客串运维做CI/CD的规划设计, 主要是基于&rsquo;Pipeline as Code in Jenkins&rsquo;. 整理了下思路和技术点, 慢慢的写.</p>
+
+<p>这一篇是关于基于角色的授权策略, 用的是<code>Role-Based Authorization Strategy Plugin</code>.</p>
+
+<p>授权在CI/CD流程中比较常见, 比如我们只让某些特定用户才可以构建Pre-Release的Job. 而更高级的Release发布, 又会需要某些用户的审批才可以进行. 需要授权时, 可能还需要发邮件提醒用户.</p>
+
+<p>UI上如何使用就不提了, 这里只说Pipeline as Code. 后面的几篇也会是这个背景.</p>
+
+<p>参考的这篇<a href="https://www.avioconsulting.com/blog/using-role-based-authorization-strategy-jenkins">文章</a>, 文章里的代码运行失败, 做了修复.</p>
+
+<h2 id="配置">配置</h2>
+
+<p>安装完插件, 需要开始<code>基于角色的授权策略</code>. 同时添加角色和为用户分配角色.</p>
+
+<h3 id="使用-role-based-strategy-作为验证方式">使用<code>Role-Based Strategy</code>作为验证方式</h3>
+
+<p><code>Manage Jenkins / Configure Global Security / Configure Global Security</code></p>
+
+<p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15241955282214.jpg" alt="" /></p>
+    </div>
+    <div class="read-more">
+      <a href="/using-role-based-authorization-strategy-in-jenkins/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
     <article class="post">
   <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/kvm-installation-note/">KVM安装手册</a></h1>
@@ -254,101 +293,6 @@
     </div>
     <div class="read-more">
       <a href="/install-minishift-on-mac/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/spring-cloud-zuul-breakdown/">Spring Cloud Zuul详解</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2018-02-22 </span>
-      <div class="post-category">
-          <a href="/categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <p>Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看<a href="http://atbug.com/learn-netflix-zuul/">上一篇</a>.</p>
-
-<h2 id="实现">实现</h2>
-
-<p>@EnableZuulProxy 与 @EnableZuulServer
-二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用.
-Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
-
-<h3 id="具体实现">具体实现:</h3>
-
-<ol>
-<li>使用<code>ZuulController</code>(<code>ServletWrappingController</code>的子类)封装<code>ZuulServlet</code>实例, 处理从<code>DispatcherServlet</code>进来的请求.</li>
-<li><code>ZuulHandlerMapping</code>负责注册handler mapping, 将<code>Route</code>的<code>fullPath</code>的请求交由<code>ZuulController</code>处理.</li>
-<li>同时使用<code>ServletRegistrationBean</code>注册<code>ZuulServlet</code>, 默认使用<code>/zuul</code>作为urlMapping. 所有来自以<code>/zuul</code>开头的path的请求都会直接进入<code>ZuulServlet</code>, 不会进入<code>DispatcherServlet</code>.</li>
-</ol>
-
-<h4 id="使用注解">使用注解</h4>
-
-<ul>
-<li><p><code>@EnableZuulProxy</code>引入了<code>ZuulProxyMarkerConfiguration</code>, <code>ZuulProxyMarkerConfiguration</code>只做了一件事, 实例化了内部类<code>Marker</code>.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
-<span class="kd">public</span> <span class="nf">class</span> <span class="n">ZuulProxyMarkerConfiguration</span> <span class="p">{</span>
-    <span class="nd">@Bean</span>
-    <span class="kd">public</span> <span class="nf">Marker</span> <span class="n">zuulProxyMarkerBean</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">Marker</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="kd">class</span> <span class="nf">Marker</span> <span class="p">{</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></td></tr></table>
-</div>
-</div></li>
-
-<li><p><code>@EnableZuulServer</code>引入了<code>ZuulServerMarkerConfiguration</code>, <code>ZuulServerMarkerConfiguration</code>也只做了一件事: 实例化了内部类<code>Marker</code></p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
-<span class="kd">public</span> <span class="nf">class</span> <span class="n">ZuulServerMarkerConfiguration</span> <span class="p">{</span>
-    <span class="nd">@Bean</span>
-    <span class="kd">public</span> <span class="nf">Marker</span> <span class="n">zuulServerMarkerBean</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">Marker</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="kd">class</span> <span class="nf">Marker</span> <span class="p">{</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></td></tr></table>
-</div>
-</div></li>
-</ul>
-    </div>
-    <div class="read-more">
-      <a href="/spring-cloud-zuul-breakdown/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>
