@@ -269,14 +269,14 @@
   </url>
   
   <url>
-    <loc>https://atbug.com/categories/devops/</loc>
+    <loc>https://atbug.com/tags/devops/</loc>
     <lastmod>2018-04-20T12:18:46+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://atbug.com/tags/devops/</loc>
+    <loc>https://atbug.com/categories/devops/</loc>
     <lastmod>2018-04-20T12:18:46+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
