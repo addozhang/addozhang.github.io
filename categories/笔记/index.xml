@@ -2,138 +2,138 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>笔记 on 乱世浮生</title>
-    <link>/categories/%E7%AC%94%E8%AE%B0/</link>
+    <link>https://atbug.com/categories/%E7%AC%94%E8%AE%B0/</link>
     <description>Recent content in 笔记 on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Tue, 22 Oct 2019 09:27:03 +0800</lastBuildDate>
     
-	<atom:link href="/categories/%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://atbug.com/categories/%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Spring Boot 2.2.0 发布</title>
-      <link>/spring-boot-2-2-0-release/</link>
+      <link>https://atbug.com/spring-boot-2-2-0-release/</link>
       <pubDate>Tue, 22 Oct 2019 09:27:03 +0800</pubDate>
       
-      <guid>/spring-boot-2-2-0-release/</guid>
+      <guid>https://atbug.com/spring-boot-2-2-0-release/</guid>
       <description>译自: https://spring.io/blog/2019/10/16/spring-boot-2-2-0 组件升级 Spring AMQP 2.2 Spring Batch 4.2 Spring Data Moore Spring Framework 5.2 Spring HATEOAS 1.0 Spring Integration 5.2 Spring Kafka 2.3 Spring Security 5.2 Spring Session Corn 第三方库升级 Elasticsearch 6.7 Flyway 6.0 Jackson 2.10 JUnit 5.5 Micrometer 1.3 Reactor Dysprosium Solr 8.0 性能提升 延迟初始化(Lazy initialization)</description>
     </item>
     
     <item>
       <title>Zipkin dependencies的坑之二: 心跳超时和Executor OOM</title>
-      <link>/zipkin-dependencies-bug-two-timeout-and-oom/</link>
+      <link>https://atbug.com/zipkin-dependencies-bug-two-timeout-and-oom/</link>
       <pubDate>Sun, 22 Sep 2019 18:27:37 +0800</pubDate>
       
-      <guid>/zipkin-dependencies-bug-two-timeout-and-oom/</guid>
+      <guid>https://atbug.com/zipkin-dependencies-bug-two-timeout-and-oom/</guid>
       <description>上回说为了解决吞吐问题, 将zipkin-dependencies的版本升级到了2.3.0. 好景不长, 从某一天开始作业运行报错: 1 2 3 4 5 6 7</description>
     </item>
     
     <item>
       <title>Zipkin dependencies的坑之一: 耗时越来越长</title>
-      <link>/zipkin-dependencies-bug-one/</link>
+      <link>https://atbug.com/zipkin-dependencies-bug-one/</link>
       <pubDate>Sun, 22 Sep 2019 17:59:56 +0800</pubDate>
       
-      <guid>/zipkin-dependencies-bug-one/</guid>
+      <guid>https://atbug.com/zipkin-dependencies-bug-one/</guid>
       <description>zipkin-dependencies是zipkin调用链的依赖分析工具. 系统上线时使用了当时的最新版本2.0.1, 运行一年之后随着服务的增</description>
     </item>
     
     <item>
       <title>如何选择Kafka Topic的分区数</title>
-      <link>/how-to-choose-topic-partition-count-number-kafka/</link>
+      <link>https://atbug.com/how-to-choose-topic-partition-count-number-kafka/</link>
       <pubDate>Fri, 30 Aug 2019 11:10:46 +0800</pubDate>
       
-      <guid>/how-to-choose-topic-partition-count-number-kafka/</guid>
+      <guid>https://atbug.com/how-to-choose-topic-partition-count-number-kafka/</guid>
       <description>在kafka中, topic的分区是并行计算的单元. 在producer端和broker端, 可以同时并发的写数据到不同的分区中. 在consume</description>
     </item>
     
     <item>
       <title>博客最近半年没什么产出</title>
-      <link>/no-output-in-past-half-year/</link>
+      <link>https://atbug.com/no-output-in-past-half-year/</link>
       <pubDate>Tue, 27 Aug 2019 14:29:12 +0000</pubDate>
       
-      <guid>/no-output-in-past-half-year/</guid>
+      <guid>https://atbug.com/no-output-in-past-half-year/</guid>
       <description>上一篇日志更新还是在去年的12月, 至今有差不多10个月没有更新了. 不是说没有东西可写, 而且想写的东西很多. 工作太忙, 不忙的时候又太懒, 归根结</description>
     </item>
     
     <item>
       <title>Spring Boot源码分析 - Configuration注解</title>
-      <link>/spring-boot-configuration-annotation/</link>
+      <link>https://atbug.com/spring-boot-configuration-annotation/</link>
       <pubDate>Mon, 10 Dec 2018 16:24:33 +0000</pubDate>
       
-      <guid>/spring-boot-configuration-annotation/</guid>
+      <guid>https://atbug.com/spring-boot-configuration-annotation/</guid>
       <description>@Configuration注解 @Configuration注解指示一个类声明一个或多个@Bean方法, 并且可以由Spring容器处理, 以在</description>
     </item>
     
     <item>
       <title>Alpine容器安装Docker和OpenShift Client Tools</title>
-      <link>/install-docker-and-openshift-client-tools-in-alpine-container/</link>
+      <link>https://atbug.com/install-docker-and-openshift-client-tools-in-alpine-container/</link>
       <pubDate>Tue, 28 Aug 2018 09:14:12 +0000</pubDate>
       
-      <guid>/install-docker-and-openshift-client-tools-in-alpine-container/</guid>
+      <guid>https://atbug.com/install-docker-and-openshift-client-tools-in-alpine-container/</guid>
       <description>安装Docker 1 2 3 4 5 6 7 8 9 10 11 12 13 echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/main&amp;#34; &amp;gt; /etc/apk/repositories echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/community&amp;#34; &amp;gt;&amp;gt; /etc/apk/repositories echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/testing&amp;#34; &amp;gt;&amp;gt; /etc/apk/repositories apk -U --no-cache \ --allow-untrusted add \ shadow \ docker \ py-pip \ openrc \ &amp;amp;&amp;amp; pip install docker-compose rc-update add docker boot 安装OpenShift Client Tools 需</description>
     </item>
     
     <item>
       <title>Zuul网关Ribbon重试</title>
-      <link>/ribbon-retry-in-zuul/</link>
+      <link>https://atbug.com/ribbon-retry-in-zuul/</link>
       <pubDate>Thu, 02 Aug 2018 08:55:43 +0000</pubDate>
       
-      <guid>/ribbon-retry-in-zuul/</guid>
+      <guid>https://atbug.com/ribbon-retry-in-zuul/</guid>
       <description>相关配置 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 #如果路由转发请求发生超时(连接超时或处理超时), 只要超时时间的设置小于Hystrix的命令</description>
     </item>
     
     <item>
       <title>Hystrix工作原理三</title>
-      <link>/hystrix-exception-handling/</link>
+      <link>https://atbug.com/hystrix-exception-handling/</link>
       <pubDate>Sun, 24 Jun 2018 16:20:16 +0000</pubDate>
       
-      <guid>/hystrix-exception-handling/</guid>
+      <guid>https://atbug.com/hystrix-exception-handling/</guid>
       <description>异常处理 Hystrix异常类型 HystrixRuntimeException HystrixBadRequestException HystrixTimeoutException RejectedExecutionException HystrixRuntimeException HystrixCommand失败时抛出, 不会触发fallback. HystrixBadRequestException 用提供的参数或状态表示错误的异常</description>
     </item>
     
     <item>
       <title>Hystrix工作原理二</title>
-      <link>/hystrix-isolation/</link>
+      <link>https://atbug.com/hystrix-isolation/</link>
       <pubDate>Sun, 24 Jun 2018 16:18:52 +0000</pubDate>
       
-      <guid>/hystrix-isolation/</guid>
+      <guid>https://atbug.com/hystrix-isolation/</guid>
       <description>隔离策略 线程和线程池 客户端(库, 网络调用等)在各自的线程上运行. 这种做法将他们与调用线程隔开, 因此调用者可以从一个耗时的依赖调用&amp;rdquo</description>
     </item>
     
     <item>
       <title>Hystrix工作原理一</title>
-      <link>/how-hystrix-works/</link>
+      <link>https://atbug.com/how-hystrix-works/</link>
       <pubDate>Mon, 04 Jun 2018 08:47:40 +0000</pubDate>
       
-      <guid>/how-hystrix-works/</guid>
+      <guid>https://atbug.com/how-hystrix-works/</guid>
       <description>运行时的流程图 构建HystrixCommand或者HystrixObservableCommand对象 第一步是构建一个HystrixComm</description>
     </item>
     
     <item>
       <title>解决rsyslogd资源占用率高问题</title>
-      <link>/rsyslogd-high-cpu-trouble-shooting/</link>
+      <link>https://atbug.com/rsyslogd-high-cpu-trouble-shooting/</link>
       <pubDate>Fri, 01 Jun 2018 09:32:28 +0000</pubDate>
       
-      <guid>/rsyslogd-high-cpu-trouble-shooting/</guid>
+      <guid>https://atbug.com/rsyslogd-high-cpu-trouble-shooting/</guid>
       <description>rsyslogd资源占用高问题记录 问题: openshift集群安装在esxi的虚拟机上. 各个节点出现问题, 集群响应很慢. kswapd0进程c</description>
     </item>
     
     <item>
       <title>Kubernetes中的Nginx动态解析</title>
-      <link>/nginx-dynamic-domain-parse-in-kubernetes/</link>
+      <link>https://atbug.com/nginx-dynamic-domain-parse-in-kubernetes/</link>
       <pubDate>Wed, 30 May 2018 12:10:32 +0000</pubDate>
       
-      <guid>/nginx-dynamic-domain-parse-in-kubernetes/</guid>
+      <guid>https://atbug.com/nginx-dynamic-domain-parse-in-kubernetes/</guid>
       <description>背景 Nginx运行在kubernets中, 反向代理service提供服务. kubernetes版本v1.9.1+a0ce1bc657. 问题:</description>
     </item>
     
     <item>
       <title>Spring Cloud Ribbon 详解</title>
-      <link>/spring-cloud-ribbon-breakdown-1/</link>
+      <link>https://atbug.com/spring-cloud-ribbon-breakdown-1/</link>
       <pubDate>Sat, 05 May 2018 11:18:05 +0000</pubDate>
       
-      <guid>/spring-cloud-ribbon-breakdown-1/</guid>
+      <guid>https://atbug.com/spring-cloud-ribbon-breakdown-1/</guid>
       <description>&lt;p&gt;客户端负载均衡, Ribbon的核心概念是命名的客户端.&lt;/p&gt;
 
 &lt;h2 id=&#34;使用&#34;&gt;使用&lt;/h2&gt;
@@ -203,10 +203,10 @@
     
     <item>
       <title>KVM安装手册</title>
-      <link>/kvm-installation-note/</link>
+      <link>https://atbug.com/kvm-installation-note/</link>
       <pubDate>Thu, 12 Apr 2018 12:45:15 +0000</pubDate>
       
-      <guid>/kvm-installation-note/</guid>
+      <guid>https://atbug.com/kvm-installation-note/</guid>
       <description>&lt;h2 id=&#34;添加虚拟机流程&#34;&gt;添加虚拟机流程：&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
@@ -270,37 +270,37 @@
     
     <item>
       <title>启用Jenkins CLI</title>
-      <link>/jenkins-cli-enable/</link>
+      <link>https://atbug.com/jenkins-cli-enable/</link>
       <pubDate>Mon, 09 Apr 2018 11:16:38 +0000</pubDate>
       
-      <guid>/jenkins-cli-enable/</guid>
+      <guid>https://atbug.com/jenkins-cli-enable/</guid>
       <description>Jenkins CLI提供了SSH和Client模式. Docker运行Jenkins 1 2 3 4 5 6 7 8 9 10 version:&amp;#39;3&amp;#39;services:jenkins:image:jenkins/jenkins:alpineports:-8080:8080-50000:50000-46059:46059volumes:-&amp;#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&amp;#34; note: 以为是docker运行, ssh端口设置选用了固</description>
     </item>
     
     <item>
       <title>Jenkins - 解决execute shell中启动的进程被在Job退出时被杀死问题</title>
-      <link>/resolve-process-be-killed-after-jenkins-job-done/</link>
+      <link>https://atbug.com/resolve-process-be-killed-after-jenkins-job-done/</link>
       <pubDate>Thu, 15 Mar 2018 17:00:25 +0000</pubDate>
       
-      <guid>/resolve-process-be-killed-after-jenkins-job-done/</guid>
+      <guid>https://atbug.com/resolve-process-be-killed-after-jenkins-job-done/</guid>
       <description>因为ProcessTreeKiller的存在, 构建过程中使用shell启动的进程在Job完成时都会被kill掉. 各种搜索以及ProcessT</description>
     </item>
     
     <item>
       <title>MacOS安装minishift</title>
-      <link>/install-minishift-on-mac/</link>
+      <link>https://atbug.com/install-minishift-on-mac/</link>
       <pubDate>Fri, 23 Feb 2018 15:32:26 +0000</pubDate>
       
-      <guid>/install-minishift-on-mac/</guid>
+      <guid>https://atbug.com/install-minishift-on-mac/</guid>
       <description>MacOS环境安装minishift 安装minishift cli 1 brew cask install minishift 使用virtualbox安装 安装的时候可以指定HTTP代理, 拉取墙外镜</description>
     </item>
     
     <item>
       <title>Spring Cloud Zuul详解</title>
-      <link>/spring-cloud-zuul-breakdown/</link>
+      <link>https://atbug.com/spring-cloud-zuul-breakdown/</link>
       <pubDate>Thu, 22 Feb 2018 17:02:26 +0000</pubDate>
       
-      <guid>/spring-cloud-zuul-breakdown/</guid>
+      <guid>https://atbug.com/spring-cloud-zuul-breakdown/</guid>
       <description>&lt;p&gt;Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看&lt;a href=&#34;http://atbug.com/learn-netflix-zuul/&#34;&gt;上一篇&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&#34;实现&#34;&gt;实现&lt;/h2&gt;
@@ -380,10 +380,10 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
     
     <item>
       <title>Spring Cloud - Eureka服务注册</title>
-      <link>/spring-cloud-service-registry-via-eureka/</link>
+      <link>https://atbug.com/spring-cloud-service-registry-via-eureka/</link>
       <pubDate>Wed, 14 Feb 2018 07:32:43 +0000</pubDate>
       
-      <guid>/spring-cloud-service-registry-via-eureka/</guid>
+      <guid>https://atbug.com/spring-cloud-service-registry-via-eureka/</guid>
       <description>&lt;p&gt;之前分析过&lt;a href=&#34;http://atbug.com/spring-cloud-eureka-client-source-code-analysis/&#34;&gt;Spring Cloud的Eureka服务发现&lt;/a&gt;, 今天分析一下服务注册.&lt;/p&gt;
 
 &lt;h2 id=&#34;配置&#34;&gt;配置&lt;/h2&gt;
@@ -415,10 +415,10 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
     
     <item>
       <title>初识Netflix Zuul</title>
-      <link>/learn-netflix-zuul/</link>
+      <link>https://atbug.com/learn-netflix-zuul/</link>
       <pubDate>Sun, 11 Feb 2018 10:07:18 +0000</pubDate>
       
-      <guid>/learn-netflix-zuul/</guid>
+      <guid>https://atbug.com/learn-netflix-zuul/</guid>
       <description>&lt;p&gt;嵌入式的zuul代理&lt;/p&gt;
 
 &lt;p&gt;使用了Netfilx OSS的其他组件:
@@ -449,55 +449,55 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
     
     <item>
       <title>ConfigurationProperties到底需不需要getter</title>
-      <link>/configurationproperties-requires-getter-or-not/</link>
+      <link>https://atbug.com/configurationproperties-requires-getter-or-not/</link>
       <pubDate>Wed, 07 Feb 2018 15:53:21 +0000</pubDate>
       
-      <guid>/configurationproperties-requires-getter-or-not/</guid>
+      <guid>https://atbug.com/configurationproperties-requires-getter-or-not/</guid>
       <description>为什么要讨论这个问题, 工作中一个同事写的类使用了ConfigurationProperties, 只提供了标准的setter方法. 属性的访问,</description>
     </item>
     
     <item>
       <title>自定义GOPATH下安装godep失败</title>
-      <link>/install-godep-issue-in-custom-gopath/</link>
+      <link>https://atbug.com/install-godep-issue-in-custom-gopath/</link>
       <pubDate>Fri, 22 Dec 2017 13:02:38 +0000</pubDate>
       
-      <guid>/install-godep-issue-in-custom-gopath/</guid>
+      <guid>https://atbug.com/install-godep-issue-in-custom-gopath/</guid>
       <description>我的环境变量是这样的: 1 2 3 4 export GOROOT=/usr/local/go export GOPATH=/Users/addo/Workspaces/go_w export GOBIN=$GOROOT/bin export PATH=$PATH:$GOBIN 使用下面的命令安装报错: go get -v github.com/tools/godep github.com/tools/godep (download) github.com/tools/godep/vendor/github.com/pmezard/go-difflib/difflib github.com/tools/godep/vendor/github.com/kr/fs github.com/tools/godep/vendor/github.com/kr/text github.com/tools/godep/vendor/golang.org/x/tools/go/vcs github.com/tools/godep/vendor/github.com/kr/pretty github.com/tools/godep go install github.com/tools/godep: open /usr/local/go/bin/godep: permission denied 默认是安装到$GOBIN目录下,</description>
     </item>
     
     <item>
       <title>Kafka的消息可靠传递</title>
-      <link>/kafka-reliable-data-delivery/</link>
+      <link>https://atbug.com/kafka-reliable-data-delivery/</link>
       <pubDate>Sat, 18 Nov 2017 14:01:46 +0000</pubDate>
       
-      <guid>/kafka-reliable-data-delivery/</guid>
+      <guid>https://atbug.com/kafka-reliable-data-delivery/</guid>
       <description>Kafka提供的基础保障可以用来构建可靠的系统, 却无法保证完全可靠. 需要在可靠性和吞吐之间做取舍. Kafka在分区上提供了消息的顺序保证. 生</description>
     </item>
     
     <item>
       <title>Spring Cloud - Eureka Client源码分析</title>
-      <link>/spring-cloud-eureka-client-source-code-analysis/</link>
+      <link>https://atbug.com/spring-cloud-eureka-client-source-code-analysis/</link>
       <pubDate>Sat, 14 Oct 2017 22:04:59 +0000</pubDate>
       
-      <guid>/spring-cloud-eureka-client-source-code-analysis/</guid>
+      <guid>https://atbug.com/spring-cloud-eureka-client-source-code-analysis/</guid>
       <description>准备做个Spring Cloud源码分析系列, 作为Spring Cloud的源码分析笔记. 这一篇是Eureka的客户端. 客户端 两种方式, 最终的实</description>
     </item>
     
     <item>
       <title>MetaspaceSize的坑</title>
-      <link>/java8-metaspace-size-issue/</link>
+      <link>https://atbug.com/java8-metaspace-size-issue/</link>
       <pubDate>Thu, 13 Apr 2017 11:55:14 +0000</pubDate>
       
-      <guid>/java8-metaspace-size-issue/</guid>
+      <guid>https://atbug.com/java8-metaspace-size-issue/</guid>
       <description>这几天生产上有台机器的Metaspace一直在告警，Metaspace使用达到了97%。使用-XX:MetaspaceSize=512m，告</description>
     </item>
     
     <item>
       <title>Redis清理缓存</title>
-      <link>/clean-speicified-keys-in-redis/</link>
+      <link>https://atbug.com/clean-speicified-keys-in-redis/</link>
       <pubDate>Tue, 13 Dec 2016 16:54:41 +0000</pubDate>
       
-      <guid>/clean-speicified-keys-in-redis/</guid>
+      <guid>https://atbug.com/clean-speicified-keys-in-redis/</guid>
       <description>最近有个需求需要主动的去清理部分缓存，考虑的原子性的问题，用Lua脚本进行实现。 Lua脚本 1 2 3 4 5 6 7 local count = 0 for _,k in ipairs(redis.call(&amp;#39;KEYS&amp;#39;, ARGV[1])) do redis.call(&amp;#39;DEL&amp;#39;, k) count = count + 1 end</description>
     </item>
     

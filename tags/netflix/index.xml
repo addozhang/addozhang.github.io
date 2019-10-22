@@ -2,39 +2,39 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Netflix on 乱世浮生</title>
-    <link>/tags/netflix/</link>
+    <link>https://atbug.com/tags/netflix/</link>
     <description>Recent content in Netflix on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Sun, 24 Jun 2018 16:20:16 +0000</lastBuildDate>
     
-	<atom:link href="/tags/netflix/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://atbug.com/tags/netflix/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Hystrix工作原理三</title>
-      <link>/hystrix-exception-handling/</link>
+      <link>https://atbug.com/hystrix-exception-handling/</link>
       <pubDate>Sun, 24 Jun 2018 16:20:16 +0000</pubDate>
       
-      <guid>/hystrix-exception-handling/</guid>
+      <guid>https://atbug.com/hystrix-exception-handling/</guid>
       <description>异常处理 Hystrix异常类型 HystrixRuntimeException HystrixBadRequestException HystrixTimeoutException RejectedExecutionException HystrixRuntimeException HystrixCommand失败时抛出, 不会触发fallback. HystrixBadRequestException 用提供的参数或状态表示错误的异常</description>
     </item>
     
     <item>
       <title>Hystrix工作原理二</title>
-      <link>/hystrix-isolation/</link>
+      <link>https://atbug.com/hystrix-isolation/</link>
       <pubDate>Sun, 24 Jun 2018 16:18:52 +0000</pubDate>
       
-      <guid>/hystrix-isolation/</guid>
+      <guid>https://atbug.com/hystrix-isolation/</guid>
       <description>隔离策略 线程和线程池 客户端(库, 网络调用等)在各自的线程上运行. 这种做法将他们与调用线程隔开, 因此调用者可以从一个耗时的依赖调用&amp;rdquo</description>
     </item>
     
     <item>
       <title>初识Netflix Zuul</title>
-      <link>/learn-netflix-zuul/</link>
+      <link>https://atbug.com/learn-netflix-zuul/</link>
       <pubDate>Sun, 11 Feb 2018 10:07:18 +0000</pubDate>
       
-      <guid>/learn-netflix-zuul/</guid>
+      <guid>https://atbug.com/learn-netflix-zuul/</guid>
       <description>&lt;p&gt;嵌入式的zuul代理&lt;/p&gt;
 
 &lt;p&gt;使用了Netfilx OSS的其他组件:

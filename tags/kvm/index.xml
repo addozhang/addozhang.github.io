@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>KVM on 乱世浮生</title>
-    <link>/tags/kvm/</link>
+    <link>https://atbug.com/tags/kvm/</link>
     <description>Recent content in KVM on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Thu, 12 Apr 2018 12:45:15 +0000</lastBuildDate>
     
-	<atom:link href="/tags/kvm/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://atbug.com/tags/kvm/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>KVM安装手册</title>
-      <link>/kvm-installation-note/</link>
+      <link>https://atbug.com/kvm-installation-note/</link>
       <pubDate>Thu, 12 Apr 2018 12:45:15 +0000</pubDate>
       
-      <guid>/kvm-installation-note/</guid>
+      <guid>https://atbug.com/kvm-installation-note/</guid>
       <description>&lt;h2 id=&#34;添加虚拟机流程&#34;&gt;添加虚拟机流程：&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;

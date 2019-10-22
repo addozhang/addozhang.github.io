@@ -2,66 +2,66 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on 乱世浮生</title>
-    <link>/categories/</link>
+    <link>https://atbug.com/categories/</link>
     <description>Recent content in Categories on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Tue, 22 Oct 2019 09:27:03 +0800</lastBuildDate>
     
-	<atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://atbug.com/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>笔记</title>
-      <link>/categories/%E7%AC%94%E8%AE%B0/</link>
+      <link>https://atbug.com/categories/%E7%AC%94%E8%AE%B0/</link>
       <pubDate>Tue, 22 Oct 2019 09:27:03 +0800</pubDate>
       
-      <guid>/categories/%E7%AC%94%E8%AE%B0/</guid>
+      <guid>https://atbug.com/categories/%E7%AC%94%E8%AE%B0/</guid>
       <description></description>
     </item>
     
     <item>
       <title>DevOps</title>
-      <link>/categories/devops/</link>
+      <link>https://atbug.com/categories/devops/</link>
       <pubDate>Fri, 20 Apr 2018 12:18:46 +0000</pubDate>
       
-      <guid>/categories/devops/</guid>
+      <guid>https://atbug.com/categories/devops/</guid>
       <description></description>
     </item>
     
     <item>
       <title>学习</title>
-      <link>/categories/%E5%AD%A6%E4%B9%A0/</link>
+      <link>https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/</link>
       <pubDate>Mon, 01 Jan 2018 12:30:55 +0000</pubDate>
       
-      <guid>/categories/%E5%AD%A6%E4%B9%A0/</guid>
+      <guid>https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/</guid>
       <description></description>
     </item>
     
     <item>
       <title>测试</title>
-      <link>/categories/%E6%B5%8B%E8%AF%95/</link>
+      <link>https://atbug.com/categories/%E6%B5%8B%E8%AF%95/</link>
       <pubDate>Sat, 02 Dec 2017 07:35:43 +0000</pubDate>
       
-      <guid>/categories/%E6%B5%8B%E8%AF%95/</guid>
+      <guid>https://atbug.com/categories/%E6%B5%8B%E8%AF%95/</guid>
       <description></description>
     </item>
     
     <item>
       <title>容器</title>
-      <link>/categories/%E5%AE%B9%E5%99%A8/</link>
+      <link>https://atbug.com/categories/%E5%AE%B9%E5%99%A8/</link>
       <pubDate>Thu, 17 Aug 2017 09:44:17 +0000</pubDate>
       
-      <guid>/categories/%E5%AE%B9%E5%99%A8/</guid>
+      <guid>https://atbug.com/categories/%E5%AE%B9%E5%99%A8/</guid>
       <description></description>
     </item>
     
     <item>
       <title>软件</title>
-      <link>/categories/%E8%BD%AF%E4%BB%B6/</link>
+      <link>https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/</link>
       <pubDate>Wed, 30 Mar 2016 14:27:02 +0000</pubDate>
       
-      <guid>/categories/%E8%BD%AF%E4%BB%B6/</guid>
+      <guid>https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/</guid>
       <description></description>
     </item>
     

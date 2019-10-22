@@ -2,30 +2,30 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Zuul on 乱世浮生</title>
-    <link>/tags/zuul/</link>
+    <link>https://atbug.com/tags/zuul/</link>
     <description>Recent content in Zuul on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Thu, 02 Aug 2018 08:55:43 +0000</lastBuildDate>
     
-	<atom:link href="/tags/zuul/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://atbug.com/tags/zuul/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Zuul网关Ribbon重试</title>
-      <link>/ribbon-retry-in-zuul/</link>
+      <link>https://atbug.com/ribbon-retry-in-zuul/</link>
       <pubDate>Thu, 02 Aug 2018 08:55:43 +0000</pubDate>
       
-      <guid>/ribbon-retry-in-zuul/</guid>
+      <guid>https://atbug.com/ribbon-retry-in-zuul/</guid>
       <description>相关配置 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 #如果路由转发请求发生超时(连接超时或处理超时), 只要超时时间的设置小于Hystrix的命令</description>
     </item>
     
     <item>
       <title>Spring Cloud Zuul详解</title>
-      <link>/spring-cloud-zuul-breakdown/</link>
+      <link>https://atbug.com/spring-cloud-zuul-breakdown/</link>
       <pubDate>Thu, 22 Feb 2018 17:02:26 +0000</pubDate>
       
-      <guid>/spring-cloud-zuul-breakdown/</guid>
+      <guid>https://atbug.com/spring-cloud-zuul-breakdown/</guid>
       <description>&lt;p&gt;Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看&lt;a href=&#34;http://atbug.com/learn-netflix-zuul/&#34;&gt;上一篇&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&#34;实现&#34;&gt;实现&lt;/h2&gt;
@@ -105,10 +105,10 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
     
     <item>
       <title>初识Netflix Zuul</title>
-      <link>/learn-netflix-zuul/</link>
+      <link>https://atbug.com/learn-netflix-zuul/</link>
       <pubDate>Sun, 11 Feb 2018 10:07:18 +0000</pubDate>
       
-      <guid>/learn-netflix-zuul/</guid>
+      <guid>https://atbug.com/learn-netflix-zuul/</guid>
       <description>&lt;p&gt;嵌入式的zuul代理&lt;/p&gt;
 
 &lt;p&gt;使用了Netfilx OSS的其他组件:

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>google on 乱世浮生</title>
-    <link>/tags/google/</link>
+    <link>https://atbug.com/tags/google/</link>
     <description>Recent content in google on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Sun, 09 Feb 2014 09:26:50 +0000</lastBuildDate>
     
-	<atom:link href="/tags/google/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://atbug.com/tags/google/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>日常工作中使用的chrome插件</title>
-      <link>/chrome-extensions-for-daily-work/</link>
+      <link>https://atbug.com/chrome-extensions-for-daily-work/</link>
       <pubDate>Sun, 09 Feb 2014 09:26:50 +0000</pubDate>
       
-      <guid>/chrome-extensions-for-daily-work/</guid>
+      <guid>https://atbug.com/chrome-extensions-for-daily-work/</guid>
       <description>先说下背景，Java程序猿一枚，兼做hybrid app。所以日常工作中免不了要跟浏览器打交道，一般就只用chrome了，看中它的调试功能和庞</description>
     </item>
     
