@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>C3p0 on 乱世浮生</title>
-    <link>http://localhost:1313/tags/c3p0/</link>
+    <link>/tags/c3p0/</link>
     <description>Recent content in C3p0 on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Mon, 10 Apr 2017 08:29:00 +0000</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/tags/c3p0/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/c3p0/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>GreenPlum JDBC和C3P0数据源</title>
-      <link>http://localhost:1313/greenplum-jdbc-and-c3p0-datasource/</link>
+      <link>/greenplum-jdbc-and-c3p0-datasource/</link>
       <pubDate>Mon, 10 Apr 2017 08:29:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/greenplum-jdbc-and-c3p0-datasource/</guid>
+      <guid>/greenplum-jdbc-and-c3p0-datasource/</guid>
       <description>在网上搜索GreenPlum（GPDB）的数据源配置的时候，发现搜索结果都是用postgresql的配置。 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17</description>
     </item>
     

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Macos on 乱世浮生</title>
-    <link>http://localhost:1313/tags/macos/</link>
+    <link>/tags/macos/</link>
     <description>Recent content in Macos on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Thu, 17 Aug 2017 09:44:17 +0000</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/macos/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Kubernetes学习 — Macos安装Kubernetes</title>
-      <link>http://localhost:1313/install-kubernetes-on-macos/</link>
+      <link>/install-kubernetes-on-macos/</link>
       <pubDate>Thu, 17 Aug 2017 09:44:17 +0000</pubDate>
       
-      <guid>http://localhost:1313/install-kubernetes-on-macos/</guid>
+      <guid>/install-kubernetes-on-macos/</guid>
       <description>Kubernetes 安装 macos 检查环境 1 sysctl -a | grep machdep.cpu.features | grep VMX 安装VirtualBox 1 http://download.virtualbox.org/virtualbox/5.1.26/Oracle_VM_VirtualBox_Extension_Pack-5.1.26-117224.vbox-extpack 安装minikube 1 curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.21.0/minikube-darwin-amd64 &amp;amp;&amp;amp; chmod +x minikube &amp;amp;&amp;amp; sudo mv minikube /usr/local/bin/ 创建集群 默认使用virtual</description>
     </item>
     

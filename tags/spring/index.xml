@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Spring on 乱世浮生</title>
-    <link>http://localhost:1313/tags/spring/</link>
+    <link>/tags/spring/</link>
     <description>Recent content in Spring on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Wed, 14 Feb 2018 07:32:43 +0000</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/tags/spring/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/spring/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Spring Cloud - Eureka服务注册</title>
-      <link>http://localhost:1313/spring-cloud-service-registry-via-eureka/</link>
+      <link>/spring-cloud-service-registry-via-eureka/</link>
       <pubDate>Wed, 14 Feb 2018 07:32:43 +0000</pubDate>
       
-      <guid>http://localhost:1313/spring-cloud-service-registry-via-eureka/</guid>
+      <guid>/spring-cloud-service-registry-via-eureka/</guid>
       <description>&lt;p&gt;之前分析过&lt;a href=&#34;http://atbug.com/spring-cloud-eureka-client-source-code-analysis/&#34;&gt;Spring Cloud的Eureka服务发现&lt;/a&gt;, 今天分析一下服务注册.&lt;/p&gt;
 
 &lt;h2 id=&#34;配置&#34;&gt;配置&lt;/h2&gt;
@@ -48,28 +48,28 @@
     
     <item>
       <title>ConfigurationProperties到底需不需要getter</title>
-      <link>http://localhost:1313/configurationproperties-requires-getter-or-not/</link>
+      <link>/configurationproperties-requires-getter-or-not/</link>
       <pubDate>Wed, 07 Feb 2018 15:53:21 +0000</pubDate>
       
-      <guid>http://localhost:1313/configurationproperties-requires-getter-or-not/</guid>
+      <guid>/configurationproperties-requires-getter-or-not/</guid>
       <description>为什么要讨论这个问题, 工作中一个同事写的类使用了ConfigurationProperties, 只提供了标准的setter方法. 属性的访问,</description>
     </item>
     
     <item>
       <title>SpringBoot源码 - 启动</title>
-      <link>http://localhost:1313/glance-over-spring-boot-source/</link>
+      <link>/glance-over-spring-boot-source/</link>
       <pubDate>Fri, 08 Dec 2017 17:48:43 +0000</pubDate>
       
-      <guid>http://localhost:1313/glance-over-spring-boot-source/</guid>
+      <guid>/glance-over-spring-boot-source/</guid>
       <description>SpringBoot Application启动部分的源码阅读. SpringApplication 常用的SpringApplication.run(Class, Args)启动Spring应用,</description>
     </item>
     
     <item>
       <title>使用Kryo替换spring amqp的Java序列化</title>
-      <link>http://localhost:1313/use-kryo-in-spring-amqp-serialization/</link>
+      <link>/use-kryo-in-spring-amqp-serialization/</link>
       <pubDate>Wed, 29 Jun 2016 05:29:14 +0000</pubDate>
       
-      <guid>http://localhost:1313/use-kryo-in-spring-amqp-serialization/</guid>
+      <guid>/use-kryo-in-spring-amqp-serialization/</guid>
       <description>spring amqp的原生并没有对Kryo加以支持，Kryo的优点就不多说了。 git地址：https://github.com/addozhang/s</description>
     </item>
     

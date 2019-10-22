@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>minishift on 乱世浮生</title>
-    <link>http://localhost:1313/tags/minishift/</link>
+    <link>/tags/minishift/</link>
     <description>Recent content in minishift on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Fri, 23 Feb 2018 15:32:26 +0000</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/tags/minishift/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/minishift/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>MacOS安装minishift</title>
-      <link>http://localhost:1313/install-minishift-on-mac/</link>
+      <link>/install-minishift-on-mac/</link>
       <pubDate>Fri, 23 Feb 2018 15:32:26 +0000</pubDate>
       
-      <guid>http://localhost:1313/install-minishift-on-mac/</guid>
+      <guid>/install-minishift-on-mac/</guid>
       <description>MacOS环境安装minishift 安装minishift cli 1 brew cask install minishift 使用virtualbox安装 安装的时候可以指定HTTP代理, 拉取墙外镜</description>
     </item>
     

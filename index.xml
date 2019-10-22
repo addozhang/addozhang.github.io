@@ -2,147 +2,147 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>乱世浮生</title>
-    <link>http://localhost:1313/</link>
+    <link>/</link>
     <description>Recent content on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Tue, 22 Oct 2019 09:27:03 +0800</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Spring Boot 2.2.0 发布</title>
-      <link>http://localhost:1313/spring-boot-2-2-0-release/</link>
+      <link>/spring-boot-2-2-0-release/</link>
       <pubDate>Tue, 22 Oct 2019 09:27:03 +0800</pubDate>
       
-      <guid>http://localhost:1313/spring-boot-2-2-0-release/</guid>
+      <guid>/spring-boot-2-2-0-release/</guid>
       <description>译自: https://spring.io/blog/2019/10/16/spring-boot-2-2-0 组件升级 Spring AMQP 2.2 Spring Batch 4.2 Spring Data Moore Spring Framework 5.2 Spring HATEOAS 1.0 Spring Integration 5.2 Spring Kafka 2.3 Spring Security 5.2 Spring Session Corn 第三方库升级 Elasticsearch 6.7 Flyway 6.0 Jackson 2.10 JUnit 5.5 Micrometer 1.3 Reactor Dysprosium Solr 8.0 性能提升 延迟初始化(Lazy initialization)</description>
     </item>
     
     <item>
       <title>Zipkin dependencies的坑之二: 心跳超时和Executor OOM</title>
-      <link>http://localhost:1313/zipkin-dependencies-bug-two-timeout-and-oom/</link>
+      <link>/zipkin-dependencies-bug-two-timeout-and-oom/</link>
       <pubDate>Sun, 22 Sep 2019 18:27:37 +0800</pubDate>
       
-      <guid>http://localhost:1313/zipkin-dependencies-bug-two-timeout-and-oom/</guid>
+      <guid>/zipkin-dependencies-bug-two-timeout-and-oom/</guid>
       <description>上回说为了解决吞吐问题, 将zipkin-dependencies的版本升级到了2.3.0. 好景不长, 从某一天开始作业运行报错: 1 2 3 4 5 6 7</description>
     </item>
     
     <item>
       <title>Zipkin dependencies的坑之一: 耗时越来越长</title>
-      <link>http://localhost:1313/zipkin-dependencies-bug-one/</link>
+      <link>/zipkin-dependencies-bug-one/</link>
       <pubDate>Sun, 22 Sep 2019 17:59:56 +0800</pubDate>
       
-      <guid>http://localhost:1313/zipkin-dependencies-bug-one/</guid>
+      <guid>/zipkin-dependencies-bug-one/</guid>
       <description>zipkin-dependencies是zipkin调用链的依赖分析工具. 系统上线时使用了当时的最新版本2.0.1, 运行一年之后随着服务的增</description>
     </item>
     
     <item>
       <title>如何选择Kafka Topic的分区数</title>
-      <link>http://localhost:1313/how-to-choose-topic-partition-count-number-kafka/</link>
+      <link>/how-to-choose-topic-partition-count-number-kafka/</link>
       <pubDate>Fri, 30 Aug 2019 11:10:46 +0800</pubDate>
       
-      <guid>http://localhost:1313/how-to-choose-topic-partition-count-number-kafka/</guid>
+      <guid>/how-to-choose-topic-partition-count-number-kafka/</guid>
       <description>在kafka中, topic的分区是并行计算的单元. 在producer端和broker端, 可以同时并发的写数据到不同的分区中. 在consume</description>
     </item>
     
     <item>
       <title>博客最近半年没什么产出</title>
-      <link>http://localhost:1313/no-output-in-past-half-year/</link>
+      <link>/no-output-in-past-half-year/</link>
       <pubDate>Tue, 27 Aug 2019 14:29:12 +0000</pubDate>
       
-      <guid>http://localhost:1313/no-output-in-past-half-year/</guid>
+      <guid>/no-output-in-past-half-year/</guid>
       <description>上一篇日志更新还是在去年的12月, 至今有差不多10个月没有更新了. 不是说没有东西可写, 而且想写的东西很多. 工作太忙, 不忙的时候又太懒, 归根结</description>
     </item>
     
     <item>
       <title>Spring Boot源码分析 - Configuration注解</title>
-      <link>http://localhost:1313/spring-boot-configuration-annotation/</link>
+      <link>/spring-boot-configuration-annotation/</link>
       <pubDate>Mon, 10 Dec 2018 16:24:33 +0000</pubDate>
       
-      <guid>http://localhost:1313/spring-boot-configuration-annotation/</guid>
+      <guid>/spring-boot-configuration-annotation/</guid>
       <description>@Configuration注解 @Configuration注解指示一个类声明一个或多个@Bean方法, 并且可以由Spring容器处理, 以在</description>
     </item>
     
     <item>
       <title>Nginx实现Elasticsearch的HTTP基本认证</title>
-      <link>http://localhost:1313/elasticsearch-http-basic-authentication-via-nginx/</link>
+      <link>/elasticsearch-http-basic-authentication-via-nginx/</link>
       <pubDate>Tue, 06 Nov 2018 09:24:24 +0000</pubDate>
       
-      <guid>http://localhost:1313/elasticsearch-http-basic-authentication-via-nginx/</guid>
+      <guid>/elasticsearch-http-basic-authentication-via-nginx/</guid>
       <description>Elasticssearch的HTTP基本认证实现有两种方案: x-pack和nginx反向代理. 前者收费, 后者不太适合生产使用. 如果仅仅是开</description>
     </item>
     
     <item>
       <title>Alpine容器安装Docker和OpenShift Client Tools</title>
-      <link>http://localhost:1313/install-docker-and-openshift-client-tools-in-alpine-container/</link>
+      <link>/install-docker-and-openshift-client-tools-in-alpine-container/</link>
       <pubDate>Tue, 28 Aug 2018 09:14:12 +0000</pubDate>
       
-      <guid>http://localhost:1313/install-docker-and-openshift-client-tools-in-alpine-container/</guid>
+      <guid>/install-docker-and-openshift-client-tools-in-alpine-container/</guid>
       <description>安装Docker 1 2 3 4 5 6 7 8 9 10 11 12 13 echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/main&amp;#34; &amp;gt; /etc/apk/repositories echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/community&amp;#34; &amp;gt;&amp;gt; /etc/apk/repositories echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/testing&amp;#34; &amp;gt;&amp;gt; /etc/apk/repositories apk -U --no-cache \ --allow-untrusted add \ shadow \ docker \ py-pip \ openrc \ &amp;amp;&amp;amp; pip install docker-compose rc-update add docker boot 安装OpenShift Client Tools 需</description>
     </item>
     
     <item>
       <title>Zuul网关Ribbon重试</title>
-      <link>http://localhost:1313/ribbon-retry-in-zuul/</link>
+      <link>/ribbon-retry-in-zuul/</link>
       <pubDate>Thu, 02 Aug 2018 08:55:43 +0000</pubDate>
       
-      <guid>http://localhost:1313/ribbon-retry-in-zuul/</guid>
+      <guid>/ribbon-retry-in-zuul/</guid>
       <description>相关配置 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 #如果路由转发请求发生超时(连接超时或处理超时), 只要超时时间的设置小于Hystrix的命令</description>
     </item>
     
     <item>
       <title>Hystrix工作原理三</title>
-      <link>http://localhost:1313/hystrix-exception-handling/</link>
+      <link>/hystrix-exception-handling/</link>
       <pubDate>Sun, 24 Jun 2018 16:20:16 +0000</pubDate>
       
-      <guid>http://localhost:1313/hystrix-exception-handling/</guid>
+      <guid>/hystrix-exception-handling/</guid>
       <description>异常处理 Hystrix异常类型 HystrixRuntimeException HystrixBadRequestException HystrixTimeoutException RejectedExecutionException HystrixRuntimeException HystrixCommand失败时抛出, 不会触发fallback. HystrixBadRequestException 用提供的参数或状态表示错误的异常</description>
     </item>
     
     <item>
       <title>Hystrix工作原理二</title>
-      <link>http://localhost:1313/hystrix-isolation/</link>
+      <link>/hystrix-isolation/</link>
       <pubDate>Sun, 24 Jun 2018 16:18:52 +0000</pubDate>
       
-      <guid>http://localhost:1313/hystrix-isolation/</guid>
+      <guid>/hystrix-isolation/</guid>
       <description>隔离策略 线程和线程池 客户端(库, 网络调用等)在各自的线程上运行. 这种做法将他们与调用线程隔开, 因此调用者可以从一个耗时的依赖调用&amp;rdquo</description>
     </item>
     
     <item>
       <title>Hystrix工作原理一</title>
-      <link>http://localhost:1313/how-hystrix-works/</link>
+      <link>/how-hystrix-works/</link>
       <pubDate>Mon, 04 Jun 2018 08:47:40 +0000</pubDate>
       
-      <guid>http://localhost:1313/how-hystrix-works/</guid>
+      <guid>/how-hystrix-works/</guid>
       <description>运行时的流程图 构建HystrixCommand或者HystrixObservableCommand对象 第一步是构建一个HystrixComm</description>
     </item>
     
     <item>
       <title>解决rsyslogd资源占用率高问题</title>
-      <link>http://localhost:1313/rsyslogd-high-cpu-trouble-shooting/</link>
+      <link>/rsyslogd-high-cpu-trouble-shooting/</link>
       <pubDate>Fri, 01 Jun 2018 09:32:28 +0000</pubDate>
       
-      <guid>http://localhost:1313/rsyslogd-high-cpu-trouble-shooting/</guid>
+      <guid>/rsyslogd-high-cpu-trouble-shooting/</guid>
       <description>rsyslogd资源占用高问题记录 问题: openshift集群安装在esxi的虚拟机上. 各个节点出现问题, 集群响应很慢. kswapd0进程c</description>
     </item>
     
     <item>
       <title>Kubernetes中的Nginx动态解析</title>
-      <link>http://localhost:1313/nginx-dynamic-domain-parse-in-kubernetes/</link>
+      <link>/nginx-dynamic-domain-parse-in-kubernetes/</link>
       <pubDate>Wed, 30 May 2018 12:10:32 +0000</pubDate>
       
-      <guid>http://localhost:1313/nginx-dynamic-domain-parse-in-kubernetes/</guid>
+      <guid>/nginx-dynamic-domain-parse-in-kubernetes/</guid>
       <description>背景 Nginx运行在kubernets中, 反向代理service提供服务. kubernetes版本v1.9.1+a0ce1bc657. 问题:</description>
     </item>
     
     <item>
       <title>Spring Cloud Ribbon 详解</title>
-      <link>http://localhost:1313/spring-cloud-ribbon-breakdown-1/</link>
+      <link>/spring-cloud-ribbon-breakdown-1/</link>
       <pubDate>Sat, 05 May 2018 11:18:05 +0000</pubDate>
       
-      <guid>http://localhost:1313/spring-cloud-ribbon-breakdown-1/</guid>
+      <guid>/spring-cloud-ribbon-breakdown-1/</guid>
       <description>&lt;p&gt;客户端负载均衡, Ribbon的核心概念是命名的客户端.&lt;/p&gt;
 
 &lt;h2 id=&#34;使用&#34;&gt;使用&lt;/h2&gt;
@@ -212,10 +212,10 @@
     
     <item>
       <title>Jenkins CI/CD (一) 基于角色的授权策略</title>
-      <link>http://localhost:1313/using-role-based-authorization-strategy-in-jenkins/</link>
+      <link>/using-role-based-authorization-strategy-in-jenkins/</link>
       <pubDate>Fri, 20 Apr 2018 12:18:46 +0000</pubDate>
       
-      <guid>http://localhost:1313/using-role-based-authorization-strategy-in-jenkins/</guid>
+      <guid>/using-role-based-authorization-strategy-in-jenkins/</guid>
       <description>&lt;p&gt;最近开始客串运维做CI/CD的规划设计, 主要是基于&amp;rsquo;Pipeline as Code in Jenkins&amp;rsquo;. 整理了下思路和技术点, 慢慢的写.&lt;/p&gt;
 
 &lt;p&gt;这一篇是关于基于角色的授权策略, 用的是&lt;code&gt;Role-Based Authorization Strategy Plugin&lt;/code&gt;.&lt;/p&gt;
@@ -239,10 +239,10 @@
     
     <item>
       <title>KVM安装手册</title>
-      <link>http://localhost:1313/kvm-installation-note/</link>
+      <link>/kvm-installation-note/</link>
       <pubDate>Thu, 12 Apr 2018 12:45:15 +0000</pubDate>
       
-      <guid>http://localhost:1313/kvm-installation-note/</guid>
+      <guid>/kvm-installation-note/</guid>
       <description>&lt;h2 id=&#34;添加虚拟机流程&#34;&gt;添加虚拟机流程：&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
@@ -306,37 +306,37 @@
     
     <item>
       <title>启用Jenkins CLI</title>
-      <link>http://localhost:1313/jenkins-cli-enable/</link>
+      <link>/jenkins-cli-enable/</link>
       <pubDate>Mon, 09 Apr 2018 11:16:38 +0000</pubDate>
       
-      <guid>http://localhost:1313/jenkins-cli-enable/</guid>
+      <guid>/jenkins-cli-enable/</guid>
       <description>Jenkins CLI提供了SSH和Client模式. Docker运行Jenkins 1 2 3 4 5 6 7 8 9 10 version:&amp;#39;3&amp;#39;services:jenkins:image:jenkins/jenkins:alpineports:-8080:8080-50000:50000-46059:46059volumes:-&amp;#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&amp;#34; note: 以为是docker运行, ssh端口设置选用了固</description>
     </item>
     
     <item>
       <title>Jenkins - 解决execute shell中启动的进程被在Job退出时被杀死问题</title>
-      <link>http://localhost:1313/resolve-process-be-killed-after-jenkins-job-done/</link>
+      <link>/resolve-process-be-killed-after-jenkins-job-done/</link>
       <pubDate>Thu, 15 Mar 2018 17:00:25 +0000</pubDate>
       
-      <guid>http://localhost:1313/resolve-process-be-killed-after-jenkins-job-done/</guid>
+      <guid>/resolve-process-be-killed-after-jenkins-job-done/</guid>
       <description>因为ProcessTreeKiller的存在, 构建过程中使用shell启动的进程在Job完成时都会被kill掉. 各种搜索以及ProcessT</description>
     </item>
     
     <item>
       <title>MacOS安装minishift</title>
-      <link>http://localhost:1313/install-minishift-on-mac/</link>
+      <link>/install-minishift-on-mac/</link>
       <pubDate>Fri, 23 Feb 2018 15:32:26 +0000</pubDate>
       
-      <guid>http://localhost:1313/install-minishift-on-mac/</guid>
+      <guid>/install-minishift-on-mac/</guid>
       <description>MacOS环境安装minishift 安装minishift cli 1 brew cask install minishift 使用virtualbox安装 安装的时候可以指定HTTP代理, 拉取墙外镜</description>
     </item>
     
     <item>
       <title>Spring Cloud Zuul详解</title>
-      <link>http://localhost:1313/spring-cloud-zuul-breakdown/</link>
+      <link>/spring-cloud-zuul-breakdown/</link>
       <pubDate>Thu, 22 Feb 2018 17:02:26 +0000</pubDate>
       
-      <guid>http://localhost:1313/spring-cloud-zuul-breakdown/</guid>
+      <guid>/spring-cloud-zuul-breakdown/</guid>
       <description>&lt;p&gt;Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看&lt;a href=&#34;http://atbug.com/learn-netflix-zuul/&#34;&gt;上一篇&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&#34;实现&#34;&gt;实现&lt;/h2&gt;
@@ -416,10 +416,10 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
     
     <item>
       <title>Spring Cloud - Eureka服务注册</title>
-      <link>http://localhost:1313/spring-cloud-service-registry-via-eureka/</link>
+      <link>/spring-cloud-service-registry-via-eureka/</link>
       <pubDate>Wed, 14 Feb 2018 07:32:43 +0000</pubDate>
       
-      <guid>http://localhost:1313/spring-cloud-service-registry-via-eureka/</guid>
+      <guid>/spring-cloud-service-registry-via-eureka/</guid>
       <description>&lt;p&gt;之前分析过&lt;a href=&#34;http://atbug.com/spring-cloud-eureka-client-source-code-analysis/&#34;&gt;Spring Cloud的Eureka服务发现&lt;/a&gt;, 今天分析一下服务注册.&lt;/p&gt;
 
 &lt;h2 id=&#34;配置&#34;&gt;配置&lt;/h2&gt;
@@ -451,10 +451,10 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
     
     <item>
       <title>初识Netflix Zuul</title>
-      <link>http://localhost:1313/learn-netflix-zuul/</link>
+      <link>/learn-netflix-zuul/</link>
       <pubDate>Sun, 11 Feb 2018 10:07:18 +0000</pubDate>
       
-      <guid>http://localhost:1313/learn-netflix-zuul/</guid>
+      <guid>/learn-netflix-zuul/</guid>
       <description>&lt;p&gt;嵌入式的zuul代理&lt;/p&gt;
 
 &lt;p&gt;使用了Netfilx OSS的其他组件:
@@ -485,19 +485,19 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
     
     <item>
       <title>ConfigurationProperties到底需不需要getter</title>
-      <link>http://localhost:1313/configurationproperties-requires-getter-or-not/</link>
+      <link>/configurationproperties-requires-getter-or-not/</link>
       <pubDate>Wed, 07 Feb 2018 15:53:21 +0000</pubDate>
       
-      <guid>http://localhost:1313/configurationproperties-requires-getter-or-not/</guid>
+      <guid>/configurationproperties-requires-getter-or-not/</guid>
       <description>为什么要讨论这个问题, 工作中一个同事写的类使用了ConfigurationProperties, 只提供了标准的setter方法. 属性的访问,</description>
     </item>
     
     <item>
       <title>Go In Action 读书笔记 四</title>
-      <link>http://localhost:1313/go-in-action-four/</link>
+      <link>/go-in-action-four/</link>
       <pubDate>Mon, 01 Jan 2018 12:30:55 +0000</pubDate>
       
-      <guid>http://localhost:1313/go-in-action-four/</guid>
+      <guid>/go-in-action-four/</guid>
       <description>&lt;p&gt;&lt;img src=&#34;https://talks.golang.org/2013/go4python/img/fib-go.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;并发模式&#34;&gt;并发模式&lt;/h2&gt;
@@ -510,10 +510,10 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
     
     <item>
       <title>Go In Action 读书笔记 三</title>
-      <link>http://localhost:1313/go-in-action-three/</link>
+      <link>/go-in-action-three/</link>
       <pubDate>Mon, 01 Jan 2018 12:30:31 +0000</pubDate>
       
-      <guid>http://localhost:1313/go-in-action-three/</guid>
+      <guid>/go-in-action-three/</guid>
       <description>&lt;h2 id=&#34;并发&#34;&gt;并发&lt;/h2&gt;
 
 &lt;p&gt;Go语言里的并发是指让某个函数可以独立于其他函数运行的能力. 当一个函数创建为goroutine时, Go会将其视为一个独立的工作单元. 这个工作单元会被调度到可用的&lt;strong&gt;逻辑处理器&lt;/strong&gt;上执行.&lt;/p&gt;
@@ -533,10 +533,10 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
     
     <item>
       <title>Go In Action 读书笔记 二</title>
-      <link>http://localhost:1313/go-in-action-two/</link>
+      <link>/go-in-action-two/</link>
       <pubDate>Mon, 01 Jan 2018 12:28:04 +0000</pubDate>
       
-      <guid>http://localhost:1313/go-in-action-two/</guid>
+      <guid>/go-in-action-two/</guid>
       <description>&lt;h2 id=&#34;go语言的类型系统&#34;&gt;Go语言的类型系统&lt;/h2&gt;
 
 &lt;p&gt;Go语言是静态类型的变成语言. 编译的时候需要确定类型.&lt;/p&gt;
@@ -601,10 +601,10 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
     
     <item>
       <title>Go In Action 读书笔记 一</title>
-      <link>http://localhost:1313/go-in-action-one/</link>
+      <link>/go-in-action-one/</link>
       <pubDate>Mon, 01 Jan 2018 12:27:10 +0000</pubDate>
       
-      <guid>http://localhost:1313/go-in-action-one/</guid>
+      <guid>/go-in-action-one/</guid>
       <description>&lt;p&gt;&lt;img src=&#34;http://7xvxng.com1.z0.glb.clouddn.com/15142714785285.jpg&#34; alt=&#34;架构流程图&#34; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;关键字&#34;&gt;关键字&lt;/h2&gt;
@@ -649,406 +649,406 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
     
     <item>
       <title>自定义GOPATH下安装godep失败</title>
-      <link>http://localhost:1313/install-godep-issue-in-custom-gopath/</link>
+      <link>/install-godep-issue-in-custom-gopath/</link>
       <pubDate>Fri, 22 Dec 2017 13:02:38 +0000</pubDate>
       
-      <guid>http://localhost:1313/install-godep-issue-in-custom-gopath/</guid>
+      <guid>/install-godep-issue-in-custom-gopath/</guid>
       <description>我的环境变量是这样的: 1 2 3 4 export GOROOT=/usr/local/go export GOPATH=/Users/addo/Workspaces/go_w export GOBIN=$GOROOT/bin export PATH=$PATH:$GOBIN 使用下面的命令安装报错: go get -v github.com/tools/godep github.com/tools/godep (download) github.com/tools/godep/vendor/github.com/pmezard/go-difflib/difflib github.com/tools/godep/vendor/github.com/kr/fs github.com/tools/godep/vendor/github.com/kr/text github.com/tools/godep/vendor/golang.org/x/tools/go/vcs github.com/tools/godep/vendor/github.com/kr/pretty github.com/tools/godep go install github.com/tools/godep: open /usr/local/go/bin/godep: permission denied 默认是安装到$GOBIN目录下,</description>
     </item>
     
     <item>
       <title>SpringBoot源码 - 启动</title>
-      <link>http://localhost:1313/glance-over-spring-boot-source/</link>
+      <link>/glance-over-spring-boot-source/</link>
       <pubDate>Fri, 08 Dec 2017 17:48:43 +0000</pubDate>
       
-      <guid>http://localhost:1313/glance-over-spring-boot-source/</guid>
+      <guid>/glance-over-spring-boot-source/</guid>
       <description>SpringBoot Application启动部分的源码阅读. SpringApplication 常用的SpringApplication.run(Class, Args)启动Spring应用,</description>
     </item>
     
     <item>
       <title>Java序列化工具性能对比</title>
-      <link>http://localhost:1313/java-serval-serializer-benchmark/</link>
+      <link>/java-serval-serializer-benchmark/</link>
       <pubDate>Sat, 02 Dec 2017 07:35:43 +0000</pubDate>
       
-      <guid>http://localhost:1313/java-serval-serializer-benchmark/</guid>
+      <guid>/java-serval-serializer-benchmark/</guid>
       <description>最近在调整系统的性能, 系统中正使用Jackson作为序列化工具. 做了下与fastJson, Avro, ProtoStuff的序列化吞吐对比. 由于只是做</description>
     </item>
     
     <item>
       <title>Kafka的消息可靠传递</title>
-      <link>http://localhost:1313/kafka-reliable-data-delivery/</link>
+      <link>/kafka-reliable-data-delivery/</link>
       <pubDate>Sat, 18 Nov 2017 14:01:46 +0000</pubDate>
       
-      <guid>http://localhost:1313/kafka-reliable-data-delivery/</guid>
+      <guid>/kafka-reliable-data-delivery/</guid>
       <description>Kafka提供的基础保障可以用来构建可靠的系统, 却无法保证完全可靠. 需要在可靠性和吞吐之间做取舍. Kafka在分区上提供了消息的顺序保证. 生</description>
     </item>
     
     <item>
       <title>Spring Cloud - Eureka Client源码分析</title>
-      <link>http://localhost:1313/spring-cloud-eureka-client-source-code-analysis/</link>
+      <link>/spring-cloud-eureka-client-source-code-analysis/</link>
       <pubDate>Sat, 14 Oct 2017 22:04:59 +0000</pubDate>
       
-      <guid>http://localhost:1313/spring-cloud-eureka-client-source-code-analysis/</guid>
+      <guid>/spring-cloud-eureka-client-source-code-analysis/</guid>
       <description>准备做个Spring Cloud源码分析系列, 作为Spring Cloud的源码分析笔记. 这一篇是Eureka的客户端. 客户端 两种方式, 最终的实</description>
     </item>
     
     <item>
       <title>Raft算法学习</title>
-      <link>http://localhost:1313/learning-raft/</link>
+      <link>/learning-raft/</link>
       <pubDate>Sat, 14 Oct 2017 05:57:34 +0000</pubDate>
       
-      <guid>http://localhost:1313/learning-raft/</guid>
+      <guid>/learning-raft/</guid>
       <description>Raft 强一致性算法 名词 复制状态机 复制状态机是通过复制日志来实现的, 按照日志中的命令的顺序来执行这些命令. 相同的状态机执行相同的日志命令, 获得相同</description>
     </item>
     
     <item>
       <title>Kafka发送不同确认方式的性能差异</title>
-      <link>http://localhost:1313/kafka-producer-acknowledge-benchmark/</link>
+      <link>/kafka-producer-acknowledge-benchmark/</link>
       <pubDate>Tue, 10 Oct 2017 11:49:58 +0000</pubDate>
       
-      <guid>http://localhost:1313/kafka-producer-acknowledge-benchmark/</guid>
+      <guid>/kafka-producer-acknowledge-benchmark/</guid>
       <description>背景 Kafka的性能众所周知，Producer支持acknowledge模式。即Kafka会想Producer返回消息发送的结果。但是在Ja</description>
     </item>
     
     <item>
       <title>Kafka消息消费一致性</title>
-      <link>http://localhost:1313/kafka-consumer-consistency/</link>
+      <link>/kafka-consumer-consistency/</link>
       <pubDate>Tue, 26 Sep 2017 19:13:48 +0000</pubDate>
       
-      <guid>http://localhost:1313/kafka-consumer-consistency/</guid>
+      <guid>/kafka-consumer-consistency/</guid>
       <description>Kafka消费端的offset主要由consumer来控制, Kafka降每个consumer所监听的tocpic的partition的off</description>
     </item>
     
     <item>
       <title>Kafka 恰好一次发送和事务消费示例</title>
-      <link>http://localhost:1313/kafka-exactly-once-delivery-and-transactional-messaging-example/</link>
+      <link>/kafka-exactly-once-delivery-and-transactional-messaging-example/</link>
       <pubDate>Fri, 22 Sep 2017 18:03:43 +0000</pubDate>
       
-      <guid>http://localhost:1313/kafka-exactly-once-delivery-and-transactional-messaging-example/</guid>
+      <guid>/kafka-exactly-once-delivery-and-transactional-messaging-example/</guid>
       <description>核心思想 生产端一致性: 开启幂等和事务, 包含重试, 发送确认, 同一个连接的最大未确认请求数. 消费端一致性: 通过设置读已提交的数据和同时处理完成每</description>
     </item>
     
     <item>
       <title>恰好一次发送和事务消息(译)</title>
-      <link>http://localhost:1313/kafka-exactly-once-delivery-and-transactional-messaging/</link>
+      <link>/kafka-exactly-once-delivery-and-transactional-messaging/</link>
       <pubDate>Tue, 19 Sep 2017 19:13:26 +0000</pubDate>
       
-      <guid>http://localhost:1313/kafka-exactly-once-delivery-and-transactional-messaging/</guid>
+      <guid>/kafka-exactly-once-delivery-and-transactional-messaging/</guid>
       <description>Kafka提供“至少一次”交付语义, 这意味着发送的消息可以传送一次或多次. 人们真正想要的是“一次”语义,因为重复的消息没有被传递。 普遍地发声</description>
     </item>
     
     <item>
       <title>Kafka Producer配置解读</title>
-      <link>http://localhost:1313/kafka-producer-config/</link>
+      <link>/kafka-producer-config/</link>
       <pubDate>Tue, 19 Sep 2017 15:38:03 +0000</pubDate>
       
-      <guid>http://localhost:1313/kafka-producer-config/</guid>
+      <guid>/kafka-producer-config/</guid>
       <description>按照重要性分类, 基于版本0.11.0.0 高 bootstrap.servers 一组host和port用于初始化连接. 不管这里配置了多少台server, 都只是用作发现整个集群全</description>
     </item>
     
     <item>
       <title>JSON Patch</title>
-      <link>http://localhost:1313/json-patch/</link>
+      <link>/json-patch/</link>
       <pubDate>Sun, 27 Aug 2017 14:41:44 +0000</pubDate>
       
-      <guid>http://localhost:1313/json-patch/</guid>
+      <guid>/json-patch/</guid>
       <description>JSON Path是在使用Kubernetes API的过程中首次使用的. 使用API做扩缩容的时候, 发送整个Deployment的全文不是个明智的做法</description>
     </item>
     
     <item>
       <title>如何在Openshift中使用hostPath</title>
-      <link>http://localhost:1313/how-to-use-hostpath-in-openshift/</link>
+      <link>/how-to-use-hostpath-in-openshift/</link>
       <pubDate>Wed, 23 Aug 2017 19:29:51 +0000</pubDate>
       
-      <guid>http://localhost:1313/how-to-use-hostpath-in-openshift/</guid>
+      <guid>/how-to-use-hostpath-in-openshift/</guid>
       <description>使用openshift搭建的k8s的api创建Deployment，在启动的时候报下面的错误： Invalid value: &amp;ldquo;hostPath&amp;rdquo;: hostPath volumes are not allowed to be used] 解决方案： 一个方案是将u</description>
     </item>
     
     <item>
       <title>Kubernetes — 持久卷</title>
-      <link>http://localhost:1313/kubernetes-persistent-volumes/</link>
+      <link>/kubernetes-persistent-volumes/</link>
       <pubDate>Sun, 20 Aug 2017 22:25:40 +0000</pubDate>
       
-      <guid>http://localhost:1313/kubernetes-persistent-volumes/</guid>
+      <guid>/kubernetes-persistent-volumes/</guid>
       <description>Persistent Volume 译自Persistent Volumes 介绍 管理存储是管理计算的独特问题。 PersistentVolume子系统为用户和管理员提供了一个API，其中提</description>
     </item>
     
     <item>
       <title>Kubernetes学习 — Macos安装Kubernetes</title>
-      <link>http://localhost:1313/install-kubernetes-on-macos/</link>
+      <link>/install-kubernetes-on-macos/</link>
       <pubDate>Thu, 17 Aug 2017 09:44:17 +0000</pubDate>
       
-      <guid>http://localhost:1313/install-kubernetes-on-macos/</guid>
+      <guid>/install-kubernetes-on-macos/</guid>
       <description>Kubernetes 安装 macos 检查环境 1 sysctl -a | grep machdep.cpu.features | grep VMX 安装VirtualBox 1 http://download.virtualbox.org/virtualbox/5.1.26/Oracle_VM_VirtualBox_Extension_Pack-5.1.26-117224.vbox-extpack 安装minikube 1 curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.21.0/minikube-darwin-amd64 &amp;amp;&amp;amp; chmod +x minikube &amp;amp;&amp;amp; sudo mv minikube /usr/local/bin/ 创建集群 默认使用virtual</description>
     </item>
     
     <item>
       <title>暴力停止ExecutorService的线程</title>
-      <link>http://localhost:1313/stop-a-thread-of-executor-service/</link>
+      <link>/stop-a-thread-of-executor-service/</link>
       <pubDate>Wed, 19 Jul 2017 22:25:19 +0000</pubDate>
       
-      <guid>http://localhost:1313/stop-a-thread-of-executor-service/</guid>
+      <guid>/stop-a-thread-of-executor-service/</guid>
       <description>停止，stop，这里说的是真的停止。如何优雅的结束，这里就不提了。 这里要用Thread.stop()。众所周知，stop()方法在JDK中是</description>
     </item>
     
     <item>
       <title>私有构造函数捕获模式</title>
-      <link>http://localhost:1313/private-constructor-capture-idiom/</link>
+      <link>/private-constructor-capture-idiom/</link>
       <pubDate>Wed, 24 May 2017 06:50:44 +0000</pubDate>
       
-      <guid>http://localhost:1313/private-constructor-capture-idiom/</guid>
+      <guid>/private-constructor-capture-idiom/</guid>
       <description>《Java并发编程实践》的注解中有提到这一概念。 The private constructor exists to avoid the race condition that would occur if the copy constructor were implemented as this (p.x, p.y); this is an example of the private constructor capture idiom (Bloch and Gafter, 2005). 结合原文代码： 1 2 3</description>
     </item>
     
     <item>
       <title>Docker快速构建Cassandra和Java操作</title>
-      <link>http://localhost:1313/java-operate-cassandra-deployed-in-docker/</link>
+      <link>/java-operate-cassandra-deployed-in-docker/</link>
       <pubDate>Thu, 18 May 2017 23:33:24 +0000</pubDate>
       
-      <guid>http://localhost:1313/java-operate-cassandra-deployed-in-docker/</guid>
+      <guid>/java-operate-cassandra-deployed-in-docker/</guid>
       <description>搭建Cassandra 使用docker创建Cassandra，方便快捷 1 2 3 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table</description>
     </item>
     
     <item>
       <title>从零开始用docker运行spring boot应用</title>
-      <link>http://localhost:1313/run-spring-boot-app-in-docker/</link>
+      <link>/run-spring-boot-app-in-docker/</link>
       <pubDate>Thu, 20 Apr 2017 21:58:42 +0000</pubDate>
       
-      <guid>http://localhost:1313/run-spring-boot-app-in-docker/</guid>
+      <guid>/run-spring-boot-app-in-docker/</guid>
       <description>假设已经安装好Docker Springboot应用 pom添加依赖和构建插件 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 &amp;lt;parent&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-starter-parent&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.5.3.RELEASE&amp;lt;/version&amp;gt; &amp;lt;/parent&amp;gt; &amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-starter-web&amp;lt;/artifactId&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt; &amp;lt;build&amp;gt; &amp;lt;plugins&amp;gt; &amp;lt;plugin&amp;gt;</description>
     </item>
     
     <item>
       <title>Jasig CAS Web and Proxy flow</title>
-      <link>http://localhost:1313/jasig-cas-web-and-proxy-flow/</link>
+      <link>/jasig-cas-web-and-proxy-flow/</link>
       <pubDate>Tue, 18 Apr 2017 10:36:16 +0000</pubDate>
       
-      <guid>http://localhost:1313/jasig-cas-web-and-proxy-flow/</guid>
+      <guid>/jasig-cas-web-and-proxy-flow/</guid>
       <description>最近因为需求在看CAS相关的只是，由于需要后端调用，用到proxy（代理）模式。整理了下web flow和proxy web flow的流程。 Web Flow Proxy Web</description>
     </item>
     
     <item>
       <title>MetaspaceSize的坑</title>
-      <link>http://localhost:1313/java8-metaspace-size-issue/</link>
+      <link>/java8-metaspace-size-issue/</link>
       <pubDate>Thu, 13 Apr 2017 11:55:14 +0000</pubDate>
       
-      <guid>http://localhost:1313/java8-metaspace-size-issue/</guid>
+      <guid>/java8-metaspace-size-issue/</guid>
       <description>这几天生产上有台机器的Metaspace一直在告警，Metaspace使用达到了97%。使用-XX:MetaspaceSize=512m，告</description>
     </item>
     
     <item>
       <title>一个Tomcat类加载问题</title>
-      <link>http://localhost:1313/one-tomcat-class-load-issue/</link>
+      <link>/one-tomcat-class-load-issue/</link>
       <pubDate>Wed, 12 Apr 2017 10:40:01 +0000</pubDate>
       
-      <guid>http://localhost:1313/one-tomcat-class-load-issue/</guid>
+      <guid>/one-tomcat-class-load-issue/</guid>
       <description>背景 一个Tomcat实例中运行了三个应用，其中一个对接了Apereo的CAS系统。现在要求另外两个系统也对接CAS系统，问题就出现了： 应用启</description>
     </item>
     
     <item>
       <title>Scala笔记：用函数字面量块调用高阶函数</title>
-      <link>http://localhost:1313/call-high-order-function-in-function-literal/</link>
+      <link>/call-high-order-function-in-function-literal/</link>
       <pubDate>Tue, 11 Apr 2017 10:15:15 +0000</pubDate>
       
-      <guid>http://localhost:1313/call-high-order-function-in-function-literal/</guid>
+      <guid>/call-high-order-function-in-function-literal/</guid>
       <description>这里会用到几个概念高阶函数、函数字面量、参数组 高阶函数 high-order function 函数的一种，简单来说它包含了一个函数类型的参数或者返回值。 所谓的高阶是跟一阶函数相</description>
     </item>
     
     <item>
       <title>GreenPlum JDBC和C3P0数据源</title>
-      <link>http://localhost:1313/greenplum-jdbc-and-c3p0-datasource/</link>
+      <link>/greenplum-jdbc-and-c3p0-datasource/</link>
       <pubDate>Mon, 10 Apr 2017 08:29:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/greenplum-jdbc-and-c3p0-datasource/</guid>
+      <guid>/greenplum-jdbc-and-c3p0-datasource/</guid>
       <description>在网上搜索GreenPlum（GPDB）的数据源配置的时候，发现搜索结果都是用postgresql的配置。 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17</description>
     </item>
     
     <item>
       <title>Scala笔记：def VS val</title>
-      <link>http://localhost:1313/def-vs-val-in-scala/</link>
+      <link>/def-vs-val-in-scala/</link>
       <pubDate>Sun, 09 Apr 2017 08:24:40 +0000</pubDate>
       
-      <guid>http://localhost:1313/def-vs-val-in-scala/</guid>
+      <guid>/def-vs-val-in-scala/</guid>
       <description>先说原理： val修饰的在定义的时候执行 def修饰的在调用的时候执行 直观的例子： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 //注释</description>
     </item>
     
     <item>
       <title>Centos编译安装Redis</title>
-      <link>http://localhost:1313/install-redis-on-centos/</link>
+      <link>/install-redis-on-centos/</link>
       <pubDate>Fri, 07 Apr 2017 16:48:46 +0000</pubDate>
       
-      <guid>http://localhost:1313/install-redis-on-centos/</guid>
+      <guid>/install-redis-on-centos/</guid>
       <description>版本 Centos7 Redis3.2.8 编译安装 1 2 3 4 5 wget http://download.redis.io/releases/redis-3.2.8.tar.gz tar -zxvf redis-3.2.8.tar.gz cd redis-3.2.8 sudo make test sudo make install 启动 1 redis-server 问题 /bin/sh: cc: command not found 原因：Centos安装时选择的类型是Infrastructure，</description>
     </item>
     
     <item>
       <title>Centos上安装Postgresql</title>
-      <link>http://localhost:1313/install-postgresql-on-centos/</link>
+      <link>/install-postgresql-on-centos/</link>
       <pubDate>Thu, 06 Apr 2017 22:54:17 +0000</pubDate>
       
-      <guid>http://localhost:1313/install-postgresql-on-centos/</guid>
+      <guid>/install-postgresql-on-centos/</guid>
       <description>版本 Centos7 Postgresql9.2 Enable ssh service sshd start Open firewall for 22 firewall-cmd —state firewall-cmd —list-all firewall-cmd —permanent —zone=public —add-port=22/tcp firewall-cmd</description>
     </item>
     
     <item>
       <title>Key长度对Redis性能影响</title>
-      <link>http://localhost:1313/redis-performance-key-length/</link>
+      <link>/redis-performance-key-length/</link>
       <pubDate>Thu, 16 Mar 2017 10:37:03 +0000</pubDate>
       
-      <guid>http://localhost:1313/redis-performance-key-length/</guid>
+      <guid>/redis-performance-key-length/</guid>
       <description>最近Redis的使用中用的到key可能比较长，但是Redis的官方文档没提到key长度对性能的影响，故简单做了个测试。 环境 Redis和测试程</description>
     </item>
     
     <item>
       <title>遍历Collection时删除元素</title>
-      <link>http://localhost:1313/remove-element-while-looping-collection/</link>
+      <link>/remove-element-while-looping-collection/</link>
       <pubDate>Sun, 05 Mar 2017 22:04:58 +0000</pubDate>
       
-      <guid>http://localhost:1313/remove-element-while-looping-collection/</guid>
+      <guid>/remove-element-while-looping-collection/</guid>
       <description>其实标题我想用《为什么foreach边循环边移除元素要用Iterator？》可是太长。 不用Iterator，用Collection.remo</description>
     </item>
     
     <item>
       <title>Java Volatile关键字</title>
-      <link>http://localhost:1313/deep-in-java-volatile-keywork/</link>
+      <link>/deep-in-java-volatile-keywork/</link>
       <pubDate>Thu, 02 Mar 2017 08:30:29 +0000</pubDate>
       
-      <guid>http://localhost:1313/deep-in-java-volatile-keywork/</guid>
+      <guid>/deep-in-java-volatile-keywork/</guid>
       <description>volatile通过保证对变量的读或写都是直接从内存中读取或直接写入内存中，保证了可见性；但是volatile并不足以保证线程安全，因为无法</description>
     </item>
     
     <item>
       <title>Haproxy虚拟主机SSL</title>
-      <link>http://localhost:1313/haproxy-multi-host-with-ssl/</link>
+      <link>/haproxy-multi-host-with-ssl/</link>
       <pubDate>Mon, 27 Feb 2017 19:31:53 +0000</pubDate>
       
-      <guid>http://localhost:1313/haproxy-multi-host-with-ssl/</guid>
+      <guid>/haproxy-multi-host-with-ssl/</guid>
       <description>Haproxy为多个域名配置SSL 生成自签名证书 1 2 3 4 5 6 sudo mkdir /etc/ssl/atbug.com sudo openssl genrsa -out /etc/ssl/atbug.com/atbug.com.key 1024 sudo openssl req -new -key /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.csr sudo openssl x509 -req -days 365 -in /etc/ssl/atbug.com/atbug.com.csr -singkey /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.crt sudo openssl x509 -req -days 365 -in /etc/ssl/atbug.com/atbug.com.csr -signkey /etc/ssl/atbug.com/atbug.com.key -out</description>
     </item>
     
     <item>
       <title>mybatis报错“Result Maps collection already contains value for ***”</title>
-      <link>http://localhost:1313/duplicate-resultmap-in-mybatis-mapper/</link>
+      <link>/duplicate-resultmap-in-mybatis-mapper/</link>
       <pubDate>Wed, 22 Feb 2017 14:12:18 +0000</pubDate>
       
-      <guid>http://localhost:1313/duplicate-resultmap-in-mybatis-mapper/</guid>
+      <guid>/duplicate-resultmap-in-mybatis-mapper/</guid>
       <description>这是工作中遇到的一个问题：测试环境部署出错，报了下面的问题。 1 2 3 4 5 6 7 8 9 10 Caused by: java.lang.IllegalArgumentException: Result Maps collection already contains value for xxx.xxx.xxxRepository.BaseResultMap at org.apache.ibatis.session.Configuration$StrictMap.put(Configuration.java:802) at org.apache.ibatis.session.Configuration$StrictMap.put(Configuration.java:774) at org.apache.ibatis.session.Configuration.addResultMap(Configuration.java:556) at org.apache.ibatis.builder.MapperBuilderAssistant.addResultMap(MapperBuilderAssistant.java:217) at org.apache.ibatis.builder.ResultMapResolver.resolve(ResultMapResolver.java:47) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElement(XMLMapperBuilder.java:285) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElement(XMLMapperBuilder.java:252) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElements(XMLMapperBuilder.java:244) at org.apache.ibatis.builder.xml.XMLMapperBuilder.configurationElement(XMLMapperBuilder.java:116) 检</description>
     </item>
     
     <item>
       <title>消费时offset被重置导致重复消费</title>
-      <link>http://localhost:1313/offset-be-reset-when-consuming/</link>
+      <link>/offset-be-reset-when-consuming/</link>
       <pubDate>Mon, 20 Feb 2017 13:23:49 +0000</pubDate>
       
-      <guid>http://localhost:1313/offset-be-reset-when-consuming/</guid>
+      <guid>/offset-be-reset-when-consuming/</guid>
       <description>这是实际使用时遇到的问题：kafka api的版本是0.10，发现有重复消费问题；检查log后发现在commit offset的时候发生超时。 1</description>
     </item>
     
     <item>
       <title>TheadPoolExecutor源码分析</title>
-      <link>http://localhost:1313/threadpoolexecutor-sourcecode-analysis/</link>
+      <link>/threadpoolexecutor-sourcecode-analysis/</link>
       <pubDate>Mon, 20 Feb 2017 09:56:07 +0000</pubDate>
       
-      <guid>http://localhost:1313/threadpoolexecutor-sourcecode-analysis/</guid>
+      <guid>/threadpoolexecutor-sourcecode-analysis/</guid>
       <description>TheadPoolExecutor源码分析 ThreadPoolExecutor是多线程中经常用到的类，其使用一个线程池执行提交的任务。 实现 没</description>
     </item>
     
     <item>
       <title>Kafka Java生产者模型</title>
-      <link>http://localhost:1313/kafka-java-producer-model/</link>
+      <link>/kafka-java-producer-model/</link>
       <pubDate>Wed, 04 Jan 2017 16:33:02 +0000</pubDate>
       
-      <guid>http://localhost:1313/kafka-java-producer-model/</guid>
+      <guid>/kafka-java-producer-model/</guid>
       <description>Producer初始化 初始化KafkaProducer实例，同时通过Config数据初始化MetaData、NetWorkClient、Ac</description>
     </item>
     
     <item>
       <title>Redis清理缓存</title>
-      <link>http://localhost:1313/clean-speicified-keys-in-redis/</link>
+      <link>/clean-speicified-keys-in-redis/</link>
       <pubDate>Tue, 13 Dec 2016 16:54:41 +0000</pubDate>
       
-      <guid>http://localhost:1313/clean-speicified-keys-in-redis/</guid>
+      <guid>/clean-speicified-keys-in-redis/</guid>
       <description>最近有个需求需要主动的去清理部分缓存，考虑的原子性的问题，用Lua脚本进行实现。 Lua脚本 1 2 3 4 5 6 7 local count = 0 for _,k in ipairs(redis.call(&amp;#39;KEYS&amp;#39;, ARGV[1])) do redis.call(&amp;#39;DEL&amp;#39;, k) count = count + 1 end</description>
     </item>
     
     <item>
       <title>Flume - FileChannel （一）</title>
-      <link>http://localhost:1313/flume-filechannel-overview/</link>
+      <link>/flume-filechannel-overview/</link>
       <pubDate>Wed, 23 Nov 2016 09:23:57 +0000</pubDate>
       
-      <guid>http://localhost:1313/flume-filechannel-overview/</guid>
+      <guid>/flume-filechannel-overview/</guid>
       <description>概述 当使用Flume的时候，每个流程都包含了输入源、通道和输出。一个典型的例子是一个web服务器将事件通过RPC（搬入AvroSource）</description>
     </item>
     
     <item>
       <title>探索Rabbitmq的Java客户端</title>
-      <link>http://localhost:1313/deep-in-rabbitmq-java-client/</link>
+      <link>/deep-in-rabbitmq-java-client/</link>
       <pubDate>Sun, 09 Oct 2016 09:20:07 +0000</pubDate>
       
-      <guid>http://localhost:1313/deep-in-rabbitmq-java-client/</guid>
+      <guid>/deep-in-rabbitmq-java-client/</guid>
       <description>AMQPConnection 实例初始化 创建Connection时会通过FrameHandlerFacotry创建一个SocketFrameHandler，Socket</description>
     </item>
     
     <item>
       <title>Git回车换行</title>
-      <link>http://localhost:1313/crlf-in-git/</link>
+      <link>/crlf-in-git/</link>
       <pubDate>Wed, 14 Sep 2016 09:16:10 +0000</pubDate>
       
-      <guid>http://localhost:1313/crlf-in-git/</guid>
+      <guid>/crlf-in-git/</guid>
       <description>最近又个项目，checkout之后，没做任何改动前git status发现已经有modified了，通过git diff发现有两种改动： - warning: CRLF will</description>
     </item>
     
     <item>
       <title>深入剖析HashSet和HashMap实现</title>
-      <link>http://localhost:1313/deep-in-implementation-of-hashset/</link>
+      <link>/deep-in-implementation-of-hashset/</link>
       <pubDate>Mon, 11 Jul 2016 14:57:16 +0000</pubDate>
       
-      <guid>http://localhost:1313/deep-in-implementation-of-hashset/</guid>
+      <guid>/deep-in-implementation-of-hashset/</guid>
       <description>HashSet是一个包含非重复元素的集合，如何实现的，要从底层实现代码看起。 背景 首先非重复元素如何定义，看Set的描述： More formally, sets contain no pair of elements e1 and</description>
     </item>
     
     <item>
       <title>多线程下的单例模式&#43;反汇编</title>
-      <link>http://localhost:1313/singleton-in-multi-threads-programming/</link>
+      <link>/singleton-in-multi-threads-programming/</link>
       <pubDate>Wed, 06 Jul 2016 16:57:09 +0000</pubDate>
       
-      <guid>http://localhost:1313/singleton-in-multi-threads-programming/</guid>
+      <guid>/singleton-in-multi-threads-programming/</guid>
       <description>多线程下的单例模式的实现，顺便做了反汇编。 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 public class MySingleton { private static MySingleton INSTANCE; private MySingleton() { } public static MySingleton getInstance() { if (INSTANCE == null) { synchronized (MySingleton.class) { INSTANCE = new MySingleton(); } } return INSTANCE; }</description>
     </item>
     
     <item>
       <title>使用Kryo替换spring amqp的Java序列化</title>
-      <link>http://localhost:1313/use-kryo-in-spring-amqp-serialization/</link>
+      <link>/use-kryo-in-spring-amqp-serialization/</link>
       <pubDate>Wed, 29 Jun 2016 05:29:14 +0000</pubDate>
       
-      <guid>http://localhost:1313/use-kryo-in-spring-amqp-serialization/</guid>
+      <guid>/use-kryo-in-spring-amqp-serialization/</guid>
       <description>spring amqp的原生并没有对Kryo加以支持，Kryo的优点就不多说了。 git地址：https://github.com/addozhang/s</description>
     </item>
     
     <item>
       <title>Rabbitmq延迟队列实现</title>
-      <link>http://localhost:1313/rabbitmq-delay-queue-implementation/</link>
+      <link>/rabbitmq-delay-queue-implementation/</link>
       <pubDate>Wed, 30 Mar 2016 14:27:02 +0000</pubDate>
       
-      <guid>http://localhost:1313/rabbitmq-delay-queue-implementation/</guid>
+      <guid>/rabbitmq-delay-queue-implementation/</guid>
       <description>工作中很多场景需要用到定时任务、延迟任务，常用的方法用crontab job、Spring的Quartz，然后扫描整张数据库表，判断哪些数据需</description>
     </item>
     
     <item>
       <title>关于SLF4J</title>
-      <link>http://localhost:1313/about-slf4j/</link>
+      <link>/about-slf4j/</link>
       <pubDate>Sat, 18 Apr 2015 11:16:26 +0000</pubDate>
       
-      <guid>http://localhost:1313/about-slf4j/</guid>
+      <guid>/about-slf4j/</guid>
       <description>Spring的功能越来越强大，同时也越来越臃肿。比如想快速搭建一个基于Spring的项目，解决依赖问题非常耗时。Spring的项目模板的出现</description>
     </item>
     
     <item>
       <title>日常工作中使用的chrome插件</title>
-      <link>http://localhost:1313/chrome-extensions-for-daily-work/</link>
+      <link>/chrome-extensions-for-daily-work/</link>
       <pubDate>Sun, 09 Feb 2014 09:26:50 +0000</pubDate>
       
-      <guid>http://localhost:1313/chrome-extensions-for-daily-work/</guid>
+      <guid>/chrome-extensions-for-daily-work/</guid>
       <description>先说下背景，Java程序猿一枚，兼做hybrid app。所以日常工作中免不了要跟浏览器打交道，一般就只用chrome了，看中它的调试功能和庞</description>
     </item>
     
