@@ -4,14 +4,35 @@
   
   <url>
     <loc>https://atbug.com/categories/</loc>
-    <lastmod>2019-10-22T09:27:03+08:00</lastmod>
+    <lastmod>2019-11-06T20:19:50+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/docker-engine-api-on-mac-osx/</loc>
+    <lastmod>2019-11-06T20:19:50+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://atbug.com/post/</loc>
-    <lastmod>2019-10-22T09:27:03+08:00</lastmod>
+    <lastmod>2019-11-06T20:19:50+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/</loc>
+    <lastmod>2019-11-06T20:19:50+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/categories/%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2019-11-06T20:19:50+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -32,20 +53,6 @@
   
   <url>
     <loc>https://atbug.com/tags/</loc>
-    <lastmod>2019-10-22T09:27:03+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/</loc>
-    <lastmod>2019-10-22T09:27:03+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/categories/%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2019-10-22T09:27:03+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
