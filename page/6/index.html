@@ -26,26 +26,26 @@
 <meta name="generator" content="Hugo 0.57.2 with theme even" />
 
 
-<link rel="canonical" href="http://localhost:1313/" />
-  <link href="http://localhost:1313/index.xml" rel="alternate" type="application/rss+xml" title="乱世浮生" />
-  <link href="http://localhost:1313/index.xml" rel="feed" type="application/rss+xml" title="乱世浮生" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="canonical" href="https://atbug.com/" />
+  <link href="https://atbug.com/index.xml" rel="alternate" type="application/rss+xml" title="乱世浮生" />
+  <link href="https://atbug.com/index.xml" rel="feed" type="application/rss+xml" title="乱世浮生" />
+<link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
+<link rel="manifest" href="../../manifest.json">
+<link rel="mask-icon" href="../../safari-pinned-tab.svg" color="#5bbad5">
 
 
-<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link href="../../dist/even.c2a46f00.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
 <meta property="og:title" content="乱世浮生" />
 <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="http://localhost:1313/" />
+<meta property="og:url" content="https://atbug.com/" />
 
-<meta property="og:updated_time" content="2019-10-22T09:27:03+08:00" />
+<meta property="og:updated_time" content="2019-11-06T20:19:50+08:00" />
 <meta itemprop="name" content="乱世浮生">
 <meta itemprop="description" content="知我者谓我何忧 不知我者谓我何求.">
 
@@ -66,7 +66,7 @@
 <body>
   <div id="mobile-navbar" class="mobile-navbar">
   <div class="mobile-header-logo">
-    <a href="/" class="logo">乱世浮生</a>
+    <a href="../../" class="logo">乱世浮生</a>
   </div>
   <div class="mobile-navbar-icon">
     <span></span>
@@ -76,15 +76,13 @@
 </div>
 <nav id="mobile-menu" class="mobile-menu slideout-menu">
   <ul class="mobile-menu-list">
-    <a href="/">
-        <li class="mobile-menu-item">Home</li>
-      </a><a href="/post/">
+    <a href="../../post/">
         <li class="mobile-menu-item">Archives</li>
-      </a><a href="/tags/">
+      </a><a href="../../tags/">
         <li class="mobile-menu-item">Tags</li>
-      </a><a href="/categories/">
+      </a><a href="../../categories/">
         <li class="mobile-menu-item">Categories</li>
-      </a><a href="/about/">
+      </a><a href="../../about/">
         <li class="mobile-menu-item">About</li>
       </a>
   </ul>
@@ -92,21 +90,19 @@
   <div class="container" id="mobile-panel">
     <header id="header" class="header">
         <div class="logo-wrapper">
-  <a href="/" class="logo">乱世浮生</a>
+  <a href="../../" class="logo">乱世浮生</a>
 </div>
 
 <nav class="site-navbar">
   <ul id="menu" class="menu">
     <li class="menu-item">
-        <a class="menu-item-link" href="/">Home</a>
+        <a class="menu-item-link" href="../../post/">Archives</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="/post/">Archives</a>
+        <a class="menu-item-link" href="../../tags/">Tags</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="/tags/">Tags</a>
+        <a class="menu-item-link" href="../../categories/">Categories</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="/categories/">Categories</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/about/">About</a>
+        <a class="menu-item-link" href="../../about/">About</a>
       </li>
   </ul>
 </nav>
@@ -118,11 +114,39 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/go-in-action-three/">Go In Action 读书笔记 三</a></h1>
+    <h1 class="post-title"><a class="post-link" href="../../go-in-action-four/">Go In Action 读书笔记 四</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2018-01-01 </span>
       <div class="post-category">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p><img src="https://talks.golang.org/2013/go4python/img/fib-go.png" alt="" /></p>
+
+<h2 id="并发模式">并发模式</h2>
+
+<h3 id="runner">runner</h3>
+
+<p>runner展示了如何使用通道来监视程序的执行时间, 如果程序执行时间太长, 也可以用终止程序.
+这个程序可用作corn作业执行</p>
+    </div>
+    <div class="read-more">
+      <a href="../../go-in-action-four/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="../../go-in-action-three/">Go In Action 读书笔记 三</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-01-01 </span>
+      <div class="post-category">
+          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
           </div>
     </div>
   </header>
@@ -146,18 +170,18 @@
 资源包括但不限于: 内存(来自文件系统的代码和数据), 句柄(文件, 设备, 操作系统), 线程.</p>
     </div>
     <div class="read-more">
-      <a href="/go-in-action-three/" class="read-more-link">阅读更多</a>
+      <a href="../../go-in-action-three/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>
 
     <article class="post">
   <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/go-in-action-two/">Go In Action 读书笔记 二</a></h1>
+    <h1 class="post-title"><a class="post-link" href="../../go-in-action-two/">Go In Action 读书笔记 二</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2018-01-01 </span>
       <div class="post-category">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
           </div>
     </div>
   </header>
@@ -226,18 +250,18 @@
 </div>
     </div>
     <div class="read-more">
-      <a href="/go-in-action-two/" class="read-more-link">阅读更多</a>
+      <a href="../../go-in-action-two/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>
 
     <article class="post">
   <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/go-in-action-one/">Go In Action 读书笔记 一</a></h1>
+    <h1 class="post-title"><a class="post-link" href="../../go-in-action-one/">Go In Action 读书笔记 一</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2018-01-01 </span>
       <div class="post-category">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
           </div>
     </div>
   </header>
@@ -286,18 +310,18 @@
 </div>
     </div>
     <div class="read-more">
-      <a href="/go-in-action-one/" class="read-more-link">阅读更多</a>
+      <a href="../../go-in-action-one/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>
 
     <article class="post">
   <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/install-godep-issue-in-custom-gopath/">自定义GOPATH下安装godep失败</a></h1>
+    <h1 class="post-title"><a class="post-link" href="../../install-godep-issue-in-custom-gopath/">自定义GOPATH下安装godep失败</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2017-12-22 </span>
       <div class="post-category">
-          <a href="/categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
+          <a href="../../categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
           </div>
     </div>
   </header>
@@ -307,28 +331,7 @@
       我的环境变量是这样的: 1 2 3 4 export GOROOT=/usr/local/go export GOPATH=/Users/addo/Workspaces/go_w export GOBIN=$GOROOT/bin export PATH=$PATH:$GOBIN 使用下面的命令安装报错: go get -v github.com/tools/godep github.com/tools/godep (download) github.com/tools/godep/vendor/github.com/pmezard/go-difflib/difflib github.com/tools/godep/vendor/github.com/kr/fs github.com/tools/godep/vendor/github.com/kr/text github.com/tools/godep/vendor/golang.org/x/tools/go/vcs github.com/tools/godep/vendor/github.com/kr/pretty github.com/tools/godep go install github.com/tools/godep: open /usr/local/go/bin/godep: permission denied 默认是安装到$GOBIN目录下,
     </div>
     <div class="read-more">
-      <a href="/install-godep-issue-in-custom-gopath/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/glance-over-spring-boot-source/">SpringBoot源码 - 启动</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2017-12-08 </span>
-      <div class="post-category">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      SpringBoot Application启动部分的源码阅读. SpringApplication 常用的SpringApplication.run(Class, Args)启动Spring应用,
-    </div>
-    <div class="read-more">
-      <a href="/glance-over-spring-boot-source/" class="read-more-link">阅读更多</a>
+      <a href="../../install-godep-issue-in-custom-gopath/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>
@@ -336,11 +339,11 @@
     </section>
   
   <nav class="pagination">
-    <a class="prev" href="/page/5/">
+    <a class="prev" href="../../page/5/">
         <i class="iconfont icon-left"></i>
         <span class="prev-text">上一页</span>
       </a>
-    <a class="next" href="/page/7/">
+    <a class="next" href="../../page/7/">
         <span class="next-text">下一页</span>
         <i class="iconfont icon-right"></i>
       </a>
@@ -355,7 +358,7 @@
       <div class="social-links">
       <a href="mailto:duwasai@gmail.com" class="iconfont icon-email" title="email"></a>
       <a href="https://github.com/addozhang" class="iconfont icon-github" title="github"></a>
-  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+  <a href="https://atbug.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
 </div>
 
 <div class="copyright">
@@ -390,7 +393,7 @@
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
-<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+<script type="text/javascript" src="../../dist/even.26188efa.min.js"></script>
 
 
 <script type="application/javascript">
