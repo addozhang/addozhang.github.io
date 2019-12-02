@@ -45,7 +45,7 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://atbug.com/" />
 
-<meta property="og:updated_time" content="2019-11-06T20:19:50+08:00" />
+<meta property="og:updated_time" content="2019-11-10T19:50:27+08:00" />
 <meta itemprop="name" content="乱世浮生">
 <meta itemprop="description" content="知我者谓我何忧 不知我者谓我何求.">
 
@@ -116,6 +116,27 @@
       <div class="content-wrapper">
         <div id="content" class="content">
           <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="../../haproxy-multi-host-with-ssl/">Haproxy虚拟主机SSL</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-02-27 </span>
+      <div class="post-category">
+          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      Haproxy为多个域名配置SSL 生成自签名证书 1 2 3 4 5 6 sudo mkdir /etc/ssl/atbug.com sudo openssl genrsa -out /etc/ssl/atbug.com/atbug.com.key 1024 sudo openssl req -new -key /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.csr sudo openssl x509 -req -days 365 -in /etc/ssl/atbug.com/atbug.com.csr -singkey /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.crt sudo openssl x509 -req -days 365 -in /etc/ssl/atbug.com/atbug.com.csr -signkey /etc/ssl/atbug.com/atbug.com.key -out
+    </div>
+    <div class="read-more">
+      <a href="../../haproxy-multi-host-with-ssl/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
     <article class="post">
   <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="../../duplicate-resultmap-in-mybatis-mapper/">mybatis报错“Result Maps collection already contains value for ***”</a></h1>
@@ -196,27 +217,6 @@
     </div>
     <div class="read-more">
       <a href="../../kafka-java-producer-model/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="../../clean-speicified-keys-in-redis/">Redis清理缓存</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2016-12-13 </span>
-      <div class="post-category">
-          <a href="../../categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      最近有个需求需要主动的去清理部分缓存，考虑的原子性的问题，用Lua脚本进行实现。 Lua脚本 1 2 3 4 5 6 7 local count = 0 for _,k in ipairs(redis.call(&#39;KEYS&#39;, ARGV[1])) do redis.call(&#39;DEL&#39;, k) count = count + 1 end
-    </div>
-    <div class="read-more">
-      <a href="../../clean-speicified-keys-in-redis/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>
