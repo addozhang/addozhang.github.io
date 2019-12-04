@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Spring Cloud Hoxton发布 - 乱世浮生</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Addo Zhang" /><meta name="description" content="原文 Spring Cloud Hoxton.RELEASE基于Spring Boot 2.2.1.RELEASE 文档变化 Hoxton.RELEASE使用了新的首页, 新的样式以及单页面, 多页面和PD" /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with theme even" />
+
+
+<link rel="canonical" href="https://atbug.com/spring-cloud-hoxton-release/" />
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="manifest" href="../manifest.json">
+<link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="../dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Spring Cloud Hoxton发布" />
+<meta property="og:description" content="原文 Spring Cloud Hoxton.RELEASE基于Spring Boot 2.2.1.RELEASE 文档变化 Hoxton.RELEASE使用了新的首页, 新的样式以及单页面, 多页面和PD" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://atbug.com/spring-cloud-hoxton-release/" />
+<meta property="article:published_time" content="2019-12-04T11:09:07+08:00" />
+<meta property="article:modified_time" content="2019-12-04T11:09:07+08:00" />
+<meta itemprop="name" content="Spring Cloud Hoxton发布">
+<meta itemprop="description" content="原文 Spring Cloud Hoxton.RELEASE基于Spring Boot 2.2.1.RELEASE 文档变化 Hoxton.RELEASE使用了新的首页, 新的样式以及单页面, 多页面和PD">
+
+
+<meta itemprop="datePublished" content="2019-12-04T11:09:07&#43;08:00" />
+<meta itemprop="dateModified" content="2019-12-04T11:09:07&#43;08:00" />
+<meta itemprop="wordCount" content="1753">
+
+
+
+<meta itemprop="keywords" content="Spring Cloud," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Spring Cloud Hoxton发布"/>
+<meta name="twitter:description" content="原文 Spring Cloud Hoxton.RELEASE基于Spring Boot 2.2.1.RELEASE 文档变化 Hoxton.RELEASE使用了新的首页, 新的样式以及单页面, 多页面和PD"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="../" class="logo">乱世浮生</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="../">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="../post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="../tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="../categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="../about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="../" class="logo">乱世浮生</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="../">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="../post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="../tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="../categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="../about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Spring Cloud Hoxton发布</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-12-04 </span>
+        <div class="post-category">
+            <a href="../categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#文档变化">文档变化</a></li>
+<li><a href="#新的负载均衡器实现">新的负载均衡器实现</a></li>
+<li><a href="#spring-cloud-netflix">Spring Cloud Netflix</a></li>
+<li><a href="#spring-cloud-cloudfoundry">Spring Cloud Cloudfoundry</a></li>
+<li><a href="#spring-cloud-bus">Spring Cloud Bus</a></li>
+<li><a href="#spring-cloud-vault">Spring Cloud Vault</a></li>
+<li><a href="#spring-cloud-kubernetes">Spring Cloud Kubernetes</a></li>
+<li><a href="#spring-cloud-contract">Spring Cloud Contract</a></li>
+<li><a href="#spring-cloud-consul">Spring Cloud Consul</a></li>
+<li><a href="#spring-cloud-config">Spring Cloud Config</a></li>
+<li><a href="#spring-cloud-gcp">Spring Cloud Gcp</a></li>
+<li><a href="#spring-cloud-stream">Spring Cloud Stream</a></li>
+<li><a href="#spring-cloud-commons">Spring Cloud Commons</a></li>
+<li><a href="#spring-cloud-openfeign">Spring Cloud Openfeign</a></li>
+<li><a href="#spring-cloud-task">Spring Cloud Task</a></li>
+<li><a href="#spring-cloud-sleuth">Spring Cloud Sleuth</a></li>
+<li><a href="#spring-cloud-aws">Spring Cloud AWS</a></li>
+<li><a href="#spring-cloud-zookeeper">Spring Cloud Zookeeper</a></li>
+<li><a href="#spring-cloud-security">Spring Cloud Security</a></li>
+<li><a href="#spring-cloud-curcuitbreaker">Spring Cloud CurcuitBreaker</a></li>
+<li><a href="#spring-cloud-function">Spring Cloud Function</a></li>
+<li><a href="#spring-cloud-gateway">Spring Cloud Gateway</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><a href="https://spring.io/blog/2019/11/28/spring-cloud-hoxton-released">原文</a></p>
+
+<p>Spring Cloud Hoxton.RELEASE基于Spring Boot 2.2.1.RELEASE</p>
+
+<h3 id="文档变化">文档变化</h3>
+
+<p>Hoxton.RELEASE使用了新的<a href="https://cloud.spring.io/spring-cloud-static/Hoxton.RELEASE/reference/html/spring-cloud.html">首页</a>, 新的样式以及单页面, 多页面和PDF版本.</p>
+
+<h3 id="新的负载均衡器实现">新的负载均衡器实现</h3>
+
+<p>Hoxton.RELEASE是第一个包含阻塞和非阻塞客户端负载均衡器实现的版本, 替代进入维护状态的Netflix Ribbon.</p>
+
+<p>搭配<code>BlockingLoadBalancerClient</code>使用<code>RestTemplate</code>, 需要在classpath中引入<code>org.springframework.cloud:spring-cloud-loadbalancer</code>. 这个依赖同样用于使用了<code>@LoadBalanced WebClient.Builder</code>的响应式应用中. 唯一的区别是Spring Cloud会自动配置<code>ReactorLoadBalancerExchangeFilterFunction</code>实例. 更多内容查看<a href="https://cloud.spring.io/spring-cloud-static/spring-cloud-commons/2.2.0.M2/reference/html/#_spring_resttemplate_as_a_load_balancer_client">文档</a>. 新的<code>ReactorLoadBalancerExchangeFilterFunction</code>可用于自动装配并自动传递给<code>WebClient.Builder</code>(<a href="https://cloud.spring.io/spring-cloud-commons/reference/html/#webflux-with-reactive-loadbalancer">文档</a>).</p>
+
+<h3 id="spring-cloud-netflix">Spring Cloud Netflix</h3>
+
+<ul>
+<li>增加了新的<code>ReactiveDiscoveryClient</code>, 同时增加了新的Spring Cloud Circuit Breaker API的Hystrix实现.</li>
+<li>增加<a href="https://cloud.spring.io/spring-cloud-static/spring-cloud-netflix/2.2.0.RC2/reference/html/#disabling-spring-cloud-circuit-breaker-hystrix">配置项</a><code>spring.cloud.circuitbreaker.hystrix.enabled</code>来禁用Spring Cloud CircuitBreaker Hystrix的自动配置.</li>
+</ul>
+
+<h3 id="spring-cloud-cloudfoundry">Spring Cloud Cloudfoundry</h3>
+
+<p>支持新的<code>ReactiveDiscoveryClient</code></p>
+
+<h3 id="spring-cloud-bus">Spring Cloud Bus</h3>
+
+<p>文档更新</p>
+
+<h3 id="spring-cloud-vault">Spring Cloud Vault</h3>
+
+<ul>
+<li>在Pivotal应用程序服务)以前的PCF)中运行的应用程序可以利用容器的身份来使用保险柜的PCF身份验证支持进行身份验证</li>
+<li>使用X-Vault-Namespace标头支持Vault名称空间(Vault Enterprise功能)</li>
+</ul>
+
+<h3 id="spring-cloud-kubernetes">Spring Cloud Kubernetes</h3>
+
+<p>支持新的<code>ReactiveDiscoveryClient</code></p>
+
+<h3 id="spring-cloud-contract">Spring Cloud Contract</h3>
+
+<ul>
+<li>完整的文档重写</li>
+<li>主要测试类生成重构</li>
+<li>从Groovy到Java的大量重写</li>
+<li>添加了对使用Kotlin和Java编写合同的支持</li>
+<li>在合同DSL和运行时存根生成中添加了inProgress标志</li>
+<li>增加了对生成测试的TestNG支持</li>
+<li>许多库版本增量(包括Groovy, WireMock和Pact)</li>
+</ul>
+
+<h3 id="spring-cloud-consul">Spring Cloud Consul</h3>
+
+<p>支持新的<code>ReactiveDiscoveryClient</code>以及Consul的一致性模型</p>
+
+<h3 id="spring-cloud-config">Spring Cloud Config</h3>
+
+<ul>
+<li>新的环境仓库支持AWS S3</li>
+<li>添加了解密纯文本属性的功能</li>
+</ul>
+
+<h3 id="spring-cloud-gcp">Spring Cloud Gcp</h3>
+
+<ul>
+<li>添加BigQuery模块</li>
+<li>为Cloud Foundry创建了一个单独的启动器：<code>spring-cloud-gcp-starter-cloudfoundry</code></li>
+<li>可以浏览<a href="https://github.com/spring-cloud/spring-cloud-gcp/blob/master/CHANGELOG.adoc#120release-2019-11-26">变更日志</a>文档以获取更多信息</li>
+</ul>
+
+<h3 id="spring-cloud-stream">Spring Cloud Stream</h3>
+
+<p>从annotation-driven过度到了更加简单的函数式.</p>
+
+<ul>
+<li><a href="https://spring.io/blog/2019/10/14/spring-cloud-stream-demystified-and-simplified">Spring Cloud Stream - demystified and simplified</a></li>
+<li><a href="https://spring.io/blog/2019/10/17/spring-cloud-stream-functional-and-reactive">Spring Cloud Stream - functional and reactive</a></li>
+<li><a href="https://spring.io/blog/2019/10/25/spring-cloud-stream-and-spring-integration">Spring Cloud Stream - and Spring Integration</a></li>
+<li><a href="https://spring.io/blog/2019/10/31/spring-cloud-stream-event-routing">Spring Cloud Stream - Event Routing</a></li>
+</ul>
+
+<h3 id="spring-cloud-commons">Spring Cloud Commons</h3>
+
+<p>引入阻塞和非阻塞客户端负载均衡器实现, 来替代进入维护状态的Netflix Ribbon.</p>
+
+<h3 id="spring-cloud-openfeign">Spring Cloud Openfeign</h3>
+
+<ul>
+<li>Openfeign升级到10.4.0</li>
+<li>支持Spring Cloud LoadBalancer</li>
+</ul>
+
+<h3 id="spring-cloud-task">Spring Cloud Task</h3>
+
+<ul>
+<li>支持Micrometer</li>
+<li>更新文档</li>
+<li>使用Spring Batch分区时启动的任务应用现在加入了external-execution-id</li>
+</ul>
+
+<h3 id="spring-cloud-sleuth">Spring Cloud Sleuth</h3>
+
+<ul>
+<li>加入对最新的Brave(包括消息采样)的支持</li>
+<li>添加了onLastOperator Reactor跟踪选项，以提高性能</li>
+<li>添加了Redis跟踪</li>
+<li>将默认采样器设置为限速采样器</li>
+<li>添加了对AWS SQS跟踪的支持</li>
+<li>增加了对Quartz跟踪的支持</li>
+<li>添加了进程内传播机制</li>
+<li>默认为Zipkin报告的Micrometer指标</li>
+</ul>
+
+<h3 id="spring-cloud-aws">Spring Cloud AWS</h3>
+
+<p>Bug修复</p>
+
+<h3 id="spring-cloud-zookeeper">Spring Cloud Zookeeper</h3>
+
+<p>支持新的<code>ReactiveDiscoveryClient</code></p>
+
+<h3 id="spring-cloud-security">Spring Cloud Security</h3>
+
+<p>Bug修复</p>
+
+<h3 id="spring-cloud-curcuitbreaker">Spring Cloud CurcuitBreaker</h3>
+
+<p>引入新的项目Spring Cloud CircuitBreaker, 这个项目包含的抽象的API用于在项目中使用断路器. 支持该API的实现:</p>
+
+<ul>
+<li>Resilience4j</li>
+<li>Spring Retry</li>
+<li>Hystrix (in <a href="https://github.com/spring-cloud/spring-cloud-netflix/blob/master/spring-cloud-netflix-hystrix/src/main/java/org/springframework/cloud/netflix/hystrix/HystrixCircuitBreaker.java">spring-cloud-netflix</a>)</li>
+<li>Sentinel (in <a href="https://github.com/alibaba/spring-cloud-alibaba/tree/master/spring-cloud-alibaba-sentinel">spring-cloud-alibaba</a>)</li>
+</ul>
+
+<p><a href="https://spring.io/blog/2019/04/16/introducing-spring-cloud-circuit-breaker">更多信息</a></p>
+
+<ul>
+<li>时添加了自动配置, 在使用Resilience4J收集断路器的指标数据</li>
+<li>升级到Resilience4J 1.1.0</li>
+<li>添加配置项禁用REsilience4J的自动配置</li>
+</ul>
+
+<h3 id="spring-cloud-function">Spring Cloud Function</h3>
+
+<p>添加了更多新特性:</p>
+
+<ul>
+<li>透明类型转换</li>
+<li>函数路由</li>
+<li>函数参数</li>
+</ul>
+
+<p><a href="https://spring.io/blog/2019/11/25/announcing-the-release-of-spring-cloud-function-3-0-0-release">更多详细信息</a></p>
+
+<h3 id="spring-cloud-gateway">Spring Cloud Gateway</h3>
+
+<ul>
+<li>支持新的<code>ReactiveDiscoveryClient</code></li>
+<li>RSocket模块迁移到了自己维护的位于Spring Cloud Incubator organization项目中</li>
+<li>通过增加的使用了新Spring Cloud CircuitBreaker库过滤器为路由提供断路器功能</li>
+</ul>
+
+    </div>
+
+    
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="../tags/spring-cloud/">Spring Cloud</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="../bose-qc35-downgrade/">
+            <span class="next-text nav-default">Bose QC35 固件降级</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'addozhang';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:duwasai@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/addozhang" class="iconfont icon-github" title="github"></a>
+  <a href="https://atbug.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Addo Zhang</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="../dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

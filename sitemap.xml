@@ -2,28 +2,56 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://atbug.com/bose-qc35-downgrade/</loc>
-    <lastmod>2019-11-10T19:50:27+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>https://atbug.com/categories/</loc>
-    <lastmod>2019-11-10T19:50:27+08:00</lastmod>
+    <lastmod>2019-12-04T11:09:07+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://atbug.com/post/</loc>
-    <lastmod>2019-11-10T19:50:27+08:00</lastmod>
+    <lastmod>2019-12-04T11:09:07+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/tags/spring-cloud/</loc>
+    <lastmod>2019-12-04T11:09:07+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/spring-cloud-hoxton-release/</loc>
+    <lastmod>2019-12-04T11:09:07+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/tags/</loc>
+    <lastmod>2019-12-04T11:09:07+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://atbug.com/</loc>
+    <lastmod>2019-12-04T11:09:07+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/categories/%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2019-12-04T11:09:07+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/bose-qc35-downgrade/</loc>
     <lastmod>2019-11-10T19:50:27+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -44,13 +72,6 @@
   </url>
   
   <url>
-    <loc>https://atbug.com/categories/%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2019-11-06T20:19:50+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>https://atbug.com/spring-boot-2-2-0-release/</loc>
     <lastmod>2019-10-22T09:27:03+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -59,13 +80,6 @@
   
   <url>
     <loc>https://atbug.com/tags/spring-boot/</loc>
-    <lastmod>2019-10-22T09:27:03+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/tags/</loc>
     <lastmod>2019-10-22T09:27:03+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -171,13 +185,6 @@
   
   <url>
     <loc>https://atbug.com/tags/ribbon/</loc>
-    <lastmod>2018-08-02T08:55:43+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/tags/spring-cloud/</loc>
     <lastmod>2018-08-02T08:55:43+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

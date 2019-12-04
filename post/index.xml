@@ -6,10 +6,19 @@
     <description>Recent content in Posts on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 10 Nov 2019 19:50:27 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 04 Dec 2019 11:09:07 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Spring Cloud Hoxton发布</title>
+      <link>https://atbug.com/spring-cloud-hoxton-release/</link>
+      <pubDate>Wed, 04 Dec 2019 11:09:07 +0800</pubDate>
+      
+      <guid>https://atbug.com/spring-cloud-hoxton-release/</guid>
+      <description>原文 Spring Cloud Hoxton.RELEASE基于Spring Boot 2.2.1.RELEASE 文档变化 Hoxton.RELEASE使用了新的首页, 新的样式以及单页面, 多页面和PD</description>
+    </item>
     
     <item>
       <title>Bose QC35 固件降级</title>
