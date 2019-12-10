@@ -63,235 +63,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../spring-cloud-service-registry-via-eureka/">Spring Cloud - Eureka服务注册</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../run-spring-boot-app-in-docker/">从零开始用docker运行spring boot应用</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../spring-cloud-service-registry-via-eureka/" class="article-date">
-                        <time datetime='2018-02-14T07:32:43.000&#43;00:00' itemprop="datePublished">2018-02-14</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../spring-cloud-service-registry-via-eureka/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    <p>之前分析过<a href="http://atbug.com/spring-cloud-eureka-client-source-code-analysis/">Spring Cloud的Eureka服务发现</a>, 今天分析一下服务注册.</p>
-
-<h2 id="配置">配置</h2>
-
-<h3 id="bootstrapconfiguration">BootstrapConfiguration</h3>
-
-<h4 id="eurekadiscoveryclientconfigservicebootstrapconfiguration">EurekaDiscoveryClientConfigServiceBootstrapConfiguration</h4>
-
-<p>spring-cloud-config环境中使用的配置</p>
-
-<p>引入<code>EurekaDiscoveryClientConfiguration</code>和<code>EurekaClientAutoConfiguration</code></p>
-
-<h5 id="eurekadiscoveryclientconfiguration">EurekaDiscoveryClientConfiguration</h5>
-
-<ol>
-<li>在spring-cloud中(通过是否存在RefreshScopeRefreshedEvent.class判断), 添加<code>RefreshScopeRefreshedEvent</code>的listener. 收到事件后重新注册实例.</li>
-<li>在<code>eureka.client.healthcheck.enabled</code>设置为true时, 注册<code>EurekaHealthCheckHandler</code>bean. <code>EurekaHealthCheckHandler</code>负责将应用状态映射为实例状态<code>InstanceStatus</code>.</li>
-</ol>
-
-<h5 id="eurekaclientautoconfiguration">EurekaClientAutoConfiguration</h5>
-
-<p>支持spring-cloud和非spring-cloud环境, 在spring-cloud环境中, 下面两个bean要使用<code>@RefreshScope</code>标注</p>
-
-<ol>
-<li>实例化<code>EurekaClient</code>bean, 在spring-cloud中使用实现类<code>CloudEurekaClient</code>.</li>
-<li>使用<code>EurekaInstanceConfig</code>实例, 实例化<code>ApplicationInfoManager</code>bean</li>
-</ol>
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../spring-cloud-service-registry-via-eureka/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/spring">Spring
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/eureka">Eureka
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../learn-netflix-zuul/">初识Netflix Zuul</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../learn-netflix-zuul/" class="article-date">
-                        <time datetime='2018-02-11T10:07:18.000&#43;00:00' itemprop="datePublished">2018-02-11</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../learn-netflix-zuul/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    <p>嵌入式的zuul代理</p>
-
-<p>使用了Netfilx OSS的其他组件:
-- Hystrix   熔断
-- Ribbon    负责发送外出请求的客户端, 提供软件负载均衡功能
-- Trubine   实时地聚合细粒度的metrics数据
-- Archaius  动态配置</p>
-
-<h2 id="介绍">介绍</h2>
-
-<p>由于2.0停止开发且会有bug, 故下面的分析基于1.x版本.</p>
-
-<h3 id="特性">特性</h3>
-
-<ul>
-<li>Authentication 认证</li>
-<li>Insights 洞察</li>
-<li>Stress Testing 压力测试</li>
-<li>Canary Testing 金丝雀测试</li>
-<li>Dynamic Routing 动态路由</li>
-<li>Multi-Region Resiliency 多区域弹性</li>
-<li>Load Shedding 负载脱落</li>
-<li>Security 安全</li>
-<li>Static Response handling 静态响应处理</li>
-<li>Multi-Region Resiliency 主动/主动流量管理</li>
-</ul>
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../learn-netflix-zuul/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/netflix">Netflix
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/zuul">Zuul
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../configurationproperties-requires-getter-or-not/">ConfigurationProperties到底需不需要getter</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../configurationproperties-requires-getter-or-not/" class="article-date">
-                        <time datetime='2018-02-07T15:53:21.000&#43;00:00' itemprop="datePublished">2018-02-07</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../configurationproperties-requires-getter-or-not/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    为什么要讨论这个问题, 工作中一个同事写的类使用了ConfigurationProperties, 只提供了标准的setter方法. 属性的访问,
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../configurationproperties-requires-getter-or-not/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/spring">Spring
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../go-in-action-four/">Go In Action 读书笔记 四</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../go-in-action-four/" class="article-date">
-                        <time datetime='2018-01-01T12:30:55.000&#43;00:00' itemprop="datePublished">2018-01-01</time>
+                    <a href="../../run-spring-boot-app-in-docker/" class="article-date">
+                        <time datetime='2017-04-20T21:58:42.000&#43;00:00' itemprop="datePublished">2017-04-20</time>
                     </a>
                     
                     
@@ -306,24 +83,17 @@
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../go-in-action-four/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../run-spring-boot-app-in-docker/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    <p><img src="https://talks.golang.org/2013/go4python/img/fib-go.png" alt="" /></p>
-
-<h2 id="并发模式">并发模式</h2>
-
-<h3 id="runner">runner</h3>
-
-<p>runner展示了如何使用通道来监视程序的执行时间, 如果程序执行时间太长, 也可以用终止程序.
-这个程序可用作corn作业执行</p>
+                    假设已经安装好Docker Springboot应用 pom添加依赖和构建插件 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 &lt;parent&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt; &lt;version&gt;1.5.3.RELEASE&lt;/version&gt; &lt;/parent&gt; &lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt; &lt;/dependency&gt; &lt;/dependencies&gt; &lt;build&gt; &lt;plugins&gt; &lt;plugin&gt;
                     </p>
                     <p class="article-more-link">
-                        <a href="../../go-in-action-four/">Read More</a>
+                        <a href="../../run-spring-boot-app-in-docker/">Read More</a>
                     </p>
                 </div>
 
@@ -332,7 +102,12 @@
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/go">Go
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/spring-boot">Spring-boot
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/docker">Docker
                             </a>
                         </li>
                         
@@ -347,12 +122,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../go-in-action-three/">Go In Action 读书笔记 三</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../jasig-cas-web-and-proxy-flow/">Jasig CAS Web and Proxy flow</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../go-in-action-three/" class="article-date">
-                        <time datetime='2018-01-01T12:30:31.000&#43;00:00' itemprop="datePublished">2018-01-01</time>
+                    <a href="../../jasig-cas-web-and-proxy-flow/" class="article-date">
+                        <time datetime='2017-04-18T10:36:16.000&#43;00:00' itemprop="datePublished">2017-04-18</time>
                     </a>
                     
                     
@@ -367,31 +142,17 @@
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../go-in-action-three/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../jasig-cas-web-and-proxy-flow/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    <h2 id="并发">并发</h2>
-
-<p>Go语言里的并发是指让某个函数可以独立于其他函数运行的能力. 当一个函数创建为goroutine时, Go会将其视为一个独立的工作单元. 这个工作单元会被调度到可用的<strong>逻辑处理器</strong>上执行.</p>
-
-<p>Go的运行时调度器可以管理所有创建的goroutine, 并为其分配执行时间.
-这个调度器在操作系统之上, 将操作系统的线程与逻辑处理器绑定, 并在逻辑处理器执行goroutine. <strong>调度器可以在任何给定的时间, 全面控制哪个goroutine在哪个逻辑处理器上运行</strong>.</p>
-
-<p>Go的并发同步模型来自一个叫做通信顺序进程(Communicating Sequential Processes, <a href="http://www.usingcsp.com">CSP</a>). CSP是一个消息传递模型, 通过在goroutine之前传递数据来传递消息, 不需要通过加锁实现同步访问. 用于在goroutine间传递消息的数据结构叫做通道(channel).</p>
-
-<h3 id="并发与并行">并发与并行</h3>
-
-<p>操作系统的线程(thread)和进程(process).</p>
-
-<p>进程类似应用程序在运行中需要用到和维护的各种资源的容器.
-资源包括但不限于: 内存(来自文件系统的代码和数据), 句柄(文件, 设备, 操作系统), 线程.</p>
+                    最近因为需求在看CAS相关的只是，由于需要后端调用，用到proxy（代理）模式。整理了下web flow和proxy web flow的流程。 Web Flow Proxy Web
                     </p>
                     <p class="article-more-link">
-                        <a href="../../go-in-action-three/">Read More</a>
+                        <a href="../../jasig-cas-web-and-proxy-flow/">Read More</a>
                     </p>
                 </div>
 
@@ -400,7 +161,480 @@
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/go">Go
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/cas">cas
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../java8-metaspace-size-issue/">MetaspaceSize的坑</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../java8-metaspace-size-issue/" class="article-date">
+                        <time datetime='2017-04-13T11:55:14.000&#43;00:00' itemprop="datePublished">2017-04-13</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../java8-metaspace-size-issue/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    这几天生产上有台机器的Metaspace一直在告警，Metaspace使用达到了97%。使用-XX:MetaspaceSize=512m，告
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../java8-metaspace-size-issue/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java8">Java8
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/metaspace">Metaspace
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/jvm">JVM
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../one-tomcat-class-load-issue/">一个Tomcat类加载问题</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../one-tomcat-class-load-issue/" class="article-date">
+                        <time datetime='2017-04-12T10:40:01.000&#43;00:00' itemprop="datePublished">2017-04-12</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../one-tomcat-class-load-issue/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    背景 一个Tomcat实例中运行了三个应用，其中一个对接了Apereo的CAS系统。现在要求另外两个系统也对接CAS系统，问题就出现了： 应用启
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../one-tomcat-class-load-issue/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/tomcat">Tomcat
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../call-high-order-function-in-function-literal/">Scala笔记：用函数字面量块调用高阶函数</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../call-high-order-function-in-function-literal/" class="article-date">
+                        <time datetime='2017-04-11T10:15:15.000&#43;00:00' itemprop="datePublished">2017-04-11</time>
+                    </a>
+                    
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../call-high-order-function-in-function-literal/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    这里会用到几个概念高阶函数、函数字面量、参数组 高阶函数 high-order function 函数的一种，简单来说它包含了一个函数类型的参数或者返回值。 所谓的高阶是跟一阶函数相
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../call-high-order-function-in-function-literal/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/scala">scala
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/%E5%AD%A6%E4%B9%A0">学习
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../greenplum-jdbc-and-c3p0-datasource/">GreenPlum JDBC和C3P0数据源</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../greenplum-jdbc-and-c3p0-datasource/" class="article-date">
+                        <time datetime='2017-04-10T08:29:00.000&#43;00:00' itemprop="datePublished">2017-04-10</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../greenplum-jdbc-and-c3p0-datasource/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    在网上搜索GreenPlum（GPDB）的数据源配置的时候，发现搜索结果都是用postgresql的配置。 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../greenplum-jdbc-and-c3p0-datasource/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/greenplum">GreenPlum
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/c3p0">C3p0
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../def-vs-val-in-scala/">Scala笔记：def VS val</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../def-vs-val-in-scala/" class="article-date">
+                        <time datetime='2017-04-09T08:24:40.000&#43;00:00' itemprop="datePublished">2017-04-09</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../def-vs-val-in-scala/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    先说原理： val修饰的在定义的时候执行 def修饰的在调用的时候执行 直观的例子： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 //注释
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../def-vs-val-in-scala/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/scala">scala
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../install-redis-on-centos/">Centos编译安装Redis</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../install-redis-on-centos/" class="article-date">
+                        <time datetime='2017-04-07T16:48:46.000&#43;00:00' itemprop="datePublished">2017-04-07</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../install-redis-on-centos/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    版本 Centos7 Redis3.2.8 编译安装 1 2 3 4 5 wget http://download.redis.io/releases/redis-3.2.8.tar.gz tar -zxvf redis-3.2.8.tar.gz cd redis-3.2.8 sudo make test sudo make install 启动 1 redis-server 问题 /bin/sh: cc: command not found 原因：Centos安装时选择的类型是Infrastructure，
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../install-redis-on-centos/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/centos">Centos
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/redis">Redis
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../install-postgresql-on-centos/">Centos上安装Postgresql</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../install-postgresql-on-centos/" class="article-date">
+                        <time datetime='2017-04-06T22:54:17.000&#43;00:00' itemprop="datePublished">2017-04-06</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../install-postgresql-on-centos/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    版本 Centos7 Postgresql9.2 Enable ssh service sshd start Open firewall for 22 firewall-cmd —state firewall-cmd —list-all firewall-cmd —permanent —zone=public —add-port=22/tcp firewall-cmd
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../install-postgresql-on-centos/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/database">Database
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/linux">Linux
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../redis-performance-key-length/">Key长度对Redis性能影响</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../redis-performance-key-length/" class="article-date">
+                        <time datetime='2017-03-16T10:37:03.000&#43;00:00' itemprop="datePublished">2017-03-16</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../redis-performance-key-length/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    最近Redis的使用中用的到key可能比较长，但是Redis的官方文档没提到key长度对性能的影响，故简单做了个测试。 环境 Redis和测试程
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../redis-performance-key-length/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/redis">Redis
                             </a>
                         </li>
                         
@@ -448,38 +682,6 @@
     
     
     <a href="../../page/8/">8</a>
-    
-    
-    
-    <a href="../../page/9/">9</a>
-    
-    
-    
-    <a href="../../page/10/">10</a>
-    
-    
-    
-    <a href="../../page/11/">11</a>
-    
-    
-    
-    <a href="../../page/12/">12</a>
-    
-    
-    
-    <a href="../../page/13/">13</a>
-    
-    
-    
-    <a href="../../page/14/">14</a>
-    
-    
-    
-    <a href="../../page/15/">15</a>
-    
-    
-    
-    <a href="../../page/16/">16</a>
     
     
 

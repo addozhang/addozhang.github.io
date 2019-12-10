@@ -63,12 +63,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../kvm-installation-note/">KVM安装手册</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../kafka-exactly-once-delivery-and-transactional-messaging-example/">Kafka 恰好一次发送和事务消费示例</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../kvm-installation-note/" class="article-date">
-                        <time datetime='2018-04-12T12:45:15.000&#43;00:00' itemprop="datePublished">2018-04-12</time>
+                    <a href="../../kafka-exactly-once-delivery-and-transactional-messaging-example/" class="article-date">
+                        <time datetime='2017-09-22T18:03:43.000&#43;00:00' itemprop="datePublished">2017-09-22</time>
                     </a>
                     
                     
@@ -76,82 +76,24 @@
                         <div class="article-category">
                             
                             
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
                             
                         </div>
                     </div>
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../kvm-installation-note/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../kafka-exactly-once-delivery-and-transactional-messaging-example/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    <h2 id="添加虚拟机流程">添加虚拟机流程：</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></pre></td>
-<td class="lntd">
-<pre class="chroma">1. 配置网络
-2. 配置存储池
-3. 上传镜像
-4. 安装虚拟机，指定配置</pre></td></tr></table>
-</div>
-</div>
-<h3 id="安装kvm虚拟机">安装KVM虚拟机</h3>
-
-<h4 id="1-关闭防火墙-selinux">1. 关闭防火墙，selinux</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># service iptables stop</span>
-<span class="c1"># setenforce 0 临时关闭</span>
-<span class="c1"># chkconfig NetworkManager off</span></code></pre></td></tr></table>
-</div>
-</div>
-<h4 id="2-安装kvm虚拟机">2. 安装kvm虚拟机</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># yum install kvm libvirt libvirt-devel python-virtinst python-virtinst qemu-kvm virt-viewer bridge-utils virt-top libguestfs-tools ca-certificates audit-libs-python device-mapper-libs virt-install</span>
-<span class="c1"># 启动服务</span>
-<span class="c1"># service libvirtd restart</span>
-下载virtio-win-1.5.2-1.el6.noarch.rpm 如果不安装window虚拟机或者使用带virtio驱动的镜像可以不用安装
-<span class="c1"># rpm -ivh virtio-win-1.5.2-1.el6.noarch.rpm</span></code></pre></td></tr></table>
-</div>
-</div>
-<h4 id="3-libvirt在管理本地或远程hypervisor时的表现形式如下">3. Libvirt在管理本地或远程Hypervisor时的表现形式如下。</h4>
-
-<p>在libvirt内部管理了五部分：</p>
-
-<ul>
-<li>节点：所谓的节点就是我们的物理服务器，一个服务器代表一个节点，上边存放着Hyper和Domain</li>
-<li>Hypervisor：即VMM，指虚拟机的监控程序，在KVM中是一个加载了kvm.ko的标准Linux系统。</li>
-<li>域（Domain）：指虚拟机，一个域代表一个虚拟机（估计思路来源于Xen的Domain0）</li>
-<li>存储池（Storage Pool）：存储空间，支持多种协议和网络存储。作为虚拟机磁盘的存储源。</li>
-<li>卷组（Volume）：虚拟机磁盘在Host上的表现形式。
-上边的五部分，我们必须使用的是前三个，因为很多时候根据业务规则或应用的灵活性并没有使用卷组（其实就是有了编制的虚拟磁盘文件），也就没有必要使用存储池。</li>
-</ul>
+                    核心思想 生产端一致性: 开启幂等和事务, 包含重试, 发送确认, 同一个连接的最大未确认请求数. 消费端一致性: 通过设置读已提交的数据和同时处理完成每
                     </p>
                     <p class="article-more-link">
-                        <a href="../../kvm-installation-note/">Read More</a>
+                        <a href="../../kafka-exactly-once-delivery-and-transactional-messaging-example/">Read More</a>
                     </p>
                 </div>
 
@@ -160,17 +102,12 @@
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/linux">Linux
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/kafka">Kafka
                             </a>
                         </li>
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/ops">ops
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/kvm">KVM
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
                             </a>
                         </li>
                         
@@ -185,12 +122,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../jenkins-cli-enable/">启用Jenkins CLI</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../kafka-exactly-once-delivery-and-transactional-messaging/">恰好一次发送和事务消息(译)</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../jenkins-cli-enable/" class="article-date">
-                        <time datetime='2018-04-09T11:16:38.000&#43;00:00' itemprop="datePublished">2018-04-09</time>
+                    <a href="../../kafka-exactly-once-delivery-and-transactional-messaging/" class="article-date">
+                        <time datetime='2017-09-19T19:13:26.000&#43;00:00' itemprop="datePublished">2017-09-19</time>
                     </a>
                     
                     
@@ -198,24 +135,24 @@
                         <div class="article-category">
                             
                             
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
                             
                         </div>
                     </div>
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../jenkins-cli-enable/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../kafka-exactly-once-delivery-and-transactional-messaging/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    Jenkins CLI提供了SSH和Client模式. Docker运行Jenkins 1 2 3 4 5 6 7 8 9 10 version:&#39;3&#39;services:jenkins:image:jenkins/jenkins:alpineports:-8080:8080-50000:50000-46059:46059volumes:-&#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&#34; note: 以为是docker运行, ssh端口设置选用了固
+                    Kafka提供“至少一次”交付语义, 这意味着发送的消息可以传送一次或多次. 人们真正想要的是“一次”语义,因为重复的消息没有被传递。 普遍地发声
                     </p>
                     <p class="article-more-link">
-                        <a href="../../jenkins-cli-enable/">Read More</a>
+                        <a href="../../kafka-exactly-once-delivery-and-transactional-messaging/">Read More</a>
                     </p>
                 </div>
 
@@ -224,7 +161,7 @@
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/jenkins">Jenkins
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/kafka">Kafka
                             </a>
                         </li>
                         
@@ -239,12 +176,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../resolve-process-be-killed-after-jenkins-job-done/">Jenkins - 解决execute shell中启动的进程被在Job退出时被杀死问题</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../kafka-producer-config/">Kafka Producer配置解读</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../resolve-process-be-killed-after-jenkins-job-done/" class="article-date">
-                        <time datetime='2018-03-15T17:00:25.000&#43;00:00' itemprop="datePublished">2018-03-15</time>
+                    <a href="../../kafka-producer-config/" class="article-date">
+                        <time datetime='2017-09-19T15:38:03.000&#43;00:00' itemprop="datePublished">2017-09-19</time>
                     </a>
                     
                     
@@ -252,24 +189,24 @@
                         <div class="article-category">
                             
                             
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
                             
                         </div>
                     </div>
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../resolve-process-be-killed-after-jenkins-job-done/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../kafka-producer-config/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    因为ProcessTreeKiller的存在, 构建过程中使用shell启动的进程在Job完成时都会被kill掉. 各种搜索以及ProcessT
+                    按照重要性分类, 基于版本0.11.0.0 高 bootstrap.servers 一组host和port用于初始化连接. 不管这里配置了多少台server, 都只是用作发现整个集群全
                     </p>
                     <p class="article-more-link">
-                        <a href="../../resolve-process-be-killed-after-jenkins-job-done/">Read More</a>
+                        <a href="../../kafka-producer-config/">Read More</a>
                     </p>
                 </div>
 
@@ -278,7 +215,7 @@
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/jenkins">Jenkins
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/kafka">Kafka
                             </a>
                         </li>
                         
@@ -293,12 +230,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../install-minishift-on-mac/">MacOS安装minishift</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../json-patch/">JSON Patch</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../install-minishift-on-mac/" class="article-date">
-                        <time datetime='2018-02-23T15:32:26.000&#43;00:00' itemprop="datePublished">2018-02-23</time>
+                    <a href="../../json-patch/" class="article-date">
+                        <time datetime='2017-08-27T14:41:44.000&#43;00:00' itemprop="datePublished">2017-08-27</time>
                     </a>
                     
                     
@@ -306,24 +243,24 @@
                         <div class="article-category">
                             
                             
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
                             
                         </div>
                     </div>
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../install-minishift-on-mac/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../json-patch/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    MacOS环境安装minishift 安装minishift cli 1 brew cask install minishift 使用virtualbox安装 安装的时候可以指定HTTP代理, 拉取墙外镜
+                    JSON Path是在使用Kubernetes API的过程中首次使用的. 使用API做扩缩容的时候, 发送整个Deployment的全文不是个明智的做法
                     </p>
                     <p class="article-more-link">
-                        <a href="../../install-minishift-on-mac/">Read More</a>
+                        <a href="../../json-patch/">Read More</a>
                     </p>
                 </div>
 
@@ -332,12 +269,7 @@
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/minishift">minishift
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/openshift">openshift
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/json">JSON
                             </a>
                         </li>
                         
@@ -352,12 +284,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../spring-cloud-zuul-breakdown/">Spring Cloud Zuul详解</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../how-to-use-hostpath-in-openshift/">如何在Openshift中使用hostPath</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../spring-cloud-zuul-breakdown/" class="article-date">
-                        <time datetime='2018-02-22T17:02:26.000&#43;00:00' itemprop="datePublished">2018-02-22</time>
+                    <a href="../../how-to-use-hostpath-in-openshift/" class="article-date">
+                        <time datetime='2017-08-23T19:29:51.000&#43;00:00' itemprop="datePublished">2017-08-23</time>
                     </a>
                     
                     
@@ -365,98 +297,24 @@
                         <div class="article-category">
                             
                             
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
                             
                         </div>
                     </div>
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../spring-cloud-zuul-breakdown/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../how-to-use-hostpath-in-openshift/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    <p>Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看<a href="http://atbug.com/learn-netflix-zuul/">上一篇</a>.</p>
-
-<h2 id="实现">实现</h2>
-
-<p>@EnableZuulProxy 与 @EnableZuulServer
-二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用.
-Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
-
-<h3 id="具体实现">具体实现:</h3>
-
-<ol>
-<li>使用<code>ZuulController</code>(<code>ServletWrappingController</code>的子类)封装<code>ZuulServlet</code>实例, 处理从<code>DispatcherServlet</code>进来的请求.</li>
-<li><code>ZuulHandlerMapping</code>负责注册handler mapping, 将<code>Route</code>的<code>fullPath</code>的请求交由<code>ZuulController</code>处理.</li>
-<li>同时使用<code>ServletRegistrationBean</code>注册<code>ZuulServlet</code>, 默认使用<code>/zuul</code>作为urlMapping. 所有来自以<code>/zuul</code>开头的path的请求都会直接进入<code>ZuulServlet</code>, 不会进入<code>DispatcherServlet</code>.</li>
-</ol>
-
-<h4 id="使用注解">使用注解</h4>
-
-<ul>
-<li><p><code>@EnableZuulProxy</code>引入了<code>ZuulProxyMarkerConfiguration</code>, <code>ZuulProxyMarkerConfiguration</code>只做了一件事, 实例化了内部类<code>Marker</code>.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
-<span class="kd">public</span> <span class="nf">class</span> <span class="n">ZuulProxyMarkerConfiguration</span> <span class="p">{</span>
-    <span class="nd">@Bean</span>
-    <span class="kd">public</span> <span class="nf">Marker</span> <span class="n">zuulProxyMarkerBean</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">Marker</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="kd">class</span> <span class="nf">Marker</span> <span class="p">{</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></td></tr></table>
-</div>
-</div></li>
-
-<li><p><code>@EnableZuulServer</code>引入了<code>ZuulServerMarkerConfiguration</code>, <code>ZuulServerMarkerConfiguration</code>也只做了一件事: 实例化了内部类<code>Marker</code></p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
-<span class="kd">public</span> <span class="nf">class</span> <span class="n">ZuulServerMarkerConfiguration</span> <span class="p">{</span>
-    <span class="nd">@Bean</span>
-    <span class="kd">public</span> <span class="nf">Marker</span> <span class="n">zuulServerMarkerBean</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">Marker</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="kd">class</span> <span class="nf">Marker</span> <span class="p">{</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></td></tr></table>
-</div>
-</div></li>
-</ul>
+                    使用openshift搭建的k8s的api创建Deployment，在启动的时候报下面的错误： Invalid value: &ldquo;hostPath&rdquo;: hostPath volumes are not allowed to be used] 解决方案： 一个方案是将u
                     </p>
                     <p class="article-more-link">
-                        <a href="../../spring-cloud-zuul-breakdown/">Read More</a>
+                        <a href="../../how-to-use-hostpath-in-openshift/">Read More</a>
                     </p>
                 </div>
 
@@ -465,12 +323,307 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/spring-cloud">Spring Cloud
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/kubenetes">Kubenetes
                             </a>
                         </li>
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/zuul">Zuul
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/openshift">Openshift
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../kubernetes-persistent-volumes/">Kubernetes — 持久卷</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../kubernetes-persistent-volumes/" class="article-date">
+                        <time datetime='2017-08-20T22:25:40.000&#43;00:00' itemprop="datePublished">2017-08-20</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../kubernetes-persistent-volumes/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    Persistent Volume 译自Persistent Volumes 介绍 管理存储是管理计算的独特问题。 PersistentVolume子系统为用户和管理员提供了一个API，其中提
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../kubernetes-persistent-volumes/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/kubernetes">Kubernetes
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../install-kubernetes-on-macos/">Kubernetes学习 — Macos安装Kubernetes</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../install-kubernetes-on-macos/" class="article-date">
+                        <time datetime='2017-08-17T09:44:17.000&#43;00:00' itemprop="datePublished">2017-08-17</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AE%B9%E5%99%A8">容器</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../install-kubernetes-on-macos/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    Kubernetes 安装 macos 检查环境 1 sysctl -a | grep machdep.cpu.features | grep VMX 安装VirtualBox 1 http://download.virtualbox.org/virtualbox/5.1.26/Oracle_VM_VirtualBox_Extension_Pack-5.1.26-117224.vbox-extpack 安装minikube 1 curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.21.0/minikube-darwin-amd64 &amp;&amp; chmod +x minikube &amp;&amp; sudo mv minikube /usr/local/bin/ 创建集群 默认使用virtual
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../install-kubernetes-on-macos/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/kubernetes">Kubernetes
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/macos">Macos
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../stop-a-thread-of-executor-service/">暴力停止ExecutorService的线程</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../stop-a-thread-of-executor-service/" class="article-date">
+                        <time datetime='2017-07-19T22:25:19.000&#43;00:00' itemprop="datePublished">2017-07-19</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../stop-a-thread-of-executor-service/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    停止，stop，这里说的是真的停止。如何优雅的结束，这里就不提了。 这里要用Thread.stop()。众所周知，stop()方法在JDK中是
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../stop-a-thread-of-executor-service/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/%E7%BA%BF%E7%A8%8B">线程
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../private-constructor-capture-idiom/">私有构造函数捕获模式</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../private-constructor-capture-idiom/" class="article-date">
+                        <time datetime='2017-05-24T06:50:44.000&#43;00:00' itemprop="datePublished">2017-05-24</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../private-constructor-capture-idiom/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    《Java并发编程实践》的注解中有提到这一概念。 The private constructor exists to avoid the race condition that would occur if the copy constructor were implemented as this (p.x, p.y); this is an example of the private constructor capture idiom (Bloch and Gafter, 2005). 结合原文代码： 1 2 3
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../private-constructor-capture-idiom/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B">多线程
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../java-operate-cassandra-deployed-in-docker/">Docker快速构建Cassandra和Java操作</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../java-operate-cassandra-deployed-in-docker/" class="article-date">
+                        <time datetime='2017-05-18T23:33:24.000&#43;00:00' itemprop="datePublished">2017-05-18</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../java-operate-cassandra-deployed-in-docker/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    搭建Cassandra 使用docker创建Cassandra，方便快捷 1 2 3 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../java-operate-cassandra-deployed-in-docker/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/cassandra">Cassandra
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/docker">Docker
                             </a>
                         </li>
                         
@@ -518,38 +671,6 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
     
     
     <a href="../../page/8/">8</a>
-    
-    
-    
-    <a href="../../page/9/">9</a>
-    
-    
-    
-    <a href="../../page/10/">10</a>
-    
-    
-    
-    <a href="../../page/11/">11</a>
-    
-    
-    
-    <a href="../../page/12/">12</a>
-    
-    
-    
-    <a href="../../page/13/">13</a>
-    
-    
-    
-    <a href="../../page/14/">14</a>
-    
-    
-    
-    <a href="../../page/15/">15</a>
-    
-    
-    
-    <a href="../../page/16/">16</a>
     
     
 

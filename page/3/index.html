@@ -63,62 +63,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../elasticsearch-http-basic-authentication-via-nginx/">Nginx实现Elasticsearch的HTTP基本认证</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../kvm-installation-note/">KVM安装手册</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../elasticsearch-http-basic-authentication-via-nginx/" class="article-date">
-                        <time datetime='2018-11-06T09:24:24.000&#43;00:00' itemprop="datePublished">2018-11-06</time>
-                    </a>
-                    
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../elasticsearch-http-basic-authentication-via-nginx/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    Elasticssearch的HTTP基本认证实现有两种方案: x-pack和nginx反向代理. 前者收费, 后者不太适合生产使用. 如果仅仅是开
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../elasticsearch-http-basic-authentication-via-nginx/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/nginx">nginx
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/elasticsearch">elasticsearch
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../install-docker-and-openshift-client-tools-in-alpine-container/">Alpine容器安装Docker和OpenShift Client Tools</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../install-docker-and-openshift-client-tools-in-alpine-container/" class="article-date">
-                        <time datetime='2018-08-28T09:14:12.000&#43;00:00' itemprop="datePublished">2018-08-28</time>
+                    <a href="../../kvm-installation-note/" class="article-date">
+                        <time datetime='2018-04-12T12:45:15.000&#43;00:00' itemprop="datePublished">2018-04-12</time>
                     </a>
                     
                     
@@ -133,17 +83,75 @@
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../install-docker-and-openshift-client-tools-in-alpine-container/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../kvm-installation-note/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    安装Docker 1 2 3 4 5 6 7 8 9 10 11 12 13 echo &#34;http://dl-2.alpinelinux.org/alpine/edge/main&#34; &gt; /etc/apk/repositories echo &#34;http://dl-2.alpinelinux.org/alpine/edge/community&#34; &gt;&gt; /etc/apk/repositories echo &#34;http://dl-2.alpinelinux.org/alpine/edge/testing&#34; &gt;&gt; /etc/apk/repositories apk -U --no-cache \ --allow-untrusted add \ shadow \ docker \ py-pip \ openrc \ &amp;&amp; pip install docker-compose rc-update add docker boot 安装OpenShift Client Tools 需
+                    <h2 id="添加虚拟机流程">添加虚拟机流程：</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">1. 配置网络
+2. 配置存储池
+3. 上传镜像
+4. 安装虚拟机，指定配置</pre></td></tr></table>
+</div>
+</div>
+<h3 id="安装kvm虚拟机">安装KVM虚拟机</h3>
+
+<h4 id="1-关闭防火墙-selinux">1. 关闭防火墙，selinux</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># service iptables stop</span>
+<span class="c1"># setenforce 0 临时关闭</span>
+<span class="c1"># chkconfig NetworkManager off</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="2-安装kvm虚拟机">2. 安装kvm虚拟机</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># yum install kvm libvirt libvirt-devel python-virtinst python-virtinst qemu-kvm virt-viewer bridge-utils virt-top libguestfs-tools ca-certificates audit-libs-python device-mapper-libs virt-install</span>
+<span class="c1"># 启动服务</span>
+<span class="c1"># service libvirtd restart</span>
+下载virtio-win-1.5.2-1.el6.noarch.rpm 如果不安装window虚拟机或者使用带virtio驱动的镜像可以不用安装
+<span class="c1"># rpm -ivh virtio-win-1.5.2-1.el6.noarch.rpm</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="3-libvirt在管理本地或远程hypervisor时的表现形式如下">3. Libvirt在管理本地或远程Hypervisor时的表现形式如下。</h4>
+
+<p>在libvirt内部管理了五部分：</p>
+
+<ul>
+<li>节点：所谓的节点就是我们的物理服务器，一个服务器代表一个节点，上边存放着Hyper和Domain</li>
+<li>Hypervisor：即VMM，指虚拟机的监控程序，在KVM中是一个加载了kvm.ko的标准Linux系统。</li>
+<li>域（Domain）：指虚拟机，一个域代表一个虚拟机（估计思路来源于Xen的Domain0）</li>
+<li>存储池（Storage Pool）：存储空间，支持多种协议和网络存储。作为虚拟机磁盘的存储源。</li>
+<li>卷组（Volume）：虚拟机磁盘在Host上的表现形式。
+上边的五部分，我们必须使用的是前三个，因为很多时候根据业务规则或应用的灵活性并没有使用卷组（其实就是有了编制的虚拟磁盘文件），也就没有必要使用存储池。</li>
+</ul>
                     </p>
                     <p class="article-more-link">
-                        <a href="../../install-docker-and-openshift-client-tools-in-alpine-container/">Read More</a>
+                        <a href="../../kvm-installation-note/">Read More</a>
                     </p>
                 </div>
 
@@ -152,17 +160,17 @@
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/docker">Docker
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/linux">Linux
                             </a>
                         </li>
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/openshift">Openshift
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/ops">ops
                             </a>
                         </li>
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/alpine">Alpine
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/kvm">KVM
                             </a>
                         </li>
                         
@@ -177,12 +185,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../ribbon-retry-in-zuul/">Zuul网关Ribbon重试</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../jenkins-cli-enable/">启用Jenkins CLI</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../ribbon-retry-in-zuul/" class="article-date">
-                        <time datetime='2018-08-02T08:55:43.000&#43;00:00' itemprop="datePublished">2018-08-02</time>
+                    <a href="../../jenkins-cli-enable/" class="article-date">
+                        <time datetime='2018-04-09T11:16:38.000&#43;00:00' itemprop="datePublished">2018-04-09</time>
                     </a>
                     
                     
@@ -197,17 +205,258 @@
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../ribbon-retry-in-zuul/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../jenkins-cli-enable/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    相关配置 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 #如果路由转发请求发生超时(连接超时或处理超时), 只要超时时间的设置小于Hystrix的命令
+                    Jenkins CLI提供了SSH和Client模式. Docker运行Jenkins 1 2 3 4 5 6 7 8 9 10 version:&#39;3&#39;services:jenkins:image:jenkins/jenkins:alpineports:-8080:8080-50000:50000-46059:46059volumes:-&#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&#34; note: 以为是docker运行, ssh端口设置选用了固
                     </p>
                     <p class="article-more-link">
-                        <a href="../../ribbon-retry-in-zuul/">Read More</a>
+                        <a href="../../jenkins-cli-enable/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/jenkins">Jenkins
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../resolve-process-be-killed-after-jenkins-job-done/">Jenkins - 解决execute shell中启动的进程被在Job退出时被杀死问题</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../resolve-process-be-killed-after-jenkins-job-done/" class="article-date">
+                        <time datetime='2018-03-15T17:00:25.000&#43;00:00' itemprop="datePublished">2018-03-15</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../resolve-process-be-killed-after-jenkins-job-done/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    因为ProcessTreeKiller的存在, 构建过程中使用shell启动的进程在Job完成时都会被kill掉. 各种搜索以及ProcessT
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../resolve-process-be-killed-after-jenkins-job-done/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/jenkins">Jenkins
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../install-minishift-on-mac/">MacOS安装minishift</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../install-minishift-on-mac/" class="article-date">
+                        <time datetime='2018-02-23T15:32:26.000&#43;00:00' itemprop="datePublished">2018-02-23</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../install-minishift-on-mac/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    MacOS环境安装minishift 安装minishift cli 1 brew cask install minishift 使用virtualbox安装 安装的时候可以指定HTTP代理, 拉取墙外镜
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../install-minishift-on-mac/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/minishift">minishift
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/openshift">openshift
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../spring-cloud-zuul-breakdown/">Spring Cloud Zuul详解</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../spring-cloud-zuul-breakdown/" class="article-date">
+                        <time datetime='2018-02-22T17:02:26.000&#43;00:00' itemprop="datePublished">2018-02-22</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../spring-cloud-zuul-breakdown/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    <p>Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看<a href="http://atbug.com/learn-netflix-zuul/">上一篇</a>.</p>
+
+<h2 id="实现">实现</h2>
+
+<p>@EnableZuulProxy 与 @EnableZuulServer
+二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用.
+Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
+
+<h3 id="具体实现">具体实现:</h3>
+
+<ol>
+<li>使用<code>ZuulController</code>(<code>ServletWrappingController</code>的子类)封装<code>ZuulServlet</code>实例, 处理从<code>DispatcherServlet</code>进来的请求.</li>
+<li><code>ZuulHandlerMapping</code>负责注册handler mapping, 将<code>Route</code>的<code>fullPath</code>的请求交由<code>ZuulController</code>处理.</li>
+<li>同时使用<code>ServletRegistrationBean</code>注册<code>ZuulServlet</code>, 默认使用<code>/zuul</code>作为urlMapping. 所有来自以<code>/zuul</code>开头的path的请求都会直接进入<code>ZuulServlet</code>, 不会进入<code>DispatcherServlet</code>.</li>
+</ol>
+
+<h4 id="使用注解">使用注解</h4>
+
+<ul>
+<li><p><code>@EnableZuulProxy</code>引入了<code>ZuulProxyMarkerConfiguration</code>, <code>ZuulProxyMarkerConfiguration</code>只做了一件事, 实例化了内部类<code>Marker</code>.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
+<span class="kd">public</span> <span class="nf">class</span> <span class="n">ZuulProxyMarkerConfiguration</span> <span class="p">{</span>
+    <span class="nd">@Bean</span>
+    <span class="kd">public</span> <span class="nf">Marker</span> <span class="n">zuulProxyMarkerBean</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Marker</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kd">class</span> <span class="nf">Marker</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div></li>
+
+<li><p><code>@EnableZuulServer</code>引入了<code>ZuulServerMarkerConfiguration</code>, <code>ZuulServerMarkerConfiguration</code>也只做了一件事: 实例化了内部类<code>Marker</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
+<span class="kd">public</span> <span class="nf">class</span> <span class="n">ZuulServerMarkerConfiguration</span> <span class="p">{</span>
+    <span class="nd">@Bean</span>
+    <span class="kd">public</span> <span class="nf">Marker</span> <span class="n">zuulServerMarkerBean</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Marker</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kd">class</span> <span class="nf">Marker</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../spring-cloud-zuul-breakdown/">Read More</a>
                     </p>
                 </div>
 
@@ -225,11 +474,6 @@
                             </a>
                         </li>
                         
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/ribbon">Ribbon
-                            </a>
-                        </li>
-                        
                     </ul>
                 </footer>
                 
@@ -241,12 +485,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../hystrix-exception-handling/">Hystrix工作原理三</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../spring-cloud-service-registry-via-eureka/">Spring Cloud - Eureka服务注册</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../hystrix-exception-handling/" class="article-date">
-                        <time datetime='2018-06-24T16:20:16.000&#43;00:00' itemprop="datePublished">2018-06-24</time>
+                    <a href="../../spring-cloud-service-registry-via-eureka/" class="article-date">
+                        <time datetime='2018-02-14T07:32:43.000&#43;00:00' itemprop="datePublished">2018-02-14</time>
                     </a>
                     
                     
@@ -261,17 +505,43 @@
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../hystrix-exception-handling/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../spring-cloud-service-registry-via-eureka/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    异常处理 Hystrix异常类型 HystrixRuntimeException HystrixBadRequestException HystrixTimeoutException RejectedExecutionException HystrixRuntimeException HystrixCommand失败时抛出, 不会触发fallback. HystrixBadRequestException 用提供的参数或状态表示错误的异常
+                    <p>之前分析过<a href="http://atbug.com/spring-cloud-eureka-client-source-code-analysis/">Spring Cloud的Eureka服务发现</a>, 今天分析一下服务注册.</p>
+
+<h2 id="配置">配置</h2>
+
+<h3 id="bootstrapconfiguration">BootstrapConfiguration</h3>
+
+<h4 id="eurekadiscoveryclientconfigservicebootstrapconfiguration">EurekaDiscoveryClientConfigServiceBootstrapConfiguration</h4>
+
+<p>spring-cloud-config环境中使用的配置</p>
+
+<p>引入<code>EurekaDiscoveryClientConfiguration</code>和<code>EurekaClientAutoConfiguration</code></p>
+
+<h5 id="eurekadiscoveryclientconfiguration">EurekaDiscoveryClientConfiguration</h5>
+
+<ol>
+<li>在spring-cloud中(通过是否存在RefreshScopeRefreshedEvent.class判断), 添加<code>RefreshScopeRefreshedEvent</code>的listener. 收到事件后重新注册实例.</li>
+<li>在<code>eureka.client.healthcheck.enabled</code>设置为true时, 注册<code>EurekaHealthCheckHandler</code>bean. <code>EurekaHealthCheckHandler</code>负责将应用状态映射为实例状态<code>InstanceStatus</code>.</li>
+</ol>
+
+<h5 id="eurekaclientautoconfiguration">EurekaClientAutoConfiguration</h5>
+
+<p>支持spring-cloud和非spring-cloud环境, 在spring-cloud环境中, 下面两个bean要使用<code>@RefreshScope</code>标注</p>
+
+<ol>
+<li>实例化<code>EurekaClient</code>bean, 在spring-cloud中使用实现类<code>CloudEurekaClient</code>.</li>
+<li>使用<code>EurekaInstanceConfig</code>实例, 实例化<code>ApplicationInfoManager</code>bean</li>
+</ol>
                     </p>
                     <p class="article-more-link">
-                        <a href="../../hystrix-exception-handling/">Read More</a>
+                        <a href="../../spring-cloud-service-registry-via-eureka/">Read More</a>
                     </p>
                 </div>
 
@@ -280,12 +550,12 @@
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/hystrix">Hystrix
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/spring">Spring
                             </a>
                         </li>
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/netflix">Netflix
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/eureka">Eureka
                             </a>
                         </li>
                         
@@ -300,12 +570,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../hystrix-isolation/">Hystrix工作原理二</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../learn-netflix-zuul/">初识Netflix Zuul</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../hystrix-isolation/" class="article-date">
-                        <time datetime='2018-06-24T16:18:52.000&#43;00:00' itemprop="datePublished">2018-06-24</time>
+                    <a href="../../learn-netflix-zuul/" class="article-date">
+                        <time datetime='2018-02-11T10:07:18.000&#43;00:00' itemprop="datePublished">2018-02-11</time>
                     </a>
                     
                     
@@ -320,17 +590,42 @@
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../hystrix-isolation/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../learn-netflix-zuul/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    隔离策略 线程和线程池 客户端(库, 网络调用等)在各自的线程上运行. 这种做法将他们与调用线程隔开, 因此调用者可以从一个耗时的依赖调用&rdquo
+                    <p>嵌入式的zuul代理</p>
+
+<p>使用了Netfilx OSS的其他组件:
+- Hystrix   熔断
+- Ribbon    负责发送外出请求的客户端, 提供软件负载均衡功能
+- Trubine   实时地聚合细粒度的metrics数据
+- Archaius  动态配置</p>
+
+<h2 id="介绍">介绍</h2>
+
+<p>由于2.0停止开发且会有bug, 故下面的分析基于1.x版本.</p>
+
+<h3 id="特性">特性</h3>
+
+<ul>
+<li>Authentication 认证</li>
+<li>Insights 洞察</li>
+<li>Stress Testing 压力测试</li>
+<li>Canary Testing 金丝雀测试</li>
+<li>Dynamic Routing 动态路由</li>
+<li>Multi-Region Resiliency 多区域弹性</li>
+<li>Load Shedding 负载脱落</li>
+<li>Security 安全</li>
+<li>Static Response handling 静态响应处理</li>
+<li>Multi-Region Resiliency 主动/主动流量管理</li>
+</ul>
                     </p>
                     <p class="article-more-link">
-                        <a href="../../hystrix-isolation/">Read More</a>
+                        <a href="../../learn-netflix-zuul/">Read More</a>
                     </p>
                 </div>
 
@@ -339,12 +634,195 @@
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/hystrix">Hystrix
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/netflix">Netflix
                             </a>
                         </li>
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/netflix">Netflix
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/zuul">Zuul
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../configurationproperties-requires-getter-or-not/">ConfigurationProperties到底需不需要getter</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../configurationproperties-requires-getter-or-not/" class="article-date">
+                        <time datetime='2018-02-07T15:53:21.000&#43;00:00' itemprop="datePublished">2018-02-07</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../configurationproperties-requires-getter-or-not/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    为什么要讨论这个问题, 工作中一个同事写的类使用了ConfigurationProperties, 只提供了标准的setter方法. 属性的访问,
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../configurationproperties-requires-getter-or-not/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/spring">Spring
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../go-in-action-four/">Go In Action 读书笔记 四</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../go-in-action-four/" class="article-date">
+                        <time datetime='2018-01-01T12:30:55.000&#43;00:00' itemprop="datePublished">2018-01-01</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../go-in-action-four/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    <p><img src="https://talks.golang.org/2013/go4python/img/fib-go.png" alt="" /></p>
+
+<h2 id="并发模式">并发模式</h2>
+
+<h3 id="runner">runner</h3>
+
+<p>runner展示了如何使用通道来监视程序的执行时间, 如果程序执行时间太长, 也可以用终止程序.
+这个程序可用作corn作业执行</p>
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../go-in-action-four/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/go">Go
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../go-in-action-three/">Go In Action 读书笔记 三</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../go-in-action-three/" class="article-date">
+                        <time datetime='2018-01-01T12:30:31.000&#43;00:00' itemprop="datePublished">2018-01-01</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../go-in-action-three/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    <h2 id="并发">并发</h2>
+
+<p>Go语言里的并发是指让某个函数可以独立于其他函数运行的能力. 当一个函数创建为goroutine时, Go会将其视为一个独立的工作单元. 这个工作单元会被调度到可用的<strong>逻辑处理器</strong>上执行.</p>
+
+<p>Go的运行时调度器可以管理所有创建的goroutine, 并为其分配执行时间.
+这个调度器在操作系统之上, 将操作系统的线程与逻辑处理器绑定, 并在逻辑处理器执行goroutine. <strong>调度器可以在任何给定的时间, 全面控制哪个goroutine在哪个逻辑处理器上运行</strong>.</p>
+
+<p>Go的并发同步模型来自一个叫做通信顺序进程(Communicating Sequential Processes, <a href="http://www.usingcsp.com">CSP</a>). CSP是一个消息传递模型, 通过在goroutine之前传递数据来传递消息, 不需要通过加锁实现同步访问. 用于在goroutine间传递消息的数据结构叫做通道(channel).</p>
+
+<h3 id="并发与并行">并发与并行</h3>
+
+<p>操作系统的线程(thread)和进程(process).</p>
+
+<p>进程类似应用程序在运行中需要用到和维护的各种资源的容器.
+资源包括但不限于: 内存(来自文件系统的代码和数据), 句柄(文件, 设备, 操作系统), 线程.</p>
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../go-in-action-three/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/go">Go
                             </a>
                         </li>
                         
@@ -392,38 +870,6 @@
     
     
     <a href="../../page/8/">8</a>
-    
-    
-    
-    <a href="../../page/9/">9</a>
-    
-    
-    
-    <a href="../../page/10/">10</a>
-    
-    
-    
-    <a href="../../page/11/">11</a>
-    
-    
-    
-    <a href="../../page/12/">12</a>
-    
-    
-    
-    <a href="../../page/13/">13</a>
-    
-    
-    
-    <a href="../../page/14/">14</a>
-    
-    
-    
-    <a href="../../page/15/">15</a>
-    
-    
-    
-    <a href="../../page/16/">16</a>
     
     
 

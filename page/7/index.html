@@ -63,12 +63,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../go-in-action-two/">Go In Action 读书笔记 二</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../remove-element-while-looping-collection/">遍历Collection时删除元素</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../go-in-action-two/" class="article-date">
-                        <time datetime='2018-01-01T12:28:04.000&#43;00:00' itemprop="datePublished">2018-01-01</time>
+                    <a href="../../remove-element-while-looping-collection/" class="article-date">
+                        <time datetime='2017-03-05T22:04:58.000&#43;00:00' itemprop="datePublished">2017-03-05</time>
                     </a>
                     
                     
@@ -83,76 +83,17 @@
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../go-in-action-two/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../remove-element-while-looping-collection/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    <h2 id="go语言的类型系统">Go语言的类型系统</h2>
-
-<p>Go语言是静态类型的变成语言. 编译的时候需要确定类型.</p>
-
-<h3 id="用户定义的类型">用户定义的类型</h3>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">user</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">name</span>    <span class="kt">string</span>
-    <span class="nx">email</span>   <span class="kt">string</span>
-    <span class="nx">ext</span>     <span class="kt">int</span>
-    <span class="nx">privileged</span>  <span class="kt">bool</span>
-<span class="p">}</span></code></pre></td></tr></table>
-</div>
-</div>
-<p><strong>使用</strong>
-零值和<strong>结构字面量</strong>初始化</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//引用类型, 各个字段初始化为对应的零值
-</span><span class="c1"></span><span class="kd">var</span> <span class="nx">bill</span> <span class="nx">user</span> <span class="err">#</span><span class="p">{</span>  <span class="mi">0</span> <span class="kc">false</span><span class="p">}</span>
-<span class="c1">//创建并初始化, 使用结构字面量
-</span><span class="c1"></span><span class="nx">lisa</span> <span class="o">:=</span> <span class="nx">user</span><span class="p">{</span> <span class="c1">//{Lisa lisa@email.com 123 true}
-</span><span class="c1"></span>    <span class="nx">name</span><span class="p">:</span> <span class="s">&#34;Lisa&#34;</span><span class="p">,</span>
-    <span class="nx">email</span><span class="p">:</span> <span class="s">&#34;lisa@email.com&#34;</span><span class="p">,</span>
-    <span class="nx">ext</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span>
-    <span class="nx">privileged</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-<span class="p">}</span></code></pre></td></tr></table>
-</div>
-</div>
-<p><strong>结构字面量的赋值方式:</strong>
-- 不同行声明每一个字段和对应的值, 字段名和字段以<code>:</code>分隔, 末尾以<code>,</code>结尾
-- 不适用字段名, 只声明对应的值. 写在一行里, 以<code>,</code>分隔, 结尾不需要<code>,</code>. <strong>要保证顺序</strong></p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">lisa</span> <span class="o">:=</span> <span class="p">{</span><span class="s">&#34;Lisa&#34;</span><span class="p">,</span> <span class="s">&#34;lisa@email.com&#34;</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span> <span class="kc">true</span><span class="p">}</span></code></pre></td></tr></table>
-</div>
-</div>
+                    其实标题我想用《为什么foreach边循环边移除元素要用Iterator？》可是太长。 不用Iterator，用Collection.remo
                     </p>
                     <p class="article-more-link">
-                        <a href="../../go-in-action-two/">Read More</a>
+                        <a href="../../remove-element-while-looping-collection/">Read More</a>
                     </p>
                 </div>
 
@@ -161,7 +102,7 @@
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/go">Go
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
                             </a>
                         </li>
                         
@@ -176,12 +117,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../go-in-action-one/">Go In Action 读书笔记 一</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../deep-in-java-volatile-keywork/">Java Volatile关键字</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../go-in-action-one/" class="article-date">
-                        <time datetime='2018-01-01T12:27:10.000&#43;00:00' itemprop="datePublished">2018-01-01</time>
+                    <a href="../../deep-in-java-volatile-keywork/" class="article-date">
+                        <time datetime='2017-03-02T08:30:29.000&#43;00:00' itemprop="datePublished">2017-03-02</time>
                     </a>
                     
                     
@@ -196,56 +137,17 @@
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../go-in-action-one/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../deep-in-java-volatile-keywork/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    <p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15142714785285.jpg" alt="架构流程图" /></p>
-
-<h2 id="关键字">关键字</h2>
-
-<h3 id="var">var</h3>
-
-<p>变量使用<code>var</code>声明, 如果变量不是定义在任何一个函数作用域内, 这个变量就是包级变量.
-&gt; Go语言中, 所有变量都被初始化为其<strong>零值</strong>. 对于数值类型, 其零值是<strong>0</strong>;  对于字符串类型, 其零值是<strong>空字符串&rdquo;&rdquo;</strong>; 对于布尔类型, 其零值是<strong>false</strong>. 对于引用类型来说, 底层数据结构会被初始化对应的零值. 但是被生命被起零值的引用类型的变量, 会返回<strong>nil</strong>作为其值.</p>
-
-<h3 id="const">const</h3>
-
-<p>定义常量</p>
-
-<h3 id="interface">interface</h3>
-
-<p>声明接口</p>
-
-<h3 id="func">func</h3>
-
-<p>声明函数</p>
-
-<h3 id="defer">defer</h3>
-
-<p>安排后面的函数调用在当前函数返回时才执行.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">file</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">open</span><span class="p">(</span><span class="s">&#34;filePath&#34;</span><span class="p">)</span>
-<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span>
-    <span class="k">return</span>
-<span class="k">defer</span> <span class="nx">file</span><span class="p">.</span><span class="nb">close</span><span class="p">()</span>
-<span class="err">#</span> <span class="nx">more</span> <span class="nx">file</span> <span class="nx">operation</span></code></pre></td></tr></table>
-</div>
-</div>
+                    volatile通过保证对变量的读或写都是直接从内存中读取或直接写入内存中，保证了可见性；但是volatile并不足以保证线程安全，因为无法
                     </p>
                     <p class="article-more-link">
-                        <a href="../../go-in-action-one/">Read More</a>
+                        <a href="../../deep-in-java-volatile-keywork/">Read More</a>
                     </p>
                 </div>
 
@@ -254,7 +156,7 @@
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/go">Go
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
                             </a>
                         </li>
                         
@@ -269,66 +171,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../install-godep-issue-in-custom-gopath/">自定义GOPATH下安装godep失败</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../haproxy-multi-host-with-ssl/">Haproxy虚拟主机SSL</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../install-godep-issue-in-custom-gopath/" class="article-date">
-                        <time datetime='2017-12-22T13:02:38.000&#43;00:00' itemprop="datePublished">2017-12-22</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../install-godep-issue-in-custom-gopath/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    我的环境变量是这样的: 1 2 3 4 export GOROOT=/usr/local/go export GOPATH=/Users/addo/Workspaces/go_w export GOBIN=$GOROOT/bin export PATH=$PATH:$GOBIN 使用下面的命令安装报错: go get -v github.com/tools/godep github.com/tools/godep (download) github.com/tools/godep/vendor/github.com/pmezard/go-difflib/difflib github.com/tools/godep/vendor/github.com/kr/fs github.com/tools/godep/vendor/github.com/kr/text github.com/tools/godep/vendor/golang.org/x/tools/go/vcs github.com/tools/godep/vendor/github.com/kr/pretty github.com/tools/godep go install github.com/tools/godep: open /usr/local/go/bin/godep: permission denied 默认是安装到$GOBIN目录下,
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../install-godep-issue-in-custom-gopath/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/golang">golang
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../glance-over-spring-boot-source/">SpringBoot源码 - 启动</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../glance-over-spring-boot-source/" class="article-date">
-                        <time datetime='2017-12-08T17:48:43.000&#43;00:00' itemprop="datePublished">2017-12-08</time>
+                    <a href="../../haproxy-multi-host-with-ssl/" class="article-date">
+                        <time datetime='2017-02-27T19:31:53.000&#43;00:00' itemprop="datePublished">2017-02-27</time>
                     </a>
                     
                     
@@ -343,17 +191,17 @@
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../glance-over-spring-boot-source/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../haproxy-multi-host-with-ssl/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    SpringBoot Application启动部分的源码阅读. SpringApplication 常用的SpringApplication.run(Class, Args)启动Spring应用,
+                    Haproxy为多个域名配置SSL 生成自签名证书 1 2 3 4 5 6 sudo mkdir /etc/ssl/atbug.com sudo openssl genrsa -out /etc/ssl/atbug.com/atbug.com.key 1024 sudo openssl req -new -key /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.csr sudo openssl x509 -req -days 365 -in /etc/ssl/atbug.com/atbug.com.csr -singkey /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.crt sudo openssl x509 -req -days 365 -in /etc/ssl/atbug.com/atbug.com.csr -signkey /etc/ssl/atbug.com/atbug.com.key -out
                     </p>
                     <p class="article-more-link">
-                        <a href="../../glance-over-spring-boot-source/">Read More</a>
+                        <a href="../../haproxy-multi-host-with-ssl/">Read More</a>
                     </p>
                 </div>
 
@@ -362,7 +210,130 @@
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/spring">Spring
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/haproxy">Haproxy
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/ssl">SSL
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/https">HTTPS
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../duplicate-resultmap-in-mybatis-mapper/">mybatis报错“Result Maps collection already contains value for ***”</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../duplicate-resultmap-in-mybatis-mapper/" class="article-date">
+                        <time datetime='2017-02-22T14:12:18.000&#43;00:00' itemprop="datePublished">2017-02-22</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../duplicate-resultmap-in-mybatis-mapper/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    这是工作中遇到的一个问题：测试环境部署出错，报了下面的问题。 1 2 3 4 5 6 7 8 9 10 Caused by: java.lang.IllegalArgumentException: Result Maps collection already contains value for xxx.xxx.xxxRepository.BaseResultMap at org.apache.ibatis.session.Configuration$StrictMap.put(Configuration.java:802) at org.apache.ibatis.session.Configuration$StrictMap.put(Configuration.java:774) at org.apache.ibatis.session.Configuration.addResultMap(Configuration.java:556) at org.apache.ibatis.builder.MapperBuilderAssistant.addResultMap(MapperBuilderAssistant.java:217) at org.apache.ibatis.builder.ResultMapResolver.resolve(ResultMapResolver.java:47) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElement(XMLMapperBuilder.java:285) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElement(XMLMapperBuilder.java:252) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElements(XMLMapperBuilder.java:244) at org.apache.ibatis.builder.xml.XMLMapperBuilder.configurationElement(XMLMapperBuilder.java:116) 检
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../duplicate-resultmap-in-mybatis-mapper/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/mybatis">Mybatis
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../offset-be-reset-when-consuming/">消费时offset被重置导致重复消费</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../offset-be-reset-when-consuming/" class="article-date">
+                        <time datetime='2017-02-20T13:23:49.000&#43;00:00' itemprop="datePublished">2017-02-20</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../offset-be-reset-when-consuming/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    这是实际使用时遇到的问题：kafka api的版本是0.10，发现有重复消费问题；检查log后发现在commit offset的时候发生超时。 1
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../offset-be-reset-when-consuming/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/kafka">Kafka
                             </a>
                         </li>
                         
@@ -382,12 +353,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../java-serval-serializer-benchmark/">Java序列化工具性能对比</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../threadpoolexecutor-sourcecode-analysis/">TheadPoolExecutor源码分析</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../java-serval-serializer-benchmark/" class="article-date">
-                        <time datetime='2017-12-02T07:35:43.000&#43;00:00' itemprop="datePublished">2017-12-02</time>
+                    <a href="../../threadpoolexecutor-sourcecode-analysis/" class="article-date">
+                        <time datetime='2017-02-20T09:56:07.000&#43;00:00' itemprop="datePublished">2017-02-20</time>
                     </a>
                     
                     
@@ -395,24 +366,24 @@
                         <div class="article-category">
                             
                             
-                            <a class="article-category-link" href="https://atbug.com//categories/%E6%B5%8B%E8%AF%95">测试</a>
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
                             
                         </div>
                     </div>
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../java-serval-serializer-benchmark/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../threadpoolexecutor-sourcecode-analysis/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    最近在调整系统的性能, 系统中正使用Jackson作为序列化工具. 做了下与fastJson, Avro, ProtoStuff的序列化吞吐对比. 由于只是做
+                    TheadPoolExecutor源码分析 ThreadPoolExecutor是多线程中经常用到的类，其使用一个线程池执行提交的任务。 实现 没
                     </p>
                     <p class="article-more-link">
-                        <a href="../../java-serval-serializer-benchmark/">Read More</a>
+                        <a href="../../threadpoolexecutor-sourcecode-analysis/">Read More</a>
                     </p>
                 </div>
 
@@ -421,12 +392,238 @@
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/serializer">Serializer
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../kafka-java-producer-model/">Kafka Java生产者模型</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../kafka-java-producer-model/" class="article-date">
+                        <time datetime='2017-01-04T16:33:02.000&#43;00:00' itemprop="datePublished">2017-01-04</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../kafka-java-producer-model/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    Producer初始化 初始化KafkaProducer实例，同时通过Config数据初始化MetaData、NetWorkClient、Ac
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../kafka-java-producer-model/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
                             </a>
                         </li>
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/benchmark">Benchmark
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/kafka">Kafka
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../clean-speicified-keys-in-redis/">Redis清理缓存</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../clean-speicified-keys-in-redis/" class="article-date">
+                        <time datetime='2016-12-13T16:54:41.000&#43;00:00' itemprop="datePublished">2016-12-13</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../clean-speicified-keys-in-redis/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    最近有个需求需要主动的去清理部分缓存，考虑的原子性的问题，用Lua脚本进行实现。 Lua脚本 1 2 3 4 5 6 7 local count = 0 for _,k in ipairs(redis.call(&#39;KEYS&#39;, ARGV[1])) do redis.call(&#39;DEL&#39;, k) count = count + 1 end
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../clean-speicified-keys-in-redis/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/reids">reids
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">java
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../flume-filechannel-overview/">Flume - FileChannel （一）</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../flume-filechannel-overview/" class="article-date">
+                        <time datetime='2016-11-23T09:23:57.000&#43;00:00' itemprop="datePublished">2016-11-23</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../flume-filechannel-overview/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    概述 当使用Flume的时候，每个流程都包含了输入源、通道和输出。一个典型的例子是一个web服务器将事件通过RPC（搬入AvroSource）
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../flume-filechannel-overview/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/flume">Flume
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../deep-in-rabbitmq-java-client/">探索Rabbitmq的Java客户端</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../deep-in-rabbitmq-java-client/" class="article-date">
+                        <time datetime='2016-10-09T09:20:07.000&#43;00:00' itemprop="datePublished">2016-10-09</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../deep-in-rabbitmq-java-client/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    AMQPConnection 实例初始化 创建Connection时会通过FrameHandlerFacotry创建一个SocketFrameHandler，Socket
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../deep-in-rabbitmq-java-client/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/rabbitmq">Rabbitmq
                             </a>
                         </li>
                         
@@ -474,38 +671,6 @@
     
     
     <a href="../../page/8/">8</a>
-    
-    
-    
-    <a href="../../page/9/">9</a>
-    
-    
-    
-    <a href="../../page/10/">10</a>
-    
-    
-    
-    <a href="../../page/11/">11</a>
-    
-    
-    
-    <a href="../../page/12/">12</a>
-    
-    
-    
-    <a href="../../page/13/">13</a>
-    
-    
-    
-    <a href="../../page/14/">14</a>
-    
-    
-    
-    <a href="../../page/15/">15</a>
-    
-    
-    
-    <a href="../../page/16/">16</a>
     
     
 

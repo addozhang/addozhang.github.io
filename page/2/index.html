@@ -63,123 +63,28 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../zipkin-dependencies-bug-two-timeout-and-oom/">Zipkin dependencies的坑之二: 心跳超时和Executor OOM</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../elasticsearch-http-basic-authentication-via-nginx/">Nginx实现Elasticsearch的HTTP基本认证</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../zipkin-dependencies-bug-two-timeout-and-oom/" class="article-date">
-                        <time datetime='2019-09-22T18:27:37.000&#43;08:00' itemprop="datePublished">2019-09-22</time>
+                    <a href="../../elasticsearch-http-basic-authentication-via-nginx/" class="article-date">
+                        <time datetime='2018-11-06T09:24:24.000&#43;00:00' itemprop="datePublished">2018-11-06</time>
                     </a>
                     
                     
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../zipkin-dependencies-bug-two-timeout-and-oom/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../elasticsearch-http-basic-authentication-via-nginx/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    上回说为了解决吞吐问题, 将zipkin-dependencies的版本升级到了2.3.0. 好景不长, 从某一天开始作业运行报错: 1 2 3 4 5 6 7
+                    Elasticssearch的HTTP基本认证实现有两种方案: x-pack和nginx反向代理. 前者收费, 后者不太适合生产使用. 如果仅仅是开
                     </p>
                     <p class="article-more-link">
-                        <a href="../../zipkin-dependencies-bug-two-timeout-and-oom/">Read More</a>
-                    </p>
-                </div>
-
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../zipkin-dependencies-bug-one/">Zipkin dependencies的坑之一: 耗时越来越长</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../zipkin-dependencies-bug-one/" class="article-date">
-                        <time datetime='2019-09-22T17:59:56.000&#43;08:00' itemprop="datePublished">2019-09-22</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../zipkin-dependencies-bug-one/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    zipkin-dependencies是zipkin调用链的依赖分析工具. 系统上线时使用了当时的最新版本2.0.1, 运行一年之后随着服务的增
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../zipkin-dependencies-bug-one/">Read More</a>
-                    </p>
-                </div>
-
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../how-to-choose-topic-partition-count-number-kafka/">如何选择Kafka Topic的分区数</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../how-to-choose-topic-partition-count-number-kafka/" class="article-date">
-                        <time datetime='2019-08-30T11:10:46.000&#43;08:00' itemprop="datePublished">2019-08-30</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../how-to-choose-topic-partition-count-number-kafka/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    在kafka中, topic的分区是并行计算的单元. 在producer端和broker端, 可以同时并发的写数据到不同的分区中. 在consume
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../how-to-choose-topic-partition-count-number-kafka/">Read More</a>
+                        <a href="../../elasticsearch-http-basic-authentication-via-nginx/">Read More</a>
                     </p>
                 </div>
 
@@ -188,7 +93,12 @@
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/kafka">Kafka
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/nginx">nginx
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/elasticsearch">elasticsearch
                             </a>
                         </li>
                         
@@ -203,12 +113,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../no-output-in-past-half-year/">博客最近半年没什么产出</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../install-docker-and-openshift-client-tools-in-alpine-container/">Alpine容器安装Docker和OpenShift Client Tools</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../no-output-in-past-half-year/" class="article-date">
-                        <time datetime='2019-08-27T14:29:12.000&#43;00:00' itemprop="datePublished">2019-08-27</time>
+                    <a href="../../install-docker-and-openshift-client-tools-in-alpine-container/" class="article-date">
+                        <time datetime='2018-08-28T09:14:12.000&#43;00:00' itemprop="datePublished">2018-08-28</time>
                     </a>
                     
                     
@@ -223,17 +133,17 @@
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../no-output-in-past-half-year/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../install-docker-and-openshift-client-tools-in-alpine-container/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    上一篇日志更新还是在去年的12月, 至今有差不多10个月没有更新了. 不是说没有东西可写, 而且想写的东西很多. 工作太忙, 不忙的时候又太懒, 归根结
+                    安装Docker 1 2 3 4 5 6 7 8 9 10 11 12 13 echo &#34;http://dl-2.alpinelinux.org/alpine/edge/main&#34; &gt; /etc/apk/repositories echo &#34;http://dl-2.alpinelinux.org/alpine/edge/community&#34; &gt;&gt; /etc/apk/repositories echo &#34;http://dl-2.alpinelinux.org/alpine/edge/testing&#34; &gt;&gt; /etc/apk/repositories apk -U --no-cache \ --allow-untrusted add \ shadow \ docker \ py-pip \ openrc \ &amp;&amp; pip install docker-compose rc-update add docker boot 安装OpenShift Client Tools 需
                     </p>
                     <p class="article-more-link">
-                        <a href="../../no-output-in-past-half-year/">Read More</a>
+                        <a href="../../install-docker-and-openshift-client-tools-in-alpine-container/">Read More</a>
                     </p>
                 </div>
 
@@ -242,7 +152,17 @@
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/%E9%9A%8F%E7%AC%94">随笔
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/docker">Docker
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/openshift">Openshift
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/alpine">Alpine
                             </a>
                         </li>
                         
@@ -257,12 +177,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../spring-boot-configuration-annotation/">Spring Boot源码分析 - Configuration注解</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="../../ribbon-retry-in-zuul/">Zuul网关Ribbon重试</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="../../spring-boot-configuration-annotation/" class="article-date">
-                        <time datetime='2018-12-10T16:24:33.000&#43;00:00' itemprop="datePublished">2018-12-10</time>
+                    <a href="../../ribbon-retry-in-zuul/" class="article-date">
+                        <time datetime='2018-08-02T08:55:43.000&#43;00:00' itemprop="datePublished">2018-08-02</time>
                     </a>
                     
                     
@@ -277,17 +197,17 @@
                     
                     
                     <div class="article-comment-link-wrap">
-                        <a href="../../spring-boot-configuration-annotation/#disqus_thread" class="article-comment-link">Comments</a>
+                        <a href="../../ribbon-retry-in-zuul/#disqus_thread" class="article-comment-link">Comments</a>
                     </div>
                     
                 </div>
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    @Configuration注解 @Configuration注解指示一个类声明一个或多个@Bean方法, 并且可以由Spring容器处理, 以在
+                    相关配置 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 #如果路由转发请求发生超时(连接超时或处理超时), 只要超时时间的设置小于Hystrix的命令
                     </p>
                     <p class="article-more-link">
-                        <a href="../../spring-boot-configuration-annotation/">Read More</a>
+                        <a href="../../ribbon-retry-in-zuul/">Read More</a>
                     </p>
                 </div>
 
@@ -296,7 +216,517 @@
                     <ul class="article-tag-list">
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/spring-boot">spring boot
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/spring-cloud">Spring Cloud
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/zuul">Zuul
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/ribbon">Ribbon
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../hystrix-exception-handling/">Hystrix工作原理三</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../hystrix-exception-handling/" class="article-date">
+                        <time datetime='2018-06-24T16:20:16.000&#43;00:00' itemprop="datePublished">2018-06-24</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../hystrix-exception-handling/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    异常处理 Hystrix异常类型 HystrixRuntimeException HystrixBadRequestException HystrixTimeoutException RejectedExecutionException HystrixRuntimeException HystrixCommand失败时抛出, 不会触发fallback. HystrixBadRequestException 用提供的参数或状态表示错误的异常
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../hystrix-exception-handling/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/hystrix">Hystrix
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/netflix">Netflix
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../hystrix-isolation/">Hystrix工作原理二</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../hystrix-isolation/" class="article-date">
+                        <time datetime='2018-06-24T16:18:52.000&#43;00:00' itemprop="datePublished">2018-06-24</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../hystrix-isolation/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    隔离策略 线程和线程池 客户端(库, 网络调用等)在各自的线程上运行. 这种做法将他们与调用线程隔开, 因此调用者可以从一个耗时的依赖调用&rdquo
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../hystrix-isolation/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/hystrix">Hystrix
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/netflix">Netflix
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../how-hystrix-works/">Hystrix工作原理一</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../how-hystrix-works/" class="article-date">
+                        <time datetime='2018-06-04T08:47:40.000&#43;00:00' itemprop="datePublished">2018-06-04</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../how-hystrix-works/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    运行时的流程图 构建HystrixCommand或者HystrixObservableCommand对象 第一步是构建一个HystrixComm
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../how-hystrix-works/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/%E6%96%AD%E8%B7%AF%E5%99%A8">断路器
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/hystrix">Hystrix
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../rsyslogd-high-cpu-trouble-shooting/">解决rsyslogd资源占用率高问题</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../rsyslogd-high-cpu-trouble-shooting/" class="article-date">
+                        <time datetime='2018-06-01T09:32:28.000&#43;00:00' itemprop="datePublished">2018-06-01</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../rsyslogd-high-cpu-trouble-shooting/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    rsyslogd资源占用高问题记录 问题: openshift集群安装在esxi的虚拟机上. 各个节点出现问题, 集群响应很慢. kswapd0进程c
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../rsyslogd-high-cpu-trouble-shooting/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/linux">Linux
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../nginx-dynamic-domain-parse-in-kubernetes/">Kubernetes中的Nginx动态解析</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../nginx-dynamic-domain-parse-in-kubernetes/" class="article-date">
+                        <time datetime='2018-05-30T12:10:32.000&#43;00:00' itemprop="datePublished">2018-05-30</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../nginx-dynamic-domain-parse-in-kubernetes/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    背景 Nginx运行在kubernets中, 反向代理service提供服务. kubernetes版本v1.9.1+a0ce1bc657. 问题:
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../nginx-dynamic-domain-parse-in-kubernetes/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/kubernetes">Kubernetes
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/nginx">Nginx
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../spring-cloud-ribbon-breakdown-1/">Spring Cloud Ribbon 详解</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../spring-cloud-ribbon-breakdown-1/" class="article-date">
+                        <time datetime='2018-05-05T11:18:05.000&#43;00:00' itemprop="datePublished">2018-05-05</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../spring-cloud-ribbon-breakdown-1/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    <p>客户端负载均衡, Ribbon的核心概念是命名的客户端.</p>
+
+<h2 id="使用">使用</h2>
+
+<h3 id="引入ribbon依赖和配置">引入Ribbon依赖和配置</h3>
+
+<p>加入<code>spring-cloud-starter-netflix-ribbon</code>依赖</p>
+
+<h3 id="代码中使用ribbonclient注解">代码中使用RibbonClient注解</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span> 
+<span class="nd">@RibbonClient</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;foo&#34;</span><span class="p">,</span> <span class="n">configuration</span> <span class="o">=</span> <span class="n">FooConfiguration</span><span class="p">.</span><span class="na">class</span><span class="p">)</span> <span class="kd">public</span> <span class="nf">class</span> <span class="n">TestConfiguration</span> <span class="p">{}</span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span> <span class="kd">protected</span> <span class="nf">static</span> <span class="kd">class</span> <span class="nf">FooConfiguration</span> <span class="p">{</span>
+
+    <span class="nd">@Bean</span> 
+    <span class="kd">public</span> <span class="nf">ZonePreferenceServerListFilter</span> <span class="n">serverListFilter</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">ZonePreferenceServerListFilter</span> <span class="nf">filter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZonePreferenceServerListFilter</span><span class="p">();</span>
+        <span class="n">filter</span><span class="p">.</span><span class="na">setZone</span><span class="p">(</span><span class="s">&#34;myTestZone&#34;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">filter</span><span class="p">;</span> 
+    <span class="p">}</span>
+
+    <span class="nd">@Bean</span> 
+    <span class="kd">public</span> <span class="nf">IPing</span> <span class="n">ribbonPing</span><span class="p">()</span> <span class="p">{</span> 
+        <span class="k">return</span> <span class="k">new</span> <span class="n">PingUrl</span><span class="p">();</span> 
+    <span class="p">}</span>
+
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>Ribbon客户端的配置, 如果不指定会使用默认的实现:</p>
+
+<ul>
+<li>IClientConfig 客户端相关配置</li>
+<li>IRule 定义负载均衡策略</li>
+<li>IPing 定义如何ping目标服务实例来判断是否存活, ribbon使用单独的线程每隔一段时间(默认10s)对本地缓存的ServerList做一次检查</li>
+<li>ServerList<Server>    定义如何获取服务实例列表. 两种实现基于配置的<code>ConfigurationBasedServerList</code>和基于Eureka服务发现的<code>DiscoveryEnabledNIWSServerList</code></li>
+<li>ServerListFilter<Server>  用来使用期望的特征过滤静态配置动态获得的候选服务实例列表. 若未提供, 默认使用<code>ZoneAffinityServerListFilter</code></li>
+<li>ILoadBalancer 定义了软负载均衡器的操作的接口. 一个典型的负载均衡器至少需要一组用来做负载均衡的服务实例, 一个标记某个服务实例不在旋转中的方法, 和对应的方法调用从实例列表中选出某一个服务实例.</li>
+<li>ServerListUpdater DynamicServerListLoadBalancer用来更新实例列表的策略(推<code>EurekaNotificationServerListUpdater</code>/拉<code>PollingServerListUpdater</code>, 默认是拉)</li>
+</ul>
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../spring-cloud-ribbon-breakdown-1/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/spring-cloud">Spring Cloud
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1">负载均衡
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../using-role-based-authorization-strategy-in-jenkins/">Jenkins CI/CD (一) 基于角色的授权策略</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../using-role-based-authorization-strategy-in-jenkins/" class="article-date">
+                        <time datetime='2018-04-20T12:18:46.000&#43;00:00' itemprop="datePublished">2018-04-20</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/devops">DevOps</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../using-role-based-authorization-strategy-in-jenkins/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    <p>最近开始客串运维做CI/CD的规划设计, 主要是基于&rsquo;Pipeline as Code in Jenkins&rsquo;. 整理了下思路和技术点, 慢慢的写.</p>
+
+<p>这一篇是关于基于角色的授权策略, 用的是<code>Role-Based Authorization Strategy Plugin</code>.</p>
+
+<p>授权在CI/CD流程中比较常见, 比如我们只让某些特定用户才可以构建Pre-Release的Job. 而更高级的Release发布, 又会需要某些用户的审批才可以进行. 需要授权时, 可能还需要发邮件提醒用户.</p>
+
+<p>UI上如何使用就不提了, 这里只说Pipeline as Code. 后面的几篇也会是这个背景.</p>
+
+<p>参考的这篇<a href="https://www.avioconsulting.com/blog/using-role-based-authorization-strategy-jenkins">文章</a>, 文章里的代码运行失败, 做了修复.</p>
+
+<h2 id="配置">配置</h2>
+
+<p>安装完插件, 需要开始<code>基于角色的授权策略</code>. 同时添加角色和为用户分配角色.</p>
+
+<h3 id="使用-role-based-strategy-作为验证方式">使用<code>Role-Based Strategy</code>作为验证方式</h3>
+
+<p><code>Manage Jenkins / Configure Global Security / Configure Global Security</code></p>
+
+<p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15241955282214.jpg" alt="" /></p>
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../using-role-based-authorization-strategy-in-jenkins/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/devops">DevOps
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/ci/cd">CI/CD
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/jenkins">Jenkins
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/groovy">Groovy
                             </a>
                         </li>
                         
@@ -344,38 +774,6 @@
     
     
     <a href="../../page/8/">8</a>
-    
-    
-    
-    <a href="../../page/9/">9</a>
-    
-    
-    
-    <a href="../../page/10/">10</a>
-    
-    
-    
-    <a href="../../page/11/">11</a>
-    
-    
-    
-    <a href="../../page/12/">12</a>
-    
-    
-    
-    <a href="../../page/13/">13</a>
-    
-    
-    
-    <a href="../../page/14/">14</a>
-    
-    
-    
-    <a href="../../page/15/">15</a>
-    
-    
-    
-    <a href="../../page/16/">16</a>
     
     
 
