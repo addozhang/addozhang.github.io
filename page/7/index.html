@@ -1,694 +1,391 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-cn">
 <head>
-    <title>乱世浮生</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>乱世浮生</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
-    <meta charset="utf-8">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    
-    <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
-    <meta name="keywords" content="Java,Spring Cloud,Architecture,">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-        <meta property="og:title" content="乱世浮生" />
-    <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="zh-cn" />
-    <meta property="og:url" content="https://atbug.com/" />
-    
-<link href="https://atbug.com/index.xml" rel="alternate" type="application/rss+xml" title="乱世浮生" />
-    <link rel="shortcut icon" href="../../favicon.ico">
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
-    <link href="https://atbug.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
-    <link href="https://atbug.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
 
-    <link rel="stylesheet" href="https://atbug.com/css/style.css">
-    
+<meta name="author" content="Addo Zhang" /><meta name="description" content="知我者谓我何忧 不知我者谓我何求." /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
 
-    <meta name="generator" content="Hugo 0.57.2" />
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with theme even" />
+
+
+<link rel="canonical" href="https://atbug.com/" />
+  <link href="https://atbug.com/index.xml" rel="alternate" type="application/rss+xml" title="乱世浮生" />
+  <link href="https://atbug.com/index.xml" rel="feed" type="application/rss+xml" title="乱世浮生" />
+<link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
+<link rel="manifest" href="../../manifest.json">
+<link rel="mask-icon" href="../../safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="../../dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="乱世浮生" />
+<meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://atbug.com/" />
+
+<meta property="og:updated_time" content="2019-12-09T10:05:30+08:00" />
+<meta itemprop="name" content="乱世浮生">
+<meta itemprop="description" content="知我者谓我何忧 不知我者谓我何求.">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="乱世浮生"/>
+<meta name="twitter:description" content="知我者谓我何忧 不知我者谓我何求."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
 </head>
-
 <body>
-<div id="container">
-    <header id="header">
-    <div id="header-outer" class="outer">
-        <div id="header-inner" class="inner">
-            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
-            <a id="logo" class="logo-text" href="https://atbug.com/">乱世浮生</a>
-            <nav id="main-nav">
-                
-                <a class="main-nav-link" href="../../">Home</a>
-                
-                <a class="main-nav-link" href="../../post/">Archives</a>
-                
-                <a class="main-nav-link" href="../../tags/">Tags</a>
-                
-                <a class="main-nav-link" href="../../categories/">Categories</a>
-                
-                <a class="main-nav-link" href="../../about/">About</a>
-                
-            </nav>
-            <nav id="sub-nav">
-                <div id="search-form-wrap">
-                </div>
-            </nav>
-        </div>
-    </div>
-</header>
-
-    <section id="main" class="outer">
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../remove-element-while-looping-collection/">遍历Collection时删除元素</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../remove-element-while-looping-collection/" class="article-date">
-                        <time datetime='2017-03-05T22:04:58.000&#43;00:00' itemprop="datePublished">2017-03-05</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../remove-element-while-looping-collection/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    其实标题我想用《为什么foreach边循环边移除元素要用Iterator？》可是太长。 不用Iterator，用Collection.remo
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../remove-element-while-looping-collection/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../deep-in-java-volatile-keywork/">Java Volatile关键字</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../deep-in-java-volatile-keywork/" class="article-date">
-                        <time datetime='2017-03-02T08:30:29.000&#43;00:00' itemprop="datePublished">2017-03-02</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../deep-in-java-volatile-keywork/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    volatile通过保证对变量的读或写都是直接从内存中读取或直接写入内存中，保证了可见性；但是volatile并不足以保证线程安全，因为无法
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../deep-in-java-volatile-keywork/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../haproxy-multi-host-with-ssl/">Haproxy虚拟主机SSL</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../haproxy-multi-host-with-ssl/" class="article-date">
-                        <time datetime='2017-02-27T19:31:53.000&#43;00:00' itemprop="datePublished">2017-02-27</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../haproxy-multi-host-with-ssl/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    Haproxy为多个域名配置SSL 生成自签名证书 1 2 3 4 5 6 sudo mkdir /etc/ssl/atbug.com sudo openssl genrsa -out /etc/ssl/atbug.com/atbug.com.key 1024 sudo openssl req -new -key /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.csr sudo openssl x509 -req -days 365 -in /etc/ssl/atbug.com/atbug.com.csr -singkey /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.crt sudo openssl x509 -req -days 365 -in /etc/ssl/atbug.com/atbug.com.csr -signkey /etc/ssl/atbug.com/atbug.com.key -out
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../haproxy-multi-host-with-ssl/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/haproxy">Haproxy
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/ssl">SSL
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/https">HTTPS
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../duplicate-resultmap-in-mybatis-mapper/">mybatis报错“Result Maps collection already contains value for ***”</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../duplicate-resultmap-in-mybatis-mapper/" class="article-date">
-                        <time datetime='2017-02-22T14:12:18.000&#43;00:00' itemprop="datePublished">2017-02-22</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../duplicate-resultmap-in-mybatis-mapper/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    这是工作中遇到的一个问题：测试环境部署出错，报了下面的问题。 1 2 3 4 5 6 7 8 9 10 Caused by: java.lang.IllegalArgumentException: Result Maps collection already contains value for xxx.xxx.xxxRepository.BaseResultMap at org.apache.ibatis.session.Configuration$StrictMap.put(Configuration.java:802) at org.apache.ibatis.session.Configuration$StrictMap.put(Configuration.java:774) at org.apache.ibatis.session.Configuration.addResultMap(Configuration.java:556) at org.apache.ibatis.builder.MapperBuilderAssistant.addResultMap(MapperBuilderAssistant.java:217) at org.apache.ibatis.builder.ResultMapResolver.resolve(ResultMapResolver.java:47) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElement(XMLMapperBuilder.java:285) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElement(XMLMapperBuilder.java:252) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElements(XMLMapperBuilder.java:244) at org.apache.ibatis.builder.xml.XMLMapperBuilder.configurationElement(XMLMapperBuilder.java:116) 检
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../duplicate-resultmap-in-mybatis-mapper/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/mybatis">Mybatis
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../offset-be-reset-when-consuming/">消费时offset被重置导致重复消费</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../offset-be-reset-when-consuming/" class="article-date">
-                        <time datetime='2017-02-20T13:23:49.000&#43;00:00' itemprop="datePublished">2017-02-20</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../offset-be-reset-when-consuming/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    这是实际使用时遇到的问题：kafka api的版本是0.10，发现有重复消费问题；检查log后发现在commit offset的时候发生超时。 1
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../offset-be-reset-when-consuming/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/kafka">Kafka
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../threadpoolexecutor-sourcecode-analysis/">TheadPoolExecutor源码分析</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../threadpoolexecutor-sourcecode-analysis/" class="article-date">
-                        <time datetime='2017-02-20T09:56:07.000&#43;00:00' itemprop="datePublished">2017-02-20</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../threadpoolexecutor-sourcecode-analysis/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    TheadPoolExecutor源码分析 ThreadPoolExecutor是多线程中经常用到的类，其使用一个线程池执行提交的任务。 实现 没
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../threadpoolexecutor-sourcecode-analysis/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../kafka-java-producer-model/">Kafka Java生产者模型</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../kafka-java-producer-model/" class="article-date">
-                        <time datetime='2017-01-04T16:33:02.000&#43;00:00' itemprop="datePublished">2017-01-04</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../kafka-java-producer-model/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    Producer初始化 初始化KafkaProducer实例，同时通过Config数据初始化MetaData、NetWorkClient、Ac
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../kafka-java-producer-model/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/kafka">Kafka
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../clean-speicified-keys-in-redis/">Redis清理缓存</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../clean-speicified-keys-in-redis/" class="article-date">
-                        <time datetime='2016-12-13T16:54:41.000&#43;00:00' itemprop="datePublished">2016-12-13</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../clean-speicified-keys-in-redis/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    最近有个需求需要主动的去清理部分缓存，考虑的原子性的问题，用Lua脚本进行实现。 Lua脚本 1 2 3 4 5 6 7 local count = 0 for _,k in ipairs(redis.call(&#39;KEYS&#39;, ARGV[1])) do redis.call(&#39;DEL&#39;, k) count = count + 1 end
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../clean-speicified-keys-in-redis/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/reids">reids
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">java
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../flume-filechannel-overview/">Flume - FileChannel （一）</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../flume-filechannel-overview/" class="article-date">
-                        <time datetime='2016-11-23T09:23:57.000&#43;00:00' itemprop="datePublished">2016-11-23</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../flume-filechannel-overview/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    概述 当使用Flume的时候，每个流程都包含了输入源、通道和输出。一个典型的例子是一个web服务器将事件通过RPC（搬入AvroSource）
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../flume-filechannel-overview/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/flume">Flume
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../deep-in-rabbitmq-java-client/">探索Rabbitmq的Java客户端</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../deep-in-rabbitmq-java-client/" class="article-date">
-                        <time datetime='2016-10-09T09:20:07.000&#43;00:00' itemprop="datePublished">2016-10-09</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../deep-in-rabbitmq-java-client/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    AMQPConnection 实例初始化 创建Connection时会通过FrameHandlerFacotry创建一个SocketFrameHandler，Socket
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../deep-in-rabbitmq-java-client/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/rabbitmq">Rabbitmq
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-
-        
-
-<nav id="page-nav">
-    
-    <a href="../../page/6/" rel="prev" class="extend prev">&laquo; Prev</a>
-    
-    
-    
-    <a href="../../">1</a>
-    
-    
-    
-    <a href="../../page/2/">2</a>
-    
-    
-    
-    <a href="../../page/3/">3</a>
-    
-    
-    
-    <a href="../../page/4/">4</a>
-    
-    
-    
-    <a href="../../page/5/">5</a>
-    
-    
-    
-    <a href="../../page/6/">6</a>
-    
-    
-    
-    <span class="page-number current">7</span>
-    
-    
-    
-    <a href="../../page/8/">8</a>
-    
-    
-
-    
-    <a href="../../page/8/" rel="next" class="extend next">Next &raquo;</a>
-    
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="../../" class="logo">乱世浮生</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="../../">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="../../post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="../../tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="../../categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="../../about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
 </nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="../../" class="logo">乱世浮生</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="../../">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="../../post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="../../tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="../../categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="../../about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="../../remove-element-while-looping-collection/">遍历Collection时删除元素</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-03-05 </span>
+      <div class="post-category">
+          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      其实标题我想用《为什么foreach边循环边移除元素要用Iterator？》可是太长。 不用Iterator，用Collection.remo
+    </div>
+    <div class="read-more">
+      <a href="../../remove-element-while-looping-collection/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="../../deep-in-java-volatile-keywork/">Java Volatile关键字</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-03-02 </span>
+      <div class="post-category">
+          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      volatile通过保证对变量的读或写都是直接从内存中读取或直接写入内存中，保证了可见性；但是volatile并不足以保证线程安全，因为无法
+    </div>
+    <div class="read-more">
+      <a href="../../deep-in-java-volatile-keywork/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="../../haproxy-multi-host-with-ssl/">Haproxy虚拟主机SSL</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-02-27 </span>
+      <div class="post-category">
+          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      Haproxy为多个域名配置SSL 生成自签名证书 1 2 3 4 5 6 sudo mkdir /etc/ssl/atbug.com sudo openssl genrsa -out /etc/ssl/atbug.com/atbug.com.key 1024 sudo openssl req -new -key /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.csr sudo openssl x509 -req -days 365 -in /etc/ssl/atbug.com/atbug.com.csr -singkey /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.crt sudo openssl x509 -req -days 365 -in /etc/ssl/atbug.com/atbug.com.csr -signkey /etc/ssl/atbug.com/atbug.com.key -out
+    </div>
+    <div class="read-more">
+      <a href="../../haproxy-multi-host-with-ssl/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="../../duplicate-resultmap-in-mybatis-mapper/">mybatis报错“Result Maps collection already contains value for ***”</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-02-22 </span>
+      <div class="post-category">
+          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      这是工作中遇到的一个问题：测试环境部署出错，报了下面的问题。 1 2 3 4 5 6 7 8 9 10 Caused by: java.lang.IllegalArgumentException: Result Maps collection already contains value for xxx.xxx.xxxRepository.BaseResultMap at org.apache.ibatis.session.Configuration$StrictMap.put(Configuration.java:802) at org.apache.ibatis.session.Configuration$StrictMap.put(Configuration.java:774) at org.apache.ibatis.session.Configuration.addResultMap(Configuration.java:556) at org.apache.ibatis.builder.MapperBuilderAssistant.addResultMap(MapperBuilderAssistant.java:217) at org.apache.ibatis.builder.ResultMapResolver.resolve(ResultMapResolver.java:47) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElement(XMLMapperBuilder.java:285) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElement(XMLMapperBuilder.java:252) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElements(XMLMapperBuilder.java:244) at org.apache.ibatis.builder.xml.XMLMapperBuilder.configurationElement(XMLMapperBuilder.java:116) 检
+    </div>
+    <div class="read-more">
+      <a href="../../duplicate-resultmap-in-mybatis-mapper/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="../../offset-be-reset-when-consuming/">消费时offset被重置导致重复消费</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-02-20 </span>
+      <div class="post-category">
+          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      这是实际使用时遇到的问题：kafka api的版本是0.10，发现有重复消费问题；检查log后发现在commit offset的时候发生超时。 1
+    </div>
+    <div class="read-more">
+      <a href="../../offset-be-reset-when-consuming/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="../../threadpoolexecutor-sourcecode-analysis/">TheadPoolExecutor源码分析</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-02-20 </span>
+      <div class="post-category">
+          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      TheadPoolExecutor源码分析 ThreadPoolExecutor是多线程中经常用到的类，其使用一个线程池执行提交的任务。 实现 没
+    </div>
+    <div class="read-more">
+      <a href="../../threadpoolexecutor-sourcecode-analysis/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="../../kafka-java-producer-model/">Kafka Java生产者模型</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-01-04 </span>
+      <div class="post-category">
+          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      Producer初始化 初始化KafkaProducer实例，同时通过Config数据初始化MetaData、NetWorkClient、Ac
+    </div>
+    <div class="read-more">
+      <a href="../../kafka-java-producer-model/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="../../clean-speicified-keys-in-redis/">Redis清理缓存</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2016-12-13 </span>
+      <div class="post-category">
+          <a href="../../categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      最近有个需求需要主动的去清理部分缓存，考虑的原子性的问题，用Lua脚本进行实现。 Lua脚本 1 2 3 4 5 6 7 local count = 0 for _,k in ipairs(redis.call(&#39;KEYS&#39;, ARGV[1])) do redis.call(&#39;DEL&#39;, k) count = count + 1 end
+    </div>
+    <div class="read-more">
+      <a href="../../clean-speicified-keys-in-redis/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="../../flume-filechannel-overview/">Flume - FileChannel （一）</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2016-11-23 </span>
+      <div class="post-category">
+          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      概述 当使用Flume的时候，每个流程都包含了输入源、通道和输出。一个典型的例子是一个web服务器将事件通过RPC（搬入AvroSource）
+    </div>
+    <div class="read-more">
+      <a href="../../flume-filechannel-overview/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="../../deep-in-rabbitmq-java-client/">探索Rabbitmq的Java客户端</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2016-10-09 </span>
+      <div class="post-category">
+          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      AMQPConnection 实例初始化 创建Connection时会通过FrameHandlerFacotry创建一个SocketFrameHandler，Socket
+    </div>
+    <div class="read-more">
+      <a href="../../deep-in-rabbitmq-java-client/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
 
     </section>
-    <footer id="footer">
-    <div class="outer">
-        <div id="footer-info" class="inner">
-            &copy; 2019 Addo Zhang
-            <br />
-            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+  
+  <nav class="pagination">
+    <a class="prev" href="../../page/6/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text">上一页</span>
+      </a>
+    <a class="next" href="../../page/8/">
+        <span class="next-text">下一页</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+  </nav>
         </div>
+        
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:duwasai@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/addozhang" class="iconfont icon-github" title="github"></a>
+  <a href="https://atbug.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Addo Zhang</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
     </div>
-    
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="../../dist/even.26188efa.min.js"></script>
+
+
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -701,23 +398,10 @@ if (!doNotTrack) {
 <script async src='https://www.google-analytics.com/analytics.js'></script>
 
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
 
-    
-    <script>
-        document.getElementById('main-nav-toggle').addEventListener('click', function () {
-            var header = document.getElementById('header');
-            if (header.classList.contains('mobile-on')) {
-                header.classList.remove('mobile-on');
-            } else {
-                header.classList.add('mobile-on');
-            }
-        });
-    </script>
-</footer>
 
-</div>
+
+
+
 </body>
 </html>

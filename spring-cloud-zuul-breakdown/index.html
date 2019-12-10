@@ -1,93 +1,425 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-cn">
 <head>
-    <title>Spring Cloud Zuul详解 // 乱世浮生</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Spring Cloud Zuul详解 - 乱世浮生</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
-    <meta charset="utf-8">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    
-    <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
-    <meta name="keywords" content="Java,Spring Cloud,Architecture,">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-        <meta property="og:title" content="Spring Cloud Zuul详解" />
-    <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="zh-cn" />
-    <meta property="og:url" content="https://atbug.com/spring-cloud-zuul-breakdown/" />
-    
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
-    <link rel="shortcut icon" href="../favicon.ico">
 
-    <link href="https://atbug.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
-    <link href="https://atbug.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+<meta name="author" content="Addo Zhang" /><meta name="description" content="Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看上一篇.
+实现 @EnableZuulProxy 与 @EnableZuulServer 二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用. Zuul server的路由都通过ZuulProperties进行配置.
+具体实现:  使用ZuulController(ServletWrappingController的子类)封装ZuulServlet实例, 处理从DispatcherServlet进来的请求. ZuulHandlerMapping负责注册handler mapping, 将Route的fullPath的请求交由ZuulController处理. 同时使用ServletRegistrationBean注册ZuulServlet, 默认使用/zuul作为urlMapping. 所有来自以/zuul开头的path的请求都会直接进入ZuulServlet, 不会进入DispatcherServlet.  使用注解  @EnableZuulProxy引入了ZuulProxyMarkerConfiguration, ZuulProxyMarkerConfiguration只做了一件事, 实例化了内部类Marker.
+1 2 3 4 5 6 7 8 9 10  @Configuration public class ZuulProxyMarkerConfiguration { @Bean public Marker zuulProxyMarkerBean() { return new Marker(); } class Marker { } }   @EnableZuulServer引入了ZuulServerMarkerConfiguration, ZuulServerMarkerConfiguration也只做了一件事: 实例化了内部类Marker
+1 2 3 4 5 6 7 8 9 10  @Configuration public class ZuulServerMarkerConfiguration { @Bean public Marker zuulServerMarkerBean() { return new Marker(); } class Marker { } }   " /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
 
-    <link rel="stylesheet" href="https://atbug.com/css/style.css">
-    
 
-    <meta name="generator" content="Hugo 0.57.2" />
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with theme even" />
+
+
+<link rel="canonical" href="https://atbug.com/spring-cloud-zuul-breakdown/" />
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="manifest" href="../manifest.json">
+<link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="../dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Spring Cloud Zuul详解" />
+<meta property="og:description" content="Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看上一篇.
+
+实现
+
+@EnableZuulProxy 与 @EnableZuulServer
+二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用.
+Zuul server的路由都通过ZuulProperties进行配置.
+
+具体实现:
+
+
+使用ZuulController(ServletWrappingController的子类)封装ZuulServlet实例, 处理从DispatcherServlet进来的请求.
+ZuulHandlerMapping负责注册handler mapping, 将Route的fullPath的请求交由ZuulController处理.
+同时使用ServletRegistrationBean注册ZuulServlet, 默认使用/zuul作为urlMapping. 所有来自以/zuul开头的path的请求都会直接进入ZuulServlet, 不会进入DispatcherServlet.
+
+
+使用注解
+
+
+@EnableZuulProxy引入了ZuulProxyMarkerConfiguration, ZuulProxyMarkerConfiguration只做了一件事, 实例化了内部类Marker.
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+@Configuration
+public class ZuulProxyMarkerConfiguration {
+    @Bean
+    public Marker zuulProxyMarkerBean() {
+        return new Marker();
+    }
+
+    class Marker {
+    }
+}
+
+
+
+@EnableZuulServer引入了ZuulServerMarkerConfiguration, ZuulServerMarkerConfiguration也只做了一件事: 实例化了内部类Marker
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+@Configuration
+public class ZuulServerMarkerConfiguration {
+    @Bean
+    public Marker zuulServerMarkerBean() {
+        return new Marker();
+    }
+
+    class Marker {
+    }
+}
+
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://atbug.com/spring-cloud-zuul-breakdown/" />
+<meta property="article:published_time" content="2018-02-22T17:02:26+00:00" />
+<meta property="article:modified_time" content="2018-02-22T17:02:26+00:00" />
+<meta itemprop="name" content="Spring Cloud Zuul详解">
+<meta itemprop="description" content="Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看上一篇.
+
+实现
+
+@EnableZuulProxy 与 @EnableZuulServer
+二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用.
+Zuul server的路由都通过ZuulProperties进行配置.
+
+具体实现:
+
+
+使用ZuulController(ServletWrappingController的子类)封装ZuulServlet实例, 处理从DispatcherServlet进来的请求.
+ZuulHandlerMapping负责注册handler mapping, 将Route的fullPath的请求交由ZuulController处理.
+同时使用ServletRegistrationBean注册ZuulServlet, 默认使用/zuul作为urlMapping. 所有来自以/zuul开头的path的请求都会直接进入ZuulServlet, 不会进入DispatcherServlet.
+
+
+使用注解
+
+
+@EnableZuulProxy引入了ZuulProxyMarkerConfiguration, ZuulProxyMarkerConfiguration只做了一件事, 实例化了内部类Marker.
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+@Configuration
+public class ZuulProxyMarkerConfiguration {
+    @Bean
+    public Marker zuulProxyMarkerBean() {
+        return new Marker();
+    }
+
+    class Marker {
+    }
+}
+
+
+
+@EnableZuulServer引入了ZuulServerMarkerConfiguration, ZuulServerMarkerConfiguration也只做了一件事: 实例化了内部类Marker
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+@Configuration
+public class ZuulServerMarkerConfiguration {
+    @Bean
+    public Marker zuulServerMarkerBean() {
+        return new Marker();
+    }
+
+    class Marker {
+    }
+}
+
+
+">
+
+
+<meta itemprop="datePublished" content="2018-02-22T17:02:26&#43;00:00" />
+<meta itemprop="dateModified" content="2018-02-22T17:02:26&#43;00:00" />
+<meta itemprop="wordCount" content="5007">
+
+
+
+<meta itemprop="keywords" content="Spring Cloud,Zuul," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Spring Cloud Zuul详解"/>
+<meta name="twitter:description" content="Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看上一篇.
+
+实现
+
+@EnableZuulProxy 与 @EnableZuulServer
+二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用.
+Zuul server的路由都通过ZuulProperties进行配置.
+
+具体实现:
+
+
+使用ZuulController(ServletWrappingController的子类)封装ZuulServlet实例, 处理从DispatcherServlet进来的请求.
+ZuulHandlerMapping负责注册handler mapping, 将Route的fullPath的请求交由ZuulController处理.
+同时使用ServletRegistrationBean注册ZuulServlet, 默认使用/zuul作为urlMapping. 所有来自以/zuul开头的path的请求都会直接进入ZuulServlet, 不会进入DispatcherServlet.
+
+
+使用注解
+
+
+@EnableZuulProxy引入了ZuulProxyMarkerConfiguration, ZuulProxyMarkerConfiguration只做了一件事, 实例化了内部类Marker.
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+@Configuration
+public class ZuulProxyMarkerConfiguration {
+    @Bean
+    public Marker zuulProxyMarkerBean() {
+        return new Marker();
+    }
+
+    class Marker {
+    }
+}
+
+
+
+@EnableZuulServer引入了ZuulServerMarkerConfiguration, ZuulServerMarkerConfiguration也只做了一件事: 实例化了内部类Marker
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+@Configuration
+public class ZuulServerMarkerConfiguration {
+    @Bean
+    public Marker zuulServerMarkerBean() {
+        return new Marker();
+    }
+
+    class Marker {
+    }
+}
+
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
 </head>
-
-
 <body>
-<div id="container">
-    <header id="header">
-    <div id="header-outer" class="outer">
-        <div id="header-inner" class="inner">
-            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
-            <a id="logo" class="logo-text" href="https://atbug.com/">乱世浮生</a>
-            <nav id="main-nav">
-                
-                <a class="main-nav-link" href="../">Home</a>
-                
-                <a class="main-nav-link" href="../post/">Archives</a>
-                
-                <a class="main-nav-link" href="../tags/">Tags</a>
-                
-                <a class="main-nav-link" href="../categories/">Categories</a>
-                
-                <a class="main-nav-link" href="../about/">About</a>
-                
-            </nav>
-            <nav id="sub-nav">
-                <div id="search-form-wrap">
-                </div>
-            </nav>
-        </div>
-    </div>
-</header>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="../" class="logo">乱世浮生</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="../">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="../post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="../tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="../categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="../about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="../" class="logo">乱世浮生</a>
+</div>
 
-    <section id="main" class="outer">
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        <header class="article-header">
-            <h1 class="article-title" itemprop="name">Spring Cloud Zuul详解</h1>
-        </header>
-        
-        <div class="article-meta">
-            <a href="../spring-cloud-zuul-breakdown/" class="article-date">
-                <time datetime='2018-02-22T17:02:26.000&#43;00:00' itemprop="datePublished">2018-02-22</time>
-            </a>
-            
-            
-            <div class="post-categories">
-                <div class="article-category">
-                    
-                    
-                    <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                    
-                </div>
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="../">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="../post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="../tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="../categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="../about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Spring Cloud Zuul详解</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-02-22 </span>
+        <div class="post-category">
+            <a href="../categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
             </div>
-            
-            
-            <div class="article-comment-link-wrap">
-                <a href="../spring-cloud-zuul-breakdown/#disqus_thread" class="article-comment-link">Comments</a>
-            </div>
-            
-        </div>
-        <div class="article-entry" itemprop="articleBody">
-            <p>Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看<a href="http://atbug.com/learn-netflix-zuul/">上一篇</a>.</p>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#实现">实现</a>
+<ul>
+<li><a href="#具体实现">具体实现:</a>
+<ul>
+<li><a href="#使用注解">使用注解</a></li>
+<li><a href="#enableautoconfiguration">EnableAutoConfiguration</a>
+<ul>
+<li><a href="#zuulserverautoconfiguration-详解">ZuulServerAutoConfiguration 详解</a></li>
+<li><a href="#zuulproxyautoconfiguration-详解">ZuulProxyAutoConfiguration 详解</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#配置项">配置项</a>
+<ul>
+<li>
+<ul>
+<li><a href="#zuul-servletpath">zuul.servletPath</a></li>
+<li><a href="#zuul-ignoredpatterns">zuul.ignoredPatterns</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#过滤器">过滤器</a>
+<ul>
+<li><a href="#zuulserverautoconfiguration">ZuulServerAutoConfiguration</a>
+<ul>
+<li><a href="#servletdetectionfilter">ServletDetectionFilter</a></li>
+<li><a href="#formbodywrapperfilter">FormBodyWrapperFilter</a></li>
+<li><a href="#debugfilter">DebugFilter</a></li>
+<li><a href="#servlet30wrapperfilter">Servlet30WrapperFilter</a></li>
+<li><a href="#sendresponsefilter">SendResponseFilter</a></li>
+</ul></li>
+<li><a href="#zuulproxyautoconfiguration">ZuulProxyAutoConfiguration</a>
+<ul>
+<li><a href="#predecorationfilter">PreDecorationFilter</a></li>
+<li><a href="#ribbonroutingfilter">RibbonRoutingFilter</a></li>
+<li><a href="#simplehostroutingfilter">SimpleHostRoutingFilter</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#监听器">监听器</a>
+<ul>
+<li>
+<ul>
+<li><a href="#zuulrefreshlistener">ZuulRefreshListener</a></li>
+<li><a href="#zuuldiscoveryrefreshlistener">ZuulDiscoveryRefreshListener</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看<a href="http://atbug.com/learn-netflix-zuul/">上一篇</a>.</p>
 
 <h2 id="实现">实现</h2>
 
@@ -1053,138 +1385,93 @@ public class ZuulProxyAutoConfiguration extends ZuulServerAutoConfiguration {
 <p><code>InstanceRegisteredEvent</code>当前路由服务实例完成服务注册后发出的事件.
 <code>ParentHeartbeatEvent</code>当<code>DiscoveryClient</code>定位到*Config Server*服务的时候有<code>bootstrapContext</code>发给应用程序上下文的事件.
 <code>HeartbeatEvent</code>由<code>DiscoveryClient</code>每次拉取服务注册信息后发出.</p>
-        </div>
-
-        
-        
-        <div class="article-toc" >
-            <h3></h3>
-            <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#实现">实现</a>
-<ul>
-<li><a href="#具体实现">具体实现:</a>
-<ul>
-<li><a href="#使用注解">使用注解</a></li>
-<li><a href="#enableautoconfiguration">EnableAutoConfiguration</a>
-<ul>
-<li><a href="#zuulserverautoconfiguration-详解">ZuulServerAutoConfiguration 详解</a></li>
-<li><a href="#zuulproxyautoconfiguration-详解">ZuulProxyAutoConfiguration 详解</a></li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li><a href="#配置项">配置项</a>
-<ul>
-<li>
-<ul>
-<li><a href="#zuul-servletpath">zuul.servletPath</a></li>
-<li><a href="#zuul-ignoredpatterns">zuul.ignoredPatterns</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#过滤器">过滤器</a>
-<ul>
-<li><a href="#zuulserverautoconfiguration">ZuulServerAutoConfiguration</a>
-<ul>
-<li><a href="#servletdetectionfilter">ServletDetectionFilter</a></li>
-<li><a href="#formbodywrapperfilter">FormBodyWrapperFilter</a></li>
-<li><a href="#debugfilter">DebugFilter</a></li>
-<li><a href="#servlet30wrapperfilter">Servlet30WrapperFilter</a></li>
-<li><a href="#sendresponsefilter">SendResponseFilter</a></li>
-</ul></li>
-<li><a href="#zuulproxyautoconfiguration">ZuulProxyAutoConfiguration</a>
-<ul>
-<li><a href="#predecorationfilter">PreDecorationFilter</a></li>
-<li><a href="#ribbonroutingfilter">RibbonRoutingFilter</a></li>
-<li><a href="#simplehostroutingfilter">SimpleHostRoutingFilter</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#监听器">监听器</a>
-<ul>
-<li>
-<ul>
-<li><a href="#zuulrefreshlistener">ZuulRefreshListener</a></li>
-<li><a href="#zuuldiscoveryrefreshlistener">ZuulDiscoveryRefreshListener</a></li>
-</ul></li>
-</ul></li>
-</ul></li>
-</ul>
-</nav>
-        </div>
-        
-        
-
-        
-
-
-        
-        <footer class="article-footer">
-            <ul class="article-tag-list">
-                
-                <li class="article-tag-list-item">
-                    <a class="article-tag-list-link" href="https://atbug.com//tags/spring-cloud">Spring Cloud
-                    </a>
-                </li>
-                
-                <li class="article-tag-list-item">
-                    <a class="article-tag-list-link" href="https://atbug.com//tags/zuul">Zuul
-                    </a>
-                </li>
-                
-            </ul>
-        </footer>
-        
     </div>
-    <nav id="article-nav">
+
     
-    <a href="../install-minishift-on-mac/" id="article-nav-newer" class="article-nav-link-wrap">
-        <div class="article-nav-title"><span>&lt;</span>&nbsp;
-            MacOS安装minishift
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="../tags/spring-cloud/">Spring Cloud</a>
+          <a href="../tags/zuul/">Zuul</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="../install-minishift-on-mac/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">MacOS安装minishift</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="../spring-cloud-service-registry-via-eureka/">
+            <span class="next-text nav-default">Spring Cloud - Eureka服务注册</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
         </div>
-    </a>
-    
-    
-    <a href="../spring-cloud-service-registry-via-eureka/" id="article-nav-older" class="article-nav-link-wrap">
-        <div class="article-nav-title">Spring Cloud - Eureka服务注册&nbsp;<span>&gt;</span></div>
-    </a>
-    
-</nav>
-
-</article>
-
-        
-            <div id="disqus_thread"></div>
-<script type="application/javascript">
-    var disqus_config = function () {
-    
-    
-    
-    };
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
     (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "addozhang" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'addozhang';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-        
-    </section>
-    <footer id="footer">
-    <div class="outer">
-        <div id="footer-info" class="inner">
-            &copy; 2019 Addo Zhang
-            <br />
-            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
-        </div>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:duwasai@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/addozhang" class="iconfont icon-github" title="github"></a>
+  <a href="https://atbug.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2015 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Addo Zhang</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
     </div>
-    
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="../dist/even.26188efa.min.js"></script>
+
+
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -1197,23 +1484,10 @@ if (!doNotTrack) {
 <script async src='https://www.google-analytics.com/analytics.js'></script>
 
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
 
-    
-    <script>
-        document.getElementById('main-nav-toggle').addEventListener('click', function () {
-            var header = document.getElementById('header');
-            if (header.classList.contains('mobile-on')) {
-                header.classList.remove('mobile-on');
-            } else {
-                header.classList.add('mobile-on');
-            }
-        });
-    </script>
-</footer>
 
-</div>
+
+
+
 </body>
 </html>
