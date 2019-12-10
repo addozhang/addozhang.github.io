@@ -1,286 +1,436 @@
 <!DOCTYPE html>
-<html lang="zh-cn">
+<html>
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>乱世浮生</title>
-  <meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <title>乱世浮生</title>
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
+    <meta name="keywords" content="Java,Spring Cloud,Architecture,">
 
-<meta name="theme-color" content="#f8f5ec" />
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+        <meta property="og:title" content="乱世浮生" />
+    <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh-cn" />
+    <meta property="og:url" content="https://atbug.com/" />
+    
+<link href="https://atbug.com/index.xml" rel="alternate" type="application/rss+xml" title="乱世浮生" />
+    <link rel="shortcut icon" href="../../favicon.ico">
 
+    <link href="https://atbug.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://atbug.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
 
-<meta name="author" content="Addo Zhang" /><meta name="description" content="知我者谓我何忧 不知我者谓我何求." /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
+    <link rel="stylesheet" href="https://atbug.com/css/style.css">
+    
 
-
-
-
-
-
-<meta name="generator" content="Hugo 0.57.2 with theme even" />
-
-
-<link rel="canonical" href="https://atbug.com/" />
-  <link href="https://atbug.com/index.xml" rel="alternate" type="application/rss+xml" title="乱世浮生" />
-  <link href="https://atbug.com/index.xml" rel="feed" type="application/rss+xml" title="乱世浮生" />
-<link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
-<link rel="manifest" href="../../manifest.json">
-<link rel="mask-icon" href="../../safari-pinned-tab.svg" color="#5bbad5">
-
-
-<link href="../../dist/even.c2a46f00.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
-
-
-<meta property="og:title" content="乱世浮生" />
-<meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://atbug.com/" />
-
-<meta property="og:updated_time" content="2019-12-09T10:05:30+08:00" />
-<meta itemprop="name" content="乱世浮生">
-<meta itemprop="description" content="知我者谓我何忧 不知我者谓我何求.">
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="乱世浮生"/>
-<meta name="twitter:description" content="知我者谓我何忧 不知我者谓我何求."/>
-
-<!--[if lte IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
-<![endif]-->
-
-<!--[if lt IE 9]>
-  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-<![endif]-->
-
+    <meta name="generator" content="Hugo 0.57.2" />
 </head>
+
 <body>
-  <div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="../../" class="logo">乱世浮生</a>
-  </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list">
-    <a href="../../">
-        <li class="mobile-menu-item">Home</li>
-      </a><a href="../../post/">
-        <li class="mobile-menu-item">Archives</li>
-      </a><a href="../../tags/">
-        <li class="mobile-menu-item">Tags</li>
-      </a><a href="../../categories/">
-        <li class="mobile-menu-item">Categories</li>
-      </a><a href="../../about/">
-        <li class="mobile-menu-item">About</li>
-      </a>
-  </ul>
-</nav>
-  <div class="container" id="mobile-panel">
-    <header id="header" class="header">
-        <div class="logo-wrapper">
-  <a href="../../" class="logo">乱世浮生</a>
-</div>
-
-<nav class="site-navbar">
-  <ul id="menu" class="menu">
-    <li class="menu-item">
-        <a class="menu-item-link" href="../../">Home</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="../../post/">Archives</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="../../tags/">Tags</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="../../categories/">Categories</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="../../about/">About</a>
-      </li>
-  </ul>
-</nav>
-    </header>
-
-    <main id="main" class="main">
-      <div class="content-wrapper">
-        <div id="content" class="content">
-          <section id="posts" class="posts">
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="../../threadpoolexecutor-sourcecode-analysis/">TheadPoolExecutor源码分析</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2017-02-20 </span>
-      <div class="post-category">
-          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      TheadPoolExecutor源码分析 ThreadPoolExecutor是多线程中经常用到的类，其使用一个线程池执行提交的任务。 实现 没
-    </div>
-    <div class="read-more">
-      <a href="../../threadpoolexecutor-sourcecode-analysis/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="../../kafka-java-producer-model/">Kafka Java生产者模型</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2017-01-04 </span>
-      <div class="post-category">
-          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      Producer初始化 初始化KafkaProducer实例，同时通过Config数据初始化MetaData、NetWorkClient、Ac
-    </div>
-    <div class="read-more">
-      <a href="../../kafka-java-producer-model/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="../../clean-speicified-keys-in-redis/">Redis清理缓存</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2016-12-13 </span>
-      <div class="post-category">
-          <a href="../../categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      最近有个需求需要主动的去清理部分缓存，考虑的原子性的问题，用Lua脚本进行实现。 Lua脚本 1 2 3 4 5 6 7 local count = 0 for _,k in ipairs(redis.call(&#39;KEYS&#39;, ARGV[1])) do redis.call(&#39;DEL&#39;, k) count = count + 1 end
-    </div>
-    <div class="read-more">
-      <a href="../../clean-speicified-keys-in-redis/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="../../flume-filechannel-overview/">Flume - FileChannel （一）</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2016-11-23 </span>
-      <div class="post-category">
-          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      概述 当使用Flume的时候，每个流程都包含了输入源、通道和输出。一个典型的例子是一个web服务器将事件通过RPC（搬入AvroSource）
-    </div>
-    <div class="read-more">
-      <a href="../../flume-filechannel-overview/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="../../deep-in-rabbitmq-java-client/">探索Rabbitmq的Java客户端</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2016-10-09 </span>
-      <div class="post-category">
-          <a href="../../categories/%E5%AD%A6%E4%B9%A0/"> 学习 </a>
-          </div>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      AMQPConnection 实例初始化 创建Connection时会通过FrameHandlerFacotry创建一个SocketFrameHandler，Socket
-    </div>
-    <div class="read-more">
-      <a href="../../deep-in-rabbitmq-java-client/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    </section>
-  
-  <nav class="pagination">
-    <a class="prev" href="../../page/13/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text">上一页</span>
-      </a>
-    <a class="next" href="../../page/15/">
-        <span class="next-text">下一页</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-  </nav>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://atbug.com/">乱世浮生</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="../../">Home</a>
+                
+                <a class="main-nav-link" href="../../post/">Archives</a>
+                
+                <a class="main-nav-link" href="../../tags/">Tags</a>
+                
+                <a class="main-nav-link" href="../../categories/">Categories</a>
+                
+                <a class="main-nav-link" href="../../about/">About</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
         </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../threadpoolexecutor-sourcecode-analysis/">TheadPoolExecutor源码分析</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../threadpoolexecutor-sourcecode-analysis/" class="article-date">
+                        <time datetime='2017-02-20T09:56:07.000&#43;00:00' itemprop="datePublished">2017-02-20</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../threadpoolexecutor-sourcecode-analysis/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    TheadPoolExecutor源码分析 ThreadPoolExecutor是多线程中经常用到的类，其使用一个线程池执行提交的任务。 实现 没
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../threadpoolexecutor-sourcecode-analysis/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../kafka-java-producer-model/">Kafka Java生产者模型</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../kafka-java-producer-model/" class="article-date">
+                        <time datetime='2017-01-04T16:33:02.000&#43;00:00' itemprop="datePublished">2017-01-04</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../kafka-java-producer-model/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    Producer初始化 初始化KafkaProducer实例，同时通过Config数据初始化MetaData、NetWorkClient、Ac
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../kafka-java-producer-model/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/kafka">Kafka
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../clean-speicified-keys-in-redis/">Redis清理缓存</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../clean-speicified-keys-in-redis/" class="article-date">
+                        <time datetime='2016-12-13T16:54:41.000&#43;00:00' itemprop="datePublished">2016-12-13</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../clean-speicified-keys-in-redis/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    最近有个需求需要主动的去清理部分缓存，考虑的原子性的问题，用Lua脚本进行实现。 Lua脚本 1 2 3 4 5 6 7 local count = 0 for _,k in ipairs(redis.call(&#39;KEYS&#39;, ARGV[1])) do redis.call(&#39;DEL&#39;, k) count = count + 1 end
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../clean-speicified-keys-in-redis/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/reids">reids
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">java
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../flume-filechannel-overview/">Flume - FileChannel （一）</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../flume-filechannel-overview/" class="article-date">
+                        <time datetime='2016-11-23T09:23:57.000&#43;00:00' itemprop="datePublished">2016-11-23</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../flume-filechannel-overview/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    概述 当使用Flume的时候，每个流程都包含了输入源、通道和输出。一个典型的例子是一个web服务器将事件通过RPC（搬入AvroSource）
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../flume-filechannel-overview/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/flume">Flume
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../deep-in-rabbitmq-java-client/">探索Rabbitmq的Java客户端</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../deep-in-rabbitmq-java-client/" class="article-date">
+                        <time datetime='2016-10-09T09:20:07.000&#43;00:00' itemprop="datePublished">2016-10-09</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../deep-in-rabbitmq-java-client/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    AMQPConnection 实例初始化 创建Connection时会通过FrameHandlerFacotry创建一个SocketFrameHandler，Socket
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../deep-in-rabbitmq-java-client/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/rabbitmq">Rabbitmq
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
         
 
-      </div>
-    </main>
+        
 
-    <footer id="footer" class="footer">
-      <div class="social-links">
-      <a href="mailto:duwasai@gmail.com" class="iconfont icon-email" title="email"></a>
-      <a href="https://github.com/addozhang" class="iconfont icon-github" title="github"></a>
-  <a href="https://atbug.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
-</div>
+<nav id="page-nav">
+    
+    <a href="../../page/13/" rel="prev" class="extend prev">&laquo; Prev</a>
+    
+    
+    
+    <a href="../../">1</a>
+    
+    
+    
+    <a href="../../page/2/">2</a>
+    
+    
+    
+    <a href="../../page/3/">3</a>
+    
+    
+    
+    <a href="../../page/4/">4</a>
+    
+    
+    
+    <a href="../../page/5/">5</a>
+    
+    
+    
+    <a href="../../page/6/">6</a>
+    
+    
+    
+    <a href="../../page/7/">7</a>
+    
+    
+    
+    <a href="../../page/8/">8</a>
+    
+    
+    
+    <a href="../../page/9/">9</a>
+    
+    
+    
+    <a href="../../page/10/">10</a>
+    
+    
+    
+    <a href="../../page/11/">11</a>
+    
+    
+    
+    <a href="../../page/12/">12</a>
+    
+    
+    
+    <a href="../../page/13/">13</a>
+    
+    
+    
+    <span class="page-number current">14</span>
+    
+    
+    
+    <a href="../../page/15/">15</a>
+    
+    
+    
+    <a href="../../page/16/">16</a>
+    
+    
 
-<div class="copyright">
-  <span class="power-by">
-    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    主题 - 
-    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
-  </span>
+    
+    <a href="../../page/15/" rel="next" class="extend next">Next &raquo;</a>
+    
+</nav>
 
-  
-
-  <span class="copyright-year">
-    &copy; 
-    2015 - 
-    2019
-    <span class="heart">
-      <i class="iconfont icon-heart"></i>
-    </span>
-    <span class="author">Addo Zhang</span>
-  </span>
-</div>
-    </footer>
-
-    <div class="back-to-top" id="back-to-top">
-      <i class="iconfont icon-up"></i>
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2019 Addo Zhang
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
     </div>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
-<script type="text/javascript" src="../../dist/even.26188efa.min.js"></script>
-
-
+    
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -293,10 +443,23 @@ if (!doNotTrack) {
 <script async src='https://www.google-analytics.com/analytics.js'></script>
 
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
 
-
-
-
+</div>
 </body>
 </html>
