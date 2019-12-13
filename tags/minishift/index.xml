@@ -17,7 +17,7 @@
       <pubDate>Fri, 23 Feb 2018 15:32:26 +0000</pubDate>
       
       <guid>https://atbug.com/install-minishift-on-mac/</guid>
-      <description>MacOS环境安装minishift 安装minishift cli 1 brew cask install minishift 使用virtualbox安装 安装的时候可以指定HTTP代理, 拉取墙外镜</description>
+      <description>MacOS环境安装minishift 安装minishift cli brew cask install minishift 使用virtualbox安装 安装的时候可以指定HTTP代理, 拉取墙外镜像</description>
     </item>
     
   </channel>

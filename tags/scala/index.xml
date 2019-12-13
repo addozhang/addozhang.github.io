@@ -26,7 +26,7 @@
       <pubDate>Sun, 09 Apr 2017 08:24:40 +0000</pubDate>
       
       <guid>https://atbug.com/def-vs-val-in-scala/</guid>
-      <description>先说原理： val修饰的在定义的时候执行 def修饰的在调用的时候执行 直观的例子： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 //注释</description>
+      <description>先说原理： val修饰的在定义的时候执行 def修饰的在调用的时候执行 直观的例子： //注释的行为REPL输出 def test: () =&amp;gt; Int = { println(&amp;#34;def called&amp;#34;) val r = util.Random.nextInt () =&amp;gt; r } //test:</description>
     </item>
     
   </channel>

@@ -17,7 +17,7 @@
       <pubDate>Thu, 18 May 2017 23:33:24 +0000</pubDate>
       
       <guid>https://atbug.com/java-operate-cassandra-deployed-in-docker/</guid>
-      <description>搭建Cassandra 使用docker创建Cassandra，方便快捷 1 2 3 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table</description>
+      <description>搭建Cassandra 使用docker创建Cassandra，方便快捷 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table #cqlsh&amp;gt;#createkeyspaceCREATEKEYSPACEcontactsWITHREPLICATION={&amp;#39;class&amp;#39;:&amp;#39;SimpleStrategy&amp;#39;,&amp;#39;replication_factor&amp;#39;:1};#useUSEcontacts;#createtableCREATETABLEcontact(idUUID,emailTEXTPRIMARYKEY); 查看</description>
     </item>
     
   </channel>

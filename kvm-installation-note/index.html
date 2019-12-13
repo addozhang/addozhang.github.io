@@ -1,156 +1,30 @@
 <!DOCTYPE html>
-<html lang="zh-cn">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
   <title>KVM安装手册 - 乱世浮生</title>
-  <meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-<meta name="theme-color" content="#f8f5ec" />
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
-
-
-<meta name="author" content="Addo Zhang" /><meta name="description" content="添加虚拟机流程： 1 2 3 4  1. 配置网络 2. 配置存储池 3. 上传镜像 4. 安装虚拟机，指定配置   安装KVM虚拟机 1. 关闭防火墙，selinux 1 2 3  # service iptables stop # setenforce 0 临时关闭 # chkconfig NetworkManager off   2. 安装kvm虚拟机 1 2 3 4 5  # yum install kvm libvirt libvirt-devel python-virtinst python-virtinst qemu-kvm virt-viewer bridge-utils virt-top libguestfs-tools ca-certificates audit-libs-python device-mapper-libs virt-install # 启动服务 # service libvirtd restart 下载virtio-win-1.5.2-1.el6.noarch.rpm 如果不安装window虚拟机或者使用带virtio驱动的镜像可以不用安装 # rpm -ivh virtio-win-1.5.2-1.el6.noarch.rpm   3. Libvirt在管理本地或远程Hypervisor时的表现形式如下。 在libvirt内部管理了五部分：
- 节点：所谓的节点就是我们的物理服务器，一个服务器代表一个节点，上边存放着Hyper和Domain Hypervisor：即VMM，指虚拟机的监控程序，在KVM中是一个加载了kvm.ko的标准Linux系统。 域（Domain）：指虚拟机，一个域代表一个虚拟机（估计思路来源于Xen的Domain0） 存储池（Storage Pool）：存储空间，支持多种协议和网络存储。作为虚拟机磁盘的存储源。 卷组（Volume）：虚拟机磁盘在Host上的表现形式。 上边的五部分，我们必须使用的是前三个，因为很多时候根据业务规则或应用的灵活性并没有使用卷组（其实就是有了编制的虚拟磁盘文件），也就没有必要使用存储池。 " /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
-
-
-
-
-
-
-<meta name="generator" content="Hugo 0.57.2 with theme even" />
-
-
-<link rel="canonical" href="https://atbug.com/kvm-installation-note/" />
-<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="manifest" href="../manifest.json">
-<link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
-
-
-<link href="../dist/even.c2a46f00.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
-
-
-<meta property="og:title" content="KVM安装手册" />
-<meta property="og:description" content="添加虚拟机流程：
-
-
-1
-2
-3
-4
-
-
+  <meta name="description" content="添加虚拟机流程：
 1. 配置网络
 2. 配置存储池
 3. 上传镜像
 4. 安装虚拟机，指定配置
-
-
 安装KVM虚拟机
 
 1. 关闭防火墙，selinux
-
-
-1
-2
-3
-
-
 # service iptables stop
 # setenforce 0 临时关闭
 # chkconfig NetworkManager off
-
-
 2. 安装kvm虚拟机
-
-
-1
-2
-3
-4
-5
-
-
 # yum install kvm libvirt libvirt-devel python-virtinst python-virtinst qemu-kvm virt-viewer bridge-utils virt-top libguestfs-tools ca-certificates audit-libs-python device-mapper-libs virt-install
 # 启动服务
 # service libvirtd restart
 下载virtio-win-1.5.2-1.el6.noarch.rpm 如果不安装window虚拟机或者使用带virtio驱动的镜像可以不用安装
 # rpm -ivh virtio-win-1.5.2-1.el6.noarch.rpm
-
-
-3. Libvirt在管理本地或远程Hypervisor时的表现形式如下。
-
-在libvirt内部管理了五部分：
-
-
-节点：所谓的节点就是我们的物理服务器，一个服务器代表一个节点，上边存放着Hyper和Domain
-Hypervisor：即VMM，指虚拟机的监控程序，在KVM中是一个加载了kvm.ko的标准Linux系统。
-域（Domain）：指虚拟机，一个域代表一个虚拟机（估计思路来源于Xen的Domain0）
-存储池（Storage Pool）：存储空间，支持多种协议和网络存储。作为虚拟机磁盘的存储源。
-卷组（Volume）：虚拟机磁盘在Host上的表现形式。
-上边的五部分，我们必须使用的是前三个，因为很多时候根据业务规则或应用的灵活性并没有使用卷组（其实就是有了编制的虚拟磁盘文件），也就没有必要使用存储池。
-" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://atbug.com/kvm-installation-note/" />
-<meta property="article:published_time" content="2018-04-12T12:45:15+00:00" />
-<meta property="article:modified_time" content="2018-04-12T12:45:15+00:00" />
-<meta itemprop="name" content="KVM安装手册">
-<meta itemprop="description" content="添加虚拟机流程：
-
-
-1
-2
-3
-4
-
-
-1. 配置网络
-2. 配置存储池
-3. 上传镜像
-4. 安装虚拟机，指定配置
-
-
-安装KVM虚拟机
-
-1. 关闭防火墙，selinux
-
-
-1
-2
-3
-
-
-# service iptables stop
-# setenforce 0 临时关闭
-# chkconfig NetworkManager off
-
-
-2. 安装kvm虚拟机
-
-
-1
-2
-3
-4
-5
-
-
-# yum install kvm libvirt libvirt-devel python-virtinst python-virtinst qemu-kvm virt-viewer bridge-utils virt-top libguestfs-tools ca-certificates audit-libs-python device-mapper-libs virt-install
-# 启动服务
-# service libvirtd restart
-下载virtio-win-1.5.2-1.el6.noarch.rpm 如果不安装window虚拟机或者使用带virtio驱动的镜像可以不用安装
-# rpm -ivh virtio-win-1.5.2-1.el6.noarch.rpm
-
-
 3. Libvirt在管理本地或远程Hypervisor时的表现形式如下。
 
 在libvirt内部管理了五部分：
@@ -163,64 +37,93 @@ Hypervisor：即VMM，指虚拟机的监控程序，在KVM中是一个加载了k
 卷组（Volume）：虚拟机磁盘在Host上的表现形式。
 上边的五部分，我们必须使用的是前三个，因为很多时候根据业务规则或应用的灵活性并没有使用卷组（其实就是有了编制的虚拟磁盘文件），也就没有必要使用存储池。
 ">
+  <meta name="author" content="Addo Zhang"/><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "乱世浮生",
+    
+    "url": "https:\/\/atbug.com\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "https:\/\/atbug.com\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "https:\/\/atbug.com\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "https:\/\/atbug.com\/kvm-installation-note\/",
+          "name": "K v m安装手册"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Addo Zhang"
+  },
+  "headline": "KVM安装手册",
+  "description" : "添加虚拟机流程： 1. 配置网络 2. 配置存储池 3. 上传镜像 4. 安装虚拟机，指定配置 安装KVM虚拟机 1. 关闭防火墙，selinux # service iptables stop # setenforce 0 临时关闭 # chkconfig NetworkManager off 2. 安装kvm虚拟机 # yum install kvm libvirt libvirt-devel python-virtinst python-virtinst qemu-kvm virt-viewer bridge-utils virt-top libguestfs-tools ca-certificates audit-libs-python device-mapper-libs virt-install # 启动服务 # service libvirtd restart 下载virtio-win-1.5.2-1.el6.noarch.rpm 如果不安装window虚拟机或者使用带virtio驱动的镜像可以不用安装 # rpm -ivh virtio-win-1.5.2-1.el6.noarch.rpm 3. Libvirt在管理本地或远程Hypervisor时的表现形式如下。 在libvirt内部管理了五部分：\n 节点：所谓的节点就是我们的物理服务器，一个服务器代表一个节点，上边存放着Hyper和Domain Hypervisor：即VMM，指虚拟机的监控程序，在KVM中是一个加载了kvm.ko的标准Linux系统。 域（Domain）：指虚拟机，一个域代表一个虚拟机（估计思路来源于Xen的Domain0） 存储池（Storage Pool）：存储空间，支持多种协议和网络存储。作为虚拟机磁盘的存储源。 卷组（Volume）：虚拟机磁盘在Host上的表现形式。 上边的五部分，我们必须使用的是前三个，因为很多时候根据业务规则或应用的灵活性并没有使用卷组（其实就是有了编制的虚拟磁盘文件），也就没有必要使用存储池。 ",
+  "inLanguage" : "zh-cn",
+  "wordCount":  1980 ,
+  "datePublished" : "2018-04-12T12:45:15",
+  "dateModified" : "2018-04-12T12:45:15",
+  "image" : "https:\/\/atbug.com\/",
+  "keywords" : [ "Linux, ops, KVM" ],
+  "mainEntityOfPage" : "https:\/\/atbug.com\/kvm-installation-note\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "https:\/\/atbug.com\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "https:\/\/atbug.com\/",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
 
-
-<meta itemprop="datePublished" content="2018-04-12T12:45:15&#43;00:00" />
-<meta itemprop="dateModified" content="2018-04-12T12:45:15&#43;00:00" />
-<meta itemprop="wordCount" content="2112">
-
-
-
-<meta itemprop="keywords" content="Linux,ops,KVM," />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="KVM安装手册"/>
-<meta name="twitter:description" content="添加虚拟机流程：
-
-
-1
-2
-3
-4
-
-
+<meta property="og:title" content="KVM安装手册" />
+<meta property="og:description" content="添加虚拟机流程：
 1. 配置网络
 2. 配置存储池
 3. 上传镜像
 4. 安装虚拟机，指定配置
-
-
 安装KVM虚拟机
 
 1. 关闭防火墙，selinux
-
-
-1
-2
-3
-
-
 # service iptables stop
 # setenforce 0 临时关闭
 # chkconfig NetworkManager off
-
-
 2. 安装kvm虚拟机
-
-
-1
-2
-3
-4
-5
-
-
 # yum install kvm libvirt libvirt-devel python-virtinst python-virtinst qemu-kvm virt-viewer bridge-utils virt-top libguestfs-tools ca-certificates audit-libs-python device-mapper-libs virt-install
 # 启动服务
 # service libvirtd restart
 下载virtio-win-1.5.2-1.el6.noarch.rpm 如果不安装window虚拟机或者使用带virtio驱动的镜像可以不用安装
 # rpm -ivh virtio-win-1.5.2-1.el6.noarch.rpm
-
-
 3. Libvirt在管理本地或远程Hypervisor时的表现形式如下。
 
 在libvirt内部管理了五部分：
@@ -232,170 +135,227 @@ Hypervisor：即VMM，指虚拟机的监控程序，在KVM中是一个加载了k
 存储池（Storage Pool）：存储空间，支持多种协议和网络存储。作为虚拟机磁盘的存储源。
 卷组（Volume）：虚拟机磁盘在Host上的表现形式。
 上边的五部分，我们必须使用的是前三个，因为很多时候根据业务规则或应用的灵活性并没有使用卷组（其实就是有了编制的虚拟磁盘文件），也就没有必要使用存储池。
-"/>
+">
+<meta property="og:url" content="https://atbug.com/kvm-installation-note/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="乱世浮生" />
 
-<!--[if lte IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
-<![endif]-->
-
-<!--[if lt IE 9]>
-  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-<![endif]-->
-
-</head>
-<body>
-  <div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="../" class="logo">乱世浮生</a>
-  </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list">
-    <a href="../">
-        <li class="mobile-menu-item">Home</li>
-      </a><a href="../post/">
-        <li class="mobile-menu-item">Archives</li>
-      </a><a href="../tags/">
-        <li class="mobile-menu-item">Tags</li>
-      </a><a href="../categories/">
-        <li class="mobile-menu-item">Categories</li>
-      </a><a href="../about/">
-        <li class="mobile-menu-item">About</li>
-      </a>
-  </ul>
-</nav>
-  <div class="container" id="mobile-panel">
-    <header id="header" class="header">
-        <div class="logo-wrapper">
-  <a href="../" class="logo">乱世浮生</a>
-</div>
-
-<nav class="site-navbar">
-  <ul id="menu" class="menu">
-    <li class="menu-item">
-        <a class="menu-item-link" href="../">Home</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="../post/">Archives</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="../tags/">Tags</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="../categories/">Categories</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="../about/">About</a>
-      </li>
-  </ul>
-</nav>
-    </header>
-
-    <main id="main" class="main">
-      <div class="content-wrapper">
-        <div id="content" class="content">
-          <article class="post">
-    
-    <header class="post-header">
-      <h1 class="post-title">KVM安装手册</h1>
-
-      <div class="post-meta">
-        <span class="post-time"> 2018-04-12 </span>
-        <div class="post-category">
-            <a href="../categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
-            </div>
-        
-      </div>
-    </header>
-
-    <div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">文章目录</h2>
-  <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#添加虚拟机流程">添加虚拟机流程：</a>
-<ul>
-<li><a href="#安装kvm虚拟机">安装KVM虚拟机</a>
-<ul>
-<li><a href="#1-关闭防火墙-selinux">1. 关闭防火墙，selinux</a></li>
-<li><a href="#2-安装kvm虚拟机">2. 安装kvm虚拟机</a></li>
-<li><a href="#3-libvirt在管理本地或远程hypervisor时的表现形式如下">3. Libvirt在管理本地或远程Hypervisor时的表现形式如下。</a></li>
-</ul></li>
-<li><a href="#配置">配置</a>
-<ul>
-<li><a href="#1-修改网络配置">1. 修改网络配置</a></li>
-<li><a href="#3-关闭宿主机的gso与tso功能">3. 关闭宿主机的GSO与TSO功能</a></li>
-<li><a href="#4-创建基于文件夹的存储池-目录">4. 创建基于文件夹的存储池（目录）</a></li>
-<li><a href="#3-在存储池中创建虚拟机存储卷-创建卷">3. 在存储池中创建虚拟机存储卷（创建卷）</a>
-<ul>
-<li><a href="#存储池相关管理命令">存储池相关管理命令</a></li>
-</ul></li>
-<li><a href="#4-安装虚拟机">4. 安装虚拟机</a></li>
-<li><a href="#5-启动">5. 启动</a></li>
-<li><a href="#6-动态调整cpu个数">6. 动态调整cpu个数</a></li>
-<li><a href="#7-动态调整mem容量">7. 动态调整mem容量</a></li>
-<li><a href="#8-查看虚拟化客户机的资源使用情况">8. 查看虚拟化客户机的资源使用情况</a></li>
-<li><a href="#9-一些扩展命令">9. 一些扩展命令</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#问题">问题</a></li>
-</ul></li>
-</ul>
-</nav>
-  </div>
-</div>
-    <div class="post-content">
-      <h2 id="添加虚拟机流程">添加虚拟机流程：</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></pre></td>
-<td class="lntd">
-<pre class="chroma">1. 配置网络
+  <meta name="twitter:title" content="KVM安装手册" />
+  <meta name="twitter:description" content="添加虚拟机流程：
+1. 配置网络
 2. 配置存储池
 3. 上传镜像
-4. 安装虚拟机，指定配置</pre></td></tr></table>
+4. 安装虚拟机，指定配置
+安装KVM虚拟机
+
+1. 关闭防火墙，selinux
+# service iptables stop
+# setenforce 0 临时关闭
+# chkconfig NetworkManager off
+2. 安装kvm虚拟机
+# yum install kvm libvirt …">
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.57.2" />
+  <link rel="alternate" href="https://atbug.com/index.xml" type="application/rss+xml" title="乱世浮生"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://atbug.com/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://atbug.com/css/syntax.css" /><link rel="stylesheet" href="https://atbug.com/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://atbug.com/">乱世浮生</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Home" href="../">Home</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Archives" href="../post/">Archives</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="../tags/">Tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Categories" href="../categories/">Categories</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="../about/">About</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
 </div>
-</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              
+                <h1>KVM安装手册</h1>
+              
+              
+              
+              
+                <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;发表于 April 12, 2018
+  
+  
+  
+  
+    
+      &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Addo Zhang
+    
+  
+  
+</span>
+
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h2 id="添加虚拟机流程">添加虚拟机流程：</h2>
+<div class="highlight"><pre class="chroma">1. 配置网络
+2. 配置存储池
+3. 上传镜像
+4. 安装虚拟机，指定配置</pre></div>
 <h3 id="安装kvm虚拟机">安装KVM虚拟机</h3>
 
 <h4 id="1-关闭防火墙-selinux">1. 关闭防火墙，selinux</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># service iptables stop</span>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># service iptables stop</span>
 <span class="c1"># setenforce 0 临时关闭</span>
-<span class="c1"># chkconfig NetworkManager off</span></code></pre></td></tr></table>
-</div>
-</div>
+<span class="c1"># chkconfig NetworkManager off</span></code></pre></div>
 <h4 id="2-安装kvm虚拟机">2. 安装kvm虚拟机</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># yum install kvm libvirt libvirt-devel python-virtinst python-virtinst qemu-kvm virt-viewer bridge-utils virt-top libguestfs-tools ca-certificates audit-libs-python device-mapper-libs virt-install</span>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># yum install kvm libvirt libvirt-devel python-virtinst python-virtinst qemu-kvm virt-viewer bridge-utils virt-top libguestfs-tools ca-certificates audit-libs-python device-mapper-libs virt-install</span>
 <span class="c1"># 启动服务</span>
 <span class="c1"># service libvirtd restart</span>
 下载virtio-win-1.5.2-1.el6.noarch.rpm 如果不安装window虚拟机或者使用带virtio驱动的镜像可以不用安装
-<span class="c1"># rpm -ivh virtio-win-1.5.2-1.el6.noarch.rpm</span></code></pre></td></tr></table>
-</div>
-</div>
+<span class="c1"># rpm -ivh virtio-win-1.5.2-1.el6.noarch.rpm</span></code></pre></div>
 <h4 id="3-libvirt在管理本地或远程hypervisor时的表现形式如下">3. Libvirt在管理本地或远程Hypervisor时的表现形式如下。</h4>
 
 <p>在libvirt内部管理了五部分：</p>
@@ -414,25 +374,11 @@ Hypervisor：即VMM，指虚拟机的监控程序，在KVM中是一个加载了k
 <h4 id="1-修改网络配置">1. 修改网络配置</h4>
 
 <p>方案一 (推荐)</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><span class="lnt">1
-</span></pre></td>
-<td class="lntd">
-<pre class="chroma">brctl addbr br0 &amp;&amp; brctl addif br0 em1 &amp;&amp; brctl stp br0 on &amp;&amp; ifconfig em1 0.0.0.0 &amp;&amp; ifconfig br0 192.168.1.31 netmask 255.255.255.0 &amp;&amp; route add default gw 192.168.1.1</pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma">brctl addbr br0 &amp;&amp; brctl addif br0 em1 &amp;&amp; brctl stp br0 on &amp;&amp; ifconfig em1 0.0.0.0 &amp;&amp; ifconfig br0 192.168.1.31 netmask 255.255.255.0 &amp;&amp; route add default gw 192.168.1.1</pre></div>
 <p>方案二</p>
 
 <p><a href="https://blog.csdn.net/wh211212/article/details/54141412">参考</a></p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># vim /etc/sysconfig/network-scripts/ifcfg-br0</span></code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># vim /etc/sysconfig/network-scripts/ifcfg-br0</span></code></pre></div>
 <blockquote>
 <p>DEVICE=br0
 TYPE=Bridge
@@ -445,28 +391,14 @@ GATEWAY=192.168.1.1
 DNS1=119.29.29.29
 ONBOOT=yes</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># vim /etc/sysconfig/network-scripts/ifcfg-em1</span></code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># vim /etc/sysconfig/network-scripts/ifcfg-em1</span></code></pre></div>
 <blockquote>
 <p>DEVICE=em1
 BOOTPROTO=none
 ONBOOT=yes
 BRIDGE=br0</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># vim /etc/sysconfig/network-scripts/ifcfg-bond0</span> </code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># vim /etc/sysconfig/network-scripts/ifcfg-bond0</span> </code></pre></div>
 <blockquote>
 <p>DEVICE=bond0
 TYPE=Ethernet
@@ -481,120 +413,37 @@ BONDING_OPTS=&ldquo;mode=5 miimon=100&rdquo;</p>
 <p><a href="https://www.jianshu.com/p/110b60c14a8b">方案三</a></p>
 
 <h4 id="3-关闭宿主机的gso与tso功能">3. 关闭宿主机的GSO与TSO功能</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># ethtool -K em1 gso off</span>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># ethtool -K em1 gso off</span>
 <span class="c1"># ethtool -K em1 tso off</span>
-<span class="c1"># systemctl restart network</span></code></pre></td></tr></table>
-</div>
-</div>
+<span class="c1"># systemctl restart network</span></code></pre></div>
 <h4 id="4-创建基于文件夹的存储池-目录">4. 创建基于文件夹的存储池（目录）</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># mkdir -p /home/vmdisk</span></code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># mkdir -p /home/vmdisk</span></code></pre></div>
 <p>定义存储池与其目录</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-define-as vmDiskPool --type dir --target /home/vmdisk</span>
-Pool vmDiskPool defined</code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-define-as vmDiskPool --type dir --target /home/vmdisk</span>
+Pool vmDiskPool defined</code></pre></div>
 <p>创建已定义的存储池</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-build vmDiskPool</span>
-Pool vmDiskPool built</code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-build vmDiskPool</span>
+Pool vmDiskPool built</code></pre></div>
 <p>查看已定义的存储池，存储池不激活无法使用</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-list --all</span>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-list --all</span>
 Name State Autostart
 -----------------------------------------
-vmDiskPool inactive no </code></pre></td></tr></table>
-</div>
-</div>
+vmDiskPool inactive no </code></pre></div>
 <p>查看存储卷信息</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-info vmDiskPool</span>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-info vmDiskPool</span>
 Name: vmDiskPool
 UUID: 3fc996c4-9bfa-7fdc-2960-445e4c551855
 State: inactive
 Persistent: yes
-Autostart: no</code></pre></td></tr></table>
-</div>
-</div>
+Autostart: no</code></pre></div>
 <p>激活并自动启动已定义的存储池</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-autostart vmDiskPool</span>
-Pool vmDiskPool marked as autostarted</code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-autostart vmDiskPool</span>
+Pool vmDiskPool marked as autostarted</code></pre></div>
 <p>启动存储卷</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-start vmDiskPool</span>
-Pool vmDiskPool started</code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-start vmDiskPool</span>
+Pool vmDiskPool started</code></pre></div>
 <p>再次查看存储卷信息</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-info vmDiskPool</span>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-info vmDiskPool</span>
 Name: vmDiskPool
 UUID: 3fc996c4-9bfa-7fdc-2960-445e4c551855
 State: running
@@ -602,89 +451,25 @@ Persistent: yes
 Autostart: yes
 Capacity: <span class="m">39</span>.25 GiB
 Allocation: <span class="m">47</span>.89 MiB
-Available: <span class="m">39</span>.20 GiB</code></pre></td></tr></table>
-</div>
-</div>
+Available: <span class="m">39</span>.20 GiB</code></pre></div>
 <h4 id="3-在存储池中创建虚拟机存储卷-创建卷">3. 在存储池中创建虚拟机存储卷（创建卷）</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh vol-create-as vmDiskPool linux_vm0.qcow2 300G --format qcow2</span></code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh vol-create-as vmDiskPool linux_vm0.qcow2 300G --format qcow2</span></code></pre></div>
 <p>查看存储卷</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">ll /home/vmdisk/</code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">ll /home/vmdisk/</code></pre></div>
 <h5 id="存储池相关管理命令">存储池相关管理命令</h5>
 
 <p>删除存储池中的存储卷</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh vol-delete --pool vmDiskPool linux_vm1.qcow2</span></code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh vol-delete --pool vmDiskPool linux_vm1.qcow2</span></code></pre></div>
 <p>取消激活存储池</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-destroy vmDiskPool</span></code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-destroy vmDiskPool</span></code></pre></div>
 <p>取消定义存储池</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-undefine vmDiskPool</span></code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-undefine vmDiskPool</span></code></pre></div>
 <p>删除存储池</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-delete vmDiskPool</span></code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh pool-delete vmDiskPool</span></code></pre></div>
 <h4 id="4-安装虚拟机">4. 安装虚拟机</h4>
 
 <p>bridge网络模式</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virt-install \</span>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virt-install \</span>
 --virt-type kvm <span class="se">\
 </span><span class="se"></span>--os-type<span class="o">=</span>linux <span class="se">\
 </span><span class="se"></span>--os-variant<span class="o">=</span>RHEL7 <span class="se">\
@@ -699,47 +484,13 @@ Available: <span class="m">39</span>.20 GiB</code></pre></td></tr></table>
 </span><span class="se"></span>--boot cdrom,hd,menu<span class="o">=</span>on <span class="se">\
 </span><span class="se"></span>--console pty,target_type<span class="o">=</span>serial <span class="se">\
 </span><span class="se"></span>--extra-args <span class="s1">&#39;console=ttyS0,115200n8 serial&#39;</span> <span class="se">\
-</span><span class="se"></span>--debug</code></pre></td></tr></table>
-</div>
-</div>
+</span><span class="se"></span>--debug</code></pre></div>
 <p>NAT网络模式</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virt-install --name=test --ram 512 --vcpus=1 -f /data/kvm/vm/test.qcow2 --cdrom /data/iso/CentOS-6.5-x86_64-bin-DVD1.iso --graphics vnc,listen=0.0.0.0,port=5988, --network network=default,model=virtio --force --accelerate --autostart --boot cdrom,hd,menu=on</span></code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virt-install --name=test --ram 512 --vcpus=1 -f /data/kvm/vm/test.qcow2 --cdrom /data/iso/CentOS-6.5-x86_64-bin-DVD1.iso --graphics vnc,listen=0.0.0.0,port=5988, --network network=default,model=virtio --force --accelerate --autostart --boot cdrom,hd,menu=on</span></code></pre></div>
 <p>安装window主机</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virt-install --name=window_24 --ram 12288 --vcpus 4 -c /data/iso/windows2008.iso --disk path=/usr/share/virtio-win/virtio-win-1.5.2.iso,device=cdrom --disk path=/data/kvm/vm/window_24.img,format=qcow2,bus=virtio --network bridge=br0,model=virtio --vnc --vncport=5924 --vnclisten=0.0.0.0 --force --autostart --os-type=windows --accelerate --boot cdrom,hd,menu=on</span></code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virt-install --name=window_24 --ram 12288 --vcpus 4 -c /data/iso/windows2008.iso --disk path=/usr/share/virtio-win/virtio-win-1.5.2.iso,device=cdrom --disk path=/data/kvm/vm/window_24.img,format=qcow2,bus=virtio --network bridge=br0,model=virtio --vnc --vncport=5924 --vnclisten=0.0.0.0 --force --autostart --os-type=windows --accelerate --boot cdrom,hd,menu=on</span></code></pre></div>
 <p>设置虚拟机网络</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span></pre></td>
-<td class="lntd">
-<pre class="chroma"># vi /etc/sysconfig/network-scripts/ifcfg-eth0
+<div class="highlight"><pre class="chroma"># vi /etc/sysconfig/network-scripts/ifcfg-eth0
 TYPE=Ethernet
 BOOTPROTO=static
 DEFROUTE=yes
@@ -752,101 +503,29 @@ ONBOOT=yes
 IPADDR=192.168.1.16
 PREFIX=24
 GATEWAY=192.168.1.1
-DNS1=119.29.29.29</pre></td></tr></table>
-</div>
-</div>
+DNS1=119.29.29.29</pre></div>
 <h4 id="5-启动">5. 启动</h4>
 
 <p>使用virsh list &ndash;all查看已安装的kvm</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">[</span>root@localhost ~<span class="o">]</span><span class="c1"># virsh list --all</span>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">[</span>root@localhost ~<span class="o">]</span><span class="c1"># virsh list --all</span>
 Id Name State
 ----------------------------------------------------
-<span class="m">5</span> <span class="nb">test</span> running</code></pre></td></tr></table>
-</div>
-</div>
+<span class="m">5</span> <span class="nb">test</span> running</code></pre></div>
 <h4 id="6-动态调整cpu个数">6. 动态调整cpu个数</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh setvcpus test --maximum 4 --config #设置test的最大cpu颗数</span>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh setvcpus test --maximum 4 --config #设置test的最大cpu颗数</span>
 <span class="c1"># virsh setvcpus test 3 #增加到3个CPU</span>
 注：使用上面命令修改，虚拟机重启修改的配置会丢失
-<span class="c1"># virsh edit test #修改CPU个数再保存配置，这样重启之后也会生效</span></code></pre></td></tr></table>
-</div>
-</div>
+<span class="c1"># virsh edit test #修改CPU个数再保存配置，这样重启之后也会生效</span></code></pre></div>
 <h4 id="7-动态调整mem容量">7. 动态调整mem容量</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh setmaxmem test 2G --config #设置最大内存</span>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh setmaxmem test 2G --config #设置最大内存</span>
 <span class="c1"># virsh setmem test 800M --config #重启后生效</span>
-<span class="c1"># virsh setmem test 800M --config --live #马上生效</span></code></pre></td></tr></table>
-</div>
-</div>
+<span class="c1"># virsh setmem test 800M --config --live #马上生效</span></code></pre></div>
 <h4 id="8-查看虚拟化客户机的资源使用情况">8. 查看虚拟化客户机的资源使用情况</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virt-top</span></code></pre></td></tr></table>
-</div>
-</div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virt-top</span></code></pre></div>
 <h4 id="9-一些扩展命令">9. 一些扩展命令</h4>
 
 <p>virsh命令行：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh list #显示本地活动虚拟机</span>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># virsh list #显示本地活动虚拟机</span>
 <span class="c1"># virsh list --all #显示本地所有的虚拟机（活动的+不活动的）</span>
 <span class="c1"># virsh define test.xml #通过配置文件定义一个虚拟机（这个虚拟机还不是活动的）</span>
 <span class="c1"># virsh start test #启动名字为test的非活动虚拟机</span>
@@ -875,9 +554,7 @@ Id Name State
 <span class="c1"># virsh attach-interface test #在客户端中附加新网络接口。</span>
 <span class="c1"># virsh detach-device test #从客户端中分离设备，使用同样的 XML 描述作为命令attach-device</span>
 <span class="c1"># virsh detach-disk test #从客户端中分离磁盘设备。</span>
-<span class="c1"># virsh detach-interface #从客户端中分离网络接口。</span></code></pre></td></tr></table>
-</div>
-</div>
+<span class="c1"># virsh detach-interface #从客户端中分离网络接口。</span></code></pre></div>
 <h2 id="问题">问题</h2>
 
 <blockquote>
@@ -885,18 +562,9 @@ Id Name State
 </blockquote>
 
 <p>修改<code>/etc/libvirt/qemu.conf</code></p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1">#取消注释</span>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1">#取消注释</span>
 <span class="nv">user</span> <span class="o">=</span> <span class="s2">&#34;root&#34;</span>
-<span class="nv">group</span> <span class="o">=</span> <span class="s2">&#34;root&#34;</span></code></pre></td></tr></table>
-</div>
-</div>
+<span class="nv">group</span> <span class="o">=</span> <span class="s2">&#34;root&#34;</span></code></pre></div>
 <p>重启libvirtd</p>
 
 <p><code>service libvirtd restart</code></p>
@@ -904,114 +572,91 @@ Id Name State
 <blockquote>
 <p>error: 操作失败: 这个域有活跃控制台会话</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">ps -ef<span class="p">|</span>grep <span class="s1">&#39;console VMNAME|grep -v &#39;</span>grep<span class="err">&#39;</span>
-<span class="c1">#然后kill掉相应的进行</span></code></pre></td></tr></table>
-</div>
-</div>
-    </div>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">ps -ef<span class="p">|</span>grep <span class="s1">&#39;console VMNAME|grep -v &#39;</span>grep<span class="err">&#39;</span>
+<span class="c1">#然后kill掉相应的进行</span></code></pre></div>
 
-    
-<footer class="post-footer">
-      <div class="post-tags">
-          <a href="../tags/linux/">Linux</a>
-          <a href="../tags/ops/">ops</a>
-          <a href="../tags/kvm/">KVM</a>
+        
+          <div class="blog-tags">
+            
+              <a href="https://atbug.com//tags/linux/">Linux</a>&nbsp;
+            
+              <a href="https://atbug.com//tags/ops/">ops</a>&nbsp;
+            
+              <a href="https://atbug.com//tags/kvm/">KVM</a>&nbsp;
+            
           </div>
-      <nav class="post-nav">
-        <a class="prev" href="../using-role-based-authorization-strategy-in-jenkins/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Jenkins CI/CD (一) 基于角色的授权策略</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="../jenkins-cli-enable/">
-            <span class="next-text nav-default">启用Jenkins CLI</span>
-            <span class="next-text nav-mobile">下一篇</span>
-            <i class="iconfont icon-right"></i>
-          </a>
-      </nav>
-    </footer>
-  </article>
-        </div>
-        <div id="disqus_thread"></div>
-    <script type="text/javascript">
-    (function() {
+        
+
+        
+
+        
+      </article>
+
       
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://atbug.com/jenkins-cli-enable/" data-toggle="tooltip" data-placement="top" title="启用Jenkins CLI">&larr; 前一篇</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://atbug.com/using-role-based-authorization-strategy-in-jenkins/" data-toggle="tooltip" data-placement="top" title="Jenkins CI/CD (一) 基于角色的授权策略">后一篇 &rarr;</a>
+            </li>
+          
+        </ul>
       
-      if (window.location.hostname === 'localhost') return;
 
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'addozhang';
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
-  
+      
 
-  
-
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="social-links">
-      <a href="mailto:duwasai@gmail.com" class="iconfont icon-email" title="email"></a>
-      <a href="https://github.com/addozhang" class="iconfont icon-github" title="github"></a>
-  <a href="https://atbug.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
-</div>
-
-<div class="copyright">
-  <span class="power-by">
-    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    主题 - 
-    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
-  </span>
-
-  
-
-  <span class="copyright-year">
-    &copy; 
-    2015 - 
-    2019
-    <span class="heart">
-      <i class="iconfont icon-heart"></i>
-    </span>
-    <span class="author">Addo Zhang</span>
-  </span>
-</div>
-    </footer>
-
-    <div class="back-to-top" id="back-to-top">
-      <i class="iconfont icon-up"></i>
     </div>
   </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
-<script type="text/javascript" src="../dist/even.26188efa.min.js"></script>
+</div>
+
+      
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Addo Zhang
+            
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2015 - 2019
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://atbug.com/">乱世浮生</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          由 <a href="https://gohugo.io">Hugo v0.57.2</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a> 移植自 <a href="https://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="https://atbug.com/js/main.js"></script><script> renderMathInElement(document.body); </script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="https://atbug.com/js/load-photoswipe.js"></script>
 
 
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-47966140-1', 'auto');
-	ga('set', 'anonymizeIp', true);
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 
 
@@ -1019,5 +664,7 @@ if (!doNotTrack) {
 
 
 
-</body>
+    
+  </body>
 </html>
+

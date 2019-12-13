@@ -17,7 +17,7 @@
       <pubDate>Wed, 24 May 2017 06:50:44 +0000</pubDate>
       
       <guid>https://atbug.com/private-constructor-capture-idiom/</guid>
-      <description>《Java并发编程实践》的注解中有提到这一概念。 The private constructor exists to avoid the race condition that would occur if the copy constructor were implemented as this (p.x, p.y); this is an example of the private constructor capture idiom (Bloch and Gafter, 2005). 结合原文代码： 1 2 3</description>
+      <description>《Java并发编程实践》的注解中有提到这一概念。 The private constructor exists to avoid the race condition that would occur if the copy constructor were implemented as this (p.x, p.y); this is an example of the private constructor capture idiom (Bloch and Gafter, 2005). 结合原文代码： @ThreadSafe public class</description>
     </item>
     
   </channel>

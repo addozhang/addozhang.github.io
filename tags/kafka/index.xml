@@ -80,7 +80,7 @@
       <pubDate>Mon, 20 Feb 2017 13:23:49 +0000</pubDate>
       
       <guid>https://atbug.com/offset-be-reset-when-consuming/</guid>
-      <description>这是实际使用时遇到的问题：kafka api的版本是0.10，发现有重复消费问题；检查log后发现在commit offset的时候发生超时。 1</description>
+      <description>这是实际使用时遇到的问题：kafka api的版本是0.10，发现有重复消费问题；检查log后发现在commit offset的时候发生超时。 Auto</description>
     </item>
     
     <item>

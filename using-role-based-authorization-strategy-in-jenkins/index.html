@@ -1,49 +1,100 @@
 <!DOCTYPE html>
-<html lang="zh-cn">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
   <title>Jenkins CI/CD (一) 基于角色的授权策略 - 乱世浮生</title>
-  <meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+  <meta name="description" content="最近开始客串运维做CI/CD的规划设计, 主要是基于&rsquo;Pipeline as Code in Jenkins&rsquo;. 整理了下思路和技术点, 慢慢的写.
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-<meta name="theme-color" content="#f8f5ec" />
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
-
-
-<meta name="author" content="Addo Zhang" /><meta name="description" content="最近开始客串运维做CI/CD的规划设计, 主要是基于&amp;rsquo;Pipeline as Code in Jenkins&amp;rsquo;. 整理了下思路和技术点, 慢慢的写.
 这一篇是关于基于角色的授权策略, 用的是Role-Based Authorization Strategy Plugin.
+
 授权在CI/CD流程中比较常见, 比如我们只让某些特定用户才可以构建Pre-Release的Job. 而更高级的Release发布, 又会需要某些用户的审批才可以进行. 需要授权时, 可能还需要发邮件提醒用户.
+
 UI上如何使用就不提了, 这里只说Pipeline as Code. 后面的几篇也会是这个背景.
+
 参考的这篇文章, 文章里的代码运行失败, 做了修复.
-配置 安装完插件, 需要开始基于角色的授权策略. 同时添加角色和为用户分配角色.
-使用Role-Based Strategy作为验证方式 Manage Jenkins / Configure Global Security / Configure Global Security
-" /><meta name="keywords" content="Java, Spring Cloud, Architecture" />
 
+配置
 
+安装完插件, 需要开始基于角色的授权策略. 同时添加角色和为用户分配角色.
 
+使用Role-Based Strategy作为验证方式
 
+Manage Jenkins / Configure Global Security / Configure Global Security
 
-
-<meta name="generator" content="Hugo 0.57.2 with theme even" />
-
-
-<link rel="canonical" href="https://atbug.com/using-role-based-authorization-strategy-in-jenkins/" />
-<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="manifest" href="../manifest.json">
-<link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
-
-
-<link href="../dist/even.c2a46f00.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
-
+">
+  <meta name="author" content="Addo Zhang"/><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "乱世浮生",
+    
+    "url": "https:\/\/atbug.com\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "https:\/\/atbug.com\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "https:\/\/atbug.com\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "https:\/\/atbug.com\/using-role-based-authorization-strategy-in-jenkins\/",
+          "name": "Jenkins c i\/ c d (一) 基于角色的授权策略"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Addo Zhang"
+  },
+  "headline": "Jenkins CI\/CD (一) 基于角色的授权策略",
+  "description" : "最近开始客串运维做CI\/CD的规划设计, 主要是基于\x26rsquo;Pipeline as Code in Jenkins\x26rsquo;. 整理了下思路和技术点, 慢慢的写.\n这一篇是关于基于角色的授权策略, 用的是Role-Based Authorization Strategy Plugin.\n授权在CI\/CD流程中比较常见, 比如我们只让某些特定用户才可以构建Pre-Release的Job. 而更高级的Release发布, 又会需要某些用户的审批才可以进行. 需要授权时, 可能还需要发邮件提醒用户.\nUI上如何使用就不提了, 这里只说Pipeline as Code. 后面的几篇也会是这个背景.\n参考的这篇文章, 文章里的代码运行失败, 做了修复.\n配置 安装完插件, 需要开始基于角色的授权策略. 同时添加角色和为用户分配角色.\n使用Role-Based Strategy作为验证方式 Manage Jenkins \/ Configure Global Security \/ Configure Global Security\n",
+  "inLanguage" : "zh-cn",
+  "wordCount":  719 ,
+  "datePublished" : "2018-04-20T12:18:46",
+  "dateModified" : "2018-04-20T12:18:46",
+  "image" : "https:\/\/atbug.com\/",
+  "keywords" : [ "DevOps, CI\/CD, Jenkins, Groovy" ],
+  "mainEntityOfPage" : "https:\/\/atbug.com\/using-role-based-authorization-strategy-in-jenkins\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "https:\/\/atbug.com\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "https:\/\/atbug.com\/",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
 
 <meta property="og:title" content="Jenkins CI/CD (一) 基于角色的授权策略" />
 <meta property="og:description" content="最近开始客串运维做CI/CD的规划设计, 主要是基于&rsquo;Pipeline as Code in Jenkins&rsquo;. 整理了下思路和技术点, 慢慢的写.
@@ -64,162 +115,203 @@ UI上如何使用就不提了, 这里只说Pipeline as Code. 后面的几篇也�
 
 Manage Jenkins / Configure Global Security / Configure Global Security
 
-" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://atbug.com/using-role-based-authorization-strategy-in-jenkins/" />
-<meta property="article:published_time" content="2018-04-20T12:18:46+00:00" />
-<meta property="article:modified_time" content="2018-04-20T12:18:46+00:00" />
-<meta itemprop="name" content="Jenkins CI/CD (一) 基于角色的授权策略">
-<meta itemprop="description" content="最近开始客串运维做CI/CD的规划设计, 主要是基于&rsquo;Pipeline as Code in Jenkins&rsquo;. 整理了下思路和技术点, 慢慢的写.
-
-这一篇是关于基于角色的授权策略, 用的是Role-Based Authorization Strategy Plugin.
-
-授权在CI/CD流程中比较常见, 比如我们只让某些特定用户才可以构建Pre-Release的Job. 而更高级的Release发布, 又会需要某些用户的审批才可以进行. 需要授权时, 可能还需要发邮件提醒用户.
-
-UI上如何使用就不提了, 这里只说Pipeline as Code. 后面的几篇也会是这个背景.
-
-参考的这篇文章, 文章里的代码运行失败, 做了修复.
-
-配置
-
-安装完插件, 需要开始基于角色的授权策略. 同时添加角色和为用户分配角色.
-
-使用Role-Based Strategy作为验证方式
-
-Manage Jenkins / Configure Global Security / Configure Global Security
-
 ">
+<meta property="og:url" content="https://atbug.com/using-role-based-authorization-strategy-in-jenkins/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="乱世浮生" />
 
-
-<meta itemprop="datePublished" content="2018-04-20T12:18:46&#43;00:00" />
-<meta itemprop="dateModified" content="2018-04-20T12:18:46&#43;00:00" />
-<meta itemprop="wordCount" content="776">
-
-
-
-<meta itemprop="keywords" content="DevOps,CI/CD,Jenkins,Groovy," />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Jenkins CI/CD (一) 基于角色的授权策略"/>
-<meta name="twitter:description" content="最近开始客串运维做CI/CD的规划设计, 主要是基于&rsquo;Pipeline as Code in Jenkins&rsquo;. 整理了下思路和技术点, 慢慢的写.
+  <meta name="twitter:title" content="Jenkins CI/CD (一) 基于角色的授权策略" />
+  <meta name="twitter:description" content="最近开始客串运维做CI/CD的规划设计, 主要是基于&rsquo;Pipeline as Code in Jenkins&rsquo;. 整理了下思路和技术点, 慢慢的写.
 
 这一篇是关于基于角色的授权策略, 用的是Role-Based Authorization Strategy Plugin.
 
-授权在CI/CD流程中比较常见, 比如我们只让某些特定用户才可以构建Pre-Release的Job. 而更高级的Release发布, 又会需要某些用户的审批才可以进行. 需要授权时, 可能还需要发邮件提醒用户.
+授权在CI/CD流程中比较常见, 比如我们只让某些特定用户才可以构建Pre-Release …">
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.57.2" />
+  <link rel="alternate" href="https://atbug.com/index.xml" type="application/rss+xml" title="乱世浮生"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://atbug.com/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://atbug.com/css/syntax.css" /><link rel="stylesheet" href="https://atbug.com/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
 
-UI上如何使用就不提了, 这里只说Pipeline as Code. 后面的几篇也会是这个背景.
 
-参考的这篇文章, 文章里的代码运行失败, 做了修复.
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
-配置
 
-安装完插件, 需要开始基于角色的授权策略. 同时添加角色和为用户分配角色.
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://atbug.com/">乱世浮生</a>
+    </div>
 
-使用Role-Based Strategy作为验证方式
-
-Manage Jenkins / Configure Global Security / Configure Global Security
-
-"/>
-
-<!--[if lte IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
-<![endif]-->
-
-<!--[if lt IE 9]>
-  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-<![endif]-->
-
-</head>
-<body>
-  <div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="../" class="logo">乱世浮生</a>
-  </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list">
-    <a href="../">
-        <li class="mobile-menu-item">Home</li>
-      </a><a href="../post/">
-        <li class="mobile-menu-item">Archives</li>
-      </a><a href="../tags/">
-        <li class="mobile-menu-item">Tags</li>
-      </a><a href="../categories/">
-        <li class="mobile-menu-item">Categories</li>
-      </a><a href="../about/">
-        <li class="mobile-menu-item">About</li>
-      </a>
-  </ul>
-</nav>
-  <div class="container" id="mobile-panel">
-    <header id="header" class="header">
-        <div class="logo-wrapper">
-  <a href="../" class="logo">乱世浮生</a>
-</div>
-
-<nav class="site-navbar">
-  <ul id="menu" class="menu">
-    <li class="menu-item">
-        <a class="menu-item-link" href="../">Home</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="../post/">Archives</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="../tags/">Tags</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="../categories/">Categories</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="../about/">About</a>
-      </li>
-  </ul>
-</nav>
-    </header>
-
-    <main id="main" class="main">
-      <div class="content-wrapper">
-        <div id="content" class="content">
-          <article class="post">
-    
-    <header class="post-header">
-      <h1 class="post-title">Jenkins CI/CD (一) 基于角色的授权策略</h1>
-
-      <div class="post-meta">
-        <span class="post-time"> 2018-04-20 </span>
-        <div class="post-category">
-            <a href="../categories/devops/"> DevOps </a>
-            </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
         
-      </div>
-    </header>
+          
+            <li>
+              <a title="Home" href="../">Home</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Archives" href="../post/">Archives</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="../tags/">Tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Categories" href="../categories/">Categories</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="../about/">About</a>
+            </li>
+          
+        
 
-    <div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">文章目录</h2>
-  <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#配置">配置</a>
-<ul>
-<li><a href="#使用-role-based-strategy-作为验证方式">使用<code>Role-Based Strategy</code>作为验证方式</a></li>
-<li><a href="#添加角色">添加角色</a>
-<ul>
-<li><a href="#为新加的角色配置权限">为新加的角色配置权限</a></li>
-</ul></li>
-<li><a href="#为用户指定角色">为用户指定角色</a></li>
-</ul></li>
-<li><a href="#编码">编码</a></li>
-</ul></li>
-</ul>
-</nav>
+        
+
+        
+      </ul>
+    </div>
+
+    
+
   </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
 </div>
-    <div class="post-content">
-      <p>最近开始客串运维做CI/CD的规划设计, 主要是基于&rsquo;Pipeline as Code in Jenkins&rsquo;. 整理了下思路和技术点, 慢慢的写.</p>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              
+                <h1>Jenkins CI/CD (一) 基于角色的授权策略</h1>
+              
+              
+              
+              
+                <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;发表于 April 20, 2018
+  
+  
+  
+  
+    
+      &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Addo Zhang
+    
+  
+  
+</span>
+
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>最近开始客串运维做CI/CD的规划设计, 主要是基于&rsquo;Pipeline as Code in Jenkins&rsquo;. 整理了下思路和技术点, 慢慢的写.</p>
 
 <p>这一篇是关于基于角色的授权策略, 用的是<code>Role-Based Authorization Strategy Plugin</code>.</p>
 
@@ -266,64 +358,13 @@ Manage Jenkins / Configure Global Security / Configure Global Security
 <h2 id="编码">编码</h2>
 
 <p>授权会在很多job里使用, 所以我们使用<code>shared library</code>来定义.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="n">timeout</span><span class="o">(</span><span class="nl">time:</span> <span class="mi">5</span><span class="o">,</span> <span class="nl">unit:</span> <span class="s1">&#39;MINUTES&#39;</span><span class="o">)</span> <span class="o">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="n">timeout</span><span class="o">(</span><span class="nl">time:</span> <span class="mi">5</span><span class="o">,</span> <span class="nl">unit:</span> <span class="s1">&#39;MINUTES&#39;</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">notifyAwaitApproval</span> <span class="nl">approvers:</span> <span class="n">getApprovers</span><span class="o">(</span><span class="s1">&#39;pre-release&#39;</span><span class="o">),</span>
         <span class="nl">emailPrompt:</span> <span class="s1">&#39;Build is ready to prepare release&#39;</span>
-<span class="o">}</span></code></pre></td></tr></table>
-</div>
-</div>
+<span class="o">}</span></code></pre></div>
 <p>给用户发送待审批邮件, 使用<code>input</code>等待用户的交互, 同时使用<code>milestone</code>阻塞后续的构建请求.
 <code>notifyAwaitApproval.groovy</code></p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span><span class="lnt">33
-</span><span class="lnt">34
-</span><span class="lnt">35
-</span><span class="lnt">36
-</span><span class="lnt">37
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="kt">def</span> <span class="nf">call</span><span class="o">(</span><span class="n">options</span><span class="o">)</span> <span class="o">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="kt">def</span> <span class="nf">call</span><span class="o">(</span><span class="n">options</span><span class="o">)</span> <span class="o">{</span>
 
     <span class="kt">def</span> <span class="n">jobName</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="na">JOB_NAME</span>
 
@@ -359,32 +400,10 @@ Manage Jenkins / Configure Global Security / Configure Global Security
             <span class="nl">submitter:</span> <span class="n">csvApproverUsernames</span><span class="o">,</span>
             <span class="nl">submitterParameter:</span> <span class="s1">&#39;submitter&#39;</span>
     <span class="n">milestone</span><span class="o">()</span>
-<span class="o">}</span></code></pre></td></tr></table>
-</div>
-</div>
+<span class="o">}</span></code></pre></div>
 <p>检查并获取Jenkins当前配置的授权策略, 如果是<code>Role-Based Authorization</code>, 返回拥有指定角色的用户列表.
 <code>getApprovers.groovy</code></p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="kn">import</span> <span class="nn">com.cloudbees.groovy.cps.NonCPS</span>
+<div class="highlight"><pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="kn">import</span> <span class="nn">com.cloudbees.groovy.cps.NonCPS</span>
 <span class="kn">import</span> <span class="nn">com.michelin.cio.hudson.plugins.rolestrategy.RoleBasedAuthorizationStrategy</span>
 
 <span class="nd">@NonCPS</span>
@@ -399,108 +418,92 @@ Manage Jenkins / Configure Global Security / Configure Global Security
     <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
         <span class="k">throw</span> <span class="k">new</span> <span class="nf">Exception</span><span class="o">(</span><span class="s2">&#34;Role Strategy Plugin not in use.  Please enable to retrieve users for a role&#34;</span><span class="o">)</span>
     <span class="o">}</span>
-<span class="o">}</span></code></pre></td></tr></table>
-</div>
-</div>
-    </div>
+<span class="o">}</span></code></pre></div>
 
-    
-<footer class="post-footer">
-      <div class="post-tags">
-          <a href="../tags/devops/">DevOps</a>
-          <a href="../tags/ci/cd/">CI/CD</a>
-          <a href="../tags/jenkins/">Jenkins</a>
-          <a href="../tags/groovy/">Groovy</a>
+        
+          <div class="blog-tags">
+            
+              <a href="https://atbug.com//tags/devops/">DevOps</a>&nbsp;
+            
+              <a href="https://atbug.com//tags/ci/cd/">CI/CD</a>&nbsp;
+            
+              <a href="https://atbug.com//tags/jenkins/">Jenkins</a>&nbsp;
+            
+              <a href="https://atbug.com//tags/groovy/">Groovy</a>&nbsp;
+            
           </div>
-      <nav class="post-nav">
-        <a class="prev" href="../spring-cloud-ribbon-breakdown-1/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Spring Cloud Ribbon 详解</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="../kvm-installation-note/">
-            <span class="next-text nav-default">KVM安装手册</span>
-            <span class="next-text nav-mobile">下一篇</span>
-            <i class="iconfont icon-right"></i>
-          </a>
-      </nav>
-    </footer>
-  </article>
-        </div>
-        <div id="disqus_thread"></div>
-    <script type="text/javascript">
-    (function() {
+        
+
+        
+
+        
+      </article>
+
       
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://atbug.com/kvm-installation-note/" data-toggle="tooltip" data-placement="top" title="KVM安装手册">&larr; 前一篇</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://atbug.com/spring-cloud-ribbon-breakdown-1/" data-toggle="tooltip" data-placement="top" title="Spring Cloud Ribbon 详解">后一篇 &rarr;</a>
+            </li>
+          
+        </ul>
       
-      if (window.location.hostname === 'localhost') return;
 
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'addozhang';
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
-  
+      
 
-  
-
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="social-links">
-      <a href="mailto:duwasai@gmail.com" class="iconfont icon-email" title="email"></a>
-      <a href="https://github.com/addozhang" class="iconfont icon-github" title="github"></a>
-  <a href="https://atbug.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
-</div>
-
-<div class="copyright">
-  <span class="power-by">
-    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    主题 - 
-    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
-  </span>
-
-  
-
-  <span class="copyright-year">
-    &copy; 
-    2015 - 
-    2019
-    <span class="heart">
-      <i class="iconfont icon-heart"></i>
-    </span>
-    <span class="author">Addo Zhang</span>
-  </span>
-</div>
-    </footer>
-
-    <div class="back-to-top" id="back-to-top">
-      <i class="iconfont icon-up"></i>
     </div>
   </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
-<script type="text/javascript" src="../dist/even.26188efa.min.js"></script>
+</div>
+
+      
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Addo Zhang
+            
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2015 - 2019
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://atbug.com/">乱世浮生</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          由 <a href="https://gohugo.io">Hugo v0.57.2</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a> 移植自 <a href="https://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="https://atbug.com/js/main.js"></script><script> renderMathInElement(document.body); </script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="https://atbug.com/js/load-photoswipe.js"></script>
 
 
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-47966140-1', 'auto');
-	ga('set', 'anonymizeIp', true);
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 
 
@@ -508,5 +511,7 @@ if (!doNotTrack) {
 
 
 
-</body>
+    
+  </body>
 </html>
+

@@ -44,7 +44,7 @@
       <pubDate>Mon, 09 Apr 2018 11:16:38 +0000</pubDate>
       
       <guid>https://atbug.com/jenkins-cli-enable/</guid>
-      <description>Jenkins CLI提供了SSH和Client模式. Docker运行Jenkins 1 2 3 4 5 6 7 8 9 10 version:&amp;#39;3&amp;#39;services:jenkins:image:jenkins/jenkins:alpineports:-8080:8080-50000:50000-46059:46059volumes:-&amp;#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&amp;#34; note: 以为是docker运行, ssh端口设置选用了固</description>
+      <description>Jenkins CLI提供了SSH和Client模式. Docker运行Jenkins version:&amp;#39;3&amp;#39;services:jenkins:image:jenkins/jenkins:alpineports:-8080:8080-50000:50000-46059:46059volumes:-&amp;#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&amp;#34; note: 以为是docker运行, ssh端口设置选用了固定端口. Client 从http</description>
     </item>
     
     <item>
