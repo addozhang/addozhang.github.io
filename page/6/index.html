@@ -23,7 +23,7 @@
     <link href="https://atbug.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
 
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
-    
+    <link rel="stylesheet" href="https://atbug.com/css/syntax.css">
 
     <meta name="generator" content="Hugo 0.57.2" />
 </head>
@@ -57,6 +57,70 @@
 </header>
 
     <section id="main" class="outer">
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../java-operate-cassandra-deployed-in-docker/">Docker快速构建Cassandra和Java操作</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../java-operate-cassandra-deployed-in-docker/" class="article-date">
+                        <time datetime='2017-05-18T23:33:24.000&#43;00:00' itemprop="datePublished">2017-05-18</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../java-operate-cassandra-deployed-in-docker/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    搭建Cassandra 使用docker创建Cassandra，方便快捷 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table #cqlsh&gt;#createkeyspaceCREATEKEYSPACEcontactsWITHREPLICATION={&#39;class&#39;:&#39;SimpleStrategy&#39;,&#39;replication_factor&#39;:1};#useUSEcontacts;#createtableCREATETABLEcontact(idUUID,emailTEXTPRIMARYKEY); 查看
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../java-operate-cassandra-deployed-in-docker/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/cassandra">Cassandra
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/docker">Docker
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
         
         <article class="article article-type-post" itemscope itemprop="blogPost">
             <div class="article-inner">
@@ -576,65 +640,6 @@
                         
                         <li class="article-tag-list-item">
                             <a class="article-tag-list-link" href="https://atbug.com//tags/linux">Linux
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../redis-performance-key-length/">Key长度对Redis性能影响</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../redis-performance-key-length/" class="article-date">
-                        <time datetime='2017-03-16T10:37:03.000&#43;00:00' itemprop="datePublished">2017-03-16</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../redis-performance-key-length/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    最近Redis的使用中用的到key可能比较长，但是Redis的官方文档没提到key长度对性能的影响，故简单做了个测试。 环境 Redis和测试程
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../redis-performance-key-length/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/redis">Redis
                             </a>
                         </li>
                         
