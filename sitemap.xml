@@ -332,14 +332,14 @@
   </url>
   
   <url>
-    <loc>https://atbug.com/categories/devops/</loc>
+    <loc>https://atbug.com/tags/devops/</loc>
     <lastmod>2018-04-20T12:18:46+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://atbug.com/tags/devops/</loc>
+    <loc>https://atbug.com/categories/devops/</loc>
     <lastmod>2018-04-20T12:18:46+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -1118,6 +1118,18 @@
   <url>
     <loc>https://atbug.com/chrome-extensions-for-daily-work/</loc>
     <lastmod>2014-02-09T09:26:50+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/about/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/home/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>

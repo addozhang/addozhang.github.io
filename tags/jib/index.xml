@@ -17,7 +17,7 @@
       <pubDate>Mon, 09 Dec 2019 10:05:30 +0800</pubDate>
       
       <guid>https://atbug.com/build-docker-or-oci-image-with-jib-for-java/</guid>
-      <description>(pic from jib github) Jib是Google Container Tools中的一个工具. Jib builds optimized Docker and OCI images for your Java applications without a Docker daemon - and without deep mastery of Docker best-practices. It is available as plugins for Maven and Gradle and as a Java library. Jib无需D</description>
+      <description>Jib是Google Container Tools中的一个工具。 Jib builds optimized Docker and OCI images for your Java applications without a Docker daemon - and without deep mastery of Docker best-practices. It is available as plugins for Maven and Gradle and as a Java library. Jib无需Docke</description>
     </item>
     
   </channel>
