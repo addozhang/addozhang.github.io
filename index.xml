@@ -6,19 +6,10 @@
     <description>Recent content on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 13 Dec 2019 11:03:43 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 09 Dec 2019 10:05:30 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>关于我</title>
-      <link>https://atbug.com/about/</link>
-      <pubDate>Fri, 13 Dec 2019 11:03:43 +0800</pubDate>
-      
-      <guid>https://atbug.com/about/</guid>
-      <description>码农一枚.</description>
-    </item>
     
     <item>
       <title>使用Jib为Java应用构建镜像</title>
@@ -950,6 +941,15 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
       
       <guid>https://atbug.com/about-slf4j/</guid>
       <description>Spring的功能越来越强大，同时也越来越臃肿。比如想快速搭建一个基于Spring的项目，解决依赖问题非常耗时。Spring的项目模板的出现</description>
+    </item>
+    
+    <item>
+      <title>关于我</title>
+      <link>https://atbug.com/about/</link>
+      <pubDate>Sat, 13 Dec 2014 11:03:43 +0800</pubDate>
+      
+      <guid>https://atbug.com/about/</guid>
+      <description>码农一枚.</description>
     </item>
     
     <item>

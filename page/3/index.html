@@ -63,93 +63,6 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../using-role-based-authorization-strategy-in-jenkins/">Jenkins CI/CD (一) 基于角色的授权策略</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../using-role-based-authorization-strategy-in-jenkins/" class="article-date">
-                        <time datetime='2018-04-20T12:18:46.000&#43;00:00' itemprop="datePublished">2018-04-20</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/devops">DevOps</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../using-role-based-authorization-strategy-in-jenkins/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    <p>最近开始客串运维做CI/CD的规划设计, 主要是基于&rsquo;Pipeline as Code in Jenkins&rsquo;. 整理了下思路和技术点, 慢慢的写.</p>
-
-<p>这一篇是关于基于角色的授权策略, 用的是<code>Role-Based Authorization Strategy Plugin</code>.</p>
-
-<p>授权在CI/CD流程中比较常见, 比如我们只让某些特定用户才可以构建Pre-Release的Job. 而更高级的Release发布, 又会需要某些用户的审批才可以进行. 需要授权时, 可能还需要发邮件提醒用户.</p>
-
-<p>UI上如何使用就不提了, 这里只说Pipeline as Code. 后面的几篇也会是这个背景.</p>
-
-<p>参考的这篇<a href="https://www.avioconsulting.com/blog/using-role-based-authorization-strategy-jenkins">文章</a>, 文章里的代码运行失败, 做了修复.</p>
-
-<h2 id="配置">配置</h2>
-
-<p>安装完插件, 需要开始<code>基于角色的授权策略</code>. 同时添加角色和为用户分配角色.</p>
-
-<h3 id="使用-role-based-strategy-作为验证方式">使用<code>Role-Based Strategy</code>作为验证方式</h3>
-
-<p><code>Manage Jenkins / Configure Global Security / Configure Global Security</code></p>
-
-<p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15241955282214.jpg" alt="" /></p>
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../using-role-based-authorization-strategy-in-jenkins/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/devops">DevOps
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/ci/cd">CI/CD
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/jenkins">Jenkins
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/groovy">Groovy
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
                     <h1 itemprop="name"><a class="article-title" href="../../kvm-installation-note/">KVM安装手册</a></h1>
                 </header>
                 
@@ -771,6 +684,74 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
                     </p>
                     <p class="article-more-link">
                         <a href="../../go-in-action-four/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/go">Go
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../go-in-action-three/">Go In Action 读书笔记 三</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../go-in-action-three/" class="article-date">
+                        <time datetime='2018-01-01T12:30:31.000&#43;00:00' itemprop="datePublished">2018-01-01</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../go-in-action-three/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    <h2 id="并发">并发</h2>
+
+<p>Go语言里的并发是指让某个函数可以独立于其他函数运行的能力. 当一个函数创建为goroutine时, Go会将其视为一个独立的工作单元. 这个工作单元会被调度到可用的<strong>逻辑处理器</strong>上执行.</p>
+
+<p>Go的运行时调度器可以管理所有创建的goroutine, 并为其分配执行时间.
+这个调度器在操作系统之上, 将操作系统的线程与逻辑处理器绑定, 并在逻辑处理器执行goroutine. <strong>调度器可以在任何给定的时间, 全面控制哪个goroutine在哪个逻辑处理器上运行</strong>.</p>
+
+<p>Go的并发同步模型来自一个叫做通信顺序进程(Communicating Sequential Processes, <a href="http://www.usingcsp.com">CSP</a>). CSP是一个消息传递模型, 通过在goroutine之前传递数据来传递消息, 不需要通过加锁实现同步访问. 用于在goroutine间传递消息的数据结构叫做通道(channel).</p>
+
+<h3 id="并发与并行">并发与并行</h3>
+
+<p>操作系统的线程(thread)和进程(process).</p>
+
+<p>进程类似应用程序在运行中需要用到和维护的各种资源的容器.
+资源包括但不限于: 内存(来自文件系统的代码和数据), 句柄(文件, 设备, 操作系统), 线程.</p>
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../go-in-action-three/">Read More</a>
                     </p>
                 </div>
 

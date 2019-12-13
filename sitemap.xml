@@ -3,20 +3,6 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://atbug.com/</loc>
-    <lastmod>2019-12-13T11:03:43+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/about/</loc>
-    <lastmod>2019-12-13T11:03:43+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>https://atbug.com/categories/</loc>
     <lastmod>2019-12-09T10:05:30+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -60,6 +46,13 @@
   
   <url>
     <loc>https://atbug.com/tags/tools/</loc>
+    <lastmod>2019-12-09T10:05:30+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/</loc>
     <lastmod>2019-12-09T10:05:30+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -339,14 +332,14 @@
   </url>
   
   <url>
-    <loc>https://atbug.com/categories/devops/</loc>
+    <loc>https://atbug.com/tags/devops/</loc>
     <lastmod>2018-04-20T12:18:46+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://atbug.com/tags/devops/</loc>
+    <loc>https://atbug.com/categories/devops/</loc>
     <lastmod>2018-04-20T12:18:46+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -1090,6 +1083,13 @@
   <url>
     <loc>https://atbug.com/about-slf4j/</loc>
     <lastmod>2015-04-18T11:16:26+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/about/</loc>
+    <lastmod>2014-12-13T11:03:43+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>

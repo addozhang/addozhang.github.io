@@ -63,74 +63,6 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../go-in-action-three/">Go In Action 读书笔记 三</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../go-in-action-three/" class="article-date">
-                        <time datetime='2018-01-01T12:30:31.000&#43;00:00' itemprop="datePublished">2018-01-01</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../go-in-action-three/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    <h2 id="并发">并发</h2>
-
-<p>Go语言里的并发是指让某个函数可以独立于其他函数运行的能力. 当一个函数创建为goroutine时, Go会将其视为一个独立的工作单元. 这个工作单元会被调度到可用的<strong>逻辑处理器</strong>上执行.</p>
-
-<p>Go的运行时调度器可以管理所有创建的goroutine, 并为其分配执行时间.
-这个调度器在操作系统之上, 将操作系统的线程与逻辑处理器绑定, 并在逻辑处理器执行goroutine. <strong>调度器可以在任何给定的时间, 全面控制哪个goroutine在哪个逻辑处理器上运行</strong>.</p>
-
-<p>Go的并发同步模型来自一个叫做通信顺序进程(Communicating Sequential Processes, <a href="http://www.usingcsp.com">CSP</a>). CSP是一个消息传递模型, 通过在goroutine之前传递数据来传递消息, 不需要通过加锁实现同步访问. 用于在goroutine间传递消息的数据结构叫做通道(channel).</p>
-
-<h3 id="并发与并行">并发与并行</h3>
-
-<p>操作系统的线程(thread)和进程(process).</p>
-
-<p>进程类似应用程序在运行中需要用到和维护的各种资源的容器.
-资源包括但不限于: 内存(来自文件系统的代码和数据), 句柄(文件, 设备, 操作系统), 线程.</p>
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../go-in-action-three/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/go">Go
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
                     <h1 itemprop="name"><a class="article-title" href="../../go-in-action-two/">Go In Action 读书笔记 二</a></h1>
                 </header>
                 
@@ -681,6 +613,65 @@
                         
                         <li class="article-tag-list-item">
                             <a class="article-tag-list-link" href="https://atbug.com//tags/kafka">Kafka
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../kafka-consumer-consistency/">Kafka消息消费一致性</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../kafka-consumer-consistency/" class="article-date">
+                        <time datetime='2017-09-26T19:13:48.000&#43;00:00' itemprop="datePublished">2017-09-26</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../kafka-consumer-consistency/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    Kafka消费端的offset主要由consumer来控制, Kafka降每个consumer所监听的tocpic的partition的off
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../kafka-consumer-consistency/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/kafka">Kafka
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/%E4%B8%80%E8%87%B4%E6%80%A7">一致性
                             </a>
                         </li>
                         
