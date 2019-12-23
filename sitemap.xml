@@ -150,14 +150,14 @@
   </url>
   
   <url>
-    <loc>https://atbug.com/tags/spring-boot/</loc>
+    <loc>https://atbug.com/spring-boot-2-2-0-release/</loc>
     <lastmod>2019-10-22T09:27:03+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://atbug.com/spring-boot-2-2-0-release/</loc>
+    <loc>https://atbug.com/tags/spring-boot/</loc>
     <lastmod>2019-10-22T09:27:03+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
