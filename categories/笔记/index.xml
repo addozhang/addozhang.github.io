@@ -6,10 +6,19 @@
     <description>Recent content in 笔记 on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 09 Dec 2019 10:05:30 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 21 Dec 2019 20:45:22 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/categories/%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>加速Kubernetes上的Java开发</title>
+      <link>https://atbug.com/speed-up-java-development-on-kubernetes/</link>
+      <pubDate>Sat, 21 Dec 2019 20:45:22 +0800</pubDate>
+      
+      <guid>https://atbug.com/speed-up-java-development-on-kubernetes/</guid>
+      <description>今天来说说日常在Kubernetes开发Java项目遇到的问题. 当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是copy</description>
+    </item>
     
     <item>
       <title>使用Jib为Java应用构建镜像</title>

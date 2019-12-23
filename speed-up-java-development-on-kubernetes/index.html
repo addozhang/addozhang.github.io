@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>加速Kubernetes上的Java开发 // 乱世浮生</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
+    <meta name="keywords" content="Java,Spring Cloud,Architecture,">
+
+        <meta property="og:title" content="加速Kubernetes上的Java开发" />
+    <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh-cn" />
+    <meta property="og:url" content="https://atbug.com/speed-up-java-development-on-kubernetes/" />
+    
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link href="https://atbug.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://atbug.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://atbug.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.57.2" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://atbug.com/">乱世浮生</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="../">Home</a>
+                
+                <a class="main-nav-link" href="../post/">Archives</a>
+                
+                <a class="main-nav-link" href="../tags/">Tags</a>
+                
+                <a class="main-nav-link" href="../categories/">Categories</a>
+                
+                <a class="main-nav-link" href="../about/">About</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">加速Kubernetes上的Java开发</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="../speed-up-java-development-on-kubernetes/" class="article-date">
+                <time datetime='2019-12-21T20:45:22.000&#43;08:00' itemprop="datePublished">2019-12-21</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                    
+                </div>
+            </div>
+            
+            
+            <div class="article-comment-link-wrap">
+                <a href="../speed-up-java-development-on-kubernetes/#disqus_thread" class="article-comment-link">Comments</a>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            
+
+<p>今天来说说日常在Kubernetes开发Java项目遇到的问题.</p>
+
+<p>当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是<code>copy+paste+modify</code>. 能否以变成的方式来生成?</p>
+
+<p>开发时的步骤也比较繁琐: <code>docker build</code>, <code>docker push</code>, <code>kubectl apple</code>, <code>kubectl delete pod</code>. 对于一个Java应用来说还多了一步编译. 操作一次还ok, 但是一天十几次总会有想吐的感觉. 这些步骤能否简化成一个命令, 甚至修改了代码自动就完成上面一系列的操作?</p>
+
+<p>实现这些我们需要几个工具: <a href="https://github.com/dekorateio/dekorate">dekorate</a>, <a href="https://github.com/GoogleContainerTools/jib">Jib</a>, <a href="https://github.com/GoogleContainerTools/skaffold">Skaffold</a>. 其中Jib也在上一篇文章<a href="https://atbug.com/build-docker-or-oci-image-with-jib-for-java/">使用Jib为Java应用构建镜像</a>中介绍过.</p>
+
+<h2 id="dekorate">dekorate</h2>
+
+<blockquote>
+<p>Dekorate is a collection of Java compile-time generators and decorators for Kubernetes/OpenShift manifests.
+Dekorate是Java编译时生成和装饰Kubernetes/OpenShift的manifests的工具</p>
+</blockquote>
+
+<h3 id="快速开始">快速开始</h3>
+
+<h4 id="1-通过使用-spring-initializer-https-start-spring-io-生成一个项目-spring-boot-2-2-2-并加入依赖">1. 通过使用<a href="https://start.spring.io">Spring Initializer</a>生成一个项目(Spring Boot 2.2.2), 并加入依赖:</h4>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>io.dekorate<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>kubernetes-spring-starter<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;version&gt;</span>0.10.0<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span></code></pre></div>
+<h4 id="2-加入一个简单的-controller">2. 加入一个简单的<code>Controller</code>:</h4>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="cm">/**
+</span><span class="cm"> * @author Addo.Zhang
+</span><span class="cm"> * @date 2019/12/22
+</span><span class="cm"> */</span>
+<span class="nd">@RestController</span>
+<span class="kd">public</span> <span class="nf">class</span> <span class="n">DekorateExampleController</span> <span class="p">{</span>
+
+    <span class="nd">@GetMapping</span>
+    <span class="kd">public</span> <span class="nf">String</span> <span class="n">hi</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&#34;Hello World&#34;</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">}</span></code></pre></div>
+<h4 id="3-执行命令-mvn-clean-install-然后在-target-classes-meta-inf-dekorate-目录下可以找到-kubernetes-json-和-kubernetes-yml-两个文件">3. 执行命令<code>mvn clean install</code>, 然后在<code>target/classes/META-INF/dekorate</code>目录下可以找到<code>kubernetes.json</code>和<code>kubernetes.yml</code>两个文件.</h4>
+
+<p><code>kubernetes.yml</code>的内容:</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">---<span class="w">
+</span><span class="w"></span>apiVersion<span class="p">:</span><span class="w"> </span><span class="s2">&#34;v1&#34;</span><span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span><span class="s2">&#34;Service&#34;</span><span class="w">
+</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">  </span>labels<span class="p">:</span><span class="w">
+</span><span class="w">    </span>app<span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
+</span><span class="w">    </span>version<span class="p">:</span><span class="w"> </span><span class="s2">&#34;0.0.1-SNAPSHOT&#34;</span><span class="w">
+</span><span class="w">    </span>group<span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo&#34;</span><span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
+</span><span class="w"></span>spec<span class="p">:</span><span class="w">
+</span><span class="w">  </span>ports<span class="p">:</span><span class="w">
+</span><span class="w">  </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span><span class="s2">&#34;http&#34;</span><span class="w">
+</span><span class="w">    </span>port<span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
+</span><span class="w">    </span>targetPort<span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
+</span><span class="w">  </span>selector<span class="p">:</span><span class="w">
+</span><span class="w">    </span>app<span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
+</span><span class="w">    </span>version<span class="p">:</span><span class="w"> </span><span class="s2">&#34;0.0.1-SNAPSHOT&#34;</span><span class="w">
+</span><span class="w">    </span>group<span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo&#34;</span><span class="w">
+</span><span class="w">  </span>type<span class="p">:</span><span class="w"> </span><span class="s2">&#34;ClusterIP&#34;</span><span class="w">
+</span><span class="w"></span>---<span class="w">
+</span><span class="w"></span>apiVersion<span class="p">:</span><span class="w"> </span><span class="s2">&#34;apps/v1&#34;</span><span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span><span class="s2">&#34;Deployment&#34;</span><span class="w">
+</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">  </span>labels<span class="p">:</span><span class="w">
+</span><span class="w">    </span>app<span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
+</span><span class="w">    </span>version<span class="p">:</span><span class="w"> </span><span class="s2">&#34;0.0.1-SNAPSHOT&#34;</span><span class="w">
+</span><span class="w">    </span>group<span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo&#34;</span><span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
+</span><span class="w"></span>spec<span class="p">:</span><span class="w">
+</span><span class="w">  </span>replicas<span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">  </span>selector<span class="p">:</span><span class="w">
+</span><span class="w">    </span>matchLabels<span class="p">:</span><span class="w">
+</span><span class="w">      </span>app<span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
+</span><span class="w">      </span>version<span class="p">:</span><span class="w"> </span><span class="s2">&#34;0.0.1-SNAPSHOT&#34;</span><span class="w">
+</span><span class="w">      </span>group<span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo&#34;</span><span class="w">
+</span><span class="w">  </span>template<span class="p">:</span><span class="w">
+</span><span class="w">    </span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">      </span>labels<span class="p">:</span><span class="w">
+</span><span class="w">        </span>app<span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
+</span><span class="w">        </span>version<span class="p">:</span><span class="w"> </span><span class="s2">&#34;0.0.1-SNAPSHOT&#34;</span><span class="w">
+</span><span class="w">        </span>group<span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo&#34;</span><span class="w">
+</span><span class="w">    </span>spec<span class="p">:</span><span class="w">
+</span><span class="w">      </span>containers<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>env<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span><span class="s2">&#34;KUBERNETES_NAMESPACE&#34;</span><span class="w">
+</span><span class="w">          </span>valueFrom<span class="p">:</span><span class="w">
+</span><span class="w">            </span>fieldRef<span class="p">:</span><span class="w">
+</span><span class="w">              </span>fieldPath<span class="p">:</span><span class="w"> </span><span class="s2">&#34;metadata.namespace&#34;</span><span class="w">
+</span><span class="w">        </span>image<span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo/dekorate-example:0.0.1-SNAPSHOT&#34;</span><span class="w">
+</span><span class="w">        </span>imagePullPolicy<span class="p">:</span><span class="w"> </span><span class="s2">&#34;IfNotPresent&#34;</span><span class="w">
+</span><span class="w">        </span>livenessProbe<span class="p">:</span><span class="w">
+</span><span class="w">          </span>failureThreshold<span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
+</span><span class="w">          </span>httpGet<span class="p">:</span><span class="w">
+</span><span class="w">            </span>path<span class="p">:</span><span class="w"> </span><span class="s2">&#34;/actuator/info&#34;</span><span class="w">
+</span><span class="w">            </span>port<span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
+</span><span class="w">            </span>scheme<span class="p">:</span><span class="w"> </span><span class="s2">&#34;HTTP&#34;</span><span class="w">
+</span><span class="w">          </span>initialDelaySeconds<span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w">
+</span><span class="w">          </span>periodSeconds<span class="p">:</span><span class="w"> </span><span class="m">30</span><span class="w">
+</span><span class="w">          </span>successThreshold<span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">          </span>timeoutSeconds<span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
+</span><span class="w">        </span>name<span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
+</span><span class="w">        </span>ports<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>containerPort<span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
+</span><span class="w">          </span>name<span class="p">:</span><span class="w"> </span><span class="s2">&#34;http&#34;</span><span class="w">
+</span><span class="w">          </span>protocol<span class="p">:</span><span class="w"> </span><span class="s2">&#34;TCP&#34;</span><span class="w">
+</span><span class="w">        </span>readinessProbe<span class="p">:</span><span class="w">
+</span><span class="w">          </span>failureThreshold<span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
+</span><span class="w">          </span>httpGet<span class="p">:</span><span class="w">
+</span><span class="w">            </span>path<span class="p">:</span><span class="w"> </span><span class="s2">&#34;/actuator/health&#34;</span><span class="w">
+</span><span class="w">            </span>port<span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
+</span><span class="w">            </span>scheme<span class="p">:</span><span class="w"> </span><span class="s2">&#34;HTTP&#34;</span><span class="w">
+</span><span class="w">          </span>initialDelaySeconds<span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w">
+</span><span class="w">          </span>periodSeconds<span class="p">:</span><span class="w"> </span><span class="m">30</span><span class="w">
+</span><span class="w">          </span>successThreshold<span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">          </span>timeoutSeconds<span class="p">:</span><span class="w"> </span><span class="m">10</span></code></pre></div>
+<p>yml中包含了<code>Service</code>和<code>Deployment</code>两部分, dekorate完美兼容的Spring:</p>
+
+<ul>
+<li><code>app: dekorate-example</code>: 项目名</li>
+<li><code>version: 0.0.1-SNAPSHOT</code>: 项目当前版本</li>
+<li><code>group: addo</code>: 是我系统当前用户名</li>
+<li><code>/actuator/health</code>: Spring Boot 2.2后actuator的health endpoint, 作为<code>readinessProbe</code></li>
+<li><code>/actuator/info</code>: Spring Boot 2.2后actuator的endpoint, 作为<code>livenessProbe</code></li>
+</ul>
+
+<h3 id="进阶">进阶</h3>
+
+<p><strong>前面yml的内容都是自动生成的, 假如有些特殊的需求. 比如修改镜像的<code>repository</code>即这里的<code>group</code>, 如何操作?</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-properties" data-lang="properties">dekorate.kubernetes.group = addozhang</code></pre></div>
+<p>结果:</p>
+
+<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/5zgkfl.jpg" alt="Change Image Repository" /></p>
+
+<p><strong>或者修改Service的类型为NodePort</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-properties" data-lang="properties">dekorate.kubernetes.service-type = NodePort</code></pre></div>
+<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/vIen3M.jpg" alt="NodePort Service" /></p>
+
+<h4 id="配置">配置</h4>
+
+<p>dekoration提供了<a href="https://github.com/dekorateio/dekorate/blob/master/assets/config.md">丰富的配置</a>来个性化manifest.</p>
+
+<p>除了上面使用的配置文件(properties/yaml)的方式, 还提供了<code>Annotation</code>注解配置方式.</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nf">io</span><span class="p">.</span><span class="na">dekorate</span><span class="p">.</span><span class="na">kubernetes</span><span class="p">.</span><span class="na">annotation</span><span class="p">.</span><span class="na">Env</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nf">io</span><span class="p">.</span><span class="na">dekorate</span><span class="p">.</span><span class="na">kubernetes</span><span class="p">.</span><span class="na">annotation</span><span class="p">.</span><span class="na">KubernetesApplication</span><span class="p">;</span>
+
+<span class="nd">@KubernetesApplication</span><span class="p">(</span><span class="n">envVars</span> <span class="o">=</span> <span class="nd">@Env</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;key1&#34;</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="s">&#34;var1&#34;</span><span class="p">))</span>
+<span class="kd">public</span> <span class="nf">class</span> <span class="n">Main</span> <span class="p">{</span>
+
+  <span class="kd">public</span> <span class="nf">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="nf">args</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//Your code goes here
+</span><span class="c1"></span>  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/exQoxy.jpg" alt="@KubernetesApplication Annotation" /></p>
+
+<h2 id="jib">Jib</h2>
+
+<p>Jib的说明请看上一篇文章:<a href="https://atbug.com/build-docker-or-oci-image-with-jib-for-java/">使用Jib为Java应用构建镜像</a></p>
+
+<h3 id="插件配置">插件配置</h3>
+
+<p>下面是针对该项目添加的配置:</p>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;plugin&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>com.google.cloud.tools<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>jib-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>1.8.0<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;configuration&gt;</span>
+        <span class="nt">&lt;container&gt;</span>
+            <span class="nt">&lt;jvmFlags&gt;</span>
+                <span class="nt">&lt;jvmFlag&gt;</span>-Xmx128m<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag&gt;</span>-Xms64m<span class="nt">&lt;/jvmFlag&gt;</span>
+            <span class="nt">&lt;/jvmFlags&gt;</span>
+            <span class="nt">&lt;labels&gt;</span>
+                <span class="nt">&lt;Author&gt;</span>Addo.Zhang<span class="nt">&lt;/Author&gt;</span>
+            <span class="nt">&lt;/labels&gt;</span>
+            <span class="nt">&lt;creationTime&gt;</span>USE_CURRENT_TIMESTAMP<span class="nt">&lt;/creationTime&gt;</span>
+        <span class="nt">&lt;/container&gt;</span>
+        <span class="nt">&lt;from&gt;</span>
+            <span class="nt">&lt;image&gt;</span>openjdk:8-jdk-alpine<span class="nt">&lt;/image&gt;</span>
+        <span class="nt">&lt;/from&gt;</span>
+        <span class="nt">&lt;to&gt;</span>
+            <span class="nt">&lt;image&gt;</span>addo/dekorate-example<span class="nt">&lt;/image&gt;</span>
+            <span class="nt">&lt;tags&gt;</span>
+                <span class="nt">&lt;tag&gt;</span>latest<span class="nt">&lt;/tag&gt;</span>
+            <span class="nt">&lt;/tags&gt;</span>
+        <span class="nt">&lt;/to&gt;</span>
+        <span class="nt">&lt;allowInsecureRegistries&gt;</span>true<span class="nt">&lt;/allowInsecureRegistries&gt;</span>
+    <span class="nt">&lt;/configuration&gt;</span>
+<span class="nt">&lt;/plugin&gt;</span></code></pre></div>
+<p>执行命令<code>mvn compile jib:dockerBuild</code>便可以编译代码, 构建镜像并推送到镜像仓库.</p>
+
+<h2 id="skaffold">Skaffold</h2>
+
+<p><a href="https://github.com/GoogleContainerTools/skaffold">Skaffold</a>也是GoogleContainerTools中的一个工具.</p>
+
+<blockquote>
+<p>Skaffold is a command line tool that facilitates continuous development for Kubernetes applications. You can iterate on your application source code locally then deploy to local or remote Kubernetes clusters. Skaffold handles the workflow for building, pushing and deploying your application. It also provides building blocks and describe customizations for a CI/CD pipeline.
+Skaffold是一个命令行工具, 可促进Kubernetes应用程序的持续开发. 可以在本地迭代应用程序源代码, 然后部署到本地或远程Kubernetes集群. Skaffold处理构建, 推送和部署应用程序的工作流程. 它还提供了构建块并描述了CI/CD管道的自定义.</p>
+</blockquote>
+
+<p>在我们这个例子中, 通过与Jib的联动, 完成编译代码, 构建镜像, 推送镜像, 部署一系列操作.</p>
+
+<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/2019-12-23 15.12.24.gif" alt="Run" /></p>
+
+<p>截屏中的操作, 因为没有代码改动而不续构建镜像, Skaffold直接从cache中获取镜像并部署到Kubernetes中.</p>
+
+<h3 id="skaffold操作">Skaffold操作</h3>
+
+<h4 id="1-执行命令-skaffold-init-xxenablejibinit-并在提示出输入-y">1. 执行命令<code>skaffold init --XXenableJibInit</code>并在提示出输入<code>y</code></h4>
+
+<h4 id="2-该命令会生成一个名为-skaffold-yaml-的文件">2. 该命令会生成一个名为<code>skaffold.yaml</code>的文件</h4>
+
+<p>由于<code>dekorate</code>同时生成了<code>json</code>和<code>yaml</code>格式的manifest, 被<code>skaffold</code>检测到. 实际操作中只需要其中一个即可.</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>skaffold/v1<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>Config<span class="w">
+</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>dekorate-example<span class="w">
+</span><span class="w"></span>build<span class="p">:</span><span class="w">
+</span><span class="w">  </span>artifacts<span class="p">:</span><span class="w">
+</span><span class="w">  </span>-<span class="w"> </span>image<span class="p">:</span><span class="w"> </span>addo/dekorate-example<span class="w">
+</span><span class="w">    </span>jib<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w"></span>deploy<span class="p">:</span><span class="w">
+</span><span class="w">  </span>kubectl<span class="p">:</span><span class="w">
+</span><span class="w">    </span>manifests<span class="p">:</span><span class="w">
+</span><span class="w">    </span>-<span class="w"> </span>target/classes/META-INF/dekorate/kubernetes.json<span class="w">
+</span><span class="w">    </span>-<span class="w"> </span>target/classes/META-INF/dekorate/kubernetes.yml</code></pre></div>
+<h4 id="3-执行-skaffold-run">3. 执行<code>skaffold run</code></h4>
+
+<h4 id="4-pod启动完成后-通过-kubectl-port-forward-podname-here-8081">4. pod启动完成后, 通过<code>kubectl port-forward PODNAME-HERE 8081</code></h4>
+
+<h4 id="5-请求-http-http-localhost-8081">5. 请求<code>http http://localhost:8081</code></h4>
+
+<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/wt2BVU.jpg" alt="" /></p>
+
+<h3 id="进阶-1">进阶</h3>
+
+<p>Skaffold的功能强大, 目前个人使用的有限, 有时间新开一篇来学习一下.</p>
+
+<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/FXu4Hy.jpg" alt="" /></p>
+
+<h4 id="cli">CLI</h4>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">➜  ~ skaffold <span class="nb">help</span>
+A tool that facilitates continuous development <span class="k">for</span> Kubernetes applications.
+
+  Find more information at: https://skaffold.dev/docs/getting-started/
+
+End-to-end pipelines:
+  run               Run a pipeline
+  dev               Run a pipeline in development mode
+  debug             <span class="o">[</span>beta<span class="o">]</span> Run a pipeline in debug mode
+
+Pipeline building blocks <span class="k">for</span> CI/CD:
+  build             Build the artifacts
+  deploy            Deploy pre-built artifacts
+  delete            Delete the deployed application
+  render            <span class="o">[</span>alpha<span class="o">]</span> Perform all image builds, and output rendered Kubernetes manifests
+
+Getting started with a new project:
+  init              <span class="o">[</span>alpha<span class="o">]</span> Generate configuration <span class="k">for</span> deploying an application
+  fix               Update old configuration to newest schema version
+
+Other Commands:
+  completion        Output shell completion <span class="k">for</span> the given shell <span class="o">(</span>bash or zsh<span class="o">)</span>
+  config            Interact with the Skaffold configuration
+  credits           Export third party notices to given path <span class="o">(</span>./skaffold-credits by default<span class="o">)</span>
+  diagnose          Run a diagnostic on Skaffold
+  version           Print the version information
+
+Usage:
+  skaffold <span class="o">[</span>flags<span class="o">]</span> <span class="o">[</span>options<span class="o">]</span>
+
+Use <span class="s2">&#34;skaffold &lt;command&gt; --help&#34;</span> <span class="k">for</span> more information about a given command.
+Use <span class="s2">&#34;skaffold options&#34;</span> <span class="k">for</span> a list of global command-line options <span class="o">(</span>applies to all commands<span class="o">)</span>.</code></pre></div>
+<h4 id="yaml配置">Yaml配置</h4>
+
+<p>参考<a href="https://skaffold.dev/docs/references/yaml/">skaffold.yaml</a></p>
+
+<h2 id="总结">总结</h2>
+
+<p>文章的开头我们提到如何做到修改代码后自动完成一些列的操作, 通过<code>skaffold dev</code>就可以实现.</p>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#dekorate">dekorate</a>
+<ul>
+<li><a href="#快速开始">快速开始</a>
+<ul>
+<li><a href="#1-通过使用-spring-initializer-https-start-spring-io-生成一个项目-spring-boot-2-2-2-并加入依赖">1. 通过使用<a href="https://start.spring.io">Spring Initializer</a>生成一个项目(Spring Boot 2.2.2), 并加入依赖:</a></li>
+<li><a href="#2-加入一个简单的-controller">2. 加入一个简单的<code>Controller</code>:</a></li>
+<li><a href="#3-执行命令-mvn-clean-install-然后在-target-classes-meta-inf-dekorate-目录下可以找到-kubernetes-json-和-kubernetes-yml-两个文件">3. 执行命令<code>mvn clean install</code>, 然后在<code>target/classes/META-INF/dekorate</code>目录下可以找到<code>kubernetes.json</code>和<code>kubernetes.yml</code>两个文件.</a></li>
+</ul></li>
+<li><a href="#进阶">进阶</a>
+<ul>
+<li><a href="#配置">配置</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#jib">Jib</a>
+<ul>
+<li><a href="#插件配置">插件配置</a></li>
+</ul></li>
+<li><a href="#skaffold">Skaffold</a>
+<ul>
+<li><a href="#skaffold操作">Skaffold操作</a>
+<ul>
+<li><a href="#1-执行命令-skaffold-init-xxenablejibinit-并在提示出输入-y">1. 执行命令<code>skaffold init --XXenableJibInit</code>并在提示出输入<code>y</code></a></li>
+<li><a href="#2-该命令会生成一个名为-skaffold-yaml-的文件">2. 该命令会生成一个名为<code>skaffold.yaml</code>的文件</a></li>
+<li><a href="#3-执行-skaffold-run">3. 执行<code>skaffold run</code></a></li>
+<li><a href="#4-pod启动完成后-通过-kubectl-port-forward-podname-here-8081">4. pod启动完成后, 通过<code>kubectl port-forward PODNAME-HERE 8081</code></a></li>
+<li><a href="#5-请求-http-http-localhost-8081">5. 请求<code>http http://localhost:8081</code></a></li>
+</ul></li>
+<li><a href="#进阶-1">进阶</a>
+<ul>
+<li><a href="#cli">CLI</a></li>
+<li><a href="#yaml配置">Yaml配置</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#总结">总结</a></li>
+</ul></li>
+</ul>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/docker">Docker
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/jib">Jib
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/kubernetes">Kubernetes
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/skaffold">Skaffold
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/dekorate">dekorate
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    <nav id="article-nav">
+    
+    
+    <a href="../build-docker-or-oci-image-with-jib-for-java/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">使用Jib为Java应用构建镜像&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "addozhang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2019 Addo Zhang
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>
