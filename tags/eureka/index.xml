@@ -6,10 +6,19 @@
     <description>Recent content in Eureka on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 14 Feb 2018 07:32:43 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 05 Jan 2020 14:14:03 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/tags/eureka/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>神秘的Eureka自我保护</title>
+      <link>https://atbug.com/translation-the-mystery-of-eurekas-self-preservation/</link>
+      <pubDate>Sun, 05 Jan 2020 14:14:03 +0800</pubDate>
+      
+      <guid>https://atbug.com/translation-the-mystery-of-eurekas-self-preservation/</guid>
+      <description>本文翻译自The Mystery of Eureka Self-Preservation 根据CAP定理, Eureka是一个AP系统, 这就导致了在网络分区期间多个注册表中的信息不一致. 自我保护功能则是为了尽</description>
+    </item>
     
     <item>
       <title>Spring Cloud - Eureka服务注册</title>
