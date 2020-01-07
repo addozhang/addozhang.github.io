@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Java on 乱世浮生</title>
@@ -62,7 +62,7 @@
       <pubDate>Thu, 18 May 2017 23:33:24 +0000</pubDate>
       
       <guid>https://atbug.com/java-operate-cassandra-deployed-in-docker/</guid>
-      <description>搭建Cassandra 使用docker创建Cassandra，方便快捷 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table #cqlsh&amp;gt;#createkeyspaceCREATEKEYSPACEcontactsWITHREPLICATION={&amp;#39;class&amp;#39;:&amp;#39;SimpleStrategy&amp;#39;,&amp;#39;replication_factor&amp;#39;:1};#useUSEcontacts;#createtableCREATETABLEcontact(idUUID,emailTEXTPRIMARYKEY); 查看</description>
+      <description>搭建Cassandra 使用docker创建Cassandra，方便快捷 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table #cq</description>
     </item>
     
     <item>
@@ -188,7 +188,7 @@
       <pubDate>Wed, 06 Jul 2016 16:57:09 +0000</pubDate>
       
       <guid>https://atbug.com/singleton-in-multi-threads-programming/</guid>
-      <description>多线程下的单例模式的实现，顺便做了反汇编。 public class MySingleton { private static MySingleton INSTANCE; private MySingleton() { } public static MySingleton getInstance() { if (INSTANCE == null) { synchronized (MySingleton.class) { INSTANCE = new MySingleton(); } } return INSTANCE; } }Compiled from &amp;#34;MySingleton.java&amp;#34; public class MySingleton { public static MySingleton getInstance(); Code: 0: getstatic #2</description>
+      <description>多线程下的单例模式的实现，顺便做了反汇编。 public class MySingleton { private static MySingleton INSTANCE; private MySingleton() { } public static MySingleton getInstance() { if (INSTANCE == null) { synchronized (MySingleton.class) { INSTANCE = new MySingleton(); } } return INSTANCE; } } Compiled from &amp;#34;MySingleton.java&amp;#34; public class MySingleton { public static MySingleton getInstance(); Code: 0: getstatic</description>
     </item>
     
     <item>

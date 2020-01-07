@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Redis on 乱世浮生</title>
@@ -17,7 +17,7 @@
       <pubDate>Fri, 07 Apr 2017 16:48:46 +0000</pubDate>
       
       <guid>https://atbug.com/install-redis-on-centos/</guid>
-      <description>版本 Centos7 Redis3.2.8 编译安装 wget http://download.redis.io/releases/redis-3.2.8.tar.gz tar -zxvf redis-3.2.8.tar.gz cd redis-3.2.8 sudo make test sudo make install 启动 redis-server 问题 /bin/sh: cc: command not found 原因：Centos安装时选择的类型是Infrastructure，没有c++的</description>
+      <description>版本 Centos7 Redis3.2.8 编译安装 wget http://download.redis.io/releases/redis-3.2.8.tar.gz tar -zxvf redis-3.2.8.tar.gz cd redis-3.2.8 sudo make test sudo make install 启动 redis-server 问题 /bin/sh: cc: command not found **原因：**Centos安装时选择的类型是Infrastructure，没有</description>
     </item>
     
     <item>

@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,78 +87,66 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<p>其实标题我想用《为什么foreach边循环边移除元素要用Iterator？》可是太长。</p>
-
+            <p>其实标题我想用《为什么foreach边循环边移除元素要用Iterator？》可是太长。</p>
 <p>不用Iterator，用Collection.remove()，会报ConcurrentModificationException错误。</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="k">for</span><span class="p">(</span><span class="n">Integer</span> <span class="nf">i</span> <span class="o">:</span> <span class="n">list</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">list</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">i</span><span class="p">);</span> <span class="c1">//Throw ConcurrentModificationException
-</span><span class="c1"></span><span class="p">}</span></code></pre></div>
-<p>其实使用foreach的时候，会自动生成一个Iterator来遍历list。不只是remove，使用add、clear等方法一样会出错。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="k">for</span><span class="o">(</span><span class="n">Integer</span> <span class="n">i</span> <span class="o">:</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">list</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">i</span><span class="o">)</span><span class="o">;</span> <span class="c1">//Throw ConcurrentModificationException
+</span><span class="c1"></span><span class="o">}</span>
+</code></pre></div><p>其实使用foreach的时候，会自动生成一个Iterator来遍历list。不只是remove，使用add、clear等方法一样会出错。</p>
 <p>拿ArrayList来说，它有一个私有的Iterator接口的内部类Itr：</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="nf">class</span> <span class="n">Itr</span> <span class="nf">implements</span> <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="nf">cursor</span><span class="p">;</span>       <span class="c1">// index of next element to return
-</span><span class="c1"></span>    <span class="kt">int</span> <span class="nf">lastRet</span> <span class="o">=</span> <span class="o">-</span><span class="n">1</span><span class="p">;</span> <span class="c1">// index of last element returned; -1 if no such
-</span><span class="c1"></span>    <span class="kt">int</span> <span class="nf">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="kd">class</span> <span class="nc">Itr</span> <span class="kd">implements</span> <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">cursor</span><span class="o">;</span>       <span class="c1">// index of next element to return
+</span><span class="c1"></span>    <span class="kt">int</span> <span class="n">lastRet</span> <span class="o">=</span> <span class="o">-</span><span class="n">1</span><span class="o">;</span> <span class="c1">// index of last element returned; -1 if no such
+</span><span class="c1"></span>    <span class="kt">int</span> <span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="o">;</span>
   	
   <span class="c1">//sevrval methods
-</span><span class="c1"></span><span class="p">}</span></code></pre></div>
-<p>使用Iterator来遍历ArrayList实际上是通过两个指针来遍历ArrayList底层的数组：cursor是下一个返回的元素在数组中的下标；lastRet是上一个元素的下标。还有一个重要的expectedModCount使用的是ArrayList的modCount的（modCount具体是什么意思下文会提到）。</p>
-
+</span><span class="c1"></span><span class="o">}</span>
+</code></pre></div><p>使用Iterator来遍历ArrayList实际上是通过两个指针来遍历ArrayList底层的数组：cursor是下一个返回的元素在数组中的下标；lastRet是上一个元素的下标。还有一个重要的expectedModCount使用的是ArrayList的modCount的（modCount具体是什么意思下文会提到）。</p>
 <p>从Itr的实现来看，有三种情况会抛出ConcurrentModificationException：</p>
-
 <ul>
 <li>cursor超出了数组的最大下标</li>
 <li>expectedModCount不等于modCount</li>
 <li>删除元素最终还是调用ArrayList的remove方法，此方法可能会抛出IndexOutOfBoundsException</li>
 </ul>
-
 <h3 id="expectedmodcount不等于modcount">expectedModCount不等于modCount</h3>
-
 <p>开头所说的问题正是是<strong>第二种情况</strong>下出现的。modCount简单说记录了Collection被修改的次数：添加或者删除元素。</p>
-
 <p>假如在foreach循环中删除元素，且此时modCount等2：</p>
-
 <ul>
 <li>循环开始创建新Itr实例，expectedModCount=modCount=2</li>
 <li>使用ArrayList.remove()删除元素，modCount加1</li>
-
-<li><p>继续调用next()方法指向下一个元素，此时检查expectedModCount是否等于modCount，不等则抛ConcurrentModificationException</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">E</span> <span class="n">next</span><span class="p">()</span> <span class="p">{</span>
-<span class="n">checkForComodification</span><span class="p">();</span>
-<span class="kt">int</span> <span class="nf">i</span> <span class="o">=</span> <span class="n">cursor</span><span class="p">;</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">size</span><span class="p">)</span>
-    <span class="k">throw</span> <span class="k">new</span> <span class="n">NoSuchElementException</span><span class="p">();</span>
-<span class="n">Object</span><span class="p">[]</span> <span class="nf">elementData</span> <span class="o">=</span> <span class="n">ArrayList</span><span class="p">.</span><span class="na">this</span><span class="p">.</span><span class="na">elementData</span><span class="p">;</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">elementData</span><span class="p">.</span><span class="na">length</span><span class="p">)</span>
-    <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="p">();</span>
-<span class="n">cursor</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">1</span><span class="p">;</span>
-<span class="k">return</span> <span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="n">elementData</span><span class="p">[</span><span class="n">lastRet</span> <span class="o">=</span> <span class="n">i</span><span class="p">];</span>
-<span class="p">}</span>
-<span class="kd">final</span> <span class="nf">void</span> <span class="n">checkForComodification</span><span class="p">()</span> <span class="p">{</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">modCount</span> <span class="o">!=</span> <span class="n">expectedModCount</span><span class="p">)</span>
-    <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="p">();</span>
-<span class="p">}</span></code></pre></div></li>
+<li>继续调用next()方法指向下一个元素，此时检查expectedModCount是否等于modCount，不等则抛ConcurrentModificationException</li>
 </ul>
-
-<p>上面提到Iterator的实现中删除元素实际调用的还是ArrayList.remove()方法，为什么不会抛错？</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="n">E</span> <span class="nf">next</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">checkForComodification</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;</span><span class="o">=</span> <span class="n">size</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">NoSuchElementException</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">Object</span><span class="o">[</span><span class="o">]</span> <span class="n">elementData</span> <span class="o">=</span> <span class="n">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">elementData</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;</span><span class="o">=</span> <span class="n">elementData</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">1</span><span class="o">;</span>
+    <span class="k">return</span> <span class="o">(</span><span class="n">E</span><span class="o">)</span> <span class="n">elementData</span><span class="o">[</span><span class="n">lastRet</span> <span class="o">=</span> <span class="n">i</span><span class="o">]</span><span class="o">;</span>
+<span class="o">}</span>
+<span class="kd">final</span> <span class="kt">void</span> <span class="nf">checkForComodification</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">modCount</span> <span class="o">!</span><span class="o">=</span> <span class="n">expectedModCount</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div><p>上面提到Iterator的实现中删除元素实际调用的还是ArrayList.remove()方法，为什么不会抛错？</p>
 <p>Itr的remove方法在调用ArrayList.remove()之后，会更新<strong>expectedModCount</strong>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">void</span> <span class="n">remove</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">lastRet</span> <span class="o">&lt;</span> <span class="n">0</span><span class="p">)</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="p">();</span>
-    <span class="n">checkForComodification</span><span class="p">();</span>
-    <span class="k">try</span> <span class="p">{</span>
-        <span class="n">ArrayList</span><span class="p">.</span><span class="na">this</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">lastRet</span><span class="p">);</span>
-        <span class="n">cursor</span> <span class="o">=</span> <span class="n">lastRet</span><span class="p">;</span>
-        <span class="n">lastRet</span> <span class="o">=</span> <span class="o">-</span><span class="n">1</span><span class="p">;</span>
-        <span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="p">;</span>
-    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">IndexOutOfBoundsException</span> <span class="nf">ex</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">lastRet</span> <span class="o">&lt;</span> <span class="n">0</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">checkForComodification</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">lastRet</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">lastRet</span><span class="o">;</span>
+        <span class="n">lastRet</span> <span class="o">=</span> <span class="o">-</span><span class="n">1</span><span class="o">;</span>
+        <span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IndexOutOfBoundsException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
         </div>
 
         
@@ -166,15 +154,13 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#expectedmodcount不等于modcount">expectedModCount不等于modCount</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#expectedmodcount不等于modcount">expectedModCount不等于modCount</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,28 +87,17 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<p>为什么要讨论这个问题, 工作中一个同事写的类使用了<code>ConfigurationProperties</code>, 只提供了标准的setter方法. 属性的访问, 提供了定制的方法. 可以参考<code>EurekaClientConfigBean</code>.</p>
-
+            <p>为什么要讨论这个问题, 工作中一个同事写的类使用了<code>ConfigurationProperties</code>, 只提供了标准的setter方法. 属性的访问, 提供了定制的方法. 可以参考<code>EurekaClientConfigBean</code>.</p>
 <p>他使用的是spring boot 2.0.0.M5版本, 可以正常获取配置文件中的属性值, 但是在1.5.8.RELEASE获取不到.</p>
-
 <p>看下文档和源码:</p>
-
 <blockquote>
 <p>Annotation for externalized configuration. Add this to a class definition or a @Bean method in a @Configuration class if you want to bind and validate some external Properties (e.g. from a .properties file).</p>
 </blockquote>
-
 <p>外置配置的注解. 当需要绑定外置配置(如properties或者yaml配置)的时候, 将其加到使用了<code>@Configuration</code>注解的类声明处或者<code>@Bean</code>标注的方法上.</p>
-
 <p>值的绑定是通过<code>ConfigurationPropertiesBindingPostProcessor</code>在bean实例创建后, 初始化回调(如<code>InitializingBean</code>的<code>afterPropertiesSet</code>方法)或者<code>init-method</code>之前之前完成的.</p>
-
-<h3 id="1-5-x">1.5.x</h3>
-
+<h3 id="15x">1.5.x</h3>
 <p>执行绑定的时候如果找不到getter方法, 会抛出<code>RelaxedBindingNotWritablePropertyException</code>异常. debug模式下, 会打印<strong>Ignoring benign property binding failure</strong>.</p>
-
-<h3 id="2-x">2.x</h3>
-
+<h3 id="2x">2.x</h3>
 <p>2.x版本中, 如果找不到getter方法, 会将原值默认为null, 并继续执行绑定.</p>
 
         </div>
@@ -118,16 +107,14 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#1-5-x">1.5.x</a></li>
-<li><a href="#2-x">2.x</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#15x">1.5.x</a></li>
+        <li><a href="#2x">2.x</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,57 +87,38 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<p><img src="https://github.com/GoogleContainerTools/jib/raw/master/logo/jib-build-docker-java-container-image.png" alt="pic from jib github" /></p>
-
+            <p><img src="https://github.com/GoogleContainerTools/jib/raw/master/logo/jib-build-docker-java-container-image.png" alt="pic from jib github"></p>
 <p><a href="https://github.com/GoogleContainerTools/jib">Jib</a>是Google Container Tools中的一个工具。</p>
-
 <blockquote>
 <p>Jib builds optimized Docker and OCI images for your Java applications without a Docker daemon - and without deep mastery of Docker best-practices. It is available as plugins for Maven and Gradle and as a Java library.</p>
-
 <p>Jib无需Docker守护程序即可为Java应用程序构建优化的Docker和OCI映像-无需深入了解Docker最佳实践. 它可以作为Maven和Gradle的插件以及Java库使用.</p>
 </blockquote>
-
 <h2 id="与docker构建流程比较">与Docker构建流程比较</h2>
-
 <p>Docker镜像构建流程:</p>
-
-<p><img src="https://4.bp.blogspot.com/-SXeItzMS_oo/WzVemqaj7CI/AAAAAAAAF_w/t5Lau7EOC84Kywct_OPiDGIomCiFTywgwCLcBGAs/s1600/docker_build_flow.png" alt="pic from Google Cloud Platform Blog" /></p>
-
+<p><img src="https://4.bp.blogspot.com/-SXeItzMS_oo/WzVemqaj7CI/AAAAAAAAF_w/t5Lau7EOC84Kywct_OPiDGIomCiFTywgwCLcBGAs/s1600/docker_build_flow.png" alt="pic from Google Cloud Platform Blog"></p>
 <p>Jib构建流程:</p>
-
-<p><img src="https://3.bp.blogspot.com/-_qNyJdVno8E/WzVeqmuC5PI/AAAAAAAAF_0/AHaZ1_ZnJmg8eaUnTlUGyUVe06KRmvlYQCLcBGAs/s1600/jib_build_flow.png" alt="" /></p>
-
+<p><img src="https://3.bp.blogspot.com/-_qNyJdVno8E/WzVeqmuC5PI/AAAAAAAAF_0/AHaZ1_ZnJmg8eaUnTlUGyUVe06KRmvlYQCLcBGAs/s1600/jib_build_flow.png" alt=""></p>
 <p><em>(pic from Google Cloud Platform Blog)</em></p>
-
 <h2 id="快速开始">快速开始</h2>
-
 <p>构建镜像, 并推送到对应的镜像仓库, 比如Docker Hub等, 或者自建仓库.</p>
-
 <p><code>mvn compile com.google.cloud.tools:jib-maven-plugin:1.8.0:build -Dimage=&lt;MY IMAGE&gt;</code></p>
-
 <p>假如要构建到Docker守护进程的话:</p>
-
 <p><code>mvn compile com.google.cloud.tools:jib-maven-plugin:1.8.0:dockerBuild</code></p>
-
 <h3 id="插件">插件</h3>
-
 <h4 id="设置">设置</h4>
-
 <p><code>pom.xml</code>中使用<code>jib-maven-plugin</code>插件.</p>
-<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;project&gt;</span>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;project</span><span class="nt">&gt;</span>
   ...
-  <span class="nt">&lt;build&gt;</span>
-    <span class="nt">&lt;plugins&gt;</span>
+  <span class="nt">&lt;build</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;plugins</span><span class="nt">&gt;</span>
       ...
-      <span class="nt">&lt;plugin&gt;</span>
-        <span class="nt">&lt;groupId&gt;</span>com.google.cloud.tools<span class="nt">&lt;/groupId&gt;</span>
-        <span class="nt">&lt;artifactId&gt;</span>jib-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
-        <span class="nt">&lt;version&gt;</span>1.8.0<span class="nt">&lt;/version&gt;</span>
-        <span class="nt">&lt;configuration&gt;</span>
-          <span class="nt">&lt;to&gt;</span>
-            <span class="nt">&lt;image&gt;</span>myimage<span class="nt">&lt;/image&gt;</span>
+      <span class="nt">&lt;plugin</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;groupId</span><span class="nt">&gt;</span>com.google.cloud.tools<span class="nt">&lt;/groupId&gt;</span>
+        <span class="nt">&lt;artifactId</span><span class="nt">&gt;</span>jib-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;version</span><span class="nt">&gt;</span>1.8.0<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;configuration</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;to</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;image</span><span class="nt">&gt;</span>myimage<span class="nt">&lt;/image&gt;</span>
           <span class="nt">&lt;/to&gt;</span>
         <span class="nt">&lt;/configuration&gt;</span>
       <span class="nt">&lt;/plugin&gt;</span>
@@ -145,54 +126,53 @@
     <span class="nt">&lt;/plugins&gt;</span>
   <span class="nt">&lt;/build&gt;</span>
   ...
-<span class="nt">&lt;/project&gt;</span></code></pre></div>
-<h4 id="插件配置">插件配置</h4>
-<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;plugin&gt;</span>
-    <span class="nt">&lt;groupId&gt;</span>com.google.cloud.tools<span class="nt">&lt;/groupId&gt;</span>
-    <span class="nt">&lt;artifactId&gt;</span>jib-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
-    <span class="nt">&lt;version&gt;</span>${jib.maven-plugin-version}<span class="nt">&lt;/version&gt;</span>
-    <span class="nt">&lt;configuration&gt;</span>
-        <span class="nt">&lt;container&gt;</span>
-            <span class="nt">&lt;jvmFlags&gt;</span>
-                <span class="nt">&lt;jvmFlag&gt;</span>-Xmx1024m<span class="nt">&lt;/jvmFlag&gt;</span>
-                <span class="nt">&lt;jvmFlag&gt;</span>-Xms512m<span class="nt">&lt;/jvmFlag&gt;</span>
-                <span class="nt">&lt;jvmFlag&gt;</span>-XX:NewRatio=1<span class="nt">&lt;/jvmFlag&gt;</span>
-                <span class="nt">&lt;jvmFlag&gt;</span>-XX:+UseConcMarkSweepGC<span class="nt">&lt;/jvmFlag&gt;</span>
-                <span class="nt">&lt;jvmFlag&gt;</span>-XX:CMSInitiatingOccupancyFraction=75<span class="nt">&lt;/jvmFlag&gt;</span>
-                <span class="nt">&lt;jvmFlag&gt;</span>-XX:+UseCMSInitiatingOccupancyOnly<span class="nt">&lt;/jvmFlag&gt;</span>
-                <span class="nt">&lt;jvmFlag&gt;</span>-XX:ReservedCodeCacheSize=128M<span class="nt">&lt;/jvmFlag&gt;</span>
-                <span class="nt">&lt;jvmFlag&gt;</span>-XX:ParallelGCThreads=2<span class="nt">&lt;/jvmFlag&gt;</span>
-                <span class="nt">&lt;jvmFlag&gt;</span>-XX:+ExplicitGCInvokesConcurrent<span class="nt">&lt;/jvmFlag&gt;</span>
-                <span class="nt">&lt;jvmFlag&gt;</span>-Duser.timezone=Asia/Shanghai<span class="nt">&lt;/jvmFlag&gt;</span>
-                <span class="nt">&lt;jvmFlag&gt;</span>-Djava.security.egd=file:/dev/./urandom<span class="nt">&lt;/jvmFlag&gt;</span>
+<span class="nt">&lt;/project&gt;</span>
+</code></pre></div><h4 id="插件配置">插件配置</h4>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;plugin</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;groupId</span><span class="nt">&gt;</span>com.google.cloud.tools<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId</span><span class="nt">&gt;</span>jib-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version</span><span class="nt">&gt;</span>${jib.maven-plugin-version}<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;configuration</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;container</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;jvmFlags</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;jvmFlag</span><span class="nt">&gt;</span>-Xmx1024m<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag</span><span class="nt">&gt;</span>-Xms512m<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag</span><span class="nt">&gt;</span>-XX:NewRatio=1<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag</span><span class="nt">&gt;</span>-XX:+UseConcMarkSweepGC<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag</span><span class="nt">&gt;</span>-XX:CMSInitiatingOccupancyFraction=75<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag</span><span class="nt">&gt;</span>-XX:+UseCMSInitiatingOccupancyOnly<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag</span><span class="nt">&gt;</span>-XX:ReservedCodeCacheSize=128M<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag</span><span class="nt">&gt;</span>-XX:ParallelGCThreads=2<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag</span><span class="nt">&gt;</span>-XX:+ExplicitGCInvokesConcurrent<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag</span><span class="nt">&gt;</span>-Duser.timezone=Asia/Shanghai<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag</span><span class="nt">&gt;</span>-Djava.security.egd=file:/dev/./urandom<span class="nt">&lt;/jvmFlag&gt;</span>
             <span class="nt">&lt;/jvmFlags&gt;</span>
-            <span class="nt">&lt;labels&gt;</span>
-                <span class="nt">&lt;Author&gt;</span>Addo.Zhang<span class="nt">&lt;/Author&gt;</span>
+            <span class="nt">&lt;labels</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;Author</span><span class="nt">&gt;</span>Addo.Zhang<span class="nt">&lt;/Author&gt;</span>
             <span class="nt">&lt;/labels&gt;</span>
-            <span class="nt">&lt;user&gt;</span>apps<span class="nt">&lt;/user&gt;</span>
-            <span class="nt">&lt;appRoot&gt;</span>/home/apps/local<span class="nt">&lt;/appRoot&gt;</span>
-            <span class="nt">&lt;workingDirectory&gt;</span>/home/apps/local<span class="nt">&lt;/workingDirectory&gt;</span>
-            <span class="nt">&lt;creationTime&gt;</span>USE_CURRENT_TIMESTAMP<span class="nt">&lt;/creationTime&gt;</span>
+            <span class="nt">&lt;user</span><span class="nt">&gt;</span>apps<span class="nt">&lt;/user&gt;</span>
+            <span class="nt">&lt;appRoot</span><span class="nt">&gt;</span>/home/apps/local<span class="nt">&lt;/appRoot&gt;</span>
+            <span class="nt">&lt;workingDirectory</span><span class="nt">&gt;</span>/home/apps/local<span class="nt">&lt;/workingDirectory&gt;</span>
+            <span class="nt">&lt;creationTime</span><span class="nt">&gt;</span>USE_CURRENT_TIMESTAMP<span class="nt">&lt;/creationTime&gt;</span>
         <span class="nt">&lt;/container&gt;</span>
-        <span class="nt">&lt;from&gt;</span>
-            <span class="nt">&lt;image&gt;</span>PRIVATE_REGISTRY/REPOSITORY/GLOBAL_BASE:1.0.0<span class="nt">&lt;/image&gt;</span>
-            <span class="nt">&lt;auth&gt;</span>
-                <span class="nt">&lt;username&gt;</span>USERNAME<span class="nt">&lt;/username&gt;</span>
-                <span class="nt">&lt;password&gt;</span>PASSWORD<span class="nt">&lt;/password&gt;</span>
+        <span class="nt">&lt;from</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;image</span><span class="nt">&gt;</span>PRIVATE_REGISTRY/REPOSITORY/GLOBAL_BASE:1.0.0<span class="nt">&lt;/image&gt;</span>
+            <span class="nt">&lt;auth</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;username</span><span class="nt">&gt;</span>USERNAME<span class="nt">&lt;/username&gt;</span>
+                <span class="nt">&lt;password</span><span class="nt">&gt;</span>PASSWORD<span class="nt">&lt;/password&gt;</span>
             <span class="nt">&lt;/auth&gt;</span>
         <span class="nt">&lt;/from&gt;</span>
-        <span class="nt">&lt;to&gt;</span>
-            <span class="nt">&lt;image&gt;</span>PRIVATE_REGISTRY/REPOSITORY/${project.artifactId}<span class="nt">&lt;/image&gt;</span>
-            <span class="nt">&lt;auth&gt;</span>
-                <span class="nt">&lt;username&gt;</span>USERNAME<span class="nt">&lt;/username&gt;</span>
-                <span class="nt">&lt;password&gt;</span>PASSWORD<span class="nt">&lt;/password&gt;</span>
+        <span class="nt">&lt;to</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;image</span><span class="nt">&gt;</span>PRIVATE_REGISTRY/REPOSITORY/${project.artifactId}<span class="nt">&lt;/image&gt;</span>
+            <span class="nt">&lt;auth</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;username</span><span class="nt">&gt;</span>USERNAME<span class="nt">&lt;/username&gt;</span>
+                <span class="nt">&lt;password</span><span class="nt">&gt;</span>PASSWORD<span class="nt">&lt;/password&gt;</span>
             <span class="nt">&lt;/auth&gt;</span>
         <span class="nt">&lt;/to&gt;</span>
-        <span class="nt">&lt;allowInsecureRegistries&gt;</span>true<span class="nt">&lt;/allowInsecureRegistries&gt;</span>
+        <span class="nt">&lt;allowInsecureRegistries</span><span class="nt">&gt;</span>true<span class="nt">&lt;/allowInsecureRegistries&gt;</span>
     <span class="nt">&lt;/configuration&gt;</span>
-<span class="nt">&lt;/plugin&gt;</span></code></pre></div>
-<p>注意: 如果你的私库是insecure的, 需要指定<code>allowInsecureRegistries</code>为true. 同时命令行构建的时候添加<code>-DsendCredentialsOverHttp=true</code></p>
-
+<span class="nt">&lt;/plugin&gt;</span>
+</code></pre></div><p>注意: 如果你的私库是insecure的, 需要指定<code>allowInsecureRegistries</code>为true. 同时命令行构建的时候添加<code>-DsendCredentialsOverHttp=true</code></p>
 <p>更多的配置参见<a href="https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin">官方文档</a></p>
 
         </div>
@@ -202,20 +182,14 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#与docker构建流程比较">与Docker构建流程比较</a></li>
-<li><a href="#快速开始">快速开始</a>
-<ul>
-<li><a href="#插件">插件</a>
-<ul>
-<li><a href="#设置">设置</a></li>
-<li><a href="#插件配置">插件配置</a></li>
-</ul></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#与docker构建流程比较">与Docker构建流程比较</a></li>
+    <li><a href="#快速开始">快速开始</a>
+      <ul>
+        <li><a href="#插件">插件</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

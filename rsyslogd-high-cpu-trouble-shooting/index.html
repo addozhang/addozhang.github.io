@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,65 +87,44 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<h1 id="rsyslogd资源占用高问题记录">rsyslogd资源占用高问题记录</h1>
-
+            <h1 id="rsyslogd资源占用高问题记录">rsyslogd资源占用高问题记录</h1>
 <p>问题:
-<img src="http://7xvxng.com1.z0.glb.clouddn.com/15277280296373.jpg" alt="" /></p>
-
+<img src="http://7xvxng.com1.z0.glb.clouddn.com/15277280296373.jpg" alt=""></p>
 <p>openshift集群安装在<code>esxi</code>的虚拟机上. 各个节点出现问题, 集群响应很慢.</p>
-
 <ul>
 <li><code>kswapd0</code>进程cpu 90%多.</li>
 <li><code>rsyslogd</code>进程内存 90%多.</li>
 </ul>
-
 <p>**先上总结: **</p>
-
 <p><code>system-journal</code>服务监听<code>/dev/log</code>socket获取日志, 保存在内存中, 并间歇性的写入<code>/var/log/journal</code>目录中.</p>
-
 <p><code>rsyslog</code>服务启动后监听<code>/run/systemd/journal/syslog</code>socket获取<code>syslog</code>类型日志, 并写入<code>/var/log/messages</code>文件中. 获取日志时需要记录日志条目的<code>position</code>到<code>/var/lib/rsyslog/imjournal.state</code>文件中.</p>
-
 <p>可能是虚拟机系统安装问题, 导致没有创建<code>/var/lib/rsyslog</code>. <code>rsyslog</code>将异常日志写入<code>/dev/log</code>socket中.</p>
-
 <p>这样就导致了死循环, <code>rsyslog</code>因为要打开<code>/var/log/messages</code>并写入日志, 消耗cpu, 内存还有磁盘I/O.</p>
-
 <h2 id="诊断步骤">诊断步骤:</h2>
-
 <h3 id="rsyslog">rsyslog</h3>
-
 <p>重启<code>rsyslog</code>服务</p>
-
 <p>重启之后内存得到释放, 但是rsyslogd进程cpu跑到90%多, 且内存在持续升高.</p>
-
 <p>检查服务状态发现进程一直在报错:</p>
-<div class="highlight"><pre class="chroma">fopen() failed: &#39;Permission denied&#39;, path: &#39;/imjournal.state.tmp&#39;
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">fopen() failed: &#39;Permission denied&#39;, path: &#39;/imjournal.state.tmp&#39;
  [try http://www.rsyslog.com/e/2013 ]
 fopen() failed: &#39;Permission denied&#39;, path: &#39;/imjournal.state.tmp&#39;
  [try http://www.rsyslog.com/e/2013 ]
-... </pre></div>
-<p>检查<code>/etc/rsyslog.conf</code>中的<code>WorkDirectory</code>行是没有被注释的. 检查默认工作目录<code>/var/lib/rsyslog</code>, 发现目录不存在.</p>
-
+... 
+</code></pre></div><p>检查<code>/etc/rsyslog.conf</code>中的<code>WorkDirectory</code>行是没有被注释的. 检查默认工作目录<code>/var/lib/rsyslog</code>, 发现目录不存在.</p>
 <p>因此创建<code>/var/lib/rsyslog</code>目录, 并赋予<code>600</code>权限.</p>
-
 <p>再次重启<code>rsyslog</code>服务, 观察一段时间没有错误抛出, <code>/var/lib/rsyslog</code>目录下创建了<code>imjournal.state</code>文件. 检查文件, 内容不断被刷新. 但是占用内存还在升高, <code>/var/log/messages</code>文件中还有错误信息写入. 但是错误日志的时间是比较早的.</p>
-
 <p>再次检查<code>/etc/rsyslog.conf</code>配置, 有一行配置:</p>
-
 <blockquote>
 <p># Include all config files in /etc/rsyslog.d/
 $IncludeConfig /etc/rsyslog.d/*.conf</p>
 </blockquote>
-
 <p>目录中有文件<code>/etc/rsyslog.d/listen.conf</code>, 内容为<code>$SystemLogSocketName /run/systemd/journal/syslog</code>.</p>
-
-<p>分析:
-- <code>/run</code>是linux内存中的数据
-- <code>journal</code>相关服务:<code>systemd-journald.service</code>.</p>
-
-<h3 id="systemd-journald-service">systemd-journald.service</h3>
-
+<p>分析:</p>
+<ul>
+<li><code>/run</code>是linux内存中的数据</li>
+<li><code>journal</code>相关服务:<code>systemd-journald.service</code>.</li>
+</ul>
+<h3 id="systemd-journaldservice">systemd-journald.service</h3>
 <p><code>systemd-journald</code>是用来协助<code>rsyslog</code>记录系统启动服务和服务启动失败的情况等等. <code>systemd-journald</code>使用内存保存记录, 系统重启记录会丢失. 所有还要用<code>rsyslog</code>来记录分类信息, 如上面<code>/etc/rsyslog.d/listen.conf</code>中的<code>syslog</code>分类.</p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">~ systemctl list-sockets
 
@@ -154,9 +133,9 @@ LISTEN                          UNIT                         ACTIVATES
 /dev/log                        systemd-journald.socket      systemd-journald.service
 /run/systemd/journal/socket     systemd-journald.socket      systemd-journald.service
 /run/systemd/journal/stdout     systemd-journald.socket      systemd-journald.service
-....</code></pre></div>
-<p>查看journal的配置<code>/etc/systemd/jounal.conf</code>, 最终还是会持久化到硬盘上的<code>/var/log/journal</code>目录中. 每个文件的大小是<code>10M</code>, 最多使用<code>8G</code>的空间, 同步间隔<code>1s</code>.</p>
-<div class="highlight"><pre class="chroma">[Journal]
+....
+</code></pre></div><p>查看journal的配置<code>/etc/systemd/jounal.conf</code>, 最终还是会持久化到硬盘上的<code>/var/log/journal</code>目录中. 每个文件的大小是<code>10M</code>, 最多使用<code>8G</code>的空间, 同步间隔<code>1s</code>.</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">[Journal]
  Storage=persistent
  Compress=True
 #Seal=yes
@@ -178,11 +157,9 @@ LISTEN                          UNIT                         ACTIVATES
 #MaxLevelSyslog=debug
 #MaxLevelKMsg=notice
 #MaxLevelConsole=info
-#MaxLevelWall=emerg</pre></div>
-<p>检查<code>/var/log/journal</code>目录, 发现里面文件很多, 每个大小为<code>10m</code>. 清空该目录并重启<code>rsyslog</code>, 观察一段时间后一切正常.</p>
-
+#MaxLevelWall=emerg
+</code></pre></div><p>检查<code>/var/log/journal</code>目录, 发现里面文件很多, 每个大小为<code>10m</code>. 清空该目录并重启<code>rsyslog</code>, 观察一段时间后一切正常.</p>
 <p>参考:</p>
-
 <ul>
 <li><a href="https://access.redhat.com/solutions/2795451">Redhat</a></li>
 <li><a href="https://wizardforcel.gitbooks.io/vbird-linux-basic-4e/content/160.html">systemd-journald.service 简介</a></li>
@@ -196,16 +173,14 @@ LISTEN                          UNIT                         ACTIVATES
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li><a href="#rsyslogd资源占用高问题记录">rsyslogd资源占用高问题记录</a>
-<ul>
-<li><a href="#诊断步骤">诊断步骤:</a>
-<ul>
-<li><a href="#rsyslog">rsyslog</a></li>
-<li><a href="#systemd-journald-service">systemd-journald.service</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#诊断步骤">诊断步骤:</a>
+      <ul>
+        <li><a href="#rsyslog">rsyslog</a></li>
+        <li><a href="#systemd-journaldservice">systemd-journald.service</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

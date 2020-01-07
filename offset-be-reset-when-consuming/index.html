@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -89,16 +89,21 @@
         <div class="article-entry" itemprop="articleBody">
             <p>这是实际使用时遇到的问题：kafka api的版本是0.10，发现有重复消费问题；检查log后发现在commit offset的时候发生超时。</p>
 <div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">Auto offset commit failed for group test: Commit cannot be completed since the group has already rebalanced and assigned the partitions to another member. This means that the time between subsequent calls to poll() was longer than the configured session.timeout.ms, which typically implies that the poll loop is spending too much time message processing. You can address this either by increasing the session timeout or by reducing the maximum size of batches returned in poll() with max.poll.records.
-15:12:12.364 [main] WARN  o.a.k.c.c.i.ConsumerCoordinator - Auto offset commit failed for group test: Commit offsets failed with retriable exception. You should retry committing offsets.</code></pre></div>
-<p>看了Kafka的API文档，发现0.10中提供了新的配置<strong>max.poll.records</strong>：</p>
+15:12:12.364 [main] WARN  o.a.k.c.c.i.ConsumerCoordinator - Auto offset commit failed for group test: Commit offsets failed with retriable exception. You should retry committing offsets.
+</code></pre></div><p>看了Kafka的API文档，发现0.10中提供了新的配置<strong>max.poll.records</strong>：</p>
 <div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">The maximum number of records returned in a single call to poll().
 type: int
-default: 2147483647</code></pre></div>
-<p>如果生产端写入很快，消费端处理耗时。一个batch的处理时间大于session.timeout.ms，会导致session time out，引起offset commit失败。</p>
+default: 2147483647
+</code></pre></div><p>如果生产端写入很快，消费端处理耗时。一个batch的处理时间大于session.timeout.ms，会导致session time out，引起offset commit失败。</p>
 
         </div>
 
         
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents"></nav>
+        </div>
         
         
 

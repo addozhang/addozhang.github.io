@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,120 +87,74 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<h4 id="版本">版本</h4>
-
+            <h4 id="版本">版本</h4>
 <p>Centos7</p>
-
 <p>Postgresql9.2</p>
-
 <h4 id="enable-ssh">Enable ssh</h4>
-
 <blockquote>
 <p>service sshd start</p>
 </blockquote>
-
 <h4 id="open-firewall-for-22">Open firewall for 22</h4>
-
 <blockquote>
 <p>firewall-cmd —state</p>
-
 <p>firewall-cmd —list-all</p>
-
 <p>firewall-cmd  —permanent —zone=public —add-port=22/tcp</p>
-
 <p>firewall-cmd —reload</p>
 </blockquote>
-
 <h4 id="install-postgresql">Install Postgresql</h4>
-
 <blockquote>
 <p>yum install postgres</p>
-
 <p>su postgres</p>
-
 <p>postgres —version</p>
 </blockquote>
-
 <p>默认会创建postgres:postgres用户和组</p>
-
 <h4 id="切换用户">切换用户</h4>
-
 <blockquote>
 <p>su - postgres</p>
 </blockquote>
-
 <h4 id="初始化数据库">初始化数据库</h4>
-
 <p>通过指定数据文件目录初始化db</p>
-
 <blockquote>
 <p>initdb -D /var/lib/pgsql/data</p>
 </blockquote>
-
 <h4 id="修改端口防火墙">修改端口防火墙</h4>
-
 <p>默认端口是5432，需要在防火墙中打开端口</p>
-
 <blockquote>
 <p>firewall-cmd &ndash;permanent &ndash;zone=public &ndash;add-port=5432/tcp</p>
 </blockquote>
-
 <h4 id="修改监听的ip">修改监听的ip</h4>
-
-<p>需要外部访问的话，需要修改postgresql.conf中的监听ip，&rsquo;0.0.0.0&rsquo;允许所有ipv4的ip访问，&rdquo;::&ldquo;允许所有ipv6的ip访问</p>
-
+<p>需要外部访问的话，需要修改postgresql.conf中的监听ip，&lsquo;0.0.0.0'允许所有ipv4的ip访问，''::&lsquo;&lsquo;允许所有ipv6的ip访问</p>
 <blockquote>
 <p>listen_addresses = &ldquo;0.0.0.0&rdquo;</p>
 </blockquote>
-
 <p>修改需要重启postgresql</p>
-
 <h4 id="启动">启动</h4>
-
 <blockquote>
 <p>postgres -D /var/lib/pgsql/data &gt;logfile 2&gt;&amp;1 &amp;</p>
 </blockquote>
-
 <h4 id="登录控制台">登录控制台</h4>
-
-<p>会使用当前系统用户postgres访问，系统提示符会变成&rsquo;postgres=#&rsquo;</p>
-
+<p>会使用当前系统用户postgres访问，系统提示符会变成'postgres=#&rsquo;</p>
 <blockquote>
 <p>psql</p>
 </blockquote>
-
 <p>修改密码</p>
-
 <blockquote>
 <p>\password postgres</p>
 </blockquote>
-
 <p>创建用户</p>
-
 <blockquote>
 <p>CREATE USER dbuser WITH PASSWORD &lsquo;password&rsquo;;</p>
-
 <p>CREATE DATABASE example OWNER dbuser;</p>
-
 <p>GRANT ALL PRIVILEGES ON DATABASE example to dbuser;</p>
 </blockquote>
-
 <h4 id="客户端权限配置文件">客户端权限配置文件</h4>
-
 <p>默认只允许本地客户端连接，需要修改pg_hba.conf文件，</p>
-
 <blockquote>
-<p>host    all             all             127.0.0.<sup>1</sup>&frasl;<sub>32</sub>            trust</p>
-
+<p>host    all             all             127.0.0.1/32            trust</p>
 <p>改为</p>
-
 <p>host    all             all             0.0.0.0 /0           trust</p>
 </blockquote>
-
 <h4 id="客户端连接">客户端连接</h4>
-
 <blockquote>
 <p>psql -U dbuser -d example -h 127.0.0.1 -p 5432</p>
 </blockquote>
@@ -212,29 +166,13 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#版本">版本</a></li>
-<li><a href="#enable-ssh">Enable ssh</a></li>
-<li><a href="#open-firewall-for-22">Open firewall for 22</a></li>
-<li><a href="#install-postgresql">Install Postgresql</a></li>
-<li><a href="#切换用户">切换用户</a></li>
-<li><a href="#初始化数据库">初始化数据库</a></li>
-<li><a href="#修改端口防火墙">修改端口防火墙</a></li>
-<li><a href="#修改监听的ip">修改监听的ip</a></li>
-<li><a href="#启动">启动</a></li>
-<li><a href="#登录控制台">登录控制台</a></li>
-<li><a href="#客户端权限配置文件">客户端权限配置文件</a></li>
-<li><a href="#客户端连接">客户端连接</a></li>
-</ul></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

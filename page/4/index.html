@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 <body>
@@ -90,12 +90,9 @@
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    <p><img src="https://talks.golang.org/2013/go4python/img/fib-go.png" alt="" /></p>
-
+                    <p><img src="https://talks.golang.org/2013/go4python/img/fib-go.png" alt=""></p>
 <h2 id="并发模式">并发模式</h2>
-
 <h3 id="runner">runner</h3>
-
 <p>runner展示了如何使用通道来监视程序的执行时间, 如果程序执行时间太长, 也可以用终止程序.
 这个程序可用作corn作业执行</p>
                     </p>
@@ -152,18 +149,12 @@
                     <p>
                         
                     <h2 id="并发">并发</h2>
-
 <p>Go语言里的并发是指让某个函数可以独立于其他函数运行的能力. 当一个函数创建为goroutine时, Go会将其视为一个独立的工作单元. 这个工作单元会被调度到可用的<strong>逻辑处理器</strong>上执行.</p>
-
 <p>Go的运行时调度器可以管理所有创建的goroutine, 并为其分配执行时间.
 这个调度器在操作系统之上, 将操作系统的线程与逻辑处理器绑定, 并在逻辑处理器执行goroutine. <strong>调度器可以在任何给定的时间, 全面控制哪个goroutine在哪个逻辑处理器上运行</strong>.</p>
-
 <p>Go的并发同步模型来自一个叫做通信顺序进程(Communicating Sequential Processes, <a href="http://www.usingcsp.com">CSP</a>). CSP是一个消息传递模型, 通过在goroutine之前传递数据来传递消息, 不需要通过加锁实现同步访问. 用于在goroutine间传递消息的数据结构叫做通道(channel).</p>
-
 <h3 id="并发与并行">并发与并行</h3>
-
 <p>操作系统的线程(thread)和进程(process).</p>
-
 <p>进程类似应用程序在运行中需要用到和维护的各种资源的容器.
 资源包括但不限于: 内存(来自文件系统的代码和数据), 句柄(文件, 设备, 操作系统), 线程.</p>
                     </p>
@@ -220,17 +211,15 @@
                     <p>
                         
                     <h2 id="go语言的类型系统">Go语言的类型系统</h2>
-
 <p>Go语言是静态类型的变成语言. 编译的时候需要确定类型.</p>
-
 <h3 id="用户定义的类型">用户定义的类型</h3>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">user</span> <span class="kd">struct</span> <span class="p">{</span>
     <span class="nx">name</span>    <span class="kt">string</span>
     <span class="nx">email</span>   <span class="kt">string</span>
     <span class="nx">ext</span>     <span class="kt">int</span>
     <span class="nx">privileged</span>  <span class="kt">bool</span>
-<span class="p">}</span></code></pre></div>
-<p><strong>使用</strong>
+<span class="p">}</span>
+</code></pre></div><p><strong>使用</strong>
 零值和<strong>结构字面量</strong>初始化</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//引用类型, 各个字段初始化为对应的零值
 </span><span class="c1"></span><span class="kd">var</span> <span class="nx">bill</span> <span class="nx">user</span> <span class="err">#</span><span class="p">{</span>  <span class="mi">0</span> <span class="kc">false</span><span class="p">}</span>
@@ -240,11 +229,14 @@
     <span class="nx">email</span><span class="p">:</span> <span class="s">&#34;lisa@email.com&#34;</span><span class="p">,</span>
     <span class="nx">ext</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span>
     <span class="nx">privileged</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-<span class="p">}</span></code></pre></div>
-<p><strong>结构字面量的赋值方式:</strong>
-- 不同行声明每一个字段和对应的值, 字段名和字段以<code>:</code>分隔, 末尾以<code>,</code>结尾
-- 不适用字段名, 只声明对应的值. 写在一行里, 以<code>,</code>分隔, 结尾不需要<code>,</code>. <strong>要保证顺序</strong></p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">lisa</span> <span class="o">:=</span> <span class="p">{</span><span class="s">&#34;Lisa&#34;</span><span class="p">,</span> <span class="s">&#34;lisa@email.com&#34;</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span> <span class="kc">true</span><span class="p">}</span></code></pre></div>
+<span class="p">}</span>
+</code></pre></div><p><strong>结构字面量的赋值方式:</strong></p>
+<ul>
+<li>不同行声明每一个字段和对应的值, 字段名和字段以<code>:</code>分隔, 末尾以<code>,</code>结尾</li>
+<li>不适用字段名, 只声明对应的值. 写在一行里, 以<code>,</code>分隔, 结尾不需要<code>,</code>. <strong>要保证顺序</strong></li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">lisa</span> <span class="o">:=</span> <span class="p">{</span><span class="s">&#34;Lisa&#34;</span><span class="p">,</span> <span class="s">&#34;lisa@email.com&#34;</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span> <span class="kc">true</span><span class="p">}</span>
+</code></pre></div>
                     </p>
                     <p class="article-more-link">
                         <a href="../../go-in-action-two/">Read More</a>
@@ -298,35 +290,27 @@
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    <p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15142714785285.jpg" alt="架构流程图" /></p>
-
+                    <p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15142714785285.jpg" alt="架构流程图"></p>
 <h2 id="关键字">关键字</h2>
-
 <h3 id="var">var</h3>
-
-<p>变量使用<code>var</code>声明, 如果变量不是定义在任何一个函数作用域内, 这个变量就是包级变量.
-&gt; Go语言中, 所有变量都被初始化为其<strong>零值</strong>. 对于数值类型, 其零值是<strong>0</strong>;  对于字符串类型, 其零值是<strong>空字符串&rdquo;&rdquo;</strong>; 对于布尔类型, 其零值是<strong>false</strong>. 对于引用类型来说, 底层数据结构会被初始化对应的零值. 但是被生命被起零值的引用类型的变量, 会返回<strong>nil</strong>作为其值.</p>
-
+<p>变量使用<code>var</code>声明, 如果变量不是定义在任何一个函数作用域内, 这个变量就是包级变量.</p>
+<blockquote>
+<p>Go语言中, 所有变量都被初始化为其<strong>零值</strong>. 对于数值类型, 其零值是<strong>0</strong>;  对于字符串类型, 其零值是<strong>空字符串&rdquo;&quot;</strong>; 对于布尔类型, 其零值是<strong>false</strong>. 对于引用类型来说, 底层数据结构会被初始化对应的零值. 但是被生命被起零值的引用类型的变量, 会返回<strong>nil</strong>作为其值.</p>
+</blockquote>
 <h3 id="const">const</h3>
-
 <p>定义常量</p>
-
 <h3 id="interface">interface</h3>
-
 <p>声明接口</p>
-
 <h3 id="func">func</h3>
-
 <p>声明函数</p>
-
 <h3 id="defer">defer</h3>
-
 <p>安排后面的函数调用在当前函数返回时才执行.</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">file</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">open</span><span class="p">(</span><span class="s">&#34;filePath&#34;</span><span class="p">)</span>
 <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span>
     <span class="k">return</span>
-<span class="k">defer</span> <span class="nx">file</span><span class="p">.</span><span class="nb">close</span><span class="p">()</span>
-<span class="err">#</span> <span class="nx">more</span> <span class="nx">file</span> <span class="nx">operation</span></code></pre></div>
+<span class="k">defer</span> <span class="nx">file</span><span class="p">.</span><span class="nb">close</span><span class="p">(</span><span class="p">)</span>
+<span class="err">#</span> <span class="nx">more</span> <span class="nx">file</span> <span class="nx">operation</span>
+</code></pre></div>
                     </p>
                     <p class="article-more-link">
                         <a href="../../go-in-action-one/">Read More</a>

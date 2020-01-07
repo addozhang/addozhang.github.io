@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>乱世浮生</title>
@@ -161,7 +161,7 @@
       <pubDate>Sun, 24 Jun 2018 16:18:52 +0000</pubDate>
       
       <guid>https://atbug.com/hystrix-isolation/</guid>
-      <description>隔离策略 线程和线程池 客户端(库, 网络调用等)在各自的线程上运行. 这种做法将他们与调用线程隔开, 因此调用者可以从一个耗时的依赖调用&amp;rdquo</description>
+      <description>隔离策略 线程和线程池 客户端(库, 网络调用等)在各自的线程上运行. 这种做法将他们与调用线程隔开, 因此调用者可以从一个耗时的依赖调用&amp;quot;</description>
     </item>
     
     <item>
@@ -198,38 +198,34 @@
       
       <guid>https://atbug.com/spring-cloud-ribbon-breakdown-1/</guid>
       <description>&lt;p&gt;客户端负载均衡, Ribbon的核心概念是命名的客户端.&lt;/p&gt;
-
 &lt;h2 id=&#34;使用&#34;&gt;使用&lt;/h2&gt;
-
 &lt;h3 id=&#34;引入ribbon依赖和配置&#34;&gt;引入Ribbon依赖和配置&lt;/h3&gt;
-
 &lt;p&gt;加入&lt;code&gt;spring-cloud-starter-netflix-ribbon&lt;/code&gt;依赖&lt;/p&gt;
-
 &lt;h3 id=&#34;代码中使用ribbonclient注解&#34;&gt;代码中使用RibbonClient注解&lt;/h3&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Configuration&lt;/span&gt; 
-&lt;span class=&#34;nd&#34;&gt;@RibbonClient&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;foo&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;configuration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;FooConfiguration&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;TestConfiguration&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Configuration&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;protected&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;FooConfiguration&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@RibbonClient&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;foo&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;configuration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;FooConfiguration&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;TestConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Configuration&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;protected&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;FooConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
 
     &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt; 
-    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;ZonePreferenceServerListFilter&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;serverListFilter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-        &lt;span class=&#34;n&#34;&gt;ZonePreferenceServerListFilter&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;filter&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ZonePreferenceServerListFilter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
-        &lt;span class=&#34;n&#34;&gt;filter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setZone&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;myTestZone&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
-        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;filter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; 
-    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ZonePreferenceServerListFilter&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;serverListFilter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;ZonePreferenceServerListFilter&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;filter&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ZonePreferenceServerListFilter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;filter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setZone&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;myTestZone&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;filter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt; 
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
     &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt; 
-    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;IPing&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ribbonPing&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; 
-        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;PingUrl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt; 
-    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IPing&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;ribbonPing&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; 
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;PingUrl&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt; 
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Ribbon客户端的配置, 如果不指定会使用默认的实现:&lt;/p&gt;
-
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Ribbon客户端的配置, 如果不指定会使用默认的实现:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;IClientConfig 客户端相关配置&lt;/li&gt;
 &lt;li&gt;IRule 定义负载均衡策略&lt;/li&gt;
 &lt;li&gt;IPing 定义如何ping目标服务实例来判断是否存活, ribbon使用单独的线程每隔一段时间(默认10s)对本地缓存的ServerList做一次检查&lt;/li&gt;
-&lt;li&gt;ServerList&lt;Server&gt;    定义如何获取服务实例列表. 两种实现基于配置的&lt;code&gt;ConfigurationBasedServerList&lt;/code&gt;和基于Eureka服务发现的&lt;code&gt;DiscoveryEnabledNIWSServerList&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;ServerListFilter&lt;Server&gt;  用来使用期望的特征过滤静态配置动态获得的候选服务实例列表. 若未提供, 默认使用&lt;code&gt;ZoneAffinityServerListFilter&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;ServerList&lt;!-- raw HTML omitted --&gt;    定义如何获取服务实例列表. 两种实现基于配置的&lt;code&gt;ConfigurationBasedServerList&lt;/code&gt;和基于Eureka服务发现的&lt;code&gt;DiscoveryEnabledNIWSServerList&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;ServerListFilter&lt;!-- raw HTML omitted --&gt;  用来使用期望的特征过滤静态配置动态获得的候选服务实例列表. 若未提供, 默认使用&lt;code&gt;ZoneAffinityServerListFilter&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;ILoadBalancer 定义了软负载均衡器的操作的接口. 一个典型的负载均衡器至少需要一组用来做负载均衡的服务实例, 一个标记某个服务实例不在旋转中的方法, 和对应的方法调用从实例列表中选出某一个服务实例.&lt;/li&gt;
 &lt;li&gt;ServerListUpdater DynamicServerListLoadBalancer用来更新实例列表的策略(推&lt;code&gt;EurekaNotificationServerListUpdater&lt;/code&gt;/拉&lt;code&gt;PollingServerListUpdater&lt;/code&gt;, 默认是拉)&lt;/li&gt;
 &lt;/ul&gt;</description>
@@ -241,25 +237,16 @@
       <pubDate>Fri, 20 Apr 2018 12:18:46 +0000</pubDate>
       
       <guid>https://atbug.com/using-role-based-authorization-strategy-in-jenkins/</guid>
-      <description>&lt;p&gt;最近开始客串运维做CI/CD的规划设计, 主要是基于&amp;rsquo;Pipeline as Code in Jenkins&amp;rsquo;. 整理了下思路和技术点, 慢慢的写.&lt;/p&gt;
-
+      <description>&lt;p&gt;最近开始客串运维做CI/CD的规划设计, 主要是基于&#39;Pipeline as Code in Jenkins&amp;rsquo;. 整理了下思路和技术点, 慢慢的写.&lt;/p&gt;
 &lt;p&gt;这一篇是关于基于角色的授权策略, 用的是&lt;code&gt;Role-Based Authorization Strategy Plugin&lt;/code&gt;.&lt;/p&gt;
-
 &lt;p&gt;授权在CI/CD流程中比较常见, 比如我们只让某些特定用户才可以构建Pre-Release的Job. 而更高级的Release发布, 又会需要某些用户的审批才可以进行. 需要授权时, 可能还需要发邮件提醒用户.&lt;/p&gt;
-
 &lt;p&gt;UI上如何使用就不提了, 这里只说Pipeline as Code. 后面的几篇也会是这个背景.&lt;/p&gt;
-
 &lt;p&gt;参考的这篇&lt;a href=&#34;https://www.avioconsulting.com/blog/using-role-based-authorization-strategy-jenkins&#34;&gt;文章&lt;/a&gt;, 文章里的代码运行失败, 做了修复.&lt;/p&gt;
-
 &lt;h2 id=&#34;配置&#34;&gt;配置&lt;/h2&gt;
-
 &lt;p&gt;安装完插件, 需要开始&lt;code&gt;基于角色的授权策略&lt;/code&gt;. 同时添加角色和为用户分配角色.&lt;/p&gt;
-
-&lt;h3 id=&#34;使用-role-based-strategy-作为验证方式&#34;&gt;使用&lt;code&gt;Role-Based Strategy&lt;/code&gt;作为验证方式&lt;/h3&gt;
-
+&lt;h3 id=&#34;使用role-based-strategy作为验证方式&#34;&gt;使用&lt;code&gt;Role-Based Strategy&lt;/code&gt;作为验证方式&lt;/h3&gt;
 &lt;p&gt;&lt;code&gt;Manage Jenkins / Configure Global Security / Configure Global Security&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xvxng.com1.z0.glb.clouddn.com/15241955282214.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;</description>
+&lt;p&gt;&lt;img src=&#34;http://7xvxng.com1.z0.glb.clouddn.com/15241955282214.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -269,26 +256,24 @@
       
       <guid>https://atbug.com/kvm-installation-note/</guid>
       <description>&lt;h2 id=&#34;添加虚拟机流程&#34;&gt;添加虚拟机流程：&lt;/h2&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;1. 配置网络
+&lt;pre&gt;&lt;code&gt;1. 配置网络
 2. 配置存储池
 3. 上传镜像
-4. 安装虚拟机，指定配置&lt;/pre&gt;&lt;/div&gt;
+4. 安装虚拟机，指定配置
+&lt;/code&gt;&lt;/pre&gt;
 &lt;h3 id=&#34;安装kvm虚拟机&#34;&gt;安装KVM虚拟机&lt;/h3&gt;
-
-&lt;h4 id=&#34;1-关闭防火墙-selinux&#34;&gt;1. 关闭防火墙，selinux&lt;/h4&gt;
+&lt;h4 id=&#34;1-关闭防火墙selinux&#34;&gt;1. 关闭防火墙，selinux&lt;/h4&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# service iptables stop&lt;/span&gt;
 &lt;span class=&#34;c1&#34;&gt;# setenforce 0 临时关闭&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;# chkconfig NetworkManager off&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4 id=&#34;2-安装kvm虚拟机&#34;&gt;2. 安装kvm虚拟机&lt;/h4&gt;
+&lt;span class=&#34;c1&#34;&gt;# chkconfig NetworkManager off&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;2-安装kvm虚拟机&#34;&gt;2. 安装kvm虚拟机&lt;/h4&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# yum install kvm libvirt libvirt-devel python-virtinst python-virtinst qemu-kvm virt-viewer bridge-utils virt-top libguestfs-tools ca-certificates audit-libs-python device-mapper-libs virt-install&lt;/span&gt;
 &lt;span class=&#34;c1&#34;&gt;# 启动服务&lt;/span&gt;
 &lt;span class=&#34;c1&#34;&gt;# service libvirtd restart&lt;/span&gt;
 下载virtio-win-1.5.2-1.el6.noarch.rpm 如果不安装window虚拟机或者使用带virtio驱动的镜像可以不用安装
-&lt;span class=&#34;c1&#34;&gt;# rpm -ivh virtio-win-1.5.2-1.el6.noarch.rpm&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4 id=&#34;3-libvirt在管理本地或远程hypervisor时的表现形式如下&#34;&gt;3. Libvirt在管理本地或远程Hypervisor时的表现形式如下。&lt;/h4&gt;
-
+&lt;span class=&#34;c1&#34;&gt;# rpm -ivh virtio-win-1.5.2-1.el6.noarch.rpm&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;3-libvirt在管理本地或远程hypervisor时的表现形式如下&#34;&gt;3. Libvirt在管理本地或远程Hypervisor时的表现形式如下。&lt;/h4&gt;
 &lt;p&gt;在libvirt内部管理了五部分：&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;节点：所谓的节点就是我们的物理服务器，一个服务器代表一个节点，上边存放着Hyper和Domain&lt;/li&gt;
 &lt;li&gt;Hypervisor：即VMM，指虚拟机的监控程序，在KVM中是一个加载了kvm.ko的标准Linux系统。&lt;/li&gt;
@@ -305,7 +290,7 @@
       <pubDate>Mon, 09 Apr 2018 11:16:38 +0000</pubDate>
       
       <guid>https://atbug.com/jenkins-cli-enable/</guid>
-      <description>Jenkins CLI提供了SSH和Client模式. Docker运行Jenkins version:&amp;#39;3&amp;#39;services:jenkins:image:jenkins/jenkins:alpineports:-8080:8080-50000:50000-46059:46059volumes:-&amp;#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&amp;#34; note: 以为是docker运行, ssh端口设置选用了固定端口. Client 从http</description>
+      <description>Jenkins CLI提供了SSH和Client模式. Docker运行Jenkins version:&amp;#39;3&amp;#39;services:jenkins:image:jenkins/jenkins:alpineports:-8080:8080-50000:50000-46059:46059volumes:-&amp;#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&amp;#34;note: 以为是docker运行, ssh端口设置选用了固定端口. Client 从http:</description>
     </item>
     
     <item>
@@ -333,47 +318,44 @@
       
       <guid>https://atbug.com/spring-cloud-zuul-breakdown/</guid>
       <description>&lt;p&gt;Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看&lt;a href=&#34;http://atbug.com/learn-netflix-zuul/&#34;&gt;上一篇&lt;/a&gt;.&lt;/p&gt;
-
 &lt;h2 id=&#34;实现&#34;&gt;实现&lt;/h2&gt;
-
 &lt;p&gt;@EnableZuulProxy 与 @EnableZuulServer
 二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用.
 Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置.&lt;/p&gt;
-
 &lt;h3 id=&#34;具体实现&#34;&gt;具体实现:&lt;/h3&gt;
-
 &lt;ol&gt;
 &lt;li&gt;使用&lt;code&gt;ZuulController&lt;/code&gt;(&lt;code&gt;ServletWrappingController&lt;/code&gt;的子类)封装&lt;code&gt;ZuulServlet&lt;/code&gt;实例, 处理从&lt;code&gt;DispatcherServlet&lt;/code&gt;进来的请求.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;ZuulHandlerMapping&lt;/code&gt;负责注册handler mapping, 将&lt;code&gt;Route&lt;/code&gt;的&lt;code&gt;fullPath&lt;/code&gt;的请求交由&lt;code&gt;ZuulController&lt;/code&gt;处理.&lt;/li&gt;
 &lt;li&gt;同时使用&lt;code&gt;ServletRegistrationBean&lt;/code&gt;注册&lt;code&gt;ZuulServlet&lt;/code&gt;, 默认使用&lt;code&gt;/zuul&lt;/code&gt;作为urlMapping. 所有来自以&lt;code&gt;/zuul&lt;/code&gt;开头的path的请求都会直接进入&lt;code&gt;ZuulServlet&lt;/code&gt;, 不会进入&lt;code&gt;DispatcherServlet&lt;/code&gt;.&lt;/li&gt;
 &lt;/ol&gt;
-
 &lt;h4 id=&#34;使用注解&#34;&gt;使用注解&lt;/h4&gt;
-
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;@EnableZuulProxy&lt;/code&gt;引入了&lt;code&gt;ZuulProxyMarkerConfiguration&lt;/code&gt;, &lt;code&gt;ZuulProxyMarkerConfiguration&lt;/code&gt;只做了一件事, 实例化了内部类&lt;code&gt;Marker&lt;/code&gt;.&lt;/p&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;@EnableZuulProxy&lt;/code&gt;引入了&lt;code&gt;ZuulProxyMarkerConfiguration&lt;/code&gt;, &lt;code&gt;ZuulProxyMarkerConfiguration&lt;/code&gt;只做了一件事, 实例化了内部类&lt;code&gt;Marker&lt;/code&gt;.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Configuration&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ZuulProxyMarkerConfiguration&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;ZuulProxyMarkerConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
     &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
-    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Marker&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;zuulProxyMarkerBean&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Marker&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Marker&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;zuulProxyMarkerBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Marker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-    &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Marker&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;code&gt;@EnableZuulServer&lt;/code&gt;引入了&lt;code&gt;ZuulServerMarkerConfiguration&lt;/code&gt;, &lt;code&gt;ZuulServerMarkerConfiguration&lt;/code&gt;也只做了一件事: 实例化了内部类&lt;code&gt;Marker&lt;/code&gt;&lt;/p&gt;
+    &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Marker&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;@EnableZuulServer&lt;/code&gt;引入了&lt;code&gt;ZuulServerMarkerConfiguration&lt;/code&gt;, &lt;code&gt;ZuulServerMarkerConfiguration&lt;/code&gt;也只做了一件事: 实例化了内部类&lt;code&gt;Marker&lt;/code&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Configuration&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ZuulServerMarkerConfiguration&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;ZuulServerMarkerConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
     &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
-    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Marker&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;zuulServerMarkerBean&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Marker&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Marker&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;zuulServerMarkerBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Marker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-    &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Marker&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+    &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Marker&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;/ul&gt;</description>
     </item>
     
@@ -384,28 +366,18 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
       
       <guid>https://atbug.com/spring-cloud-service-registry-via-eureka/</guid>
       <description>&lt;p&gt;之前分析过&lt;a href=&#34;http://atbug.com/spring-cloud-eureka-client-source-code-analysis/&#34;&gt;Spring Cloud的Eureka服务发现&lt;/a&gt;, 今天分析一下服务注册.&lt;/p&gt;
-
 &lt;h2 id=&#34;配置&#34;&gt;配置&lt;/h2&gt;
-
 &lt;h3 id=&#34;bootstrapconfiguration&#34;&gt;BootstrapConfiguration&lt;/h3&gt;
-
 &lt;h4 id=&#34;eurekadiscoveryclientconfigservicebootstrapconfiguration&#34;&gt;EurekaDiscoveryClientConfigServiceBootstrapConfiguration&lt;/h4&gt;
-
 &lt;p&gt;spring-cloud-config环境中使用的配置&lt;/p&gt;
-
 &lt;p&gt;引入&lt;code&gt;EurekaDiscoveryClientConfiguration&lt;/code&gt;和&lt;code&gt;EurekaClientAutoConfiguration&lt;/code&gt;&lt;/p&gt;
-
 &lt;h5 id=&#34;eurekadiscoveryclientconfiguration&#34;&gt;EurekaDiscoveryClientConfiguration&lt;/h5&gt;
-
 &lt;ol&gt;
 &lt;li&gt;在spring-cloud中(通过是否存在RefreshScopeRefreshedEvent.class判断), 添加&lt;code&gt;RefreshScopeRefreshedEvent&lt;/code&gt;的listener. 收到事件后重新注册实例.&lt;/li&gt;
 &lt;li&gt;在&lt;code&gt;eureka.client.healthcheck.enabled&lt;/code&gt;设置为true时, 注册&lt;code&gt;EurekaHealthCheckHandler&lt;/code&gt;bean. &lt;code&gt;EurekaHealthCheckHandler&lt;/code&gt;负责将应用状态映射为实例状态&lt;code&gt;InstanceStatus&lt;/code&gt;.&lt;/li&gt;
 &lt;/ol&gt;
-
 &lt;h5 id=&#34;eurekaclientautoconfiguration&#34;&gt;EurekaClientAutoConfiguration&lt;/h5&gt;
-
 &lt;p&gt;支持spring-cloud和非spring-cloud环境, 在spring-cloud环境中, 下面两个bean要使用&lt;code&gt;@RefreshScope&lt;/code&gt;标注&lt;/p&gt;
-
 &lt;ol&gt;
 &lt;li&gt;实例化&lt;code&gt;EurekaClient&lt;/code&gt;bean, 在spring-cloud中使用实现类&lt;code&gt;CloudEurekaClient&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;使用&lt;code&gt;EurekaInstanceConfig&lt;/code&gt;实例, 实例化&lt;code&gt;ApplicationInfoManager&lt;/code&gt;bean&lt;/li&gt;
@@ -419,19 +391,16 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
       
       <guid>https://atbug.com/learn-netflix-zuul/</guid>
       <description>&lt;p&gt;嵌入式的zuul代理&lt;/p&gt;
-
-&lt;p&gt;使用了Netfilx OSS的其他组件:
-- Hystrix   熔断
-- Ribbon    负责发送外出请求的客户端, 提供软件负载均衡功能
-- Trubine   实时地聚合细粒度的metrics数据
-- Archaius  动态配置&lt;/p&gt;
-
+&lt;p&gt;使用了Netfilx OSS的其他组件:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Hystrix   熔断&lt;/li&gt;
+&lt;li&gt;Ribbon    负责发送外出请求的客户端, 提供软件负载均衡功能&lt;/li&gt;
+&lt;li&gt;Trubine   实时地聚合细粒度的metrics数据&lt;/li&gt;
+&lt;li&gt;Archaius  动态配置&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h2 id=&#34;介绍&#34;&gt;介绍&lt;/h2&gt;
-
 &lt;p&gt;由于2.0停止开发且会有bug, 故下面的分析基于1.x版本.&lt;/p&gt;
-
 &lt;h3 id=&#34;特性&#34;&gt;特性&lt;/h3&gt;
-
 &lt;ul&gt;
 &lt;li&gt;Authentication 认证&lt;/li&gt;
 &lt;li&gt;Insights 洞察&lt;/li&gt;
@@ -461,12 +430,9 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
       <pubDate>Mon, 01 Jan 2018 12:30:55 +0000</pubDate>
       
       <guid>https://atbug.com/go-in-action-four/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;https://talks.golang.org/2013/go4python/img/fib-go.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
+      <description>&lt;p&gt;&lt;img src=&#34;https://talks.golang.org/2013/go4python/img/fib-go.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;并发模式&#34;&gt;并发模式&lt;/h2&gt;
-
 &lt;h3 id=&#34;runner&#34;&gt;runner&lt;/h3&gt;
-
 &lt;p&gt;runner展示了如何使用通道来监视程序的执行时间, 如果程序执行时间太长, 也可以用终止程序.
 这个程序可用作corn作业执行&lt;/p&gt;</description>
     </item>
@@ -478,18 +444,12 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
       
       <guid>https://atbug.com/go-in-action-three/</guid>
       <description>&lt;h2 id=&#34;并发&#34;&gt;并发&lt;/h2&gt;
-
 &lt;p&gt;Go语言里的并发是指让某个函数可以独立于其他函数运行的能力. 当一个函数创建为goroutine时, Go会将其视为一个独立的工作单元. 这个工作单元会被调度到可用的&lt;strong&gt;逻辑处理器&lt;/strong&gt;上执行.&lt;/p&gt;
-
 &lt;p&gt;Go的运行时调度器可以管理所有创建的goroutine, 并为其分配执行时间.
 这个调度器在操作系统之上, 将操作系统的线程与逻辑处理器绑定, 并在逻辑处理器执行goroutine. &lt;strong&gt;调度器可以在任何给定的时间, 全面控制哪个goroutine在哪个逻辑处理器上运行&lt;/strong&gt;.&lt;/p&gt;
-
 &lt;p&gt;Go的并发同步模型来自一个叫做通信顺序进程(Communicating Sequential Processes, &lt;a href=&#34;http://www.usingcsp.com&#34;&gt;CSP&lt;/a&gt;). CSP是一个消息传递模型, 通过在goroutine之前传递数据来传递消息, 不需要通过加锁实现同步访问. 用于在goroutine间传递消息的数据结构叫做通道(channel).&lt;/p&gt;
-
 &lt;h3 id=&#34;并发与并行&#34;&gt;并发与并行&lt;/h3&gt;
-
 &lt;p&gt;操作系统的线程(thread)和进程(process).&lt;/p&gt;
-
 &lt;p&gt;进程类似应用程序在运行中需要用到和维护的各种资源的容器.
 资源包括但不限于: 内存(来自文件系统的代码和数据), 句柄(文件, 设备, 操作系统), 线程.&lt;/p&gt;</description>
     </item>
@@ -501,17 +461,15 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
       
       <guid>https://atbug.com/go-in-action-two/</guid>
       <description>&lt;h2 id=&#34;go语言的类型系统&#34;&gt;Go语言的类型系统&lt;/h2&gt;
-
 &lt;p&gt;Go语言是静态类型的变成语言. 编译的时候需要确定类型.&lt;/p&gt;
-
 &lt;h3 id=&#34;用户定义的类型&#34;&gt;用户定义的类型&lt;/h3&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kd&#34;&gt;type&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;user&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;struct&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;name&lt;/span&gt;    &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;email&lt;/span&gt;   &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;ext&lt;/span&gt;     &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;privileged&lt;/span&gt;  &lt;span class=&#34;kt&#34;&gt;bool&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;使用&lt;/strong&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;使用&lt;/strong&gt;
 零值和&lt;strong&gt;结构字面量&lt;/strong&gt;初始化&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;c1&#34;&gt;//引用类型, 各个字段初始化为对应的零值
 &lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;bill&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;user&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;  &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
@@ -521,11 +479,14 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
     &lt;span class=&#34;nx&#34;&gt;email&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;lisa@email.com&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;ext&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;123&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;privileged&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;结构字面量的赋值方式:&lt;/strong&gt;
-- 不同行声明每一个字段和对应的值, 字段名和字段以&lt;code&gt;:&lt;/code&gt;分隔, 末尾以&lt;code&gt;,&lt;/code&gt;结尾
-- 不适用字段名, 只声明对应的值. 写在一行里, 以&lt;code&gt;,&lt;/code&gt;分隔, 结尾不需要&lt;code&gt;,&lt;/code&gt;. &lt;strong&gt;要保证顺序&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;lisa&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Lisa&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;lisa@email.com&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;123&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;结构字面量的赋值方式:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;不同行声明每一个字段和对应的值, 字段名和字段以&lt;code&gt;:&lt;/code&gt;分隔, 末尾以&lt;code&gt;,&lt;/code&gt;结尾&lt;/li&gt;
+&lt;li&gt;不适用字段名, 只声明对应的值. 写在一行里, 以&lt;code&gt;,&lt;/code&gt;分隔, 结尾不需要&lt;code&gt;,&lt;/code&gt;. &lt;strong&gt;要保证顺序&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;lisa&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Lisa&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;lisa@email.com&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;123&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
     </item>
     
     <item>
@@ -534,35 +495,27 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
       <pubDate>Mon, 01 Jan 2018 12:27:10 +0000</pubDate>
       
       <guid>https://atbug.com/go-in-action-one/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;http://7xvxng.com1.z0.glb.clouddn.com/15142714785285.jpg&#34; alt=&#34;架构流程图&#34; /&gt;&lt;/p&gt;
-
+      <description>&lt;p&gt;&lt;img src=&#34;http://7xvxng.com1.z0.glb.clouddn.com/15142714785285.jpg&#34; alt=&#34;架构流程图&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;关键字&#34;&gt;关键字&lt;/h2&gt;
-
 &lt;h3 id=&#34;var&#34;&gt;var&lt;/h3&gt;
-
-&lt;p&gt;变量使用&lt;code&gt;var&lt;/code&gt;声明, 如果变量不是定义在任何一个函数作用域内, 这个变量就是包级变量.
-&amp;gt; Go语言中, 所有变量都被初始化为其&lt;strong&gt;零值&lt;/strong&gt;. 对于数值类型, 其零值是&lt;strong&gt;0&lt;/strong&gt;;  对于字符串类型, 其零值是&lt;strong&gt;空字符串&amp;rdquo;&amp;rdquo;&lt;/strong&gt;; 对于布尔类型, 其零值是&lt;strong&gt;false&lt;/strong&gt;. 对于引用类型来说, 底层数据结构会被初始化对应的零值. 但是被生命被起零值的引用类型的变量, 会返回&lt;strong&gt;nil&lt;/strong&gt;作为其值.&lt;/p&gt;
-
+&lt;p&gt;变量使用&lt;code&gt;var&lt;/code&gt;声明, 如果变量不是定义在任何一个函数作用域内, 这个变量就是包级变量.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Go语言中, 所有变量都被初始化为其&lt;strong&gt;零值&lt;/strong&gt;. 对于数值类型, 其零值是&lt;strong&gt;0&lt;/strong&gt;;  对于字符串类型, 其零值是&lt;strong&gt;空字符串&amp;rdquo;&amp;quot;&lt;/strong&gt;; 对于布尔类型, 其零值是&lt;strong&gt;false&lt;/strong&gt;. 对于引用类型来说, 底层数据结构会被初始化对应的零值. 但是被生命被起零值的引用类型的变量, 会返回&lt;strong&gt;nil&lt;/strong&gt;作为其值.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id=&#34;const&#34;&gt;const&lt;/h3&gt;
-
 &lt;p&gt;定义常量&lt;/p&gt;
-
 &lt;h3 id=&#34;interface&#34;&gt;interface&lt;/h3&gt;
-
 &lt;p&gt;声明接口&lt;/p&gt;
-
 &lt;h3 id=&#34;func&#34;&gt;func&lt;/h3&gt;
-
 &lt;p&gt;声明函数&lt;/p&gt;
-
 &lt;h3 id=&#34;defer&#34;&gt;defer&lt;/h3&gt;
-
 &lt;p&gt;安排后面的函数调用在当前函数返回时才执行.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;err&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;os&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;open&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;filePath&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;err&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;nil&lt;/span&gt;
     &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;defer&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;close&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
-&lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;more&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;file&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;operation&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+&lt;span class=&#34;k&#34;&gt;defer&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;close&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;more&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;file&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;operation&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
     </item>
     
     <item>
@@ -724,7 +677,7 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
       <pubDate>Thu, 18 May 2017 23:33:24 +0000</pubDate>
       
       <guid>https://atbug.com/java-operate-cassandra-deployed-in-docker/</guid>
-      <description>搭建Cassandra 使用docker创建Cassandra，方便快捷 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table #cqlsh&amp;gt;#createkeyspaceCREATEKEYSPACEcontactsWITHREPLICATION={&amp;#39;class&amp;#39;:&amp;#39;SimpleStrategy&amp;#39;,&amp;#39;replication_factor&amp;#39;:1};#useUSEcontacts;#createtableCREATETABLEcontact(idUUID,emailTEXTPRIMARYKEY); 查看</description>
+      <description>搭建Cassandra 使用docker创建Cassandra，方便快捷 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table #cq</description>
     </item>
     
     <item>
@@ -796,7 +749,7 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
       <pubDate>Fri, 07 Apr 2017 16:48:46 +0000</pubDate>
       
       <guid>https://atbug.com/install-redis-on-centos/</guid>
-      <description>版本 Centos7 Redis3.2.8 编译安装 wget http://download.redis.io/releases/redis-3.2.8.tar.gz tar -zxvf redis-3.2.8.tar.gz cd redis-3.2.8 sudo make test sudo make install 启动 redis-server 问题 /bin/sh: cc: command not found 原因：Centos安装时选择的类型是Infrastructure，没有c++的</description>
+      <description>版本 Centos7 Redis3.2.8 编译安装 wget http://download.redis.io/releases/redis-3.2.8.tar.gz tar -zxvf redis-3.2.8.tar.gz cd redis-3.2.8 sudo make test sudo make install 启动 redis-server 问题 /bin/sh: cc: command not found **原因：**Centos安装时选择的类型是Infrastructure，没有</description>
     </item>
     
     <item>
@@ -931,7 +884,7 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
       <pubDate>Wed, 06 Jul 2016 16:57:09 +0000</pubDate>
       
       <guid>https://atbug.com/singleton-in-multi-threads-programming/</guid>
-      <description>多线程下的单例模式的实现，顺便做了反汇编。 public class MySingleton { private static MySingleton INSTANCE; private MySingleton() { } public static MySingleton getInstance() { if (INSTANCE == null) { synchronized (MySingleton.class) { INSTANCE = new MySingleton(); } } return INSTANCE; } }Compiled from &amp;#34;MySingleton.java&amp;#34; public class MySingleton { public static MySingleton getInstance(); Code: 0: getstatic #2</description>
+      <description>多线程下的单例模式的实现，顺便做了反汇编。 public class MySingleton { private static MySingleton INSTANCE; private MySingleton() { } public static MySingleton getInstance() { if (INSTANCE == null) { synchronized (MySingleton.class) { INSTANCE = new MySingleton(); } } return INSTANCE; } } Compiled from &amp;#34;MySingleton.java&amp;#34; public class MySingleton { public static MySingleton getInstance(); Code: 0: getstatic</description>
     </item>
     
     <item>
@@ -949,7 +902,7 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
       <pubDate>Wed, 30 Mar 2016 14:27:02 +0000</pubDate>
       
       <guid>https://atbug.com/rabbitmq-delay-queue-implementation/</guid>
-      <description>工作中很多场景需要用到定时任务、延迟任务，常用的方法用crontab job、Spring的Quartz，然后扫描整张数据库表，判断哪些数据需</description>
+      <description>在requeue=false的情况系，消息被client reject 消息过期 队列长度超过限制</description>
     </item>
     
     <item>

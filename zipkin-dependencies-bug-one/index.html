@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,49 +87,32 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<p>zipkin-dependencies是zipkin调用链的依赖分析工具.</p>
-
+            <p>zipkin-dependencies是zipkin调用链的依赖分析工具.</p>
 <p>系统上线时使用了当时的最新版本<code>2.0.1</code>, 运行一年之后随着服务的增多, 分析一天的数据耗时越来越多. 从最初的几分钟, 到最慢的几十小时(数据量18m).</p>
-
 <p>最终返现是版本的问题, 升级到&gt;=<code>2.3.0</code>的版本之后吞吐迅速上升.</p>
-
 <p>所以便有了issue: <a href="https://github.com/openzipkin/zipkin-dependencies/issues/149">Reminder: do NOT use the version before 2.3.0</a></p>
-
 <p>但这也引来了另一个坑: <a href="https://atbug.com/zipkin-dependencies-bug-two-timeout-and-oom/">心跳超时和Executor OOM</a></p>
-
-<h3 id="tl-dr">TL;DR</h3>
-
+<h3 id="tldr">TL;DR</h3>
 <p>简单浏览了下zipkin-dependencies的源码, 2.0.1和2.3.2的比较大的差距是依赖的<code>elasticsearch-spark</code>的版本. 前者用的是<code>6.3.2</code>, 后者是<code>7.3.0</code>.</p>
-
 <p>尝试在<code>zipkin-dependencies-2.0.1</code>中使用<code>elasticsearch-spark-7.3.0</code>, 和<code>2.3.2</code>的性能一直.</p>
-
 <p>通过打开log4j debug日志, 发现到<code>elasticsearch-spark</code>两个版本的运行差异:</p>
-<div class="highlight"><pre class="chroma"><code class="language-log" data-lang="log">#7.3.0
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">#7.3.0
 19/09/05 18:13:14 INFO DAGScheduler: Submitting 3 missing tasks from ShuffleMapStage 0 (MapPartitionsRDD[1] at groupBy at ElasticsearchDependenciesJob.java:185) (first 15 tasks are for partitions Vector(0, 1, 2))
 
 #6.3.2
-19/09/05 18:09:56 INFO DAGScheduler: Submitting 214 missing tasks from ShuffleMapStage 0 (MapPartitionsRDD[1] at groupBy at ElasticsearchDependenciesJob.java:185) (first 15 tasks are for partitions Vector(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14))</code></pre></div>
-<h4 id="restservice-findpartitions-l268-的源码"><code>RestService#findPartitions()L268</code>的源码:</h4>
-
+19/09/05 18:09:56 INFO DAGScheduler: Submitting 214 missing tasks from ShuffleMapStage 0 (MapPartitionsRDD[1] at groupBy at ElasticsearchDependenciesJob.java:185) (first 15 tasks are for partitions Vector(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14))
+</code></pre></div><h4 id="restservicefindpartitionsl268的源码"><code>RestService#findPartitions()L268</code>的源码:</h4>
 <p><code>7.3.0</code>
-<img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/rXGrya.jpg" alt="" /></p>
-
+<img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/rXGrya.jpg" alt=""></p>
 <p><code>6.3.2</code>
-<img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/wswyzO.jpg" alt="" /></p>
-
+<img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/wswyzO.jpg" alt=""></p>
 <p>7.x <code>es.input.max.docs.per.partition</code>为<code>null</code> 计算出partitions=3 (实际分区数为3, 使用方法<code>#findShardPartitions()</code>)
 6.x <code>es.input.use.sliced.partitions</code>为<code>true</code>, 计算出partitions=214 (使用方法<code>#findSlicePartitions()</code>)</p>
-
 <p>在7.x中, 可以通过设置<code>es.input.max.docs.per.partition</code>的值来设置切片数量(对单个partition进行切分, 通过增加并行任务数量来提高吞吐)</p>
-
 <p>**该行代码的commit message: **</p>
-
 <blockquote>
 <p>Remove default setting for max documents per partition  We added support for sliced scrolls back in 5.0, which allows subdividing scrolls into smaller input splits. there are some cases where the added subdivision of the scroll operations causes high amounts of overhead when reading very large shards. in most cases, shards should be small enough that a regular read operation over them should complete in reasonable time. In order to avoid performance degradation at higher levels, we are removing the default value of 100k from this setting, and instead, checking if it is set. Additionally, the &lsquo;es.input.use.sliced.partitions&rsquo; setting has been removed as it is now redundant.</p>
 </blockquote>
-
 <p><a href="https://github.com/elastic/elasticsearch-hadoop/issues/1196">关联的issue#1196</a></p>
 
         </div>
@@ -139,18 +122,13 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#tl-dr">TL;DR</a>
-<ul>
-<li><a href="#restservice-findpartitions-l268-的源码"><code>RestService#findPartitions()L268</code>的源码:</a></li>
-</ul></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#tldr">TL;DR</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,10 +87,7 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<p>Jenkins CLI提供了SSH和Client模式.</p>
-
+            <p>Jenkins CLI提供了SSH和Client模式.</p>
 <p>Docker运行Jenkins</p>
 <div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">version<span class="p">:</span><span class="w"> </span><span class="s1">&#39;3&#39;</span><span class="w">
 </span><span class="w"></span>services<span class="p">:</span><span class="w">
@@ -101,16 +98,13 @@
 </span><span class="w">      </span>-<span class="w"> </span><span class="m">50000</span><span class="p">:</span><span class="m">50000</span><span class="w">
 </span><span class="w">      </span>-<span class="w"> </span><span class="m">46059</span><span class="p">:</span><span class="m">46059</span><span class="w">
 </span><span class="w">    </span>volumes<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span><span class="s2">&#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&#34;</span></code></pre></div>
-<p>note: 以为是docker运行, ssh端口设置选用了固定端口.</p>
-
+</span><span class="w">      </span>-<span class="w"> </span><span class="s2">&#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&#34;</span><span class="w">
+</span></code></pre></div><p>note: 以为是docker运行, ssh端口设置选用了固定端口.</p>
 <h3 id="client">Client</h3>
-
 <p>从<code>http://JENKINS_URL/cli</code>页面下载client jar</p>
-
 <p>使用方法:</p>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">java -jar jenkins-cli.jar -s http://localhost:8080/ help</code></pre></div>
-<p>构建:</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">java -jar jenkins-cli.jar -s http://localhost:8080/ <span class="nb">help</span>
+</code></pre></div><p>构建:</p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">java -jar jenkins-cli.jar -s http://localhost:8080/ build JOB <span class="o">[</span>-c<span class="o">]</span> <span class="o">[</span>-f<span class="o">]</span> <span class="o">[</span>-p<span class="o">]</span> <span class="o">[</span>-r N<span class="o">]</span> <span class="o">[</span>-s<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> <span class="o">[</span>-w<span class="o">]</span>
 Starts a build, and optionally waits <span class="k">for</span> a completion.
 Aside from general scripting use, this <span class="nb">command</span> can be
@@ -134,25 +128,22 @@ an SCM change.
  -s  : Wait <span class="k">until</span> the completion/abortion of the command. Interrupts are passed
        through to the build.
  -v  : Prints out the console output of the build. Use with -s
- -w  : Wait <span class="k">until</span> the start of the command</code></pre></div>
-<h3 id="ssh">SSH</h3>
-
+ -w  : Wait <span class="k">until</span> the start of the <span class="nb">command</span>
+</code></pre></div><h3 id="ssh">SSH</h3>
 <p>启用SSH, 使用随机端口. 也可以使用固定端口:</p>
-
-<p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15232377732862.jpg" alt="" /></p>
-
+<p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15232377732862.jpg" alt=""></p>
 <p>获取SSH端口号:</p>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">curl -Lv http://localhost:8080/login <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">|</span> grep <span class="s1">&#39;X-SSH-Endpoint&#39;</span>
-<span class="c1">#&lt; X-SSH-Endpoint: localhost:46059</span></code></pre></div>
-<p>生成ssh key:</p>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">ssh-keygen -t rsa -b <span class="m">4096</span> -C <span class="s2">&#34;admin&#34;</span></code></pre></div>
-<p>添加ssh公钥:</p>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">http://localhost:8080/user/admin/configure</code></pre></div>
-<p>修改ssh config, 添加如下配置:</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">curl -Lv http://localhost:8080/login 2&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">|</span> grep <span class="s1">&#39;X-SSH-Endpoint&#39;</span>
+<span class="c1">#&lt; X-SSH-Endpoint: localhost:46059</span>
+</code></pre></div><p>生成ssh key:</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">ssh-keygen -t rsa -b <span class="m">4096</span> -C <span class="s2">&#34;admin&#34;</span>
+</code></pre></div><p>添加ssh公钥:</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">http://localhost:8080/user/admin/configure
+</code></pre></div><p>修改ssh config, 添加如下配置:</p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">Host localhost
  IdentityFile ~/.ssh/id_rsa_jenkins_cli
-Port <span class="m">46059</span></code></pre></div>
-<p>验证:</p>
+Port <span class="m">46059</span>
+</code></pre></div><p>验证:</p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">ssh admin@localhost <span class="nb">help</span>
   add-job-to-view
     Adds <span class="nb">jobs</span> to view.
@@ -168,8 +159,8 @@ Port <span class="m">46059</span></code></pre></div>
     Retrieves console output of a build.
   copy-job
     Copies a job.
-    ...</code></pre></div>
-<p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15232435960672.jpg" alt="" /></p>
+    ...
+</code></pre></div><p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15232435960672.jpg" alt=""></p>
 
         </div>
 
@@ -178,16 +169,14 @@ Port <span class="m">46059</span></code></pre></div>
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#client">Client</a></li>
-<li><a href="#ssh">SSH</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#client">Client</a></li>
+        <li><a href="#ssh">SSH</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

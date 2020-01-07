@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,94 +87,71 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<p>JSON Path是在使用Kubernetes API的过程中首次使用的. 使用API做扩缩容的时候, 发送整个Deployment的全文不是个明智的做法, 虽然可行. 因此便使用了JSON Patch.</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="n">JsonObject</span> <span class="nf">item</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JsonObject</span><span class="p">();</span>
-<span class="n">item</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;op&#34;</span><span class="p">,</span> <span class="k">new</span> <span class="n">JsonPrimitive</span><span class="p">(</span><span class="s">&#34;replace&#34;</span><span class="p">));</span>
-<span class="n">item</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;path&#34;</span><span class="p">,</span> <span class="k">new</span> <span class="n">JsonPrimitive</span><span class="p">(</span><span class="s">&#34;/spec/replicas&#34;</span><span class="p">));</span>
-<span class="n">item</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;value&#34;</span><span class="p">,</span> <span class="k">new</span> <span class="n">JsonPrimitive</span><span class="p">(</span><span class="n">instances</span><span class="p">));</span>
-<span class="n">JsonArray</span> <span class="nf">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JsonArray</span><span class="p">();</span>
-<span class="n">body</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">item</span><span class="p">);</span>
-<span class="n">appsV1beta1Api</span><span class="p">.</span><span class="na">patchNamespacedScaleScale</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">namespace</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span></code></pre></div>
-<p>fabric8s提供的kubernetes-client中使用的<a href="https://github.com/flipkart-incubator/zjsonpatch">zjsonpatch</a>则封装了JSON Patch操作. 例如在做扩缩容的时候或者当前的deployment, 修改replicas的值. 然后比较对象的不同(JsonDiff.asJson(sourceJsonNode, targetJsonNode)).</p>
-
+            <p>JSON Path是在使用Kubernetes API的过程中首次使用的. 使用API做扩缩容的时候, 发送整个Deployment的全文不是个明智的做法, 虽然可行. 因此便使用了JSON Patch.</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="n">JsonObject</span> <span class="n">item</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JsonObject</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<span class="n">item</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&#34;op&#34;</span><span class="o">,</span> <span class="k">new</span> <span class="n">JsonPrimitive</span><span class="o">(</span><span class="s">&#34;replace&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+<span class="n">item</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&#34;path&#34;</span><span class="o">,</span> <span class="k">new</span> <span class="n">JsonPrimitive</span><span class="o">(</span><span class="s">&#34;/spec/replicas&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+<span class="n">item</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&#34;value&#34;</span><span class="o">,</span> <span class="k">new</span> <span class="n">JsonPrimitive</span><span class="o">(</span><span class="n">instances</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+<span class="n">JsonArray</span> <span class="n">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JsonArray</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<span class="n">body</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">item</span><span class="o">)</span><span class="o">;</span>
+<span class="n">appsV1beta1Api</span><span class="o">.</span><span class="na">patchNamespacedScaleScale</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">namespace</span><span class="o">,</span> <span class="n">body</span><span class="o">,</span> <span class="kc">null</span><span class="o">)</span><span class="o">;</span>
+</code></pre></div><p>fabric8s提供的kubernetes-client中使用的<a href="https://github.com/flipkart-incubator/zjsonpatch">zjsonpatch</a>则封装了JSON Patch操作. 例如在做扩缩容的时候或者当前的deployment, 修改replicas的值. 然后比较对象的不同(JsonDiff.asJson(sourceJsonNode, targetJsonNode)).</p>
 <p>下面的内容部分翻译自<a href="http://jsonpatch.com">JSON PATH</a>, 有兴趣的可以跳转看原文.</p>
-
 <h2 id="什么是json-patch">什么是JSON Patch</h2>
-
 <p>JSON Path是一直描述JSON文档变化的格式. 使用它可以避免在只需要修改某一部分的时候发送整个文档内容. 当与HTTP PATCH方法混合使用的时候, 它允许在标准规范的基础上使用HTTP APIs进行部分更新.</p>
-
 <p>补丁(Patch)内容的格式也是JSON.</p>
-
 <p>JSON Patch由IETF在<a href="http://tools.ietf.org/html/rfc6902">RFC 6902</a>中规范.</p>
-
 <h3 id="简单的例子">简单的例子</h3>
-
 <h4 id="原始文档">原始文档</h4>
-<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json">  <span class="s2">&#34;baz&#34;</span><span class="err">:</span> <span class="s2">&#34;qux&#34;</span><span class="err">,</span>
+<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json">
+  <span class="s2">&#34;baz&#34;</span><span class="err">:</span> <span class="s2">&#34;qux&#34;</span><span class="err">,</span>
   <span class="s2">&#34;foo&#34;</span><span class="err">:</span> <span class="s2">&#34;bar&#34;</span>
-<span class="err">}</span></code></pre></div>
-<h4 id="补丁">补丁</h4>
+<span class="err">}</span>
+</code></pre></div><h4 id="补丁">补丁</h4>
 <div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">[</span>
-  <span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;replace&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/baz&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;boo&#34;</span> <span class="p">},</span>
-  <span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;add&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/hello&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;world&#34;</span><span class="p">]</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;replace&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/baz&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;boo&#34;</span> <span class="p">}</span><span class="p">,</span>
+  <span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;add&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/hello&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;world&#34;</span><span class="p">]</span> <span class="p">}</span><span class="p">,</span>
   <span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;remove&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/foo&#34;</span><span class="p">}</span>
-<span class="p">]</span></code></pre></div>
-<h4 id="结果">结果</h4>
+<span class="p">]</span>
+</code></pre></div><h4 id="结果">结果</h4>
 <div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
   <span class="nt">&#34;baz&#34;</span><span class="p">:</span> <span class="s2">&#34;boo&#34;</span><span class="p">,</span>
   <span class="nt">&#34;hello&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;world&#34;</span><span class="p">]</span>
-<span class="p">}</span></code></pre></div>
-<h2 id="如何实现">如何实现</h2>
-
-<p>一个JSON Path文档是一个包含了一组patch操作的JSON文件. 支持的patch操作包括&rdquo;add&rdquo;, &ldquo;remove&rdquo;, &ldquo;replace&rdquo;, &ldquo;move&rdquo;, &ldquo;copy&rdquo;和&rdquo;test&rdquo;. 这些patch操作是按照顺序应用的: 如果有任何一个操作失败, 整个patch都会被终止.</p>
-
-<h4 id="json-pointer-指针">JSON Pointer(指针)</h4>
-
+<span class="p">}</span>
+</code></pre></div><h2 id="如何实现">如何实现</h2>
+<p>一个JSON Path文档是一个包含了一组patch操作的JSON文件. 支持的patch操作包括&quot;add&rdquo;, &ldquo;remove&rdquo;, &ldquo;replace&rdquo;, &ldquo;move&rdquo;, &ldquo;copy&quot;和&quot;test&rdquo;. 这些patch操作是按照顺序应用的: 如果有任何一个操作失败, 整个patch都会被终止.</p>
+<h4 id="json-pointer指针">JSON Pointer(指针)</h4>
 <p>JSON指针<a href="http://tools.ietf.org/html/rfc6901">IETF RFC 6901</a>定义了一个如何在JSON文档中定位指定值的字符格式. 用来在所有的JSON Patch操作中指定要修改的文档部分.</p>
-
 <p>JSON指针是使用<code>/</code>分隔的token字符串, 这些token指定了对象的key或者是数组的索引. 例如, 给定JSON</p>
 <div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
   <span class="nt">&#34;biscuits&#34;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="p">{</span> <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;Digestive&#34;</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;Digestive&#34;</span> <span class="p">}</span><span class="p">,</span>
     <span class="p">{</span> <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;Choco Leibniz&#34;</span> <span class="p">}</span>
   <span class="p">]</span>
-<span class="p">}</span></code></pre></div>
-<p><code>/biscuits</code>将指向数组biscuits, 同时<code>/biscuits/1/name</code>指向<code>Choco Leibniz</code>.</p>
-
+<span class="p">}</span>
+</code></pre></div><p><code>/biscuits</code>将指向数组biscuits, 同时<code>/biscuits/1/name</code>指向<code>Choco Leibniz</code>.</p>
 <p>要指向JSON文档的根要使用一个空的字符串<code>''</code>. 指针<code>/</code>并不是指向根, 而是指向根上key为<code>&quot;&quot;</code>的位置(在JSON中是非法的).</p>
-
 <h3 id="操作">操作</h3>
-
 <h4 id="add">Add</h4>
-<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;add&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/biscuits/1&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;Ginger Nut&#34;</span> <span class="p">}</span> <span class="p">}</span></code></pre></div>
-<p>在对象上增加一个值, 或者数组中插入数据. 如果是数组, 值将被插入到给定位置的前面. <code>-</code>用来表示插入到数组的尾部.</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;add&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/biscuits/1&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;Ginger Nut&#34;</span> <span class="p">}</span> <span class="p">}</span>
+</code></pre></div><p>在对象上增加一个值, 或者数组中插入数据. 如果是数组, 值将被插入到给定位置的前面. <code>-</code>用来表示插入到数组的尾部.</p>
 <h4 id="remove">Remove</h4>
-<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;remove&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/biscuits&#34;</span> <span class="p">}</span></code></pre></div>
-<p>删除对象或者数组中的值.</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;remove&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/biscuits&#34;</span> <span class="p">}</span>
+</code></pre></div><p>删除对象或者数组中的值.</p>
 <h4 id="replace">Replace</h4>
-<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;replace&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/biscuits/0/name&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;Chocolate Digestive&#34;</span> <span class="p">}</span></code></pre></div>
-<p>替换一个值. 等同于先删除再增加.</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;replace&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/biscuits/0/name&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;Chocolate Digestive&#34;</span> <span class="p">}</span>
+</code></pre></div><p>替换一个值. 等同于先删除再增加.</p>
 <h4 id="copy">Copy</h4>
-<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;copy&#34;</span><span class="p">,</span> <span class="nt">&#34;from&#34;</span><span class="p">:</span> <span class="s2">&#34;/biscuits/0&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/best_biscuit&#34;</span> <span class="p">}</span></code></pre></div>
-<p>从一个位置(from)复制数据到指定的位置(path)上. <code>from</code>和<code>to</code>都是JSON指针.</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;copy&#34;</span><span class="p">,</span> <span class="nt">&#34;from&#34;</span><span class="p">:</span> <span class="s2">&#34;/biscuits/0&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/best_biscuit&#34;</span> <span class="p">}</span>
+</code></pre></div><p>从一个位置(from)复制数据到指定的位置(path)上. <code>from</code>和<code>to</code>都是JSON指针.</p>
 <h4 id="move">Move</h4>
-<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;move&#34;</span><span class="p">,</span> <span class="nt">&#34;from&#34;</span><span class="p">:</span> <span class="s2">&#34;/biscuits&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/cookies&#34;</span> <span class="p">}</span></code></pre></div>
-<p>从一个位置(from)移动数据到指定的位置(path)上. <code>from</code>和<code>to</code>都是JSON指针.</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;move&#34;</span><span class="p">,</span> <span class="nt">&#34;from&#34;</span><span class="p">:</span> <span class="s2">&#34;/biscuits&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/cookies&#34;</span> <span class="p">}</span>
+</code></pre></div><p>从一个位置(from)移动数据到指定的位置(path)上. <code>from</code>和<code>to</code>都是JSON指针.</p>
 <h4 id="test">Test</h4>
-<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;test&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/best_biscuit/name&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;Choco Leibniz&#34;</span> <span class="p">}</span></code></pre></div>
-<p>检查某个位置的值是否是指定的值.如果失败, 整个Patch操作就会终止.</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span> <span class="nt">&#34;op&#34;</span><span class="p">:</span> <span class="s2">&#34;test&#34;</span><span class="p">,</span> <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/best_biscuit/name&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;Choco Leibniz&#34;</span> <span class="p">}</span>
+</code></pre></div><p>检查某个位置的值是否是指定的值.如果失败, 整个Patch操作就会终止.</p>
 <h3 id="库">库</h3>
-
 <h4 id="javascript">JavaScript</h4>
-
 <ul>
 <li><a href="http://jsonpatchjs.com/">jsonpatch.js</a></li>
 <li><a href="http://bruth.github.com/jsonpatch-js/">jsonpatch-js</a></li>
@@ -183,97 +160,69 @@
 <li><a href="https://github.com/JSON8/patch">JSON8 Patch</a></li>
 <li><a href="https://github.com/MarketsWorld/json-patch-utils">JSON Patch Utils</a></li>
 </ul>
-
 <h4 id="python">Python</h4>
-
 <ul>
 <li><a href="https://github.com/stefankoegl/python-json-patch">python-json-patch</a></li>
 </ul>
-
 <h4 id="php">PHP</h4>
-
 <ul>
 <li><a href="https://github.com/mikemccabe/json-patch-php">json-patch-php</a></li>
 <li><a href="https://github.com/raphaelstolt/php-jsonpatch">php-jsonpatch/php-jsonpatch</a></li>
 <li><a href="https://github.com/xp-forge/json-patch">xp-forge/json-patch</a></li>
 <li><a href="https://github.com/gamringer/JSONPatch">JSONPatch</a></li>
 </ul>
-
 <h4 id="ruby">Ruby</h4>
-
 <ul>
 <li><a href="https://github.com/jasnell/json-tools">json_tools</a></li>
 <li><a href="https://rubygems.org/gems/json_patch">json_patch</a></li>
 <li><a href="https://github.com/tenderlove/hana">hana</a></li>
 </ul>
-
 <h4 id="perl">Perl</h4>
-
 <ul>
 <li><a href="https://github.com/zigorou/perl-json-patch">perl-json-patch</a></li>
 </ul>
-
 <h4 id="c">C</h4>
-
 <ul>
 <li><a href="https://github.com/DaveGamble/cJSON">cJSON</a> (JSON library in C, includes JSON Patch support in cJSON_Utils)</li>
 </ul>
-
 <h4 id="java">Java</h4>
-
 <ul>
 <li><a href="https://github.com/flipkart-incubator/zjsonpatch">zjsonpatch</a></li>
 <li><a href="https://github.com/fge/json-patch">json-patch</a></li>
 </ul>
-
 <h4 id="scala">Scala</h4>
-
 <ul>
 <li><a href="https://github.com/gnieh/diffson">diffson</a></li>
 </ul>
-
 <h4 id="c-1">C++</h4>
-
 <ul>
 <li><a href="https://github.com/nlohmann/json">JSON</a></li>
 </ul>
-
-<h4 id="c-2">C</h4>
-
+<h4 id="c-2">C####</h4>
 <ul>
 <li><a href="https://github.com/JornWildt/Ramone">Ramone</a> (a framework for consuming REST services, includes a JSON Patch implementation)</li>
 <li><a href="https://github.com/myquay/JsonPatch">JsonPatch</a> (Adds JSON Patch support to ASP.NET Web API)</li>
 <li><a href="https://starcounter.io/">Starcounter</a> (In-memory Application Engine, uses JSON Patch with OT for client-server sync)</li>
 <li><a href="https://github.com/DSaunders/Nancy.JsonPatch">Nancy.JsonPatch</a> (Adds JSON Patch support to NancyFX)</li>
 </ul>
-
 <h4 id="go">Go</h4>
-
 <ul>
 <li><a href="https://github.com/evanphx/json-patch">json-patch</a></li>
 <li><a href="https://github.com/mattbaird/jsonpatch">jsonpatch</a></li>
 </ul>
-
 <h4 id="haskell">Haskell</h4>
-
 <ul>
 <li><a href="https://github.com/GallagherCommaJack/Haskell-JSON-Patch">Haskell-JSON-Patch</a></li>
 </ul>
-
 <h4 id="erlang">Erlang</h4>
-
 <ul>
 <li><a href="https://github.com/marianoguerra/json-patch.erl">json-patch.erl</a></li>
 </ul>
-
 <h4 id="elm">Elm</h4>
-
 <ul>
 <li><a href="http://package.elm-lang.org/packages/norpan/elm-json-patch/latest">norpan/elm-json-patch</a></li>
 </ul>
-
 <h2 id="测试套件">测试套件</h2>
-
 <p>github上维护的一组一致性测试 <a href="https://github.com/json-patch/json-patch-tests">github.com/json-patch/json-patch-tests</a></p>
 
         </div>
@@ -283,54 +232,21 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#什么是json-patch">什么是JSON Patch</a>
-<ul>
-<li><a href="#简单的例子">简单的例子</a>
-<ul>
-<li><a href="#原始文档">原始文档</a></li>
-<li><a href="#补丁">补丁</a></li>
-<li><a href="#结果">结果</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#如何实现">如何实现</a>
-<ul>
-<li>
-<ul>
-<li><a href="#json-pointer-指针">JSON Pointer(指针)</a></li>
-</ul></li>
-<li><a href="#操作">操作</a>
-<ul>
-<li><a href="#add">Add</a></li>
-<li><a href="#remove">Remove</a></li>
-<li><a href="#replace">Replace</a></li>
-<li><a href="#copy">Copy</a></li>
-<li><a href="#move">Move</a></li>
-<li><a href="#test">Test</a></li>
-</ul></li>
-<li><a href="#库">库</a>
-<ul>
-<li><a href="#javascript">JavaScript</a></li>
-<li><a href="#python">Python</a></li>
-<li><a href="#php">PHP</a></li>
-<li><a href="#ruby">Ruby</a></li>
-<li><a href="#perl">Perl</a></li>
-<li><a href="#c">C</a></li>
-<li><a href="#java">Java</a></li>
-<li><a href="#scala">Scala</a></li>
-<li><a href="#c-1">C++</a></li>
-<li><a href="#c-2">C</a></li>
-<li><a href="#go">Go</a></li>
-<li><a href="#haskell">Haskell</a></li>
-<li><a href="#erlang">Erlang</a></li>
-<li><a href="#elm">Elm</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#测试套件">测试套件</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#什么是json-patch">什么是JSON Patch</a>
+      <ul>
+        <li><a href="#简单的例子">简单的例子</a></li>
+      </ul>
+    </li>
+    <li><a href="#如何实现">如何实现</a>
+      <ul>
+        <li></li>
+        <li><a href="#操作">操作</a></li>
+        <li><a href="#库">库</a></li>
+      </ul>
+    </li>
+    <li><a href="#测试套件">测试套件</a></li>
+  </ul>
 </nav>
         </div>
         

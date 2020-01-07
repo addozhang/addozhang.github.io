@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,32 +87,18 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<p><img src="../media/14835174309242.jpg" alt="" /></p>
-
+            <p><img src="../media/14835174309242.jpg" alt=""></p>
 <h3 id="producer初始化">Producer初始化</h3>
-
 <p>初始化KafkaProducer实例，同时通过Config数据初始化MetaData、NetWorkClient、Accumulator和Sender线程。启动Sender线程。</p>
-
 <h4 id="metadata信息">MetaData信息</h4>
-
 <p>记录Cluster的相关信息，第一次链接使用Config设置，之后会从远端poll信息回来，比如host.name等信息。</p>
-
 <h4 id="accumulator实例">Accumulator实例</h4>
-
 <p>Accumulator持有一个Map实例，key为TopicPartition（封装了topic和partition信息）对象，Value为RecordBatch的Deque集合。</p>
-
 <h4 id="networkclient实例">NetworkClient实例</h4>
-
 <p>通过MetaData信息初始化NetworkClient实例，NetworkClient使用NIO模型。</p>
-
 <h4 id="sender线程">Sender线程</h4>
-
 <p>sender持有NetworkClient和Accumulator实例，在Producer实例初始化完成之后，持续地将Accumulator中的Batch数据drain到一个List中，调用NetworkClient进行发送。</p>
-
 <h3 id="发送">发送</h3>
-
 <p>调用Producer实例进行消息发送，首先将消息序列化之后追加到Accumulator的Deque的最后一个batch中，之后唤醒sender-&gt;client-&gt;Selector进行消息发送。</p>
 
         </div>
@@ -122,22 +108,14 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#producer初始化">Producer初始化</a>
-<ul>
-<li><a href="#metadata信息">MetaData信息</a></li>
-<li><a href="#accumulator实例">Accumulator实例</a></li>
-<li><a href="#networkclient实例">NetworkClient实例</a></li>
-<li><a href="#sender线程">Sender线程</a></li>
-</ul></li>
-<li><a href="#发送">发送</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#producer初始化">Producer初始化</a></li>
+        <li><a href="#发送">发送</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

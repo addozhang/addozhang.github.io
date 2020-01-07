@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -88,20 +88,23 @@
         </div>
         <div class="article-entry" itemprop="articleBody">
             <p>使用openshift搭建的k8s的api创建Deployment，在启动的时候报下面的错误：</p>
-
 <blockquote>
 <p>Invalid value: &ldquo;hostPath&rdquo;: hostPath volumes are not allowed to be used]</p>
 </blockquote>
-
 <p>解决方案：</p>
-
 <p>一个方案是将user加入<code>privileged</code> scc中，另一个方案就是：</p>
-<div class="highlight"><pre class="chroma">oc edit scc restricted
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">oc edit scc restricted
 #添加下面这行
-allowHostDirVolumePlugin: true</pre></div>
+allowHostDirVolumePlugin: true
+</code></pre></div>
         </div>
 
         
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents"></nav>
+        </div>
         
         
 

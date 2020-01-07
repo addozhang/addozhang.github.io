@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 <body>
@@ -316,7 +316,7 @@
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    多线程下的单例模式的实现，顺便做了反汇编。 public class MySingleton { private static MySingleton INSTANCE; private MySingleton() { } public static MySingleton getInstance() { if (INSTANCE == null) { synchronized (MySingleton.class) { INSTANCE = new MySingleton(); } } return INSTANCE; } }Compiled from &#34;MySingleton.java&#34; public class MySingleton { public static MySingleton getInstance(); Code: 0: getstatic #2
+                    多线程下的单例模式的实现，顺便做了反汇编。 public class MySingleton { private static MySingleton INSTANCE; private MySingleton() { } public static MySingleton getInstance() { if (INSTANCE == null) { synchronized (MySingleton.class) { INSTANCE = new MySingleton(); } } return INSTANCE; } } Compiled from &#34;MySingleton.java&#34; public class MySingleton { public static MySingleton getInstance(); Code: 0: getstatic
                     </p>
                     <p class="article-more-link">
                         <a href="../../singleton-in-multi-threads-programming/">Read More</a>
@@ -434,7 +434,7 @@
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    工作中很多场景需要用到定时任务、延迟任务，常用的方法用crontab job、Spring的Quartz，然后扫描整张数据库表，判断哪些数据需
+                    在requeue=false的情况系，消息被client reject 消息过期 队列长度超过限制
                     </p>
                     <p class="article-more-link">
                         <a href="../../rabbitmq-delay-queue-implementation/">Read More</a>

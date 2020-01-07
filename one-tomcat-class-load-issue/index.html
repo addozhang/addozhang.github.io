@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,45 +87,29 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<h2 id="背景">背景</h2>
-
+            <h2 id="背景">背景</h2>
 <p>一个Tomcat实例中运行了三个应用，其中一个对接了Apereo的CAS系统。现在要求另外两个系统也对接CAS系统，问题就出现了：</p>
-
 <blockquote>
 <p>应用启动后打开其中两个应用的任何一个，登录完成后系统都没有问题。唯独首选打开第三个，其他两个报错ClassNotFoundException: org.apache.xerces.parsers.SAXParser。</p>
 </blockquote>
-
 <p>发现这个类来自<code>xerces:xercesImpl:jar:2.6.2</code>，使用<code>mvn dependency:tree</code>发现是被xom:xom:1.1简洁引用。</p>
-
 <h2 id="分析">分析</h2>
-
 <p>CAS client jar中使用XMLReaderFactory创建XMLReader，首次创建会从classpath中查找<code>META-INF/services/org.xml.sax.driver</code>文件，这个文件里的内容是一个类的全名。比如xercesImpl中该文件的内容是<code>org.apache.xerces.parsers.SAXParser</code>。</p>
-
 <p>找到之后会将类名保存在XMLReaderFactory的静态变量_clsFromJar，并标记不会再查找org.xml.sax.driver文件。找不到的话则使用<code>com.sun.org.apache.xerces.internal.parsers.SAXParser</code>类。</p>
-
 <p>然后再使用当前线程的ContextClassLoader对类进行加载，这里的的ContextClassLoader是一个WebAppClassLoader的实例。</p>
-
 <p>同时XMLReaderFactory类是被BootStrapClassLoader加载的，为三个应用共享。</p>
-
 <h2 id="tomcat类记载机制">Tomcat类记载机制</h2>
-
 <p>Tomcat中有四个位置可以存放Java类库：/commons、/server、/shared和各Web应用的WEB-INF/lib目录。</p>
-
 <blockquote>
 <p>/commons目录中的类库可以被Tomcat和所有Web应用使用
 /server目录中的类库只能被Tomcat使用
 /shared目录中的可以被所有Web应用的使用，但是对Tomcat不可见
 各Web应用的WEB-INF/lib目录中的类库则只能被该的应用使用</p>
 </blockquote>
-
 <p>Tomcat的使用CommonClassLoader、CatalinaClassLoader、SharedClassLoader、WebAPPClassLoader加载对应目录中的类库。</p>
-
 <p>Bootstrap、Extension、Application是虚拟机使用的系统类加载器。</p>
-
 <p>类的加载使用双亲委派机制(Parent-Delegation)。</p>
-<div class="highlight"><pre class="chroma">       Bootstrap
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">       Bootstrap
            |
        Extension
            |
@@ -139,9 +123,8 @@
               /      \
         WebApp1 ... WebApp2
            |           |
-         Jasper      Jasper</pre></div>
-<h2 id="解决方案">解决方案</h2>
-
+         Jasper      Jasper
+</code></pre></div><h2 id="解决方案">解决方案</h2>
 <p>在另外两个应用中添加<code>xerces:xercesImpl:jar:2.6.2</code>依赖。</p>
 
         </div>
@@ -151,15 +134,12 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#背景">背景</a></li>
-<li><a href="#分析">分析</a></li>
-<li><a href="#tomcat类记载机制">Tomcat类记载机制</a></li>
-<li><a href="#解决方案">解决方案</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#分析">分析</a></li>
+    <li><a href="#tomcat类记载机制">Tomcat类记载机制</a></li>
+    <li><a href="#解决方案">解决方案</a></li>
+  </ul>
 </nav>
         </div>
         

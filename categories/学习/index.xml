@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>学习 on 乱世浮生</title>
@@ -17,12 +17,9 @@
       <pubDate>Mon, 01 Jan 2018 12:30:55 +0000</pubDate>
       
       <guid>https://atbug.com/go-in-action-four/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;https://talks.golang.org/2013/go4python/img/fib-go.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
+      <description>&lt;p&gt;&lt;img src=&#34;https://talks.golang.org/2013/go4python/img/fib-go.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;并发模式&#34;&gt;并发模式&lt;/h2&gt;
-
 &lt;h3 id=&#34;runner&#34;&gt;runner&lt;/h3&gt;
-
 &lt;p&gt;runner展示了如何使用通道来监视程序的执行时间, 如果程序执行时间太长, 也可以用终止程序.
 这个程序可用作corn作业执行&lt;/p&gt;</description>
     </item>
@@ -34,18 +31,12 @@
       
       <guid>https://atbug.com/go-in-action-three/</guid>
       <description>&lt;h2 id=&#34;并发&#34;&gt;并发&lt;/h2&gt;
-
 &lt;p&gt;Go语言里的并发是指让某个函数可以独立于其他函数运行的能力. 当一个函数创建为goroutine时, Go会将其视为一个独立的工作单元. 这个工作单元会被调度到可用的&lt;strong&gt;逻辑处理器&lt;/strong&gt;上执行.&lt;/p&gt;
-
 &lt;p&gt;Go的运行时调度器可以管理所有创建的goroutine, 并为其分配执行时间.
 这个调度器在操作系统之上, 将操作系统的线程与逻辑处理器绑定, 并在逻辑处理器执行goroutine. &lt;strong&gt;调度器可以在任何给定的时间, 全面控制哪个goroutine在哪个逻辑处理器上运行&lt;/strong&gt;.&lt;/p&gt;
-
 &lt;p&gt;Go的并发同步模型来自一个叫做通信顺序进程(Communicating Sequential Processes, &lt;a href=&#34;http://www.usingcsp.com&#34;&gt;CSP&lt;/a&gt;). CSP是一个消息传递模型, 通过在goroutine之前传递数据来传递消息, 不需要通过加锁实现同步访问. 用于在goroutine间传递消息的数据结构叫做通道(channel).&lt;/p&gt;
-
 &lt;h3 id=&#34;并发与并行&#34;&gt;并发与并行&lt;/h3&gt;
-
 &lt;p&gt;操作系统的线程(thread)和进程(process).&lt;/p&gt;
-
 &lt;p&gt;进程类似应用程序在运行中需要用到和维护的各种资源的容器.
 资源包括但不限于: 内存(来自文件系统的代码和数据), 句柄(文件, 设备, 操作系统), 线程.&lt;/p&gt;</description>
     </item>
@@ -57,17 +48,15 @@
       
       <guid>https://atbug.com/go-in-action-two/</guid>
       <description>&lt;h2 id=&#34;go语言的类型系统&#34;&gt;Go语言的类型系统&lt;/h2&gt;
-
 &lt;p&gt;Go语言是静态类型的变成语言. 编译的时候需要确定类型.&lt;/p&gt;
-
 &lt;h3 id=&#34;用户定义的类型&#34;&gt;用户定义的类型&lt;/h3&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kd&#34;&gt;type&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;user&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;struct&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;name&lt;/span&gt;    &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;email&lt;/span&gt;   &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;ext&lt;/span&gt;     &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;privileged&lt;/span&gt;  &lt;span class=&#34;kt&#34;&gt;bool&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;使用&lt;/strong&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;使用&lt;/strong&gt;
 零值和&lt;strong&gt;结构字面量&lt;/strong&gt;初始化&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;c1&#34;&gt;//引用类型, 各个字段初始化为对应的零值
 &lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;bill&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;user&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;  &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
@@ -77,11 +66,14 @@
     &lt;span class=&#34;nx&#34;&gt;email&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;lisa@email.com&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;ext&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;123&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;privileged&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;结构字面量的赋值方式:&lt;/strong&gt;
-- 不同行声明每一个字段和对应的值, 字段名和字段以&lt;code&gt;:&lt;/code&gt;分隔, 末尾以&lt;code&gt;,&lt;/code&gt;结尾
-- 不适用字段名, 只声明对应的值. 写在一行里, 以&lt;code&gt;,&lt;/code&gt;分隔, 结尾不需要&lt;code&gt;,&lt;/code&gt;. &lt;strong&gt;要保证顺序&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;lisa&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Lisa&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;lisa@email.com&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;123&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;结构字面量的赋值方式:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;不同行声明每一个字段和对应的值, 字段名和字段以&lt;code&gt;:&lt;/code&gt;分隔, 末尾以&lt;code&gt;,&lt;/code&gt;结尾&lt;/li&gt;
+&lt;li&gt;不适用字段名, 只声明对应的值. 写在一行里, 以&lt;code&gt;,&lt;/code&gt;分隔, 结尾不需要&lt;code&gt;,&lt;/code&gt;. &lt;strong&gt;要保证顺序&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;lisa&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Lisa&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;lisa@email.com&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;123&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
     </item>
     
     <item>
@@ -90,35 +82,27 @@
       <pubDate>Mon, 01 Jan 2018 12:27:10 +0000</pubDate>
       
       <guid>https://atbug.com/go-in-action-one/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;http://7xvxng.com1.z0.glb.clouddn.com/15142714785285.jpg&#34; alt=&#34;架构流程图&#34; /&gt;&lt;/p&gt;
-
+      <description>&lt;p&gt;&lt;img src=&#34;http://7xvxng.com1.z0.glb.clouddn.com/15142714785285.jpg&#34; alt=&#34;架构流程图&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;关键字&#34;&gt;关键字&lt;/h2&gt;
-
 &lt;h3 id=&#34;var&#34;&gt;var&lt;/h3&gt;
-
-&lt;p&gt;变量使用&lt;code&gt;var&lt;/code&gt;声明, 如果变量不是定义在任何一个函数作用域内, 这个变量就是包级变量.
-&amp;gt; Go语言中, 所有变量都被初始化为其&lt;strong&gt;零值&lt;/strong&gt;. 对于数值类型, 其零值是&lt;strong&gt;0&lt;/strong&gt;;  对于字符串类型, 其零值是&lt;strong&gt;空字符串&amp;rdquo;&amp;rdquo;&lt;/strong&gt;; 对于布尔类型, 其零值是&lt;strong&gt;false&lt;/strong&gt;. 对于引用类型来说, 底层数据结构会被初始化对应的零值. 但是被生命被起零值的引用类型的变量, 会返回&lt;strong&gt;nil&lt;/strong&gt;作为其值.&lt;/p&gt;
-
+&lt;p&gt;变量使用&lt;code&gt;var&lt;/code&gt;声明, 如果变量不是定义在任何一个函数作用域内, 这个变量就是包级变量.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Go语言中, 所有变量都被初始化为其&lt;strong&gt;零值&lt;/strong&gt;. 对于数值类型, 其零值是&lt;strong&gt;0&lt;/strong&gt;;  对于字符串类型, 其零值是&lt;strong&gt;空字符串&amp;rdquo;&amp;quot;&lt;/strong&gt;; 对于布尔类型, 其零值是&lt;strong&gt;false&lt;/strong&gt;. 对于引用类型来说, 底层数据结构会被初始化对应的零值. 但是被生命被起零值的引用类型的变量, 会返回&lt;strong&gt;nil&lt;/strong&gt;作为其值.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id=&#34;const&#34;&gt;const&lt;/h3&gt;
-
 &lt;p&gt;定义常量&lt;/p&gt;
-
 &lt;h3 id=&#34;interface&#34;&gt;interface&lt;/h3&gt;
-
 &lt;p&gt;声明接口&lt;/p&gt;
-
 &lt;h3 id=&#34;func&#34;&gt;func&lt;/h3&gt;
-
 &lt;p&gt;声明函数&lt;/p&gt;
-
 &lt;h3 id=&#34;defer&#34;&gt;defer&lt;/h3&gt;
-
 &lt;p&gt;安排后面的函数调用在当前函数返回时才执行.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;err&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;os&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;open&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;filePath&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;err&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;nil&lt;/span&gt;
     &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;defer&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;close&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
-&lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;more&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;file&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;operation&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+&lt;span class=&#34;k&#34;&gt;defer&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;close&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;more&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;file&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;operation&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
     </item>
     
     <item>
@@ -235,7 +219,7 @@
       <pubDate>Thu, 18 May 2017 23:33:24 +0000</pubDate>
       
       <guid>https://atbug.com/java-operate-cassandra-deployed-in-docker/</guid>
-      <description>搭建Cassandra 使用docker创建Cassandra，方便快捷 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table #cqlsh&amp;gt;#createkeyspaceCREATEKEYSPACEcontactsWITHREPLICATION={&amp;#39;class&amp;#39;:&amp;#39;SimpleStrategy&amp;#39;,&amp;#39;replication_factor&amp;#39;:1};#useUSEcontacts;#createtableCREATETABLEcontact(idUUID,emailTEXTPRIMARYKEY); 查看</description>
+      <description>搭建Cassandra 使用docker创建Cassandra，方便快捷 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table #cq</description>
     </item>
     
     <item>
@@ -289,7 +273,7 @@
       <pubDate>Fri, 07 Apr 2017 16:48:46 +0000</pubDate>
       
       <guid>https://atbug.com/install-redis-on-centos/</guid>
-      <description>版本 Centos7 Redis3.2.8 编译安装 wget http://download.redis.io/releases/redis-3.2.8.tar.gz tar -zxvf redis-3.2.8.tar.gz cd redis-3.2.8 sudo make test sudo make install 启动 redis-server 问题 /bin/sh: cc: command not found 原因：Centos安装时选择的类型是Infrastructure，没有c++的</description>
+      <description>版本 Centos7 Redis3.2.8 编译安装 wget http://download.redis.io/releases/redis-3.2.8.tar.gz tar -zxvf redis-3.2.8.tar.gz cd redis-3.2.8 sudo make test sudo make install 启动 redis-server 问题 /bin/sh: cc: command not found **原因：**Centos安装时选择的类型是Infrastructure，没有</description>
     </item>
     
     <item>
@@ -415,7 +399,7 @@
       <pubDate>Wed, 06 Jul 2016 16:57:09 +0000</pubDate>
       
       <guid>https://atbug.com/singleton-in-multi-threads-programming/</guid>
-      <description>多线程下的单例模式的实现，顺便做了反汇编。 public class MySingleton { private static MySingleton INSTANCE; private MySingleton() { } public static MySingleton getInstance() { if (INSTANCE == null) { synchronized (MySingleton.class) { INSTANCE = new MySingleton(); } } return INSTANCE; } }Compiled from &amp;#34;MySingleton.java&amp;#34; public class MySingleton { public static MySingleton getInstance(); Code: 0: getstatic #2</description>
+      <description>多线程下的单例模式的实现，顺便做了反汇编。 public class MySingleton { private static MySingleton INSTANCE; private MySingleton() { } public static MySingleton getInstance() { if (INSTANCE == null) { synchronized (MySingleton.class) { INSTANCE = new MySingleton(); } } return INSTANCE; } } Compiled from &amp;#34;MySingleton.java&amp;#34; public class MySingleton { public static MySingleton getInstance(); Code: 0: getstatic</description>
     </item>
     
     <item>
@@ -433,7 +417,7 @@
       <pubDate>Wed, 30 Mar 2016 14:27:02 +0000</pubDate>
       
       <guid>https://atbug.com/rabbitmq-delay-queue-implementation/</guid>
-      <description>工作中很多场景需要用到定时任务、延迟任务，常用的方法用crontab job、Spring的Quartz，然后扫描整张数据库表，判断哪些数据需</description>
+      <description>在requeue=false的情况系，消息被client reject 消息过期 队列长度超过限制</description>
     </item>
     
     <item>

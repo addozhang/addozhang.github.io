@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -88,20 +88,21 @@
         </div>
         <div class="article-entry" itemprop="articleBody">
             <p>根据官方的文档<a href="https://docs.docker.com/docker-for-mac/docker-toolbox/">Docker Desktop on Mac vs. Docker Toolbox</a>, Docker Desktop on Mac只提供了UNIX socket<code>/var/run/docker.sock</code>, 并未提供tcp的监听(默认2375端口).</p>
-
 <p><strong>如果使用linux的配置方式在<code>Docker Desktop</code>中配置<code>host</code>, <code>Docker Desktop</code>将无法启动. 需要去<code>~/.docker/daemon.json</code>中删除<code>hosts</code>配置才能正常启动.</strong></p>
-
 <p>通过下面的方式暴露出2375的tcp</p>
-<div class="highlight"><pre class="chroma">docker run --rm -d -v /var/run/docker.sock:/var/run/docker.sock -p 127.0.0.1:2375:2375 bobrik/socat TCP-LISTEN:2375,fork UNIX-CONNECT:/var/run/docker.sock</pre></div>
-<p>然后通过<code>docker version</code>查看当前的docker engine的版本, 比如1.40. 查看官方的Engine API文档: <a href="https://docs.docker.com/engine/api/v1.40">https://docs.docker.com/engine/api/v1.40</a></p>
-
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">docker run --rm -d -v /var/run/docker.sock:/var/run/docker.sock -p 127.0.0.1:2375:2375 bobrik/socat TCP-LISTEN:2375,fork UNIX-CONNECT:/var/run/docker.sock
+</code></pre></div><p>然后通过<code>docker version</code>查看当前的docker engine的版本, 比如1.40. 查看官方的Engine API文档: <a href="https://docs.docker.com/engine/api/v1.40">https://docs.docker.com/engine/api/v1.40</a></p>
 <p>搜索个镜像测试一下:</p>
-
-<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/15729240620185.jpg" alt="" /></p>
+<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/15729240620185.jpg" alt=""></p>
 
         </div>
 
         
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents"></nav>
+        </div>
         
         
 

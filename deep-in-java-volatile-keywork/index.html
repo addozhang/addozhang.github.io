@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -88,28 +88,26 @@
         </div>
         <div class="article-entry" itemprop="articleBody">
             <p>volatile通过保证对变量的读或写都是直接从内存中读取或直接写入内存中，保证了可见性；但是volatile并不足以保证线程安全，因为无法保证原子性，如count++操作：</p>
-
 <ol>
 <li>将值从内存读入寄存器中</li>
 <li>进行加1操作，内存保存到寄存器中</li>
 <li>结果从寄存器flush到内存中</li>
 </ol>
-
 <p>借用一张图来看：</p>
-
-<p><img src="http://tutorials.jenkov.com/images/java-concurrency/java-volatile-2.png" alt="123" /></p>
-
+<p><img src="http://tutorials.jenkov.com/images/java-concurrency/java-volatile-2.png" alt="123"></p>
 <p>不是volatile的变量的指令执行顺序是1-&gt;2-&gt;3；而声明为volatile的变量，顺序是1-&gt;23。从这里看，volatile保证了一个线程修改了volatile修饰的变量，变化会马上体现在内存中。线程间看到的值是一样的。</p>
-
 <p>上面说了无法保证原子性是指：多核cpu，线程A执行了指令1，线程B也执行了指令1。A进行了加1操作，结果写入寄存器同时flush到内存；随后B也执行了同样的操作。count本来应该的结果是加2，但是却只加了1。原因就是我们通常所指的读和写不是原子操作。我们最希望看到的是123同时执行，手段就是sychronized或者java.util.concurrent包中的原子数据类型。</p>
-
 <p>简单拿AtomicInteger来看，其中的一个int类型的value字段声明为volatile，保证了123同时执行。</p>
-
 <p>参考：<a href="http://tutorials.jenkov.com/java-concurrency/volatile.html">Java Volatile</a></p>
 
         </div>
 
         
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents"></nav>
+        </div>
         
         
 

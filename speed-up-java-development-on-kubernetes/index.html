@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,47 +87,37 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<p>今天来说说日常在Kubernetes开发Java项目遇到的问题.</p>
-
+            <p>今天来说说日常在Kubernetes开发Java项目遇到的问题.</p>
 <p>当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是<code>copy+paste+modify</code>. 能否以变成的方式来生成?</p>
-
 <p>开发时的步骤也比较繁琐: <code>docker build</code>, <code>docker push</code>, <code>kubectl apple</code>, <code>kubectl delete pod</code>. 对于一个Java应用来说还多了一步编译. 操作一次还ok, 但是一天十几次总会有想吐的感觉. 这些步骤能否简化成一个命令, 甚至修改了代码自动就完成上面一系列的操作?</p>
-
 <p>实现这些我们需要几个工具: <a href="https://github.com/dekorateio/dekorate">dekorate</a>, <a href="https://github.com/GoogleContainerTools/jib">Jib</a>, <a href="https://github.com/GoogleContainerTools/skaffold">Skaffold</a>. 其中Jib也在上一篇文章<a href="https://atbug.com/build-docker-or-oci-image-with-jib-for-java/">使用Jib为Java应用构建镜像</a>中介绍过.</p>
-
 <h2 id="dekorate">dekorate</h2>
-
 <blockquote>
 <p>Dekorate is a collection of Java compile-time generators and decorators for Kubernetes/OpenShift manifests.
 Dekorate是Java编译时生成和装饰Kubernetes/OpenShift的manifests的工具</p>
 </blockquote>
-
 <h3 id="快速开始">快速开始</h3>
-
-<h4 id="1-通过使用-spring-initializer-https-start-spring-io-生成一个项目-spring-boot-2-2-2-并加入依赖">1. 通过使用<a href="https://start.spring.io">Spring Initializer</a>生成一个项目(Spring Boot 2.2.2), 并加入依赖:</h4>
-<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;dependency&gt;</span>
-  <span class="nt">&lt;groupId&gt;</span>io.dekorate<span class="nt">&lt;/groupId&gt;</span>
-  <span class="nt">&lt;artifactId&gt;</span>kubernetes-spring-starter<span class="nt">&lt;/artifactId&gt;</span>
-  <span class="nt">&lt;version&gt;</span>0.10.0<span class="nt">&lt;/version&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span></code></pre></div>
-<h4 id="2-加入一个简单的-controller">2. 加入一个简单的<code>Controller</code>:</h4>
+<h4 id="1-通过使用spring-initializerhttpsstartspringio生成一个项目spring-boot-222-并加入依赖">1. 通过使用<a href="https://start.spring.io">Spring Initializer</a>生成一个项目(Spring Boot 2.2.2), 并加入依赖:</h4>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;dependency</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;groupId</span><span class="nt">&gt;</span>io.dekorate<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId</span><span class="nt">&gt;</span>kubernetes-spring-starter<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;version</span><span class="nt">&gt;</span>0.10.0<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div><h4 id="2-加入一个简单的controller">2. 加入一个简单的<code>Controller</code>:</h4>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="cm">/**
 </span><span class="cm"> * @author Addo.Zhang
 </span><span class="cm"> * @date 2019/12/22
 </span><span class="cm"> */</span>
 <span class="nd">@RestController</span>
-<span class="kd">public</span> <span class="nf">class</span> <span class="n">DekorateExampleController</span> <span class="p">{</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">DekorateExampleController</span> <span class="o">{</span>
 
     <span class="nd">@GetMapping</span>
-    <span class="kd">public</span> <span class="nf">String</span> <span class="n">hi</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="s">&#34;Hello World&#34;</span><span class="p">;</span>
-    <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">hi</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">&#34;Hello World&#34;</span><span class="o">;</span>
+    <span class="o">}</span>
 
-<span class="p">}</span></code></pre></div>
-<h4 id="3-执行命令-mvn-clean-install-然后在-target-classes-meta-inf-dekorate-目录下可以找到-kubernetes-json-和-kubernetes-yml-两个文件">3. 执行命令<code>mvn clean install</code>, 然后在<code>target/classes/META-INF/dekorate</code>目录下可以找到<code>kubernetes.json</code>和<code>kubernetes.yml</code>两个文件.</h4>
-
+<span class="o">}</span>
+</code></pre></div><h4 id="3-执行命令mvn-clean-install-然后在targetclassesmeta-infdekorate目录下可以找到kubernetesjson和kubernetesyml两个文件">3. 执行命令<code>mvn clean install</code>, 然后在<code>target/classes/META-INF/dekorate</code>目录下可以找到<code>kubernetes.json</code>和<code>kubernetes.yml</code>两个文件.</h4>
 <p><code>kubernetes.yml</code>的内容:</p>
 <div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">---<span class="w">
 </span><span class="w"></span>apiVersion<span class="p">:</span><span class="w"> </span><span class="s2">&#34;v1&#34;</span><span class="w">
@@ -203,9 +193,8 @@ Dekorate是Java编译时生成和装饰Kubernetes/OpenShift的manifests的工具
 </span><span class="w">          </span>initialDelaySeconds<span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w">
 </span><span class="w">          </span>periodSeconds<span class="p">:</span><span class="w"> </span><span class="m">30</span><span class="w">
 </span><span class="w">          </span>successThreshold<span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
-</span><span class="w">          </span>timeoutSeconds<span class="p">:</span><span class="w"> </span><span class="m">10</span></code></pre></div>
-<p>yml中包含了<code>Service</code>和<code>Deployment</code>两部分, dekorate完美兼容的Spring:</p>
-
+</span><span class="w">          </span>timeoutSeconds<span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
+</span></code></pre></div><p>yml中包含了<code>Service</code>和<code>Deployment</code>两部分, dekorate完美兼容的Spring:</p>
 <ul>
 <li><code>app: dekorate-example</code>: 项目名</li>
 <li><code>version: 0.0.1-SNAPSHOT</code>: 项目当前版本</li>
@@ -213,93 +202,72 @@ Dekorate是Java编译时生成和装饰Kubernetes/OpenShift的manifests的工具
 <li><code>/actuator/health</code>: Spring Boot 2.2后actuator的health endpoint, 作为<code>readinessProbe</code></li>
 <li><code>/actuator/info</code>: Spring Boot 2.2后actuator的endpoint, 作为<code>livenessProbe</code></li>
 </ul>
-
 <h3 id="进阶">进阶</h3>
-
 <p><strong>前面yml的内容都是自动生成的, 假如有些特殊的需求. 比如修改镜像的<code>repository</code>即这里的<code>group</code>, 如何操作?</strong></p>
-<div class="highlight"><pre class="chroma"><code class="language-properties" data-lang="properties">dekorate.kubernetes.group = addozhang</code></pre></div>
-<p>结果:</p>
-
-<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/5zgkfl.jpg" alt="Change Image Repository" /></p>
-
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">dekorate.kubernetes.group = addozhang
+</code></pre></div><p>结果:</p>
+<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/5zgkfl.jpg" alt="Change Image Repository"></p>
 <p><strong>或者修改Service的类型为NodePort</strong></p>
-<div class="highlight"><pre class="chroma"><code class="language-properties" data-lang="properties">dekorate.kubernetes.service-type = NodePort</code></pre></div>
-<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/vIen3M.jpg" alt="NodePort Service" /></p>
-
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">dekorate.kubernetes.service-type = NodePort
+</code></pre></div><p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/vIen3M.jpg" alt="NodePort Service"></p>
 <h4 id="配置">配置</h4>
-
 <p>dekoration提供了<a href="https://github.com/dekorateio/dekorate/blob/master/assets/config.md">丰富的配置</a>来个性化manifest.</p>
-
 <p>除了上面使用的配置文件(properties/yaml)的方式, 还提供了<code>Annotation</code>注解配置方式.</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nf">io</span><span class="p">.</span><span class="na">dekorate</span><span class="p">.</span><span class="na">kubernetes</span><span class="p">.</span><span class="na">annotation</span><span class="p">.</span><span class="na">Env</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nf">io</span><span class="p">.</span><span class="na">dekorate</span><span class="p">.</span><span class="na">kubernetes</span><span class="p">.</span><span class="na">annotation</span><span class="p">.</span><span class="na">KubernetesApplication</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">io.dekorate.kubernetes.annotation.Env</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">io.dekorate.kubernetes.annotation.KubernetesApplication</span><span class="o">;</span>
 
-<span class="nd">@KubernetesApplication</span><span class="p">(</span><span class="n">envVars</span> <span class="o">=</span> <span class="nd">@Env</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;key1&#34;</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="s">&#34;var1&#34;</span><span class="p">))</span>
-<span class="kd">public</span> <span class="nf">class</span> <span class="n">Main</span> <span class="p">{</span>
+<span class="nd">@KubernetesApplication</span><span class="o">(</span><span class="n">envVars</span> <span class="o">=</span> <span class="nd">@Env</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;key1&#34;</span><span class="o">,</span> <span class="n">value</span> <span class="o">=</span> <span class="s">&#34;var1&#34;</span><span class="o">)</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
 
-  <span class="kd">public</span> <span class="nf">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="nf">args</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
     <span class="c1">//Your code goes here
-</span><span class="c1"></span>  <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/exQoxy.jpg" alt="@KubernetesApplication Annotation" /></p>
-
+</span><span class="c1"></span>  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/exQoxy.jpg" alt="@KubernetesApplication Annotation"></p>
 <h2 id="jib">Jib</h2>
-
 <p>Jib的说明请看上一篇文章:<a href="https://atbug.com/build-docker-or-oci-image-with-jib-for-java/">使用Jib为Java应用构建镜像</a></p>
-
 <h3 id="插件配置">插件配置</h3>
-
 <p>下面是针对该项目添加的配置:</p>
-<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;plugin&gt;</span>
-    <span class="nt">&lt;groupId&gt;</span>com.google.cloud.tools<span class="nt">&lt;/groupId&gt;</span>
-    <span class="nt">&lt;artifactId&gt;</span>jib-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
-    <span class="nt">&lt;version&gt;</span>1.8.0<span class="nt">&lt;/version&gt;</span>
-    <span class="nt">&lt;configuration&gt;</span>
-        <span class="nt">&lt;container&gt;</span>
-            <span class="nt">&lt;jvmFlags&gt;</span>
-                <span class="nt">&lt;jvmFlag&gt;</span>-Xmx128m<span class="nt">&lt;/jvmFlag&gt;</span>
-                <span class="nt">&lt;jvmFlag&gt;</span>-Xms64m<span class="nt">&lt;/jvmFlag&gt;</span>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;plugin</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;groupId</span><span class="nt">&gt;</span>com.google.cloud.tools<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId</span><span class="nt">&gt;</span>jib-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version</span><span class="nt">&gt;</span>1.8.0<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;configuration</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;container</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;jvmFlags</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;jvmFlag</span><span class="nt">&gt;</span>-Xmx128m<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag</span><span class="nt">&gt;</span>-Xms64m<span class="nt">&lt;/jvmFlag&gt;</span>
             <span class="nt">&lt;/jvmFlags&gt;</span>
-            <span class="nt">&lt;labels&gt;</span>
-                <span class="nt">&lt;Author&gt;</span>Addo.Zhang<span class="nt">&lt;/Author&gt;</span>
+            <span class="nt">&lt;labels</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;Author</span><span class="nt">&gt;</span>Addo.Zhang<span class="nt">&lt;/Author&gt;</span>
             <span class="nt">&lt;/labels&gt;</span>
-            <span class="nt">&lt;creationTime&gt;</span>USE_CURRENT_TIMESTAMP<span class="nt">&lt;/creationTime&gt;</span>
+            <span class="nt">&lt;creationTime</span><span class="nt">&gt;</span>USE_CURRENT_TIMESTAMP<span class="nt">&lt;/creationTime&gt;</span>
         <span class="nt">&lt;/container&gt;</span>
-        <span class="nt">&lt;from&gt;</span>
-            <span class="nt">&lt;image&gt;</span>openjdk:8-jdk-alpine<span class="nt">&lt;/image&gt;</span>
+        <span class="nt">&lt;from</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;image</span><span class="nt">&gt;</span>openjdk:8-jdk-alpine<span class="nt">&lt;/image&gt;</span>
         <span class="nt">&lt;/from&gt;</span>
-        <span class="nt">&lt;to&gt;</span>
-            <span class="nt">&lt;image&gt;</span>addo/dekorate-example<span class="nt">&lt;/image&gt;</span>
-            <span class="nt">&lt;tags&gt;</span>
-                <span class="nt">&lt;tag&gt;</span>latest<span class="nt">&lt;/tag&gt;</span>
+        <span class="nt">&lt;to</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;image</span><span class="nt">&gt;</span>addo/dekorate-example<span class="nt">&lt;/image&gt;</span>
+            <span class="nt">&lt;tags</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;tag</span><span class="nt">&gt;</span>latest<span class="nt">&lt;/tag&gt;</span>
             <span class="nt">&lt;/tags&gt;</span>
         <span class="nt">&lt;/to&gt;</span>
-        <span class="nt">&lt;allowInsecureRegistries&gt;</span>true<span class="nt">&lt;/allowInsecureRegistries&gt;</span>
+        <span class="nt">&lt;allowInsecureRegistries</span><span class="nt">&gt;</span>true<span class="nt">&lt;/allowInsecureRegistries&gt;</span>
     <span class="nt">&lt;/configuration&gt;</span>
-<span class="nt">&lt;/plugin&gt;</span></code></pre></div>
-<p>执行命令<code>mvn compile jib:dockerBuild</code>便可以编译代码, 构建镜像并推送到镜像仓库.</p>
-
+<span class="nt">&lt;/plugin&gt;</span>
+</code></pre></div><p>执行命令<code>mvn compile jib:dockerBuild</code>便可以编译代码, 构建镜像并推送到镜像仓库.</p>
 <h2 id="skaffold">Skaffold</h2>
-
 <p><a href="https://github.com/GoogleContainerTools/skaffold">Skaffold</a>也是GoogleContainerTools中的一个工具.</p>
-
 <blockquote>
 <p>Skaffold is a command line tool that facilitates continuous development for Kubernetes applications. You can iterate on your application source code locally then deploy to local or remote Kubernetes clusters. Skaffold handles the workflow for building, pushing and deploying your application. It also provides building blocks and describe customizations for a CI/CD pipeline.
 Skaffold是一个命令行工具, 可促进Kubernetes应用程序的持续开发. 可以在本地迭代应用程序源代码, 然后部署到本地或远程Kubernetes集群. Skaffold处理构建, 推送和部署应用程序的工作流程. 它还提供了构建块并描述了CI/CD管道的自定义.</p>
 </blockquote>
-
 <p>在我们这个例子中, 通过与Jib的联动, 完成编译代码, 构建镜像, 推送镜像, 部署一系列操作.</p>
-
-<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/2019-12-23 15.12.24.gif" alt="Run" /></p>
-
+<p>![Run](<a href="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/2019-12-23">https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/2019-12-23</a> 15.12.24.gif)</p>
 <p>截屏中的操作, 因为没有代码改动而不续构建镜像, Skaffold直接从cache中获取镜像并部署到Kubernetes中.</p>
-
 <h3 id="skaffold操作">Skaffold操作</h3>
-
-<h4 id="1-执行命令-skaffold-init-xxenablejibinit-并在提示出输入-y">1. 执行命令<code>skaffold init --XXenableJibInit</code>并在提示出输入<code>y</code></h4>
-
-<h4 id="2-该命令会生成一个名为-skaffold-yaml-的文件">2. 该命令会生成一个名为<code>skaffold.yaml</code>的文件</h4>
-
+<h4 id="1-执行命令skaffold-init---xxenablejibinit并在提示出输入y">1. 执行命令<code>skaffold init --XXenableJibInit</code>并在提示出输入<code>y</code></h4>
+<h4 id="2-该命令会生成一个名为skaffoldyaml的文件">2. 该命令会生成一个名为<code>skaffold.yaml</code>的文件</h4>
 <p>由于<code>dekorate</code>同时生成了<code>json</code>和<code>yaml</code>格式的manifest, 被<code>skaffold</code>检测到. 实际操作中只需要其中一个即可.</p>
 <div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>skaffold/v1<span class="w">
 </span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>Config<span class="w">
@@ -313,21 +281,14 @@ Skaffold是一个命令行工具, 可促进Kubernetes应用程序的持续开发
 </span><span class="w">  </span>kubectl<span class="p">:</span><span class="w">
 </span><span class="w">    </span>manifests<span class="p">:</span><span class="w">
 </span><span class="w">    </span>-<span class="w"> </span>target/classes/META-INF/dekorate/kubernetes.json<span class="w">
-</span><span class="w">    </span>-<span class="w"> </span>target/classes/META-INF/dekorate/kubernetes.yml</code></pre></div>
-<h4 id="3-执行-skaffold-run">3. 执行<code>skaffold run</code></h4>
-
-<h4 id="4-pod启动完成后-通过-kubectl-port-forward-podname-here-8081">4. pod启动完成后, 通过<code>kubectl port-forward PODNAME-HERE 8081</code></h4>
-
-<h4 id="5-请求-http-http-localhost-8081">5. 请求<code>http http://localhost:8081</code></h4>
-
-<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/wt2BVU.jpg" alt="" /></p>
-
+</span><span class="w">    </span>-<span class="w"> </span>target/classes/META-INF/dekorate/kubernetes.yml<span class="w">
+</span></code></pre></div><h4 id="3-执行skaffold-run">3. 执行<code>skaffold run</code></h4>
+<h4 id="4-pod启动完成后-通过kubectl-port-forward-podname-here-8081">4. pod启动完成后, 通过<code>kubectl port-forward PODNAME-HERE 8081</code></h4>
+<h4 id="5-请求http-httplocalhost8081">5. 请求<code>http http://localhost:8081</code></h4>
+<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/wt2BVU.jpg" alt=""></p>
 <h3 id="进阶-1">进阶</h3>
-
 <p>Skaffold的功能强大, 目前个人使用的有限, 有时间新开一篇来学习一下.</p>
-
-<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/FXu4Hy.jpg" alt="" /></p>
-
+<p><img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/FXu4Hy.jpg" alt=""></p>
 <h4 id="cli">CLI</h4>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">➜  ~ skaffold <span class="nb">help</span>
 A tool that facilitates continuous development <span class="k">for</span> Kubernetes applications.
@@ -360,15 +321,11 @@ Usage:
   skaffold <span class="o">[</span>flags<span class="o">]</span> <span class="o">[</span>options<span class="o">]</span>
 
 Use <span class="s2">&#34;skaffold &lt;command&gt; --help&#34;</span> <span class="k">for</span> more information about a given command.
-Use <span class="s2">&#34;skaffold options&#34;</span> <span class="k">for</span> a list of global command-line options <span class="o">(</span>applies to all commands<span class="o">)</span>.</code></pre></div>
-<h4 id="yaml配置">Yaml配置</h4>
-
+Use <span class="s2">&#34;skaffold options&#34;</span> <span class="k">for</span> a list of global command-line options <span class="o">(</span>applies to all commands<span class="o">)</span>.
+</code></pre></div><h4 id="yaml配置">Yaml配置</h4>
 <p>参考<a href="https://skaffold.dev/docs/references/yaml/">skaffold.yaml</a></p>
-
 <h2 id="总结">总结</h2>
-
 <p>文章的开头我们提到如何做到修改代码后自动完成一些列的操作, 通过<code>skaffold dev</code>就可以实现.</p>
-
 <p>文章中使用的<code>dekoration-example</code>可在<a href="https://github.com/addozhang/dekorate-example">GitHub</a>上找到.</p>
 
         </div>
@@ -378,45 +335,26 @@ Use <span class="s2">&#34;skaffold options&#34;</span> <span class="k">for</span
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#dekorate">dekorate</a>
-<ul>
-<li><a href="#快速开始">快速开始</a>
-<ul>
-<li><a href="#1-通过使用-spring-initializer-https-start-spring-io-生成一个项目-spring-boot-2-2-2-并加入依赖">1. 通过使用<a href="https://start.spring.io">Spring Initializer</a>生成一个项目(Spring Boot 2.2.2), 并加入依赖:</a></li>
-<li><a href="#2-加入一个简单的-controller">2. 加入一个简单的<code>Controller</code>:</a></li>
-<li><a href="#3-执行命令-mvn-clean-install-然后在-target-classes-meta-inf-dekorate-目录下可以找到-kubernetes-json-和-kubernetes-yml-两个文件">3. 执行命令<code>mvn clean install</code>, 然后在<code>target/classes/META-INF/dekorate</code>目录下可以找到<code>kubernetes.json</code>和<code>kubernetes.yml</code>两个文件.</a></li>
-</ul></li>
-<li><a href="#进阶">进阶</a>
-<ul>
-<li><a href="#配置">配置</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#jib">Jib</a>
-<ul>
-<li><a href="#插件配置">插件配置</a></li>
-</ul></li>
-<li><a href="#skaffold">Skaffold</a>
-<ul>
-<li><a href="#skaffold操作">Skaffold操作</a>
-<ul>
-<li><a href="#1-执行命令-skaffold-init-xxenablejibinit-并在提示出输入-y">1. 执行命令<code>skaffold init --XXenableJibInit</code>并在提示出输入<code>y</code></a></li>
-<li><a href="#2-该命令会生成一个名为-skaffold-yaml-的文件">2. 该命令会生成一个名为<code>skaffold.yaml</code>的文件</a></li>
-<li><a href="#3-执行-skaffold-run">3. 执行<code>skaffold run</code></a></li>
-<li><a href="#4-pod启动完成后-通过-kubectl-port-forward-podname-here-8081">4. pod启动完成后, 通过<code>kubectl port-forward PODNAME-HERE 8081</code></a></li>
-<li><a href="#5-请求-http-http-localhost-8081">5. 请求<code>http http://localhost:8081</code></a></li>
-</ul></li>
-<li><a href="#进阶-1">进阶</a>
-<ul>
-<li><a href="#cli">CLI</a></li>
-<li><a href="#yaml配置">Yaml配置</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#总结">总结</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#dekorate">dekorate</a>
+      <ul>
+        <li><a href="#快速开始">快速开始</a></li>
+        <li><a href="#进阶">进阶</a></li>
+      </ul>
+    </li>
+    <li><a href="#jib">Jib</a>
+      <ul>
+        <li><a href="#插件配置">插件配置</a></li>
+      </ul>
+    </li>
+    <li><a href="#skaffold">Skaffold</a>
+      <ul>
+        <li><a href="#skaffold操作">Skaffold操作</a></li>
+        <li><a href="#进阶-1">进阶</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
 </nav>
         </div>
         

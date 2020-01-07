@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,106 +87,92 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<h1 id="raft">Raft</h1>
-
+            <h1 id="raft">Raft</h1>
 <p>强一致性算法</p>
-
 <h2 id="名词">名词</h2>
-
 <h3 id="复制状态机">复制状态机</h3>
-
-<p><img src="http://wx4.sinaimg.cn/mw690/4858d6a8ly1fbxcex0w1fj20gt08vwfr.jpg" alt="复制状态机的架构" />
+<p><img src="http://wx4.sinaimg.cn/mw690/4858d6a8ly1fbxcex0w1fj20gt08vwfr.jpg" alt="复制状态机的架构">
 复制状态机是通过复制日志来实现的, 按照日志中的命令的顺序来执行这些命令. 相同的状态机执行相同的日志命令, 获得相同的执行结果.</p>
-
 <h3 id="任期号-currentterm">任期号 (currentTerm)</h3>
-
 <p>每个成员都会保存一个任期号, 称为<strong>服务器最后知道的任期号</strong>.</p>
-
 <h3 id="投票的候选人id-votedfor">投票的候选人id (votedFor)</h3>
-
 <p>当前任期内, 投票的候选人id, 即响应投票请求(见下文)返回true时的候选人id.</p>
-
 <h3 id="已被提交的最大日志条目的索引值-commitindex">已被提交的最大日志条目的索引值 (commitIndex)</h3>
-
 <p>每个成员都会持有已被提交的最大日志条目的索引值</p>
-
-<h3 id="被状态机执行的最-日志条-的索引值-lastapplied">被状态机执行的最⼤日志条⽬的索引值 (lastApplied)</h3>
-
+<h3 id="被状态机执行的最日志条的索引值-lastapplied">被状态机执行的最⼤日志条⽬的索引值 (lastApplied)</h3>
 <p>每个成员都会持有被状态机执行的最⼤日志条⽬的索引值</p>
-
 <h3 id="请求">请求</h3>
-
 <h4 id="日志复制请求-appendentries-rpc">日志复制请求 (AppendEntries RPC)</h4>
-
 <p>由领导人发送给其他服务器, 也用作heartbeat</p>
-
-<p><strong>请求内容</strong>
-- term 领导人的任期号
-- leaderId 领导人的id
-- prevLogIndex 已经被状态机执行的最大索引值, 即最新日志之前的日志的索引值.
-- preLogTerm 最新日志之前的日志的领导人的任期号
-- entries[] 需要被复制的日志条目
-- leaderCommit 领导人提交的日志条目索引值</p>
-
-<p><strong>响应内容</strong>
-- term 当前的任期号,  用于领导人更新自己的任期号
-- success 目标服务器是否能够匹配prevLogIndex和preLogTerm</p>
-
-<p><strong>接受者的处理</strong>
-1. 如果term &lt; currentTerm返回false, 即发送请求的领导人任期号小于服务器最后知道的任期号, 意味着领导人发生了变更.
-2. 如果prevLogIndex和preLogTerm不匹配, 返回false. 即发送请求的领导人的日志不是最新的,
-3. 如果有一条已经存在的⽇志与新的冲突（index 相同但是任期号 term不同），则删除已经存在的⽇志和它之后所有的日志
-4. 添加任何在已有的日志中不存在的条目
-5. 如果leaderCommit &gt; commitIndex, 则更新commitIndex为leaderCommit和最新日志条目索引值中较小的一个</p>
-
+<p><strong>请求内容</strong></p>
+<ul>
+<li>term 领导人的任期号</li>
+<li>leaderId 领导人的id</li>
+<li>prevLogIndex 已经被状态机执行的最大索引值, 即最新日志之前的日志的索引值.</li>
+<li>preLogTerm 最新日志之前的日志的领导人的任期号</li>
+<li>entries[] 需要被复制的日志条目</li>
+<li>leaderCommit 领导人提交的日志条目索引值</li>
+</ul>
+<p><strong>响应内容</strong></p>
+<ul>
+<li>term 当前的任期号,  用于领导人更新自己的任期号</li>
+<li>success 目标服务器是否能够匹配prevLogIndex和preLogTerm</li>
+</ul>
+<p><strong>接受者的处理</strong></p>
+<ol>
+<li>如果term &lt; currentTerm返回false, 即发送请求的领导人任期号小于服务器最后知道的任期号, 意味着领导人发生了变更.</li>
+<li>如果prevLogIndex和preLogTerm不匹配, 返回false. 即发送请求的领导人的日志不是最新的,</li>
+<li>如果有一条已经存在的⽇志与新的冲突（index 相同但是任期号 term不同），则删除已经存在的⽇志和它之后所有的日志</li>
+<li>添加任何在已有的日志中不存在的条目</li>
+<li>如果leaderCommit &gt; commitIndex, 则更新commitIndex为leaderCommit和最新日志条目索引值中较小的一个</li>
+</ol>
 <h4 id="发起投票请求-requestvote-rpc">发起投票请求 (RequestVote RPC)</h4>
-
 <p>由候选人发起的, 发给集群中已知的其他成员</p>
-
-<p><strong>请求内容</strong>
-- term 候选人的任期号 (在变更为领导人之前的保存的任期号的基础上加1)
-- candidatedId 请求投票的候选人id
-- lastLogIndex 候选人最新日志条目的索引值
-- lastLogTerm 候选人最新日志条目对应的任期号</p>
-
-<p><strong>响应内容</strong>
-- term 目前的任期号, 用于候选人更新自己的任期号
-- voteGranted 收到选票为true</p>
-
-<p><strong>接受者的处理</strong>
-1. 如果term &lt; currentTerm 返回voteGranted为false
-2. 如果votedFor为空, 并且lastLogIndex和lastLogTerm匹配成功, 则为该候选人投票, 返回voteGranted为true. 并更新为候选人id</p>
-
+<p><strong>请求内容</strong></p>
+<ul>
+<li>term 候选人的任期号 (在变更为领导人之前的保存的任期号的基础上加1)</li>
+<li>candidatedId 请求投票的候选人id</li>
+<li>lastLogIndex 候选人最新日志条目的索引值</li>
+<li>lastLogTerm 候选人最新日志条目对应的任期号</li>
+</ul>
+<p><strong>响应内容</strong></p>
+<ul>
+<li>term 目前的任期号, 用于候选人更新自己的任期号</li>
+<li>voteGranted 收到选票为true</li>
+</ul>
+<p><strong>接受者的处理</strong></p>
+<ol>
+<li>如果term &lt; currentTerm 返回voteGranted为false</li>
+<li>如果votedFor为空, 并且lastLogIndex和lastLogTerm匹配成功, 则为该候选人投票, 返回voteGranted为true. 并更新为候选人id</li>
+</ol>
 <h4 id="安装快照请求-instalsnapshotrpc">安装快照请求 (InstalSnapshotRPC)</h4>
-
 <p>在领导人发送快照给跟随者时使用, 按顺序发送.</p>
-
-<p><strong>请求内容</strong>
-- term 领导人的任期号
-- leaderId 领导人id
-- lastIncludedIndex 快照中包含的最后日志条目的索引值
-- lastIncludedTerm 快照中包含的最后日志条目的任期号
-- offset 分块在快照块中的偏移量
-- data[] 快照的原始数据
-- done 如果是最后一块数据则为true</p>
-
-<p><strong>响应内容</strong>
-- term 目标服务器的currentTerm, 用于领导人更新自己</p>
-
-<p><strong>接受者的处理</strong>
-1. 如果term &lt; currentTerm 立刻回复
-2. 如果是第一个分块(offset为0)则创建新的快照
-3. 在指定的偏移量写入数据
-4. 如果done未false, 则回复并继续等待之后的数据
-5. 保存快照文件, 丢弃所有存在的或者部分有着更新索引号的快照
-6. 如果现存的日志拥有相同的最后任期号和索引值, 则后面的数据继续保留并且回复
-7. 丢弃全部日志
-8. 能够使用快照来恢复状态机 (并且装载快照中的集群配置)</p>
-
-<h2 id="约束-原则">约束/原则</h2>
-
+<p><strong>请求内容</strong></p>
+<ul>
+<li>term 领导人的任期号</li>
+<li>leaderId 领导人id</li>
+<li>lastIncludedIndex 快照中包含的最后日志条目的索引值</li>
+<li>lastIncludedTerm 快照中包含的最后日志条目的任期号</li>
+<li>offset 分块在快照块中的偏移量</li>
+<li>data[] 快照的原始数据</li>
+<li>done 如果是最后一块数据则为true</li>
+</ul>
+<p><strong>响应内容</strong></p>
+<ul>
+<li>term 目标服务器的currentTerm, 用于领导人更新自己</li>
+</ul>
+<p><strong>接受者的处理</strong></p>
+<ol>
+<li>如果term &lt; currentTerm 立刻回复</li>
+<li>如果是第一个分块(offset为0)则创建新的快照</li>
+<li>在指定的偏移量写入数据</li>
+<li>如果done未false, 则回复并继续等待之后的数据</li>
+<li>保存快照文件, 丢弃所有存在的或者部分有着更新索引号的快照</li>
+<li>如果现存的日志拥有相同的最后任期号和索引值, 则后面的数据继续保留并且回复</li>
+<li>丢弃全部日志</li>
+<li>能够使用快照来恢复状态机 (并且装载快照中的集群配置)</li>
+</ol>
+<h2 id="约束原则">约束/原则</h2>
 <ul>
 <li>选举安全原则 Election Safety: 一个任期内最多只有一个领导人当选</li>
 <li>领导人只增加原则 Leader Append-Only: 领导人永远不会覆盖或者删除自己的日志, 它只会增加条目</li>
@@ -194,68 +180,41 @@
 <li>领导人完全原则 Leader Completeness: 如果一个日志条目在一个给定任期内被提交, 那么这个条目一定会出现在所有任期号更大的领导人中</li>
 <li>状态机安全原则 State Machine Safety: 如果一个服务器已经将给定索引位置的日志条目应用到状态机中, 则所有的其他服务器不会在该索引位置应用不同的条目</li>
 </ul>
-
 <h2 id="领导人选举-leader-election">领导人选举 (Leader election)</h2>
-
 <h3 id="集群成员的状态">集群成员的状态</h3>
-
 <ul>
 <li>领导人</li>
 <li>候选人</li>
 <li>追随者.</li>
 </ul>
-
-<p><img src="http://wx2.sinaimg.cn/mw690/4858d6a8ly1fc9uv9fx6wj20hn07xt9z.jpg" alt="状态转换" /></p>
-
+<p><img src="http://wx2.sinaimg.cn/mw690/4858d6a8ly1fc9uv9fx6wj20hn07xt9z.jpg" alt="状态转换"></p>
 <p>在同一时间, 成员只会属于其中的一种状态. 并且集群中只会存在一个领导人.</p>
-
 <p>有领导人时: 一个领导人, n-1个追随者
 无领导人时: x个候选人, n-x个追随者</p>
-
 <h3 id="约束">约束</h3>
-
 <ul>
 <li>集群中最多存在一个领导人</li>
 <li>追随者不会发送请求, 只会接受来自领导人的AppendEntries RPC请求, 和候选人的RequestVote RPC请求. <em>AppendEntries RPC请求同时提供heartbeat机制</em></li>
 <li>领导人只接受来自客户端的请求</li>
 </ul>
-
 <h3 id="任期">任期</h3>
-
-<p><img src="http://wx3.sinaimg.cn/mw690/4858d6a8ly1fc9vx0s6l6j20ef05odg9.jpg" alt="时间流" /></p>
-
+<p><img src="http://wx3.sinaimg.cn/mw690/4858d6a8ly1fc9vx0s6l6j20ef05odg9.jpg" alt="时间流"></p>
 <p>时间被划分为一个个的任期, 每一个任期的开始都是领导人的选举.</p>
-
 <p>随机的选举超时时间 例如150~300毫秒, 防止无限选举失败.</p>
-
 <h2 id="日志复制">日志复制</h2>
-
 <h3 id="约束-1">约束</h3>
-
 <p>日志的流向只会是从领导人到追随者. 领导人不会覆盖自己的日志.</p>
-
 <h3 id="流程">流程</h3>
-
 <p>领导人接受来自客户端的请求, 把请求中的命令作为日志条目加入到自己的日志中, 然后向追随者发送AppendEnties RPC请求, 要求追随者复制这条日志条目. 追随者复制完成后会响应领导人. 所有的请求都会响应后, 领导人会将该条目应用到状态机中, 并响应客户端. 假如有追随者没有响应, 领导人会无限地重试AppendEnties RPC请求直到所有的追随者都复制了该条目.</p>
-
 <h2 id="安全性">安全性</h2>
-
 <p>没有包含全部日志的服务器不会赢得选举, 即某些投票请求的响应返回false.</p>
-
 <h2 id="日志压缩">日志压缩</h2>
-
 <p>把当前的系统状态写入快照(snapshot)中, 并持久化到存储中, 然后丢弃之前的全部日志.</p>
-
-<p><img src="http://wx2.sinaimg.cn/mw690/4858d6a8ly1fccdvbs2y7j20g70ae75i.jpg" alt="保存条目1-5到快照中" /></p>
-
+<p><img src="http://wx2.sinaimg.cn/mw690/4858d6a8ly1fccdvbs2y7j20g70ae75i.jpg" alt="保存条目1-5到快照中"></p>
 <p>快照中包含了最后的索引值和任期号.</p>
-
 <p>增量压缩(incremental approaches)</p>
-
 <p>领导人必须偶尔地发送快照给一些落后的跟随者. 运行非常缓慢或者新加入的跟随者不能与领导人保持同步, 可以通过发送快照的方式让跟随者更新到最新的状态.</p>
-
 <h2 id="参考">参考</h2>
-
 <p><a href="http://www.infoq.com/cn/articles/raft-paper">Raft 一致性算法论文译文</a></p>
 
         </div>
@@ -265,40 +224,35 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li><a href="#raft">Raft</a>
-<ul>
-<li><a href="#名词">名词</a>
-<ul>
-<li><a href="#复制状态机">复制状态机</a></li>
-<li><a href="#任期号-currentterm">任期号 (currentTerm)</a></li>
-<li><a href="#投票的候选人id-votedfor">投票的候选人id (votedFor)</a></li>
-<li><a href="#已被提交的最大日志条目的索引值-commitindex">已被提交的最大日志条目的索引值 (commitIndex)</a></li>
-<li><a href="#被状态机执行的最-日志条-的索引值-lastapplied">被状态机执行的最⼤日志条⽬的索引值 (lastApplied)</a></li>
-<li><a href="#请求">请求</a>
-<ul>
-<li><a href="#日志复制请求-appendentries-rpc">日志复制请求 (AppendEntries RPC)</a></li>
-<li><a href="#发起投票请求-requestvote-rpc">发起投票请求 (RequestVote RPC)</a></li>
-<li><a href="#安装快照请求-instalsnapshotrpc">安装快照请求 (InstalSnapshotRPC)</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#约束-原则">约束/原则</a></li>
-<li><a href="#领导人选举-leader-election">领导人选举 (Leader election)</a>
-<ul>
-<li><a href="#集群成员的状态">集群成员的状态</a></li>
-<li><a href="#约束">约束</a></li>
-<li><a href="#任期">任期</a></li>
-</ul></li>
-<li><a href="#日志复制">日志复制</a>
-<ul>
-<li><a href="#约束-1">约束</a></li>
-<li><a href="#流程">流程</a></li>
-</ul></li>
-<li><a href="#安全性">安全性</a></li>
-<li><a href="#日志压缩">日志压缩</a></li>
-<li><a href="#参考">参考</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#名词">名词</a>
+      <ul>
+        <li><a href="#复制状态机">复制状态机</a></li>
+        <li><a href="#任期号-currentterm">任期号 (currentTerm)</a></li>
+        <li><a href="#投票的候选人id-votedfor">投票的候选人id (votedFor)</a></li>
+        <li><a href="#已被提交的最大日志条目的索引值-commitindex">已被提交的最大日志条目的索引值 (commitIndex)</a></li>
+        <li><a href="#被状态机执行的最日志条的索引值-lastapplied">被状态机执行的最⼤日志条⽬的索引值 (lastApplied)</a></li>
+        <li><a href="#请求">请求</a></li>
+      </ul>
+    </li>
+    <li><a href="#约束原则">约束/原则</a></li>
+    <li><a href="#领导人选举-leader-election">领导人选举 (Leader election)</a>
+      <ul>
+        <li><a href="#集群成员的状态">集群成员的状态</a></li>
+        <li><a href="#约束">约束</a></li>
+        <li><a href="#任期">任期</a></li>
+      </ul>
+    </li>
+    <li><a href="#日志复制">日志复制</a>
+      <ul>
+        <li><a href="#约束-1">约束</a></li>
+        <li><a href="#流程">流程</a></li>
+      </ul>
+    </li>
+    <li><a href="#安全性">安全性</a></li>
+    <li><a href="#日志压缩">日志压缩</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
 </nav>
         </div>
         

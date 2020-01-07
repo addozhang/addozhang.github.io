@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,9 +87,7 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<h2 id="安装docker">安装Docker</h2>
+            <h2 id="安装docker">安装Docker</h2>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s2">&#34;http://dl-2.alpinelinux.org/alpine/edge/main&#34;</span> &gt; /etc/apk/repositories
 <span class="nb">echo</span> <span class="s2">&#34;http://dl-2.alpinelinux.org/alpine/edge/community&#34;</span> &gt;&gt; /etc/apk/repositories
 <span class="nb">echo</span> <span class="s2">&#34;http://dl-2.alpinelinux.org/alpine/edge/testing&#34;</span> &gt;&gt; /etc/apk/repositories
@@ -102,15 +100,14 @@ apk -U --no-cache <span class="se">\
 </span><span class="se"></span>    openrc <span class="se">\
 </span><span class="se"></span>    <span class="o">&amp;&amp;</span> pip install docker-compose
     
-rc-update add docker boot</code></pre></div>
-<h2 id="安装openshift-client-tools">安装OpenShift Client Tools</h2>
-
+rc-update add docker boot
+</code></pre></div><h2 id="安装openshift-client-tools">安装OpenShift Client Tools</h2>
 <p>需要先安装glibc</p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">apk --no-cache add ca-certificates wget
 wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
 wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.28-r0/glibc-2.28-r0.apk
-apk add glibc-2.28-r0.apk</code></pre></div>
-<p><code>curl --retry 7 -Lo /tmp/client-tools.tar.gz &quot;https://mirror.openshift.com/pub/openshift-v3/clients/3.9.1/linux/oc.tar.gz&quot;</code></p>
+apk add glibc-2.28-r0.apk
+</code></pre></div><p><code>curl --retry 7 -Lo /tmp/client-tools.tar.gz &quot;https://mirror.openshift.com/pub/openshift-v3/clients/3.9.1/linux/oc.tar.gz&quot;</code></p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">curl --retry <span class="m">7</span> -Lo /tmp/client-tools.tar.gz <span class="s2">&#34;https://mirror.openshift.com/pub/openshift-v3/clients/3.9.1/linux/oc.tar.gz&#34;</span>
 
 tar zxf /tmp/client-tools.tar.gz -C /usr/local/bin oc <span class="se">\
@@ -118,8 +115,8 @@ tar zxf /tmp/client-tools.tar.gz -C /usr/local/bin oc <span class="se">\
 </span><span class="se"></span>    <span class="o">&amp;&amp;</span> apk del .build-deps
     
 <span class="c1"># ADDED: Resolve issue x509 oc login issue</span>
-apk add --update ca-certificates</code></pre></div>
-<p>参考: <a href="https://github.com/openshift/origin/issues/11135">github issue</a></p>
+apk add --update ca-certificates
+</code></pre></div><p>参考: <a href="https://github.com/openshift/origin/issues/11135">github issue</a></p>
 
         </div>
 
@@ -128,13 +125,10 @@ apk add --update ca-certificates</code></pre></div>
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#安装docker">安装Docker</a></li>
-<li><a href="#安装openshift-client-tools">安装OpenShift Client Tools</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#安装docker">安装Docker</a></li>
+    <li><a href="#安装openshift-client-tools">安装OpenShift Client Tools</a></li>
+  </ul>
 </nav>
         </div>
         

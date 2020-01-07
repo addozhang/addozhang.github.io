@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,50 +87,30 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<p><a href="https://spring.io/blog/2019/11/28/spring-cloud-hoxton-released">原文</a></p>
-
+            <p><a href="https://spring.io/blog/2019/11/28/spring-cloud-hoxton-released">原文</a></p>
 <p>Spring Cloud Hoxton.RELEASE基于Spring Boot 2.2.1.RELEASE</p>
-
 <h3 id="文档变化">文档变化</h3>
-
 <p>Hoxton.RELEASE使用了新的<a href="https://cloud.spring.io/spring-cloud-static/Hoxton.RELEASE/reference/html/spring-cloud.html">首页</a>, 新的样式以及单页面, 多页面和PDF版本.</p>
-
 <h3 id="新的负载均衡器实现">新的负载均衡器实现</h3>
-
 <p>Hoxton.RELEASE是第一个包含阻塞和非阻塞客户端负载均衡器实现的版本, 替代进入维护状态的Netflix Ribbon.</p>
-
 <p>搭配<code>BlockingLoadBalancerClient</code>使用<code>RestTemplate</code>, 需要在classpath中引入<code>org.springframework.cloud:spring-cloud-loadbalancer</code>. 这个依赖同样用于使用了<code>@LoadBalanced WebClient.Builder</code>的响应式应用中. 唯一的区别是Spring Cloud会自动配置<code>ReactorLoadBalancerExchangeFilterFunction</code>实例. 更多内容查看<a href="https://cloud.spring.io/spring-cloud-static/spring-cloud-commons/2.2.0.M2/reference/html/#_spring_resttemplate_as_a_load_balancer_client">文档</a>. 新的<code>ReactorLoadBalancerExchangeFilterFunction</code>可用于自动装配并自动传递给<code>WebClient.Builder</code>(<a href="https://cloud.spring.io/spring-cloud-commons/reference/html/#webflux-with-reactive-loadbalancer">文档</a>).</p>
-
 <h3 id="spring-cloud-netflix">Spring Cloud Netflix</h3>
-
 <ul>
 <li>增加了新的<code>ReactiveDiscoveryClient</code>, 同时增加了新的Spring Cloud Circuit Breaker API的Hystrix实现.</li>
 <li>增加<a href="https://cloud.spring.io/spring-cloud-static/spring-cloud-netflix/2.2.0.RC2/reference/html/#disabling-spring-cloud-circuit-breaker-hystrix">配置项</a><code>spring.cloud.circuitbreaker.hystrix.enabled</code>来禁用Spring Cloud CircuitBreaker Hystrix的自动配置.</li>
 </ul>
-
 <h3 id="spring-cloud-cloudfoundry">Spring Cloud Cloudfoundry</h3>
-
 <p>支持新的<code>ReactiveDiscoveryClient</code></p>
-
 <h3 id="spring-cloud-bus">Spring Cloud Bus</h3>
-
 <p>文档更新</p>
-
 <h3 id="spring-cloud-vault">Spring Cloud Vault</h3>
-
 <ul>
 <li>在Pivotal应用程序服务)以前的PCF)中运行的应用程序可以利用容器的身份来使用保险柜的PCF身份验证支持进行身份验证</li>
 <li>使用X-Vault-Namespace标头支持Vault名称空间(Vault Enterprise功能)</li>
 </ul>
-
 <h3 id="spring-cloud-kubernetes">Spring Cloud Kubernetes</h3>
-
 <p>支持新的<code>ReactiveDiscoveryClient</code></p>
-
 <h3 id="spring-cloud-contract">Spring Cloud Contract</h3>
-
 <ul>
 <li>完整的文档重写</li>
 <li>主要测试类生成重构</li>
@@ -140,58 +120,41 @@
 <li>增加了对生成测试的TestNG支持</li>
 <li>许多库版本增量(包括Groovy, WireMock和Pact)</li>
 </ul>
-
 <h3 id="spring-cloud-consul">Spring Cloud Consul</h3>
-
 <p>支持新的<code>ReactiveDiscoveryClient</code>以及Consul的一致性模型</p>
-
 <h3 id="spring-cloud-config">Spring Cloud Config</h3>
-
 <ul>
 <li>新的环境仓库支持AWS S3</li>
 <li>添加了解密纯文本属性的功能</li>
 </ul>
-
 <h3 id="spring-cloud-gcp">Spring Cloud Gcp</h3>
-
 <ul>
 <li>添加BigQuery模块</li>
 <li>为Cloud Foundry创建了一个单独的启动器：<code>spring-cloud-gcp-starter-cloudfoundry</code></li>
 <li>可以浏览<a href="https://github.com/spring-cloud/spring-cloud-gcp/blob/master/CHANGELOG.adoc#120release-2019-11-26">变更日志</a>文档以获取更多信息</li>
 </ul>
-
 <h3 id="spring-cloud-stream">Spring Cloud Stream</h3>
-
 <p>从annotation-driven过度到了更加简单的函数式.</p>
-
 <ul>
 <li><a href="https://spring.io/blog/2019/10/14/spring-cloud-stream-demystified-and-simplified">Spring Cloud Stream - demystified and simplified</a></li>
 <li><a href="https://spring.io/blog/2019/10/17/spring-cloud-stream-functional-and-reactive">Spring Cloud Stream - functional and reactive</a></li>
 <li><a href="https://spring.io/blog/2019/10/25/spring-cloud-stream-and-spring-integration">Spring Cloud Stream - and Spring Integration</a></li>
 <li><a href="https://spring.io/blog/2019/10/31/spring-cloud-stream-event-routing">Spring Cloud Stream - Event Routing</a></li>
 </ul>
-
 <h3 id="spring-cloud-commons">Spring Cloud Commons</h3>
-
 <p>引入阻塞和非阻塞客户端负载均衡器实现, 来替代进入维护状态的Netflix Ribbon.</p>
-
 <h3 id="spring-cloud-openfeign">Spring Cloud Openfeign</h3>
-
 <ul>
 <li>Openfeign升级到10.4.0</li>
 <li>支持Spring Cloud LoadBalancer</li>
 </ul>
-
 <h3 id="spring-cloud-task">Spring Cloud Task</h3>
-
 <ul>
 <li>支持Micrometer</li>
 <li>更新文档</li>
 <li>使用Spring Batch分区时启动的任务应用现在加入了external-execution-id</li>
 </ul>
-
 <h3 id="spring-cloud-sleuth">Spring Cloud Sleuth</h3>
-
 <ul>
 <li>加入对最新的Brave(包括消息采样)的支持</li>
 <li>添加了onLastOperator Reactor跟踪选项，以提高性能</li>
@@ -202,52 +165,35 @@
 <li>添加了进程内传播机制</li>
 <li>默认为Zipkin报告的Micrometer指标</li>
 </ul>
-
 <h3 id="spring-cloud-aws">Spring Cloud AWS</h3>
-
 <p>Bug修复</p>
-
 <h3 id="spring-cloud-zookeeper">Spring Cloud Zookeeper</h3>
-
 <p>支持新的<code>ReactiveDiscoveryClient</code></p>
-
 <h3 id="spring-cloud-security">Spring Cloud Security</h3>
-
 <p>Bug修复</p>
-
 <h3 id="spring-cloud-curcuitbreaker">Spring Cloud CurcuitBreaker</h3>
-
 <p>引入新的项目Spring Cloud CircuitBreaker, 这个项目包含的抽象的API用于在项目中使用断路器. 支持该API的实现:</p>
-
 <ul>
 <li>Resilience4j</li>
 <li>Spring Retry</li>
 <li>Hystrix (in <a href="https://github.com/spring-cloud/spring-cloud-netflix/blob/master/spring-cloud-netflix-hystrix/src/main/java/org/springframework/cloud/netflix/hystrix/HystrixCircuitBreaker.java">spring-cloud-netflix</a>)</li>
 <li>Sentinel (in <a href="https://github.com/alibaba/spring-cloud-alibaba/tree/master/spring-cloud-alibaba-sentinel">spring-cloud-alibaba</a>)</li>
 </ul>
-
 <p><a href="https://spring.io/blog/2019/04/16/introducing-spring-cloud-circuit-breaker">更多信息</a></p>
-
 <ul>
 <li>时添加了自动配置, 在使用Resilience4J收集断路器的指标数据</li>
 <li>升级到Resilience4J 1.1.0</li>
 <li>添加配置项禁用REsilience4J的自动配置</li>
 </ul>
-
 <h3 id="spring-cloud-function">Spring Cloud Function</h3>
-
 <p>添加了更多新特性:</p>
-
 <ul>
 <li>透明类型转换</li>
 <li>函数路由</li>
 <li>函数参数</li>
 </ul>
-
 <p><a href="https://spring.io/blog/2019/11/25/announcing-the-release-of-spring-cloud-function-3-0-0-release">更多详细信息</a></p>
-
 <h3 id="spring-cloud-gateway">Spring Cloud Gateway</h3>
-
 <ul>
 <li>支持新的<code>ReactiveDiscoveryClient</code></li>
 <li>RSocket模块迁移到了自己维护的位于Spring Cloud Incubator organization项目中</li>
@@ -261,36 +207,34 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#文档变化">文档变化</a></li>
-<li><a href="#新的负载均衡器实现">新的负载均衡器实现</a></li>
-<li><a href="#spring-cloud-netflix">Spring Cloud Netflix</a></li>
-<li><a href="#spring-cloud-cloudfoundry">Spring Cloud Cloudfoundry</a></li>
-<li><a href="#spring-cloud-bus">Spring Cloud Bus</a></li>
-<li><a href="#spring-cloud-vault">Spring Cloud Vault</a></li>
-<li><a href="#spring-cloud-kubernetes">Spring Cloud Kubernetes</a></li>
-<li><a href="#spring-cloud-contract">Spring Cloud Contract</a></li>
-<li><a href="#spring-cloud-consul">Spring Cloud Consul</a></li>
-<li><a href="#spring-cloud-config">Spring Cloud Config</a></li>
-<li><a href="#spring-cloud-gcp">Spring Cloud Gcp</a></li>
-<li><a href="#spring-cloud-stream">Spring Cloud Stream</a></li>
-<li><a href="#spring-cloud-commons">Spring Cloud Commons</a></li>
-<li><a href="#spring-cloud-openfeign">Spring Cloud Openfeign</a></li>
-<li><a href="#spring-cloud-task">Spring Cloud Task</a></li>
-<li><a href="#spring-cloud-sleuth">Spring Cloud Sleuth</a></li>
-<li><a href="#spring-cloud-aws">Spring Cloud AWS</a></li>
-<li><a href="#spring-cloud-zookeeper">Spring Cloud Zookeeper</a></li>
-<li><a href="#spring-cloud-security">Spring Cloud Security</a></li>
-<li><a href="#spring-cloud-curcuitbreaker">Spring Cloud CurcuitBreaker</a></li>
-<li><a href="#spring-cloud-function">Spring Cloud Function</a></li>
-<li><a href="#spring-cloud-gateway">Spring Cloud Gateway</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#文档变化">文档变化</a></li>
+        <li><a href="#新的负载均衡器实现">新的负载均衡器实现</a></li>
+        <li><a href="#spring-cloud-netflix">Spring Cloud Netflix</a></li>
+        <li><a href="#spring-cloud-cloudfoundry">Spring Cloud Cloudfoundry</a></li>
+        <li><a href="#spring-cloud-bus">Spring Cloud Bus</a></li>
+        <li><a href="#spring-cloud-vault">Spring Cloud Vault</a></li>
+        <li><a href="#spring-cloud-kubernetes">Spring Cloud Kubernetes</a></li>
+        <li><a href="#spring-cloud-contract">Spring Cloud Contract</a></li>
+        <li><a href="#spring-cloud-consul">Spring Cloud Consul</a></li>
+        <li><a href="#spring-cloud-config">Spring Cloud Config</a></li>
+        <li><a href="#spring-cloud-gcp">Spring Cloud Gcp</a></li>
+        <li><a href="#spring-cloud-stream">Spring Cloud Stream</a></li>
+        <li><a href="#spring-cloud-commons">Spring Cloud Commons</a></li>
+        <li><a href="#spring-cloud-openfeign">Spring Cloud Openfeign</a></li>
+        <li><a href="#spring-cloud-task">Spring Cloud Task</a></li>
+        <li><a href="#spring-cloud-sleuth">Spring Cloud Sleuth</a></li>
+        <li><a href="#spring-cloud-aws">Spring Cloud AWS</a></li>
+        <li><a href="#spring-cloud-zookeeper">Spring Cloud Zookeeper</a></li>
+        <li><a href="#spring-cloud-security">Spring Cloud Security</a></li>
+        <li><a href="#spring-cloud-curcuitbreaker">Spring Cloud CurcuitBreaker</a></li>
+        <li><a href="#spring-cloud-function">Spring Cloud Function</a></li>
+        <li><a href="#spring-cloud-gateway">Spring Cloud Gateway</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

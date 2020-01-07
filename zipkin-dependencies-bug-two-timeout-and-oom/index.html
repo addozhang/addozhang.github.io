@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,12 +87,9 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<p>上回说为了解决吞吐问题, 将<a href="https://github.com/openzipkin/zipkin-dependencies">zipkin-dependencies</a>的版本升级到了2.3.0.</p>
-
+            <p>上回说为了解决吞吐问题, 将<a href="https://github.com/openzipkin/zipkin-dependencies">zipkin-dependencies</a>的版本升级到了2.3.0.</p>
 <p>好景不长, 从某一天开始作业运行报错:</p>
-<div class="highlight"><pre class="chroma"><code class="language-log" data-lang="log">Issue communicating with driver in heartbeater
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">Issue communicating with driver in heartbeater
 org.apache.spark.rpc.RpcTimeoutException: Futures timed out after [10000 milliseconds]. This timeout is controlled by spark.executor.heartbeatInterval
 
 ...
@@ -100,17 +97,18 @@ org.apache.spark.rpc.RpcTimeoutException: Futures timed out after [10000 millise
 19/09/18 08:33:20 ERROR Executor: Exception in task 1.0 in stage 1.0 (TID 4)
 java.lang.OutOfMemoryError: Java heap space
 
-...</code></pre></div>
-<h3 id="解决方案">解决方案</h3>
-
+...
+</code></pre></div><h3 id="解决方案">解决方案</h3>
 <p>最新版本(2.3.0)目前不支持额外的spark和elasticsearch-spark的配置, 已经提交了<a href="https://github.com/openzipkin/zipkin-dependencies/pull/151">PR</a></p>
-
 <ol>
-<li><p>超时的解决方案: 为spark指定配置</p>
-<div class="highlight"><pre class="chroma"><code class="language-properties" data-lang="properties">spark.executor.heartbeatInterval=600000
-spark.network.timeout=600000</code></pre></div></li>
-
-<li><p>OOM解决方案: 根据实际情况通过<code>es.input.max.docs.per.partition</code>配置executor的数量. 调整运行内存及<code>spark.executor.memory</code></p></li>
+<li>
+<p>超时的解决方案: 为spark指定配置</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">spark.executor.heartbeatInterval=600000
+spark.network.timeout=600000
+</code></pre></div></li>
+<li>
+<p>OOM解决方案: 根据实际情况通过<code>es.input.max.docs.per.partition</code>配置executor的数量. 调整运行内存及<code>spark.executor.memory</code></p>
+</li>
 </ol>
 
         </div>
@@ -120,15 +118,13 @@ spark.network.timeout=600000</code></pre></div></li>
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#解决方案">解决方案</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#解决方案">解决方案</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

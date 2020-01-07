@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,15 +87,11 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            <p><img src="https://talks.golang.org/2013/go4python/img/fib-go.png" alt="" /></p>
-
+            <p><img src="https://talks.golang.org/2013/go4python/img/fib-go.png" alt=""></p>
 <h2 id="并发模式">并发模式</h2>
-
 <h3 id="runner">runner</h3>
-
 <p>runner展示了如何使用通道来监视程序的执行时间, 如果程序执行时间太长, 也可以用终止程序.
 这个程序可用作corn作业执行</p>
-
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">runner</span>
 
 <span class="kn">import</span> <span class="p">(</span>
@@ -113,7 +109,7 @@
 </span><span class="c1"></span>	<span class="nx">complete</span>  <span class="kd">chan</span> <span class="kt">error</span>
 	<span class="c1">//报告任务处理已经超时
 </span><span class="c1"></span>	<span class="nx">timeout</span>   <span class="o">&lt;-</span><span class="kd">chan</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
-	<span class="nx">tasks</span>     <span class="p">[]</span><span class="kd">func</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span>
+	<span class="nx">tasks</span>     <span class="p">[</span><span class="p">]</span><span class="kd">func</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span>
 <span class="p">}</span>
 <span class="c1">//超时错误
 </span><span class="c1"></span><span class="kd">var</span> <span class="nx">ErrTimeout</span> <span class="p">=</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;received timeout&#34;</span><span class="p">)</span>
@@ -123,25 +119,25 @@
 <span class="c1">//返回一个新的准备使用的Runner
 </span><span class="c1"></span><span class="kd">func</span> <span class="nf">New</span><span class="p">(</span><span class="nx">d</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span><span class="p">)</span> <span class="o">*</span><span class="nx">Runner</span> <span class="p">{</span>
 	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Runner</span><span class="p">{</span>
-		<span class="nx">interrupt</span><span class="p">:</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Signal</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-		<span class="nx">complete</span><span class="p">:</span>  <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">error</span><span class="p">),</span>
-		<span class="nx">timeout</span><span class="p">:</span>   <span class="nx">time</span><span class="p">.</span><span class="nf">After</span><span class="p">(</span><span class="nx">d</span><span class="p">),</span> <span class="c1">//After函数会使用goroutine启动一个timer, timer时间到后向channel写入Time
+		<span class="nx">interrupt</span><span class="p">:</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Signal</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="p">,</span>
+		<span class="nx">complete</span><span class="p">:</span>  <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">error</span><span class="p">)</span><span class="p">,</span>
+		<span class="nx">timeout</span><span class="p">:</span>   <span class="nx">time</span><span class="p">.</span><span class="nf">After</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span><span class="p">,</span> <span class="c1">//After函数会使用goroutine启动一个timer, timer时间到后向channel写入Time
 </span><span class="c1"></span>	<span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">//向Runner中添加task
-</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">Runner</span><span class="p">)</span> <span class="nf">AddTask</span><span class="p">(</span><span class="nx">tasks</span> <span class="o">...</span> <span class="kd">func</span><span class="p">(</span><span class="kt">int</span><span class="p">))</span> <span class="p">{</span>
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">Runner</span><span class="p">)</span> <span class="nf">AddTask</span><span class="p">(</span><span class="nx">tasks</span> <span class="o">...</span> <span class="kd">func</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
 	<span class="nx">r</span><span class="p">.</span><span class="nx">tasks</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">tasks</span><span class="p">,</span> <span class="nx">tasks</span><span class="o">...</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">Runner</span><span class="p">)</span> <span class="nf">Start</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">Runner</span><span class="p">)</span> <span class="nf">Start</span><span class="p">(</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
 	<span class="c1">//希望接收所有终端信号
 </span><span class="c1"></span>	<span class="nx">signal</span><span class="p">.</span><span class="nf">Notify</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">interrupt</span><span class="p">,</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Interrupt</span><span class="p">)</span>
 
-	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
 		<span class="c1">//使用goroutine执行任务
-</span><span class="c1"></span>		<span class="nx">r</span><span class="p">.</span><span class="nx">complete</span> <span class="o">&lt;-</span> <span class="nx">r</span><span class="p">.</span><span class="nf">run</span><span class="p">()</span>
-	<span class="p">}()</span>
+</span><span class="c1"></span>		<span class="nx">r</span><span class="p">.</span><span class="nx">complete</span> <span class="o">&lt;-</span> <span class="nx">r</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="p">)</span>
+	<span class="p">}</span><span class="p">(</span><span class="p">)</span>
 
 	<span class="k">select</span> <span class="p">{</span> <span class="c1">//main线程在select处阻塞, 要么等待任务执行结果结束, 要么等待计时器报告超时
 </span><span class="c1"></span>	<span class="k">case</span> <span class="nx">err</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">r</span><span class="p">.</span><span class="nx">complete</span><span class="p">:</span><span class="c1">//阻塞等待任务执行结果
@@ -151,10 +147,10 @@
 	<span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">Runner</span><span class="p">)</span> <span class="nf">run</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">Runner</span><span class="p">)</span> <span class="nf">run</span><span class="p">(</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
 	<span class="k">for</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">task</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">r</span><span class="p">.</span><span class="nx">tasks</span> <span class="p">{</span>
 		<span class="c1">//检测是否有来自操作系统的终端信号
-</span><span class="c1"></span>		<span class="k">if</span> <span class="nx">r</span><span class="p">.</span><span class="nf">getInterrupted</span><span class="p">()</span> <span class="p">{</span>
+</span><span class="c1"></span>		<span class="k">if</span> <span class="nx">r</span><span class="p">.</span><span class="nf">getInterrupted</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">ErrInterrupt</span>
 		<span class="p">}</span>
 		<span class="c1">//执行任务
@@ -163,7 +159,7 @@
 	<span class="k">return</span> <span class="kc">nil</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">Runner</span><span class="p">)</span> <span class="nf">getInterrupted</span><span class="p">()</span> <span class="kt">bool</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">Runner</span><span class="p">)</span> <span class="nf">getInterrupted</span><span class="p">(</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
 	<span class="c1">//使用default将select的阻塞变成非阻塞. 每次方法调用只是检查通道中是否有数据, 不阻塞
 </span><span class="c1"></span>	<span class="k">select</span> <span class="p">{</span>
 	<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">r</span><span class="p">.</span><span class="nx">interrupt</span><span class="p">:</span>
@@ -171,7 +167,8 @@
 	<span class="k">default</span><span class="p">:</span>
 		<span class="k">return</span> <span class="kc">false</span>
 	<span class="p">}</span>
-<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
 <span class="kn">import</span> <span class="p">(</span>
 	<span class="s">&#34;time&#34;</span>
 	<span class="s">&#34;os&#34;</span>
@@ -180,15 +177,15 @@
 	<span class="s">&#34;github.com/addozhang/learning-go-lang/runner&#34;</span>
 <span class="p">)</span>
 
-<span class="kd">func</span> <span class="nf">main</span><span class="p">(){</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
 	<span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Starting working.&#34;</span><span class="p">)</span>
 
 	<span class="kd">const</span> <span class="nx">timeout</span> <span class="p">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span>
 	<span class="nx">r</span> <span class="o">:=</span> <span class="nx">runner</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="nx">timeout</span><span class="p">)</span>
 
-	<span class="nx">r</span><span class="p">.</span><span class="nf">AddTask</span><span class="p">(</span><span class="nf">createTask</span><span class="p">(),</span> <span class="nf">createTask</span><span class="p">(),</span> <span class="nf">createTask</span><span class="p">())</span>
+	<span class="nx">r</span><span class="p">.</span><span class="nf">AddTask</span><span class="p">(</span><span class="nf">createTask</span><span class="p">(</span><span class="p">)</span><span class="p">,</span> <span class="nf">createTask</span><span class="p">(</span><span class="p">)</span><span class="p">,</span> <span class="nf">createTask</span><span class="p">(</span><span class="p">)</span><span class="p">)</span>
 
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">Start</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nf">Start</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">switch</span> <span class="nx">err</span> <span class="p">{</span>
 		<span class="k">case</span> <span class="nx">runner</span><span class="p">.</span><span class="nx">ErrTimeout</span><span class="p">:</span>
 			<span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Terminating due to timeout.&#34;</span><span class="p">)</span>
@@ -201,14 +198,14 @@
 	<span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Process ended.&#34;</span><span class="p">)</span>
 <span class="p">}</span>
 <span class="c1">//创建任务, 返回接受int类型参数的函数
-</span><span class="c1"></span><span class="kd">func</span> <span class="nf">createTask</span><span class="p">()</span> <span class="kd">func</span><span class="p">(</span><span class="kt">int</span><span class="p">){</span>
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">createTask</span><span class="p">(</span><span class="p">)</span> <span class="kd">func</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="p">{</span>
 	<span class="k">return</span> <span class="kd">func</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
 		<span class="nx">log</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Processor - Task #%d&#34;</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span>
 		<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nf">Duration</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
 	<span class="p">}</span>
 <span class="p">}</span>
 <span class="c1">//创建任务, 返回接受int类型参数的函数
-</span><span class="c1"></span><span class="kd">func</span> <span class="nf">createTask</span><span class="p">()</span> <span class="kd">func</span><span class="p">(</span><span class="kt">int</span><span class="p">){</span>
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">createTask</span><span class="p">(</span><span class="p">)</span> <span class="kd">func</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="p">{</span>
 	<span class="k">return</span> <span class="kd">func</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
 		<span class="nx">log</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Processor - Task #%d&#34;</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span>
 		<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nf">Duration</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
@@ -216,13 +213,12 @@
 <span class="p">}</span>
 
 <span class="c1">//结果输出
-</span><span class="c1">//2018/01/01 09:45:57 Starting working.
-</span><span class="c1">//2018/01/01 09:45:57 Processor - Task #0
-</span><span class="c1">//2018/01/01 09:45:57 Processor - Task #1
-</span><span class="c1">//2018/01/01 09:45:58 Processor - Task #2
-</span><span class="c1"></span><span class="o">//</span><span class="mi">2018</span><span class="o">/</span><span class="mo">01</span><span class="o">/</span><span class="mo">01</span> <span class="mi">09</span><span class="p">:</span><span class="mi">46</span><span class="p">:</span><span class="mo">00</span> <span class="nx">Terminating</span> <span class="nx">due</span> <span class="nx">to</span> <span class="nx">timeout</span><span class="p">.</span></code></pre></div>
-<h3 id="pool">pool</h3>
-
+</span><span class="c1"></span><span class="c1">//2018/01/01 09:45:57 Starting working.
+</span><span class="c1"></span><span class="c1">//2018/01/01 09:45:57 Processor - Task #0
+</span><span class="c1"></span><span class="c1">//2018/01/01 09:45:57 Processor - Task #1
+</span><span class="c1"></span><span class="c1">//2018/01/01 09:45:58 Processor - Task #2
+</span><span class="c1"></span><span class="c1">//2018/01/01 09:46:00 Terminating due to timeout.
+</span></code></pre></div><h3 id="pool">pool</h3>
 <p>下面的代码展示如何使用有缓冲通道实现资源池, 以1.5版本为基础写的. 1.6之后的版本, 标准库中自带了资源池的实现<code>sycn.Pool</code></p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">pool</span>
 
@@ -236,25 +232,25 @@
 <span class="kd">type</span> <span class="nx">Pool</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">m</span>         <span class="nx">sync</span><span class="p">.</span><span class="nx">Mutex</span>                <span class="c1">//互斥锁用于安全地方访问资源池
 </span><span class="c1"></span>	<span class="nx">resources</span> <span class="kd">chan</span> <span class="nx">io</span><span class="p">.</span><span class="nx">Closer</span>            <span class="c1">//资源池通道, 需要实现io.Closer接口
-</span><span class="c1"></span>	<span class="nx">factory</span>   <span class="kd">func</span><span class="p">()</span> <span class="p">(</span><span class="nx">io</span><span class="p">.</span><span class="nx">Closer</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="c1">//创建资源的工厂方法
+</span><span class="c1"></span>	<span class="nx">factory</span>   <span class="kd">func</span><span class="p">(</span><span class="p">)</span> <span class="p">(</span><span class="nx">io</span><span class="p">.</span><span class="nx">Closer</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="c1">//创建资源的工厂方法
 </span><span class="c1"></span>	<span class="nx">closed</span>    <span class="kt">bool</span>                      <span class="c1">//资源池是否关闭
 </span><span class="c1"></span><span class="p">}</span>
 
 <span class="c1">//资源池关闭错误
 </span><span class="c1"></span><span class="kd">var</span> <span class="nx">ErrPoolClosed</span> <span class="p">=</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;Pool has ben closed.&#34;</span><span class="p">)</span>
 
-<span class="kd">func</span> <span class="nf">New</span><span class="p">(</span><span class="nx">fn</span> <span class="kd">func</span><span class="p">()</span> <span class="p">(</span><span class="nx">io</span><span class="p">.</span><span class="nx">Closer</span><span class="p">,</span> <span class="kt">error</span><span class="p">),</span> <span class="nx">size</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Pool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="nf">New</span><span class="p">(</span><span class="nx">fn</span> <span class="kd">func</span><span class="p">(</span><span class="p">)</span> <span class="p">(</span><span class="nx">io</span><span class="p">.</span><span class="nx">Closer</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span><span class="p">,</span> <span class="nx">size</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Pool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
 	<span class="k">if</span> <span class="nx">size</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;Size value too small.&#34;</span><span class="p">)</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Pool</span><span class="p">{</span>
-		<span class="nx">resources</span><span class="p">:</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">io</span><span class="p">.</span><span class="nx">Closer</span><span class="p">,</span> <span class="nx">size</span><span class="p">),</span> <span class="c1">//使用有缓冲资源池
+		<span class="nx">resources</span><span class="p">:</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">io</span><span class="p">.</span><span class="nx">Closer</span><span class="p">,</span> <span class="nx">size</span><span class="p">)</span><span class="p">,</span> <span class="c1">//使用有缓冲资源池
 </span><span class="c1"></span>		<span class="nx">factory</span><span class="p">:</span>   <span class="nx">fn</span><span class="p">,</span>
-	<span class="p">},</span> <span class="kc">nil</span>
+	<span class="p">}</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
 
 <span class="c1">//从池中获取资源
-</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Pool</span><span class="p">)</span> <span class="nf">Acquire</span><span class="p">()</span> <span class="p">(</span><span class="nx">io</span><span class="p">.</span><span class="nx">Closer</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Pool</span><span class="p">)</span> <span class="nf">Acquire</span><span class="p">(</span><span class="p">)</span> <span class="p">(</span><span class="nx">io</span><span class="p">.</span><span class="nx">Closer</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
 	<span class="k">select</span> <span class="p">{</span>
 	<span class="k">case</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">p</span><span class="p">.</span><span class="nx">resources</span><span class="p">:</span> <span class="c1">//从资源池通道获取一个资源, 因为有default, 不阻塞
 </span><span class="c1"></span>		<span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Acqure: &#34;</span><span class="p">,</span> <span class="s">&#34;Shared Resources&#34;</span><span class="p">)</span>
@@ -265,17 +261,17 @@
 
 	<span class="k">default</span><span class="p">:</span> <span class="c1">//资源池通道没有数据时, 新建一个
 </span><span class="c1"></span>		<span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Acquire: &#34;</span><span class="p">,</span> <span class="s">&#34;New Resource&#34;</span><span class="p">)</span>
-		<span class="k">return</span> <span class="nx">p</span><span class="p">.</span><span class="nf">factory</span><span class="p">()</span>
+		<span class="k">return</span> <span class="nx">p</span><span class="p">.</span><span class="nf">factory</span><span class="p">(</span><span class="p">)</span>
 	<span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">//释放资源
 </span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Pool</span><span class="p">)</span> <span class="nf">Release</span><span class="p">(</span><span class="nx">res</span> <span class="nx">io</span><span class="p">.</span><span class="nx">Closer</span><span class="p">)</span> <span class="p">{</span>
-	<span class="nx">p</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span> <span class="c1">//需要使用互斥锁操作资源池
-</span><span class="c1"></span>	<span class="k">defer</span> <span class="nx">p</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">Lock</span><span class="p">(</span><span class="p">)</span> <span class="c1">//需要使用互斥锁操作资源池
+</span><span class="c1"></span>	<span class="k">defer</span> <span class="nx">p</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">(</span><span class="p">)</span>
 
 	<span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nx">closed</span> <span class="p">{</span> <span class="c1">//
-</span><span class="c1"></span>		<span class="nx">res</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+</span><span class="c1"></span>		<span class="nx">res</span><span class="p">.</span><span class="nf">Close</span><span class="p">(</span><span class="p">)</span>
 		<span class="k">return</span>
 	<span class="p">}</span>
 
@@ -285,14 +281,14 @@
 
 	<span class="k">default</span><span class="p">:</span> <span class="c1">//如果通道已满, 直接关闭资源
 </span><span class="c1"></span>		<span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Release: &#34;</span><span class="p">,</span> <span class="s">&#34;Closing&#34;</span><span class="p">)</span>
-		<span class="nx">res</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+		<span class="nx">res</span><span class="p">.</span><span class="nf">Close</span><span class="p">(</span><span class="p">)</span>
 	<span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">//关闭资源池
-</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Pool</span><span class="p">)</span> <span class="nf">Close</span><span class="p">()</span> <span class="p">{</span>
-	<span class="nx">p</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span> <span class="c1">//加互斥锁
-</span><span class="c1"></span>	<span class="k">defer</span> <span class="nx">p</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Pool</span><span class="p">)</span> <span class="nf">Close</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">Lock</span><span class="p">(</span><span class="p">)</span> <span class="c1">//加互斥锁
+</span><span class="c1"></span>	<span class="k">defer</span> <span class="nx">p</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">(</span><span class="p">)</span>
 
 	<span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nx">closed</span> <span class="p">{</span>
 		<span class="k">return</span>
@@ -305,9 +301,10 @@
 </span><span class="c1"></span>	<span class="nb">close</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">resources</span><span class="p">)</span>
 
 	<span class="k">for</span> <span class="nx">res</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">p</span><span class="p">.</span><span class="nx">resources</span> <span class="p">{</span>
-		<span class="nx">res</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span> <span class="c1">//关闭通道中的资源
+		<span class="nx">res</span><span class="p">.</span><span class="nf">Close</span><span class="p">(</span><span class="p">)</span> <span class="c1">//关闭通道中的资源
 </span><span class="c1"></span>	<span class="p">}</span>
-<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
 
 <span class="kn">import</span> <span class="p">(</span>
 	<span class="s">&#34;github.com/addozhang/learning-go-lang/pool&#34;</span>
@@ -330,18 +327,18 @@
 
 <span class="kd">var</span> <span class="nx">idCounter</span> <span class="kt">int32</span>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">dbConn</span> <span class="o">*</span><span class="nx">dbConnection</span><span class="p">)</span> <span class="nf">Close</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">dbConn</span> <span class="o">*</span><span class="nx">dbConnection</span><span class="p">)</span> <span class="nf">Close</span><span class="p">(</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
 	<span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Close: Connection, &#34;</span><span class="p">,</span> <span class="nx">dbConn</span><span class="p">.</span><span class="nx">ID</span><span class="p">)</span>
 	<span class="k">return</span> <span class="kc">nil</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="nf">createConnection</span><span class="p">()</span> <span class="p">(</span><span class="nx">io</span><span class="p">.</span><span class="nx">Closer</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="nf">createConnection</span><span class="p">(</span><span class="p">)</span> <span class="p">(</span><span class="nx">io</span><span class="p">.</span><span class="nx">Closer</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
 	<span class="nx">id</span> <span class="o">:=</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">AddInt32</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">idCounter</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 	<span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Create: New Connection&#34;</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span>
-	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">dbConnection</span><span class="p">{</span><span class="nx">id</span><span class="p">},</span> <span class="kc">nil</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">dbConnection</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
 	<span class="kd">var</span> <span class="nx">wg</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
 	<span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="nx">maxGoRoutines</span><span class="p">)</span>
 
@@ -352,34 +349,33 @@
 	<span class="k">for</span> <span class="nx">query</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">query</span> <span class="p">&lt;</span> <span class="nx">maxGoRoutines</span><span class="p">;</span> <span class="nx">query</span><span class="o">++</span> <span class="p">{</span>
 		<span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="nx">q</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
 			<span class="nf">performQuery</span><span class="p">(</span><span class="nx">q</span><span class="p">,</span> <span class="nx">p</span><span class="p">)</span>
-			<span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
-		<span class="p">}(</span><span class="nx">query</span><span class="p">)</span>
+			<span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">(</span><span class="p">)</span>
+		<span class="p">}</span><span class="p">(</span><span class="nx">query</span><span class="p">)</span>
 	<span class="p">}</span>
 
-	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">(</span><span class="p">)</span>
 	<span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Shutdown Program.&#34;</span><span class="p">)</span>
-	<span class="nx">p</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">Close</span><span class="p">(</span><span class="p">)</span>
 <span class="p">}</span>
 <span class="kd">func</span> <span class="nf">performQuery</span><span class="p">(</span><span class="nx">query</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">pool</span> <span class="o">*</span><span class="nx">pool</span><span class="p">.</span><span class="nx">Pool</span><span class="p">)</span> <span class="p">{</span>
 
-	<span class="nx">dbConn</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">pool</span><span class="p">.</span><span class="nf">Acquire</span><span class="p">()</span>
+	<span class="nx">dbConn</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">pool</span><span class="p">.</span><span class="nf">Acquire</span><span class="p">(</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="nx">log</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
 	<span class="p">}</span>
 
-	<span class="k">defer</span> <span class="nx">dbConn</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
-	<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nf">Duration</span><span class="p">(</span><span class="nx">rand</span><span class="p">.</span><span class="nf">Intn</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span><span class="p">)</span>
-	<span class="nx">log</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;QID[%d] CID[%d]&#34;</span><span class="p">,</span> <span class="nx">query</span><span class="p">,</span> <span class="nx">dbConn</span><span class="p">.(</span><span class="o">*</span><span class="nx">dbConnection</span><span class="p">).</span><span class="nx">ID</span><span class="p">)</span>
-<span class="p">}</span></code></pre></div>
-<h3 id="work">work</h3>
-
+	<span class="k">defer</span> <span class="nx">dbConn</span><span class="p">.</span><span class="nf">Close</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nf">Duration</span><span class="p">(</span><span class="nx">rand</span><span class="p">.</span><span class="nf">Intn</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span><span class="p">)</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span><span class="p">)</span>
+	<span class="nx">log</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;QID[%d] CID[%d]&#34;</span><span class="p">,</span> <span class="nx">query</span><span class="p">,</span> <span class="nx">dbConn</span><span class="p">.</span><span class="p">(</span><span class="o">*</span><span class="nx">dbConnection</span><span class="p">)</span><span class="p">.</span><span class="nx">ID</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="work">work</h3>
 <p>下面的代码展示了如何使用无缓冲通道来创建一个goroutine池. 这个goroutine执行并控制一组工作, 让其并发执行.</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">worker</span>
 
 <span class="kn">import</span> <span class="s">&#34;sync&#34;</span>
 
 <span class="kd">type</span> <span class="nx">Worker</span> <span class="kd">interface</span> <span class="p">{</span>
-	<span class="nf">Task</span><span class="p">()</span>
+	<span class="nf">Task</span><span class="p">(</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="kd">type</span> <span class="nx">Pool</span> <span class="kd">struct</span> <span class="p">{</span>
@@ -389,18 +385,18 @@
 
 <span class="kd">func</span> <span class="nf">New</span><span class="p">(</span><span class="nx">maxRoutines</span> <span class="kt">int</span><span class="p">)</span> <span class="o">*</span><span class="nx">Pool</span> <span class="p">{</span>
 	<span class="nx">p</span> <span class="o">:=</span> <span class="nx">Pool</span><span class="p">{</span>
-		<span class="nx">worker</span><span class="p">:</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">Worker</span><span class="p">),</span>
+		<span class="nx">worker</span><span class="p">:</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">Worker</span><span class="p">)</span><span class="p">,</span>
 	<span class="p">}</span>
 
 	<span class="nx">p</span><span class="p">.</span><span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="nx">maxRoutines</span><span class="p">)</span>
 
 	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">maxRoutines</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
-		<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
 			<span class="k">for</span> <span class="nx">w</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">p</span><span class="p">.</span><span class="nx">worker</span> <span class="p">{</span>
-				<span class="nx">w</span><span class="p">.</span><span class="nf">Task</span><span class="p">()</span>
+				<span class="nx">w</span><span class="p">.</span><span class="nf">Task</span><span class="p">(</span><span class="p">)</span>
 			<span class="p">}</span>
-			<span class="nx">p</span><span class="p">.</span><span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
-		<span class="p">}()</span>
+			<span class="nx">p</span><span class="p">.</span><span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">(</span><span class="p">)</span>
+		<span class="p">}</span><span class="p">(</span><span class="p">)</span>
 	<span class="p">}</span>
 
 	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">p</span><span class="p">;</span>
@@ -410,10 +406,11 @@
 	<span class="nx">p</span><span class="p">.</span><span class="nx">worker</span> <span class="o">&lt;-</span> <span class="nx">w</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Pool</span><span class="p">)</span> <span class="nf">Shutdown</span><span class="p">()</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Pool</span><span class="p">)</span> <span class="nf">Shutdown</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
 	<span class="nb">close</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">worker</span><span class="p">)</span>
-	<span class="nx">p</span><span class="p">.</span><span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
-<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">(</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
 
 <span class="kn">import</span> <span class="p">(</span>
 	<span class="s">&#34;log&#34;</span>
@@ -422,7 +419,7 @@
 	<span class="s">&#34;sync&#34;</span>
 <span class="p">)</span>
 
-<span class="kd">var</span> <span class="nx">names</span> <span class="p">=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span>
+<span class="kd">var</span> <span class="nx">names</span> <span class="p">=</span> <span class="p">[</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
 	<span class="s">&#34;bob&#34;</span><span class="p">,</span>
 	<span class="s">&#34;steve&#34;</span><span class="p">,</span>
 	<span class="s">&#34;mary&#34;</span><span class="p">,</span>
@@ -434,29 +431,30 @@
 	<span class="nx">name</span> <span class="kt">string</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">np</span> <span class="o">*</span><span class="nx">namePrinter</span><span class="p">)</span> <span class="nf">Task</span><span class="p">()</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">np</span> <span class="o">*</span><span class="nx">namePrinter</span><span class="p">)</span> <span class="nf">Task</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
 	<span class="nx">log</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="nx">np</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
 	<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
 	<span class="nx">p</span> <span class="o">:=</span> <span class="nx">worker2</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
 	<span class="kd">var</span> <span class="nx">wg</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
-	<span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="nx">names</span><span class="p">))</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="nx">names</span><span class="p">)</span><span class="p">)</span>
 
 	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
 		<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">name</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">names</span><span class="p">{</span>
 			<span class="nx">np</span> <span class="o">:=</span> <span class="nx">namePrinter</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span>
-			<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+			<span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
 				<span class="nx">p</span><span class="p">.</span><span class="nf">Run</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">np</span><span class="p">)</span>
-				<span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
-			<span class="p">}()</span>
+				<span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">(</span><span class="p">)</span>
+			<span class="p">}</span><span class="p">(</span><span class="p">)</span>
 		<span class="p">}</span>
 	<span class="p">}</span>
-	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
-	<span class="nx">p</span><span class="p">.</span><span class="nf">Shutdown</span><span class="p">()</span>
-<span class="p">}</span></code></pre></div>
+	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">Shutdown</span><span class="p">(</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
         </div>
 
         
@@ -464,17 +462,15 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#并发模式">并发模式</a>
-<ul>
-<li><a href="#runner">runner</a></li>
-<li><a href="#pool">pool</a></li>
-<li><a href="#work">work</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#并发模式">并发模式</a>
+      <ul>
+        <li><a href="#runner">runner</a></li>
+        <li><a href="#pool">pool</a></li>
+        <li><a href="#work">work</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -88,52 +88,47 @@
         </div>
         <div class="article-entry" itemprop="articleBody">
             <p>停止，stop，这里说的是真的停止。如何优雅的结束，这里就不提了。</p>
-
 <p>这里要用<code>Thread.stop()</code>。众所周知，stop()方法在JDK中是废弃的。</p>
-
 <blockquote>
 <p>该方法天生是不安全的。使用thread.stop()停止一个线程，导致释放（解锁）所有该线程已经锁定的监视器（因沿堆栈向上传播的未检查异常ThreadDeath而解锁）。如果之前受这些监视器保护的任何对象处于不一致状态，则不一致状态的对象（受损对象）将对其他线程可见，这可能导致任意的行为。</p>
 </blockquote>
-
 <p>有时候我们会有这种需求，不需要考虑线程执行到哪一步。一般这种情况是外部执行stop，比如执行业务的线程因为各种原因假死或者耗时较长，由于设计问题又无法响应优雅的停止指令。</p>
-
 <p>现在大家在项目中都很少直接使用线程，而是通过concurrent包中的类来实现多线程，例如ExecutorService的各种实现类。</p>
-
 <p>一个简单的停止线程的例子：</p>
-<div class="highlight"><pre class="chroma"><code class="language-JAVA" data-lang="JAVA"><span class="kd">public</span> <span class="nf">class</span> <span class="n">ExecutorServiceTest</span> <span class="p">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-JAVA" data-lang="JAVA"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExecutorServiceTest</span> <span class="o">{</span>
 
-    <span class="kd">public</span> <span class="nf">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="nf">args</span><span class="p">)</span> <span class="kd">throws</span> <span class="nf">InterruptedException</span> <span class="p">{</span>
-        <span class="n">ExecutorService</span> <span class="nf">executor</span> <span class="o">=</span> <span class="n">Executors</span><span class="p">.</span><span class="na">newSingleThreadExecutor</span><span class="p">();</span>
-        <span class="kd">final</span> <span class="nf">AtomicReference</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;</span> <span class="nf">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicReference</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="n">ExecutorService</span> <span class="n">executor</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newSingleThreadExecutor</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="kd">final</span> <span class="n">AtomicReference</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicReference</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
 
-        <span class="n">Future</span><span class="o">&lt;?&gt;</span> <span class="n">firstFuture</span> <span class="o">=</span> <span class="n">executor</span><span class="p">.</span><span class="na">submit</span><span class="p">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="p">()</span> <span class="p">{</span>
-            <span class="kd">public</span> <span class="nf">void</span> <span class="n">run</span><span class="p">()</span> <span class="p">{</span>
-                <span class="n">Thread</span> <span class="nf">currentThread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">.</span><span class="na">currentThread</span><span class="p">();</span>
-                <span class="n">t</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">currentThread</span><span class="p">);</span>
-                <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">});</span>
-        <span class="k">try</span> <span class="p">{</span>
-            <span class="n">firstFuture</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">500</span><span class="p">,</span> <span class="n">TimeUnit</span><span class="p">.</span><span class="na">MILLISECONDS</span><span class="p">);</span>
-        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="nf">e</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">while</span> <span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="na">get</span><span class="p">().</span><span class="na">isAlive</span><span class="p">())</span> <span class="p">{</span>
-                <span class="n">t</span><span class="p">.</span><span class="na">get</span><span class="p">().</span><span class="na">stop</span><span class="p">();</span>
-                <span class="n">TimeUnit</span><span class="p">.</span><span class="na">MILLISECONDS</span><span class="p">.</span><span class="na">sleep</span><span class="p">(</span><span class="n">50</span><span class="p">);</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
+        <span class="n">Future</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">firstFuture</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="na">submit</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">Thread</span> <span class="n">currentThread</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">t</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">currentThread</span><span class="o">)</span><span class="o">;</span>
+                <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">firstFuture</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">500</span><span class="o">,</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">isAlive</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">stop</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">50</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
 
-        <span class="n">executor</span><span class="p">.</span><span class="na">submit</span><span class="p">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">executor</span><span class="o">.</span><span class="na">submit</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
             <span class="nd">@Override</span>
-            <span class="kd">public</span> <span class="nf">void</span> <span class="n">run</span><span class="p">()</span> <span class="p">{</span>
-                <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;submit again&#34;</span><span class="p">);</span>
-            <span class="p">}</span>
-        <span class="p">});</span>
-        <span class="n">executor</span><span class="p">.</span><span class="na">shutdown</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<p>如果你运行了上面的代码就会发现程序假死了，通过stack dump看是发生了死锁：</p>
-<div class="highlight"><pre class="chroma"><code class="language-log" data-lang="log">&#34;pool-1-thread-2&#34; #11 prio=5 os_prio=31 tid=0x00007fa91006e800 nid=0x5903 waiting on condition [0x00007000060f8000]
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;submit again&#34;</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">executor</span><span class="o">.</span><span class="na">shutdown</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>如果你运行了上面的代码就会发现程序假死了，通过stack dump看是发生了死锁：</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">&#34;pool-1-thread-2&#34; #11 prio=5 os_prio=31 tid=0x00007fa91006e800 nid=0x5903 waiting on condition [0x00007000060f8000]
    java.lang.Thread.State: WAITING (parking)
 	at sun.misc.Unsafe.park(Native Method)
 	- parking to wait for  &lt;0x000000076ab76ea0&gt; (a java.util.concurrent.locks.ReentrantLock$NonfairSync)
@@ -145,63 +140,59 @@
 	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1067)
 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1127)
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:745)</code></pre></div>
-<p>死锁发生在第二次submit后，在LinkedBlockingQueue.take()时，LinkedBlockingQueue在ThreadPoolExecutor中用来暂存task的。真正执行任务线程的时候再从队列中取出。我们都知道LinkedBlockingQueue是线程的安全的，其高并发和线程安全是通过一个ReentrantLock代替内置锁来实现的（减小了锁的粒度）。submit第二个task时，再次执行take会再次获取锁。但是由于stop直接杀死了线程，没有释放当次执行take方法时获取ReentrantLock锁，导致了死锁。</p>
-
+	at java.lang.Thread.run(Thread.java:745)
+</code></pre></div><p>死锁发生在第二次submit后，在LinkedBlockingQueue.take()时，LinkedBlockingQueue在ThreadPoolExecutor中用来暂存task的。真正执行任务线程的时候再从队列中取出。我们都知道LinkedBlockingQueue是线程的安全的，其高并发和线程安全是通过一个ReentrantLock代替内置锁来实现的（减小了锁的粒度）。submit第二个task时，再次执行take会再次获取锁。但是由于stop直接杀死了线程，没有释放当次执行take方法时获取ReentrantLock锁，导致了死锁。</p>
 <p>stop直接停止了线程，抛出了<code>ThreadDeath</code>。<code>ThreadDeath</code>是Error，不是Exception。</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">class</span> <span class="n">ThreadDeath</span> <span class="nf">extends</span> <span class="n">Error</span> <span class="p">{</span>
-    <span class="kd">private</span> <span class="nf">static</span> <span class="kd">final</span> <span class="nf">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="o">-</span><span class="n">4417128565033088268L</span><span class="p">;</span>
-<span class="p">}</span></code></pre></div>
-<p>这种情况下，原有的ExecutorService实例就不能再使用了，因为我们无法通过程序来释放未释放的锁（由虚拟机的GC来解决）。如此，便需要重建ExecutorService实例。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadDeath</span> <span class="kd">extends</span> <span class="n">Error</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="o">-</span><span class="n">4417128565033088268L</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div><p>这种情况下，原有的ExecutorService实例就不能再使用了，因为我们无法通过程序来释放未释放的锁（由虚拟机的GC来解决）。如此，便需要重建ExecutorService实例。</p>
 <p>对上面的代码做了修改：</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">class</span> <span class="n">ExecutorServiceTest</span> <span class="p">{</span>
-    <span class="kd">public</span> <span class="nf">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="nf">args</span><span class="p">)</span> <span class="kd">throws</span> <span class="nf">InterruptedException</span> <span class="p">{</span>
-        <span class="n">ExecutorService</span> <span class="nf">executor</span> <span class="o">=</span> <span class="n">Executors</span><span class="p">.</span><span class="na">newSingleThreadExecutor</span><span class="p">();</span>
-        <span class="kd">final</span> <span class="nf">AtomicReference</span><span class="o">&lt;</span><span class="n">ExecutorService</span><span class="o">&gt;</span> <span class="nf">es</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicReference</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-        <span class="n">es</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">executor</span><span class="p">);</span>
-        <span class="kd">final</span> <span class="nf">AtomicReference</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;</span> <span class="nf">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicReference</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExecutorServiceTest</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="n">ExecutorService</span> <span class="n">executor</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newSingleThreadExecutor</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="kd">final</span> <span class="n">AtomicReference</span><span class="o">&lt;</span><span class="n">ExecutorService</span><span class="o">&gt;</span> <span class="n">es</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicReference</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">es</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">executor</span><span class="o">)</span><span class="o">;</span>
+        <span class="kd">final</span> <span class="n">AtomicReference</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicReference</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
 
-        <span class="n">Future</span><span class="o">&lt;?&gt;</span> <span class="n">future</span> <span class="o">=</span> <span class="n">es</span><span class="p">.</span><span class="na">get</span><span class="p">().</span><span class="na">submit</span><span class="p">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="p">()</span> <span class="p">{</span>
-            <span class="kd">public</span> <span class="nf">void</span> <span class="n">run</span><span class="p">()</span> <span class="p">{</span>
-                <span class="n">Thread</span> <span class="nf">currentThread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">.</span><span class="na">currentThread</span><span class="p">();</span>
-                <span class="n">t</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">currentThread</span><span class="p">);</span>
-                <span class="n">currentThread</span><span class="p">.</span><span class="na">setUncaughtExceptionHandler</span><span class="p">(</span><span class="k">new</span> <span class="n">Thread</span><span class="p">.</span><span class="na">UncaughtExceptionHandler</span><span class="p">()</span> <span class="p">{</span>
-                    <span class="kd">public</span> <span class="nf">void</span> <span class="n">uncaughtException</span><span class="p">(</span><span class="n">Thread</span> <span class="nf">t</span><span class="p">,</span> <span class="n">Throwable</span> <span class="nf">e</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="n">e</span> <span class="nf">instanceof</span> <span class="n">ThreadDeath</span> <span class="o">||</span> <span class="n">e</span> <span class="nf">instanceof</span> <span class="n">IllegalMonitorStateException</span><span class="p">)</span> <span class="p">{</span>
-                            <span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span>
-                            <span class="n">es</span><span class="p">.</span><span class="na">get</span><span class="p">().</span><span class="na">shutdownNow</span><span class="p">();</span>
-                            <span class="n">es</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">Executors</span><span class="p">.</span><span class="na">newSingleThreadExecutor</span><span class="p">());</span>
-                        <span class="p">}</span>
-                    <span class="p">}</span>
-                <span class="p">});</span>
-                <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">});</span>
-        <span class="k">try</span> <span class="p">{</span>
-            <span class="n">future</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">500</span><span class="p">,</span> <span class="n">TimeUnit</span><span class="p">.</span><span class="na">MILLISECONDS</span><span class="p">);</span>
-        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="nf">e</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">while</span> <span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="na">get</span><span class="p">().</span><span class="na">isAlive</span><span class="p">())</span> <span class="p">{</span>
-                <span class="n">t</span><span class="p">.</span><span class="na">get</span><span class="p">().</span><span class="na">stop</span><span class="p">();</span>
-                <span class="n">TimeUnit</span><span class="p">.</span><span class="na">MILLISECONDS</span><span class="p">.</span><span class="na">sleep</span><span class="p">(</span><span class="n">50</span><span class="p">);</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
+        <span class="n">Future</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">future</span> <span class="o">=</span> <span class="n">es</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">submit</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">Thread</span> <span class="n">currentThread</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">t</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">currentThread</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">currentThread</span><span class="o">.</span><span class="na">setUncaughtExceptionHandler</span><span class="o">(</span><span class="k">new</span> <span class="n">Thread</span><span class="o">.</span><span class="na">UncaughtExceptionHandler</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">uncaughtException</span><span class="o">(</span><span class="n">Thread</span> <span class="n">t</span><span class="o">,</span> <span class="n">Throwable</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="k">if</span> <span class="o">(</span><span class="n">e</span> <span class="k">instanceof</span> <span class="n">ThreadDeath</span> <span class="o">|</span><span class="o">|</span> <span class="n">e</span> <span class="k">instanceof</span> <span class="n">IllegalMonitorStateException</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                            <span class="n">es</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">shutdownNow</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                            <span class="n">es</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">Executors</span><span class="o">.</span><span class="na">newSingleThreadExecutor</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+                        <span class="o">}</span>
+                    <span class="o">}</span>
+                <span class="o">}</span><span class="o">)</span><span class="o">;</span>
+                <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">future</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">500</span><span class="o">,</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">isAlive</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">stop</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">50</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
 
-        <span class="n">es</span><span class="p">.</span><span class="na">get</span><span class="p">().</span><span class="na">submit</span><span class="p">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">es</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">submit</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
             <span class="nd">@Override</span>
-            <span class="kd">public</span> <span class="nf">void</span> <span class="n">run</span><span class="p">()</span> <span class="p">{</span>
-                <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;submit again&#34;</span><span class="p">);</span>
-            <span class="p">}</span>
-        <span class="p">});</span>
-        <span class="n">es</span><span class="p">.</span><span class="na">get</span><span class="p">().</span><span class="na">shutdown</span><span class="p">();</span>
-    <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;submit again&#34;</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">es</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">shutdown</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
 
-<span class="p">}</span></code></pre></div>
-<p><strong>注：这个例子只考虑了ExecutorService实例在单线程环境中的使用，如果需要在多线程环境中需要考虑重建实例时的排他性。</strong></p>
-
+<span class="o">}</span>
+</code></pre></div><p><strong>注：这个例子只考虑了ExecutorService实例在单线程环境中的使用，如果需要在多线程环境中需要考虑重建实例时的排他性。</strong></p>
 <p>修改后的核心是UncaughtExceptionHandler：</p>
-
 <blockquote>
 <p>当线程由于未捕获的异常突然终止而调用处理程序的接口。
 当线程由于未捕获的异常即将终止时，Java虚拟机将使用Thread.getUncaughtExceptionHandler（）向线程查询其UncaughtExceptionHandler，并将调用处理程序的uncaughtException方法，将线程和异常作为参数传递。 如果一个线程没有显示它的UncaughtExceptionHandler，那么它的ThreadGroup对象充当它的UncaughtExceptionHandler。 如果ThreadGroup对象没有处理异常的特殊要求，它可以将调用转发到默认的未捕获的异常处理程序。</p>
@@ -210,6 +201,11 @@
         </div>
 
         
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents"></nav>
+        </div>
         
         
 

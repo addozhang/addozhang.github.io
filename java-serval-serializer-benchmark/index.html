@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -88,24 +88,28 @@
         </div>
         <div class="article-entry" itemprop="articleBody">
             <p>最近在调整系统的性能, 系统中正使用Jackson作为序列化工具. 做了下与fastJson, Avro, ProtoStuff的序列化吞吐对比.</p>
-
 <p>由于只是做横向对比, 没有优化系统或者JVM任何参数. 服务器一般都用Linux, 在Docker里做了Linux系统的测试.</p>
-
 <p>Mac:</p>
-<div class="highlight"><pre class="chroma">Benchmark                      Mode  Cnt        Score   Error  Units
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">Benchmark                      Mode  Cnt        Score   Error  Units
 JMHTest.avroSerializer        thrpt    2  3124799.325          ops/s
 JMHTest.fastJsonSerializer    thrpt    2  3122720.917          ops/s
 JMHTest.jacksonSerializer     thrpt    2  2373347.208          ops/s
-JMHTest.protostuffSerializer  thrpt    2  4196009.673          ops/s</pre></div>
-<p>Docker:</p>
-<div class="highlight"><pre class="chroma">Benchmark                      Mode  Cnt        Score   Error  Units
+JMHTest.protostuffSerializer  thrpt    2  4196009.673          ops/s
+</code></pre></div><p>Docker:</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">Benchmark                      Mode  Cnt        Score   Error  Units
 JMHTest.avroSerializer        thrpt    2  3293260.676          ops/s
 JMHTest.fastJsonSerializer    thrpt    2  2996908.084          ops/s
 JMHTest.jacksonSerializer     thrpt    2  2189518.443          ops/s
-JMHTest.protostuffSerializer  thrpt    2  3998265.173          ops/s</pre></div>
+JMHTest.protostuffSerializer  thrpt    2  3998265.173          ops/s
+</code></pre></div>
         </div>
 
         
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents"></nav>
+        </div>
         
         
 

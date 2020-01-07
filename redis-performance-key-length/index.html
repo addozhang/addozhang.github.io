@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,87 +87,75 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<p>最近Redis的使用中用的到key可能比较长，但是Redis的官方文档没提到key长度对性能的影响，故简单做了个测试。</p>
-
+            <p>最近Redis的使用中用的到key可能比较长，但是Redis的官方文档没提到key长度对性能的影响，故简单做了个测试。</p>
 <h3 id="环境">环境</h3>
-
 <p>Redis和测试程序都是运行在本地，不看单次的性能，只看不同的长度堆读写性能的影响。</p>
-
 <h3 id="测试方法">测试方法</h3>
-
 <p>使用长度分别为10, 100, 500, 1000, 2500, 5000, 7500, 10,000, and 20,000的key，value长度1000，读写1000次。</p>
-
 <h3 id="结果">结果</h3>
-
-<p><img src="../media/14896309668401.jpg" alt="写" /></p>
-
-<p><img src="../media/14896309585857.jpg" alt="读" /></p>
-
+<p><img src="../media/14896309668401.jpg" alt="写"></p>
+<p><img src="../media/14896309585857.jpg" alt="读"></p>
 <p>从结果来看随着长度的增加，读写的耗时都随之增加。</p>
-
 <ul>
 <li>长度为10：写平均耗时0.053ms，读0.040ms</li>
 <li>长度为20000：写平均耗时0.352ms，读0.084ms</li>
 </ul>
-
 <h3 id="测试代码">测试代码</h3>
-
-<p><a href="https://gist.github.com/addozhang/cd8551af4ca008c1f86896b9232c7a3b">源码</a>
-<!--  more --></p>
+<p><a href="https://gist.github.com/addozhang/cd8551af4ca008c1f86896b9232c7a3b">源码</a></p>
+<!-- raw HTML omitted -->
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="cm">/**
 </span><span class="cm"> * Created by addo on 2017/3/16.
 </span><span class="cm"> */</span>
-<span class="kd">public</span> <span class="nf">class</span> <span class="n">RedisTest</span> <span class="p">{</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RedisTest</span> <span class="o">{</span>
 
-    <span class="kd">private</span> <span class="nf">static</span> <span class="n">String</span><span class="p">[]</span> <span class="nf">keys</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">[</span><span class="n">1000</span><span class="p">];</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">keys</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="n">1000</span><span class="o">]</span><span class="o">;</span>
 
-    <span class="kd">private</span> <span class="nf">static</span> <span class="n">String</span> <span class="nf">randomString</span><span class="p">(</span><span class="kt">int</span> <span class="nf">length</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">Random</span> <span class="nf">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="p">();</span>
-        <span class="kt">char</span><span class="p">[]</span> <span class="nf">chars</span> <span class="o">=</span> <span class="s">&#34;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#34;</span><span class="p">.</span><span class="na">toCharArray</span><span class="p">();</span>
-        <span class="n">StringBuilder</span> <span class="nf">key</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="p">(</span><span class="n">length</span><span class="p">);</span>
-        <span class="kt">int</span> <span class="nf">i</span> <span class="o">=</span> <span class="n">length</span><span class="p">;</span>
-        <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">key</span><span class="p">.</span><span class="na">append</span><span class="p">(</span><span class="n">chars</span><span class="p">[</span><span class="n">random</span><span class="p">.</span><span class="na">nextInt</span><span class="p">(</span><span class="n">chars</span><span class="p">.</span><span class="na">length</span><span class="p">)]);</span>
-            <span class="n">i</span><span class="o">--</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">key</span><span class="p">.</span><span class="na">toString</span><span class="p">();</span>
-    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">randomString</span><span class="o">(</span><span class="kt">int</span> <span class="n">length</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="kt">char</span><span class="o">[</span><span class="o">]</span> <span class="n">chars</span> <span class="o">=</span> <span class="s">&#34;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#34;</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">StringBuilder</span> <span class="n">key</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">length</span><span class="o">)</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">length</span><span class="o">;</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">key</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">chars</span><span class="o">.</span><span class="na">length</span><span class="o">)</span><span class="o">]</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">i</span><span class="o">-</span><span class="o">-</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">key</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    <span class="kd">private</span> <span class="nf">static</span> <span class="kt">void</span> <span class="nf">write</span><span class="p">(</span><span class="n">Jedis</span> <span class="nf">jedis</span><span class="p">,</span> <span class="kt">int</span> <span class="nf">length</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kt">long</span> <span class="nf">start</span> <span class="o">=</span> <span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">();</span>
-        <span class="n">String</span> <span class="nf">key</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-        <span class="n">String</span> <span class="nf">value</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="nf">i</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">1000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">key</span> <span class="o">=</span> <span class="n">randomString</span><span class="p">(</span><span class="n">length</span><span class="p">);</span>
-            <span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span><span class="p">;</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="n">randomString</span><span class="p">(</span><span class="n">1000</span><span class="p">);</span>
-            <span class="n">jedis</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&#34;put key length %d with value length 1000 in 1000 tims costs: %d ms&#34;</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">));</span>
-    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">write</span><span class="o">(</span><span class="n">Jedis</span> <span class="n">jedis</span><span class="o">,</span> <span class="kt">int</span> <span class="n">length</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">long</span> <span class="n">start</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">key</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">1000</span><span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">randomString</span><span class="o">(</span><span class="n">length</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">keys</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">key</span><span class="o">;</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">randomString</span><span class="o">(</span><span class="n">1000</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">jedis</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&#34;put key length %d with value length 1000 in 1000 tims costs: %d ms&#34;</span><span class="o">,</span> <span class="n">length</span><span class="o">,</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">(</span><span class="o">)</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    <span class="kd">private</span> <span class="nf">static</span> <span class="kt">void</span> <span class="nf">read</span><span class="p">(</span><span class="n">Jedis</span> <span class="nf">jedis</span><span class="p">,</span> <span class="kt">int</span> <span class="nf">length</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kt">long</span> <span class="nf">start</span> <span class="o">=</span> <span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">();</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="nf">i</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">keys</span><span class="p">.</span><span class="na">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">jedis</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-        <span class="p">}</span>
-        <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&#34;get key length %d with value length 1000 in 1000 tims costs: %d ms&#34;</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">));</span>
-    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">read</span><span class="o">(</span><span class="n">Jedis</span> <span class="n">jedis</span><span class="o">,</span> <span class="kt">int</span> <span class="n">length</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">long</span> <span class="n">start</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">keys</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">jedis</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&#34;get key length %d with value length 1000 in 1000 tims costs: %d ms&#34;</span><span class="o">,</span> <span class="n">length</span><span class="o">,</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">(</span><span class="o">)</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="nf">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="nf">args</span><span class="p">)</span> <span class="kd">throws</span> <span class="nf">InterruptedException</span> <span class="p">{</span>
-        <span class="n">Jedis</span> <span class="nf">jedis</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Jedis</span><span class="p">(</span><span class="s">&#34;localhost&#34;</span><span class="p">,</span> <span class="n">6379</span><span class="p">);</span>
-        <span class="kt">int</span><span class="p">[]</span> <span class="nf">lengths</span> <span class="o">=</span> <span class="p">{</span><span class="n">10</span><span class="p">,</span> <span class="n">100</span><span class="p">,</span> <span class="n">500</span><span class="p">,</span> <span class="n">1000</span><span class="p">,</span> <span class="n">2500</span><span class="p">,</span> <span class="n">5000</span><span class="p">,</span> <span class="n">7500</span><span class="p">,</span> <span class="n">10000</span><span class="p">,</span> <span class="n">20000</span><span class="p">};</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="nf">i</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">lengths</span><span class="p">.</span><span class="na">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">write</span><span class="p">(</span><span class="n">jedis</span><span class="p">,</span> <span class="n">lengths</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-            <span class="n">read</span><span class="p">(</span><span class="n">jedis</span><span class="p">,</span> <span class="n">lengths</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-            <span class="n">keys</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">[</span><span class="n">1000</span><span class="p">];</span>
-            <span class="n">jedis</span><span class="p">.</span><span class="na">flushAll</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="n">Jedis</span> <span class="n">jedis</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Jedis</span><span class="o">(</span><span class="s">&#34;localhost&#34;</span><span class="o">,</span> <span class="n">6379</span><span class="o">)</span><span class="o">;</span>
+        <span class="kt">int</span><span class="o">[</span><span class="o">]</span> <span class="n">lengths</span> <span class="o">=</span> <span class="o">{</span><span class="n">10</span><span class="o">,</span> <span class="n">100</span><span class="o">,</span> <span class="n">500</span><span class="o">,</span> <span class="n">1000</span><span class="o">,</span> <span class="n">2500</span><span class="o">,</span> <span class="n">5000</span><span class="o">,</span> <span class="n">7500</span><span class="o">,</span> <span class="n">10000</span><span class="o">,</span> <span class="n">20000</span><span class="o">}</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">lengths</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">write</span><span class="o">(</span><span class="n">jedis</span><span class="o">,</span> <span class="n">lengths</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">read</span><span class="o">(</span><span class="n">jedis</span><span class="o">,</span> <span class="n">lengths</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">keys</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="n">1000</span><span class="o">]</span><span class="o">;</span>
+            <span class="n">jedis</span><span class="o">.</span><span class="na">flushAll</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
         </div>
 
         
@@ -175,18 +163,16 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#环境">环境</a></li>
-<li><a href="#测试方法">测试方法</a></li>
-<li><a href="#结果">结果</a></li>
-<li><a href="#测试代码">测试代码</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#环境">环境</a></li>
+        <li><a href="#测试方法">测试方法</a></li>
+        <li><a href="#结果">结果</a></li>
+        <li><a href="#测试代码">测试代码</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

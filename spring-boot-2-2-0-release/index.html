@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,12 +87,8 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<p>译自: <a href="https://spring.io/blog/2019/10/16/spring-boot-2-2-0">https://spring.io/blog/2019/10/16/spring-boot-2-2-0</a></p>
-
+            <p>译自: <a href="https://spring.io/blog/2019/10/16/spring-boot-2-2-0">https://spring.io/blog/2019/10/16/spring-boot-2-2-0</a></p>
 <h3 id="组件升级">组件升级</h3>
-
 <ul>
 <li>Spring AMQP 2.2</li>
 <li>Spring Batch 4.2</li>
@@ -104,9 +100,7 @@
 <li>Spring Security 5.2</li>
 <li>Spring Session Corn</li>
 </ul>
-
 <h3 id="第三方库升级">第三方库升级</h3>
-
 <ul>
 <li>Elasticsearch 6.7</li>
 <li>Flyway 6.0</li>
@@ -116,52 +110,31 @@
 <li>Reactor Dysprosium</li>
 <li>Solr 8.0</li>
 </ul>
-
 <h3 id="性能提升">性能提升</h3>
-
-<h4 id="延迟初始化-lazy-initialization">延迟初始化(Lazy initialization)</h4>
-
+<h4 id="延迟初始化lazy-initialization">延迟初始化(Lazy initialization)</h4>
 <p>支持开启全局延迟加载<code>spring.main.lazy-initialization</code>. 代价:</p>
-
 <ul>
 <li>初次处理HTTP请求耗时长</li>
 <li>本应在启动初始化时出现的问题, 延后出现</li>
 </ul>
-
 <p>更多参考: <a href="https://spring.io/blog/2019/03/14/lazy-initialization-in-spring-boot-2-2">https://spring.io/blog/2019/03/14/lazy-initialization-in-spring-boot-2-2</a></p>
-
 <h3 id="java-13支持">Java 13支持</h3>
-
 <p>跟随Spring Framework5.2对Java 13的支持, Spring Boot 2.2现在也支持了Java13. 同时兼容Java 11和8.</p>
-
-<h3 id="不可变的-configurationproperties-绑定">不可变的<code>@ConfigurationProperties</code>绑定</h3>
-
+<h3 id="不可变的configurationproperties绑定">不可变的<code>@ConfigurationProperties</code>绑定</h3>
 <p>现在加入了基于构造器的绑定, 允许<code>@ConfigurationProperties</code>标注的类不可变(属性不可变).</p>
-
 <p>可通过<code>@ConfigurationProperties</code>标注类, 或者使用<code>@ConstructorBinding</code>标注构造器来开启.</p>
-
 <p>额外的注解如<code>@DefaultValue</code>, <code>@DateTimeFormt</code>可对构造参数进行配置.</p>
-
 <p>更多参考: <a href="https://docs.spring.io/spring-boot/docs/2.2.0.RELEASE/reference/html/spring-boot-features.html#boot-features-external-config-constructor-binding">https://docs.spring.io/spring-boot/docs/2.2.0.RELEASE/reference/html/spring-boot-features.html#boot-features-external-config-constructor-binding</a></p>
-
 <h3 id="rscoket支持">RScoket支持</h3>
-
 <p>使用新的starter<code>spring-boot-starter-rsocket</code>自动配置.</p>
-
 <p>Spring Security的RScoket集成在classpath中存在<code>spring-security-rsocket</code>时自动完成配置.</p>
-
 <p>更多参考: <a href="https://docs.spring.io/spring-boot/docs/2.2.0.RELEASE/reference/html//spring-boot-features.html#boot-features-rsocket">https://docs.spring.io/spring-boot/docs/2.2.0.RELEASE/reference/html//spring-boot-features.html#boot-features-rsocket</a></p>
-
 <h3 id="健康指示器分组">健康指示器分组</h3>
-
-<p>支持对健康指示器(Health Indicator)进行分组. 比如将应用部署到Kubernetes时, 希望针对&rdquo;liveness&rdquo;和&rdquo;readiness&rdquo;对指示器进行分组</p>
-<div class="highlight"><pre class="chroma">management.endpoint.health.group.custom.include=db </pre></div>
-<p>检查时使用<code>localhost:8080/actuator/health/custom</code></p>
-
+<p>支持对健康指示器(Health Indicator)进行分组. 比如将应用部署到Kubernetes时, 希望针对&quot;liveness&quot;和&quot;readiness&quot;对指示器进行分组</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">management.endpoint.health.group.custom.include=db 
+</code></pre></div><p>检查时使用<code>localhost:8080/actuator/health/custom</code></p>
 <p>更多参考: <a href="https://docs.spring.io/spring-boot/docs/2.2.0.RELEASE/reference/html//production-ready-features.html#health-groups">https://docs.spring.io/spring-boot/docs/2.2.0.RELEASE/reference/html//production-ready-features.html#health-groups</a></p>
-
 <h3 id="其他变化">其他变化</h3>
-
 <p>参考: <a href="https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.2-Release-Notes">https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.2-Release-Notes</a></p>
 
         </div>
@@ -171,25 +144,20 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#组件升级">组件升级</a></li>
-<li><a href="#第三方库升级">第三方库升级</a></li>
-<li><a href="#性能提升">性能提升</a>
-<ul>
-<li><a href="#延迟初始化-lazy-initialization">延迟初始化(Lazy initialization)</a></li>
-</ul></li>
-<li><a href="#java-13支持">Java 13支持</a></li>
-<li><a href="#不可变的-configurationproperties-绑定">不可变的<code>@ConfigurationProperties</code>绑定</a></li>
-<li><a href="#rscoket支持">RScoket支持</a></li>
-<li><a href="#健康指示器分组">健康指示器分组</a></li>
-<li><a href="#其他变化">其他变化</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#组件升级">组件升级</a></li>
+        <li><a href="#第三方库升级">第三方库升级</a></li>
+        <li><a href="#性能提升">性能提升</a></li>
+        <li><a href="#java-13支持">Java 13支持</a></li>
+        <li><a href="#不可变的configurationproperties绑定">不可变的@ConfigurationProperties绑定</a></li>
+        <li><a href="#rscoket支持">RScoket支持</a></li>
+        <li><a href="#健康指示器分组">健康指示器分组</a></li>
+        <li><a href="#其他变化">其他变化</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

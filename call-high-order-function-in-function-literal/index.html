@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -78,16 +78,10 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<p>这里会用到几个概念高阶函数、函数字面量、参数组</p>
-
+            <p>这里会用到几个概念高阶函数、函数字面量、参数组</p>
 <h2 id="高阶函数">高阶函数</h2>
-
 <p>high-order function 函数的一种，简单来说它包含了一个函数类型的参数或者返回值。</p>
-
 <p>所谓的高阶是跟一阶函数相比，深入一下：</p>
-
 <blockquote>
 <ol>
 <li>一个或多个参数是函数，并返回一个值。</li>
@@ -95,7 +89,6 @@
 <li>上述两者叠加：一个或多个参数是函数，并返回一个函数。</li>
 </ol>
 </blockquote>
-
 <p>示例：</p>
 <div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">def</span> <span class="n">stringSafeOp</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">f</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=&gt;</span> <span class="nc">String</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
     <span class="k">if</span> <span class="o">(</span> <span class="n">s</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="n">f</span><span class="o">(</span><span class="n">s</span><span class="o">)</span> <span class="k">else</span> <span class="n">s</span>
@@ -104,55 +97,45 @@
 </span><span class="c1"></span><span class="k">def</span> <span class="n">reverse</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>  <span class="k">=</span> <span class="n">s</span><span class="o">.</span><span class="n">reverse</span>
 <span class="c1">//reverse: (s: String)String
 </span><span class="c1"></span><span class="n">stringSafeOp</span><span class="o">(</span><span class="s">&#34;Ready&#34;</span><span class="o">,</span> <span class="n">reverse</span><span class="o">)</span>
-<span class="o">//</span><span class="n">res86</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="n">ydaeR</span></code></pre></div>
-<h2 id="函数字面量">函数字面量</h2>
-
+<span class="c1">//res86: String = ydaeR
+</span></code></pre></div><h2 id="函数字面量">函数字面量</h2>
 <p>function literal，其他名字：匿名函数、Lambda表达式等。
 函数字面量可以存储在函数值和变量中，或者也可以定义为高阶函数调用的一部分。在任何接受函数类型的地方都可以使用函数字面量。</p>
-
 <p>reverse的函数字面量定义：</p>
-<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">val</span> <span class="n">reverse</span> <span class="k">=</span> <span class="o">(</span><span class="n">s</span><span class="k">:</span><span class="kt">String</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">reverse</span></code></pre></div>
-<p><code>(s:String) =&gt; s.reverse</code>定义了一个有类型的输入参数（s:String）和函数体（s.reverse）。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">val</span> <span class="n">reverse</span> <span class="k">=</span> <span class="o">(</span><span class="n">s</span><span class="k">:</span><span class="kt">String</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">reverse</span>
+</code></pre></div><p><code>(s:String) =&gt; s.reverse</code>定义了一个有类型的输入参数（s:String）和函数体（s.reverse）。</p>
 <p>定义为高阶函数调用的一部分：</p>
-<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="n">stringSafeOp</span><span class="o">(</span><span class="s">&#34;Ready&#34;</span><span class="o">,</span> <span class="o">(</span><span class="n">s</span><span class="k">:</span><span class="kt">String</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">reverse</span><span class="o">)</span></code></pre></div>
-<p>由于已经定义了参数f的类型<code>String =&gt; String</code>，可以从函数字面量中删除显示类型，交由编译器自动推导其类型。</p>
-<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="n">stringSafeOp</span><span class="o">(</span><span class="s">&#34;Ready&#34;</span><span class="o">,</span> <span class="n">s</span> <span class="k">=&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">reverse</span><span class="o">)</span></code></pre></div>
-<h3 id="占位符语法">占位符语法</h3>
-
+<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="n">stringSafeOp</span><span class="o">(</span><span class="s">&#34;Ready&#34;</span><span class="o">,</span> <span class="o">(</span><span class="n">s</span><span class="k">:</span><span class="kt">String</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">reverse</span><span class="o">)</span>
+</code></pre></div><p>由于已经定义了参数f的类型<code>String =&gt; String</code>，可以从函数字面量中删除显示类型，交由编译器自动推导其类型。</p>
+<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="n">stringSafeOp</span><span class="o">(</span><span class="s">&#34;Ready&#34;</span><span class="o">,</span> <span class="n">s</span> <span class="k">=&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">reverse</span><span class="o">)</span>
+</code></pre></div><h3 id="占位符语法">占位符语法</h3>
 <p>Placeholder syntax是函数字面量的一种缩写形式，将命名参数替换为通配符（_）。</p>
-
-<p>使用条件：
-&gt; 函数的显示类型在字面量之外指定
-&gt;
-&gt; 参数最多只使用一次</p>
-
+<p>使用条件：</p>
+<blockquote>
+<p>函数的显示类型在字面量之外指定</p>
+<p>参数最多只使用一次</p>
+</blockquote>
 <p>前面的例子正好符合条件：</p>
-
 <blockquote>
 <p>stringSafeOp定义中指定了字面量的类型（字面量之外） <code>String =&gt; String</code></p>
-
 <p>参数s只使用一次 <code>s.reverse</code></p>
 </blockquote>
-<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="n">stringSafeOp</span><span class="o">(</span><span class="s">&#34;Ready&#34;</span><span class="o">,</span> <span class="k">_</span><span class="o">.</span><span class="n">reverse</span><span class="o">)</span></code></pre></div>
-<h2 id="参数组">参数组</h2>
-
+<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="n">stringSafeOp</span><span class="o">(</span><span class="s">&#34;Ready&#34;</span><span class="o">,</span> <span class="k">_</span><span class="o">.</span><span class="n">reverse</span><span class="o">)</span>
+</code></pre></div><h2 id="参数组">参数组</h2>
 <p>parameter groups 函数的参数列表的另一种形式：分解并使用小括号分隔。</p>
-
 <p>stringSafeOp的参数组表示：</p>
-<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">def</span> <span class="n">stringSafeOp</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)(</span><span class="n">f</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=&gt;</span> <span class="nc">String</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">def</span> <span class="n">stringSafeOp</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=&gt;</span> <span class="nc">String</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
     <span class="k">if</span> <span class="o">(</span> <span class="n">s</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="n">f</span><span class="o">(</span><span class="n">s</span><span class="o">)</span> <span class="k">else</span> <span class="n">s</span>
 <span class="o">}</span>
-<span class="o">//</span><span class="n">stringSafeOp</span><span class="k">:</span> <span class="o">(</span><span class="kt">s:</span> <span class="kt">String</span><span class="o">)(</span><span class="kt">f:</span> <span class="kt">String</span> <span class="o">=&gt;</span> <span class="kt">String</span><span class="o">)</span><span class="nc">String</span></code></pre></div>
-<h2 id="用函数字面量块调用高阶函数">用函数字面量块调用高阶函数</h2>
-
+<span class="c1">//stringSafeOp: (s: String)(f: String =&gt; String)String
+</span></code></pre></div><h2 id="用函数字面量块调用高阶函数">用函数字面量块调用高阶函数</h2>
 <p>组合上面的特性，就有了<strong>用函数字面量块调用高阶函数</strong>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">val</span> <span class="n">newStringSafeOp</span> <span class="k">=</span> <span class="n">stringSafeOp</span><span class="o">(</span><span class="s">&#34;Ready&#34;</span><span class="o">){</span><span class="k">_</span><span class="o">.</span><span class="n">reverse</span><span class="o">}</span></code></pre></div>
-<h3 id="进阶">进阶</h3>
-<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">def</span> <span class="n">timer</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">val</span> <span class="n">newStringSafeOp</span> <span class="k">=</span> <span class="n">stringSafeOp</span><span class="o">(</span><span class="s">&#34;Ready&#34;</span><span class="o">)</span><span class="o">{</span><span class="k">_</span><span class="o">.</span><span class="n">reverse</span><span class="o">}</span>
+</code></pre></div><h3 id="进阶">进阶</h3>
+<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">def</span> <span class="n">timer</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span><span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
   <span class="k">def</span> <span class="n">now</span> <span class="k">=</span> <span class="nc">System</span><span class="o">.</span><span class="n">currentTimeMillis</span>
   <span class="k">val</span> <span class="n">start</span> <span class="k">=</span> <span class="n">now</span><span class="o">;</span> <span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="n">f</span><span class="o">;</span> <span class="k">val</span> <span class="n">end</span> <span class="k">=</span> <span class="n">now</span>
-  <span class="n">println</span><span class="o">(</span><span class="s">s&#34;Executed int </span><span class="si">${</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="si">}</span><span class="s"> ms&#34;</span><span class="o">)</span>
+  <span class="n">println</span><span class="o">(</span><span class="s">s&#34;</span><span class="s">Executed int </span><span class="si">${</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="si">}</span><span class="s"> ms</span><span class="s">&#34;</span><span class="o">)</span>
   <span class="n">a</span>
 <span class="o">}</span>
 
@@ -160,8 +143,8 @@
   <span class="n">util</span><span class="o">.</span><span class="nc">Random</span><span class="o">.</span><span class="n">setSeed</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="n">currentTimeMillis</span><span class="o">)</span>
   <span class="k">for</span> <span class="o">(</span><span class="n">i</span> <span class="k">&lt;-</span> <span class="mi">1</span> <span class="n">to</span> <span class="mi">100000</span><span class="o">)</span> <span class="n">util</span><span class="o">.</span><span class="nc">Random</span><span class="o">.</span><span class="n">nextDouble</span>
   <span class="n">util</span><span class="o">.</span><span class="nc">Random</span><span class="o">.</span><span class="n">nextDouble</span>
-<span class="o">}</span></code></pre></div>
-<p>timer方法对方法调用进行时间记录，对目标代码没有侵入性。</p>
+<span class="o">}</span>
+</code></pre></div><p>timer方法对方法调用进行时间记录，对目标代码没有侵入性。</p>
 
         </div>
 
@@ -170,21 +153,20 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#高阶函数">高阶函数</a></li>
-<li><a href="#函数字面量">函数字面量</a>
-<ul>
-<li><a href="#占位符语法">占位符语法</a></li>
-</ul></li>
-<li><a href="#参数组">参数组</a></li>
-<li><a href="#用函数字面量块调用高阶函数">用函数字面量块调用高阶函数</a>
-<ul>
-<li><a href="#进阶">进阶</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#高阶函数">高阶函数</a></li>
+    <li><a href="#函数字面量">函数字面量</a>
+      <ul>
+        <li><a href="#占位符语法">占位符语法</a></li>
+      </ul>
+    </li>
+    <li><a href="#参数组">参数组</a></li>
+    <li><a href="#用函数字面量块调用高阶函数">用函数字面量块调用高阶函数</a>
+      <ul>
+        <li><a href="#进阶">进阶</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

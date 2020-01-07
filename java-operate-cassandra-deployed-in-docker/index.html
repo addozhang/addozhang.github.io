@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,60 +87,57 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<h3 id="搭建cassandra">搭建Cassandra</h3>
-
+            <h3 id="搭建cassandra">搭建Cassandra</h3>
 <p>使用docker创建Cassandra，方便快捷</p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">docker pull cassandra:latest
-docker run -d --name cassandra -p <span class="m">9042</span>:9042 cassandra
-docker <span class="nb">exec</span> -it cassandra bash</code></pre></div>
-<h3 id="创建keyspace-table">创建keyspace、table</h3>
+docker run -d --name cassandra -p 9042:9042 cassandra
+docker <span class="nb">exec</span> -it cassandra bash
+</code></pre></div><h3 id="创建keyspacetable">创建keyspace、table</h3>
 <div class="highlight"><pre class="chroma"><code class="language-cql" data-lang="cql"><span class="o">#</span><span class="n">cqlsh</span><span class="o">&gt;</span><span class="w">
 </span><span class="w"></span><span class="o">#</span><span class="k">create</span><span class="w"> </span><span class="k">keyspace</span><span class="w">
 </span><span class="w"></span><span class="k">CREATE</span><span class="w"> </span><span class="k">KEYSPACE</span><span class="w"> </span><span class="n">contacts</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">REPLICATION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w">	</span><span class="s1">&#39;class&#39;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;SimpleStrategy&#39;</span><span class="p">,</span><span class="w">
-</span><span class="w">	</span><span class="s1">&#39;replication_factor&#39;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> 
-</span><span class="w"></span><span class="p">};</span><span class="w">
+</span><span class="w">	</span><span class="s1">&#39;</span><span class="s1">class</span><span class="s1">&#39;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;</span><span class="s1">SimpleStrategy</span><span class="s1">&#39;</span><span class="p">,</span><span class="w">
+</span><span class="w">	</span><span class="s1">&#39;</span><span class="s1">replication_factor</span><span class="s1">&#39;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> 
+</span><span class="w"></span><span class="p">}</span><span class="p">;</span><span class="w">
 </span><span class="w"></span><span class="o">#</span><span class="k">use</span><span class="w">
 </span><span class="w"></span><span class="k">USE</span><span class="w"> </span><span class="n">contacts</span><span class="p">;</span><span class="w">
 </span><span class="w"></span><span class="o">#</span><span class="k">create</span><span class="w"> </span><span class="k">table</span><span class="w">
 </span><span class="w"></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">contact</span><span class="w"> </span><span class="p">(</span><span class="w"> 
 </span><span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">UUID</span><span class="p">,</span><span class="w">
 </span><span class="w">  </span><span class="n">email</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w">
-</span><span class="w"></span><span class="p">);</span></code></pre></div>
-<h4 id="查看表数据">查看表数据</h4>
+</span><span class="w"></span><span class="p">)</span><span class="p">;</span><span class="w">
+</span></code></pre></div><h4 id="查看表数据">查看表数据</h4>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">cqlsh:contacts&gt; SELECT * FROM contact<span class="p">;</span>
 
  email <span class="p">|</span> id
 -------+----
 
-<span class="o">(</span><span class="m">0</span> rows<span class="o">)</span></code></pre></div>
-<h3 id="java客户端">Java客户端</h3>
-
+<span class="o">(</span><span class="m">0</span> rows<span class="o">)</span>
+</code></pre></div><h3 id="java客户端">Java客户端</h3>
 <h4 id="引入依赖">引入依赖</h4>
-<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;dependency&gt;</span> 
-  <span class="nt">&lt;groupId&gt;</span>com.datastax.cassandra<span class="nt">&lt;/groupId&gt;</span> 
-  <span class="nt">&lt;artifactId&gt;</span>cassandra-driver-core<span class="nt">&lt;/artifactId&gt;</span> 
-  <span class="nt">&lt;version&gt;</span>3.2.0<span class="nt">&lt;/version&gt;</span> 
-<span class="nt">&lt;/dependency&gt;</span></code></pre></div>
-<h4 id="连接到cassandra并插入数据">连接到Cassandra并插入数据</h4>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="n">Cluster</span> <span class="nf">cluster</span> <span class="o">=</span> <span class="n">Cluster</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">addContactPoint</span><span class="p">(</span><span class="s">&#34;127.0.0.1&#34;</span><span class="p">).</span><span class="na">build</span><span class="p">();</span>
-<span class="n">Session</span> <span class="nf">session</span> <span class="o">=</span> <span class="n">cluster</span><span class="p">.</span><span class="na">connect</span><span class="p">(</span><span class="s">&#34;contacts&#34;</span><span class="p">);</span>
-<span class="n">String</span> <span class="nf">insert</span> <span class="o">=</span> <span class="s">&#34;INSERT INTO contact (id, email) &#34;</span> <span class="o">+</span>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;dependency</span><span class="nt">&gt;</span> 
+  <span class="nt">&lt;groupId</span><span class="nt">&gt;</span>com.datastax.cassandra<span class="nt">&lt;/groupId&gt;</span> 
+  <span class="nt">&lt;artifactId</span><span class="nt">&gt;</span>cassandra-driver-core<span class="nt">&lt;/artifactId&gt;</span> 
+  <span class="nt">&lt;version</span><span class="nt">&gt;</span>3.2.0<span class="nt">&lt;/version&gt;</span> 
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div><h4 id="连接到cassandra并插入数据">连接到Cassandra并插入数据</h4>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="n">Cluster</span> <span class="n">cluster</span> <span class="o">=</span> <span class="n">Cluster</span><span class="o">.</span><span class="na">builder</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">addContactPoint</span><span class="o">(</span><span class="s">&#34;127.0.0.1&#34;</span><span class="o">)</span><span class="o">.</span><span class="na">build</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<span class="n">Session</span> <span class="n">session</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="na">connect</span><span class="o">(</span><span class="s">&#34;contacts&#34;</span><span class="o">)</span><span class="o">;</span>
+<span class="n">String</span> <span class="n">insert</span> <span class="o">=</span> <span class="s">&#34;INSERT INTO contact (id, email) &#34;</span> <span class="o">+</span>
         <span class="s">&#34;VALUES (&#34;</span> <span class="o">+</span>
         <span class="s">&#34;bd297650-2885-11e4-8c21-0800200c9a66,&#34;</span> <span class="o">+</span>
         <span class="s">&#34;&#39;contact@example.com&#39; &#34;</span> <span class="o">+</span>
-        <span class="s">&#34;);&#34;</span><span class="p">;</span>
-<span class="n">session</span><span class="p">.</span><span class="na">execute</span><span class="p">(</span><span class="n">insert</span><span class="p">);</span></code></pre></div>
-<h4 id="查看表数据-1">查看表数据</h4>
+        <span class="s">&#34;);&#34;</span><span class="o">;</span>
+<span class="n">session</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">insert</span><span class="o">)</span><span class="o">;</span>
+</code></pre></div><h4 id="查看表数据-1">查看表数据</h4>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">cqlsh:contacts&gt; SELECT * FROM contact<span class="p">;</span>
 
  email               <span class="p">|</span> id
 ---------------------+--------------------------------------
  contact@example.com <span class="p">|</span> bd297650-2885-11e4-8c21-0800200c9a66
 
-<span class="o">(</span><span class="m">1</span> rows<span class="o">)</span></code></pre></div>
+<span class="o">(</span><span class="m">1</span> rows<span class="o">)</span>
+</code></pre></div>
         </div>
 
         
@@ -148,25 +145,15 @@ docker <span class="nb">exec</span> -it cassandra bash</code></pre></div>
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#搭建cassandra">搭建Cassandra</a></li>
-<li><a href="#创建keyspace-table">创建keyspace、table</a>
-<ul>
-<li><a href="#查看表数据">查看表数据</a></li>
-</ul></li>
-<li><a href="#java客户端">Java客户端</a>
-<ul>
-<li><a href="#引入依赖">引入依赖</a></li>
-<li><a href="#连接到cassandra并插入数据">连接到Cassandra并插入数据</a></li>
-<li><a href="#查看表数据-1">查看表数据</a></li>
-</ul></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#搭建cassandra">搭建Cassandra</a></li>
+        <li><a href="#创建keyspacetable">创建keyspace、table</a></li>
+        <li><a href="#java客户端">Java客户端</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

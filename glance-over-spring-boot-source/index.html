@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,115 +87,109 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<p>SpringBoot Application启动部分的源码阅读.</p>
-
+            <p>SpringBoot Application启动部分的源码阅读.</p>
 <h2 id="springapplication">SpringApplication</h2>
-
 <p>常用的<code>SpringApplication.run(Class, Args)</code>启动Spring应用, 创建或者更新<code>ApplicationContext</code></p>
-
 <h3 id="静态方法run">静态方法run</h3>
-
 <p>使用source类实例化一个<code>SpringApplication</code>实例, 并调用实例方法<code>run</code>.</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">static</span> <span class="n">ConfigurableApplicationContext</span> <span class="nf">run</span><span class="p">(</span><span class="n">Object</span><span class="p">[]</span> <span class="nf">sources</span><span class="p">,</span> <span class="n">String</span><span class="p">[]</span> <span class="nf">args</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="k">new</span> <span class="n">SpringApplication</span><span class="p">(</span><span class="n">sources</span><span class="p">).</span><span class="na">run</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
-<span class="p">}</span></code></pre></div>
-<h4 id="初始化initialize">初始化initialize</h4>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="n">ConfigurableApplicationContext</span> <span class="nf">run</span><span class="o">(</span><span class="n">Object</span><span class="o">[</span><span class="o">]</span> <span class="n">sources</span><span class="o">,</span> <span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="n">SpringApplication</span><span class="o">(</span><span class="n">sources</span><span class="o">)</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">args</span><span class="o">)</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div><h4 id="初始化initialize">初始化initialize</h4>
 <ol>
-<li><p>实例化的时候首先通过尝试加载<code>javax.servlet.Servlet</code>和<code>org.springframework.web.context.ConfigurableWebApplicationContext</code>推断当前是否是<strong>web</strong>环境.</p></li>
-
-<li><p>然后从<code>spring.factories</code>获取<code>ApplicationContextInitializer</code>的实现类.</p></li>
-
-<li><p>从<code>spring.factories</code>获取<code>ApplicationListener</code>的实现类</p></li>
-
-<li><p>推断出应用的启动类(包含main方法的类): 检查线程栈中元素的方法名是否是<code>main</code></p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="nf">Class</span><span class="o">&lt;?&gt;</span> <span class="n">deduceMainApplicationClass</span><span class="p">()</span> <span class="p">{</span>
-<span class="k">try</span> <span class="p">{</span>
-<span class="c1">//获取线程栈数据
-</span><span class="c1"></span><span class="n">StackTraceElement</span><span class="p">[]</span> <span class="nf">stackTrace</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="p">().</span><span class="na">getStackTrace</span><span class="p">();</span>
-<span class="k">for</span> <span class="p">(</span><span class="n">StackTraceElement</span> <span class="nf">stackTraceElement</span> <span class="o">:</span> <span class="n">stackTrace</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="s">&#34;main&#34;</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">stackTraceElement</span><span class="p">.</span><span class="na">getMethodName</span><span class="p">()))</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">Class</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="n">stackTraceElement</span><span class="p">.</span><span class="na">getClassName</span><span class="p">());</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-<span class="p">}</span>
-<span class="k">catch</span> <span class="p">(</span><span class="n">ClassNotFoundException</span> <span class="nf">ex</span><span class="p">)</span> <span class="p">{</span>
-<span class="c1">// Swallow and continue
-</span><span class="c1"></span><span class="p">}</span>
-<span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
-<span class="p">}</span></code></pre></div></li>
+<li>
+<p>实例化的时候首先通过尝试加载<code>javax.servlet.Servlet</code>和<code>org.springframework.web.context.ConfigurableWebApplicationContext</code>推断当前是否是<strong>web</strong>环境.</p>
+</li>
+<li>
+<p>然后从<code>spring.factories</code>获取<code>ApplicationContextInitializer</code>的实现类.</p>
+</li>
+<li>
+<p>从<code>spring.factories</code>获取<code>ApplicationListener</code>的实现类</p>
+</li>
+<li>
+<p>推断出应用的启动类(包含main方法的类): 检查线程栈中元素的方法名是否是<code>main</code></p>
+</li>
 </ol>
-
-<p>到此实例化就完成了.</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">deduceMainApplicationClass</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">try</span> <span class="o">{</span>
+  <span class="c1">//获取线程栈数据
+</span><span class="c1"></span>    <span class="n">StackTraceElement</span><span class="o">[</span><span class="o">]</span> <span class="n">stackTrace</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">getStackTrace</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">for</span> <span class="o">(</span><span class="n">StackTraceElement</span> <span class="n">stackTraceElement</span> <span class="o">:</span> <span class="n">stackTrace</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(</span><span class="s">&#34;main&#34;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">stackTraceElement</span><span class="o">.</span><span class="na">getMethodName</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="n">stackTraceElement</span><span class="o">.</span><span class="na">getClassName</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="k">catch</span> <span class="o">(</span><span class="n">ClassNotFoundException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// Swallow and continue
+</span><span class="c1"></span>  <span class="o">}</span>
+  <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div><p>到此实例化就完成了.</p>
 <h3 id="实例方法run">实例方法run</h3>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">ConfigurableApplicationContext</span> <span class="n">run</span><span class="p">(</span><span class="n">String</span><span class="p">...</span> <span class="nf">args</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">StopWatch</span> <span class="nf">stopWatch</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StopWatch</span><span class="p">();</span>
-  <span class="n">stopWatch</span><span class="p">.</span><span class="na">start</span><span class="p">();</span>
-  <span class="n">ConfigurableApplicationContext</span> <span class="nf">context</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="n">ConfigurableApplicationContext</span> <span class="nf">run</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="o">.</span><span class="o">.</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">StopWatch</span> <span class="n">stopWatch</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StopWatch</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+  <span class="n">stopWatch</span><span class="o">.</span><span class="na">start</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+  <span class="n">ConfigurableApplicationContext</span> <span class="n">context</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
   <span class="c1">//默认设置java.awt.headless为true
-</span><span class="c1"></span>  <span class="n">configureHeadlessProperty</span><span class="p">();</span> 
+</span><span class="c1"></span>  <span class="n">configureHeadlessProperty</span><span class="o">(</span><span class="o">)</span><span class="o">;</span> 
   <span class="c1">//从spring.factories中获取org.springframework.boot.SpringApplicationRunListener的实现类
-</span><span class="c1"></span>  <span class="n">SpringApplicationRunListeners</span> <span class="nf">listeners</span> <span class="o">=</span> <span class="n">getRunListeners</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
+</span><span class="c1"></span>  <span class="n">SpringApplicationRunListeners</span> <span class="n">listeners</span> <span class="o">=</span> <span class="n">getRunListeners</span><span class="o">(</span><span class="n">args</span><span class="o">)</span><span class="o">;</span>
   <span class="c1">//通过EventPublishingRunListener发布started事件
-</span><span class="c1"></span>  <span class="n">listeners</span><span class="p">.</span><span class="na">started</span><span class="p">();</span>
-  <span class="k">try</span> <span class="p">{</span>
-    <span class="n">ApplicationArguments</span> <span class="nf">applicationArguments</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DefaultApplicationArguments</span><span class="p">(</span>
-        <span class="n">args</span><span class="p">);</span>
+</span><span class="c1"></span>  <span class="n">listeners</span><span class="o">.</span><span class="na">started</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+  <span class="k">try</span> <span class="o">{</span>
+    <span class="n">ApplicationArguments</span> <span class="n">applicationArguments</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DefaultApplicationArguments</span><span class="o">(</span>
+        <span class="n">args</span><span class="o">)</span><span class="o">;</span>
     <span class="c1">//重点: 创建更新上下文对象
-</span><span class="c1"></span>    <span class="n">context</span> <span class="o">=</span> <span class="n">createAndRefreshContext</span><span class="p">(</span><span class="n">listeners</span><span class="p">,</span> <span class="n">applicationArguments</span><span class="p">);</span>
+</span><span class="c1"></span>    <span class="n">context</span> <span class="o">=</span> <span class="n">createAndRefreshContext</span><span class="o">(</span><span class="n">listeners</span><span class="o">,</span> <span class="n">applicationArguments</span><span class="o">)</span><span class="o">;</span>
     <span class="c1">//上下文对象更新完调用
-</span><span class="c1"></span>    <span class="n">afterRefresh</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">applicationArguments</span><span class="p">);</span>
+</span><span class="c1"></span>    <span class="n">afterRefresh</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">applicationArguments</span><span class="o">)</span><span class="o">;</span>
     <span class="c1">//通过EventPublishingRunListener发布finished事件
-</span><span class="c1"></span>    <span class="n">listeners</span><span class="p">.</span><span class="na">finished</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
-    <span class="n">stopWatch</span><span class="p">.</span><span class="na">stop</span><span class="p">();</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">logStartupInfo</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">new</span> <span class="n">StartupInfoLogger</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">mainApplicationClass</span><span class="p">)</span>
-          <span class="p">.</span><span class="na">logStarted</span><span class="p">(</span><span class="n">getApplicationLog</span><span class="p">(),</span> <span class="n">stopWatch</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">context</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="k">catch</span> <span class="p">(</span><span class="n">Throwable</span> <span class="nf">ex</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">handleRunFailure</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">listeners</span><span class="p">,</span> <span class="n">ex</span><span class="p">);</span>
-    <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="p">(</span><span class="n">ex</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<h3 id="springapplicationrunlistener">SpringApplicationRunListener</h3>
-
+</span><span class="c1"></span>    <span class="n">listeners</span><span class="o">.</span><span class="na">finished</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="kc">null</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">stopWatch</span><span class="o">.</span><span class="na">stop</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">logStartupInfo</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">new</span> <span class="n">StartupInfoLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">mainApplicationClass</span><span class="o">)</span>
+          <span class="o">.</span><span class="na">logStarted</span><span class="o">(</span><span class="n">getApplicationLog</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">stopWatch</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">context</span><span class="o">;</span>
+  <span class="o">}</span>
+  <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">handleRunFailure</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">listeners</span><span class="o">,</span> <span class="n">ex</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="n">ex</span><span class="o">)</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><h3 id="springapplicationrunlistener">SpringApplicationRunListener</h3>
 <p>监听<code>SpringApplication</code>的<code>run</code>方法. 通过<code>SpringFactoriesLoader</code>加载, 实现时需要提供public的构造方法接受<code>SpringApplication</code>和<code>String[]</code>为参数.
 事件的发生顺序为<code>started -&gt; environmentPrepared -&gt; contextPrepared -&gt; contextLoaded -&gt; finished</code>.</p>
-
 <p>SpringBoot默认使用<code>EventPublishingRunListener</code>这个实现类, 将各个事件封装并发布出去, 最终被<code>ApplicationListener</code>捕获.</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">interface</span> <span class="n">SpringApplicationRunListener</span> <span class="p">{</span>
-<span class="kt">void</span> <span class="nf">started</span><span class="p">();</span>
-<span class="kt">void</span> <span class="nf">environmentPrepared</span><span class="p">(</span><span class="n">ConfigurableEnvironment</span> <span class="nf">environment</span><span class="p">);</span>
-<span class="kt">void</span> <span class="nf">contextPrepared</span><span class="p">(</span><span class="n">ConfigurableApplicationContext</span> <span class="nf">context</span><span class="p">);</span>
-<span class="kt">void</span> <span class="nf">contextLoaded</span><span class="p">(</span><span class="n">ConfigurableApplicationContext</span> <span class="nf">context</span><span class="p">);</span>
-<span class="kt">void</span> <span class="nf">finished</span><span class="p">(</span><span class="n">ConfigurableApplicationContext</span> <span class="nf">context</span><span class="p">,</span> <span class="n">Throwable</span> <span class="nf">exception</span><span class="p">);</span>
-<span class="p">}</span></code></pre></div>
-<h3 id="创建并更新上下文对象createandrefreshcontext">创建并更新上下文对象createAndRefreshContext</h3>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="nf">ConfigurableApplicationContext</span> <span class="n">createAndRefreshContext</span><span class="p">(</span><span class="n">SpringApplicationRunListeners</span> <span class="nf">listeners</span><span class="p">,</span> <span class="n">ApplicationArguments</span> <span class="nf">applicationArguments</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ConfigurableApplicationContext</span> <span class="nf">context</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">SpringApplicationRunListener</span> <span class="o">{</span>
+<span class="kt">void</span> <span class="nf">started</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<span class="kt">void</span> <span class="nf">environmentPrepared</span><span class="o">(</span><span class="n">ConfigurableEnvironment</span> <span class="n">environment</span><span class="o">)</span><span class="o">;</span>
+<span class="kt">void</span> <span class="nf">contextPrepared</span><span class="o">(</span><span class="n">ConfigurableApplicationContext</span> <span class="n">context</span><span class="o">)</span><span class="o">;</span>
+<span class="kt">void</span> <span class="nf">contextLoaded</span><span class="o">(</span><span class="n">ConfigurableApplicationContext</span> <span class="n">context</span><span class="o">)</span><span class="o">;</span>
+<span class="kt">void</span> <span class="nf">finished</span><span class="o">(</span><span class="n">ConfigurableApplicationContext</span> <span class="n">context</span><span class="o">,</span> <span class="n">Throwable</span> <span class="n">exception</span><span class="o">)</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div><h3 id="创建并更新上下文对象createandrefreshcontext">创建并更新上下文对象createAndRefreshContext</h3>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="n">ConfigurableApplicationContext</span> <span class="nf">createAndRefreshContext</span><span class="o">(</span><span class="n">SpringApplicationRunListeners</span> <span class="n">listeners</span><span class="o">,</span> <span class="n">ApplicationArguments</span> <span class="n">applicationArguments</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">ConfigurableApplicationContext</span> <span class="n">context</span><span class="o">;</span>
   <span class="c1">// Create and configure the environment
 </span><span class="c1"></span>  <span class="c1">//获取或创建环境实例, web环境使用StandardServletEnvironment, 非web环境使用StandardEnvironment
-</span><span class="c1"></span>  <span class="n">ConfigurableEnvironment</span> <span class="nf">environment</span> <span class="o">=</span> <span class="n">getOrCreateEnvironment</span><span class="p">();</span>
+</span><span class="c1"></span>  <span class="n">ConfigurableEnvironment</span> <span class="n">environment</span> <span class="o">=</span> <span class="n">getOrCreateEnvironment</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
   <span class="c1">//配置环境数据 
 </span><span class="c1"></span>  <span class="c1">//1. **commandLineArgs**属性从启动参数中解析, 格式&#34;--name=value&#34;
 </span><span class="c1"></span>  <span class="c1">//2. 配置profiles. 有效的profile(通过**spring.profiles.active**配置) 和 通过SpringApplication.profiles()指定的额外profile
-</span><span class="c1"></span>  <span class="n">configureEnvironment</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="n">applicationArguments</span><span class="p">.</span><span class="na">getSourceArgs</span><span class="p">());</span>
+</span><span class="c1"></span>  <span class="n">configureEnvironment</span><span class="o">(</span><span class="n">environment</span><span class="o">,</span> <span class="n">applicationArguments</span><span class="o">.</span><span class="na">getSourceArgs</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
   <span class="c1">//通过EventPublishingRunListener发布environmentPrepared事件
-</span><span class="c1"></span>  <span class="n">listeners</span><span class="p">.</span><span class="na">environmentPrepared</span><span class="p">(</span><span class="n">environment</span><span class="p">);</span>
+</span><span class="c1"></span>  <span class="n">listeners</span><span class="o">.</span><span class="na">environmentPrepared</span><span class="o">(</span><span class="n">environment</span><span class="o">)</span><span class="o">;</span>
   <span class="c1">//如果是web环境, 将非web环境实例转换成web环境实例: 
 </span><span class="c1"></span>  <span class="c1">//使用有效的profile配置和jndiProperties, servletConfigInitParams, servletContextInitParams的配置.
-</span><span class="c1"></span>  <span class="k">if</span> <span class="p">(</span><span class="n">isWebEnvironment</span><span class="p">(</span><span class="n">environment</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">webEnvironment</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">environment</span> <span class="o">=</span> <span class="n">convertToStandardEnvironment</span><span class="p">(</span><span class="n">environment</span><span class="p">);</span>
-  <span class="p">}</span>
+</span><span class="c1"></span>  <span class="k">if</span> <span class="o">(</span><span class="n">isWebEnvironment</span><span class="o">(</span><span class="n">environment</span><span class="o">)</span> <span class="o">&amp;</span><span class="o">&amp;</span> <span class="o">!</span><span class="k">this</span><span class="o">.</span><span class="na">webEnvironment</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">environment</span> <span class="o">=</span> <span class="n">convertToStandardEnvironment</span><span class="o">(</span><span class="n">environment</span><span class="o">)</span><span class="o">;</span>
+  <span class="o">}</span>
   <span class="c1">//输出banner
-</span><span class="c1"></span>  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">bannerMode</span> <span class="o">!=</span> <span class="n">Banner</span><span class="p">.</span><span class="na">Mode</span><span class="p">.</span><span class="na">OFF</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">printBanner</span><span class="p">(</span><span class="n">environment</span><span class="p">);</span>
-  <span class="p">}</span>
+</span><span class="c1"></span>  <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">bannerMode</span> <span class="o">!</span><span class="o">=</span> <span class="n">Banner</span><span class="o">.</span><span class="na">Mode</span><span class="o">.</span><span class="na">OFF</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">printBanner</span><span class="o">(</span><span class="n">environment</span><span class="o">)</span><span class="o">;</span>
+  <span class="o">}</span>
 
   <span class="c1">//创建上下文对象, 没有指定实现类的话(使用SpringApplicationBuilder.contextClass), 使用默认context类. 然后通过反射实例化上下文对象.
 </span><span class="c1"></span>  <span class="c1">//1. web环境使用org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext
@@ -205,53 +199,52 @@
 </span><span class="c1"></span>  <span class="c1">//1. 创建AnnotatedBeanDefinitionReader. 注册相关的Annotation Post Processor, 包括: ConfigurationClassPostProcessor(处理@Configuration标注的类), AutowiredAnnotationBeanPostProcessor, RequiredAnnotationBeanPostProcessor, CommonAnnotationBeanPostProcessor, PersistenceAnnotationBeanPostProcessor, EventListenerMethodProcessor, DefaultEventListenerFactory
 </span><span class="c1"></span>  <span class="c1">//2. 创建ClassPathBeanDefinitionScanner. 扫描器, 扫描默认的过滤器@Service, @Component, @Registry, @Controller. 同时支持J2EE6的@ManagedBean和@Named
 </span><span class="c1"></span>  <span class="c1">// Create, load, refresh and run the ApplicationContext
-</span><span class="c1"></span>  <span class="n">context</span> <span class="o">=</span> <span class="n">createApplicationContext</span><span class="p">();</span>
+</span><span class="c1"></span>  <span class="n">context</span> <span class="o">=</span> <span class="n">createApplicationContext</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
   <span class="c1">//设置环境
-</span><span class="c1"></span>  <span class="n">context</span><span class="p">.</span><span class="na">setEnvironment</span><span class="p">(</span><span class="n">environment</span><span class="p">);</span>
+</span><span class="c1"></span>  <span class="n">context</span><span class="o">.</span><span class="na">setEnvironment</span><span class="o">(</span><span class="n">environment</span><span class="o">)</span><span class="o">;</span>
   <span class="c1">//后续的处理
-</span><span class="c1"></span>  <span class="n">postProcessApplicationContext</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+</span><span class="c1"></span>  <span class="n">postProcessApplicationContext</span><span class="o">(</span><span class="n">context</span><span class="o">)</span><span class="o">;</span>
   <span class="c1">//应用初始化器(ApplicationContextInitializer的实现类), 对上下文对象做更多初始化的操作, 比如: 
 </span><span class="c1"></span>  <span class="c1">//1. 添加BeanFactoryPostProcessor
 </span><span class="c1"></span>  <span class="c1">//2 .设置上下文对象id
 </span><span class="c1"></span>  <span class="c1">//3 .代理配置中context.initializer.classes指定的初始化类
 </span><span class="c1"></span>  <span class="c1">//4. 添加listener, 在web容器启动后更新环境变量中的端口号(server.ports中的local.server.port)
-</span><span class="c1"></span>  <span class="n">applyInitializers</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+</span><span class="c1"></span>  <span class="n">applyInitializers</span><span class="o">(</span><span class="n">context</span><span class="o">)</span><span class="o">;</span>
   <span class="c1">//通过EventPublishingRunListener发布contextPrepared事件
-</span><span class="c1"></span>  <span class="n">listeners</span><span class="p">.</span><span class="na">contextPrepared</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+</span><span class="c1"></span>  <span class="n">listeners</span><span class="o">.</span><span class="na">contextPrepared</span><span class="o">(</span><span class="n">context</span><span class="o">)</span><span class="o">;</span>
   <span class="c1">//打印启动信息和有效的profile信息
-</span><span class="c1"></span>  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">logStartupInfo</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">logStartupInfo</span><span class="p">(</span><span class="n">context</span><span class="p">.</span><span class="na">getParent</span><span class="p">()</span> <span class="o">==</span> <span class="kc">null</span><span class="p">);</span>
-    <span class="n">logStartupProfileInfo</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
-  <span class="p">}</span>
+</span><span class="c1"></span>  <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">logStartupInfo</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">logStartupInfo</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="na">getParent</span><span class="o">(</span><span class="o">)</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">logStartupProfileInfo</span><span class="o">(</span><span class="n">context</span><span class="o">)</span><span class="o">;</span>
+  <span class="o">}</span>
 
   <span class="c1">//将ApplicationArguments实例注册到BeanFactory中, 名字为springApplicationArguments
 </span><span class="c1"></span>  <span class="c1">// Add boot specific singleton beans
-</span><span class="c1"></span>  <span class="n">context</span><span class="p">.</span><span class="na">getBeanFactory</span><span class="p">().</span><span class="na">registerSingleton</span><span class="p">(</span><span class="s">&#34;springApplicationArguments&#34;</span><span class="p">,</span>
-      <span class="n">applicationArguments</span><span class="p">);</span>
+</span><span class="c1"></span>  <span class="n">context</span><span class="o">.</span><span class="na">getBeanFactory</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">registerSingleton</span><span class="o">(</span><span class="s">&#34;springApplicationArguments&#34;</span><span class="o">,</span>
+      <span class="n">applicationArguments</span><span class="o">)</span><span class="o">;</span>
 
   <span class="c1">//从source(可以是Resource, Package, CharSequence或者Class. 从run方法进来的为Class)类加载Bean到上下文对象中
 </span><span class="c1"></span>  <span class="c1">// Load the sources
-</span><span class="c1"></span>  <span class="n">Set</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="nf">sources</span> <span class="o">=</span> <span class="n">getSources</span><span class="p">();</span>
-  <span class="n">Assert</span><span class="p">.</span><span class="na">notEmpty</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="s">&#34;Sources must not be empty&#34;</span><span class="p">);</span>
-  <span class="n">load</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">sources</span><span class="p">.</span><span class="na">toArray</span><span class="p">(</span><span class="k">new</span> <span class="n">Object</span><span class="p">[</span><span class="n">sources</span><span class="p">.</span><span class="na">size</span><span class="p">()]));</span>
+</span><span class="c1"></span>  <span class="n">Set</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">sources</span> <span class="o">=</span> <span class="n">getSources</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+  <span class="n">Assert</span><span class="o">.</span><span class="na">notEmpty</span><span class="o">(</span><span class="n">sources</span><span class="o">,</span> <span class="s">&#34;Sources must not be empty&#34;</span><span class="o">)</span><span class="o">;</span>
+  <span class="n">load</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">sources</span><span class="o">.</span><span class="na">toArray</span><span class="o">(</span><span class="k">new</span> <span class="n">Object</span><span class="o">[</span><span class="n">sources</span><span class="o">.</span><span class="na">size</span><span class="o">(</span><span class="o">)</span><span class="o">]</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
   <span class="c1">//通过EventPublishingRunListener发布contextLoaded事件
-</span><span class="c1"></span>  <span class="n">listeners</span><span class="p">.</span><span class="na">contextLoaded</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+</span><span class="c1"></span>  <span class="n">listeners</span><span class="o">.</span><span class="na">contextLoaded</span><span class="o">(</span><span class="n">context</span><span class="o">)</span><span class="o">;</span>
 
   <span class="c1">//更新上下文对象, 调用ApplicationContext.refresh()方法
 </span><span class="c1"></span>  <span class="c1">// Refresh the context
-</span><span class="c1"></span>  <span class="n">refresh</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
-  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">registerShutdownHook</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">try</span> <span class="p">{</span>
-      <span class="n">context</span><span class="p">.</span><span class="na">registerShutdownHook</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="k">catch</span> <span class="p">(</span><span class="n">AccessControlException</span> <span class="nf">ex</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="c1"></span>  <span class="n">refresh</span><span class="o">(</span><span class="n">context</span><span class="o">)</span><span class="o">;</span>
+  <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">registerShutdownHook</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="n">context</span><span class="o">.</span><span class="na">registerShutdownHook</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="k">catch</span> <span class="o">(</span><span class="n">AccessControlException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
       <span class="c1">// Not allowed in some environments.
-</span><span class="c1"></span>    <span class="p">}</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="n">context</span><span class="p">;</span>
-<span class="p">}</span></code></pre></div>
-<h3 id="更新上下文-applicationcontext-refresh">更新上下文 ApplicationContext.refresh()</h3>
-
+</span><span class="c1"></span>    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="k">return</span> <span class="n">context</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div><h3 id="更新上下文-applicationcontextrefresh">更新上下文 ApplicationContext.refresh()</h3>
 <ol>
 <li>prepareRefresh
 记录启动时间, 初始化上下文环境信息中的占位符, 检查必须的属性</li>
@@ -280,73 +273,59 @@
 <li>finishRefresh
 完成更新, 调用<code>LifecycleProcessor.onRefresh()</code>, 发布<code>ContextRefreshedEvent</code>事件, 将上下文实例暴露在MBean中.</li>
 </ol>
-
 <h4 id="configurationclasspostprocessor">ConfigurationClassPostProcessor</h4>
-
 <p><code>BeanFactoryPostProcessor</code>的实现类, 用于引导<code>@Configuration</code>类.
 默认情况下通过使用<code>&lt;context:annotation-config/&gt;</code>或者<code>&lt;context:component-scan/&gt;</code>注册.</p>
-
 <h2 id="注解">注解</h2>
-
 <h2 id="springbootapplication">@SpringBootApplication</h2>
-
 <p>集合了<code>@Configuration</code>, <code>@EnableAutoConfiguration</code>和<code>@ComponentScan</code>
 属性: <code>exclude</code>, <code>excludeName</code>, <code>scanBasePackage</code> , <code>scanBasePackageClass</code></p>
-
 <h3 id="configuration">@Configuration</h3>
-
 <p>类似旧版配置中的xml配置文件, 提供Bean的定义和引入其他xml配置. 分别通过<code>@Bean</code>和<code>@Import</code>实现.
 在ApplicationContext.refresh()时是用<code>ConfigurationClassPostProcessor</code>进行bean的实例化.</p>
-
-<p>可以与<code>@PropertySource</code>, <code>@Autowired</code>, <code>@Value</code>, <code>@Profile</code>搭配使用.</p>
+<p>可以与<code>@PropertySource</code>, <code>@Autowired</code>, <code> @Value</code>, <code>@Profile</code>搭配使用.</p>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
-<span class="nd">@PropertySource</span><span class="p">(</span><span class="s">&#34;classpath:/com/acme/app.properties&#34;</span><span class="p">)</span>
-<span class="kd">public</span> <span class="nf">class</span> <span class="n">AppConfig</span> <span class="p">{</span>
-    <span class="nd">@Value</span><span class="p">(</span><span class="s">&#34;${bean.name}&#34;</span><span class="p">)</span> <span class="n">String</span> <span class="nf">beanName</span><span class="p">;</span>
-    <span class="nd">@Autowired</span> <span class="n">DataSource</span> <span class="nf">dataSource</span><span class="p">;</span>
+<span class="nd">@PropertySource</span><span class="o">(</span><span class="s">&#34;classpath:/com/acme/app.properties&#34;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AppConfig</span> <span class="o">{</span>
+    <span class="nd">@Value</span><span class="o">(</span><span class="s">&#34;${bean.name}&#34;</span><span class="o">)</span> <span class="n">String</span> <span class="n">beanName</span><span class="o">;</span>
+    <span class="nd">@Autowired</span> <span class="n">DataSource</span> <span class="n">dataSource</span><span class="o">;</span>
     <span class="nd">@Bean</span>
-    <span class="kd">public</span> <span class="nf">MyBean</span> <span class="n">myBean</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">MyBean</span><span class="p">(</span><span class="n">beanName</span><span class="p">);</span>
-    <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">MyBean</span> <span class="nf">myBean</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">MyBean</span><span class="o">(</span><span class="n">beanName</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
     <span class="nd">@Configuration</span>
-    <span class="nd">@Profile</span><span class="p">(</span><span class="s">&#34;test&#34;</span><span class="p">)</span>
-    <span class="kd">static</span> <span class="nf">class</span> <span class="n">DatabaseConfigTest</span> <span class="p">{</span>
+    <span class="nd">@Profile</span><span class="o">(</span><span class="s">&#34;test&#34;</span><span class="o">)</span>
+    <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DatabaseConfigTest</span> <span class="o">{</span>
         <span class="nd">@Bean</span>
-        <span class="n">DataSource</span> <span class="nf">dataSource</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="k">new</span> <span class="n">EmbeddedDatabaseBuilder</span><span class="p">().</span><span class="na">build</span><span class="p">();</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
+        <span class="n">DataSource</span> <span class="nf">dataSource</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">EmbeddedDatabaseBuilder</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">build</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
     <span class="nd">@Configuration</span>
-    <span class="nd">@Profile</span><span class="p">(</span><span class="s">&#34;production&#34;</span><span class="p">)</span>
-    <span class="kd">static</span> <span class="nf">class</span> <span class="n">DatabaseConfigProduction</span> <span class="p">{</span>
+    <span class="nd">@Profile</span><span class="o">(</span><span class="s">&#34;production&#34;</span><span class="o">)</span>
+    <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DatabaseConfigProduction</span> <span class="o">{</span>
         <span class="nd">@Bean</span>
-        <span class="n">DataSource</span> <span class="nf">dataSource</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="k">new</span> <span class="n">EmbeddedDatabaseBuilder</span><span class="p">().</span><span class="na">build</span><span class="p">();</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<h3 id="enableautoconfiguration">@EnableAutoConfiguration</h3>
-
+        <span class="n">DataSource</span> <span class="nf">dataSource</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">EmbeddedDatabaseBuilder</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">build</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><h3 id="enableautoconfiguration">@EnableAutoConfiguration</h3>
 <p>开启Spring上下文对象的自动配置功能, 尝试去猜测和实例化你<strong>可能需要的</strong>bean.
 这个功能是基于classPath来完成的. 比如: 项目中引用了<code>tomcat-embedded.jar</code>, 你可能需要一个<code>TomcatEmbeddedServletContainerFactory</code>实例, 除非定义了自己的<code>EmbeddedServletContainerFactory</code>实例.</p>
-
 <h3 id="componentscan">@ComponentScan</h3>
-
 <p>扫描使用<code>@Configuration</code>标注的类, 类似于Spring XML的<code>&lt;context:component-scan&gt;</code>元素.
 使用<code>basePackages</code>和<code>basePackageClasses</code>属性来指定要扫描的包, 如果没有指定, 则默认从使用了该注解的类的包开始扫描.</p>
-
 <h3 id="import">@Import</h3>
-
 <p>提示<code>@Configuration</code>有更多的类需要引入, 类似xml中的<code>&lt;import&gt;</code>标签.
 可以引入<code>@Configuration</code>类, <code>ImportSelector</code>的实现类和<code>ImportBeanDefinitionRegistrar</code>的实现类, 还有常规的<code>Component</code>类.</p>
-
-<p>三者的处理方式不一样:
-* <code>@Configuration</code>常规方式
-* <code>ImportSelector</code>会根据泛型类型从<strong>spring.factories</strong>找到对应的配置类.
-* <code>ImportBeanDefinitionRegistrar</code> 可以实现在bean definition级别的处理 (<code>@Bean</code>实例级别)</p>
-
+<p>三者的处理方式不一样:</p>
+<ul>
+<li><code>@Configuration</code>常规方式</li>
+<li><code>ImportSelector</code>会根据泛型类型从<strong>spring.factories</strong>找到对应的配置类.</li>
+<li><code>ImportBeanDefinitionRegistrar</code> 可以实现在bean definition级别的处理 (<code>@Bean</code>实例级别)</li>
+</ul>
 <p>在<strong>引入</strong><code>@Configuration</code>类中使用<code>@Bean</code>标注的实例, 可以通过<code>@Autowired</code>注入. Bean和声明Bean的Configuration类本身都可以通过<code>@Autowired</code>注入.</p>
-
 <p>引入XML或者非Configuration, 使用<code>@ImportResource</code>.</p>
 
         </div>
@@ -356,33 +335,26 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#springapplication">SpringApplication</a>
-<ul>
-<li><a href="#静态方法run">静态方法run</a>
-<ul>
-<li><a href="#初始化initialize">初始化initialize</a></li>
-</ul></li>
-<li><a href="#实例方法run">实例方法run</a></li>
-<li><a href="#springapplicationrunlistener">SpringApplicationRunListener</a></li>
-<li><a href="#创建并更新上下文对象createandrefreshcontext">创建并更新上下文对象createAndRefreshContext</a></li>
-<li><a href="#更新上下文-applicationcontext-refresh">更新上下文 ApplicationContext.refresh()</a>
-<ul>
-<li><a href="#configurationclasspostprocessor">ConfigurationClassPostProcessor</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#注解">注解</a></li>
-<li><a href="#springbootapplication">@SpringBootApplication</a>
-<ul>
-<li><a href="#configuration">@Configuration</a></li>
-<li><a href="#enableautoconfiguration">@EnableAutoConfiguration</a></li>
-<li><a href="#componentscan">@ComponentScan</a></li>
-<li><a href="#import">@Import</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#springapplication">SpringApplication</a>
+      <ul>
+        <li><a href="#静态方法run">静态方法run</a></li>
+        <li><a href="#实例方法run">实例方法run</a></li>
+        <li><a href="#springapplicationrunlistener">SpringApplicationRunListener</a></li>
+        <li><a href="#创建并更新上下文对象createandrefreshcontext">创建并更新上下文对象createAndRefreshContext</a></li>
+        <li><a href="#更新上下文-applicationcontextrefresh">更新上下文 ApplicationContext.refresh()</a></li>
+      </ul>
+    </li>
+    <li><a href="#注解">注解</a></li>
+    <li><a href="#springbootapplication">@SpringBootApplication</a>
+      <ul>
+        <li><a href="#configuration">@Configuration</a></li>
+        <li><a href="#enableautoconfiguration">@EnableAutoConfiguration</a></li>
+        <li><a href="#componentscan">@ComponentScan</a></li>
+        <li><a href="#import">@Import</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

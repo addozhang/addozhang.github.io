@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,19 +87,16 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<p>Haproxy为多个域名配置SSL</p>
-
+            <p>Haproxy为多个域名配置SSL</p>
 <h2 id="生成自签名证书">生成自签名证书</h2>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">sudo mkdir /etc/ssl/atbug.com
 sudo openssl genrsa -out /etc/ssl/atbug.com/atbug.com.key <span class="m">1024</span>
 sudo openssl req -new -key /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.csr
 sudo openssl x509 -req -days <span class="m">365</span> -in /etc/ssl/atbug.com/atbug.com.csr -singkey /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.crt
 sudo openssl x509 -req -days <span class="m">365</span> -in /etc/ssl/atbug.com/atbug.com.csr -signkey /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.crt
-sudo cat /etc/ssl/atbug.com/atbug.com.crt /etc/ssl/atbug.com/atbug.com.key <span class="p">|</span> sudo tee /etc/ssl/atbug.com/atbug.com.pem</code></pre></div>
-<h2 id="haproxy配置">Haproxy配置</h2>
-<div class="highlight"><pre class="chroma">frontend https
+sudo cat /etc/ssl/atbug.com/atbug.com.crt /etc/ssl/atbug.com/atbug.com.key <span class="p">|</span> sudo tee /etc/ssl/atbug.com/atbug.com.pem
+</code></pre></div><h2 id="haproxy配置">Haproxy配置</h2>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">frontend https
         bind *:443 ssl crt /etc/ssl/atbug.com/atbug.com.pem
         option tcplog
         mode http
@@ -113,7 +110,8 @@ backend rome-atbug-https-backend
         balance roundrobin
         mode http
         option ssl-hello-chk
-        server node-1 ip:port cookie dw2-vm-test-apps003 check inter 2000 rise 3 fall 3 weight 50</pre></div>
+        server node-1 ip:port cookie dw2-vm-test-apps003 check inter 2000 rise 3 fall 3 weight 50
+</code></pre></div>
         </div>
 
         
@@ -121,13 +119,10 @@ backend rome-atbug-https-backend
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#生成自签名证书">生成自签名证书</a></li>
-<li><a href="#haproxy配置">Haproxy配置</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#生成自签名证书">生成自签名证书</a></li>
+    <li><a href="#haproxy配置">Haproxy配置</a></li>
+  </ul>
 </nav>
         </div>
         

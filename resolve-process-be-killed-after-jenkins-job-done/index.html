@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -88,14 +88,17 @@
         </div>
         <div class="article-entry" itemprop="articleBody">
             <p>因为<a href="https://wiki.jenkins.io/display/JENKINS/ProcessTreeKiller">ProcessTreeKiller</a>的存在, 构建过程中使用shell启动的进程在Job完成时都会被kill掉.</p>
-
-<p>各种搜索以及<a href="https://wiki.jenkins.io/display/JENKINS/ProcessTreeKiller">ProcessTreeKiller</a>提供的解决方式是修改<code>BUILD_ID</code>和添加<code>-Dhudson.util.ProcessTree.disable=true</code>都无法解决.</p>
-
+<p>各种搜索以及<a href="https://wiki.jenkins.io/display/JENKINS/ProcessTreeKiller">ProcessTreeKiller</a>提供的解决方式是修改<code>BUILD_ID</code>和添加<code> -Dhudson.util.ProcessTree.disable=true</code>都无法解决.</p>
 <p>最后参考<a href="https://issues.jenkins-ci.org/browse/JENKINS-28182">StackOverflow</a>和<a href="https://issues.jenkins-ci.org/browse/JENKINS-28182">Jenkins JIRA</a>, 修改<code>JENKINS_NODE_COOKIE</code>为任何值, 如<code>dontKillMe</code>. 这种方法可以解决, 记录一下. (搜索排名靠前的结果都不对).</p>
 
         </div>
 
         
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents"></nav>
+        </div>
         
         
 

@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -91,11 +91,9 @@
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">export</span> <span class="nv">GOROOT</span><span class="o">=</span>/usr/local/go
 <span class="nb">export</span> <span class="nv">GOPATH</span><span class="o">=</span>/Users/addo/Workspaces/go_w
 <span class="nb">export</span> <span class="nv">GOBIN</span><span class="o">=</span><span class="nv">$GOROOT</span>/bin
-<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$GOBIN</span></code></pre></div>
-<p>使用下面的命令安装报错:</p>
-
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$GOBIN</span>
+</code></pre></div><p>使用下面的命令安装报错:</p>
 <p><code>go get -v github.com/tools/godep</code></p>
-
 <blockquote>
 <p>github.com/tools/godep (download)
 github.com/tools/godep/vendor/github.com/pmezard/go-difflib/difflib
@@ -106,13 +104,9 @@ github.com/tools/godep/vendor/github.com/kr/pretty
 github.com/tools/godep
 go install github.com/tools/godep: open /usr/local/go/bin/godep: permission denied</p>
 </blockquote>
-
 <p>默认是安装到<code>$GOBIN</code>目录下, 权限不够.</p>
-
 <p>使用:</p>
-
 <p><code>sudo go get -v github.com/tools/godep</code></p>
-
 <blockquote>
 <p>sudo go get -v github.com/tools/godep
 github.com/tools/godep (download)
@@ -124,25 +118,25 @@ github.com/tools/godep/vendor/golang.org/x/tools/go/vcs
 github.com/tools/godep/vendor/github.com/kr/pretty
 github.com/tools/godep</p>
 </blockquote>
-
-<p><code>$GOBIN</code>并没有找到<code>godef</code>. 输出提示<code>created GOPATH=/Users/addo/go;</code>. 因为sudo的时候找不到<code>GOPATH</code>变量, 便重新创建了目录.</p>
-
+<p><code>$GOBIN</code>并没有找到<code>godef</code>. 输出提示<code>created GOPATH=/Users/addo/go; </code>. 因为sudo的时候找不到<code>GOPATH</code>变量, 便重新创建了目录.</p>
 <p>解决方案一:</p>
-
 <ol>
 <li>临时修改<code>GOBIN</code>: <code>export GOBIN=$GOPATH/bin</code></li>
 <li>运行<code>go get github.com/tools/godep</code></li>
 <li>将生成的godef复制到<code>GOROOT/bin</code>下</li>
 <li>回滚修改<code>export GOBIN=$GOROOT/bin; export PATH=$PATH:$GOBIN</code></li>
 </ol>
-
 <p>解决方案二:</p>
-
 <p>修改<code>GOROOT/bin</code>的属组属主, 安全性问题, 不推荐.</p>
 
         </div>
 
         
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents"></nav>
+        </div>
         
         
 

@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 
@@ -87,72 +87,69 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            
-
-<h3 id="核心思想">核心思想</h3>
-
+            <h3 id="核心思想">核心思想</h3>
 <ul>
 <li>生产端一致性: 开启幂等和事务, 包含重试, 发送确认, 同一个连接的最大未确认请求数.</li>
 <li>消费端一致性: 通过设置读已提交的数据和同时处理完成每一条消息之后手动提交offset.</li>
 </ul>
-
 <h3 id="生产端">生产端</h3>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">class</span> <span class="n">ProducerTest</span> <span class="p">{</span>
-    <span class="kd">public</span> <span class="nf">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="nf">args</span><span class="p">)</span> <span class="kd">throws</span> <span class="nf">InterruptedException</span><span class="p">,</span> <span class="n">ExecutionException</span> <span class="p">{</span>
-        <span class="n">Properties</span> <span class="nf">props</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Properties</span><span class="p">();</span>
-        <span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">BOOTSTRAP_SERVERS_CONFIG</span><span class="p">,</span> <span class="s">&#34;192.168.31.186:9092&#34;</span><span class="p">);</span>
-        <span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">TRANSACTIONAL_ID_CONFIG</span><span class="p">,</span> <span class="s">&#34;my-transactional-id&#34;</span><span class="p">);</span>
-        <span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">ACKS_CONFIG</span><span class="p">,</span> <span class="s">&#34;all&#34;</span><span class="p">);</span>
-        <span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">RETRIES_CONFIG</span><span class="p">,</span> <span class="s">&#34;3&#34;</span><span class="p">);</span>
-        <span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION</span><span class="p">,</span> <span class="s">&#34;1&#34;</span><span class="p">);</span>
-        <span class="n">Producer</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="nf">producer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KafkaProducer</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">props</span><span class="p">,</span> <span class="k">new</span> <span class="n">StringSerializer</span><span class="p">(),</span> <span class="k">new</span> <span class="n">StringSerializer</span><span class="p">());</span>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ProducerTest</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span><span class="o">,</span> <span class="n">ExecutionException</span> <span class="o">{</span>
+        <span class="n">Properties</span> <span class="n">props</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Properties</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">ProducerConfig</span><span class="o">.</span><span class="na">BOOTSTRAP_SERVERS_CONFIG</span><span class="o">,</span> <span class="s">&#34;192.168.31.186:9092&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">ProducerConfig</span><span class="o">.</span><span class="na">TRANSACTIONAL_ID_CONFIG</span><span class="o">,</span> <span class="s">&#34;my-transactional-id&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">ProducerConfig</span><span class="o">.</span><span class="na">ACKS_CONFIG</span><span class="o">,</span> <span class="s">&#34;all&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">ProducerConfig</span><span class="o">.</span><span class="na">RETRIES_CONFIG</span><span class="o">,</span> <span class="s">&#34;3&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">ProducerConfig</span><span class="o">.</span><span class="na">MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION</span><span class="o">,</span> <span class="s">&#34;1&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">Producer</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">producer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KafkaProducer</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="n">props</span><span class="o">,</span> <span class="k">new</span> <span class="n">StringSerializer</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="k">new</span> <span class="n">StringSerializer</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
 
-        <span class="n">producer</span><span class="p">.</span><span class="na">initTransactions</span><span class="p">();</span>
+        <span class="n">producer</span><span class="o">.</span><span class="na">initTransactions</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
 
-        <span class="k">try</span> <span class="p">{</span>
-            <span class="n">producer</span><span class="p">.</span><span class="na">beginTransaction</span><span class="p">();</span>
-            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="nf">i</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">Future</span><span class="o">&lt;</span><span class="n">RecordMetadata</span><span class="o">&gt;</span> <span class="nf">send</span> <span class="o">=</span> <span class="n">producer</span>
-                        <span class="p">.</span><span class="na">send</span><span class="p">(</span><span class="k">new</span> <span class="n">ProducerRecord</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="s">&#34;my-topic&#34;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">.</span><span class="na">toString</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">Integer</span><span class="p">.</span><span class="na">toString</span><span class="p">(</span><span class="n">i</span><span class="p">)));</span>
-                <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">send</span><span class="p">.</span><span class="na">get</span><span class="p">().</span><span class="na">offset</span><span class="p">());</span>
-                <span class="n">TimeUnit</span><span class="p">.</span><span class="na">MILLISECONDS</span><span class="p">.</span><span class="na">sleep</span><span class="p">(</span><span class="n">1000L</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="n">producer</span><span class="p">.</span><span class="na">commitTransaction</span><span class="p">();</span>
-        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">ProducerFencedException</span> <span class="o">|</span> <span class="n">OutOfOrderSequenceException</span> <span class="o">|</span> <span class="n">AuthorizationException</span> <span class="nf">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">producer</span><span class="o">.</span><span class="na">beginTransaction</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">5</span><span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">Future</span><span class="o">&lt;</span><span class="n">RecordMetadata</span><span class="o">&gt;</span> <span class="n">send</span> <span class="o">=</span> <span class="n">producer</span>
+                        <span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="k">new</span> <span class="n">ProducerRecord</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="s">&#34;my-topic&#34;</span><span class="o">,</span> <span class="n">Integer</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">i</span><span class="o">)</span><span class="o">,</span> <span class="n">Integer</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">i</span><span class="o">)</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">send</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">offset</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">1000L</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="n">producer</span><span class="o">.</span><span class="na">commitTransaction</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ProducerFencedException</span> <span class="o">|</span> <span class="n">OutOfOrderSequenceException</span> <span class="o">|</span> <span class="n">AuthorizationException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
             <span class="c1">// We can&#39;t recover from these exceptions, so our only option is to close the producer and exit.
-</span><span class="c1"></span>            <span class="n">producer</span><span class="p">.</span><span class="na">close</span><span class="p">();</span>
-        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">KafkaException</span> <span class="nf">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="c1"></span>            <span class="n">producer</span><span class="o">.</span><span class="na">close</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">KafkaException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
             <span class="c1">// For all other exceptions, just abort the transaction and try again.
-</span><span class="c1"></span>            <span class="n">producer</span><span class="p">.</span><span class="na">abortTransaction</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="n">producer</span><span class="p">.</span><span class="na">close</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<h3 id="消费端">消费端</h3>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">class</span> <span class="n">ConsumerTest</span> <span class="p">{</span>
-    <span class="kd">public</span> <span class="nf">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="nf">args</span><span class="p">)</span> <span class="kd">throws</span> <span class="nf">InterruptedException</span> <span class="p">{</span>
-        <span class="n">Properties</span> <span class="nf">props</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Properties</span><span class="p">();</span>
-        <span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">BOOTSTRAP_SERVERS_CONFIG</span><span class="p">,</span> <span class="s">&#34;192.168.31.186:9092&#34;</span><span class="p">);</span>
-        <span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">GROUP_ID_CONFIG</span><span class="p">,</span> <span class="s">&#34;test&#34;</span><span class="p">);</span>
-        <span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">AUTO_OFFSET_RESET_CONFIG</span><span class="p">,</span> <span class="n">OffsetResetStrategy</span><span class="p">.</span><span class="na">NONE</span><span class="p">.</span><span class="na">toString</span><span class="p">().</span><span class="na">toLowerCase</span><span class="p">(</span><span class="n">Locale</span><span class="p">.</span><span class="na">ROOT</span><span class="p">));</span>
-        <span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">ENABLE_AUTO_COMMIT_CONFIG</span><span class="p">,</span> <span class="s">&#34;false&#34;</span><span class="p">);</span>
-        <span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">KEY_DESERIALIZER_CLASS_CONFIG</span><span class="p">,</span> <span class="s">&#34;org.apache.kafka.common.serialization.StringDeserializer&#34;</span><span class="p">);</span>
-        <span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">VALUE_DESERIALIZER_CLASS_CONFIG</span><span class="p">,</span> <span class="s">&#34;org.apache.kafka.common.serialization.StringDeserializer&#34;</span><span class="p">);</span>
-        <span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">ISOLATION_LEVEL_CONFIG</span><span class="p">,</span> <span class="n">IsolationLevel</span><span class="p">.</span><span class="na">READ_COMMITTED</span><span class="p">.</span><span class="na">toString</span><span class="p">().</span><span class="na">toLowerCase</span><span class="p">(</span><span class="n">Locale</span><span class="p">.</span><span class="na">ROOT</span><span class="p">));</span>
-        <span class="n">KafkaConsumer</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="nf">consumer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KafkaConsumer</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">props</span><span class="p">);</span>
-        <span class="n">consumer</span><span class="p">.</span><span class="na">subscribe</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">asList</span><span class="p">(</span><span class="s">&#34;my-topic&#34;</span><span class="p">));</span>
-        <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">ConsumerRecords</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="nf">records</span> <span class="o">=</span> <span class="n">consumer</span><span class="p">.</span><span class="na">poll</span><span class="p">(</span><span class="n">100</span><span class="p">);</span>
-            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">records</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">for</span> <span class="p">(</span><span class="n">ConsumerRecord</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="nf">record</span> <span class="o">:</span> <span class="n">records</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">printf</span><span class="p">(</span><span class="s">&#34;offset = %d, key = %s, value = %s%n&#34;</span><span class="p">,</span> <span class="n">record</span><span class="p">.</span><span class="na">offset</span><span class="p">(),</span> <span class="n">record</span><span class="p">.</span><span class="na">key</span><span class="p">(),</span> <span class="n">record</span><span class="p">.</span><span class="na">value</span><span class="p">());</span>
+</span><span class="c1"></span>            <span class="n">producer</span><span class="o">.</span><span class="na">abortTransaction</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">producer</span><span class="o">.</span><span class="na">close</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><h3 id="消费端">消费端</h3>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ConsumerTest</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="n">Properties</span> <span class="n">props</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Properties</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">ConsumerConfig</span><span class="o">.</span><span class="na">BOOTSTRAP_SERVERS_CONFIG</span><span class="o">,</span> <span class="s">&#34;192.168.31.186:9092&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">ConsumerConfig</span><span class="o">.</span><span class="na">GROUP_ID_CONFIG</span><span class="o">,</span> <span class="s">&#34;test&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">ConsumerConfig</span><span class="o">.</span><span class="na">AUTO_OFFSET_RESET_CONFIG</span><span class="o">,</span> <span class="n">OffsetResetStrategy</span><span class="o">.</span><span class="na">NONE</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">toLowerCase</span><span class="o">(</span><span class="n">Locale</span><span class="o">.</span><span class="na">ROOT</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">ConsumerConfig</span><span class="o">.</span><span class="na">ENABLE_AUTO_COMMIT_CONFIG</span><span class="o">,</span> <span class="s">&#34;false&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">ConsumerConfig</span><span class="o">.</span><span class="na">KEY_DESERIALIZER_CLASS_CONFIG</span><span class="o">,</span> <span class="s">&#34;org.apache.kafka.common.serialization.StringDeserializer&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">ConsumerConfig</span><span class="o">.</span><span class="na">VALUE_DESERIALIZER_CLASS_CONFIG</span><span class="o">,</span> <span class="s">&#34;org.apache.kafka.common.serialization.StringDeserializer&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">ConsumerConfig</span><span class="o">.</span><span class="na">ISOLATION_LEVEL_CONFIG</span><span class="o">,</span> <span class="n">IsolationLevel</span><span class="o">.</span><span class="na">READ_COMMITTED</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">toLowerCase</span><span class="o">(</span><span class="n">Locale</span><span class="o">.</span><span class="na">ROOT</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">KafkaConsumer</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">consumer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KafkaConsumer</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="n">props</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">consumer</span><span class="o">.</span><span class="na">subscribe</span><span class="o">(</span><span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="s">&#34;my-topic&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">ConsumerRecords</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">records</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="na">poll</span><span class="o">(</span><span class="n">100</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="o">!</span><span class="n">records</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">for</span> <span class="o">(</span><span class="n">ConsumerRecord</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">record</span> <span class="o">:</span> <span class="n">records</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&#34;offset = %d, key = %s, value = %s%n&#34;</span><span class="o">,</span> <span class="n">record</span><span class="o">.</span><span class="na">offset</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">record</span><span class="o">.</span><span class="na">key</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">record</span><span class="o">.</span><span class="na">value</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
                     <span class="c1">//Manually commit each record
-</span><span class="c1"></span>                    <span class="n">consumer</span><span class="p">.</span><span class="na">commitSync</span><span class="p">(</span><span class="n">Collections</span><span class="p">.</span><span class="na">singletonMap</span><span class="p">(</span><span class="k">new</span> <span class="n">TopicPartition</span><span class="p">(</span><span class="n">record</span><span class="p">.</span><span class="na">topic</span><span class="p">(),</span> <span class="n">record</span><span class="p">.</span><span class="na">partition</span><span class="p">()),</span> <span class="k">new</span> <span class="n">OffsetAndMetadata</span><span class="p">(</span><span class="n">record</span><span class="p">.</span><span class="na">offset</span><span class="p">()</span> <span class="o">+</span> <span class="n">1</span><span class="p">)));</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
+</span><span class="c1"></span>                    <span class="n">consumer</span><span class="o">.</span><span class="na">commitSync</span><span class="o">(</span><span class="n">Collections</span><span class="o">.</span><span class="na">singletonMap</span><span class="o">(</span><span class="k">new</span> <span class="n">TopicPartition</span><span class="o">(</span><span class="n">record</span><span class="o">.</span><span class="na">topic</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">record</span><span class="o">.</span><span class="na">partition</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">,</span> <span class="k">new</span> <span class="n">OffsetAndMetadata</span><span class="o">(</span><span class="n">record</span><span class="o">.</span><span class="na">offset</span><span class="o">(</span><span class="o">)</span> <span class="o">+</span> <span class="n">1</span><span class="o">)</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
         </div>
 
         
@@ -160,17 +157,15 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#核心思想">核心思想</a></li>
-<li><a href="#生产端">生产端</a></li>
-<li><a href="#消费端">消费端</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#核心思想">核心思想</a></li>
+        <li><a href="#生产端">生产端</a></li>
+        <li><a href="#消费端">消费端</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
         </div>
         

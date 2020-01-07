@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="generator" content="Hugo 0.62.2" />
 </head>
 
 <body>
@@ -149,7 +149,7 @@
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    搭建Cassandra 使用docker创建Cassandra，方便快捷 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table #cqlsh&gt;#createkeyspaceCREATEKEYSPACEcontactsWITHREPLICATION={&#39;class&#39;:&#39;SimpleStrategy&#39;,&#39;replication_factor&#39;:1};#useUSEcontacts;#createtableCREATETABLEcontact(idUUID,emailTEXTPRIMARYKEY); 查看
+                    搭建Cassandra 使用docker创建Cassandra，方便快捷 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table #cq
                     </p>
                     <p class="article-more-link">
                         <a href="../../java-operate-cassandra-deployed-in-docker/">Read More</a>
@@ -622,7 +622,7 @@
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    版本 Centos7 Redis3.2.8 编译安装 wget http://download.redis.io/releases/redis-3.2.8.tar.gz tar -zxvf redis-3.2.8.tar.gz cd redis-3.2.8 sudo make test sudo make install 启动 redis-server 问题 /bin/sh: cc: command not found 原因：Centos安装时选择的类型是Infrastructure，没有c++的
+                    版本 Centos7 Redis3.2.8 编译安装 wget http://download.redis.io/releases/redis-3.2.8.tar.gz tar -zxvf redis-3.2.8.tar.gz cd redis-3.2.8 sudo make test sudo make install 启动 redis-server 问题 /bin/sh: cc: command not found **原因：**Centos安装时选择的类型是Infrastructure，没有
                     </p>
                     <p class="article-more-link">
                         <a href="../../install-redis-on-centos/">Read More</a>

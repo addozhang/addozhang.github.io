@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>软件 on 乱世浮生</title>
@@ -17,7 +17,7 @@
       <pubDate>Wed, 30 Mar 2016 14:27:02 +0000</pubDate>
       
       <guid>https://atbug.com/rabbitmq-delay-queue-implementation/</guid>
-      <description>工作中很多场景需要用到定时任务、延迟任务，常用的方法用crontab job、Spring的Quartz，然后扫描整张数据库表，判断哪些数据需</description>
+      <description>在requeue=false的情况系，消息被client reject 消息过期 队列长度超过限制</description>
     </item>
     
     <item>
