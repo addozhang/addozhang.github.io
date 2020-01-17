@@ -248,7 +248,7 @@ Checked 23 crds
 Checked 9 Istio Deployments
 Istio is installed successfully</p>
 </blockquote>
-<h3 id="卸载">卸载</h3>
+<h2 id="卸载">卸载</h2>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">helm template install/kubernetes/helm/istio --namespace istio-system <span class="se">\
 </span><span class="se"></span>    --values install/kubernetes/helm/istio/values-istio-demo.yaml <span class="p">|</span> kubectl delete -f -
 kubectl delete namespace istio-system
@@ -276,11 +276,8 @@ kubectl delete -f install/kubernetes/helm/istio-init/files
         <li><a href="#安装前检查">安装前检查</a></li>
       </ul>
     </li>
-    <li><a href="#安装">安装</a>
-      <ul>
-        <li><a href="#卸载">卸载</a></li>
-      </ul>
-    </li>
+    <li><a href="#安装">安装</a></li>
+    <li><a href="#卸载">卸载</a></li>
   </ul>
 </nav>
         </div>
