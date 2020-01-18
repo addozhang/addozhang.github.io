@@ -63,6 +63,65 @@
                 
                 
                 <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../install-kubernetes-on-macos/">Kubernetes学习 — Macos安装Kubernetes</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../install-kubernetes-on-macos/" class="article-date">
+                        <time datetime='2017-08-17T09:44:17.000&#43;00:00' itemprop="datePublished">2017-08-17</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AE%B9%E5%99%A8">容器</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../install-kubernetes-on-macos/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    Kubernetes 安装 macos 检查环境 sysctl -a | grep machdep.cpu.features | grep VMX 安装VirtualBox http://download.virtualbox.org/virtualbox/5.1.26/Oracle_VM_VirtualBox_Extension_Pack-5.1.26-117224.vbox-extpack 安装minikube curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.21.0/minikube-darwin-amd64 &amp;&amp; chmod +x minikube &amp;&amp; sudo mv minikube /usr/local/bin/ 创建集群 默认使用virtualbox
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../install-kubernetes-on-macos/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/kubernetes">Kubernetes
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/macos">Macos
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
                     <h1 itemprop="name"><a class="article-title" href="../../stop-a-thread-of-executor-service/">暴力停止ExecutorService的线程</a></h1>
                 </header>
                 
@@ -586,60 +645,6 @@
                         
                         <li class="article-tag-list-item">
                             <a class="article-tag-list-link" href="https://atbug.com//tags/c3p0">C3p0
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../def-vs-val-in-scala/">Scala笔记：def VS val</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../def-vs-val-in-scala/" class="article-date">
-                        <time datetime='2017-04-09T08:24:40.000&#43;00:00' itemprop="datePublished">2017-04-09</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../def-vs-val-in-scala/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    先说原理： val修饰的在定义的时候执行 def修饰的在调用的时候执行 直观的例子： //注释的行为REPL输出 def test: () =&gt; Int = { println(&#34;def called&#34;) val r = util.Random.nextInt () =&gt; r } //test:
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../def-vs-val-in-scala/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/scala">scala
                             </a>
                         </li>
                         
