@@ -951,6 +951,15 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
     </item>
     
     <item>
+      <title>关于我</title>
+      <link>https://atbug.com/about/</link>
+      <pubDate>Sat, 13 Dec 2014 11:03:43 +0800</pubDate>
+      
+      <guid>https://atbug.com/about/</guid>
+      <description>码农一枚.</description>
+    </item>
+    
+    <item>
       <title>日常工作中使用的chrome插件</title>
       <link>https://atbug.com/chrome-extensions-for-daily-work/</link>
       <pubDate>Sun, 09 Feb 2014 09:26:50 +0000</pubDate>
