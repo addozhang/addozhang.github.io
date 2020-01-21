@@ -6,7 +6,7 @@
     <description>Recent content in Tags on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 17 Jan 2020 19:17:14 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 19 Jan 2020 14:33:17 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,9 +14,18 @@
     <item>
       <title>CICD</title>
       <link>https://atbug.com/tags/cicd/</link>
-      <pubDate>Fri, 17 Jan 2020 19:17:14 +0800</pubDate>
+      <pubDate>Sun, 19 Jan 2020 14:33:17 +0800</pubDate>
       
       <guid>https://atbug.com/tags/cicd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Tekton</title>
+      <link>https://atbug.com/tags/tekton/</link>
+      <pubDate>Sun, 19 Jan 2020 14:33:17 +0800</pubDate>
+      
+      <guid>https://atbug.com/tags/tekton/</guid>
       <description></description>
     </item>
     
@@ -26,15 +35,6 @@
       <pubDate>Fri, 17 Jan 2020 19:17:14 +0800</pubDate>
       
       <guid>https://atbug.com/tags/kubernetes/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>tekton</title>
-      <link>https://atbug.com/tags/tekton/</link>
-      <pubDate>Fri, 17 Jan 2020 19:17:14 +0800</pubDate>
-      
-      <guid>https://atbug.com/tags/tekton/</guid>
       <description></description>
     </item>
     
@@ -192,7 +192,7 @@
     </item>
     
     <item>
-      <title>nginx</title>
+      <title>Nginx</title>
       <link>https://atbug.com/tags/nginx/</link>
       <pubDate>Tue, 06 Nov 2018 09:24:24 +0000</pubDate>
       

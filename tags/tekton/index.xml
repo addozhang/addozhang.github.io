@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>tekton on 乱世浮生</title>
+    <title>Tekton on 乱世浮生</title>
     <link>https://atbug.com/tags/tekton/</link>
-    <description>Recent content in tekton on 乱世浮生</description>
+    <description>Recent content in Tekton on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 17 Jan 2020 19:17:14 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 19 Jan 2020 14:33:17 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/tags/tekton/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Tekton 0.9.0 更新</title>
+      <link>https://atbug.com/tekton-0.9.0-release/</link>
+      <pubDate>Sun, 19 Jan 2020 14:33:17 +0800</pubDate>
+      
+      <guid>https://atbug.com/tekton-0.9.0-release/</guid>
+      <description>翻译整理自 What’s New in Tekton 0.9 功能及Bug修复 脚本模式 以前如果要在容器里运行个简单的 bash 脚本, 需要这么写: -name:helloimage:ubuntucommand:[&amp;#39;bash&amp;#39;]args:--c-| set -execho&amp;#34;hell</description>
+    </item>
     
     <item>
       <title>Tekton安装及Hello world</title>
