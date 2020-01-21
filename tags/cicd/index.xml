@@ -6,10 +6,19 @@
     <description>Recent content in CICD on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 19 Jan 2020 14:33:17 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 21 Jan 2020 20:19:33 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/tags/cicd/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Tekton Pipeline 实战</title>
+      <link>https://atbug.com/tekton-pipeline-practice/</link>
+      <pubDate>Tue, 21 Jan 2020 20:19:33 +0800</pubDate>
+      
+      <guid>https://atbug.com/tekton-pipeline-practice/</guid>
+      <description>Tekton Pipeline 实战 Tekton 是 Google 开源的 Kubernetes 原生CI/CD 系统, 功能强大扩展性强. 前身是 Knavite 里的 build-pipeline 项目, 后期孵化成独立的项目. 并成为 CDF 下的四个项目之一, 其他三个分别</description>
+    </item>
     
     <item>
       <title>Tekton 0.9.0 更新</title>
