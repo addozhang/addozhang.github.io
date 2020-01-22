@@ -3,13 +3,6 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://atbug.com/about/</loc>
-    <lastmod>2014-12-13T11:03:43+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>https://atbug.com/categories/</loc>
     <lastmod>2020-01-21T20:19:33+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -444,14 +437,14 @@
   </url>
   
   <url>
-    <loc>https://atbug.com/categories/devops/</loc>
+    <loc>https://atbug.com/tags/devops/</loc>
     <lastmod>2018-04-20T12:18:46+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://atbug.com/tags/devops/</loc>
+    <loc>https://atbug.com/categories/devops/</loc>
     <lastmod>2018-04-20T12:18:46+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -1222,6 +1215,7 @@
   
   <url>
     <loc>https://atbug.com/about/</loc>
+    <lastmod>2013-01-22T10:02:37+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
