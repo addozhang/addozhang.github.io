@@ -99,6 +99,11 @@
 <li>PipelineResource: 流水线的输入资源, 比如 github/gitlab 的源码, 某种存储服务的文件, 或者镜像等. 执行时, 也会作为 pod 的其中一个 container 来运行(比如拉取代码).</li>
 <li>Condition: 在 pipeline 的 task 执行时通过添加 condition 来对条件进行评估, 进而判断是否执行 task. 目前是WIP的状态, 待<a href="https://github.com/tektoncd/pipeline/issues/1137">#1137</a>的完成.</li>
 </ul>
+<p><strong>组件:</strong></p>
+<ul>
+<li><code>tekton-pipelines-controller</code>: 监控 CRD 对象(TaskRun, PipelineRun)的创建, 为该次执行创建 pod.</li>
+<li><code>tekton-pipelines-webhook</code>: 对 controller 提供 http 接口做 CRD 对象的校验.</li>
+</ul>
 <h2 id="安装">安装</h2>
 <p>参考<a href="https://atbug.com/tekton-installation-and-sample/">上一篇文章</a>, 文章中有个简单的&quot;hello world&rdquo;.</p>
 <h2 id="实践">实践</h2>
