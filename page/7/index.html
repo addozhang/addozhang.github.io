@@ -47,6 +47,8 @@
                 
                 <a class="main-nav-link" href="../../about/">About</a>
                 
+                <a class="main-nav-link" href="../../about/">About</a>
+                
             </nav>
             <nav id="sub-nav">
                 <div id="search-form-wrap">
@@ -57,6 +59,65 @@
 </header>
 
     <section id="main" class="outer">
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../one-tomcat-class-load-issue/">一个Tomcat类加载问题</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../one-tomcat-class-load-issue/" class="article-date">
+                        <time datetime='2017-04-12T10:40:01.000&#43;00:00' itemprop="datePublished">2017-04-12</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../one-tomcat-class-load-issue/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    背景 一个Tomcat实例中运行了三个应用，其中一个对接了Apereo的CAS系统。现在要求另外两个系统也对接CAS系统，问题就出现了： 应用启
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../one-tomcat-class-load-issue/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/tomcat">Tomcat
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
         
         <article class="article article-type-post" itemscope itemprop="blogPost">
             <div class="article-inner">
@@ -566,65 +627,6 @@
                         
                         <li class="article-tag-list-item">
                             <a class="article-tag-list-link" href="https://atbug.com//tags/https">HTTPS
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../duplicate-resultmap-in-mybatis-mapper/">mybatis报错“Result Maps collection already contains value for ***”</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../duplicate-resultmap-in-mybatis-mapper/" class="article-date">
-                        <time datetime='2017-02-22T14:12:18.000&#43;00:00' itemprop="datePublished">2017-02-22</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../duplicate-resultmap-in-mybatis-mapper/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    这是工作中遇到的一个问题：测试环境部署出错，报了下面的问题。 Caused by: java.lang.IllegalArgumentException: Result Maps collection already contains value for xxx.xxx.xxxRepository.BaseResultMap at org.apache.ibatis.session.Configuration$StrictMap.put(Configuration.java:802) at org.apache.ibatis.session.Configuration$StrictMap.put(Configuration.java:774) at org.apache.ibatis.session.Configuration.addResultMap(Configuration.java:556) at org.apache.ibatis.builder.MapperBuilderAssistant.addResultMap(MapperBuilderAssistant.java:217) at org.apache.ibatis.builder.ResultMapResolver.resolve(ResultMapResolver.java:47) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElement(XMLMapperBuilder.java:285) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElement(XMLMapperBuilder.java:252) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElements(XMLMapperBuilder.java:244) at org.apache.ibatis.builder.xml.XMLMapperBuilder.configurationElement(XMLMapperBuilder.java:116) 检查了对应的mappe
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../duplicate-resultmap-in-mybatis-mapper/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/mybatis">Mybatis
                             </a>
                         </li>
                         
