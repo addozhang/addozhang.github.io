@@ -222,6 +222,7 @@ git-source   git    url: https://github.com/addozhang/tekton-test.git
 </span></code></pre></div><p><strong>说明:</strong></p>
 <p>有了代码下一步就是执行 maven 的编译打包, 在<code>maven:3.5.0-jdk-8-alpine</code>镜像中执行<code>mvn</code>的相关命令.</p>
 <p>这里挂在了一个本地的volume, 避免每次构建重复下载依赖包, 同时里面还有<code> settings.xml</code></p>
+<p><em>注意: 对于 minikube, hostPath 请使用/data/.m2, 否则minikube重启后无法持久化</em></p>
 <h3 id="0x03-构建镜像并推送">0x03 构建镜像并推送</h3>
 <p>Task <code>source-to-image.yaml</code>: step <code>build-and-push</code></p>
 <div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">spec:
