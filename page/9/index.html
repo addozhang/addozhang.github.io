@@ -63,6 +63,60 @@
                 
                 
                 <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../singleton-in-multi-threads-programming/">多线程下的单例模式&#43;反汇编</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../singleton-in-multi-threads-programming/" class="article-date">
+                        <time datetime='2016-07-06T16:57:09.000&#43;00:00' itemprop="datePublished">2016-07-06</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../singleton-in-multi-threads-programming/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    多线程下的单例模式的实现，顺便做了反汇编。 public class MySingleton { private static MySingleton INSTANCE; private MySingleton() { } public static MySingleton getInstance() { if (INSTANCE == null) { synchronized (MySingleton.class) { INSTANCE = new MySingleton(); } } return INSTANCE; } } Compiled from &#34;MySingleton.java&#34; public class MySingleton { public static MySingleton getInstance(); Code: 0: getstatic
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../singleton-in-multi-threads-programming/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
                     <h1 itemprop="name"><a class="article-title" href="../../use-kryo-in-spring-amqp-serialization/">使用Kryo替换spring amqp的Java序列化</a></h1>
                 </header>
                 

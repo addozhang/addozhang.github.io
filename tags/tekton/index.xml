@@ -6,10 +6,19 @@
     <description>Recent content in Tekton on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 01 Feb 2020 12:39:28 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 05 Feb 2020 18:03:15 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/tags/tekton/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Tekton Trigger</title>
+      <link>https://atbug.com/tekton-trigger-glance/</link>
+      <pubDate>Wed, 05 Feb 2020 18:03:15 +0800</pubDate>
+      
+      <guid>https://atbug.com/tekton-trigger-glance/</guid>
+      <description>Tekton Triggers 背景 Tekton 的介绍请参考Tekton Pipeline 实战. 通常, CI/CD 事件应该包含如下信息: 确定事件的类型(比如 GitHub Push, GitLab Issue, Docker Hub Webhook 等) 可从特定管道访问并映射到特定管</description>
+    </item>
     
     <item>
       <title>Tekton Dashboard 安装</title>
