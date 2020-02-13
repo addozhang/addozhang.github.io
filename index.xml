@@ -12,12 +12,12 @@
     
     
     <item>
-      <title>Tekton Trigger</title>
+      <title>Tekton Trigger 介绍</title>
       <link>https://atbug.com/tekton-trigger-glance/</link>
       <pubDate>Wed, 05 Feb 2020 18:03:15 +0800</pubDate>
       
       <guid>https://atbug.com/tekton-trigger-glance/</guid>
-      <description>Tekton Triggers 背景 Tekton 的介绍请参考Tekton Pipeline 实战. 通常, CI/CD 事件应该包含如下信息: 确定事件的类型(比如 GitHub Push, GitLab Issue, Docker Hub Webhook 等) 可从特定管道访问并映射到特定管</description>
+      <description>背景 Tekton 的介绍请参考Tekton Pipeline 实战. 通常, CI/CD 事件应该包含如下信息: 确定事件的类型(比如 GitHub Push, GitLab Issue, Docker Hub Webhook 等) 可从特定管道访问并映射到特定管道 (</description>
     </item>
     
     <item>
