@@ -6,7 +6,7 @@
     <description>Recent content in Tags on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 05 Feb 2020 18:03:15 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 12 Feb 2020 21:30:03 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,9 +14,18 @@
     <item>
       <title>CICD</title>
       <link>https://atbug.com/tags/cicd/</link>
-      <pubDate>Wed, 05 Feb 2020 18:03:15 +0800</pubDate>
+      <pubDate>Wed, 12 Feb 2020 21:30:03 +0800</pubDate>
       
       <guid>https://atbug.com/tags/cicd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Tekton</title>
+      <link>https://atbug.com/tags/tekton/</link>
+      <pubDate>Wed, 12 Feb 2020 21:30:03 +0800</pubDate>
+      
+      <guid>https://atbug.com/tags/tekton/</guid>
       <description></description>
     </item>
     
@@ -26,15 +35,6 @@
       <pubDate>Wed, 05 Feb 2020 18:03:15 +0800</pubDate>
       
       <guid>https://atbug.com/tags/kubernetes/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Tekton</title>
-      <link>https://atbug.com/tags/tekton/</link>
-      <pubDate>Wed, 05 Feb 2020 18:03:15 +0800</pubDate>
-      
-      <guid>https://atbug.com/tags/tekton/</guid>
       <description></description>
     </item>
     
