@@ -294,7 +294,7 @@ git-source   git    url: https://github.com/addozhang/tekton-test.git
 <li>pathToYamlFile: 指定部署应用的 yaml.</li>
 </ul>
 <p>需要为上面创建的 <code>ServiceAccount</code> 添加分配权限用于对象的操作: 这里直接给了 <code>admin</code> <code>clusterrole</code>, 实际不需要对权限进行细分控制.</p>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">kubectl create rolebinding pipeline-admin-binding --clusterrole<span class="o">=</span>admin --serviceaccount<span class="o">=</span>tekton-pipelines:tekton-test
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">kubectl create clusterrolebinding pipeline-admin-binding --clusterrole<span class="o">=</span>admin --serviceaccount<span class="o">=</span>tekton-pipelines:tekton-test
 </code></pre></div><p><strong>执行:</strong></p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">kubectl apply -f tasks/deploy-to-k8s.yaml
 </code></pre></div><h3 id="0x05-组装流水线">0x05 组装流水线</h3>
