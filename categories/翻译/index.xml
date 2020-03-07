@@ -17,7 +17,7 @@
       <pubDate>Sun, 19 Jan 2020 14:33:17 +0800</pubDate>
       
       <guid>https://atbug.com/tekton-0.9.0-release/</guid>
-      <description>翻译整理自 What’s New in Tekton 0.9 功能及Bug修复 脚本模式 以前如果要在容器里运行个简单的 bash 脚本, 需要这么写: -name:helloimage:ubuntucommand:[&amp;#39;bash&amp;#39;]args:--c-| set -execho&amp;#34;hell</description>
+      <description>翻译整理自 What’s New in Tekton 0.9 功能及Bug修复 脚本模式 以前如果要在容器里运行个简单的 bash 脚本, 需要这么写: - name:helloimage:ubuntucommand:[&amp;#39;bash&amp;#39;]args:- -c- | set -execho&amp;#34;h</description>
     </item>
     
     <item>

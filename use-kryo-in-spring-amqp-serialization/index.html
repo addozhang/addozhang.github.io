@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -93,7 +93,7 @@
   <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">CONTENT_TYPE</span> <span class="o">=</span> <span class="s">&#34;application/x-kryo&#34;</span><span class="o">;</span>
   <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">DEFAULT_CHARSET</span> <span class="o">=</span> <span class="s">&#34;UTF-8&#34;</span><span class="o">;</span>
   <span class="kd">private</span> <span class="n">String</span> <span class="n">defaultCharset</span> <span class="o">=</span> <span class="n">DEFAULT_CHARSET</span><span class="o">;</span>
-  <span class="kd">private</span> <span class="n">KryoFactory</span> <span class="n">kryoFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DefaultKryoFactory</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="n">KryoFactory</span> <span class="n">kryoFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DefaultKryoFactory</span><span class="o">();</span>
 
   <span class="cm">/**
 </span><span class="cm">   * Crate a message from the payload object and message properties provided. The message id will be added to the
@@ -105,32 +105,32 @@
 </span><span class="cm">   */</span>
   <span class="nd">@Override</span>
   <span class="kd">protected</span> <span class="n">Message</span> <span class="nf">createMessage</span><span class="o">(</span><span class="n">Object</span> <span class="n">object</span><span class="o">,</span> <span class="n">MessageProperties</span> <span class="n">messageProperties</span><span class="o">)</span> <span class="o">{</span>
-      <span class="kt">byte</span><span class="o">[</span><span class="o">]</span> <span class="n">bytes</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-      <span class="n">Kryo</span> <span class="n">kryo</span> <span class="o">=</span> <span class="n">kryoFactory</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-      <span class="n">Output</span> <span class="n">output</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferOutput</span><span class="o">(</span><span class="n">4096</span><span class="o">,</span> <span class="n">1024</span> <span class="o">*</span> <span class="n">1024</span><span class="o">)</span><span class="o">;</span>
+      <span class="kt">byte</span><span class="o">[]</span> <span class="n">bytes</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+      <span class="n">Kryo</span> <span class="n">kryo</span> <span class="o">=</span> <span class="n">kryoFactory</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+      <span class="n">Output</span> <span class="n">output</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferOutput</span><span class="o">(</span><span class="n">4096</span><span class="o">,</span> <span class="n">1024</span> <span class="o">*</span> <span class="n">1024</span><span class="o">);</span>
       <span class="k">try</span> <span class="o">{</span>
-          <span class="n">kryo</span><span class="o">.</span><span class="na">writeClassAndObject</span><span class="o">(</span><span class="n">output</span><span class="o">,</span> <span class="n">object</span><span class="o">)</span><span class="o">;</span>
-          <span class="n">bytes</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="na">toBytes</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+          <span class="n">kryo</span><span class="o">.</span><span class="na">writeClassAndObject</span><span class="o">(</span><span class="n">output</span><span class="o">,</span> <span class="n">object</span><span class="o">);</span>
+          <span class="n">bytes</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="na">toBytes</span><span class="o">();</span>
       <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-          <span class="n">output</span><span class="o">.</span><span class="na">close</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+          <span class="n">output</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
       <span class="o">}</span>
-      <span class="n">messageProperties</span><span class="o">.</span><span class="na">setContentType</span><span class="o">(</span><span class="n">CONTENT_TYPE</span><span class="o">)</span><span class="o">;</span>
-      <span class="k">if</span> <span class="o">(</span><span class="n">messageProperties</span><span class="o">.</span><span class="na">getContentEncoding</span><span class="o">(</span><span class="o">)</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-          <span class="n">messageProperties</span><span class="o">.</span><span class="na">setContentEncoding</span><span class="o">(</span><span class="n">defaultCharset</span><span class="o">)</span><span class="o">;</span>
+      <span class="n">messageProperties</span><span class="o">.</span><span class="na">setContentType</span><span class="o">(</span><span class="n">CONTENT_TYPE</span><span class="o">);</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">messageProperties</span><span class="o">.</span><span class="na">getContentEncoding</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+          <span class="n">messageProperties</span><span class="o">.</span><span class="na">setContentEncoding</span><span class="o">(</span><span class="n">defaultCharset</span><span class="o">);</span>
       <span class="o">}</span>
-      <span class="k">return</span> <span class="k">new</span> <span class="n">Message</span><span class="o">(</span><span class="n">bytes</span><span class="o">,</span> <span class="n">messageProperties</span><span class="o">)</span><span class="o">;</span>
+      <span class="k">return</span> <span class="k">new</span> <span class="n">Message</span><span class="o">(</span><span class="n">bytes</span><span class="o">,</span> <span class="n">messageProperties</span><span class="o">);</span>
   <span class="o">}</span>
 
   <span class="nd">@Override</span>
   <span class="kd">public</span> <span class="n">Object</span> <span class="nf">fromMessage</span><span class="o">(</span><span class="n">Message</span> <span class="n">message</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">MessageConversionException</span> <span class="o">{</span>
       <span class="n">Object</span> <span class="n">content</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-      <span class="n">MessageProperties</span> <span class="n">properties</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="na">getMessageProperties</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-      <span class="k">if</span> <span class="o">(</span><span class="n">properties</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-          <span class="k">if</span> <span class="o">(</span><span class="n">properties</span><span class="o">.</span><span class="na">getContentType</span><span class="o">(</span><span class="o">)</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span> <span class="o">&amp;</span><span class="n">amp</span><span class="o">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="o">;</span> <span class="n">properties</span><span class="o">.</span><span class="na">getContentType</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s">&#34;x-kryo&#34;</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
-              <span class="n">Kryo</span> <span class="n">kryo</span> <span class="o">=</span> <span class="n">kryoFactory</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-              <span class="n">content</span> <span class="o">=</span> <span class="n">kryo</span><span class="o">.</span><span class="na">readClassAndObject</span><span class="o">(</span><span class="k">new</span> <span class="n">ByteBufferInput</span><span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="na">getBody</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+      <span class="n">MessageProperties</span> <span class="n">properties</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="na">getMessageProperties</span><span class="o">();</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">properties</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">if</span> <span class="o">(</span><span class="n">properties</span><span class="o">.</span><span class="na">getContentType</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;</span><span class="n">amp</span><span class="o">;&amp;</span><span class="n">amp</span><span class="o">;</span> <span class="n">properties</span><span class="o">.</span><span class="na">getContentType</span><span class="o">().</span><span class="na">contains</span><span class="o">(</span><span class="s">&#34;x-kryo&#34;</span><span class="o">))</span> <span class="o">{</span>
+              <span class="n">Kryo</span> <span class="n">kryo</span> <span class="o">=</span> <span class="n">kryoFactory</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+              <span class="n">content</span> <span class="o">=</span> <span class="n">kryo</span><span class="o">.</span><span class="na">readClassAndObject</span><span class="o">(</span><span class="k">new</span> <span class="n">ByteBufferInput</span><span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="na">getBody</span><span class="o">()));</span>
           <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-              <span class="k">throw</span> <span class="k">new</span> <span class="n">MessageConversionException</span><span class="o">(</span><span class="s">&#34;Converter not applicable to this message&#34;</span><span class="o">)</span><span class="o">;</span>
+              <span class="k">throw</span> <span class="k">new</span> <span class="n">MessageConversionException</span><span class="o">(</span><span class="s">&#34;Converter not applicable to this message&#34;</span><span class="o">);</span>
           <span class="o">}</span>
       <span class="o">}</span>
       <span class="k">return</span> <span class="n">content</span><span class="o">;</span>
@@ -139,8 +139,8 @@
   <span class="kd">private</span> <span class="kd">class</span> <span class="nc">DefaultKryoFactory</span> <span class="kd">implements</span> <span class="n">KryoFactory</span> <span class="o">{</span>
 
       <span class="nd">@Override</span>
-      <span class="kd">public</span> <span class="n">Kryo</span> <span class="nf">create</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-          <span class="n">Kryo</span> <span class="n">kryo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Kryo</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+      <span class="kd">public</span> <span class="n">Kryo</span> <span class="nf">create</span><span class="o">()</span> <span class="o">{</span>
+          <span class="n">Kryo</span> <span class="n">kryo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Kryo</span><span class="o">();</span>
           <span class="k">return</span> <span class="n">kryo</span><span class="o">;</span>
       <span class="o">}</span>
   <span class="o">}</span>

@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -94,117 +94,117 @@
 <h3 id="triggertemplate">TriggerTemplate</h3>
 <p>回看<a href="https://atbug.com/tekton-pipeline-practice/#0x06-%E6%89%A7%E8%A1%8C%E6%B5%81%E6%B0%B4%E7%BA%BF">上回用的PipelineRun Yaml</a>, 参数有<code>revision</code>, <code>url</code>, <code>imageUrl</code>和<code>imageTag</code>. (imageUrl 与项目名一直)</p>
 <p>因此定义<code>TriggerTemplate</code>将这 4 个元素作为入参, 然后复用之前的<code>Pipeline</code>.</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>tekton.dev/v1alpha1<span class="w">
-</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>TriggerTemplate<span class="w">
-</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
-</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>trigger-test-triggertemplate<span class="w">
-</span><span class="w">  </span>namespace<span class="p">:</span><span class="w"> </span>tekton-pipelines<span class="w">
-</span><span class="w"></span>spec<span class="p">:</span><span class="w">
-</span><span class="w">  </span>params<span class="p">:</span><span class="w">
-</span><span class="w">    </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>gitrevision<span class="w">
-</span><span class="w">      </span>description<span class="p">:</span><span class="w"> </span>The<span class="w"> </span>git<span class="w"> </span>revision<span class="w">
-</span><span class="w">      </span>default<span class="p">:</span><span class="w"> </span>master<span class="w">
-</span><span class="w">    </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>gitrepositoryurl<span class="w">
-</span><span class="w">      </span>description<span class="p">:</span><span class="w"> </span>The<span class="w"> </span>git<span class="w"> </span>repository<span class="w"> </span>url<span class="w">
-</span><span class="w">    </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>namespace<span class="w">
-</span><span class="w">      </span>description<span class="p">:</span><span class="w"> </span>The<span class="w"> </span>namespace<span class="w"> </span>to<span class="w"> </span>create<span class="w"> </span>the<span class="w"> </span>resources<span class="w">
-</span><span class="w">      </span>default<span class="p">:</span><span class="w"> </span>tekton-pielines<span class="w">
-</span><span class="w">    </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>projectname<span class="w">
-</span><span class="w">      </span>description<span class="p">:</span><span class="w"> </span>The<span class="w"> </span>project<span class="w"> </span>name<span class="w">
-</span><span class="w">    </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>imagetag<span class="w">
-</span><span class="w">      </span>description<span class="p">:</span><span class="w"> </span>The<span class="w"> </span>image<span class="w"> </span>tag<span class="w">
-</span><span class="w">      </span>default<span class="p">:</span><span class="w"> </span>latest<span class="w">
-</span><span class="w">  </span>resourcetemplates<span class="p">:</span><span class="w">
-</span><span class="w">    </span>-<span class="w"> </span>apiVersion<span class="p">:</span><span class="w"> </span>tekton.dev/v1alpha1<span class="w">
-</span><span class="w">      </span>kind<span class="p">:</span><span class="w"> </span>PipelineRun<span class="w">
-</span><span class="w">      </span>metadata<span class="p">:</span><span class="w">
-</span><span class="w">        </span>name<span class="p">:</span><span class="w"> </span>tekton-test-pipeline-run-$(uid)<span class="w">
-</span><span class="w">        </span>namespace<span class="p">:</span><span class="w"> </span>$(params.namespace)<span class="w">
-</span><span class="w">      </span>spec<span class="p">:</span><span class="w">
-</span><span class="w">        </span>serviceAccountName<span class="p">:</span><span class="w"> </span>tekton-test<span class="w">
-</span><span class="w">        </span>params<span class="p">:</span><span class="w"> 
-</span><span class="w">          </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>imageUrl<span class="w">
-</span><span class="w">            </span>value<span class="p">:</span><span class="w"> </span>addozhang/$(params.projectname)<span class="w">
-</span><span class="w">          </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>imageTag<span class="w">
-</span><span class="w">            </span>value<span class="p">:</span><span class="w"> </span>$(params.imagetag)<span class="w">
-</span><span class="w">        </span>pipelineRef<span class="p">:</span><span class="w">
-</span><span class="w">          </span>name<span class="p">:</span><span class="w"> </span>build-pipeline<span class="w">
-</span><span class="w">        </span>resources<span class="p">:</span><span class="w">
-</span><span class="w">          </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>git-source<span class="w">
-</span><span class="w">            </span>resourceSpec<span class="p">:</span><span class="w">
-</span><span class="w">              </span>type<span class="p">:</span><span class="w"> </span>git<span class="w">
-</span><span class="w">              </span>params<span class="p">:</span><span class="w">
-</span><span class="w">                </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>revision<span class="w">
-</span><span class="w">                  </span>value<span class="p">:</span><span class="w"> </span>$(params.gitrevision)<span class="w">
-</span><span class="w">                </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>url<span class="w">
-</span><span class="w">                  </span>value<span class="p">:</span><span class="w"> </span>$(params.gitrepositoryurl)<span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>tekton.dev/v1alpha1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>TriggerTemplate<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>trigger-test-triggertemplate<span class="w">
+</span><span class="w">  </span><span class="k">namespace</span><span class="p">:</span><span class="w"> </span>tekton-pipelines<span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">params</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>gitrevision<span class="w">
+</span><span class="w">      </span><span class="k">description</span><span class="p">:</span><span class="w"> </span>The<span class="w"> </span>git<span class="w"> </span>revision<span class="w">
+</span><span class="w">      </span><span class="k">default</span><span class="p">:</span><span class="w"> </span>master<span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>gitrepositoryurl<span class="w">
+</span><span class="w">      </span><span class="k">description</span><span class="p">:</span><span class="w"> </span>The<span class="w"> </span>git<span class="w"> </span>repository<span class="w"> </span>url<span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>namespace<span class="w">
+</span><span class="w">      </span><span class="k">description</span><span class="p">:</span><span class="w"> </span>The<span class="w"> </span>namespace<span class="w"> </span>to<span class="w"> </span>create<span class="w"> </span>the<span class="w"> </span>resources<span class="w">
+</span><span class="w">      </span><span class="k">default</span><span class="p">:</span><span class="w"> </span>tekton-pielines<span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>projectname<span class="w">
+</span><span class="w">      </span><span class="k">description</span><span class="p">:</span><span class="w"> </span>The<span class="w"> </span>project<span class="w"> </span>name<span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>imagetag<span class="w">
+</span><span class="w">      </span><span class="k">description</span><span class="p">:</span><span class="w"> </span>The<span class="w"> </span>image<span class="w"> </span>tag<span class="w">
+</span><span class="w">      </span><span class="k">default</span><span class="p">:</span><span class="w"> </span>latest<span class="w">
+</span><span class="w">  </span><span class="k">resourcetemplates</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>tekton.dev/v1alpha1<span class="w">
+</span><span class="w">      </span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>PipelineRun<span class="w">
+</span><span class="w">      </span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>tekton-test-pipeline-run-$(uid)<span class="w">
+</span><span class="w">        </span><span class="k">namespace</span><span class="p">:</span><span class="w"> </span>$(params.namespace)<span class="w">
+</span><span class="w">      </span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="k">serviceAccountName</span><span class="p">:</span><span class="w"> </span>tekton-test<span class="w">
+</span><span class="w">        </span><span class="k">params</span><span class="p">:</span><span class="w"> 
+</span><span class="w">          </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>imageUrl<span class="w">
+</span><span class="w">            </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>addozhang/$(params.projectname)<span class="w">
+</span><span class="w">          </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>imageTag<span class="w">
+</span><span class="w">            </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>$(params.imagetag)<span class="w">
+</span><span class="w">        </span><span class="k">pipelineRef</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>build-pipeline<span class="w">
+</span><span class="w">        </span><span class="k">resources</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>git-source<span class="w">
+</span><span class="w">            </span><span class="k">resourceSpec</span><span class="p">:</span><span class="w">
+</span><span class="w">              </span><span class="k">type</span><span class="p">:</span><span class="w"> </span>git<span class="w">
+</span><span class="w">              </span><span class="k">params</span><span class="p">:</span><span class="w">
+</span><span class="w">                </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>revision<span class="w">
+</span><span class="w">                  </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>$(params.gitrevision)<span class="w">
+</span><span class="w">                </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>url<span class="w">
+</span><span class="w">                  </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>$(params.gitrepositoryurl)<span class="w">
 </span></code></pre></div><p>执行<code>kubectl apply -f trigger/trigger-template.yaml</code></p>
 <h3 id="triggerbinding">TriggerBinding</h3>
 <p><code>TriggerTemplate</code>的入参都可以从<code>PushEvent</code>的 payload中通过 JsonPath 表达式来提取. 更多表达式的使用参考<a href="https://github.com/tektoncd/triggers/blob/master/docs/triggerbindings.md#event-variable-interpolation">官方的文档</a>.</p>
 <p><em>注意: 这里的 payload 格式使用的是 Gitlab 的 PushEvent 定义. 为什么要用 Gitlab 后什么会解释</em></p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>tekton.dev/v1alpha1<span class="w">
-</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>TriggerBinding<span class="w">
-</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
-</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>trigger-test-triggerbinding<span class="w">
-</span><span class="w">  </span>namespace<span class="p">:</span><span class="w"> </span>tekton-pipelines<span class="w">
-</span><span class="w"></span>spec<span class="p">:</span><span class="w">
-</span><span class="w">  </span>params<span class="p">:</span><span class="w">
-</span><span class="w">    </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>gitrevision<span class="w">
-</span><span class="w">      </span>value<span class="p">:</span><span class="w"> </span>$(body.after)<span class="w">
-</span><span class="w">    </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>namespace<span class="w">
-</span><span class="w">      </span>value<span class="p">:</span><span class="w"> </span>tekton-pipelines<span class="w">
-</span><span class="w">    </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>gitrepositoryurl<span class="w">
-</span><span class="w">      </span>value<span class="p">:</span><span class="w"> </span>$(body.project.git_http_url)<span class="w">
-</span><span class="w">    </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>projectname<span class="w">
-</span><span class="w">      </span>value<span class="p">:</span><span class="w"> </span>$(body.project.name)<span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>tekton.dev/v1alpha1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>TriggerBinding<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>trigger-test-triggerbinding<span class="w">
+</span><span class="w">  </span><span class="k">namespace</span><span class="p">:</span><span class="w"> </span>tekton-pipelines<span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">params</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>gitrevision<span class="w">
+</span><span class="w">      </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>$(body.after)<span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>namespace<span class="w">
+</span><span class="w">      </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>tekton-pipelines<span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>gitrepositoryurl<span class="w">
+</span><span class="w">      </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>$(body.project.git_http_url)<span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>projectname<span class="w">
+</span><span class="w">      </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>$(body.project.name)<span class="w">
 </span></code></pre></div><p>执行<code>kubectl apply -f trigger/trigger-binding.yaml</code></p>
 <h3 id="eventlistener">EventListener</h3>
 <p><code>EventController</code>将<code>TriggerTemplate</code>和<code>TriggerBinding</code>关联在一起, 资源在创建后会自动创建对应的 pod 和 service.</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>tekton.dev/v1alpha1<span class="w">
-</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>EventListener<span class="w">
-</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
-</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>trigger-test-eventlistener<span class="w">
-</span><span class="w">  </span>namespace<span class="p">:</span><span class="w"> </span>tekton-pipelines<span class="w">
-</span><span class="w"></span>spec<span class="p">:</span><span class="w">
-</span><span class="w">  </span>serviceAccountName<span class="p">:</span><span class="w"> </span>tekton-test<span class="w"> </span>//需要访问<span class="w"> </span>API<span class="p">,</span><span class="w"> </span>用上回创建<span class="w"> </span>serviceaccount<span class="w">
-</span><span class="w">  </span>triggers<span class="p">:</span><span class="w">
-</span><span class="w">    </span>-<span class="w"> </span>bindings<span class="p">:</span><span class="w">
-</span><span class="w">        </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>trigger-test-triggerbinding<span class="w">
-</span><span class="w">      </span>template<span class="p">:</span><span class="w">
-</span><span class="w">        </span>name<span class="p">:</span><span class="w"> </span>trigger-test-triggertemplate<span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>tekton.dev/v1alpha1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>EventListener<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>trigger-test-eventlistener<span class="w">
+</span><span class="w">  </span><span class="k">namespace</span><span class="p">:</span><span class="w"> </span>tekton-pipelines<span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">serviceAccountName</span><span class="p">:</span><span class="w"> </span>tekton-test<span class="w"> </span>//需要访问<span class="w"> </span>API<span class="p">,</span><span class="w"> </span>用上回创建<span class="w"> </span>serviceaccount<span class="w">
+</span><span class="w">  </span><span class="k">triggers</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">bindings</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>trigger-test-triggerbinding<span class="w">
+</span><span class="w">      </span><span class="k">template</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>trigger-test-triggertemplate<span class="w">
 </span></code></pre></div><p>执行<code>kubectl apply -f trigger/event-listener.yaml</code></p>
 <p>提供 WebHook 的访问入口, 为<code>EventListener</code>创建<code>ingress</code></p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>extensions/v1beta1<span class="w">
-</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>Ingress<span class="w">
-</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
-</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>el-trigger-test-eventlistener<span class="w">
-</span><span class="w">  </span>namespace<span class="p">:</span><span class="w"> </span>tekton-pipelines<span class="w">
-</span><span class="w"></span>spec<span class="p">:</span><span class="w">
-</span><span class="w">  </span>rules<span class="p">:</span><span class="w">
-</span><span class="w">  </span>-<span class="w"> </span>host<span class="p">:</span><span class="w"> </span>trigger-test.el.nip.io<span class="w">
-</span><span class="w">    </span>http<span class="p">:</span><span class="w">
-</span><span class="w">      </span>paths<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>backend<span class="p">:</span><span class="w">
-</span><span class="w">          </span>serviceName<span class="p">:</span><span class="w"> </span>el-trigger-test-eventlistener<span class="w">
-</span><span class="w">          </span>servicePort<span class="p">:</span><span class="w"> </span><span class="m">8080</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>extensions/v1beta1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>Ingress<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>el-trigger-test-eventlistener<span class="w">
+</span><span class="w">  </span><span class="k">namespace</span><span class="p">:</span><span class="w"> </span>tekton-pipelines<span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">rules</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="k">host</span><span class="p">:</span><span class="w"> </span>trigger-test.el.nip.io<span class="w">
+</span><span class="w">    </span><span class="k">http</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">paths</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="k">backend</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span><span class="k">serviceName</span><span class="p">:</span><span class="w"> </span>el-trigger-test-eventlistener<span class="w">
+</span><span class="w">          </span><span class="k">servicePort</span><span class="p">:</span><span class="w"> </span><span class="m">8080</span><span class="w">
 </span></code></pre></div><p>做完之后记得添加解析<code>sudo echo &quot;$(minikube ip)   trigger-test.el.nip.io&quot; &gt;&gt; /etc/hosts</code></p>
 <h2 id="gitlab">GitLab</h2>
 <p>这里我们没有继续用 github 作为 CVS, minikube 运行在本地, ingress 地址无法在 github 上解析(webhook 无法工作). 因此只能本地搭建个 gitlab.</p>
 <p>使用 Docker Compose 的方式部署, 并制定域名<code>gitlab.nip.io</code>.</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">version<span class="p">:</span><span class="w"> </span><span class="s1">&#39;3.6&#39;</span><span class="w">
-</span><span class="w"></span>services<span class="p">:</span><span class="w">
-</span><span class="w">  </span>web<span class="p">:</span><span class="w">
-</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span><span class="s1">&#39;gitlab/gitlab-ce:latest&#39;</span><span class="w">
-</span><span class="w">    </span>restart<span class="p">:</span><span class="w"> </span>always<span class="w">
-</span><span class="w">    </span>hostname<span class="p">:</span><span class="w"> </span><span class="s1">&#39;gitlab.nip.io&#39;</span><span class="w">
-</span><span class="w">    </span>environment<span class="p">:</span><span class="w">
-</span><span class="w">      </span>GITLAB_OMNIBUS_CONFIG<span class="p">:</span><span class="w"> </span><span class="sd">|
-</span><span class="sd">      </span><span class="sd"> </span><span class="sd">external_url &#39;http://gitlab.nip.io:8088&#39;</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">version</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;3.6&#39;</span><span class="w">
+</span><span class="w"></span><span class="k">services</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">web</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">image</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;gitlab/gitlab-ce:latest&#39;</span><span class="w">
+</span><span class="w">    </span><span class="k">restart</span><span class="p">:</span><span class="w"> </span>always<span class="w">
+</span><span class="w">    </span><span class="k">hostname</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;gitlab.nip.io&#39;</span><span class="w">
+</span><span class="w">    </span><span class="k">environment</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">GITLAB_OMNIBUS_CONFIG</span><span class="p">:</span><span class="w"> </span><span class="sd">|
+</span><span class="sd">       external_url &#39;http://gitlab.nip.io:8088&#39;</span><span class="w">
 </span><span class="w">        </span>gitlab_rails<span class="p">[</span><span class="s1">&#39;gitlab_shell_ssh_port&#39;</span><span class="p">]</span><span class="w"> </span>=<span class="w"> </span><span class="m">8022</span><span class="w">
 </span><span class="w">        </span><span class="c"># Add any other gitlab.rb configuration here, each on its own line</span><span class="w">
-</span><span class="w">    </span>ports<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span><span class="s1">&#39;8088:8088&#39;</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span><span class="s1">&#39;8022:22&#39;</span><span class="w">
+</span><span class="w">    </span><span class="k">ports</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="s1">&#39;8088:8088&#39;</span><span class="w">
+</span><span class="w">      </span>- <span class="s1">&#39;8022:22&#39;</span><span class="w">
 </span></code></pre></div><p>记得添加解析</p>
 <div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">sudo echo &#34;$(ifconfig | grep -Eo &#39;inet (addr:)?([0-9]*\.){3}[0-9]*&#39; | grep -Eo &#39;([0-9]*\.){3}[0-9]*&#39; | grep -v &#39;127.0.0.1&#39; | head -n 1)    gitlab.nip.io&#34; &gt;&gt; /etc/hosts
 </code></pre></div><p>GitLab 的默认账号是<code>root</code>, 首次访问<code>http://gitlab.nip.io:8088</code>的时候会提示设置密码.</p>
@@ -225,23 +225,23 @@ sudo brew services start dnsmasq
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ dig gitlab.nip.io @192.168.64.1
 
 <span class="p">;</span> &lt;&lt;&gt;&gt; DiG 9.10.6 &lt;&lt;&gt;&gt; gitlab.nip.io @192.168.64.1
-<span class="p">;</span><span class="p">;</span> global options: +cmd
-<span class="p">;</span><span class="p">;</span> Got answer:
-<span class="p">;</span><span class="p">;</span> -&gt;&gt;HEADER<span class="s">&lt;&lt;- opco</span>de: QUERY, status: NOERROR, id: <span class="m">63393</span>
-<span class="p">;</span><span class="p">;</span> flags: qr aa rd ra<span class="p">;</span> QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: <span class="m">1</span>
+<span class="p">;;</span> global options: +cmd
+<span class="p">;;</span> Got answer:
+<span class="p">;;</span> -&gt;&gt;HEADER<span class="s">&lt;&lt;- opco</span>de: QUERY, status: NOERROR, id: <span class="m">63393</span>
+<span class="p">;;</span> flags: qr aa rd ra<span class="p">;</span> QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: <span class="m">1</span>
 
-<span class="p">;</span><span class="p">;</span> OPT PSEUDOSECTION:
+<span class="p">;;</span> OPT PSEUDOSECTION:
 <span class="p">;</span> EDNS: version: 0, flags:<span class="p">;</span> udp: <span class="m">4096</span>
-<span class="p">;</span><span class="p">;</span> QUESTION SECTION:
+<span class="p">;;</span> QUESTION SECTION:
 <span class="p">;</span>gitlab.nip.io.			IN	A
 
-<span class="p">;</span><span class="p">;</span> ANSWER SECTION:
+<span class="p">;;</span> ANSWER SECTION:
 gitlab.nip.io.		0	IN	A	192.168.1.136
 
-<span class="p">;</span><span class="p">;</span> Query time: <span class="m">0</span> msec
-<span class="p">;</span><span class="p">;</span> SERVER: 192.168.64.1#53<span class="o">(</span>192.168.64.1<span class="o">)</span>
-<span class="p">;</span><span class="p">;</span> WHEN: Thu Feb <span class="m">13</span> 18:20:19 CST <span class="m">2020</span>
-<span class="p">;</span><span class="p">;</span> MSG SIZE  rcvd: <span class="m">58</span>
+<span class="p">;;</span> Query time: <span class="m">0</span> msec
+<span class="p">;;</span> SERVER: 192.168.64.1#53<span class="o">(</span>192.168.64.1<span class="o">)</span>
+<span class="p">;;</span> WHEN: Thu Feb <span class="m">13</span> 18:20:19 CST <span class="m">2020</span>
+<span class="p">;;</span> MSG SIZE  rcvd: <span class="m">58</span>
 </code></pre></div><h2 id="测试">测试</h2>
 <p>推送一个空的提交到代码仓库: <code>git commit -a -m &quot;trigger commit&quot; --allow-empty &amp;&amp; git push origin master</code></p>
 <p>然后就可以看到新的<code>PipelineRun</code>创建并运行.</p>

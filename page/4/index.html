@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 <body>
@@ -90,7 +90,7 @@
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    Jenkins CLI提供了SSH和Client模式. Docker运行Jenkins version:&#39;3&#39;services:jenkins:image:jenkins/jenkins:alpineports:-8080:8080-50000:50000-46059:46059volumes:-&#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&#34;note: 以为是docker运行, ssh端口设置选用了固定端口. Client 从http:
+                    Jenkins CLI提供了SSH和Client模式. Docker运行Jenkins version:&#39;3&#39;services:jenkins:image:jenkins/jenkins:alpineports:- 8080:8080- 50000:50000- 46059:46059volumes:- &#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&#34;note: 以为是docker运行, ssh端口设置选用了固定端口. Client 从h
                     </p>
                     <p class="article-more-link">
                         <a href="../../jenkins-cli-enable/">Read More</a>
@@ -275,8 +275,8 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ZuulProxyMarkerConfiguration</span> <span class="o">{</span>
     <span class="nd">@Bean</span>
-    <span class="kd">public</span> <span class="n">Marker</span> <span class="nf">zuulProxyMarkerBean</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">Marker</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">Marker</span> <span class="nf">zuulProxyMarkerBean</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Marker</span><span class="o">();</span>
     <span class="o">}</span>
 
     <span class="kd">class</span> <span class="nc">Marker</span> <span class="o">{</span>
@@ -288,8 +288,8 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ZuulServerMarkerConfiguration</span> <span class="o">{</span>
     <span class="nd">@Bean</span>
-    <span class="kd">public</span> <span class="n">Marker</span> <span class="nf">zuulServerMarkerBean</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">Marker</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">Marker</span> <span class="nf">zuulServerMarkerBean</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Marker</span><span class="o">();</span>
     <span class="o">}</span>
 
     <span class="kd">class</span> <span class="nc">Marker</span> <span class="o">{</span>

@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -108,26 +108,26 @@ tekton-pipelines-webhook-849cff5cf-8m5qq       1/1     Running   <span class="m"
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">brew install tektoncd-cli
 </code></pre></div><h2 id="tekton-hello-world">Tekton: hello world</h2>
 <p>创建一个简单的<code>Task</code>, 只有一个<code>step</code>就是打印出&quot;hello world&rdquo;</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>tekton.dev/v1alpha1<span class="w">
-</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>Task<span class="w">
-</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
-</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>echo-hello-world<span class="w">
-</span><span class="w"></span>spec<span class="p">:</span><span class="w">
-</span><span class="w">  </span>steps<span class="p">:</span><span class="w">
-</span><span class="w">    </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>echo<span class="w">
-</span><span class="w">      </span>image<span class="p">:</span><span class="w"> </span>alpine<span class="w">
-</span><span class="w">      </span>command<span class="p">:</span><span class="w">
-</span><span class="w">        </span>-<span class="w"> </span>echo<span class="w">
-</span><span class="w">      </span>args<span class="p">:</span><span class="w">
-</span><span class="w">        </span>-<span class="w"> </span><span class="s2">&#34;hello world&#34;</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>tekton.dev/v1alpha1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>Task<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>echo-hello-world<span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">steps</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>echo<span class="w">
+</span><span class="w">      </span><span class="k">image</span><span class="p">:</span><span class="w"> </span>alpine<span class="w">
+</span><span class="w">      </span><span class="k">command</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- echo<span class="w">
+</span><span class="w">      </span><span class="k">args</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- <span class="s2">&#34;hello world&#34;</span><span class="w">
 </span></code></pre></div><p>创建一个<code>TaskRun</code>执行上面的<code>Task</code></p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>tekton.dev/v1alpha1<span class="w">
-</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>TaskRun<span class="w">
-</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
-</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>echo-hello-world-task-run<span class="w">
-</span><span class="w"></span>spec<span class="p">:</span><span class="w">
-</span><span class="w">  </span>taskRef<span class="p">:</span><span class="w">
-</span><span class="w">    </span>name<span class="p">:</span><span class="w"> </span>echo-hello-world<span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>tekton.dev/v1alpha1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>TaskRun<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>echo-hello-world-task-run<span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">taskRef</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>echo-hello-world<span class="w">
 </span></code></pre></div><p>运行task:</p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">kubectl apply -f &lt;name-of-file.yaml&gt;
 </code></pre></div><p>检查<code>TaskRun</code>的输出, 执行命令:</p>

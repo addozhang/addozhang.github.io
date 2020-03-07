@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -114,7 +114,7 @@
 	<span class="s">&#34;runtime&#34;</span>
 <span class="p">)</span>
 
-<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
 	<span class="c1">//分配一个逻辑处理器给调度器使用
 </span><span class="c1"></span>	<span class="nx">runtime</span><span class="p">.</span><span class="nf">GOMAXPROCS</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -123,34 +123,34 @@
 
 	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%s\n&#34;</span><span class="p">,</span> <span class="s">&#34;Start&#34;</span><span class="p">)</span>
 
-	<span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-		<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">(</span><span class="p">)</span>
+	<span class="k">go</span> <span class="kd">func</span><span class="p">(){</span>
+		<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
 		<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span><span class="mi">0</span> <span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
 			<span class="k">for</span> <span class="nx">ch</span> <span class="o">:=</span> <span class="sc">&#39;a&#39;</span><span class="p">;</span> <span class="nx">ch</span> <span class="p">&lt;</span> <span class="sc">&#39;a&#39;</span> <span class="o">+</span> <span class="mi">26</span><span class="p">;</span> <span class="nx">ch</span> <span class="o">++</span> <span class="p">{</span>
 				<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%c &#34;</span><span class="p">,</span> <span class="nx">ch</span><span class="p">)</span>
 			<span class="p">}</span>
 		<span class="p">}</span>
-	<span class="p">}</span><span class="p">(</span><span class="p">)</span>
+	<span class="p">}()</span>
 
-	<span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-		<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">(</span><span class="p">)</span>
+	<span class="k">go</span> <span class="kd">func</span><span class="p">(){</span>
+		<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
 		<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span><span class="mi">0</span> <span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
 			<span class="k">for</span> <span class="nx">ch</span> <span class="o">:=</span> <span class="sc">&#39;A&#39;</span><span class="p">;</span> <span class="nx">ch</span> <span class="p">&lt;</span> <span class="sc">&#39;A&#39;</span> <span class="o">+</span> <span class="mi">26</span><span class="p">;</span> <span class="nx">ch</span> <span class="o">++</span> <span class="p">{</span>
 				<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%c &#34;</span><span class="p">,</span> <span class="nx">ch</span><span class="p">)</span>
 			<span class="p">}</span>
 		<span class="p">}</span>
-	<span class="p">}</span><span class="p">(</span><span class="p">)</span>
+	<span class="p">}()</span>
 
 	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Wait&#34;</span><span class="p">)</span>
-	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
 	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;\nEnd&#34;</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="c1">//结果
-</span><span class="c1"></span><span class="c1">//Start
-</span><span class="c1"></span><span class="c1">//Wait
-</span><span class="c1"></span><span class="c1">//A B C D E F G H I J K L M N O P Q R S T U V W X Y Z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z 
-</span><span class="c1"></span><span class="c1">//End
+</span><span class="c1">//Start
+</span><span class="c1">//Wait
+</span><span class="c1">//A B C D E F G H I J K L M N O P Q R S T U V W X Y Z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z 
+</span><span class="c1">//End
 </span><span class="c1"></span>
 <span class="c1">//第一个goroutine完成所有显示需要的时间太短, 以至于在调度器切换到第二个goroutine之前就完成了所有任务. 
 </span></code></pre></div><p>程序可以使用<code>runtime.GOMAXPROCS</code>来更改调度器可以下使用的逻辑处理器的数量. 如果不想代码里使用, 可以使用跟函数同名的环境变量(<code>GOMAXPROCS</code>)来设置. 使用<code>runtime.NumCPU()</code>可以获取物理处理器的个数.</p>
@@ -170,24 +170,24 @@
 	<span class="nx">wg</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
 <span class="p">)</span>
 
-<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
 	<span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
 	<span class="k">go</span> <span class="nf">incCounter</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">go</span> <span class="nf">incCounter</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
-	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
 	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Final counter: &#34;</span><span class="p">,</span> <span class="nx">counter</span><span class="p">)</span>
 
 <span class="p">}</span>
 
 <span class="kd">func</span> <span class="nf">incCounter</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">(</span><span class="p">)</span>
+	<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
 
 	<span class="k">for</span> <span class="nx">i</span><span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
 		<span class="nx">val</span> <span class="o">:=</span> <span class="nx">counter</span>
 		<span class="c1">//当前goroutine从线程退出, 并回到队列
-</span><span class="c1"></span>		<span class="nx">runtime</span><span class="p">.</span><span class="nf">Gosched</span><span class="p">(</span><span class="p">)</span>
+</span><span class="c1"></span>		<span class="nx">runtime</span><span class="p">.</span><span class="nf">Gosched</span><span class="p">()</span>
 
 		<span class="nx">val</span><span class="o">++</span>
 
@@ -195,7 +195,7 @@
 	<span class="p">}</span>
 <span class="p">}</span>
 <span class="c1">//结果
-</span><span class="c1"></span><span class="c1">//Final counter:  2
+</span><span class="c1">//Final counter:  2
 </span></code></pre></div><p>非原子操作导致最后结果为2</p>
 <h3 id="锁住共享资源">锁住共享资源</h3>
 <p>使用<code>atomic</code>和<code>sync</code>包的函数</p>
@@ -212,25 +212,25 @@
 	<span class="nx">wg</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
 <span class="p">)</span>
 
-<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
 	<span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
 	<span class="k">go</span> <span class="nf">incCounter</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">go</span> <span class="nf">incCounter</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
-	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
 	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Final counter: &#34;</span><span class="p">,</span> <span class="nx">counter</span><span class="p">)</span>
 
 <span class="p">}</span>
 
 <span class="kd">func</span> <span class="nf">incCounter</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">(</span><span class="p">)</span>
+	<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
 
 	<span class="k">for</span> <span class="nx">i</span><span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
 	   <span class="c1">//安全地对counter加1
 </span><span class="c1"></span>		<span class="nx">atomic</span><span class="p">.</span><span class="nf">AddInt64</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">counter</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 		<span class="c1">//当前goroutine从线程退出, 并回到队列
-</span><span class="c1"></span>		<span class="nx">runtime</span><span class="p">.</span><span class="nf">Gosched</span><span class="p">(</span><span class="p">)</span>
+</span><span class="c1"></span>		<span class="nx">runtime</span><span class="p">.</span><span class="nf">Gosched</span><span class="p">()</span>
 	<span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div><p><code>atomic</code>包的<code>AddInt64</code>函数, 会同步整型值的加法, 方法是强制同一时刻只能有一个goroutine运行并完成这个加法操作. 还有<code>LoadInt64</code>和<code>StoreInt64</code>函数, 提供安全的读写整型值的方式.</p>
@@ -249,31 +249,31 @@
 	<span class="nx">mutex</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">Mutex</span>
 <span class="p">)</span>
 
-<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
 	<span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
 	<span class="k">go</span> <span class="nf">incCounter</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">go</span> <span class="nf">incCounter</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
-	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
 	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Final counter: &#34;</span><span class="p">,</span> <span class="nx">counter</span><span class="p">)</span>
 
 <span class="p">}</span>
 
 <span class="kd">func</span> <span class="nf">incCounter</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">(</span><span class="p">)</span>
+	<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
 
 	<span class="k">for</span> <span class="nx">i</span><span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
       <span class="c1">//创建临界区
-</span><span class="c1"></span>		<span class="nx">mutex</span><span class="p">.</span><span class="nf">Lock</span><span class="p">(</span><span class="p">)</span>
+</span><span class="c1"></span>		<span class="nx">mutex</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
 		<span class="p">{</span>
 			<span class="nx">val</span> <span class="o">:=</span> <span class="nx">counter</span>
 			<span class="c1">//当前goroutine从线程退出, 并回到队列
-</span><span class="c1"></span>			<span class="nx">runtime</span><span class="p">.</span><span class="nf">Gosched</span><span class="p">(</span><span class="p">)</span>
+</span><span class="c1"></span>			<span class="nx">runtime</span><span class="p">.</span><span class="nf">Gosched</span><span class="p">()</span>
 			<span class="nx">val</span><span class="o">++</span>
 			<span class="nx">counter</span> <span class="p">=</span> <span class="nx">val</span>
 		<span class="p">}</span>
-		<span class="nx">mutex</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">(</span><span class="p">)</span>
+		<span class="nx">mutex</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
 	<span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div><h4 id="通道">通道</h4>
@@ -301,11 +301,11 @@
 
 <span class="kd">var</span> <span class="nx">wg</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
 
-<span class="kd">func</span> <span class="nf">init</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-	<span class="nx">rand</span><span class="p">.</span><span class="nf">Seed</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nf">Now</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nf">UnixNano</span><span class="p">(</span><span class="p">)</span><span class="p">)</span>
+<span class="kd">func</span> <span class="nf">init</span><span class="p">(){</span>
+	<span class="nx">rand</span><span class="p">.</span><span class="nf">Seed</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nf">Now</span><span class="p">().</span><span class="nf">UnixNano</span><span class="p">())</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
 	<span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
 	<span class="nx">court</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
@@ -315,10 +315,10 @@
 
 	<span class="nx">court</span> <span class="o">&lt;-</span> <span class="mi">1</span>
 
-	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
 <span class="p">}</span>
 <span class="kd">func</span> <span class="nf">player</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">court</span> <span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">(</span><span class="p">)</span>
+	<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
 	<span class="k">for</span> <span class="p">{</span>
 		<span class="nx">ball</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">court</span>
 		<span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
@@ -359,11 +359,11 @@
 
 <span class="kd">var</span> <span class="nx">wg</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
 
-<span class="kd">func</span> <span class="nf">init</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-	<span class="nx">rand</span><span class="p">.</span><span class="nf">Seed</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nf">Now</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nf">UnixNano</span><span class="p">(</span><span class="p">)</span><span class="p">)</span>
+<span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">rand</span><span class="p">.</span><span class="nf">Seed</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nf">Now</span><span class="p">().</span><span class="nf">UnixNano</span><span class="p">())</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
 	<span class="nx">tasks</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">taskLoad</span><span class="p">)</span>
 
 	<span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="nx">workers</span><span class="p">)</span>
@@ -378,10 +378,10 @@
 
 	<span class="nb">close</span><span class="p">(</span><span class="nx">tasks</span><span class="p">)</span>
 
-	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
 <span class="p">}</span>
 <span class="kd">func</span> <span class="nf">worker</span><span class="p">(</span><span class="nx">tasks</span> <span class="kd">chan</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">id</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">(</span><span class="p">)</span>
+	<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
 
 	<span class="k">for</span> <span class="p">{</span>
 		<span class="nx">task</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">tasks</span>

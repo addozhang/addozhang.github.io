@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -103,9 +103,9 @@
 <p>看了下源码，mybatis在创建SessionFactoryBean解析xml时候，会把xml中的resultMap放入到一个HashMap的子类StrictMap中，key是<strong>mapper的namespace与resultmap的id</strong>拼接成的。</p>
 <p>StrictMap在put元素的时候，会检查map中是否已存在key。</p>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">addResultMap</span><span class="o">(</span><span class="n">ResultMap</span> <span class="n">rm</span><span class="o">)</span> <span class="o">{</span>
-  <span class="n">resultMaps</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">rm</span><span class="o">.</span><span class="na">getId</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">rm</span><span class="o">)</span><span class="o">;</span>
-  <span class="n">checkLocallyForDiscriminatedNestedResultMaps</span><span class="o">(</span><span class="n">rm</span><span class="o">)</span><span class="o">;</span>
-  <span class="n">checkGloballyForDiscriminatedNestedResultMaps</span><span class="o">(</span><span class="n">rm</span><span class="o">)</span><span class="o">;</span>
+  <span class="n">resultMaps</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">rm</span><span class="o">.</span><span class="na">getId</span><span class="o">(),</span> <span class="n">rm</span><span class="o">);</span>
+  <span class="n">checkLocallyForDiscriminatedNestedResultMaps</span><span class="o">(</span><span class="n">rm</span><span class="o">);</span>
+  <span class="n">checkGloballyForDiscriminatedNestedResultMaps</span><span class="o">(</span><span class="n">rm</span><span class="o">);</span>
 <span class="o">}</span>
 </code></pre></div>
         </div>

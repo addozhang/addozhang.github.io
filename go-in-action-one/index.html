@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -105,11 +105,11 @@
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">file</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">open</span><span class="p">(</span><span class="s">&#34;filePath&#34;</span><span class="p">)</span>
 <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span>
     <span class="k">return</span>
-<span class="k">defer</span> <span class="nx">file</span><span class="p">.</span><span class="nb">close</span><span class="p">(</span><span class="p">)</span>
+<span class="k">defer</span> <span class="nx">file</span><span class="p">.</span><span class="nb">close</span><span class="p">()</span>
 <span class="err">#</span> <span class="nx">more</span> <span class="nx">file</span> <span class="nx">operation</span>
 </code></pre></div><h3 id="go">go</h3>
 <p>启动后面的函数作为<code>goroutine</code>, 如下面启动匿名函数作为<code>goroutine</code></p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="p">)</span><span class="p">{</span><span class="p">}</span><span class="p">(</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="kd">func</span><span class="p">(){}()</span>
 </code></pre></div><h3 id="import">import</h3>
 <p>导入包,  让使用者可以访问其中的标识符, 如类型, 函数, 常量和接口.
 编译器查找包时会从<code>GOROOT</code>和<code>GOPATH</code>环境变量引用的位置去查找.
@@ -133,15 +133,15 @@
 <h3 id="main包">main包</h3>
 <p>程序的入口可以在main.go文件里找到. 每个可执行的Go程序有2个特征: 有<code>main</code>函数, 程序的第01行包名为<code>main</code></p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
-<span class="kn">import</span> <span class="p">(</span><span class="p">)</span>
-<span class="kd">func</span> <span class="nf">init</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span><span class="p">}</span>
-<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span><span class="p">}</span>
+<span class="kn">import</span> <span class="p">()</span>
+<span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{}</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{}</span>
 </code></pre></div><h3 id="init函数">init函数</h3>
 <p><code>init</code>函数总是在<code>main</code>函数调用之前被调用. 常见<code>import</code>中使用下划线<code>_</code>引入没有暴露任何标识符的包, 调用其<code>init</code>函数</p>
 <h3 id="包">包</h3>
 <p>所有处于同一个文件夹下的代码文件, 必须使用同样的包名</p>
 <h3 id="一个函数多个返回值">一个函数多个返回值</h3>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">value</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">RetriveValue</span><span class="p">(</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">value</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">RetriveValue</span><span class="p">()</span>
 </code></pre></div><h3 id="简化声明变量运算符-">简化声明变量运算符 (:=)</h3>
 <p>声明变量同时赋值, 根据后面的类型确定变量的类型.</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">val</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">)</span>
@@ -158,14 +158,14 @@
 </code></pre></div><h4 id="使用">使用</h4>
 <p>使用索引访问</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">array</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="err">#</span><span class="mi">2</span>
-<span class="nx">array</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="p">=</span><span class="mi">3</span> <span class="err">#</span><span class="nx">修改</span>
+<span class="nx">array</span><span class="p">[</span><span class="mi">2</span><span class="p">]=</span><span class="mi">3</span> <span class="err">#</span><span class="nx">修改</span>
 </code></pre></div><h5 id="指针数组">指针数组</h5>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">array</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">*</span><span class="kt">int</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="nb">new</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="nb">new</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="p">}</span>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">array</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">*</span><span class="kt">int</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="nb">new</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="mi">1</span><span class="p">:</span> <span class="nb">new</span><span class="p">(</span><span class="kt">int</span><span class="p">)}</span>
 <span class="c1">//复制
-</span><span class="c1"></span><span class="o">*</span><span class="nx">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">=</span><span class="mi">1</span> 
-<span class="o">*</span><span class="nx">array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">=</span><span class="mi">2</span>
+</span><span class="c1"></span><span class="o">*</span><span class="nx">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]=</span><span class="mi">1</span> 
+<span class="o">*</span><span class="nx">array</span><span class="p">[</span><span class="mi">1</span><span class="p">]=</span><span class="mi">2</span>
 </code></pre></div><h5 id="多维数组">多维数组</h5>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">array</span> <span class="o">:=</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">}</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">}</span><span class="p">}</span>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">array</span> <span class="o">:=</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">}}</span>
 </code></pre></div><h4 id="函数间传递数组">函数间传递数组</h4>
 <p>值传递</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//声明一个需要8MB的数组
@@ -173,14 +173,14 @@
 <span class="c1">//传递数组
 </span><span class="c1"></span><span class="nf">foo</span><span class="p">(</span><span class="nx">array</span><span class="p">)</span>
 <span class="c1">//接受一个100w个整形值的数组
-</span><span class="c1"></span><span class="kd">func</span> <span class="nf">foo</span><span class="p">(</span><span class="nx">array</span> <span class="p">[</span><span class="mf">1e6</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span><span class="p">{</span><span class="p">}</span>
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">foo</span><span class="p">(</span><span class="nx">array</span> <span class="p">[</span><span class="mf">1e6</span><span class="p">]</span><span class="kt">int</span><span class="p">){}</span>
 </code></pre></div><p>使用指针传递</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//声明一个需要8MB的数组
 </span><span class="c1"></span><span class="kd">var</span> <span class="nx">array</span> <span class="p">[</span><span class="mf">1e6</span><span class="p">]</span><span class="kt">int</span>
 <span class="c1">//传递数组
 </span><span class="c1"></span><span class="nf">foo</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">array</span><span class="p">)</span>
 
-<span class="kd">func</span> <span class="nf">foo</span><span class="p">(</span><span class="nx">array</span> <span class="o">*</span><span class="p">[</span><span class="mf">1e6</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span><span class="p">{</span><span class="p">}</span>
+<span class="kd">func</span> <span class="nf">foo</span><span class="p">(</span><span class="nx">array</span> <span class="o">*</span><span class="p">[</span><span class="mf">1e6</span><span class="p">]</span><span class="kt">int</span><span class="p">){}</span>
 </code></pre></div><h3 id="切片">切片</h3>
 <p>一种数据结构, 便于使用和管理数据集合. 是围绕<strong>动态数组</strong>的概念创建的, 就是可变(增长或缩小)数组.
 <strong>切面的底层内存也是在连续快中分配的</strong>, 也能获得索引,迭代.
@@ -189,38 +189,38 @@
 包含三个字段: 指向底层数组的指针, 元素个数(长度)和容量.</p>
 <h4 id="创建和初始化">创建和初始化</h4>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//指定长度, 长度等于容量
-</span><span class="c1"></span><span class="nx">slice</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span><span class="c1"></span><span class="nx">slice</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 <span class="c1">//指定长度和容量, 只能访问3个, 其余2个通过后期操作合并
-</span><span class="c1"></span><span class="nx">slice</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="nx">slice</span> <span class="o">:=</span> <span class="p">[</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">}</span>
+</span><span class="c1"></span><span class="nx">slice</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="nx">slice</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">}</span>
 </code></pre></div><h6 id="nil和空切片">nil和空切片</h6>
 <p>nil切片</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">slice</span> <span class="p">[</span><span class="p">]</span><span class="kt">int</span>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">slice</span> <span class="p">[]</span><span class="kt">int</span>
 </code></pre></div><p>空切片, 长度为0, 容量为0</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">slice</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="nx">slice</span> <span class="o">:=</span> <span class="p">[</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="p">}</span>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">slice</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="nx">slice</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
 </code></pre></div><h5 id="使用切片">使用切片</h5>
 <h6 id="使用一个索引访问数组元素">使用一个索引访问数组元素</h6>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">slice</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">=</span><span class="mi">10</span>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">slice</span><span class="p">[</span><span class="mi">1</span><span class="p">]=</span><span class="mi">10</span>
 <span class="nx">slice</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="err">#</span><span class="mi">10</span>
 </code></pre></div><p>使用切片创建切片, <strong>新旧切片共享底层数组</strong></p>
 <h6 id="使用两个索引创建新的索引共用底层数组">使用两个索引创建新的索引(共用底层数组)</h6>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//底层数组长度为5
-</span><span class="c1"></span><span class="c1">//长度为2 = 3 - 1
-</span><span class="c1"></span><span class="c1">//容量为4 = 5 - 1
+</span><span class="c1">//长度为2 = 3 - 1
+</span><span class="c1">//容量为4 = 5 - 1
 </span><span class="c1"></span><span class="nx">newSlice</span> <span class="o">:=</span> <span class="nx">slice</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
 </code></pre></div><h4 id="增长">增长</h4>
 <p>使用内置的<code>append</code>方法追加, 返回一个新的切片(<strong>新的底层数组, 数组指针改变, 长度改变, 容器可能改变</strong>)</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">newSlice</span> <span class="o">:=</span> <span class="nf">appen</span><span class="p">(</span><span class="nx">slice</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">newSlice</span> <span class="o">:=</span> <span class="nf">appen</span><span class="p">(</span><span class="nx">slice</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="mi">6</span><span class="p">)</span>
 </code></pre></div><h5 id="三个索引">三个索引</h5>
 <p>使用三个索引, 第一个索引表示起始位置, 第二个元素表示起始索引加上希望包括的元素个数 2 + 1 = 3. 第三个索引是起始索引加上容量 2 + 2 = 4.</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//从第3个元素开始截取
-</span><span class="c1"></span><span class="c1">//长度为1 = 3 - 2
-</span><span class="c1"></span><span class="c1">//容量为2 = 4 - 2
+</span><span class="c1">//长度为1 = 3 - 2
+</span><span class="c1">//容量为2 = 4 - 2
 </span><span class="c1"></span><span class="nx">newSlice</span> <span class="o">:=</span> <span class="nx">slice</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
 </code></pre></div><h4 id="迭代切片">迭代切片</h4>
 <p>使用关键字range</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">slice</span> <span class="o">:=</span> <span class="p">[</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">}</span>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">slice</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">}</span>
 <span class="k">for</span> <span class="nx">idx</span><span class="p">,</span> <span class="nx">val</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">slice</span> <span class="p">{</span>
     <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Index: %d Values: %d\n&#34;</span><span class="p">,</span> <span class="nx">idx</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span>
 <span class="p">}</span>
@@ -243,13 +243,13 @@
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">dict</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span>
 <span class="nx">dict</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;red&#34;</span><span class="p">:</span><span class="s">&#34;#da1337&#34;</span><span class="p">,</span> <span class="s">&#34;orange&#34;</span><span class="p">:</span><span class="s">&#34;#e95a22&#34;</span><span class="p">}</span>
 <span class="c1">//空映射
-</span><span class="c1"></span><span class="nx">dict</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="p">}</span>
+</span><span class="c1"></span><span class="nx">dict</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{}</span>
 <span class="c1">//使用切片作为键
-</span><span class="c1"></span><span class="nx">dict</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="p">[</span><span class="p">]</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="p">}</span> <span class="err">#</span><span class="nx">编译错误</span> <span class="nx">invalid</span> <span class="kd">map</span> <span class="nx">key</span> <span class="kd">type</span> <span class="p">[</span><span class="p">]</span><span class="kt">string</span>
+</span><span class="c1"></span><span class="nx">dict</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[[]</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{}</span> <span class="err">#</span><span class="nx">编译错误</span> <span class="nx">invalid</span> <span class="kd">map</span> <span class="nx">key</span> <span class="kd">type</span> <span class="p">[]</span><span class="kt">string</span>
 </code></pre></div><h4 id="使用-1">使用</h4>
 <p>空映射</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="err">#</span><span class="nx">声明一个空映射</span>
-<span class="nx">colors</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">[</span><span class="p">]</span><span class="p">{</span><span class="p">}</span>
+<span class="nx">colors</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">[]{}</span>
 <span class="nx">colors</span><span class="p">[</span><span class="s">&#34;red&#34;</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;#da1337&#34;</span>
 </code></pre></div><p>nil映射</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//声明为nil映射

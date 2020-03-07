@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -143,26 +143,26 @@
 <p>在ServletContext初始化完成后调用<code>initGroovyFilterManager</code>和<code>initJavaFilters</code>.</p>
 <h5 id="initgroovyfiltermanager">initGroovyFilterManager</h5>
 <p>向过滤器注册表中添加Groovy过滤器.</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">initGroovyFilterManager</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">initGroovyFilterManager</span><span class="o">()</span> <span class="o">{</span>
     <span class="c1">//设置GroovyCompiler
 </span><span class="c1"></span>    <span class="c1">//GroovyCompiler是DynamicCompiler的实现类
-</span><span class="c1"></span>    <span class="n">FilterLoader</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">setCompiler</span><span class="o">(</span><span class="k">new</span> <span class="n">GroovyCompiler</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>    <span class="n">FilterLoader</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">setCompiler</span><span class="o">(</span><span class="k">new</span> <span class="n">GroovyCompiler</span><span class="o">());</span>
 
     <span class="c1">//从配置中是获取过滤器源文件的根目录
-</span><span class="c1"></span>    <span class="n">String</span> <span class="n">scriptRoot</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">&#34;zuul.filter.root&#34;</span><span class="o">,</span> <span class="s">&#34;&#34;</span><span class="o">)</span><span class="o">;</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">scriptRoot</span><span class="o">.</span><span class="na">length</span><span class="o">(</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="n">scriptRoot</span> <span class="o">=</span> <span class="n">scriptRoot</span> <span class="o">+</span> <span class="n">File</span><span class="o">.</span><span class="na">separator</span><span class="o">;</span>
+</span><span class="c1"></span>    <span class="n">String</span> <span class="n">scriptRoot</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">&#34;zuul.filter.root&#34;</span><span class="o">,</span> <span class="s">&#34;&#34;</span><span class="o">);</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">scriptRoot</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="n">scriptRoot</span> <span class="o">=</span> <span class="n">scriptRoot</span> <span class="o">+</span> <span class="n">File</span><span class="o">.</span><span class="na">separator</span><span class="o">;</span>
     <span class="k">try</span> <span class="o">{</span>
         <span class="c1">//设置文件名过滤器, 这里只过滤`.groovy`类型文件.
-</span><span class="c1"></span>        <span class="n">FilterFileManager</span><span class="o">.</span><span class="na">setFilenameFilter</span><span class="o">(</span><span class="k">new</span> <span class="n">GroovyFileFilter</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>        <span class="n">FilterFileManager</span><span class="o">.</span><span class="na">setFilenameFilter</span><span class="o">(</span><span class="k">new</span> <span class="n">GroovyFileFilter</span><span class="o">());</span>
         <span class="c1">//初始化过滤器文件管理器
 </span><span class="c1"></span>        <span class="c1">//第一个参数是扫描目录的间隔时间, 单位为秒
 </span><span class="c1"></span>        <span class="c1">//后面跟要扫描的子目录
 </span><span class="c1"></span>        <span class="c1">//1. 初始化的时候会扫描各个子目录, 使用文件名过滤器获取到所有的过滤器源文件. 
 </span><span class="c1"></span>        <span class="c1">//2. 遍历这些文件, 使用`FilterLoader.getInstance().putFilter(file)`, compiler编译之后使用FilterFactory进行实例化, 并添加到过滤器注册表中. 是否实例化的逻辑判断是否在上次修改且文件最后修改时间是否相同. 如果是上次修改之后又有改动, 要重建改类型过滤器的列表. 如果没有修改, 对改文件不做任何处理.
 </span><span class="c1"></span>        <span class="c1">//3. 启动线程, 每个5秒执行一个1和2的操作.
-</span><span class="c1"></span>        <span class="n">FilterFileManager</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="n">5</span><span class="o">,</span> <span class="n">scriptRoot</span> <span class="o">+</span> <span class="s">&#34;pre&#34;</span><span class="o">,</span> <span class="n">scriptRoot</span> <span class="o">+</span> <span class="s">&#34;route&#34;</span><span class="o">,</span> <span class="n">scriptRoot</span> <span class="o">+</span> <span class="s">&#34;post&#34;</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>        <span class="n">FilterFileManager</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="n">5</span><span class="o">,</span> <span class="n">scriptRoot</span> <span class="o">+</span> <span class="s">&#34;pre&#34;</span><span class="o">,</span> <span class="n">scriptRoot</span> <span class="o">+</span> <span class="s">&#34;route&#34;</span><span class="o">,</span> <span class="n">scriptRoot</span> <span class="o">+</span> <span class="s">&#34;post&#34;</span><span class="o">);</span>
     <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div><h5 id="initjavafilters">initJavaFilters</h5>
@@ -175,38 +175,38 @@
 <p><strong>Service方法</strong></p>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">service</span><span class="o">(</span><span class="n">javax</span><span class="o">.</span><span class="na">servlet</span><span class="o">.</span><span class="na">ServletRequest</span> <span class="n">servletRequest</span><span class="o">,</span> <span class="n">javax</span><span class="o">.</span><span class="na">servlet</span><span class="o">.</span><span class="na">ServletResponse</span> <span class="n">servletResponse</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ServletException</span><span class="o">,</span> <span class="n">IOException</span> <span class="o">{</span>
     <span class="k">try</span> <span class="o">{</span>
-        <span class="n">init</span><span class="o">(</span><span class="o">(</span><span class="n">HttpServletRequest</span><span class="o">)</span> <span class="n">servletRequest</span><span class="o">,</span> <span class="o">(</span><span class="n">HttpServletResponse</span><span class="o">)</span> <span class="n">servletResponse</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">init</span><span class="o">((</span><span class="n">HttpServletRequest</span><span class="o">)</span> <span class="n">servletRequest</span><span class="o">,</span> <span class="o">(</span><span class="n">HttpServletResponse</span><span class="o">)</span> <span class="n">servletResponse</span><span class="o">);</span>
 
         <span class="c1">// Marks this request as having passed through the &#34;Zuul engine&#34;, as opposed to servlets
 </span><span class="c1"></span>        <span class="c1">// explicitly bound in web.xml, for which requests will not have the same data attached
-</span><span class="c1"></span>        <span class="n">RequestContext</span> <span class="n">context</span> <span class="o">=</span> <span class="n">RequestContext</span><span class="o">.</span><span class="na">getCurrentContext</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-        <span class="n">context</span><span class="o">.</span><span class="na">setZuulEngineRan</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>        <span class="n">RequestContext</span> <span class="n">context</span> <span class="o">=</span> <span class="n">RequestContext</span><span class="o">.</span><span class="na">getCurrentContext</span><span class="o">();</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">setZuulEngineRan</span><span class="o">();</span>
 
         <span class="k">try</span> <span class="o">{</span>
-            <span class="n">preRoute</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">preRoute</span><span class="o">();</span>
         <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ZuulException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">error</span><span class="o">(</span><span class="n">e</span><span class="o">)</span><span class="o">;</span>
-            <span class="n">postRoute</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">error</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+            <span class="n">postRoute</span><span class="o">();</span>
             <span class="k">return</span><span class="o">;</span>
         <span class="o">}</span>
         <span class="k">try</span> <span class="o">{</span>
-            <span class="n">route</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">route</span><span class="o">();</span>
         <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ZuulException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">error</span><span class="o">(</span><span class="n">e</span><span class="o">)</span><span class="o">;</span>
-            <span class="n">postRoute</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">error</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+            <span class="n">postRoute</span><span class="o">();</span>
             <span class="k">return</span><span class="o">;</span>
         <span class="o">}</span>
         <span class="k">try</span> <span class="o">{</span>
-            <span class="n">postRoute</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">postRoute</span><span class="o">();</span>
         <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ZuulException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">error</span><span class="o">(</span><span class="n">e</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">error</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
             <span class="k">return</span><span class="o">;</span>
         <span class="o">}</span>
 
     <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">error</span><span class="o">(</span><span class="k">new</span> <span class="n">ZuulException</span><span class="o">(</span><span class="n">e</span><span class="o">,</span> <span class="n">500</span><span class="o">,</span> <span class="s">&#34;UNHANDLED_EXCEPTION_&#34;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getClass</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">error</span><span class="o">(</span><span class="k">new</span> <span class="n">ZuulException</span><span class="o">(</span><span class="n">e</span><span class="o">,</span> <span class="n">500</span><span class="o">,</span> <span class="s">&#34;UNHANDLED_EXCEPTION_&#34;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getName</span><span class="o">()));</span>
     <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-        <span class="n">RequestContext</span><span class="o">.</span><span class="na">getCurrentContext</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">unset</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">RequestContext</span><span class="o">.</span><span class="na">getCurrentContext</span><span class="o">().</span><span class="na">unset</span><span class="o">();</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div><p>通过<code>FilterProcessor.getInstnace()</code>调用<code>FilterProcessor</code>的<code>preRoute()</code>, <code>route()</code>, <code>postRoute()</code>和<code>error()</code>方法.</p>
@@ -217,30 +217,30 @@
 </span><span class="cm"> *
 </span><span class="cm"> * @return the return from ZuulFilterResult
 </span><span class="cm"> */</span>
-<span class="kd">public</span> <span class="n">ZuulFilterResult</span> <span class="nf">runFilter</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">ZuulFilterResult</span> <span class="n">zr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZuulFilterResult</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<span class="kd">public</span> <span class="n">ZuulFilterResult</span> <span class="nf">runFilter</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">ZuulFilterResult</span> <span class="n">zr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZuulFilterResult</span><span class="o">();</span>
     <span class="c1">//动态获取`zuul.filerClassName.filterType.disable`的值
 </span><span class="c1"></span>    <span class="c1">//动态获取使用Archaius的DynamicPropertyFactory获取*, 通过这个可实现动态配置
-</span><span class="c1"></span>    <span class="k">if</span> <span class="o">(</span><span class="o">!</span><span class="n">isFilterDisabled</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="c1"></span>    <span class="k">if</span> <span class="o">(!</span><span class="n">isFilterDisabled</span><span class="o">())</span> <span class="o">{</span>
         <span class="c1">//调用filter类的校验逻辑
-</span><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">shouldFilter</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">Tracer</span> <span class="n">t</span> <span class="o">=</span> <span class="n">TracerFactory</span><span class="o">.</span><span class="na">instance</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">startMicroTracer</span><span class="o">(</span><span class="s">&#34;ZUUL::&#34;</span> <span class="o">+</span> <span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">shouldFilter</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">Tracer</span> <span class="n">t</span> <span class="o">=</span> <span class="n">TracerFactory</span><span class="o">.</span><span class="na">instance</span><span class="o">().</span><span class="na">startMicroTracer</span><span class="o">(</span><span class="s">&#34;ZUUL::&#34;</span> <span class="o">+</span> <span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getSimpleName</span><span class="o">());</span>
             <span class="k">try</span> <span class="o">{</span>
                 <span class="c1">//执行filter的逻辑处理
-</span><span class="c1"></span>                <span class="n">Object</span> <span class="n">res</span> <span class="o">=</span> <span class="n">run</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>                <span class="n">Object</span> <span class="n">res</span> <span class="o">=</span> <span class="n">run</span><span class="o">();</span>
                 <span class="c1">//执行成功
-</span><span class="c1"></span>                <span class="n">zr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZuulFilterResult</span><span class="o">(</span><span class="n">res</span><span class="o">,</span> <span class="n">ExecutionStatus</span><span class="o">.</span><span class="na">SUCCESS</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>                <span class="n">zr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZuulFilterResult</span><span class="o">(</span><span class="n">res</span><span class="o">,</span> <span class="n">ExecutionStatus</span><span class="o">.</span><span class="na">SUCCESS</span><span class="o">);</span>
             <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">t</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;ZUUL::&#34;</span> <span class="o">+</span> <span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">(</span><span class="o">)</span> <span class="o">+</span> <span class="s">&#34; failed&#34;</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">t</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;ZUUL::&#34;</span> <span class="o">+</span> <span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getSimpleName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; failed&#34;</span><span class="o">);</span>
                 <span class="c1">//执行失败
-</span><span class="c1"></span>                <span class="n">zr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZuulFilterResult</span><span class="o">(</span><span class="n">ExecutionStatus</span><span class="o">.</span><span class="na">FAILED</span><span class="o">)</span><span class="o">;</span>
-                <span class="n">zr</span><span class="o">.</span><span class="na">setException</span><span class="o">(</span><span class="n">e</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>                <span class="n">zr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZuulFilterResult</span><span class="o">(</span><span class="n">ExecutionStatus</span><span class="o">.</span><span class="na">FAILED</span><span class="o">);</span>
+                <span class="n">zr</span><span class="o">.</span><span class="na">setException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
             <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-                <span class="n">t</span><span class="o">.</span><span class="na">stopAndLog</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">t</span><span class="o">.</span><span class="na">stopAndLog</span><span class="o">();</span>
             <span class="o">}</span>
         <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
             <span class="c1">//filter不适用, 直接跳过
-</span><span class="c1"></span>            <span class="n">zr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZuulFilterResult</span><span class="o">(</span><span class="n">ExecutionStatus</span><span class="o">.</span><span class="na">SKIPPED</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>            <span class="n">zr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZuulFilterResult</span><span class="o">(</span><span class="n">ExecutionStatus</span><span class="o">.</span><span class="na">SKIPPED</span><span class="o">);</span>
         <span class="o">}</span>
     <span class="o">}</span>
     <span class="k">return</span> <span class="n">zr</span><span class="o">;</span>
@@ -250,9 +250,9 @@
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">doFilter</span><span class="o">(</span><span class="n">ServletRequest</span> <span class="n">req</span><span class="o">,</span> <span class="n">ServletResponse</span> <span class="n">res</span><span class="o">,</span> <span class="n">FilterChain</span> <span class="n">chain</span><span class="o">)</span>
     <span class="kd">throws</span> <span class="n">IOException</span><span class="o">,</span> <span class="n">ServletException</span> <span class="o">{</span>
     <span class="k">try</span> <span class="o">{</span>
-        <span class="n">chain</span><span class="o">.</span><span class="na">doFilter</span><span class="o">(</span><span class="n">req</span><span class="o">,</span> <span class="n">res</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">chain</span><span class="o">.</span><span class="na">doFilter</span><span class="o">(</span><span class="n">req</span><span class="o">,</span> <span class="n">res</span><span class="o">);</span>
     <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-        <span class="n">RequestContext</span><span class="o">.</span><span class="na">getCurrentContext</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">unset</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">RequestContext</span><span class="o">.</span><span class="na">getCurrentContext</span><span class="o">().</span><span class="na">unset</span><span class="o">();</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div><h3 id="调试">调试</h3>
@@ -280,7 +280,7 @@
 <h4 id="defaultfilterfactory">DefaultFilterFactory</h4>
 <p>使用反射实现</p>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="n">ZuulFilter</span> <span class="nf">newInstance</span><span class="o">(</span><span class="n">Class</span> <span class="n">clazz</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InstantiationException</span><span class="o">,</span> <span class="n">IllegalAccessException</span> <span class="o">{</span>
-    <span class="k">return</span> <span class="o">(</span><span class="n">ZuulFilter</span><span class="o">)</span> <span class="n">clazz</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">return</span> <span class="o">(</span><span class="n">ZuulFilter</span><span class="o">)</span> <span class="n">clazz</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span>
 <span class="o">}</span>
 </code></pre></div><h4 id="filterfilemanager">FilterFileManager</h4>
 <p>从过滤器目录中获取修改和新增的Groovy过滤器文件.</p>

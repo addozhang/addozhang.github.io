@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -90,7 +90,7 @@
             <p>其实标题我想用《为什么foreach边循环边移除元素要用Iterator？》可是太长。</p>
 <p>不用Iterator，用Collection.remove()，会报ConcurrentModificationException错误。</p>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="k">for</span><span class="o">(</span><span class="n">Integer</span> <span class="n">i</span> <span class="o">:</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
-  <span class="n">list</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">i</span><span class="o">)</span><span class="o">;</span> <span class="c1">//Throw ConcurrentModificationException
+  <span class="n">list</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">i</span><span class="o">);</span> <span class="c1">//Throw ConcurrentModificationException
 </span><span class="c1"></span><span class="o">}</span>
 </code></pre></div><p>其实使用foreach的时候，会自动生成一个Iterator来遍历list。不只是remove，使用add、clear等方法一样会出错。</p>
 <p>拿ArrayList来说，它有一个私有的Iterator接口的内部类Itr：</p>
@@ -116,34 +116,34 @@
 <li>使用ArrayList.remove()删除元素，modCount加1</li>
 <li>继续调用next()方法指向下一个元素，此时检查expectedModCount是否等于modCount，不等则抛ConcurrentModificationException</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="n">E</span> <span class="nf">next</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">checkForComodification</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="n">E</span> <span class="nf">next</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">checkForComodification</span><span class="o">();</span>
     <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">;</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;</span><span class="o">=</span> <span class="n">size</span><span class="o">)</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="n">NoSuchElementException</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">Object</span><span class="o">[</span><span class="o">]</span> <span class="n">elementData</span> <span class="o">=</span> <span class="n">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">elementData</span><span class="o">;</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;</span><span class="o">=</span> <span class="n">elementData</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">size</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">NoSuchElementException</span><span class="o">();</span>
+    <span class="n">Object</span><span class="o">[]</span> <span class="n">elementData</span> <span class="o">=</span> <span class="n">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">elementData</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">elementData</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="o">();</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">1</span><span class="o">;</span>
-    <span class="k">return</span> <span class="o">(</span><span class="n">E</span><span class="o">)</span> <span class="n">elementData</span><span class="o">[</span><span class="n">lastRet</span> <span class="o">=</span> <span class="n">i</span><span class="o">]</span><span class="o">;</span>
+    <span class="k">return</span> <span class="o">(</span><span class="n">E</span><span class="o">)</span> <span class="n">elementData</span><span class="o">[</span><span class="n">lastRet</span> <span class="o">=</span> <span class="n">i</span><span class="o">];</span>
 <span class="o">}</span>
-<span class="kd">final</span> <span class="kt">void</span> <span class="nf">checkForComodification</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">modCount</span> <span class="o">!</span><span class="o">=</span> <span class="n">expectedModCount</span><span class="o">)</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<span class="kd">final</span> <span class="kt">void</span> <span class="nf">checkForComodification</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">modCount</span> <span class="o">!=</span> <span class="n">expectedModCount</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="o">();</span>
 <span class="o">}</span>
 </code></pre></div><p>上面提到Iterator的实现中删除元素实际调用的还是ArrayList.remove()方法，为什么不会抛错？</p>
 <p>Itr的remove方法在调用ArrayList.remove()之后，会更新<strong>expectedModCount</strong>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">()</span> <span class="o">{</span>
     <span class="k">if</span> <span class="o">(</span><span class="n">lastRet</span> <span class="o">&lt;</span> <span class="n">0</span><span class="o">)</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">checkForComodification</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">();</span>
+    <span class="n">checkForComodification</span><span class="o">();</span>
     <span class="k">try</span> <span class="o">{</span>
-        <span class="n">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">lastRet</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">lastRet</span><span class="o">);</span>
         <span class="n">cursor</span> <span class="o">=</span> <span class="n">lastRet</span><span class="o">;</span>
         <span class="n">lastRet</span> <span class="o">=</span> <span class="o">-</span><span class="n">1</span><span class="o">;</span>
         <span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="o">;</span>
     <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IndexOutOfBoundsException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="o">();</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>

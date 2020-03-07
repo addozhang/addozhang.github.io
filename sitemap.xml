@@ -143,6 +143,13 @@
   </url>
   
   <url>
+    <loc>https://atbug.com/tags/spring/</loc>
+    <lastmod>2020-01-05T14:14:03+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://atbug.com/tags/spring-cloud/</loc>
     <lastmod>2020-01-05T14:14:03+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -451,13 +458,6 @@
   </url>
   
   <url>
-    <loc>https://atbug.com/tags/ci/cd/</loc>
-    <lastmod>2018-04-20T12:18:46+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>https://atbug.com/tags/devops/</loc>
     <lastmod>2018-04-20T12:18:46+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -544,13 +544,6 @@
   <url>
     <loc>https://atbug.com/spring-cloud-zuul-breakdown/</loc>
     <lastmod>2018-02-22T17:02:26+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/tags/spring/</loc>
-    <lastmod>2018-02-14T07:32:43+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -836,6 +829,13 @@
   </url>
   
   <url>
+    <loc>https://atbug.com/tags/cas/</loc>
+    <lastmod>2017-05-18T23:33:24+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://atbug.com/tags/cassandra/</loc>
     <lastmod>2017-05-18T23:33:24+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -852,13 +852,6 @@
   <url>
     <loc>https://atbug.com/run-spring-boot-app-in-docker/</loc>
     <lastmod>2017-04-20T21:58:42+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/tags/cas/</loc>
-    <lastmod>2017-04-18T10:36:16+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -1237,6 +1230,12 @@
   <url>
     <loc>https://atbug.com/about/</loc>
     <lastmod>2013-01-22T10:02:37+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/tags/ci/cd/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>

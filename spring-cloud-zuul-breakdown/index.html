@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -105,8 +105,8 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ZuulProxyMarkerConfiguration</span> <span class="o">{</span>
     <span class="nd">@Bean</span>
-    <span class="kd">public</span> <span class="n">Marker</span> <span class="nf">zuulProxyMarkerBean</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">Marker</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">Marker</span> <span class="nf">zuulProxyMarkerBean</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Marker</span><span class="o">();</span>
     <span class="o">}</span>
 
     <span class="kd">class</span> <span class="nc">Marker</span> <span class="o">{</span>
@@ -118,8 +118,8 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ZuulServerMarkerConfiguration</span> <span class="o">{</span>
     <span class="nd">@Bean</span>
-    <span class="kd">public</span> <span class="n">Marker</span> <span class="nf">zuulServerMarkerBean</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">Marker</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">Marker</span> <span class="nf">zuulServerMarkerBean</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Marker</span><span class="o">();</span>
     <span class="o">}</span>
 
     <span class="kd">class</span> <span class="nc">Marker</span> <span class="o">{</span>
@@ -146,12 +146,12 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
 它有一个初始化的条件<code>@ConditionalOnBean(ZuulProxyMarkerConfiguration.Marker.class)</code>, 就是上下文中需要有<code>ZuulProxyMarkerConfiguration.Marker</code>这个内部类的bean. 与<code>@EnableZuulProxy</code>注解呼应.</p>
 <p>初始化包括内置的filter, 以及Discovery, Ribbon等的初始化.</p>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
-<span class="nd">@Import</span><span class="o">(</span><span class="o">{</span> <span class="n">RibbonCommandFactoryConfiguration</span><span class="o">.</span><span class="na">RestClientRibbonConfiguration</span><span class="o">.</span><span class="na">class</span><span class="o">,</span>
+<span class="nd">@Import</span><span class="o">({</span> <span class="n">RibbonCommandFactoryConfiguration</span><span class="o">.</span><span class="na">RestClientRibbonConfiguration</span><span class="o">.</span><span class="na">class</span><span class="o">,</span>
         <span class="n">RibbonCommandFactoryConfiguration</span><span class="o">.</span><span class="na">OkHttpRibbonConfiguration</span><span class="o">.</span><span class="na">class</span><span class="o">,</span>
-        <span class="n">RibbonCommandFactoryConfiguration</span><span class="o">.</span><span class="na">HttpClientRibbonConfiguration</span><span class="o">.</span><span class="na">class</span> <span class="o">}</span><span class="o">)</span>
+        <span class="n">RibbonCommandFactoryConfiguration</span><span class="o">.</span><span class="na">HttpClientRibbonConfiguration</span><span class="o">.</span><span class="na">class</span> <span class="o">})</span>
 <span class="nd">@ConditionalOnBean</span><span class="o">(</span><span class="n">ZuulProxyMarkerConfiguration</span><span class="o">.</span><span class="na">Marker</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ZuulProxyAutoConfiguration</span> <span class="kd">extends</span> <span class="n">ZuulServerAutoConfiguration</span> <span class="o">{</span>
-    <span class="o">.</span><span class="o">.</span><span class="o">.</span>
+    <span class="o">...</span>
 <span class="o">}</span>
 </code></pre></div><p>​</p>
 </li>
@@ -160,13 +160,13 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">//声明配置
 </span><span class="c1"></span><span class="nd">@Configuration</span>
 <span class="c1">//配置ZuulProperties实例
-</span><span class="c1"></span><span class="nd">@EnableConfigurationProperties</span><span class="o">(</span><span class="o">{</span> <span class="n">ZuulProperties</span><span class="o">.</span><span class="na">class</span> <span class="o">}</span><span class="o">)</span>
+</span><span class="c1"></span><span class="nd">@EnableConfigurationProperties</span><span class="o">({</span> <span class="n">ZuulProperties</span><span class="o">.</span><span class="na">class</span> <span class="o">})</span>
 <span class="c1">//条件1 存在ZuulServlet.class
 </span><span class="c1"></span><span class="nd">@ConditionalOnClass</span><span class="o">(</span><span class="n">ZuulServlet</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
 <span class="c1">//条件2 存在ZuulServerMarkerConfiguration.Marker.class bean, 即应用使用@EnableZuulServer注解
 </span><span class="c1"></span><span class="nd">@ConditionalOnBean</span><span class="o">(</span><span class="n">ZuulServerMarkerConfiguration</span><span class="o">.</span><span class="na">Marker</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
 <span class="c1">//配置ServerProperties实例
-</span><span class="c1"></span><span class="c1">// Make sure to get the ServerProperties from the same place as a normal web app would
+</span><span class="c1">// Make sure to get the ServerProperties from the same place as a normal web app would
 </span><span class="c1"></span><span class="nd">@Import</span><span class="o">(</span><span class="n">ServerPropertiesAutoConfiguration</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ZuulServerAutoConfiguration</span> <span class="o">{</span>
 
@@ -180,8 +180,8 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
 	<span class="kd">private</span> <span class="n">ErrorController</span> <span class="n">errorController</span><span class="o">;</span>
 
 	<span class="nd">@Bean</span>
-	<span class="kd">public</span> <span class="n">HasFeatures</span> <span class="nf">zuulFeature</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-		<span class="k">return</span> <span class="n">HasFeatures</span><span class="o">.</span><span class="na">namedFeature</span><span class="o">(</span><span class="s">&#34;Zuul (Simple)&#34;</span><span class="o">,</span> <span class="n">ZuulServerAutoConfiguration</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">;</span>
+	<span class="kd">public</span> <span class="n">HasFeatures</span> <span class="nf">zuulFeature</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="n">HasFeatures</span><span class="o">.</span><span class="na">namedFeature</span><span class="o">(</span><span class="s">&#34;Zuul (Simple)&#34;</span><span class="o">,</span> <span class="n">ZuulServerAutoConfiguration</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 	<span class="o">}</span>
 
   <span class="c1">//复合结构的RouteLocator
@@ -189,83 +189,83 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
 	<span class="nd">@Primary</span>
 	<span class="kd">public</span> <span class="n">CompositeRouteLocator</span> <span class="nf">primaryRouteLocator</span><span class="o">(</span>
 			<span class="n">Collection</span><span class="o">&lt;</span><span class="n">RouteLocator</span><span class="o">&gt;</span> <span class="n">routeLocators</span><span class="o">)</span> <span class="o">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="n">CompositeRouteLocator</span><span class="o">(</span><span class="n">routeLocators</span><span class="o">)</span><span class="o">;</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">CompositeRouteLocator</span><span class="o">(</span><span class="n">routeLocators</span><span class="o">);</span>
 	<span class="o">}</span>
 
   <span class="c1">//没有SimpleRouteLocator.class的bean时, 使用zuulProperties实例化一个SimpleRouteLocator实例.
 </span><span class="c1"></span>	<span class="nd">@Bean</span>
 	<span class="nd">@ConditionalOnMissingBean</span><span class="o">(</span><span class="n">SimpleRouteLocator</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-	<span class="kd">public</span> <span class="n">SimpleRouteLocator</span> <span class="nf">simpleRouteLocator</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="n">SimpleRouteLocator</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">server</span><span class="o">.</span><span class="na">getServletPrefix</span><span class="o">(</span><span class="o">)</span><span class="o">,</span>
-				<span class="k">this</span><span class="o">.</span><span class="na">zuulProperties</span><span class="o">)</span><span class="o">;</span>
+	<span class="kd">public</span> <span class="n">SimpleRouteLocator</span> <span class="nf">simpleRouteLocator</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">SimpleRouteLocator</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">server</span><span class="o">.</span><span class="na">getServletPrefix</span><span class="o">(),</span>
+				<span class="k">this</span><span class="o">.</span><span class="na">zuulProperties</span><span class="o">);</span>
 	<span class="o">}</span>
   
   <span class="c1">//zuulController, 包装了一个ZuulServlet类型的servlet, 实现对ZuulServlet类型的servlet的初始化.
 </span><span class="c1"></span>	<span class="nd">@Bean</span>
-	<span class="kd">public</span> <span class="n">ZuulController</span> <span class="nf">zuulController</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="n">ZuulController</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+	<span class="kd">public</span> <span class="n">ZuulController</span> <span class="nf">zuulController</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">ZuulController</span><span class="o">();</span>
 	<span class="o">}</span>
 
 	<span class="nd">@Bean</span>
 	<span class="kd">public</span> <span class="n">ZuulHandlerMapping</span> <span class="nf">zuulHandlerMapping</span><span class="o">(</span><span class="n">RouteLocator</span> <span class="n">routes</span><span class="o">)</span> <span class="o">{</span>
-		<span class="n">ZuulHandlerMapping</span> <span class="n">mapping</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZuulHandlerMapping</span><span class="o">(</span><span class="n">routes</span><span class="o">,</span> <span class="n">zuulController</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
-		<span class="n">mapping</span><span class="o">.</span><span class="na">setErrorController</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">errorController</span><span class="o">)</span><span class="o">;</span>
+		<span class="n">ZuulHandlerMapping</span> <span class="n">mapping</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZuulHandlerMapping</span><span class="o">(</span><span class="n">routes</span><span class="o">,</span> <span class="n">zuulController</span><span class="o">());</span>
+		<span class="n">mapping</span><span class="o">.</span><span class="na">setErrorController</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">errorController</span><span class="o">);</span>
 		<span class="k">return</span> <span class="n">mapping</span><span class="o">;</span>
 	<span class="o">}</span>
 
 	<span class="nd">@Bean</span>
-	<span class="kd">public</span> <span class="n">ApplicationListener</span><span class="o">&lt;</span><span class="n">ApplicationEvent</span><span class="o">&gt;</span> <span class="nf">zuulRefreshRoutesListener</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="n">ZuulRefreshListener</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+	<span class="kd">public</span> <span class="n">ApplicationListener</span><span class="o">&lt;</span><span class="n">ApplicationEvent</span><span class="o">&gt;</span> <span class="nf">zuulRefreshRoutesListener</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">ZuulRefreshListener</span><span class="o">();</span>
 	<span class="o">}</span>
 
 	<span class="nd">@Bean</span>
 	<span class="nd">@ConditionalOnMissingBean</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;zuulServlet&#34;</span><span class="o">)</span>
-	<span class="kd">public</span> <span class="n">ServletRegistrationBean</span> <span class="nf">zuulServlet</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-		<span class="n">ServletRegistrationBean</span> <span class="n">servlet</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServletRegistrationBean</span><span class="o">(</span><span class="k">new</span> <span class="n">ZuulServlet</span><span class="o">(</span><span class="o">)</span><span class="o">,</span>
-				<span class="k">this</span><span class="o">.</span><span class="na">zuulProperties</span><span class="o">.</span><span class="na">getServletPattern</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+	<span class="kd">public</span> <span class="n">ServletRegistrationBean</span> <span class="nf">zuulServlet</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">ServletRegistrationBean</span> <span class="n">servlet</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServletRegistrationBean</span><span class="o">(</span><span class="k">new</span> <span class="n">ZuulServlet</span><span class="o">(),</span>
+				<span class="k">this</span><span class="o">.</span><span class="na">zuulProperties</span><span class="o">.</span><span class="na">getServletPattern</span><span class="o">());</span>
 		<span class="c1">// The whole point of exposing this servlet is to provide a route that doesn&#39;t
 </span><span class="c1"></span>		<span class="c1">// buffer requests.
-</span><span class="c1"></span>		<span class="n">servlet</span><span class="o">.</span><span class="na">addInitParameter</span><span class="o">(</span><span class="s">&#34;buffer-requests&#34;</span><span class="o">,</span> <span class="s">&#34;false&#34;</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>		<span class="n">servlet</span><span class="o">.</span><span class="na">addInitParameter</span><span class="o">(</span><span class="s">&#34;buffer-requests&#34;</span><span class="o">,</span> <span class="s">&#34;false&#34;</span><span class="o">);</span>
 		<span class="k">return</span> <span class="n">servlet</span><span class="o">;</span>
 	<span class="o">}</span>
 
 	<span class="c1">// pre filters
 </span><span class="c1"></span>
 	<span class="nd">@Bean</span>
-	<span class="kd">public</span> <span class="n">ServletDetectionFilter</span> <span class="nf">servletDetectionFilter</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="n">ServletDetectionFilter</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+	<span class="kd">public</span> <span class="n">ServletDetectionFilter</span> <span class="nf">servletDetectionFilter</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">ServletDetectionFilter</span><span class="o">();</span>
 	<span class="o">}</span>
 
 	<span class="nd">@Bean</span>
-	<span class="kd">public</span> <span class="n">FormBodyWrapperFilter</span> <span class="nf">formBodyWrapperFilter</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="n">FormBodyWrapperFilter</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+	<span class="kd">public</span> <span class="n">FormBodyWrapperFilter</span> <span class="nf">formBodyWrapperFilter</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">FormBodyWrapperFilter</span><span class="o">();</span>
 	<span class="o">}</span>
 
 	<span class="nd">@Bean</span>
-	<span class="kd">public</span> <span class="n">DebugFilter</span> <span class="nf">debugFilter</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="n">DebugFilter</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+	<span class="kd">public</span> <span class="n">DebugFilter</span> <span class="nf">debugFilter</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">DebugFilter</span><span class="o">();</span>
 	<span class="o">}</span>
 
 	<span class="nd">@Bean</span>
-	<span class="kd">public</span> <span class="n">Servlet30WrapperFilter</span> <span class="nf">servlet30WrapperFilter</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="n">Servlet30WrapperFilter</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+	<span class="kd">public</span> <span class="n">Servlet30WrapperFilter</span> <span class="nf">servlet30WrapperFilter</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">Servlet30WrapperFilter</span><span class="o">();</span>
 	<span class="o">}</span>
 
 	<span class="c1">// post filters
 </span><span class="c1"></span>
 	<span class="nd">@Bean</span>
-	<span class="kd">public</span> <span class="n">SendResponseFilter</span> <span class="nf">sendResponseFilter</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="n">SendResponseFilter</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+	<span class="kd">public</span> <span class="n">SendResponseFilter</span> <span class="nf">sendResponseFilter</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">SendResponseFilter</span><span class="o">();</span>
 	<span class="o">}</span>
 
 	<span class="nd">@Bean</span>
-	<span class="kd">public</span> <span class="n">SendErrorFilter</span> <span class="nf">sendErrorFilter</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="n">SendErrorFilter</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+	<span class="kd">public</span> <span class="n">SendErrorFilter</span> <span class="nf">sendErrorFilter</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">SendErrorFilter</span><span class="o">();</span>
 	<span class="o">}</span>
 
 	<span class="nd">@Bean</span>
-	<span class="kd">public</span> <span class="n">SendForwardFilter</span> <span class="nf">sendForwardFilter</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="n">SendForwardFilter</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+	<span class="kd">public</span> <span class="n">SendForwardFilter</span> <span class="nf">sendForwardFilter</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">SendForwardFilter</span><span class="o">();</span>
 	<span class="o">}</span>
 
 	<span class="nd">@Bean</span>
@@ -273,7 +273,7 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
 	<span class="kd">public</span> <span class="n">ZuulRouteApplicationContextInitializer</span> <span class="nf">zuulRoutesApplicationContextInitiazer</span><span class="o">(</span>
 			<span class="n">SpringClientFactory</span> <span class="n">springClientFactory</span><span class="o">)</span> <span class="o">{</span>
 		<span class="k">return</span> <span class="k">new</span> <span class="n">ZuulRouteApplicationContextInitializer</span><span class="o">(</span><span class="n">springClientFactory</span><span class="o">,</span>
-				<span class="n">zuulProperties</span><span class="o">)</span><span class="o">;</span>
+				<span class="n">zuulProperties</span><span class="o">);</span>
 	<span class="o">}</span>
 
 	<span class="nd">@Configuration</span>
@@ -285,9 +285,9 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
 		<span class="nd">@Bean</span>
 		<span class="kd">public</span> <span class="n">ZuulFilterInitializer</span> <span class="nf">zuulFilterInitializer</span><span class="o">(</span>
 				<span class="n">CounterFactory</span> <span class="n">counterFactory</span><span class="o">,</span> <span class="n">TracerFactory</span> <span class="n">tracerFactory</span><span class="o">)</span> <span class="o">{</span>
-			<span class="n">FilterLoader</span> <span class="n">filterLoader</span> <span class="o">=</span> <span class="n">FilterLoader</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-			<span class="n">FilterRegistry</span> <span class="n">filterRegistry</span> <span class="o">=</span> <span class="n">FilterRegistry</span><span class="o">.</span><span class="na">instance</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-			<span class="k">return</span> <span class="k">new</span> <span class="n">ZuulFilterInitializer</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">filters</span><span class="o">,</span> <span class="n">counterFactory</span><span class="o">,</span> <span class="n">tracerFactory</span><span class="o">,</span> <span class="n">filterLoader</span><span class="o">,</span> <span class="n">filterRegistry</span><span class="o">)</span><span class="o">;</span>
+			<span class="n">FilterLoader</span> <span class="n">filterLoader</span> <span class="o">=</span> <span class="n">FilterLoader</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+			<span class="n">FilterRegistry</span> <span class="n">filterRegistry</span> <span class="o">=</span> <span class="n">FilterRegistry</span><span class="o">.</span><span class="na">instance</span><span class="o">();</span>
+			<span class="k">return</span> <span class="k">new</span> <span class="n">ZuulFilterInitializer</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">filters</span><span class="o">,</span> <span class="n">counterFactory</span><span class="o">,</span> <span class="n">tracerFactory</span><span class="o">,</span> <span class="n">filterLoader</span><span class="o">,</span> <span class="n">filterRegistry</span><span class="o">);</span>
 		<span class="o">}</span>
 
 	<span class="o">}</span>
@@ -299,7 +299,7 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
 		<span class="nd">@Bean</span>
 		<span class="nd">@ConditionalOnBean</span><span class="o">(</span><span class="n">CounterService</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
 		<span class="kd">public</span> <span class="n">CounterFactory</span> <span class="nf">counterFactory</span><span class="o">(</span><span class="n">CounterService</span> <span class="n">counterService</span><span class="o">)</span> <span class="o">{</span>
-			<span class="k">return</span> <span class="k">new</span> <span class="n">DefaultCounterFactory</span><span class="o">(</span><span class="n">counterService</span><span class="o">)</span><span class="o">;</span>
+			<span class="k">return</span> <span class="k">new</span> <span class="n">DefaultCounterFactory</span><span class="o">(</span><span class="n">counterService</span><span class="o">);</span>
 		<span class="o">}</span>
 	<span class="o">}</span>
 
@@ -308,14 +308,14 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
 
 		<span class="nd">@Bean</span>
 		<span class="nd">@ConditionalOnMissingBean</span><span class="o">(</span><span class="n">CounterFactory</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-		<span class="kd">public</span> <span class="n">CounterFactory</span> <span class="nf">counterFactory</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-			<span class="k">return</span> <span class="k">new</span> <span class="n">EmptyCounterFactory</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+		<span class="kd">public</span> <span class="n">CounterFactory</span> <span class="nf">counterFactory</span><span class="o">()</span> <span class="o">{</span>
+			<span class="k">return</span> <span class="k">new</span> <span class="n">EmptyCounterFactory</span><span class="o">();</span>
 		<span class="o">}</span>
 
 		<span class="nd">@ConditionalOnMissingBean</span><span class="o">(</span><span class="n">TracerFactory</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
 		<span class="nd">@Bean</span>
-		<span class="kd">public</span> <span class="n">TracerFactory</span> <span class="nf">tracerFactory</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-			<span class="k">return</span> <span class="k">new</span> <span class="n">EmptyTracerFactory</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+		<span class="kd">public</span> <span class="n">TracerFactory</span> <span class="nf">tracerFactory</span><span class="o">()</span> <span class="o">{</span>
+			<span class="k">return</span> <span class="k">new</span> <span class="n">EmptyTracerFactory</span><span class="o">();</span>
 		<span class="o">}</span>
 
 	<span class="o">}</span>
@@ -326,18 +326,18 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
 		<span class="nd">@Autowired</span>
 		<span class="kd">private</span> <span class="n">ZuulHandlerMapping</span> <span class="n">zuulHandlerMapping</span><span class="o">;</span>
 
-		<span class="kd">private</span> <span class="n">HeartbeatMonitor</span> <span class="n">heartbeatMonitor</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HeartbeatMonitor</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+		<span class="kd">private</span> <span class="n">HeartbeatMonitor</span> <span class="n">heartbeatMonitor</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HeartbeatMonitor</span><span class="o">();</span>
 
 		<span class="nd">@Override</span>
 		<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onApplicationEvent</span><span class="o">(</span><span class="n">ApplicationEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
 			<span class="k">if</span> <span class="o">(</span><span class="n">event</span> <span class="k">instanceof</span> <span class="n">ContextRefreshedEvent</span>
-					<span class="o">|</span><span class="o">|</span> <span class="n">event</span> <span class="k">instanceof</span> <span class="n">RefreshScopeRefreshedEvent</span>
-					<span class="o">|</span><span class="o">|</span> <span class="n">event</span> <span class="k">instanceof</span> <span class="n">RoutesRefreshedEvent</span><span class="o">)</span> <span class="o">{</span>
-				<span class="k">this</span><span class="o">.</span><span class="na">zuulHandlerMapping</span><span class="o">.</span><span class="na">setDirty</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span><span class="o">;</span>
+					<span class="o">||</span> <span class="n">event</span> <span class="k">instanceof</span> <span class="n">RefreshScopeRefreshedEvent</span>
+					<span class="o">||</span> <span class="n">event</span> <span class="k">instanceof</span> <span class="n">RoutesRefreshedEvent</span><span class="o">)</span> <span class="o">{</span>
+				<span class="k">this</span><span class="o">.</span><span class="na">zuulHandlerMapping</span><span class="o">.</span><span class="na">setDirty</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
 			<span class="o">}</span>
 			<span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">event</span> <span class="k">instanceof</span> <span class="n">HeartbeatEvent</span><span class="o">)</span> <span class="o">{</span>
-				<span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">heartbeatMonitor</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="o">(</span><span class="o">(</span><span class="n">HeartbeatEvent</span><span class="o">)</span> <span class="n">event</span><span class="o">)</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
-					<span class="k">this</span><span class="o">.</span><span class="na">zuulHandlerMapping</span><span class="o">.</span><span class="na">setDirty</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span><span class="o">;</span>
+				<span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">heartbeatMonitor</span><span class="o">.</span><span class="na">update</span><span class="o">(((</span><span class="n">HeartbeatEvent</span><span class="o">)</span> <span class="n">event</span><span class="o">).</span><span class="na">getValue</span><span class="o">()))</span> <span class="o">{</span>
+					<span class="k">this</span><span class="o">.</span><span class="na">zuulHandlerMapping</span><span class="o">.</span><span class="na">setDirty</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
 				<span class="o">}</span>
 			<span class="o">}</span>
 		<span class="o">}</span>

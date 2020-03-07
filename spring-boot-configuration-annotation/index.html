@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -101,14 +101,14 @@
 <span class="nd">@Configuration</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Config</span> <span class="o">{</span>
     <span class="nd">@Bean</span>
-    <span class="kd">public</span> <span class="n">A</span> <span class="nf">a</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-        <span class="o">.</span><span class="o">.</span><span class="o">.</span>
+    <span class="kd">public</span> <span class="n">A</span> <span class="nf">a</span><span class="o">()</span> <span class="o">{</span>
+        <span class="o">...</span>
         <span class="k">return</span> <span class="n">a</span><span class="o">;</span>
     <span class="o">}</span>
     <span class="nd">@Bean</span>
-    <span class="kd">public</span> <span class="n">B</span> <span class="nf">b</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">b</span><span class="o">.</span><span class="na">setA</span><span class="o">(</span><span class="n">a</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
-        <span class="o">.</span><span class="o">.</span><span class="o">.</span>
+    <span class="kd">public</span> <span class="n">B</span> <span class="nf">b</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">b</span><span class="o">.</span><span class="na">setA</span><span class="o">(</span><span class="n">a</span><span class="o">());</span>
+        <span class="o">...</span>
         <span class="k">return</span> <span class="n">b</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
@@ -118,20 +118,20 @@
 <p>方法的实现是去检查<code>BeanDefinition</code>中的<code>ConfigurationClassPostProcessor.configurationClass</code>属性, 是<code>full</code>还是<code>lite</code>.</p>
 <p>这个属性的值又来源于<code>#checkConfigurationClassCandidate()</code>方法, 如果<code>BeanDefinition</code>使用的是<code>@Configuration</code>注解, 则为<code>full</code>; 如果是<code>@Component</code>, <code>@ComponentScan</code>, <code>@Import</code>或者<code>@ImportResource</code>中的任何一种, 则为<code>lite</code>. 如果是<code>ConfigurationClass</code>, 则会继续为其添加顺序属性.</p>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">checkConfigurationClassCandidate</span><span class="o">(</span><span class="n">BeanDefinition</span> <span class="n">beanDef</span><span class="o">,</span> <span class="n">MetadataReaderFactory</span> <span class="n">metadataReaderFactory</span><span class="o">)</span> <span class="o">{</span>
-	<span class="o">.</span><span class="o">.</span><span class="o">.</span>
-	<span class="k">if</span> <span class="o">(</span><span class="n">isFullConfigurationCandidate</span><span class="o">(</span><span class="n">metadata</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
-		<span class="n">beanDef</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="n">CONFIGURATION_CLASS_ATTRIBUTE</span><span class="o">,</span> <span class="n">CONFIGURATION_CLASS_FULL</span><span class="o">)</span><span class="o">;</span>
+	<span class="o">...</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">isFullConfigurationCandidate</span><span class="o">(</span><span class="n">metadata</span><span class="o">))</span> <span class="o">{</span>
+		<span class="n">beanDef</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="n">CONFIGURATION_CLASS_ATTRIBUTE</span><span class="o">,</span> <span class="n">CONFIGURATION_CLASS_FULL</span><span class="o">);</span>
 	<span class="o">}</span>
-	<span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">isLiteConfigurationCandidate</span><span class="o">(</span><span class="n">metadata</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
-		<span class="n">beanDef</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="n">CONFIGURATION_CLASS_ATTRIBUTE</span><span class="o">,</span> <span class="n">CONFIGURATION_CLASS_LITE</span><span class="o">)</span><span class="o">;</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">isLiteConfigurationCandidate</span><span class="o">(</span><span class="n">metadata</span><span class="o">))</span> <span class="o">{</span>
+		<span class="n">beanDef</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="n">CONFIGURATION_CLASS_ATTRIBUTE</span><span class="o">,</span> <span class="n">CONFIGURATION_CLASS_LITE</span><span class="o">);</span>
 	<span class="o">}</span>
 	<span class="k">else</span> <span class="o">{</span>
 		<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
 	<span class="o">}</span>
 	<span class="c1">// It&#39;s a full or lite configuration candidate... Let&#39;s determine the order value, if any.
-</span><span class="c1"></span>	<span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">orderAttributes</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="na">getAnnotationAttributes</span><span class="o">(</span><span class="n">Order</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
-	<span class="k">if</span> <span class="o">(</span><span class="n">orderAttributes</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-		<span class="n">beanDef</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="n">ORDER_ATTRIBUTE</span><span class="o">,</span> <span class="n">orderAttributes</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">AnnotationUtils</span><span class="o">.</span><span class="na">VALUE</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>	<span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">orderAttributes</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="na">getAnnotationAttributes</span><span class="o">(</span><span class="n">Order</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">orderAttributes</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">beanDef</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="n">ORDER_ATTRIBUTE</span><span class="o">,</span> <span class="n">orderAttributes</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">AnnotationUtils</span><span class="o">.</span><span class="na">VALUE</span><span class="o">));</span>
 	<span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>

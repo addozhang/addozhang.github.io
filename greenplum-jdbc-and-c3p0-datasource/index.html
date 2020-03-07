@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -114,9 +114,9 @@
 </span><span class="cm">     * @throws ClassNotFoundException
 </span><span class="cm">     * @throws SQLException
 </span><span class="cm">     */</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Connection</span> <span class="nf">postgresqlConnection</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ClassNotFoundException</span><span class="o">,</span> <span class="n">SQLException</span> <span class="o">{</span>
-        <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">&#34;org.postgresql.Driver&#34;</span><span class="o">)</span><span class="o">;</span>
-        <span class="k">return</span> <span class="n">DriverManager</span><span class="o">.</span><span class="na">getConnection</span><span class="o">(</span><span class="n">POSTGRESQL_URL</span><span class="o">,</span> <span class="n">POSTGRESQL_USERNAME</span><span class="o">,</span> <span class="n">POSTGRESQL_PASSWORD</span><span class="o">)</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Connection</span> <span class="nf">postgresqlConnection</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">ClassNotFoundException</span><span class="o">,</span> <span class="n">SQLException</span> <span class="o">{</span>
+        <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">&#34;org.postgresql.Driver&#34;</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">DriverManager</span><span class="o">.</span><span class="na">getConnection</span><span class="o">(</span><span class="n">POSTGRESQL_URL</span><span class="o">,</span> <span class="n">POSTGRESQL_USERNAME</span><span class="o">,</span> <span class="n">POSTGRESQL_PASSWORD</span><span class="o">);</span>
     <span class="o">}</span>
 
     <span class="cm">/**
@@ -126,9 +126,9 @@
 </span><span class="cm">     * @throws ClassNotFoundException
 </span><span class="cm">     * @throws SQLException
 </span><span class="cm">     */</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Connection</span> <span class="nf">gpdbConnection</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ClassNotFoundException</span><span class="o">,</span> <span class="n">SQLException</span> <span class="o">{</span>
-        <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">&#34;com.pivotal.jdbc.GreenplumDriver&#34;</span><span class="o">)</span><span class="o">;</span>
-        <span class="k">return</span> <span class="n">DriverManager</span><span class="o">.</span><span class="na">getConnection</span><span class="o">(</span><span class="n">GPDB_URL</span><span class="o">,</span> <span class="n">GPDB_USERNAME</span><span class="o">,</span> <span class="n">GPDB_PASSWORD</span><span class="o">)</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Connection</span> <span class="nf">gpdbConnection</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">ClassNotFoundException</span><span class="o">,</span> <span class="n">SQLException</span> <span class="o">{</span>
+        <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">&#34;com.pivotal.jdbc.GreenplumDriver&#34;</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">DriverManager</span><span class="o">.</span><span class="na">getConnection</span><span class="o">(</span><span class="n">GPDB_URL</span><span class="o">,</span> <span class="n">GPDB_USERNAME</span><span class="o">,</span> <span class="n">GPDB_PASSWORD</span><span class="o">);</span>
     <span class="o">}</span>
 
     <span class="cm">/**
@@ -137,32 +137,32 @@
 </span><span class="cm">     * @return
 </span><span class="cm">     * @throws SQLException
 </span><span class="cm">     */</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Connection</span> <span class="nf">gpdbC3P0Connection</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">SQLException</span> <span class="o">{</span>
-        <span class="n">Properties</span> <span class="n">c3p0Props</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Properties</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;driverClass&#34;</span><span class="o">,</span> <span class="s">&#34;com.pivotal.jdbc.GreenplumDriver&#34;</span><span class="o">)</span><span class="o">;</span>
-        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;jdbcUrl&#34;</span><span class="o">,</span> <span class="n">GPDB_URL</span><span class="o">)</span><span class="o">;</span>
-        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;user&#34;</span><span class="o">,</span> <span class="n">GPDB_USERNAME</span><span class="o">)</span><span class="o">;</span>
-        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;password&#34;</span><span class="o">,</span> <span class="n">GPDB_PASSWORD</span><span class="o">)</span><span class="o">;</span>
-        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;acquireIncrement&#34;</span><span class="o">,</span> <span class="s">&#34;5&#34;</span><span class="o">)</span><span class="o">;</span>
-        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;initialPoolSize1&#34;</span><span class="o">,</span> <span class="s">&#34;1&#34;</span><span class="o">)</span><span class="o">;</span>
-        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;maxIdleTime&#34;</span><span class="o">,</span> <span class="s">&#34;60&#34;</span><span class="o">)</span><span class="o">;</span>
-        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;maxPoolSize&#34;</span><span class="o">,</span> <span class="s">&#34;50&#34;</span><span class="o">)</span><span class="o">;</span>
-        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;minPoolSize&#34;</span><span class="o">,</span> <span class="s">&#34;1&#34;</span><span class="o">)</span><span class="o">;</span>
-        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;idleConnectionTestPeriod&#34;</span><span class="o">,</span> <span class="s">&#34;60&#34;</span><span class="o">)</span><span class="o">;</span>
-        <span class="k">return</span> <span class="n">DataSources</span><span class="o">.</span><span class="na">unpooledDataSource</span><span class="o">(</span><span class="n">GPDB_URL</span><span class="o">,</span> <span class="n">c3p0Props</span><span class="o">)</span><span class="o">.</span><span class="na">getConnection</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Connection</span> <span class="nf">gpdbC3P0Connection</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">SQLException</span> <span class="o">{</span>
+        <span class="n">Properties</span> <span class="n">c3p0Props</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Properties</span><span class="o">();</span>
+        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;driverClass&#34;</span><span class="o">,</span> <span class="s">&#34;com.pivotal.jdbc.GreenplumDriver&#34;</span><span class="o">);</span>
+        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;jdbcUrl&#34;</span><span class="o">,</span> <span class="n">GPDB_URL</span><span class="o">);</span>
+        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;user&#34;</span><span class="o">,</span> <span class="n">GPDB_USERNAME</span><span class="o">);</span>
+        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;password&#34;</span><span class="o">,</span> <span class="n">GPDB_PASSWORD</span><span class="o">);</span>
+        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;acquireIncrement&#34;</span><span class="o">,</span> <span class="s">&#34;5&#34;</span><span class="o">);</span>
+        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;initialPoolSize1&#34;</span><span class="o">,</span> <span class="s">&#34;1&#34;</span><span class="o">);</span>
+        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;maxIdleTime&#34;</span><span class="o">,</span> <span class="s">&#34;60&#34;</span><span class="o">);</span>
+        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;maxPoolSize&#34;</span><span class="o">,</span> <span class="s">&#34;50&#34;</span><span class="o">);</span>
+        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;minPoolSize&#34;</span><span class="o">,</span> <span class="s">&#34;1&#34;</span><span class="o">);</span>
+        <span class="n">c3p0Props</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;idleConnectionTestPeriod&#34;</span><span class="o">,</span> <span class="s">&#34;60&#34;</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">DataSources</span><span class="o">.</span><span class="na">unpooledDataSource</span><span class="o">(</span><span class="n">GPDB_URL</span><span class="o">,</span> <span class="n">c3p0Props</span><span class="o">).</span><span class="na">getConnection</span><span class="o">();</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ClassNotFoundException</span><span class="o">,</span> <span class="n">SQLException</span> <span class="o">{</span>
-        <span class="n">Connection</span><span class="o">[</span><span class="o">]</span> <span class="n">connections</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Connection</span><span class="o">[</span><span class="o">]</span><span class="o">{</span><span class="n">postgresqlConnection</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">gpdbConnection</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">gpdbC3P0Connection</span><span class="o">(</span><span class="o">)</span><span class="o">}</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ClassNotFoundException</span><span class="o">,</span> <span class="n">SQLException</span> <span class="o">{</span>
+        <span class="n">Connection</span><span class="o">[]</span> <span class="n">connections</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Connection</span><span class="o">[]{</span><span class="n">postgresqlConnection</span><span class="o">(),</span> <span class="n">gpdbConnection</span><span class="o">(),</span> <span class="n">gpdbC3P0Connection</span><span class="o">()};</span>
         <span class="k">for</span> <span class="o">(</span><span class="n">Connection</span> <span class="n">connection</span> <span class="o">:</span> <span class="n">connections</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">CallableStatement</span> <span class="n">callableStatement</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">prepareCall</span><span class="o">(</span><span class="s">&#34;select * from user&#34;</span><span class="o">)</span><span class="o">;</span>
-            <span class="kt">boolean</span> <span class="n">execute</span> <span class="o">=</span> <span class="n">callableStatement</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-            <span class="n">ResultSet</span> <span class="n">resultSet</span> <span class="o">=</span> <span class="n">callableStatement</span><span class="o">.</span><span class="na">getResultSet</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-            <span class="k">while</span> <span class="o">(</span><span class="n">resultSet</span><span class="o">.</span><span class="na">next</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">resultSet</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="s">&#34;current_user&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">CallableStatement</span> <span class="n">callableStatement</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">prepareCall</span><span class="o">(</span><span class="s">&#34;select * from user&#34;</span><span class="o">);</span>
+            <span class="kt">boolean</span> <span class="n">execute</span> <span class="o">=</span> <span class="n">callableStatement</span><span class="o">.</span><span class="na">execute</span><span class="o">();</span>
+            <span class="n">ResultSet</span> <span class="n">resultSet</span> <span class="o">=</span> <span class="n">callableStatement</span><span class="o">.</span><span class="na">getResultSet</span><span class="o">();</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">resultSet</span><span class="o">.</span><span class="na">next</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">resultSet</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="s">&#34;current_user&#34;</span><span class="o">));</span>
             <span class="o">}</span>
-            <span class="n">callableStatement</span><span class="o">.</span><span class="na">close</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-            <span class="n">connection</span><span class="o">.</span><span class="na">close</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">callableStatement</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+            <span class="n">connection</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
         <span class="o">}</span>
 
     <span class="o">}</span>

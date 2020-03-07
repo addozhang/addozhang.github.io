@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -106,19 +106,19 @@
 </code></pre></div><p>如果是disabled的话, 通过命令<code>minikube addons enable ingress</code>.</p>
 <p><em>注意: 这里拉取<code>quay.io/kubernetes-ingress-controller/nginx-ingress-controller</code>镜像可能比较慢, 建议使用国内的镜像, 比如<code>quay.mirrors.ustc.edu.cn/kubernetes-ingress-controller/nginx-ingress-controller</code></em></p>
 <p>修改<code>basic-dashboard-ingress.yaml</code>中的<code>host</code>地址:</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>extensions/v1beta1<span class="w">
-</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>Ingress<span class="w">
-</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
-</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>tekton-dashboard<span class="w">
-</span><span class="w">  </span>namespace<span class="p">:</span><span class="w"> </span>tekton-pipelines<span class="w">
-</span><span class="w"></span>spec<span class="p">:</span><span class="w">
-</span><span class="w">  </span>rules<span class="p">:</span><span class="w">
-</span><span class="w">  </span>-<span class="w"> </span>host<span class="p">:</span><span class="w"> </span>tekton-dashboard.nip.io<span class="w">
-</span><span class="w">    </span>http<span class="p">:</span><span class="w">
-</span><span class="w">      </span>paths<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>backend<span class="p">:</span><span class="w">
-</span><span class="w">          </span>serviceName<span class="p">:</span><span class="w"> </span>tekton-dashboard<span class="w">
-</span><span class="w">          </span>servicePort<span class="p">:</span><span class="w"> </span><span class="m">9097</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>extensions/v1beta1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>Ingress<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>tekton-dashboard<span class="w">
+</span><span class="w">  </span><span class="k">namespace</span><span class="p">:</span><span class="w"> </span>tekton-pipelines<span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">rules</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="k">host</span><span class="p">:</span><span class="w"> </span>tekton-dashboard.nip.io<span class="w">
+</span><span class="w">    </span><span class="k">http</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">paths</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="k">backend</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span><span class="k">serviceName</span><span class="p">:</span><span class="w"> </span>tekton-dashboard<span class="w">
+</span><span class="w">          </span><span class="k">servicePort</span><span class="p">:</span><span class="w"> </span><span class="m">9097</span><span class="w">
 </span></code></pre></div><p>执行<code>kubectl apply -f basic-dashboard-ingress.yaml</code>.</p>
 <p>还有最后一步, 在<code>/etc/hosts</code>中添加一条解析<code>x.x.x.x tekton-dashboard.nip.io</code>, ip地址通过<code>minikube ip</code>来获取</p>
 <p>浏览器中打开<code> tekton-dashboard.nip.io</code></p>

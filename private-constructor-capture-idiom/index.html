@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -96,20 +96,20 @@
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">SafePoint</span><span class="o">{</span>
     <span class="nd">@GuardedBy</span><span class="o">(</span><span class="s">&#34;this&#34;</span><span class="o">)</span> <span class="kd">private</span> <span class="kt">int</span> <span class="n">x</span><span class="o">,</span><span class="n">y</span><span class="o">;</span>
   
-    <span class="kd">private</span> <span class="nf">SafePoint</span> <span class="o">(</span><span class="kt">int</span> <span class="o">[</span><span class="o">]</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span> <span class="k">this</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="o">,</span> <span class="n">a</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="o">)</span><span class="o">;</span> <span class="o">}</span>
+    <span class="kd">private</span> <span class="nf">SafePoint</span> <span class="o">(</span><span class="kt">int</span> <span class="o">[]</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span> <span class="k">this</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">0</span><span class="o">],</span> <span class="n">a</span><span class="o">[</span><span class="n">1</span><span class="o">]);</span> <span class="o">}</span>
   
-    <span class="kd">public</span> <span class="nf">SafePoint</span><span class="o">(</span><span class="n">SafePoint</span> <span class="n">p</span><span class="o">)</span> <span class="o">{</span> <span class="k">this</span> <span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span> <span class="o">}</span>
+    <span class="kd">public</span> <span class="nf">SafePoint</span><span class="o">(</span><span class="n">SafePoint</span> <span class="n">p</span><span class="o">)</span> <span class="o">{</span> <span class="k">this</span> <span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">get</span><span class="o">());</span> <span class="o">}</span>
   
-    <span class="kd">public</span> <span class="nf">SafePoint</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">)</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">SafePoint</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">){</span>
           <span class="k">this</span><span class="o">.</span><span class="na">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>
           <span class="k">this</span><span class="o">.</span><span class="na">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">;</span>
     <span class="o">}</span>
   
-    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">int</span><span class="o">[</span><span class="o">]</span> <span class="nf">get</span><span class="o">(</span><span class="o">)</span><span class="o">{</span>
-          <span class="k">return</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="o">]</span> <span class="o">{</span><span class="n">x</span><span class="o">,</span><span class="n">y</span><span class="o">}</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">get</span><span class="o">(){</span>
+          <span class="k">return</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[]</span> <span class="o">{</span><span class="n">x</span><span class="o">,</span><span class="n">y</span><span class="o">};</span>
     <span class="o">}</span>
   
-    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">set</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">)</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">set</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">){</span>
           <span class="k">this</span><span class="o">.</span><span class="na">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>
           <span class="k">this</span><span class="o">.</span><span class="na">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">;</span>
     <span class="o">}</span>
@@ -122,22 +122,22 @@
 <span class="o">}</span>
 </code></pre></div><p>同理，这种也不行，两次调用get()方法不是原子操作。</p>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">SafePoint</span><span class="o">(</span><span class="n">SafePoint</span> <span class="n">p</span><span class="o">)</span> <span class="o">{</span>
-	<span class="k">this</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="o">)</span>
+	<span class="k">this</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">get</span><span class="o">()[</span><span class="n">0</span><span class="o">],</span> <span class="n">p</span><span class="o">.</span><span class="na">get</span><span class="o">()[</span><span class="n">1</span><span class="o">])</span>
 <span class="o">}</span>
 </code></pre></div><p>为什么不用直接用数组，编译不通过：<code>Call to &quot;this()&quot; must be first statement in constructor body</code></p>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">SafePoint</span><span class="o">(</span><span class="n">SafePoint</span> <span class="n">p</span><span class="o">)</span> <span class="o">{</span>
- 	<span class="kt">int</span><span class="o">[</span><span class="o">]</span> <span class="n">a</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-	<span class="k">this</span><span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="o">,</span> <span class="n">a</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="o">)</span><span class="o">;</span>
+ 	<span class="kt">int</span><span class="o">[]</span> <span class="n">a</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+	<span class="k">this</span><span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">0</span><span class="o">],</span> <span class="n">a</span><span class="o">[</span><span class="n">1</span><span class="o">]);</span>
 <span class="o">}</span>
 </code></pre></div><p>为什么接受数组为参数的构造器不能公开，数组a是有外部传入的，并不能保证数组内容不会其他线程修改。</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">SafePoint</span> <span class="o">(</span><span class="kt">int</span> <span class="o">[</span><span class="o">]</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
-	<span class="k">this</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="o">,</span> <span class="n">a</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="o">)</span><span class="o">;</span> 
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">SafePoint</span> <span class="o">(</span><span class="kt">int</span> <span class="o">[]</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
+	<span class="k">this</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">0</span><span class="o">],</span> <span class="n">a</span><span class="o">[</span><span class="n">1</span><span class="o">]);</span> 
 <span class="o">}</span>
 </code></pre></div><p>当然我们可以使用下面这种代替私有的构造器，这种方法是安全的，但是会产生重复的初始化代码。</p>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">SafePoint</span><span class="o">(</span><span class="n">SafePoint</span> <span class="n">p</span><span class="o">)</span> <span class="o">{</span>
-    <span class="kt">int</span><span class="o">[</span><span class="o">]</span> <span class="n">a</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-    <span class="k">this</span><span class="o">.</span><span class="na">x</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="o">;</span>
-    <span class="k">this</span><span class="o">.</span><span class="na">y</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="o">;</span>
+    <span class="kt">int</span><span class="o">[]</span> <span class="n">a</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">x</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">0</span><span class="o">];</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">y</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">1</span><span class="o">];</span>
 <span class="o">}</span>
 </code></pre></div><p>再回头看SafePoint的线程安全性，SafePoint有两个状态变量x、y。为了保证线程安全性，没有为其分别提供getter和setter方法，而是将其封装后发布并使用内置锁保护。</p>
 <p>可以参考<a href="%5Bhttps://stackoverflow.com/questions/12028925/private-constructor-to-avoid-race-condition/12037506">stackoverflow</a>上的示例代码。</p>

@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -125,7 +125,7 @@
         <span class="nx">email</span><span class="p">:</span> <span class="s">&#34;fred@email.com&#34;</span><span class="p">,</span>
         <span class="nx">ext</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span>
         <span class="nx">privileged</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="p">}</span><span class="p">,</span>
+    <span class="p">},</span>
     <span class="nx">level</span><span class="p">:</span> <span class="s">&#34;super&#34;</span><span class="p">,</span>
 <span class="p">}</span>
 </code></pre></div><p><strong>另一种声明用户定义的类型的方法是, 基于一个已有的类型, 将其作为新类型的类型说明</strong>
@@ -142,7 +142,7 @@
 	<span class="nx">email</span> <span class="kt">string</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">u</span> <span class="nx">user</span><span class="p">)</span> <span class="nf">notify</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">u</span> <span class="nx">user</span><span class="p">)</span> <span class="nf">notify</span><span class="p">()</span> <span class="p">{</span>
 	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Sending User Email To %s&lt;%s&gt;\n&#34;</span><span class="p">,</span> <span class="nx">u</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">u</span><span class="p">.</span><span class="nx">email</span><span class="p">)</span>
 <span class="p">}</span>
 
@@ -150,23 +150,23 @@
 	<span class="nx">u</span><span class="p">.</span><span class="nx">email</span> <span class="p">=</span> <span class="nx">email</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
 	<span class="nx">bill</span> <span class="o">:=</span> <span class="nx">user</span><span class="p">{</span><span class="s">&#34;Bill&#34;</span><span class="p">,</span> <span class="s">&#34;bill@email.com&#34;</span><span class="p">}</span>
-	<span class="nx">bill</span><span class="p">.</span><span class="nf">notify</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">bill</span><span class="p">.</span><span class="nf">notify</span><span class="p">()</span>
 
 	<span class="nx">lisa</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">user</span><span class="p">{</span><span class="s">&#34;Lisa&#34;</span><span class="p">,</span> <span class="s">&#34;lisa@email.com&#34;</span><span class="p">}</span>
-	<span class="nx">lisa</span><span class="p">.</span><span class="nf">notify</span><span class="p">(</span><span class="p">)</span> <span class="c1">//实际执行 (*lisa).notify()
+	<span class="nx">lisa</span><span class="p">.</span><span class="nf">notify</span><span class="p">()</span> <span class="c1">//实际执行 (*lisa).notify()
 </span><span class="c1"></span>
 	<span class="nx">bill</span><span class="p">.</span><span class="nf">changeEmail</span><span class="p">(</span><span class="s">&#34;bill@newDomain.com&#34;</span><span class="p">)</span> <span class="c1">//实际执行 (&amp;bill).changeEmail(&#34;bill@newDomain.com&#34;)
-</span><span class="c1"></span>	<span class="nx">bill</span><span class="p">.</span><span class="nf">notify</span><span class="p">(</span><span class="p">)</span>
+</span><span class="c1"></span>	<span class="nx">bill</span><span class="p">.</span><span class="nf">notify</span><span class="p">()</span>
 
 	<span class="nx">lisa</span><span class="p">.</span><span class="nf">changeEmail</span><span class="p">(</span><span class="s">&#34;lisa@newDomain.com&#34;</span><span class="p">)</span>
-	<span class="nx">lisa</span><span class="p">.</span><span class="nf">notify</span><span class="p">(</span><span class="p">)</span> <span class="c1">//实际执行 (*lisa).notify()
+	<span class="nx">lisa</span><span class="p">.</span><span class="nf">notify</span><span class="p">()</span> <span class="c1">//实际执行 (*lisa).notify()
 </span><span class="c1"></span><span class="p">}</span>
 <span class="c1">//Sending User Email To Bill&lt;bill@email.com&gt;
-</span><span class="c1"></span><span class="c1">//Sending User Email To Lisa&lt;lisa@email.com&gt;
-</span><span class="c1"></span><span class="c1">//Sending User Email To Bill&lt;bill@newDomain.com&gt;
-</span><span class="c1"></span><span class="c1">//Sending User Email To Lisa&lt;lisa@newDomain.com&gt;
+</span><span class="c1">//Sending User Email To Lisa&lt;lisa@email.com&gt;
+</span><span class="c1">//Sending User Email To Bill&lt;bill@newDomain.com&gt;
+</span><span class="c1">//Sending User Email To Lisa&lt;lisa@newDomain.com&gt;
 </span></code></pre></div><p>Go语言里有两种类型的接收者: 值接收者和指针接收者.</p>
 <ul>
 <li>如果使用值接收者, 调用的时候会使用<strong>值的副本</strong>来执行</li>
@@ -182,14 +182,14 @@
 	<span class="k">if</span> <span class="nx">s</span> <span class="o">==</span> <span class="s">&#34;&#34;</span> <span class="o">||</span> <span class="nx">cutset</span> <span class="o">==</span> <span class="s">&#34;&#34;</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">s</span>
 	<span class="p">}</span>
-	<span class="k">return</span> <span class="nf">TrimFunc</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nf">makeCutsetFunc</span><span class="p">(</span><span class="nx">cutset</span><span class="p">)</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nf">TrimFunc</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nf">makeCutsetFunc</span><span class="p">(</span><span class="nx">cutset</span><span class="p">))</span>
 <span class="p">}</span>
 </code></pre></div><h4 id="引用类型">引用类型</h4>
 <p>Go语言里有几种: 切片, 映射, 通道, 接口和函数类型.</p>
 <p>声明上述类型的变量时, 创建的变量被称作标头(header)值. 每个引用类型创建的标头值是包含一个指向底层数据结构的指针.
 标头值里包含一个指针, 通过复制来传递一个引用类型的值得副本, 本质是就是在共享底层数据结构.</p>
 <p><code>golang.org/src/net/ip.go</code></p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">IP</span> <span class="p">[</span><span class="p">]</span><span class="kt">byte</span>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">IP</span> <span class="p">[]</span><span class="kt">byte</span>
 </code></pre></div><h4 id="结构类型">结构类型</h4>
 <p>描述一组数据值, 这组值可以是原始类型, 也可以是非原始的.
 结构类型的本质是非原始的. 对这个类型的值做增加或者删除的操作应该更改值本身. 当需要修改值本身时, 在程序中其他地方, 需要使用指针来共享这个值.</p>
@@ -200,7 +200,7 @@
     <span class="nx">loc</span> <span class="o">*</span><span class="nx">Location</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="nf">Now</span><span class="p">(</span><span class="p">)</span> <span class="nx">Time</span><span class="p">{</span>
+<span class="kd">func</span> <span class="nf">Now</span><span class="p">()</span> <span class="nx">Time</span><span class="p">{</span>
     <span class="o">...</span>
 <span class="p">}</span>
 <span class="c1">//值接收者, 返回新的Time
@@ -208,11 +208,11 @@
     <span class="o">...</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">time</span> <span class="nx">Time</span><span class="p">)</span> <span class="nf">String</span><span class="p">(</span><span class="p">)</span> <span class="kt">string</span><span class="p">{</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">time</span> <span class="nx">Time</span><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <span class="kt">string</span><span class="p">{</span>
     <span class="o">...</span>
 <span class="p">}</span>
 <span class="c1">//指针接收者
-</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">Time</span><span class="p">)</span> <span class="nf">UnmarshalBinary</span><span class="p">(</span><span class="nx">data</span> <span class="p">[</span><span class="p">]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">Time</span><span class="p">)</span> <span class="nf">UnmarshalBinary</span><span class="p">(</span><span class="nx">data</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
     <span class="o">...</span>
 <span class="p">}</span>
 
@@ -239,19 +239,19 @@
 <h4 id="标准库">标准库</h4>
 <p><code>golang.org/src/io/io.go</code></p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Reader</span> <span class="kd">interface</span> <span class="p">{</span>
-	<span class="nf">Read</span><span class="p">(</span><span class="nx">p</span> <span class="p">[</span><span class="p">]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span>
+	<span class="nf">Read</span><span class="p">(</span><span class="nx">p</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span>
 <span class="p">}</span>
 <span class="kd">type</span> <span class="nx">Writer</span> <span class="kd">interface</span> <span class="p">{</span>
-	<span class="nf">Write</span><span class="p">(</span><span class="nx">p</span> <span class="p">[</span><span class="p">]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span>
+	<span class="nf">Write</span><span class="p">(</span><span class="nx">p</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span>
 <span class="p">}</span>
 <span class="kd">type</span> <span class="nx">WriterTo</span> <span class="kd">interface</span> <span class="p">{</span>
 	<span class="nf">WriteTo</span><span class="p">(</span><span class="nx">w</span> <span class="nx">Writer</span><span class="p">)</span> <span class="p">(</span><span class="nx">n</span> <span class="kt">int64</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
 <span class="c1">//bytes.Buffer实现了io.Reader, io.WriteTo接口
 </span><span class="c1"></span>	<span class="kd">var</span> <span class="nx">b</span> <span class="nx">bytes</span><span class="p">.</span><span class="nx">Buffer</span>
-	<span class="nx">b</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="nb">byte</span><span class="p">(</span><span class="s">&#34;Hello&#34;</span><span class="p">)</span><span class="p">)</span>
+	<span class="nx">b</span><span class="p">.</span><span class="nf">Write</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="s">&#34;Hello&#34;</span><span class="p">))</span>
 	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Fprintf</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">b</span><span class="p">,</span> <span class="s">&#34;World!&#34;</span><span class="p">)</span>
 <span class="c1">//os.Stdout实现了io.Writer接口	
 </span><span class="c1"></span>	<span class="nx">io</span><span class="p">.</span><span class="nf">Copy</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Stdout</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">b</span><span class="p">)</span>
@@ -269,7 +269,7 @@
 <p>方法集定义了接口的接受规则.
 方法集定义了一组关联到给定类型的值或者指针的方法. 定义方法的时使用的接收者的类型决定了这个方法是关联到值还是关联到指针, 还是两个都关联.</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">notifier</span> <span class="kd">interface</span> <span class="p">{</span>
-	<span class="nf">notify</span><span class="p">(</span><span class="p">)</span>
+	<span class="nf">notify</span><span class="p">()</span>
 <span class="p">}</span>
 
 <span class="kd">type</span> <span class="nx">user</span> <span class="kd">struct</span> <span class="p">{</span>
@@ -277,11 +277,11 @@
 	<span class="nx">email</span> <span class="kt">string</span>
 <span class="p">}</span>
 <span class="c1">//notify是使用指针接收者实现的方法
-</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">u</span> <span class="o">*</span><span class="nx">user</span><span class="p">)</span> <span class="nf">notify</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">u</span> <span class="o">*</span><span class="nx">user</span><span class="p">)</span> <span class="nf">notify</span><span class="p">()</span> <span class="p">{</span>
 	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Send email to %s&lt;%s&gt;\n&#34;</span><span class="p">,</span> <span class="nx">u</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">u</span><span class="p">.</span><span class="nx">email</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
 	<span class="nx">u</span> <span class="o">:=</span> <span class="nx">user</span><span class="p">{</span><span class="s">&#34;Bill&#34;</span><span class="p">,</span> <span class="s">&#34;bill@email.com&#34;</span><span class="p">}</span>
 	<span class="c1">//sendNotificationTo(u) //用这一行会有编译错误. user没有实现notifier接口, 赋值给notifier会发生错误
 </span><span class="c1"></span>	<span class="nf">sendNotificationTo</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">u</span><span class="p">)</span> <span class="c1">//上面notify方法的实现的接收者为 user指针, 因此在赋值的时候只能接受user指针
@@ -289,7 +289,7 @@
 </span><span class="c1"></span><span class="p">}</span>
 <span class="c1">//接受一个实现了notifier的值作为参数
 </span><span class="c1"></span><span class="kd">func</span> <span class="nf">sendNotificationTo</span><span class="p">(</span><span class="nx">n</span> <span class="nx">notifier</span><span class="p">)</span> <span class="p">{</span>
-	<span class="nx">n</span><span class="p">.</span><span class="nf">notify</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">n</span><span class="p">.</span><span class="nf">notify</span><span class="p">()</span>
 <span class="p">}</span>
 </code></pre></div><p><strong>Go语言规范里定义的方法集的规则:</strong></p>
 <table>
@@ -313,7 +313,7 @@
 <p>T类型的值的方法集只包含值接收者声明的方法. 而指向T类型的指针的方法集既包括指针接收者声明的方法, 也包含值接收者声明的方法.</p>
 <p>上面的代码稍微做下修改, 更加清晰一些.</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">notifier</span> <span class="kd">interface</span> <span class="p">{</span>
-	<span class="nf">notify</span><span class="p">(</span><span class="p">)</span>
+	<span class="nf">notify</span><span class="p">()</span>
 <span class="p">}</span>
 
 <span class="kd">type</span> <span class="nx">user</span> <span class="kd">struct</span> <span class="p">{</span>
@@ -321,18 +321,18 @@
 	<span class="nx">email</span> <span class="kt">string</span>
 <span class="p">}</span>
 <span class="c1">//notify是使用值接收者实现的方法
-</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">u</span> <span class="nx">user</span><span class="p">)</span> <span class="nf">notify</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">u</span> <span class="nx">user</span><span class="p">)</span> <span class="nf">notify</span><span class="p">()</span> <span class="p">{</span>
 	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Send email to %s&lt;%s&gt;\n&#34;</span><span class="p">,</span> <span class="nx">u</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">u</span><span class="p">.</span><span class="nx">email</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
 	<span class="nx">u</span> <span class="o">:=</span> <span class="nx">user</span><span class="p">{</span><span class="s">&#34;Bill&#34;</span><span class="p">,</span> <span class="s">&#34;bill@email.com&#34;</span><span class="p">}</span>
 	<span class="nf">sendNotificationTo</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span>
 	<span class="nf">sendNotificationTo</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">u</span><span class="p">)</span> <span class="c1">//&amp;u赋值给notifier的变量n时, n的方法集包含了值接收者实现的方法.
 </span><span class="c1"></span><span class="p">}</span>
 
 <span class="kd">func</span> <span class="nf">sendNotificationTo</span><span class="p">(</span><span class="nx">n</span> <span class="nx">notifier</span><span class="p">)</span> <span class="p">{</span>
-	<span class="nx">n</span><span class="p">.</span><span class="nf">notify</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">n</span><span class="p">.</span><span class="nf">notify</span><span class="p">()</span>
 <span class="p">}</span>
 </code></pre></div><p>或者换个角度, 从接收者来看.</p>
 <table>
@@ -361,7 +361,7 @@
 嵌入类型是将已有类型直接声明在新的结构类型里. 被嵌入的类型称为新的外部类型的内部类型.</p>
 <p>通过嵌入类型, 与内部类型相关的标识符会提升到外部类型上, 也成为外部类型的一部分. 外部类型也可以通过声明相同名称的标识符来覆盖内部类型的标识符的字段或者方法, 这就是修改内部类型的属性或者行为实现. 也可以添加新的字段和方法.</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">notifier</span> <span class="kd">interface</span> <span class="p">{</span>
-	<span class="nf">notify</span><span class="p">(</span><span class="p">)</span>
+	<span class="nf">notify</span><span class="p">()</span>
 <span class="p">}</span>
 
 <span class="kd">type</span> <span class="nx">user</span> <span class="kd">struct</span> <span class="p">{</span>
@@ -374,33 +374,33 @@
 </span><span class="c1"></span>	<span class="nx">level</span> <span class="kt">string</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">u</span> <span class="o">*</span><span class="nx">user</span><span class="p">)</span> <span class="nf">notify</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">u</span> <span class="o">*</span><span class="nx">user</span><span class="p">)</span> <span class="nf">notify</span><span class="p">()</span> <span class="p">{</span>
 	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Send email to %s&lt;%s&gt;\n&#34;</span><span class="p">,</span> <span class="nx">u</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">u</span><span class="p">.</span><span class="nx">email</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
 	<span class="nx">ad</span> <span class="o">:=</span> <span class="nx">admin</span> <span class="p">{</span>
 		<span class="nx">user</span><span class="p">:</span> <span class="nx">user</span><span class="p">{</span>
 			<span class="nx">name</span><span class="p">:</span> <span class="s">&#34;John&#34;</span><span class="p">,</span>
 			<span class="nx">email</span><span class="p">:</span> <span class="s">&#34;john@email.com&#34;</span><span class="p">,</span>
-		<span class="p">}</span><span class="p">,</span>
+		<span class="p">},</span>
 		<span class="nx">level</span><span class="p">:</span> <span class="s">&#34;super&#34;</span><span class="p">,</span>
 	<span class="p">}</span>
 	
-	<span class="nx">ad</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nf">notify</span><span class="p">(</span><span class="p">)</span> <span class="c1">//可以直接访问内部类型的方法
-</span><span class="c1"></span>	<span class="nx">ad</span><span class="p">.</span><span class="nf">notify</span><span class="p">(</span><span class="p">)</span> <span class="c1">//内部类型的方法也被提升到外部类型
+	<span class="nx">ad</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nf">notify</span><span class="p">()</span> <span class="c1">//可以直接访问内部类型的方法
+</span><span class="c1"></span>	<span class="nx">ad</span><span class="p">.</span><span class="nf">notify</span><span class="p">()</span> <span class="c1">//内部类型的方法也被提升到外部类型
 </span><span class="c1"></span>	<span class="nf">endNotificationTo</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ad</span><span class="p">)</span> <span class="c1">//由于内部类型的提升, 内部类型实现的接口也被提升到外部类型. 外部类型也可以提供同名的方法实现, 以达到覆盖的效果.
 </span><span class="c1"></span><span class="p">}</span>
 
 <span class="kd">func</span> <span class="nf">sendNotificationTo</span><span class="p">(</span><span class="nx">n</span> <span class="nx">notifier</span><span class="p">)</span> <span class="p">{</span>
-	<span class="nx">n</span><span class="p">.</span><span class="nf">notify</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">n</span><span class="p">.</span><span class="nf">notify</span><span class="p">()</span>
 <span class="p">}</span>
 </code></pre></div><p>如果外部类型做了方法覆盖, 对内部类型方法的访问也还是会继续执行内部类型的方法</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">ad</span> <span class="o">*</span><span class="nx">admin</span><span class="p">)</span> <span class="nf">notify</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">ad</span> <span class="o">*</span><span class="nx">admin</span><span class="p">)</span> <span class="nf">notify</span><span class="p">()</span> <span class="p">{</span>
     <span class="o">...</span>
 <span class="p">}</span>
-<span class="nx">ad</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nf">notify</span><span class="p">(</span><span class="p">)</span> <span class="c1">//执行内部类型的方法
-</span><span class="c1"></span><span class="nx">ad</span><span class="p">.</span><span class="nf">notify</span><span class="p">(</span><span class="p">)</span> <span class="c1">//执行外部类型的方法
+<span class="nx">ad</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nf">notify</span><span class="p">()</span> <span class="c1">//执行内部类型的方法
+</span><span class="c1"></span><span class="nx">ad</span><span class="p">.</span><span class="nf">notify</span><span class="p">()</span> <span class="c1">//执行外部类型的方法
 </span></code></pre></div><h3 id="公开或未公开的标识符">公开或未公开的标识符</h3>
 <p>使用规则来控制声明后的标识符的可见性. Go语言支持从包里公开或者隐藏表示. 这里的标识符包括类型, 变量, 方法.
 当一个标识符的名字是小写开头的时候, 这个标识符就是未公开的. 如果是大写字母开头就是公开的, 包外的代码可见.</p>
@@ -414,7 +414,7 @@
     <span class="k">return</span> <span class="nx">user</span><span class="p">{</span><span class="nx">name</span><span class="p">,</span> <span class="nx">email</span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">-</span>
+<span class="o">---------------</span>
 <span class="kn">package</span> <span class="nx">another</span>
 <span class="c1">//在另一个包里使用User类型
 </span><span class="c1"></span><span class="nx">u</span> <span class="o">:=</span> <span class="nx">user</span><span class="p">{</span>
@@ -429,13 +429,13 @@
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">counter</span>
 <span class="kd">type</span> <span class="nx">alertCounter</span> <span class="kt">int</span> <span class="c1">//未公开类型
-</span><span class="c1"></span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">-</span>
+</span><span class="c1"></span><span class="o">---------------</span>
 
 <span class="kn">package</span> <span class="nx">another</span>
 <span class="kn">import</span> <span class="p">(</span>
     <span class="s">&#34;fmt&#34;</span>
 <span class="p">)</span>
-<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
     <span class="c1">//c = counter.alertCounter 编译会报错, 无法访问未公开标识符
 </span><span class="c1"></span>    <span class="nx">c</span> <span class="o">:=</span> <span class="nx">counter</span><span class="p">.</span><span class="nf">alertCounter</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
     <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">counter</span><span class="p">)</span> <span class="c1">// 20

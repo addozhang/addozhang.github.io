@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 <body>
@@ -514,19 +514,19 @@
 <p>加入<code>spring-cloud-starter-netflix-ribbon</code>依赖</p>
 <h3 id="代码中使用ribbonclient注解">代码中使用RibbonClient注解</h3>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span> 
-<span class="nd">@RibbonClient</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;foo&#34;</span><span class="o">,</span> <span class="n">configuration</span> <span class="o">=</span> <span class="n">FooConfiguration</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestConfiguration</span> <span class="o">{</span><span class="o">}</span>
+<span class="nd">@RibbonClient</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;foo&#34;</span><span class="o">,</span> <span class="n">configuration</span> <span class="o">=</span> <span class="n">FooConfiguration</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestConfiguration</span> <span class="o">{}</span>
 </code></pre></div><div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span> <span class="kd">protected</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">FooConfiguration</span> <span class="o">{</span>
 
     <span class="nd">@Bean</span> 
-    <span class="kd">public</span> <span class="n">ZonePreferenceServerListFilter</span> <span class="nf">serverListFilter</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">ZonePreferenceServerListFilter</span> <span class="n">filter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZonePreferenceServerListFilter</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-        <span class="n">filter</span><span class="o">.</span><span class="na">setZone</span><span class="o">(</span><span class="s">&#34;myTestZone&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">ZonePreferenceServerListFilter</span> <span class="nf">serverListFilter</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">ZonePreferenceServerListFilter</span> <span class="n">filter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZonePreferenceServerListFilter</span><span class="o">();</span>
+        <span class="n">filter</span><span class="o">.</span><span class="na">setZone</span><span class="o">(</span><span class="s">&#34;myTestZone&#34;</span><span class="o">);</span>
         <span class="k">return</span> <span class="n">filter</span><span class="o">;</span> 
     <span class="o">}</span>
 
     <span class="nd">@Bean</span> 
-    <span class="kd">public</span> <span class="n">IPing</span> <span class="nf">ribbonPing</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span> 
-        <span class="k">return</span> <span class="k">new</span> <span class="n">PingUrl</span><span class="o">(</span><span class="o">)</span><span class="o">;</span> 
+    <span class="kd">public</span> <span class="n">IPing</span> <span class="nf">ribbonPing</span><span class="o">()</span> <span class="o">{</span> 
+        <span class="k">return</span> <span class="k">new</span> <span class="n">PingUrl</span><span class="o">();</span> 
     <span class="o">}</span>
 
 <span class="o">}</span>
@@ -598,7 +598,7 @@
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    <p>最近开始客串运维做CI/CD的规划设计, 主要是基于'Pipeline as Code in Jenkins&rsquo;. 整理了下思路和技术点, 慢慢的写.</p>
+                    <p>最近开始客串运维做CI/CD的规划设计, 主要是基于&rsquo;Pipeline as Code in Jenkins&rsquo;. 整理了下思路和技术点, 慢慢的写.</p>
 <p>这一篇是关于基于角色的授权策略, 用的是<code>Role-Based Authorization Strategy Plugin</code>.</p>
 <p>授权在CI/CD流程中比较常见, 比如我们只让某些特定用户才可以构建Pre-Release的Job. 而更高级的Release发布, 又会需要某些用户的审批才可以进行. 需要授权时, 可能还需要发邮件提醒用户.</p>
 <p>UI上如何使用就不提了, 这里只说Pipeline as Code. 后面的几篇也会是这个背景.</p>

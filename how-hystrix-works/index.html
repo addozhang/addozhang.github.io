@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -94,9 +94,9 @@
 <p>构建<code>HystrixCommand</code>或者<code>HystrixObservableCommand</code>对象</p>
 <p>第一步是构建一个HystrixCommand或HystrixObservableCommand对象来代表对依赖服务所做的请求。 将在请求发生时将需要的任何参数传递给构造函数。</p>
 <p>如果依赖的服务预期会返回单一的响应, 构造一个<code>HystrixCommand</code>对象, 例如:</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="n">HystrixCommand</span> <span class="n">command</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HystrixCommand</span><span class="o">(</span><span class="n">arg1</span><span class="o">,</span> <span class="n">arg2</span><span class="o">)</span><span class="o">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="n">HystrixCommand</span> <span class="n">command</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HystrixCommand</span><span class="o">(</span><span class="n">arg1</span><span class="o">,</span> <span class="n">arg2</span><span class="o">);</span>
 </code></pre></div><p>如果依赖的服务预期会返回一个发出响应的Observable对象, 则构造一个<code>HystrixObservableCommand</code>对象, 例如:</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="n">HystrixObservableCommand</span> <span class="n">command</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HystrixObservableCommand</span><span class="o">(</span><span class="n">arg1</span><span class="o">,</span> <span class="n">arg2</span><span class="o">)</span><span class="o">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="n">HystrixObservableCommand</span> <span class="n">command</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HystrixObservableCommand</span><span class="o">(</span><span class="n">arg1</span><span class="o">,</span> <span class="n">arg2</span><span class="o">);</span>
 </code></pre></div></li>
 <li>
 <p>执行Command</p>

@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -90,22 +90,22 @@
             <p>假设已经安装好Docker</p>
 <h3 id="springboot应用">Springboot应用</h3>
 <h4 id="pom添加依赖和构建插件">pom添加依赖和构建插件</h4>
-<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;parent</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;groupId</span><span class="nt">&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
-    <span class="nt">&lt;artifactId</span><span class="nt">&gt;</span>spring-boot-starter-parent<span class="nt">&lt;/artifactId&gt;</span>
-    <span class="nt">&lt;version</span><span class="nt">&gt;</span>1.5.3.RELEASE<span class="nt">&lt;/version&gt;</span>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;parent&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-parent<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>1.5.3.RELEASE<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/parent&gt;</span>
-<span class="nt">&lt;dependencies</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;dependency</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;groupId</span><span class="nt">&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
-        <span class="nt">&lt;artifactId</span><span class="nt">&gt;</span>spring-boot-starter-web<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;dependencies&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+        <span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+        <span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-web<span class="nt">&lt;/artifactId&gt;</span>
     <span class="nt">&lt;/dependency&gt;</span>
 <span class="nt">&lt;/dependencies&gt;</span>
-<span class="nt">&lt;build</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;plugins</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;plugin</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;groupId</span><span class="nt">&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
-            <span class="nt">&lt;artifactId</span><span class="nt">&gt;</span>spring-boot-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;build&gt;</span>
+    <span class="nt">&lt;plugins&gt;</span>
+        <span class="nt">&lt;plugin&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>spring-boot-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
         <span class="nt">&lt;/plugin&gt;</span>
     <span class="nt">&lt;/plugins&gt;</span>
 <span class="nt">&lt;/build&gt;</span>
@@ -127,12 +127,12 @@
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Application</span> <span class="o">{</span>
   
     <span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">&#34;/&#34;</span><span class="o">)</span>
-    <span class="kd">public</span> <span class="n">String</span> <span class="nf">home</span><span class="o">(</span><span class="o">)</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">home</span><span class="o">(){</span>
         <span class="k">return</span> <span class="s">&#34;Hello world!&#34;</span><span class="o">;</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">SpringApplication</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">Application</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">args</span><span class="o">)</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">SpringApplication</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">Application</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">args</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div><h4 id="应用构建">应用构建</h4>
@@ -154,7 +154,7 @@ RUN yum install -y curl<span class="p">;</span> yum upgrade -y<span class="p">;<
 
 ENV JDK_VERSION 8u11
 ENV JDK_BUILD_VERSION b12
-RUN curl -LO <span class="s2">&#34;</span><span class="s2">http://download.oracle.com/otn-pub/java/jdk/</span><span class="nv">$JDK_VERSION</span><span class="s2">-</span><span class="nv">$JDK_BUILD_VERSION</span><span class="s2">/jdk-</span><span class="nv">$JDK_VERSION</span><span class="s2">-linux-x64.rpm</span><span class="s2">&#34;</span> -H <span class="s1">&#39;Cookie: oraclelicense=accept-securebackup-cookie&#39;</span> <span class="o">&amp;&amp;</span> rpm -i jdk-<span class="nv">$JDK_VERSION</span>-linux-x64.rpm<span class="p">;</span> rm -f jdk-<span class="nv">$JDK_VERSION</span>-linux-x64.rpm<span class="p">;</span> yum clean all
+RUN curl -LO <span class="s2">&#34;http://download.oracle.com/otn-pub/java/jdk/</span><span class="nv">$JDK_VERSION</span><span class="s2">-</span><span class="nv">$JDK_BUILD_VERSION</span><span class="s2">/jdk-</span><span class="nv">$JDK_VERSION</span><span class="s2">-linux-x64.rpm&#34;</span> -H <span class="s1">&#39;Cookie: oraclelicense=accept-securebackup-cookie&#39;</span> <span class="o">&amp;&amp;</span> rpm -i jdk-<span class="nv">$JDK_VERSION</span>-linux-x64.rpm<span class="p">;</span> rm -f jdk-<span class="nv">$JDK_VERSION</span>-linux-x64.rpm<span class="p">;</span> yum clean all
 ENV JAVA_HOME /usr/java/default
 
 RUN yum remove curl<span class="p">;</span>  yum clean all

@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -120,13 +120,13 @@
 		<span class="kd">extends</span> <span class="n">SpringFactoryImportSelector</span><span class="o">&lt;</span><span class="n">EnableDiscoveryClient</span><span class="o">&gt;</span> <span class="o">{</span>
 
 	<span class="nd">@Override</span>
-	<span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">isEnabled</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="n">RelaxedPropertyResolver</span><span class="o">(</span><span class="n">getEnvironment</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span>
-				<span class="s">&#34;spring.cloud.discovery.enabled&#34;</span><span class="o">,</span> <span class="n">Boolean</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">Boolean</span><span class="o">.</span><span class="na">TRUE</span><span class="o">)</span><span class="o">;</span>
+	<span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">isEnabled</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">RelaxedPropertyResolver</span><span class="o">(</span><span class="n">getEnvironment</span><span class="o">()).</span><span class="na">getProperty</span><span class="o">(</span>
+				<span class="s">&#34;spring.cloud.discovery.enabled&#34;</span><span class="o">,</span> <span class="n">Boolean</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">Boolean</span><span class="o">.</span><span class="na">TRUE</span><span class="o">);</span>
 	<span class="o">}</span>
 
 	<span class="nd">@Override</span>
-	<span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">hasDefaultFactory</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+	<span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">hasDefaultFactory</span><span class="o">()</span> <span class="o">{</span>
 		<span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
 	<span class="o">}</span>
 
@@ -140,12 +140,12 @@
 
 	<span class="kd">private</span> <span class="n">Class</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">annotationClass</span><span class="o">;</span>
 
-	<span class="kd">protected</span> <span class="nf">SpringFactoryImportSelector</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-		<span class="k">this</span><span class="o">.</span><span class="na">annotationClass</span> <span class="o">=</span> <span class="o">(</span><span class="n">Class</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="o">)</span> <span class="n">GenericTypeResolver</span>
-				<span class="o">.</span><span class="na">resolveTypeArgument</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">SpringFactoryImportSelector</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">;</span>
+	<span class="kd">protected</span> <span class="nf">SpringFactoryImportSelector</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">annotationClass</span> <span class="o">=</span> <span class="o">(</span><span class="n">Class</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;)</span> <span class="n">GenericTypeResolver</span>
+				<span class="o">.</span><span class="na">resolveTypeArgument</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">(),</span> <span class="n">SpringFactoryImportSelector</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 	<span class="o">}</span>
-	<span class="kd">public</span> <span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="nf">selectImports</span><span class="o">(</span><span class="n">AnnotationMetadata</span> <span class="n">metadata</span><span class="o">)</span> <span class="o">{</span>
-	       <span class="o">.</span><span class="o">.</span><span class="o">.</span>
+	<span class="kd">public</span> <span class="n">String</span><span class="o">[]</span> <span class="nf">selectImports</span><span class="o">(</span><span class="n">AnnotationMetadata</span> <span class="n">metadata</span><span class="o">)</span> <span class="o">{</span>
+	       <span class="o">...</span>
 	<span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div><p>这里只截取了部分变量和方法
@@ -172,7 +172,7 @@ org.springframework.cloud.netflix.eureka.EurekaDiscoveryClientConfiguration
 <span class="nd">@ConditionalOnProperty</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&#34;eureka.client.enabled&#34;</span><span class="o">,</span> <span class="n">matchIfMissing</span> <span class="o">=</span> <span class="kc">true</span><span class="o">)</span>
 <span class="nd">@CommonsLog</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">EurekaDiscoveryClientConfiguration</span> <span class="kd">implements</span> <span class="n">SmartLifecycle</span><span class="o">,</span> <span class="n">Ordered</span> <span class="o">{</span>
-        <span class="o">.</span><span class="o">.</span><span class="o">.</span>
+        <span class="o">...</span>
 <span class="o">}</span>
 </code></pre></div>
         </div>

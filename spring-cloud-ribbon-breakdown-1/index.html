@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -93,19 +93,19 @@
 <p>加入<code>spring-cloud-starter-netflix-ribbon</code>依赖</p>
 <h3 id="代码中使用ribbonclient注解">代码中使用RibbonClient注解</h3>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span> 
-<span class="nd">@RibbonClient</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;foo&#34;</span><span class="o">,</span> <span class="n">configuration</span> <span class="o">=</span> <span class="n">FooConfiguration</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestConfiguration</span> <span class="o">{</span><span class="o">}</span>
+<span class="nd">@RibbonClient</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;foo&#34;</span><span class="o">,</span> <span class="n">configuration</span> <span class="o">=</span> <span class="n">FooConfiguration</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestConfiguration</span> <span class="o">{}</span>
 </code></pre></div><div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span> <span class="kd">protected</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">FooConfiguration</span> <span class="o">{</span>
 
     <span class="nd">@Bean</span> 
-    <span class="kd">public</span> <span class="n">ZonePreferenceServerListFilter</span> <span class="nf">serverListFilter</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">ZonePreferenceServerListFilter</span> <span class="n">filter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZonePreferenceServerListFilter</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-        <span class="n">filter</span><span class="o">.</span><span class="na">setZone</span><span class="o">(</span><span class="s">&#34;myTestZone&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">ZonePreferenceServerListFilter</span> <span class="nf">serverListFilter</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">ZonePreferenceServerListFilter</span> <span class="n">filter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZonePreferenceServerListFilter</span><span class="o">();</span>
+        <span class="n">filter</span><span class="o">.</span><span class="na">setZone</span><span class="o">(</span><span class="s">&#34;myTestZone&#34;</span><span class="o">);</span>
         <span class="k">return</span> <span class="n">filter</span><span class="o">;</span> 
     <span class="o">}</span>
 
     <span class="nd">@Bean</span> 
-    <span class="kd">public</span> <span class="n">IPing</span> <span class="nf">ribbonPing</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span> 
-        <span class="k">return</span> <span class="k">new</span> <span class="n">PingUrl</span><span class="o">(</span><span class="o">)</span><span class="o">;</span> 
+    <span class="kd">public</span> <span class="n">IPing</span> <span class="nf">ribbonPing</span><span class="o">()</span> <span class="o">{</span> 
+        <span class="k">return</span> <span class="k">new</span> <span class="n">PingUrl</span><span class="o">();</span> 
     <span class="o">}</span>
 
 <span class="o">}</span>

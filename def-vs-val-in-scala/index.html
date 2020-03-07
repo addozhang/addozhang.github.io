@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -94,41 +94,41 @@
 </blockquote>
 <h2 id="直观的例子">直观的例子：</h2>
 <div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="c1">//注释的行为REPL输出
-</span><span class="c1"></span><span class="k">def</span> <span class="n">test</span><span class="k">:</span> <span class="o">(</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="nc">Int</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="c1"></span><span class="k">def</span> <span class="n">test</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="nc">Int</span> <span class="k">=</span> <span class="o">{</span>
     <span class="n">println</span><span class="o">(</span><span class="s">&#34;def called&#34;</span><span class="o">)</span>
     <span class="k">val</span> <span class="n">r</span> <span class="k">=</span> <span class="n">util</span><span class="o">.</span><span class="nc">Random</span><span class="o">.</span><span class="n">nextInt</span>
-    <span class="o">(</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">r</span>
+    <span class="o">()</span> <span class="k">=&gt;</span> <span class="n">r</span>
 <span class="o">}</span>
 <span class="c1">//test: () =&gt; Int
-</span><span class="c1"></span><span class="n">test</span><span class="o">(</span><span class="o">)</span>
+</span><span class="c1"></span><span class="n">test</span><span class="o">()</span>
 <span class="c1">//def called
-</span><span class="c1"></span><span class="c1">//res82: Int = -950077410
+</span><span class="c1">//res82: Int = -950077410
 </span><span class="c1"></span>
-<span class="n">test</span><span class="o">(</span><span class="o">)</span>
+<span class="n">test</span><span class="o">()</span>
 <span class="c1">//def called
-</span><span class="c1"></span><span class="c1">//res83: Int = 1027028032
+</span><span class="c1">//res83: Int = 1027028032
 </span><span class="c1"></span>
-<span class="k">val</span> <span class="n">test</span><span class="k">:</span> <span class="o">(</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="nc">Int</span> <span class="k">=</span> <span class="o">{</span>
+<span class="k">val</span> <span class="n">test</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="nc">Int</span> <span class="k">=</span> <span class="o">{</span>
     <span class="n">println</span><span class="o">(</span><span class="s">&#34;def called&#34;</span><span class="o">)</span>
     <span class="k">val</span> <span class="n">r</span> <span class="k">=</span> <span class="n">util</span><span class="o">.</span><span class="nc">Random</span><span class="o">.</span><span class="n">nextInt</span>
-    <span class="o">(</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">r</span>
+    <span class="o">()</span> <span class="k">=&gt;</span> <span class="n">r</span>
 <span class="o">}</span>
 <span class="c1">//def called
-</span><span class="c1"></span><span class="c1">//test: () =&gt; Int = $$Lambda$1382/338526071@42f2515d
+</span><span class="c1">//test: () =&gt; Int = $$Lambda$1382/338526071@42f2515d
 </span><span class="c1"></span>
-<span class="n">test</span><span class="o">(</span><span class="o">)</span>
+<span class="n">test</span><span class="o">()</span>
 <span class="c1">//res84: Int = 300588352
-</span><span class="c1"></span><span class="n">test</span><span class="o">(</span><span class="o">)</span>
+</span><span class="c1"></span><span class="n">test</span><span class="o">()</span>
 <span class="c1">//res84: Int = 300588352
 </span></code></pre></div><blockquote>
 <p>def在方法定义的时候除了新的方法没有任何输出；之后每次调用的时候都会执行一次，而且是每次调用都获得一个新的方法（random值不同）</p>
 <p>val在方法定义的时候除了新的方法，还会执行并获得一个方法；之后每次调用都只是执行了定义的时候获得的方法（() =&gt; r，r值固定）</p>
 </blockquote>
 <h3 id="进阶">进阶</h3>
-<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">def</span> <span class="n">timer</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span><span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">def</span> <span class="n">timer</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
   <span class="k">def</span> <span class="n">now</span> <span class="k">=</span> <span class="nc">System</span><span class="o">.</span><span class="n">currentTimeMillis</span>
   <span class="k">val</span> <span class="n">start</span> <span class="k">=</span> <span class="n">now</span><span class="o">;</span> <span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="n">f</span><span class="o">;</span> <span class="k">val</span> <span class="n">end</span> <span class="k">=</span> <span class="n">now</span>
-  <span class="n">println</span><span class="o">(</span><span class="s">s&#34;</span><span class="s">Executed int </span><span class="si">${</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="si">}</span><span class="s"> ms</span><span class="s">&#34;</span><span class="o">)</span>
+  <span class="n">println</span><span class="o">(</span><span class="s">s&#34;Executed int </span><span class="si">${</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="si">}</span><span class="s"> ms&#34;</span><span class="o">)</span>
   <span class="n">a</span>
 <span class="o">}</span>
 

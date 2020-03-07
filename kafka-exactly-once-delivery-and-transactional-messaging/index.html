@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -113,7 +113,7 @@
 </span><span class="cm">   * @throws IllegalStateException if the TransactionalId for the producer is not set
 </span><span class="cm">   *         in the configuration.
 </span><span class="cm">   */</span>
-  <span class="kt">void</span> <span class="nf">initTransactions</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IllegalStateException</span><span class="o">;</span>
+  <span class="kt">void</span> <span class="nf">initTransactions</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IllegalStateException</span><span class="o">;</span>
    
   <span class="cm">/**
 </span><span class="cm">   * Should be called before the start of each new transaction.
@@ -121,7 +121,7 @@
 </span><span class="cm">   * @throws ProducerFencedException if another producer is with the same
 </span><span class="cm">   *         transactional.id is active.
 </span><span class="cm">   */</span>
-  <span class="kt">void</span> <span class="nf">beginTransaction</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ProducerFencedException</span><span class="o">;</span>
+  <span class="kt">void</span> <span class="nf">beginTransaction</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">ProducerFencedException</span><span class="o">;</span>
    
   <span class="cm">/**
 </span><span class="cm">   * Sends a list of consumed offsets to the consumer group coordinator, and also marks
@@ -143,7 +143,7 @@
 </span><span class="cm">   * @throws ProducerFencedException if another producer is with the same
 </span><span class="cm">   *         transactional.id is active.
 </span><span class="cm">   */</span>
-  <span class="kt">void</span> <span class="nf">commitTransaction</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ProducerFencedException</span><span class="o">;</span>
+  <span class="kt">void</span> <span class="nf">commitTransaction</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">ProducerFencedException</span><span class="o">;</span>
    
   <span class="cm">/**
 </span><span class="cm">   * Aborts the ongoing transaction.
@@ -153,7 +153,7 @@
 </span><span class="cm"> 
 </span><span class="cm"> 
 </span><span class="cm">   */</span>
-  <span class="kt">void</span> <span class="nf">abortTransaction</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ProducerFencedException</span><span class="o">;</span>
+  <span class="kt">void</span> <span class="nf">abortTransaction</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">ProducerFencedException</span><span class="o">;</span>
  
  
   <span class="cm">/**
@@ -163,25 +163,25 @@
 </span><span class="cm">   * @return A future which will eventually contain the response information
 </span><span class="cm">   *
 </span><span class="cm">   */</span>
-  <span class="kd">public</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">RecordMetadata</span><span class="o">&gt;</span> <span class="nf">send</span><span class="o">(</span><span class="n">ProducerRecord</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="n">record</span><span class="o">)</span><span class="o">;</span>
+  <span class="kd">public</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">RecordMetadata</span><span class="o">&gt;</span> <span class="nf">send</span><span class="o">(</span><span class="n">ProducerRecord</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="n">record</span><span class="o">);</span>
  
   <span class="cm">/**
 </span><span class="cm">   * Send a record and invoke the given callback when the record has been acknowledged by the server
 </span><span class="cm">   */</span>
-  <span class="kd">public</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">RecordMetadata</span><span class="o">&gt;</span> <span class="nf">send</span><span class="o">(</span><span class="n">ProducerRecord</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="n">record</span><span class="o">,</span> <span class="n">Callback</span> <span class="n">callback</span><span class="o">)</span><span class="o">;</span>
+  <span class="kd">public</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">RecordMetadata</span><span class="o">&gt;</span> <span class="nf">send</span><span class="o">(</span><span class="n">ProducerRecord</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="n">record</span><span class="o">,</span> <span class="n">Callback</span> <span class="n">callback</span><span class="o">);</span>
 <span class="o">}</span>
 </code></pre></div><h3 id="outofsequenceexception">OutOfSequenceException</h3>
 <p>如果broker检测到数据丢失，生产者将抛出OutOfOrderSequenceException。 换句话说，如果它接收到大于其预期的序列的序列号。 未来将返回此异常，并传递给回调（如果有）。 这是一个致命的异常，新的Producer方法如send，beginTransaction，commitTransaction等将会抛出IlegalStateException。</p>
 <h3 id="应用示例">应用示例</h3>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">KafkaTransactionsExample</span> <span class="o">{</span>
   
-  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[</span><span class="o">]</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">KafkaConsumer</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">consumer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KafkaConsumer</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="n">consumerConfig</span><span class="o">)</span><span class="o">;</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[])</span> <span class="o">{</span>
+    <span class="n">KafkaConsumer</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">consumer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KafkaConsumer</span><span class="o">&lt;&gt;(</span><span class="n">consumerConfig</span><span class="o">);</span>
  
  
     <span class="c1">// Note that the ‘transactional.id’ configuration _must_ be specified in the
 </span><span class="c1"></span>    <span class="c1">// producer config in order to use transactions.
-</span><span class="c1"></span>    <span class="n">KafkaProducer</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">producer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KafkaProducer</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="n">producerConfig</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>    <span class="n">KafkaProducer</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">producer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KafkaProducer</span><span class="o">&lt;&gt;(</span><span class="n">producerConfig</span><span class="o">);</span>
  
     <span class="c1">// We need to initialize transactions once per producer instance. To use transactions,
 </span><span class="c1"></span>    <span class="c1">// it is assumed that the application id is specified in the config with the key
@@ -194,23 +194,23 @@
 </span><span class="c1"></span>    <span class="c1">// The response indicates success or failure. Some failures are irrecoverable and will
 </span><span class="c1"></span>    <span class="c1">// require a new producer  instance. See the documentation for TransactionMetadata for a
 </span><span class="c1"></span>    <span class="c1">// list of error codes.
-</span><span class="c1"></span>    <span class="n">producer</span><span class="o">.</span><span class="na">initTransactions</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>    <span class="n">producer</span><span class="o">.</span><span class="na">initTransactions</span><span class="o">();</span>
      
     <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
-      <span class="n">ConsumerRecords</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">records</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="na">poll</span><span class="o">(</span><span class="n">CONSUMER_POLL_TIMEOUT</span><span class="o">)</span><span class="o">;</span>
-      <span class="k">if</span> <span class="o">(</span><span class="o">!</span><span class="n">records</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">ConsumerRecords</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">records</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="na">poll</span><span class="o">(</span><span class="n">CONSUMER_POLL_TIMEOUT</span><span class="o">);</span>
+      <span class="k">if</span> <span class="o">(!</span><span class="n">records</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
         <span class="c1">// Start a new transaction. This will begin the process of batching the consumed
 </span><span class="c1"></span>        <span class="c1">// records as well
 </span><span class="c1"></span>        <span class="c1">// as an records produced as a result of processing the input records.
 </span><span class="c1"></span>        <span class="c1">//
 </span><span class="c1"></span>        <span class="c1">// We need to check the response to make sure that this producer is able to initiate
 </span><span class="c1"></span>        <span class="c1">// a new transaction.
-</span><span class="c1"></span>        <span class="n">producer</span><span class="o">.</span><span class="na">beginTransaction</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>        <span class="n">producer</span><span class="o">.</span><span class="na">beginTransaction</span><span class="o">();</span>
          
         <span class="c1">// Process the input records and send them to the output topic(s).
-</span><span class="c1"></span>        <span class="n">List</span><span class="o">&lt;</span><span class="n">ProducerRecord</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">outputRecords</span> <span class="o">=</span> <span class="n">processRecords</span><span class="o">(</span><span class="n">records</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>        <span class="n">List</span><span class="o">&lt;</span><span class="n">ProducerRecord</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">outputRecords</span> <span class="o">=</span> <span class="n">processRecords</span><span class="o">(</span><span class="n">records</span><span class="o">);</span>
         <span class="k">for</span> <span class="o">(</span><span class="n">ProducerRecord</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">outputRecord</span> <span class="o">:</span> <span class="n">outputRecords</span><span class="o">)</span> <span class="o">{</span>
-          <span class="n">producer</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="n">outputRecord</span><span class="o">)</span><span class="o">;</span>
+          <span class="n">producer</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="n">outputRecord</span><span class="o">);</span>
         <span class="o">}</span>
          
         <span class="c1">// To ensure that the consumed and produced messages are batched, we need to commit
@@ -219,13 +219,13 @@
 </span><span class="c1"></span>        <span class="c1">//
 </span><span class="c1"></span>        <span class="c1">// If this returns an error, we should abort the transaction.
 </span><span class="c1"></span>         
-        <span class="n">sendOffsetsResult</span> <span class="o">=</span> <span class="n">producer</span><span class="o">.</span><span class="na">sendOffsetsToTransaction</span><span class="o">(</span><span class="n">getUncommittedOffsets</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">sendOffsetsResult</span> <span class="o">=</span> <span class="n">producer</span><span class="o">.</span><span class="na">sendOffsetsToTransaction</span><span class="o">(</span><span class="n">getUncommittedOffsets</span><span class="o">());</span>
          
       
         <span class="c1">// Now that we have consumed, processed, and produced a batch of messages, let&#39;s
 </span><span class="c1"></span>        <span class="c1">// commit the results.
 </span><span class="c1"></span>        <span class="c1">// If this does not report success, then the transaction will be rolled back.
-</span><span class="c1"></span>        <span class="n">producer</span><span class="o">.</span><span class="na">endTransaction</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>        <span class="n">producer</span><span class="o">.</span><span class="na">endTransaction</span><span class="o">();</span>
       <span class="o">}</span>
     <span class="o">}</span>
   <span class="o">}</span>

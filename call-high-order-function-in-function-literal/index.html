@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.62.2" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -124,18 +124,18 @@
 </code></pre></div><h2 id="参数组">参数组</h2>
 <p>parameter groups 函数的参数列表的另一种形式：分解并使用小括号分隔。</p>
 <p>stringSafeOp的参数组表示：</p>
-<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">def</span> <span class="n">stringSafeOp</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=&gt;</span> <span class="nc">String</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">def</span> <span class="n">stringSafeOp</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)(</span><span class="n">f</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=&gt;</span> <span class="nc">String</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
     <span class="k">if</span> <span class="o">(</span> <span class="n">s</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="n">f</span><span class="o">(</span><span class="n">s</span><span class="o">)</span> <span class="k">else</span> <span class="n">s</span>
 <span class="o">}</span>
 <span class="c1">//stringSafeOp: (s: String)(f: String =&gt; String)String
 </span></code></pre></div><h2 id="用函数字面量块调用高阶函数">用函数字面量块调用高阶函数</h2>
 <p>组合上面的特性，就有了<strong>用函数字面量块调用高阶函数</strong>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">val</span> <span class="n">newStringSafeOp</span> <span class="k">=</span> <span class="n">stringSafeOp</span><span class="o">(</span><span class="s">&#34;Ready&#34;</span><span class="o">)</span><span class="o">{</span><span class="k">_</span><span class="o">.</span><span class="n">reverse</span><span class="o">}</span>
+<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">val</span> <span class="n">newStringSafeOp</span> <span class="k">=</span> <span class="n">stringSafeOp</span><span class="o">(</span><span class="s">&#34;Ready&#34;</span><span class="o">){</span><span class="k">_</span><span class="o">.</span><span class="n">reverse</span><span class="o">}</span>
 </code></pre></div><h3 id="进阶">进阶</h3>
-<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">def</span> <span class="n">timer</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span><span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-scala" data-lang="scala"><span class="k">def</span> <span class="n">timer</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
   <span class="k">def</span> <span class="n">now</span> <span class="k">=</span> <span class="nc">System</span><span class="o">.</span><span class="n">currentTimeMillis</span>
   <span class="k">val</span> <span class="n">start</span> <span class="k">=</span> <span class="n">now</span><span class="o">;</span> <span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="n">f</span><span class="o">;</span> <span class="k">val</span> <span class="n">end</span> <span class="k">=</span> <span class="n">now</span>
-  <span class="n">println</span><span class="o">(</span><span class="s">s&#34;</span><span class="s">Executed int </span><span class="si">${</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="si">}</span><span class="s"> ms</span><span class="s">&#34;</span><span class="o">)</span>
+  <span class="n">println</span><span class="o">(</span><span class="s">s&#34;Executed int </span><span class="si">${</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="si">}</span><span class="s"> ms&#34;</span><span class="o">)</span>
   <span class="n">a</span>
 <span class="o">}</span>
 
