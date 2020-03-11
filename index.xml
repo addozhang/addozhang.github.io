@@ -6,10 +6,19 @@
     <description>Recent content on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 11 Mar 2020 20:41:58 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 11 Mar 2020 23:00:27 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Go Docker 镜像进阶: 精简镜像</title>
+      <link>https://atbug.com/build-minimal-docker-image-for-go-app/</link>
+      <pubDate>Wed, 11 Mar 2020 23:00:27 +0800</pubDate>
+      
+      <guid>https://atbug.com/build-minimal-docker-image-for-go-app/</guid>
+      <description>问题: 入门到生产级的差距 昨天的文章《为 Go 应用创建 Docker 镜像》, 算是入门级的, 并不适用于生产级. 为什么? $ docker images REPOSITORY TAG IMAGE ID CREATED SIZE addozhang/golang-hello-world latest 4cce1292a87a 4 seconds ago 813MB 整个镜像的</description>
+    </item>
     
     <item>
       <title>为 Go 应用创建 Docker 镜像</title>

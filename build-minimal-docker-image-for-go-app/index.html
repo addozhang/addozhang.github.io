@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>为 Go 应用创建 Docker 镜像 // 乱世浮生</title>
+    <title>Go Docker 镜像进阶: 精简镜像 // 乱世浮生</title>
 
     <meta charset="utf-8">
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -10,11 +10,11 @@
     <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
     <meta name="keywords" content="Java,Spring Cloud,Architecture,">
 
-        <meta property="og:title" content="为 Go 应用创建 Docker 镜像" />
+        <meta property="og:title" content="Go Docker 镜像进阶: 精简镜像" />
     <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="zh-cn" />
-    <meta property="og:url" content="https://atbug.com/build-docker-image-for-go-app/" />
+    <meta property="og:url" content="https://atbug.com/build-minimal-docker-image-for-go-app/" />
     
 
     <link rel="shortcut icon" href="../favicon.ico">
@@ -62,12 +62,12 @@
     <div class="article-inner">
         
         <header class="article-header">
-            <h1 class="article-title" itemprop="name">为 Go 应用创建 Docker 镜像</h1>
+            <h1 class="article-title" itemprop="name">Go Docker 镜像进阶: 精简镜像</h1>
         </header>
         
         <div class="article-meta">
-            <a href="../build-docker-image-for-go-app/" class="article-date">
-                <time datetime='2020-03-11T20:41:58.000&#43;08:00' itemprop="datePublished">2020-03-11</time>
+            <a href="../build-minimal-docker-image-for-go-app/" class="article-date">
+                <time datetime='2020-03-11T23:00:27.000&#43;08:00' itemprop="datePublished">2020-03-11</time>
             </a>
             
             
@@ -82,45 +82,72 @@
             
             
             <div class="article-comment-link-wrap">
-                <a href="../build-docker-image-for-go-app/#disqus_thread" class="article-comment-link">Comments</a>
+                <a href="../build-minimal-docker-image-for-go-app/#disqus_thread" class="article-comment-link">Comments</a>
             </div>
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/03/11/15839304511808.jpg" alt=""></p>
-<p>嗯嗯, 最近开始用 Golang 了.</p>
-<p>今天需要为 Go 应用创建对象, 看了下官方博客. 拿 hello world 做个测试.</p>
-<p>使用下面的命令创建个新的项目</p>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ mkdir -p <span class="nv">$GOPATH</span>/src/github.com/addozhang/golang-hello-world <span class="o">&amp;&amp;</span> <span class="nb">cd</span> <span class="s2">&#34;</span><span class="nv">$_</span><span class="s2">&#34;</span>
-$ go mod init github.com/addozhang/golang-hello-world
-go: creating new go.mod: module github.com/addozhang/golang-hello-world
-$ cat <span class="s">&lt;&lt; EOF &gt; main.go
-</span><span class="s">package main
-</span><span class="s">
-</span><span class="s">import &#34;fmt&#34;
-</span><span class="s">
-</span><span class="s">func main() {
-</span><span class="s">	fmt.Println(&#34;Hello world&#34;)
-</span><span class="s">}
-</span><span class="s">EOF</span>
+            <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/03/11/15839387687383.jpg" alt=""></p>
+<h3 id="问题-入门到生产级的差距">问题: 入门到生产级的差距</h3>
+<p>昨天的文章《为 Go 应用创建 Docker 镜像》, 算是入门级的, 并不适用于生产级. 为什么?</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ docker images
+REPOSITORY                                    TAG                 IMAGE ID            CREATED             SIZE
+addozhang/golang-hello-world                  latest              4cce1292a87a        <span class="m">4</span> seconds ago       813MB
+</code></pre></div><p>整个镜像的大小有 813MB, 这还只有一个简单的 Hello world. 因为其中包含了 Golang 的编译和运行环境. 但是实际生产环境中, 我们并不需要这么多.</p>
+<h3 id="先看结果">先看结果</h3>
+<p>精简之后只有 2.07MB, 而且并不影响运行.</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ docker images
+REPOSITORY                                    TAG                 IMAGE ID            CREATED             SIZE
+addozhang/golang-hello-world                  latest              4cce1292a87a        <span class="m">3</span> minutes ago       813MB
+addozhang/golang-hello-world2                 latest              1da5bb994074        <span class="m">7</span> minutes ago       2.07MB
 
-<span class="c1"># go fmt</span>
-</code></pre></div><p>运行检查一次</p>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ go run main.go
+$ docker run --rm addozhang/golang-hello-world2
 Hello world
-</code></pre></div><p>程序没问题, 下面就是构建镜像了. 创建一个 Dockerfile 文件, 内容如下:</p>
-<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">FROM golang
+</code></pre></div><h3 id="解决方案">解决方案</h3>
+<p>如果做到的? 首先从基础镜像开始, 换成<code>scratch</code><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. 构建时将编译好的文件复制到镜像中</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">FROM scratch
+ADD golang-hello-world /
+CMD [&#34;/golang-hello-world&#34;]
+</code></pre></div><p>假如你是使用<code>go build</code>来编译, 在 Macos 上会遇到如下问题:</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ docker run --rm addozhang/golang-hello-world2
+standard_init_linux.go:211: <span class="nb">exec</span> user process caused <span class="s2">&#34;exec format error&#34;</span>
+</code></pre></div><p>解决方案是<code>CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build</code></p>
+<p>从头来看, 构建出一个精简的镜像, 我们需要:</p>
+<ol>
+<li>运行<code>CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build</code>构建 linux 环境的可执行文件. 该文件并不能在 mac 上运行</li>
+<li>使用<code>docker build</code>进行构建</li>
+</ol>
+<p>这样的操作步骤太麻烦, 还能不能精简一下?</p>
+<h3 id="进阶-使用-docker-的多步构建">进阶: 使用 Docker 的多步构建</h3>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">#build stage
+FROM golang as builder
 
-LABEL Author=&#34;addozhang&#34;
-ADD . /go/src/github.com/addozhang/golang-hello-world
-RUN go install github.com/addozhang/golang-hello-world
-ENTRYPOINT [ &#34;/go/bin/golang-hello-world&#34; ]
-</code></pre></div><p>构建镜像:</p>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ docker build -t addozhang/golang-hello-world .
-</code></pre></div><p>运行镜像:</p>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ docker run --rm addozhang/golang-hello-world:latest
-Hello world
-</code></pre></div><p>运行没问题, 收工</p>
+ENV GO111MODULE=on
+ENV GOPROXY=https://goproxy.io
+
+WORKDIR /app
+
+COPY go.mod .
+RUN go mod download
+
+COPY . .
+
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build
+
+#image stage
+FROM scratch
+COPY --from=builder /app/golang-hello-world /
+CMD [&#34;/golang-hello-world&#34;]
+</code></pre></div><h3 id="参考">参考</h3>
+<p><a href="https://dev.to/plutov/docker-and-go-modules-3kkn">https://dev.to/plutov/docker-and-go-modules-3kkn</a></p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p><code>scratch</code>是一个空的镜像文件 <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
 
         </div>
 
@@ -128,7 +155,19 @@ Hello world
         
         <div class="article-toc" >
             <h3></h3>
-            <nav id="TableOfContents"></nav>
+            <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#问题-入门到生产级的差距">问题: 入门到生产级的差距</a></li>
+        <li><a href="#先看结果">先看结果</a></li>
+        <li><a href="#解决方案">解决方案</a></li>
+        <li><a href="#进阶-使用-docker-的多步构建">进阶: 使用 Docker 的多步构建</a></li>
+        <li><a href="#参考">参考</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
         </div>
         
         
@@ -156,15 +195,9 @@ Hello world
     </div>
     <nav id="article-nav">
     
-    <a href="../build-minimal-docker-image-for-go-app/" id="article-nav-newer" class="article-nav-link-wrap">
-        <div class="article-nav-title"><span>&lt;</span>&nbsp;
-            Go Docker 镜像进阶: 精简镜像
-        </div>
-    </a>
     
-    
-    <a href="../tekton-trigger-practice/" id="article-nav-older" class="article-nav-link-wrap">
-        <div class="article-nav-title">CICD: Tekton Trigger 实战&nbsp;<span>&gt;</span></div>
+    <a href="../build-docker-image-for-go-app/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">为 Go 应用创建 Docker 镜像&nbsp;<span>&gt;</span></div>
     </a>
     
 </nav>
