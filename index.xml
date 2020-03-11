@@ -6,10 +6,19 @@
     <description>Recent content on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 12 Feb 2020 21:30:03 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 11 Mar 2020 20:41:58 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>为 Go 应用创建 Docker 镜像</title>
+      <link>https://atbug.com/build-docker-image-for-go-app/</link>
+      <pubDate>Wed, 11 Mar 2020 20:41:58 +0800</pubDate>
+      
+      <guid>https://atbug.com/build-docker-image-for-go-app/</guid>
+      <description>嗯嗯, 最近开始用 Golang 了. 今天需要为 Go 应用创建对象, 看了下官方博客. 拿 hello world 做个测试. 使用下面的命令创建个新的项目 $ mkdir -p $GOPATH/src/github.com/addozhang/golang-hello-world &amp;amp;&amp;amp; cd &amp;#34;$_&amp;#34; $ go mod init github.com/addozhang/golang-hello-world go: creating new go.mod:</description>
+    </item>
     
     <item>
       <title>CICD: Tekton Trigger 实战</title>
