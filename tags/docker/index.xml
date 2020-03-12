@@ -17,7 +17,7 @@
       <pubDate>Wed, 11 Mar 2020 23:00:27 +0800</pubDate>
       
       <guid>https://atbug.com/build-minimal-docker-image-for-go-app/</guid>
-      <description>问题: 入门到生产级的差距 昨天的文章《为 Go 应用创建 Docker 镜像》, 算是入门级的, 并不适用于生产级. 为什么? $ docker images REPOSITORY TAG IMAGE ID CREATED SIZE addozhang/golang-hello-world latest 4cce1292a87a 4 seconds ago 813MB 整个镜像的</description>
+      <description>​[图片来自 https://www.facebook.com/sequenceprocess/] 问题: 入门到生产级的差距 昨天的文章《为 Go 应用创建 Docker 镜像》, 算是入门级的, 并不适用于生产级. 为什么? $ docker images REPOSITORY TAG IMAGE ID CREATED SIZE addozhang/golang-hello-world latest 4cce1292a87a 4 seconds</description>
     </item>
     
     <item>
