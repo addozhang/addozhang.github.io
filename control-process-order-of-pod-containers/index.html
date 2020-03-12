@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>控制 Pod 内容器的启动顺序 // 乱世浮生</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
+    <meta name="keywords" content="Java,Spring Cloud,Architecture,">
+
+        <meta property="og:title" content="控制 Pod 内容器的启动顺序" />
+    <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh-cn" />
+    <meta property="og:url" content="https://atbug.com/control-process-order-of-pod-containers/" />
+    
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link href="https://atbug.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://atbug.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://atbug.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.65.1" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://atbug.com/">乱世浮生</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="../">Home</a>
+                
+                <a class="main-nav-link" href="../post/">Archives</a>
+                
+                <a class="main-nav-link" href="../tags/">Tags</a>
+                
+                <a class="main-nav-link" href="../categories/">Categories</a>
+                
+                <a class="main-nav-link" href="../about/">About</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">控制 Pod 内容器的启动顺序</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="../control-process-order-of-pod-containers/" class="article-date">
+                <time datetime='2020-03-12T22:05:16.000&#43;08:00' itemprop="datePublished">2020-03-12</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                    
+                </div>
+            </div>
+            
+            
+            <div class="article-comment-link-wrap">
+                <a href="../control-process-order-of-pod-containers/#disqus_thread" class="article-comment-link">Comments</a>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/03/12/15840218660840.jpg" alt=""></p>
+<h2 id="背景">背景</h2>
+<p>众所周知, Kubernetes Pod 内有两种容器: 初始化容器(init container)和应用容器(app container). 其中初始化容器的执行先于应用容器, 并且初始化容器和应用容器的个数分别为 <code>0~n</code> 和 <code>1~n</code>.</p>
+<p>初始化容器会按照顺序执行, 顺序执行的前提是初始化容器始终会运行到完成(completed)状态. 而应用容器恰好相反: 启动顺序随机, 并始终保持运行(running)状态.</p>
+<h2 id="问题">问题</h2>
+<p>工作中有个架构的方案使用到了 sidecar 容器: 将基础组件功能从容器转移到 sidecar 容器中, 其中有个功能是从远程配置中心获取配置并保持实时更新. 保证实时更新没有问题, 但是配置文件需要在 app 启动之前完成初始化.</p>
+<p>对于同为&quot;应用容器&quot;类型的 sidecar 容器来说, 由于容器启动顺序随机而无法做到这一点.</p>
+<p>当时我们给定的方案是增加一个初始化容器进行配置的初始化, 不可避免的我们需要增加一个额外的容器, 即使是这个容器的生命周期非常短.</p>
+<p>追求极致的我们总是对这个额外增加的容器耿耿于怀: 假如能控制应用容器的启动顺序&hellip;</p>
+<h3 id="新发现">新发现</h3>
+<p>近期在研究 CDF (Continuous Delivery Foundation)下的 <a href="https://github.com/tektoncd">Tekton</a>, 其中有个概念是其将流水线(pipeline)中的各个步骤(step)作为应用容器在同一个 Pod 中运行.</p>
+<p>我们都知道流水线中的步骤是按照定义的顺序执行的, 那么 Tekton 是如何保证应用容器的执行顺序的?</p>
+<p>查看 pod 的 manifest 之后发现了下面的容器配置 (这个容器的作用从 git 仓库克隆代码)</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">containers</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="k">args</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- -wait_file<span class="w">
+</span><span class="w">    </span>- /tekton/downward/ready<span class="w">
+</span><span class="w">    </span>- -wait_file_content<span class="w">
+</span><span class="w">    </span>- -post_file<span class="w">
+</span><span class="w">    </span>- /tekton/tools/<span class="m">0</span><span class="w">
+</span><span class="w">    </span>- -termination_path<span class="w">
+</span><span class="w">    </span>- /tekton/termination<span class="w">
+</span><span class="w">    </span>- -entrypoint<span class="w">
+</span><span class="w">    </span>- /ko-app/git-init<span class="w">
+</span><span class="w">    </span>- -<span class="sd">-
+</span><span class="sd">    - -url</span><span class="w">
+</span><span class="w">    </span>- http<span class="p">:</span>//gitlab.nip.io<span class="p">:</span><span class="m">8088</span>/addozhang/tekton-test<span class="w">
+</span><span class="w">    </span>- -revision<span class="w">
+</span><span class="w">    </span>- develop<span class="w">
+</span><span class="w">    </span>- -path<span class="w">
+</span><span class="w">    </span>- /workspace/git-source<span class="w">
+</span><span class="w">    </span><span class="k">command</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- /tekton/tools/entrypoint<span class="w">
+</span></code></pre></div><p>克隆代码的命令是:</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">git-init -url http://gitlab.nip.io:8088/addozhang/tekton-test -revision develop -path /workspace/git-source
+</code></pre></div><p>但是容器的启动命令是<code>/tekton/tools/entrypoint</code>并带上了一坨的参数(此处略过, 后面分析).</p>
+<p>翻看了下<a href="https://github.com/tektoncd/pipeline/tree/master/cmd/entrypoint">文档</a>:</p>
+<blockquote>
+<p>This binary is used to override the entrypoint of a container by wrapping it. In tektoncd/pipeline this is used to make sure Task&rsquo;s steps are executed in order, or for sidecars.</p>
+<p>这个二进制文件被用于通过包装的方式来覆盖容器的入口点. 在 tektoncd/pipeline 中确保任务中的步骤或者 sidecar 被顺序低执行.</p>
+</blockquote>
+<ul>
+<li><code>-entrypoint</code>: 原始的容器启动命令, 作为 <code>entrypoint</code> 的子进程运行. 即上面的 <code>git-init XXXX</code></li>
+<li><code>-post_file</code>: 子进程运行结束后写的文件路径(即上面的<code>/tekton/tools/0</code>). 如果子进程执行失败, 则写一个<code>{{post_file}}.err</code>文件, 而不是<code>{{post_file}}</code></li>
+<li><code>-wait_file</code>: 启动子进程<strong>前</strong>监控的文件路径(即上面的<code>/tekton/downward/ready</code>). 通过监控到的<code>{{watch_file}}</code>或者<code>{{watch_file}}.err</code>文件来决定执行子进程, 还是跳过执行然后写入<code>{{post_file}}.err</code>文件并返回错误码(<code>exitCode</code> &gt;= 0)</li>
+<li><code>-wait_file_content</code>: 等待<code>wait_file</code>有实际内容写入, 持续监控<code>wait_file</code>直到有内容写入.</li>
+</ul>
+<p>回头看上面容器配置:</p>
+<ol>
+<li>容器的<code>entrypoint</code>启动进程</li>
+<li>监控到<code>/tekton/downward/ready</code>文件的创建, 并等待文件内容的写入</li>
+<li>执行<code>git-init</code>子进程, 从 git 仓库克隆源码</li>
+<li>创建<code>/tekton/tools/0</code>文件</li>
+</ol>
+<h3 id="实际应用">实际应用</h3>
+<p>这个方案是否能解决我们的问题, 还是有一定的局限性的.</p>
+<p>首先需要应用容器的启动命令进行重新的编排, 这个存在一定的挑战. 需要统一应用的启动命令才能做到规模化+自动化.
+其次引入可用于监控的文件, 需要额外增加<code>Volume</code>用于跨容器的文件访问. 当然通过增加<code>emptyDir</code>的<code>Volume</code>即可.</p>
+<p>如果要突破这个局限, CRD 无非是个优秀的方案. 下一篇, 我们通过一个简单的 CRD 来实现.</p>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#问题">问题</a>
+      <ul>
+        <li><a href="#新发现">新发现</a></li>
+        <li><a href="#实际应用">实际应用</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/kubernetes">Kubernetes
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    <nav id="article-nav">
+    
+    
+    <a href="../build-minimal-docker-image-for-go-app/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">Go Docker 镜像进阶: 精简镜像&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "addozhang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2020 Addo Zhang
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>

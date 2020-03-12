@@ -6,10 +6,19 @@
     <description>Recent content in Posts on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 11 Mar 2020 23:00:27 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 12 Mar 2020 22:05:16 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>控制 Pod 内容器的启动顺序</title>
+      <link>https://atbug.com/control-process-order-of-pod-containers/</link>
+      <pubDate>Thu, 12 Mar 2020 22:05:16 +0800</pubDate>
+      
+      <guid>https://atbug.com/control-process-order-of-pod-containers/</guid>
+      <description>背景 众所周知, Kubernetes Pod 内有两种容器: 初始化容器(init container)和应用容器(app container). 其中初始化容器的执行先于应用容器, 并且初始化容器</description>
+    </item>
     
     <item>
       <title>Go Docker 镜像进阶: 精简镜像</title>
