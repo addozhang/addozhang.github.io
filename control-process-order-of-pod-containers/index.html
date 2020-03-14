@@ -144,9 +144,9 @@
 </ol>
 <h3 id="实际应用">实际应用</h3>
 <p>这个方案是否能解决我们的问题, 还是有一定的局限性的.</p>
-<p>首先需要应用容器的启动命令进行重新的编排, 这个存在一定的挑战. 需要统一应用的启动命令才能做到规模化+自动化.
-其次引入可用于监控的文件, 需要额外增加<code>Volume</code>用于跨容器的文件访问. 当然通过增加<code>emptyDir</code>的<code>Volume</code>即可.
-同时 sidecar 容器需要在完成启动后创建<code>post_file</code>, 应用容器可以使用这个<code>entrypoint</code>进行包装.</p>
+<p>首先需要应用容器的启动命令进行重新的编排, 这个存在一定的挑战. 需要统一应用的启动命令才能做到规模化+自动化.</p>
+<p>其次引入可用于监控的文件, 需要额外增加<code>Volume</code>用于跨容器的文件访问. 当然通过增加<code>emptyDir</code>的<code>Volume</code>即可.</p>
+<p>同时 sidecar 容器需要在完成启动后创建<code>post_file</code>, 应用容器可以使用这个<code>entrypoint</code>进行包装.</p>
 <p>如果要突破这个局限, CRD 无非是个优秀的方案. 下一篇, 我们通过一个简单的 CRD 来实现.</p>
 
         </div>
