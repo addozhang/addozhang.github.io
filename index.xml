@@ -120,7 +120,7 @@
     </item>
     
     <item>
-      <title>使用Jib为Java应用构建镜像</title>
+      <title>使用 Jib 为 Java 应用构建镜像</title>
       <link>https://atbug.com/build-docker-or-oci-image-with-jib-for-java/</link>
       <pubDate>Mon, 09 Dec 2019 10:05:30 +0800</pubDate>
       
