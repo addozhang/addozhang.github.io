@@ -87,14 +87,14 @@
   </url>
   
   <url>
-    <loc>https://atbug.com/tekton-trigger-practice/</loc>
+    <loc>https://atbug.com/tags/tekton/</loc>
     <lastmod>2020-02-12T21:30:03+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://atbug.com/tags/tekton/</loc>
+    <loc>https://atbug.com/tekton-trigger-practice/</loc>
     <lastmod>2020-02-12T21:30:03+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
