@@ -63,6 +63,65 @@
                 
                 
                 <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../clean-speicified-keys-in-redis/">Redis清理缓存</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../clean-speicified-keys-in-redis/" class="article-date">
+                        <time datetime='2016-12-13T16:54:41.000&#43;00:00' itemprop="datePublished">2016-12-13</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../clean-speicified-keys-in-redis/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    最近有个需求需要主动的去清理部分缓存，考虑的原子性的问题，用Lua脚本进行实现。 Lua脚本 local count = 0 for _,k in ipairs(redis.call(&#39;KEYS&#39;, ARGV[1])) do redis.call(&#39;DEL&#39;, k) count = count + 1 end return count shell
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../clean-speicified-keys-in-redis/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/reids">reids
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">java
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
                     <h1 itemprop="name"><a class="article-title" href="../../flume-filechannel-overview/">Flume - FileChannel （一）</a></h1>
                 </header>
                 
@@ -578,40 +637,6 @@
             </div>
         </article>
         
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../about/">About</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../about/" class="article-date">
-                        <time datetime='2013-01-22T10:02:37.000&#43;08:00' itemprop="datePublished">2013-01-22</time>
-                    </a>
-                    
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../about/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    基本信息 Addo Zhang 广州 程序员
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../about/">Read More</a>
-                    </p>
-                </div>
-
-                
-            </div>
-        </article>
-        
 
         
 
@@ -656,7 +681,13 @@
     <span class="page-number current">9</span>
     
     
+    
+    <a href="../../page/10/">10</a>
+    
+    
 
+    
+    <a href="../../page/10/" rel="next" class="extend next">Next &raquo;</a>
     
 </nav>
 

@@ -3,6 +3,55 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://atbug.com/post/</loc>
+    <lastmod>2020-04-01T23:18:00+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/tags/</loc>
+    <lastmod>2020-04-01T23:18:00+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/</loc>
+    <lastmod>2020-04-01T23:18:00+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/</loc>
+    <lastmod>2020-04-01T23:18:00+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F/</loc>
+    <lastmod>2020-04-01T23:18:00+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/tags/%E6%9E%B6%E6%9E%84/</loc>
+    <lastmod>2020-04-01T23:18:00+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/translation-multi-runtime-microservices-architecture/</loc>
+    <lastmod>2020-04-01T23:18:00+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://atbug.com/categories/</loc>
     <lastmod>2020-03-12T22:05:16+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -11,27 +60,6 @@
   
   <url>
     <loc>https://atbug.com/tags/kubernetes/</loc>
-    <lastmod>2020-03-12T22:05:16+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/post/</loc>
-    <lastmod>2020-03-12T22:05:16+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/tags/</loc>
-    <lastmod>2020-03-12T22:05:16+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/</loc>
     <lastmod>2020-03-12T22:05:16+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
