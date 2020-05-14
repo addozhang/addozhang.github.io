@@ -6,7 +6,7 @@
     <description>Recent content in Categories on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 12 Mar 2020 22:05:16 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 14 May 2020 11:34:24 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/categories/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>笔记</title>
       <link>https://atbug.com/categories/%E7%AC%94%E8%AE%B0/</link>
-      <pubDate>Thu, 12 Mar 2020 22:05:16 +0800</pubDate>
+      <pubDate>Thu, 14 May 2020 11:34:24 +0800</pubDate>
       
       <guid>https://atbug.com/categories/%E7%AC%94%E8%AE%B0/</guid>
       <description></description>
@@ -26,60 +26,6 @@
       <pubDate>Sun, 19 Jan 2020 14:33:17 +0800</pubDate>
       
       <guid>https://atbug.com/categories/%E7%BF%BB%E8%AF%91/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>折腾</title>
-      <link>https://atbug.com/categories/%E6%8A%98%E8%85%BE/</link>
-      <pubDate>Sun, 10 Nov 2019 19:50:27 +0800</pubDate>
-      
-      <guid>https://atbug.com/categories/%E6%8A%98%E8%85%BE/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>DevOps</title>
-      <link>https://atbug.com/categories/devops/</link>
-      <pubDate>Fri, 20 Apr 2018 12:18:46 +0000</pubDate>
-      
-      <guid>https://atbug.com/categories/devops/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>学习</title>
-      <link>https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/</link>
-      <pubDate>Mon, 01 Jan 2018 12:30:55 +0000</pubDate>
-      
-      <guid>https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>测试</title>
-      <link>https://atbug.com/categories/%E6%B5%8B%E8%AF%95/</link>
-      <pubDate>Sat, 02 Dec 2017 07:35:43 +0000</pubDate>
-      
-      <guid>https://atbug.com/categories/%E6%B5%8B%E8%AF%95/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>容器</title>
-      <link>https://atbug.com/categories/%E5%AE%B9%E5%99%A8/</link>
-      <pubDate>Thu, 17 Aug 2017 09:44:17 +0000</pubDate>
-      
-      <guid>https://atbug.com/categories/%E5%AE%B9%E5%99%A8/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>软件</title>
-      <link>https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/</link>
-      <pubDate>Wed, 30 Mar 2016 14:27:02 +0000</pubDate>
-      
-      <guid>https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/</guid>
       <description></description>
     </item>
     

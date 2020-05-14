@@ -20,54 +20,5 @@
       <description>本文翻译自The Mystery of Eureka Self-Preservation 根据CAP定理, Eureka是一个AP系统, 这就导致了在网络分区期间多个注册表中的信息不一致. 自我保护功能则是为了尽</description>
     </item>
     
-    <item>
-      <title>Hystrix工作原理三</title>
-      <link>https://atbug.com/hystrix-exception-handling/</link>
-      <pubDate>Sun, 24 Jun 2018 16:20:16 +0000</pubDate>
-      
-      <guid>https://atbug.com/hystrix-exception-handling/</guid>
-      <description>异常处理 Hystrix异常类型 HystrixRuntimeException HystrixBadRequestException HystrixTimeoutException RejectedExecutionException HystrixRuntimeException HystrixCommand失败时抛出, 不会触发fallback. HystrixBadRequestException 用提供的参数或状态表示错误的异常</description>
-    </item>
-    
-    <item>
-      <title>Hystrix工作原理二</title>
-      <link>https://atbug.com/hystrix-isolation/</link>
-      <pubDate>Sun, 24 Jun 2018 16:18:52 +0000</pubDate>
-      
-      <guid>https://atbug.com/hystrix-isolation/</guid>
-      <description>隔离策略 线程和线程池 客户端(库, 网络调用等)在各自的线程上运行. 这种做法将他们与调用线程隔开, 因此调用者可以从一个耗时的依赖调用&amp;quot;</description>
-    </item>
-    
-    <item>
-      <title>初识Netflix Zuul</title>
-      <link>https://atbug.com/learn-netflix-zuul/</link>
-      <pubDate>Sun, 11 Feb 2018 10:07:18 +0000</pubDate>
-      
-      <guid>https://atbug.com/learn-netflix-zuul/</guid>
-      <description>&lt;p&gt;嵌入式的zuul代理&lt;/p&gt;
-&lt;p&gt;使用了Netfilx OSS的其他组件:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Hystrix   熔断&lt;/li&gt;
-&lt;li&gt;Ribbon    负责发送外出请求的客户端, 提供软件负载均衡功能&lt;/li&gt;
-&lt;li&gt;Trubine   实时地聚合细粒度的metrics数据&lt;/li&gt;
-&lt;li&gt;Archaius  动态配置&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;介绍&#34;&gt;介绍&lt;/h2&gt;
-&lt;p&gt;由于2.0停止开发且会有bug, 故下面的分析基于1.x版本.&lt;/p&gt;
-&lt;h3 id=&#34;特性&#34;&gt;特性&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;Authentication 认证&lt;/li&gt;
-&lt;li&gt;Insights 洞察&lt;/li&gt;
-&lt;li&gt;Stress Testing 压力测试&lt;/li&gt;
-&lt;li&gt;Canary Testing 金丝雀测试&lt;/li&gt;
-&lt;li&gt;Dynamic Routing 动态路由&lt;/li&gt;
-&lt;li&gt;Multi-Region Resiliency 多区域弹性&lt;/li&gt;
-&lt;li&gt;Load Shedding 负载脱落&lt;/li&gt;
-&lt;li&gt;Security 安全&lt;/li&gt;
-&lt;li&gt;Static Response handling 静态响应处理&lt;/li&gt;
-&lt;li&gt;Multi-Region Resiliency 主动/主动流量管理&lt;/li&gt;
-&lt;/ul&gt;</description>
-    </item>
-    
   </channel>
 </rss>

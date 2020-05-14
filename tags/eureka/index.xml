@@ -20,30 +20,5 @@
       <description>本文翻译自The Mystery of Eureka Self-Preservation 根据CAP定理, Eureka是一个AP系统, 这就导致了在网络分区期间多个注册表中的信息不一致. 自我保护功能则是为了尽</description>
     </item>
     
-    <item>
-      <title>Spring Cloud - Eureka服务注册</title>
-      <link>https://atbug.com/spring-cloud-service-registry-via-eureka/</link>
-      <pubDate>Wed, 14 Feb 2018 07:32:43 +0000</pubDate>
-      
-      <guid>https://atbug.com/spring-cloud-service-registry-via-eureka/</guid>
-      <description>&lt;p&gt;之前分析过&lt;a href=&#34;http://atbug.com/spring-cloud-eureka-client-source-code-analysis/&#34;&gt;Spring Cloud的Eureka服务发现&lt;/a&gt;, 今天分析一下服务注册.&lt;/p&gt;
-&lt;h2 id=&#34;配置&#34;&gt;配置&lt;/h2&gt;
-&lt;h3 id=&#34;bootstrapconfiguration&#34;&gt;BootstrapConfiguration&lt;/h3&gt;
-&lt;h4 id=&#34;eurekadiscoveryclientconfigservicebootstrapconfiguration&#34;&gt;EurekaDiscoveryClientConfigServiceBootstrapConfiguration&lt;/h4&gt;
-&lt;p&gt;spring-cloud-config环境中使用的配置&lt;/p&gt;
-&lt;p&gt;引入&lt;code&gt;EurekaDiscoveryClientConfiguration&lt;/code&gt;和&lt;code&gt;EurekaClientAutoConfiguration&lt;/code&gt;&lt;/p&gt;
-&lt;h5 id=&#34;eurekadiscoveryclientconfiguration&#34;&gt;EurekaDiscoveryClientConfiguration&lt;/h5&gt;
-&lt;ol&gt;
-&lt;li&gt;在spring-cloud中(通过是否存在RefreshScopeRefreshedEvent.class判断), 添加&lt;code&gt;RefreshScopeRefreshedEvent&lt;/code&gt;的listener. 收到事件后重新注册实例.&lt;/li&gt;
-&lt;li&gt;在&lt;code&gt;eureka.client.healthcheck.enabled&lt;/code&gt;设置为true时, 注册&lt;code&gt;EurekaHealthCheckHandler&lt;/code&gt;bean. &lt;code&gt;EurekaHealthCheckHandler&lt;/code&gt;负责将应用状态映射为实例状态&lt;code&gt;InstanceStatus&lt;/code&gt;.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h5 id=&#34;eurekaclientautoconfiguration&#34;&gt;EurekaClientAutoConfiguration&lt;/h5&gt;
-&lt;p&gt;支持spring-cloud和非spring-cloud环境, 在spring-cloud环境中, 下面两个bean要使用&lt;code&gt;@RefreshScope&lt;/code&gt;标注&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;实例化&lt;code&gt;EurekaClient&lt;/code&gt;bean, 在spring-cloud中使用实现类&lt;code&gt;CloudEurekaClient&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;使用&lt;code&gt;EurekaInstanceConfig&lt;/code&gt;实例, 实例化&lt;code&gt;ApplicationInfoManager&lt;/code&gt;bean&lt;/li&gt;
-&lt;/ol&gt;</description>
-    </item>
-    
   </channel>
 </rss>
