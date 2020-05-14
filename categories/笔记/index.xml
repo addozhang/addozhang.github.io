@@ -120,12 +120,398 @@
     </item>
     
     <item>
+      <title>Spring Cloud Hoxton发布</title>
+      <link>https://atbug.com/spring-cloud-hoxton-release/</link>
+      <pubDate>Wed, 04 Dec 2019 11:09:07 +0800</pubDate>
+      
+      <guid>https://atbug.com/spring-cloud-hoxton-release/</guid>
+      <description>原文 Spring Cloud Hoxton.RELEASE基于Spring Boot 2.2.1.RELEASE 文档变化 Hoxton.RELEASE使用了新的首页, 新的样式以及单页面, 多页面和PD</description>
+    </item>
+    
+    <item>
       <title>Docker Engine API on Mac Osx</title>
       <link>https://atbug.com/docker-engine-api-on-mac-osx/</link>
       <pubDate>Wed, 06 Nov 2019 20:19:50 +0800</pubDate>
       
       <guid>https://atbug.com/docker-engine-api-on-mac-osx/</guid>
       <description>根据官方的文档Docker Desktop on Mac vs. Docker Toolbox, Docker Desktop on Mac只提供了UNIX socket/var/run/docker.sock, 并未提供tcp的监听(默认2375端口). 如果使用linux的配置方式在</description>
+    </item>
+    
+    <item>
+      <title>Spring Boot 2.2.0 发布</title>
+      <link>https://atbug.com/spring-boot-2-2-0-release/</link>
+      <pubDate>Tue, 22 Oct 2019 09:27:03 +0800</pubDate>
+      
+      <guid>https://atbug.com/spring-boot-2-2-0-release/</guid>
+      <description>译自: https://spring.io/blog/2019/10/16/spring-boot-2-2-0 组件升级 Spring AMQP 2.2 Spring Batch 4.2 Spring Data Moore Spring Framework 5.2 Spring HATEOAS 1.0 Spring Integration 5.2 Spring Kafka 2.3 Spring Security 5.2 Spring Session Corn 第三方库升级 Elasticsearch 6.7 Flyway 6.0 Jackson 2.10 JUnit 5.5 Micrometer 1.3 Reactor Dysprosium Solr 8.0 性能提升 延迟初始化(Lazy initialization)</description>
+    </item>
+    
+    <item>
+      <title>Zipkin dependencies的坑之二: 心跳超时和Executor OOM</title>
+      <link>https://atbug.com/zipkin-dependencies-bug-two-timeout-and-oom/</link>
+      <pubDate>Sun, 22 Sep 2019 18:27:37 +0800</pubDate>
+      
+      <guid>https://atbug.com/zipkin-dependencies-bug-two-timeout-and-oom/</guid>
+      <description>上回说为了解决吞吐问题, 将zipkin-dependencies的版本升级到了2.3.0. 好景不长, 从某一天开始作业运行报错: Issue communicating with driver in heartbeater org.apache.spark.rpc.RpcTimeoutException:</description>
+    </item>
+    
+    <item>
+      <title>Zipkin dependencies的坑之一: 耗时越来越长</title>
+      <link>https://atbug.com/zipkin-dependencies-bug-one/</link>
+      <pubDate>Sun, 22 Sep 2019 17:59:56 +0800</pubDate>
+      
+      <guid>https://atbug.com/zipkin-dependencies-bug-one/</guid>
+      <description>zipkin-dependencies是zipkin调用链的依赖分析工具. 系统上线时使用了当时的最新版本2.0.1, 运行一年之后随着服务的增</description>
+    </item>
+    
+    <item>
+      <title>如何选择Kafka Topic的分区数</title>
+      <link>https://atbug.com/how-to-choose-topic-partition-count-number-kafka/</link>
+      <pubDate>Fri, 30 Aug 2019 11:10:46 +0800</pubDate>
+      
+      <guid>https://atbug.com/how-to-choose-topic-partition-count-number-kafka/</guid>
+      <description>在kafka中, topic的分区是并行计算的单元. 在producer端和broker端, 可以同时并发的写数据到不同的分区中. 在consume</description>
+    </item>
+    
+    <item>
+      <title>博客最近半年没什么产出</title>
+      <link>https://atbug.com/no-output-in-past-half-year/</link>
+      <pubDate>Tue, 27 Aug 2019 14:29:12 +0000</pubDate>
+      
+      <guid>https://atbug.com/no-output-in-past-half-year/</guid>
+      <description>上一篇日志更新还是在去年的12月, 至今有差不多10个月没有更新了. 不是说没有东西可写, 而且想写的东西很多. 工作太忙, 不忙的时候又太懒, 归根结</description>
+    </item>
+    
+    <item>
+      <title>Spring Boot源码分析 - Configuration注解</title>
+      <link>https://atbug.com/spring-boot-configuration-annotation/</link>
+      <pubDate>Mon, 10 Dec 2018 16:24:33 +0000</pubDate>
+      
+      <guid>https://atbug.com/spring-boot-configuration-annotation/</guid>
+      <description>@Configuration注解 @Configuration注解指示一个类声明一个或多个@Bean方法, 并且可以由Spring容器处理, 以在</description>
+    </item>
+    
+    <item>
+      <title>Alpine容器安装Docker和OpenShift Client Tools</title>
+      <link>https://atbug.com/install-docker-and-openshift-client-tools-in-alpine-container/</link>
+      <pubDate>Tue, 28 Aug 2018 09:14:12 +0000</pubDate>
+      
+      <guid>https://atbug.com/install-docker-and-openshift-client-tools-in-alpine-container/</guid>
+      <description>安装Docker echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/main&amp;#34; &amp;gt; /etc/apk/repositories echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/community&amp;#34; &amp;gt;&amp;gt; /etc/apk/repositories echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/testing&amp;#34; &amp;gt;&amp;gt; /etc/apk/repositories apk -U --no-cache \ --allow-untrusted add \ shadow \ docker \ py-pip \ openrc \ &amp;amp;&amp;amp; pip install docker-compose rc-update add docker boot 安装OpenShift Client Tools 需要先安装glibc apk --no-cache add ca-certificates</description>
+    </item>
+    
+    <item>
+      <title>Zuul网关Ribbon重试</title>
+      <link>https://atbug.com/ribbon-retry-in-zuul/</link>
+      <pubDate>Thu, 02 Aug 2018 08:55:43 +0000</pubDate>
+      
+      <guid>https://atbug.com/ribbon-retry-in-zuul/</guid>
+      <description>相关配置 #如果路由转发请求发生超时(连接超时或处理超时), 只要超时时间的设置小于Hystrix的命令超时时间,那么它就会自动发起重试. 默认为</description>
+    </item>
+    
+    <item>
+      <title>Hystrix工作原理三</title>
+      <link>https://atbug.com/hystrix-exception-handling/</link>
+      <pubDate>Sun, 24 Jun 2018 16:20:16 +0000</pubDate>
+      
+      <guid>https://atbug.com/hystrix-exception-handling/</guid>
+      <description>异常处理 Hystrix异常类型 HystrixRuntimeException HystrixBadRequestException HystrixTimeoutException RejectedExecutionException HystrixRuntimeException HystrixCommand失败时抛出, 不会触发fallback. HystrixBadRequestException 用提供的参数或状态表示错误的异常</description>
+    </item>
+    
+    <item>
+      <title>Hystrix工作原理二</title>
+      <link>https://atbug.com/hystrix-isolation/</link>
+      <pubDate>Sun, 24 Jun 2018 16:18:52 +0000</pubDate>
+      
+      <guid>https://atbug.com/hystrix-isolation/</guid>
+      <description>隔离策略 线程和线程池 客户端(库, 网络调用等)在各自的线程上运行. 这种做法将他们与调用线程隔开, 因此调用者可以从一个耗时的依赖调用&amp;quot;</description>
+    </item>
+    
+    <item>
+      <title>Hystrix工作原理一</title>
+      <link>https://atbug.com/how-hystrix-works/</link>
+      <pubDate>Mon, 04 Jun 2018 08:47:40 +0000</pubDate>
+      
+      <guid>https://atbug.com/how-hystrix-works/</guid>
+      <description>运行时的流程图 构建HystrixCommand或者HystrixObservableCommand对象 第一步是构建一个HystrixComm</description>
+    </item>
+    
+    <item>
+      <title>解决rsyslogd资源占用率高问题</title>
+      <link>https://atbug.com/rsyslogd-high-cpu-trouble-shooting/</link>
+      <pubDate>Fri, 01 Jun 2018 09:32:28 +0000</pubDate>
+      
+      <guid>https://atbug.com/rsyslogd-high-cpu-trouble-shooting/</guid>
+      <description>rsyslogd资源占用高问题记录 问题: openshift集群安装在esxi的虚拟机上. 各个节点出现问题, 集群响应很慢. kswapd0进程c</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes中的Nginx动态解析</title>
+      <link>https://atbug.com/nginx-dynamic-domain-parse-in-kubernetes/</link>
+      <pubDate>Wed, 30 May 2018 12:10:32 +0000</pubDate>
+      
+      <guid>https://atbug.com/nginx-dynamic-domain-parse-in-kubernetes/</guid>
+      <description>背景 Nginx运行在kubernets中, 反向代理service提供服务. kubernetes版本v1.9.1+a0ce1bc657. 问题:</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Ribbon 详解</title>
+      <link>https://atbug.com/spring-cloud-ribbon-breakdown-1/</link>
+      <pubDate>Sat, 05 May 2018 11:18:05 +0000</pubDate>
+      
+      <guid>https://atbug.com/spring-cloud-ribbon-breakdown-1/</guid>
+      <description>&lt;p&gt;客户端负载均衡, Ribbon的核心概念是命名的客户端.&lt;/p&gt;
+&lt;h2 id=&#34;使用&#34;&gt;使用&lt;/h2&gt;
+&lt;h3 id=&#34;引入ribbon依赖和配置&#34;&gt;引入Ribbon依赖和配置&lt;/h3&gt;
+&lt;p&gt;加入&lt;code&gt;spring-cloud-starter-netflix-ribbon&lt;/code&gt;依赖&lt;/p&gt;
+&lt;h3 id=&#34;代码中使用ribbonclient注解&#34;&gt;代码中使用RibbonClient注解&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Configuration&lt;/span&gt; 
+&lt;span class=&#34;nd&#34;&gt;@RibbonClient&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;foo&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;configuration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;FooConfiguration&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;TestConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Configuration&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;protected&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;FooConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+
+    &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt; 
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ZonePreferenceServerListFilter&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;serverListFilter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;ZonePreferenceServerListFilter&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;filter&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ZonePreferenceServerListFilter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;filter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setZone&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;myTestZone&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;filter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt; 
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt; 
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IPing&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;ribbonPing&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; 
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;PingUrl&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt; 
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Ribbon客户端的配置, 如果不指定会使用默认的实现:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;IClientConfig 客户端相关配置&lt;/li&gt;
+&lt;li&gt;IRule 定义负载均衡策略&lt;/li&gt;
+&lt;li&gt;IPing 定义如何ping目标服务实例来判断是否存活, ribbon使用单独的线程每隔一段时间(默认10s)对本地缓存的ServerList做一次检查&lt;/li&gt;
+&lt;li&gt;ServerList&lt;!-- raw HTML omitted --&gt;    定义如何获取服务实例列表. 两种实现基于配置的&lt;code&gt;ConfigurationBasedServerList&lt;/code&gt;和基于Eureka服务发现的&lt;code&gt;DiscoveryEnabledNIWSServerList&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;ServerListFilter&lt;!-- raw HTML omitted --&gt;  用来使用期望的特征过滤静态配置动态获得的候选服务实例列表. 若未提供, 默认使用&lt;code&gt;ZoneAffinityServerListFilter&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;ILoadBalancer 定义了软负载均衡器的操作的接口. 一个典型的负载均衡器至少需要一组用来做负载均衡的服务实例, 一个标记某个服务实例不在旋转中的方法, 和对应的方法调用从实例列表中选出某一个服务实例.&lt;/li&gt;
+&lt;li&gt;ServerListUpdater DynamicServerListLoadBalancer用来更新实例列表的策略(推&lt;code&gt;EurekaNotificationServerListUpdater&lt;/code&gt;/拉&lt;code&gt;PollingServerListUpdater&lt;/code&gt;, 默认是拉)&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>KVM安装手册</title>
+      <link>https://atbug.com/kvm-installation-note/</link>
+      <pubDate>Thu, 12 Apr 2018 12:45:15 +0000</pubDate>
+      
+      <guid>https://atbug.com/kvm-installation-note/</guid>
+      <description>&lt;h2 id=&#34;添加虚拟机流程&#34;&gt;添加虚拟机流程：&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;1. 配置网络
+2. 配置存储池
+3. 上传镜像
+4. 安装虚拟机，指定配置
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;安装kvm虚拟机&#34;&gt;安装KVM虚拟机&lt;/h3&gt;
+&lt;h4 id=&#34;1-关闭防火墙selinux&#34;&gt;1. 关闭防火墙，selinux&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# service iptables stop&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# setenforce 0 临时关闭&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# chkconfig NetworkManager off&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;2-安装kvm虚拟机&#34;&gt;2. 安装kvm虚拟机&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# yum install kvm libvirt libvirt-devel python-virtinst python-virtinst qemu-kvm virt-viewer bridge-utils virt-top libguestfs-tools ca-certificates audit-libs-python device-mapper-libs virt-install&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# 启动服务&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# service libvirtd restart&lt;/span&gt;
+下载virtio-win-1.5.2-1.el6.noarch.rpm 如果不安装window虚拟机或者使用带virtio驱动的镜像可以不用安装
+&lt;span class=&#34;c1&#34;&gt;# rpm -ivh virtio-win-1.5.2-1.el6.noarch.rpm&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;3-libvirt在管理本地或远程hypervisor时的表现形式如下&#34;&gt;3. Libvirt在管理本地或远程Hypervisor时的表现形式如下。&lt;/h4&gt;
+&lt;p&gt;在libvirt内部管理了五部分：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;节点：所谓的节点就是我们的物理服务器，一个服务器代表一个节点，上边存放着Hyper和Domain&lt;/li&gt;
+&lt;li&gt;Hypervisor：即VMM，指虚拟机的监控程序，在KVM中是一个加载了kvm.ko的标准Linux系统。&lt;/li&gt;
+&lt;li&gt;域（Domain）：指虚拟机，一个域代表一个虚拟机（估计思路来源于Xen的Domain0）&lt;/li&gt;
+&lt;li&gt;存储池（Storage Pool）：存储空间，支持多种协议和网络存储。作为虚拟机磁盘的存储源。&lt;/li&gt;
+&lt;li&gt;卷组（Volume）：虚拟机磁盘在Host上的表现形式。
+上边的五部分，我们必须使用的是前三个，因为很多时候根据业务规则或应用的灵活性并没有使用卷组（其实就是有了编制的虚拟磁盘文件），也就没有必要使用存储池。&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>启用Jenkins CLI</title>
+      <link>https://atbug.com/jenkins-cli-enable/</link>
+      <pubDate>Mon, 09 Apr 2018 11:16:38 +0000</pubDate>
+      
+      <guid>https://atbug.com/jenkins-cli-enable/</guid>
+      <description>Jenkins CLI提供了SSH和Client模式. Docker运行Jenkins version:&amp;#39;3&amp;#39;services:jenkins:image:jenkins/jenkins:alpineports:- 8080:8080- 50000:50000- 46059:46059volumes:- &amp;#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&amp;#34;note: 以为是docker运行, ssh端口设置选用了固定端口. Client 从h</description>
+    </item>
+    
+    <item>
+      <title>Jenkins - 解决execute shell中启动的进程被在Job退出时被杀死问题</title>
+      <link>https://atbug.com/resolve-process-be-killed-after-jenkins-job-done/</link>
+      <pubDate>Thu, 15 Mar 2018 17:00:25 +0000</pubDate>
+      
+      <guid>https://atbug.com/resolve-process-be-killed-after-jenkins-job-done/</guid>
+      <description>因为ProcessTreeKiller的存在, 构建过程中使用shell启动的进程在Job完成时都会被kill掉. 各种搜索以及ProcessT</description>
+    </item>
+    
+    <item>
+      <title>MacOS安装minishift</title>
+      <link>https://atbug.com/install-minishift-on-mac/</link>
+      <pubDate>Fri, 23 Feb 2018 15:32:26 +0000</pubDate>
+      
+      <guid>https://atbug.com/install-minishift-on-mac/</guid>
+      <description>MacOS环境安装minishift 安装minishift cli brew cask install minishift 使用virtualbox安装 安装的时候可以指定HTTP代理, 拉取墙外镜像</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Zuul详解</title>
+      <link>https://atbug.com/spring-cloud-zuul-breakdown/</link>
+      <pubDate>Thu, 22 Feb 2018 17:02:26 +0000</pubDate>
+      
+      <guid>https://atbug.com/spring-cloud-zuul-breakdown/</guid>
+      <description>&lt;p&gt;Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看&lt;a href=&#34;http://atbug.com/learn-netflix-zuul/&#34;&gt;上一篇&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;实现&#34;&gt;实现&lt;/h2&gt;
+&lt;p&gt;@EnableZuulProxy 与 @EnableZuulServer
+二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用.
+Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置.&lt;/p&gt;
+&lt;h3 id=&#34;具体实现&#34;&gt;具体实现:&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;使用&lt;code&gt;ZuulController&lt;/code&gt;(&lt;code&gt;ServletWrappingController&lt;/code&gt;的子类)封装&lt;code&gt;ZuulServlet&lt;/code&gt;实例, 处理从&lt;code&gt;DispatcherServlet&lt;/code&gt;进来的请求.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ZuulHandlerMapping&lt;/code&gt;负责注册handler mapping, 将&lt;code&gt;Route&lt;/code&gt;的&lt;code&gt;fullPath&lt;/code&gt;的请求交由&lt;code&gt;ZuulController&lt;/code&gt;处理.&lt;/li&gt;
+&lt;li&gt;同时使用&lt;code&gt;ServletRegistrationBean&lt;/code&gt;注册&lt;code&gt;ZuulServlet&lt;/code&gt;, 默认使用&lt;code&gt;/zuul&lt;/code&gt;作为urlMapping. 所有来自以&lt;code&gt;/zuul&lt;/code&gt;开头的path的请求都会直接进入&lt;code&gt;ZuulServlet&lt;/code&gt;, 不会进入&lt;code&gt;DispatcherServlet&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;使用注解&#34;&gt;使用注解&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;@EnableZuulProxy&lt;/code&gt;引入了&lt;code&gt;ZuulProxyMarkerConfiguration&lt;/code&gt;, &lt;code&gt;ZuulProxyMarkerConfiguration&lt;/code&gt;只做了一件事, 实例化了内部类&lt;code&gt;Marker&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Configuration&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;ZuulProxyMarkerConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Marker&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;zuulProxyMarkerBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Marker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Marker&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;@EnableZuulServer&lt;/code&gt;引入了&lt;code&gt;ZuulServerMarkerConfiguration&lt;/code&gt;, &lt;code&gt;ZuulServerMarkerConfiguration&lt;/code&gt;也只做了一件事: 实例化了内部类&lt;code&gt;Marker&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Configuration&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;ZuulServerMarkerConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Marker&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;zuulServerMarkerBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Marker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Marker&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud - Eureka服务注册</title>
+      <link>https://atbug.com/spring-cloud-service-registry-via-eureka/</link>
+      <pubDate>Wed, 14 Feb 2018 07:32:43 +0000</pubDate>
+      
+      <guid>https://atbug.com/spring-cloud-service-registry-via-eureka/</guid>
+      <description>&lt;p&gt;之前分析过&lt;a href=&#34;http://atbug.com/spring-cloud-eureka-client-source-code-analysis/&#34;&gt;Spring Cloud的Eureka服务发现&lt;/a&gt;, 今天分析一下服务注册.&lt;/p&gt;
+&lt;h2 id=&#34;配置&#34;&gt;配置&lt;/h2&gt;
+&lt;h3 id=&#34;bootstrapconfiguration&#34;&gt;BootstrapConfiguration&lt;/h3&gt;
+&lt;h4 id=&#34;eurekadiscoveryclientconfigservicebootstrapconfiguration&#34;&gt;EurekaDiscoveryClientConfigServiceBootstrapConfiguration&lt;/h4&gt;
+&lt;p&gt;spring-cloud-config环境中使用的配置&lt;/p&gt;
+&lt;p&gt;引入&lt;code&gt;EurekaDiscoveryClientConfiguration&lt;/code&gt;和&lt;code&gt;EurekaClientAutoConfiguration&lt;/code&gt;&lt;/p&gt;
+&lt;h5 id=&#34;eurekadiscoveryclientconfiguration&#34;&gt;EurekaDiscoveryClientConfiguration&lt;/h5&gt;
+&lt;ol&gt;
+&lt;li&gt;在spring-cloud中(通过是否存在RefreshScopeRefreshedEvent.class判断), 添加&lt;code&gt;RefreshScopeRefreshedEvent&lt;/code&gt;的listener. 收到事件后重新注册实例.&lt;/li&gt;
+&lt;li&gt;在&lt;code&gt;eureka.client.healthcheck.enabled&lt;/code&gt;设置为true时, 注册&lt;code&gt;EurekaHealthCheckHandler&lt;/code&gt;bean. &lt;code&gt;EurekaHealthCheckHandler&lt;/code&gt;负责将应用状态映射为实例状态&lt;code&gt;InstanceStatus&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h5 id=&#34;eurekaclientautoconfiguration&#34;&gt;EurekaClientAutoConfiguration&lt;/h5&gt;
+&lt;p&gt;支持spring-cloud和非spring-cloud环境, 在spring-cloud环境中, 下面两个bean要使用&lt;code&gt;@RefreshScope&lt;/code&gt;标注&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;实例化&lt;code&gt;EurekaClient&lt;/code&gt;bean, 在spring-cloud中使用实现类&lt;code&gt;CloudEurekaClient&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;使用&lt;code&gt;EurekaInstanceConfig&lt;/code&gt;实例, 实例化&lt;code&gt;ApplicationInfoManager&lt;/code&gt;bean&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>初识Netflix Zuul</title>
+      <link>https://atbug.com/learn-netflix-zuul/</link>
+      <pubDate>Sun, 11 Feb 2018 10:07:18 +0000</pubDate>
+      
+      <guid>https://atbug.com/learn-netflix-zuul/</guid>
+      <description>&lt;p&gt;嵌入式的zuul代理&lt;/p&gt;
+&lt;p&gt;使用了Netfilx OSS的其他组件:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Hystrix   熔断&lt;/li&gt;
+&lt;li&gt;Ribbon    负责发送外出请求的客户端, 提供软件负载均衡功能&lt;/li&gt;
+&lt;li&gt;Trubine   实时地聚合细粒度的metrics数据&lt;/li&gt;
+&lt;li&gt;Archaius  动态配置&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;介绍&#34;&gt;介绍&lt;/h2&gt;
+&lt;p&gt;由于2.0停止开发且会有bug, 故下面的分析基于1.x版本.&lt;/p&gt;
+&lt;h3 id=&#34;特性&#34;&gt;特性&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Authentication 认证&lt;/li&gt;
+&lt;li&gt;Insights 洞察&lt;/li&gt;
+&lt;li&gt;Stress Testing 压力测试&lt;/li&gt;
+&lt;li&gt;Canary Testing 金丝雀测试&lt;/li&gt;
+&lt;li&gt;Dynamic Routing 动态路由&lt;/li&gt;
+&lt;li&gt;Multi-Region Resiliency 多区域弹性&lt;/li&gt;
+&lt;li&gt;Load Shedding 负载脱落&lt;/li&gt;
+&lt;li&gt;Security 安全&lt;/li&gt;
+&lt;li&gt;Static Response handling 静态响应处理&lt;/li&gt;
+&lt;li&gt;Multi-Region Resiliency 主动/主动流量管理&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>ConfigurationProperties到底需不需要getter</title>
+      <link>https://atbug.com/configurationproperties-requires-getter-or-not/</link>
+      <pubDate>Wed, 07 Feb 2018 15:53:21 +0000</pubDate>
+      
+      <guid>https://atbug.com/configurationproperties-requires-getter-or-not/</guid>
+      <description>为什么要讨论这个问题, 工作中一个同事写的类使用了ConfigurationProperties, 只提供了标准的setter方法. 属性的访问,</description>
+    </item>
+    
+    <item>
+      <title>自定义GOPATH下安装godep失败</title>
+      <link>https://atbug.com/install-godep-issue-in-custom-gopath/</link>
+      <pubDate>Fri, 22 Dec 2017 13:02:38 +0000</pubDate>
+      
+      <guid>https://atbug.com/install-godep-issue-in-custom-gopath/</guid>
+      <description>我的环境变量是这样的: export GOROOT=/usr/local/go export GOPATH=/Users/addo/Workspaces/go_w export GOBIN=$GOROOT/bin export PATH=$PATH:$GOBIN 使用下面的命令安装报错: go get -v github.com/tools/godep github.com/tools/godep (download) github.com/tools/godep/vendor/github.com/pmezard/go-difflib/difflib github.com/tools/godep/vendor/github.com/kr/fs github.com/tools/godep/vendor/github.com/kr/text github.com/tools/godep/vendor/golang.org/x/tools/go/vcs github.com/tools/godep/vendor/github.com/kr/pretty github.com/tools/godep go install github.com/tools/godep: open /usr/local/go/bin/godep: permission denied 默认是安装到$GOBIN目录下, 权限不够</description>
+    </item>
+    
+    <item>
+      <title>Kafka的消息可靠传递</title>
+      <link>https://atbug.com/kafka-reliable-data-delivery/</link>
+      <pubDate>Sat, 18 Nov 2017 14:01:46 +0000</pubDate>
+      
+      <guid>https://atbug.com/kafka-reliable-data-delivery/</guid>
+      <description>Kafka提供的基础保障可以用来构建可靠的系统, 却无法保证完全可靠. 需要在可靠性和吞吐之间做取舍. Kafka在分区上提供了消息的顺序保证. 生</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud - Eureka Client源码分析</title>
+      <link>https://atbug.com/spring-cloud-eureka-client-source-code-analysis/</link>
+      <pubDate>Sat, 14 Oct 2017 22:04:59 +0000</pubDate>
+      
+      <guid>https://atbug.com/spring-cloud-eureka-client-source-code-analysis/</guid>
+      <description>准备做个Spring Cloud源码分析系列, 作为Spring Cloud的源码分析笔记. 这一篇是Eureka的客户端. 客户端 两种方式, 最终的实</description>
+    </item>
+    
+    <item>
+      <title>MetaspaceSize的坑</title>
+      <link>https://atbug.com/java8-metaspace-size-issue/</link>
+      <pubDate>Thu, 13 Apr 2017 11:55:14 +0000</pubDate>
+      
+      <guid>https://atbug.com/java8-metaspace-size-issue/</guid>
+      <description>这几天生产上有台机器的Metaspace一直在告警，Metaspace使用达到了97%。使用-XX:MetaspaceSize=512m，告</description>
+    </item>
+    
+    <item>
+      <title>Redis清理缓存</title>
+      <link>https://atbug.com/clean-speicified-keys-in-redis/</link>
+      <pubDate>Tue, 13 Dec 2016 16:54:41 +0000</pubDate>
+      
+      <guid>https://atbug.com/clean-speicified-keys-in-redis/</guid>
+      <description>最近有个需求需要主动的去清理部分缓存，考虑的原子性的问题，用Lua脚本进行实现。 Lua脚本 local count = 0 for _,k in ipairs(redis.call(&amp;#39;KEYS&amp;#39;, ARGV[1])) do redis.call(&amp;#39;DEL&amp;#39;, k) count = count + 1 end return count shell</description>
     </item>
     
   </channel>

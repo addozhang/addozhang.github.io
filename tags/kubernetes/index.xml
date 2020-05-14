@@ -74,5 +74,32 @@
       <description>今天来说说日常在Kubernetes开发Java项目遇到的问题. 当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是copy</description>
     </item>
     
+    <item>
+      <title>Kubernetes中的Nginx动态解析</title>
+      <link>https://atbug.com/nginx-dynamic-domain-parse-in-kubernetes/</link>
+      <pubDate>Wed, 30 May 2018 12:10:32 +0000</pubDate>
+      
+      <guid>https://atbug.com/nginx-dynamic-domain-parse-in-kubernetes/</guid>
+      <description>背景 Nginx运行在kubernets中, 反向代理service提供服务. kubernetes版本v1.9.1+a0ce1bc657. 问题:</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes — 持久卷</title>
+      <link>https://atbug.com/kubernetes-persistent-volumes/</link>
+      <pubDate>Sun, 20 Aug 2017 22:25:40 +0000</pubDate>
+      
+      <guid>https://atbug.com/kubernetes-persistent-volumes/</guid>
+      <description>Persistent Volume 译自Persistent Volumes 介绍 管理存储是管理计算的独特问题。 PersistentVolume子系统为用户和管理员提供了一个API，其中提</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes学习 — Macos安装Kubernetes</title>
+      <link>https://atbug.com/install-kubernetes-on-macos/</link>
+      <pubDate>Thu, 17 Aug 2017 09:44:17 +0000</pubDate>
+      
+      <guid>https://atbug.com/install-kubernetes-on-macos/</guid>
+      <description>Kubernetes 安装 macos 检查环境 sysctl -a | grep machdep.cpu.features | grep VMX 安装VirtualBox http://download.virtualbox.org/virtualbox/5.1.26/Oracle_VM_VirtualBox_Extension_Pack-5.1.26-117224.vbox-extpack 安装minikube curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.21.0/minikube-darwin-amd64 &amp;amp;&amp;amp; chmod +x minikube &amp;amp;&amp;amp; sudo mv minikube /usr/local/bin/ 创建集群 默认使用virtualbox</description>
+    </item>
+    
   </channel>
 </rss>

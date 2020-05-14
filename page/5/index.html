@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.65.1" />
+    <meta name="generator" content="Hugo 0.68.3" />
 </head>
 
 <body>
@@ -57,6 +57,87 @@
 </header>
 
     <section id="main" class="outer">
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../learn-netflix-zuul/">初识Netflix Zuul</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../learn-netflix-zuul/" class="article-date">
+                        <time datetime='2018-02-11T10:07:18.000&#43;00:00' itemprop="datePublished">2018-02-11</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../learn-netflix-zuul/#disqus_thread" class="article-comment-link">Comments</a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    <p>嵌入式的zuul代理</p>
+<p>使用了Netfilx OSS的其他组件:</p>
+<ul>
+<li>Hystrix   熔断</li>
+<li>Ribbon    负责发送外出请求的客户端, 提供软件负载均衡功能</li>
+<li>Trubine   实时地聚合细粒度的metrics数据</li>
+<li>Archaius  动态配置</li>
+</ul>
+<h2 id="介绍">介绍</h2>
+<p>由于2.0停止开发且会有bug, 故下面的分析基于1.x版本.</p>
+<h3 id="特性">特性</h3>
+<ul>
+<li>Authentication 认证</li>
+<li>Insights 洞察</li>
+<li>Stress Testing 压力测试</li>
+<li>Canary Testing 金丝雀测试</li>
+<li>Dynamic Routing 动态路由</li>
+<li>Multi-Region Resiliency 多区域弹性</li>
+<li>Load Shedding 负载脱落</li>
+<li>Security 安全</li>
+<li>Static Response handling 静态响应处理</li>
+<li>Multi-Region Resiliency 主动/主动流量管理</li>
+</ul>
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../learn-netflix-zuul/">Read More</a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/netflix">Netflix
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/zuul">Zuul
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
         
         <article class="article article-type-post" itemscope itemprop="blogPost">
             <div class="article-inner">
@@ -603,65 +684,6 @@
                         
                         <li class="article-tag-list-item">
                             <a class="article-tag-list-link" href="https://atbug.com//tags/kafka">Kafka
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../spring-cloud-eureka-client-source-code-analysis/">Spring Cloud - Eureka Client源码分析</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../spring-cloud-eureka-client-source-code-analysis/" class="article-date">
-                        <time datetime='2017-10-14T22:04:59.000&#43;00:00' itemprop="datePublished">2017-10-14</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../spring-cloud-eureka-client-source-code-analysis/#disqus_thread" class="article-comment-link">Comments</a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    准备做个Spring Cloud源码分析系列, 作为Spring Cloud的源码分析笔记. 这一篇是Eureka的客户端. 客户端 两种方式, 最终的实
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../spring-cloud-eureka-client-source-code-analysis/">Read More</a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/%E6%BA%90%E7%A0%81">源码
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/spring-cloud">Spring Cloud
                             </a>
                         </li>
                         
