@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tekton 的工作原理 // 乱世浮生</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
+    <meta name="keywords" content="Java,Spring Cloud,Architecture,">
+
+        <meta property="og:title" content="Tekton 的工作原理" />
+    <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh-cn" />
+    <meta property="og:url" content="https://atbug.com/how-tekton-works/" />
+    
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link href="https://atbug.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://atbug.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://atbug.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.65.1" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://atbug.com/">乱世浮生</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="../">Home</a>
+                
+                <a class="main-nav-link" href="../post/">Archives</a>
+                
+                <a class="main-nav-link" href="../tags/">Tags</a>
+                
+                <a class="main-nav-link" href="../categories/">Categories</a>
+                
+                <a class="main-nav-link" href="../about/">About</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">Tekton 的工作原理</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="../how-tekton-works/" class="article-date">
+                <time datetime='2020-05-23T22:47:14.000&#43;08:00' itemprop="datePublished">2020-05-23</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                    
+                </div>
+            </div>
+            
+            
+            <div class="article-comment-link-wrap">
+                <a href="../how-tekton-works/#disqus_thread" class="article-comment-link">Comments</a>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p><em>这篇文章是基于 Tekton Pipeline 的最新版本<code>v0.12.1</code>版本。</em></p>
+<p>快速入门请参考：<a href="https://atbug.com/tekton-trigger-practice/">云原生 CICD: Tekton Pipeline 实战</a> ，<em>实战是基于版本 v0.10.x</em>。</p>
+<h2 id="pipeline-crd-与核心资源的关系">Pipeline CRD 与核心资源的关系</h2>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ k api-resources --api-group<span class="o">=</span>tekton.dev
+NAME                SHORTNAMES   APIGROUP     NAMESPACED   KIND
+clustertasks                     tekton.dev   <span class="nb">false</span>        ClusterTask
+conditions                       tekton.dev   <span class="nb">true</span>         Condition
+pipelineresources                tekton.dev   <span class="nb">true</span>         PipelineResource
+pipelineruns        pr,prs       tekton.dev   <span class="nb">true</span>         PipelineRun
+pipelines                        tekton.dev   <span class="nb">true</span>         Pipeline
+taskruns            tr,trs       tekton.dev   <span class="nb">true</span>         TaskRun
+tasks                            tekton.dev   <span class="nb">true</span>         Task
+</code></pre></div><p>Tekton Pipelines提供了上面的CRD，其中部分CRD与k8s core中资源相对应</p>
+<ul>
+<li>Task =&gt; Pod</li>
+<li>Task.Step =&gt; Container</li>
+</ul>
+<p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/23/15902164552270.jpg" alt=""></p>
+<h2 id="工作原理">工作原理</h2>
+<p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/23/15902280074872.jpg" alt="">
+(图片来自)</p>
+<p>Tekton Pipeline 是基于 Knative 的实现，pod <code>tekton-pipelines-controller</code> 中有两个 <a href="https://knative.dev/docs/eventing/samples/writing-receive-adapter-source/03-controller/">Knative Controller</a>的实现：PipelineRun 和 TaskRun。</p>
+<p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/23/15902270934199.jpg" alt=""></p>
+<h3 id="task的执行顺序">Task的执行顺序</h3>
+<p>PipelineRun Controller 的 <code>#reconcile()</code>方法，监控到有<code>PipelineRun</code>被创建。然后从<code>PipelineSpec</code>的 tasks 列表，构建出一个图（<code>graph</code>），用于描述<code>Pipeline</code>中 Task 间的依赖关系。依赖关系是通过<code>runAfter</code>和<code>from</code>，进而控制<a href="#Task%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F">Task的执行顺序</a>。与此同时，准备<code>PipelineRun</code>中定义的<code>PipelineResources</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// Node represents a Task in a pipeline.
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Node</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="c1">// Task represent the PipelineTask in Pipeline
+</span><span class="c1"></span>	<span class="nx">Task</span> <span class="nx">Task</span>
+	<span class="c1">// Prev represent all the Previous task Nodes for the current Task
+</span><span class="c1"></span>	<span class="nx">Prev</span> <span class="p">[]</span><span class="o">*</span><span class="nx">Node</span>
+	<span class="c1">// Next represent all the Next task Nodes for the current Task
+</span><span class="c1"></span>	<span class="nx">Next</span> <span class="p">[]</span><span class="o">*</span><span class="nx">Node</span>
+<span class="p">}</span>
+
+<span class="c1">// Graph represents the Pipeline Graph
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Graph</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="c1">//Nodes represent map of PipelineTask name to Node in Pipeline Graph
+</span><span class="c1"></span>	<span class="nx">Nodes</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="o">*</span><span class="nx">Node</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">Build</span><span class="p">(</span><span class="nx">tasks</span> <span class="nx">Tasks</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Graph</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</code></pre></div><p><code>PipelineRun</code>中定义的参数（parameters）也会注入到<code>PipelineSpec</code>中：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">pipelineSpec</span> <span class="p">=</span> <span class="nx">resources</span><span class="p">.</span><span class="nf">ApplyParameters</span><span class="p">(</span><span class="nx">pipelineSpec</span><span class="p">,</span> <span class="nx">pr</span><span class="p">)</span>
+</code></pre></div><p>接下来就是调用<code>dag#GetSchedulable()</code>方法，获取未完成（通过Task状态判断）的 Task 列表；</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">GetSchedulable</span><span class="p">(</span><span class="nx">g</span> <span class="o">*</span><span class="nx">Graph</span><span class="p">,</span> <span class="nx">doneTasks</span> <span class="o">...</span><span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">struct</span><span class="p">{},</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</code></pre></div><p>为 Task A 创建<code>TaskRun</code>，假如<code>Task</code>配置了<code>Condition</code>。会先为 condition创建一个<code>TaskRun</code>，只有在 condition 的<code>TaskRun</code>运行成功，才会运行 A 的<code>TaskRun</code>；否则就跳过。</p>
+<h3 id="step的执行顺序">Step的执行顺序</h3>
+<p>这一部分篇幅较长，之前的文章 <a href="https://atbug.com/control-process-order-of-pod-containers/">控制 Pod 内容器的启动顺序</a> 中提到过。</p>
+<p>这里补充一下<a href="https://kubernetes.io/docs/tasks/inject-data-application/downward-api-volume-expose-pod-information/#the-downward-api">Kubernetes Downward API</a>的使用，Kubernetes Downward API的引入，控制着 <code>Task</code> 的第一个 <code>Step</code> 在合适执行。</p>
+<p><code>TaskRun</code> Controller 在 reconciling 的过程中，在相应的 <code>Pod</code> 状态变为<code>Running</code>时，会将<code>tekton.dev/ready=READY</code>写入到 Pod 的 annotation 中，来通知第一个<code>Step</code>的执行。</p>
+<p>Pod的部分内容：</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">containers</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">args</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- -wait_file<span class="w">
+</span><span class="w">      </span>- /tekton/downward/ready<span class="w">
+</span><span class="w">      </span>- -wait_file_content<span class="w">
+</span><span class="w">      </span>- -post_file<span class="w">
+</span><span class="w">      </span>- /tekton/tools/<span class="m">0</span><span class="w">
+</span><span class="w">      </span>- -termination_path<span class="w">
+</span><span class="w">      </span>- /tekton/termination<span class="w">
+</span><span class="w">      </span>- -entrypoint<span class="w">
+</span><span class="w">      </span>- /ko-app/git-init<span class="w">
+</span><span class="w">      </span>- -<span class="sd">-
+</span><span class="sd">      - -url</span><span class="w">
+</span><span class="w">      </span>- ssh<span class="p">:</span>//git@gitlab.nip.io<span class="p">:</span><span class="m">8022</span>/addozhang/logan-pulse.git<span class="w">
+</span><span class="w">      </span>- -revision<span class="w">
+</span><span class="w">      </span>- develop<span class="w">
+</span><span class="w">      </span>- -path<span class="w">
+</span><span class="w">      </span>- /workspace/git-source<span class="w">
+</span><span class="w">      </span><span class="k">command</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- /tekton/tools/entrypoint<span class="w">
+</span><span class="w">      </span><span class="k">volumeMounts</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="k">mountPath</span><span class="p">:</span><span class="w"> </span>/tekton/downward<span class="w">
+</span><span class="w">        </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>tekton-internal-downward<span class="w">
+</span><span class="w">      
+</span><span class="w">  </span><span class="k">volumes</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">downwardAPI</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="k">defaultMode</span><span class="p">:</span><span class="w"> </span><span class="m">420</span><span class="w">
+</span><span class="w">        </span><span class="k">items</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- <span class="k">fieldRef</span><span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>v1<span class="w">
+</span><span class="w">            </span><span class="k">fieldPath</span><span class="p">:</span><span class="w"> </span>metadata.annotations<span class="p">[</span><span class="s1">&#39;tekton.dev/ready&#39;</span><span class="p">]</span><span class="w">
+</span><span class="w">          </span><span class="k">path</span><span class="p">:</span><span class="w"> </span>ready<span class="w">
+</span><span class="w">      </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>tekton-internal-downward<span class="w">
+</span></code></pre></div><h3 id="自动运行的容器">自动运行的容器</h3>
+<p>这些自动运行的容器作为 pod 的<code>initContainer</code>会在 step 容器运行之前运行</p>
+<ul>
+<li><code>credential-initializer</code></li>
+<li><code>working-dir-initializer</code></li>
+<li><code>place-scripts</code></li>
+<li><code>place-tools</code></li>
+</ul>
+<h3 id="taskstep间的数据传递">Task/Step间的数据传递</h3>
+<p>针对不同的数据，有多种不同的选择。比如<code>Workspace</code>、<code>Result</code>、<code>PipelineResource</code>。对于由于<code>Task</code>的执行是通过<code>Pod</code>来完成的，而<code>Pod</code>会调度到不同的节点上。因此<code>Task</code>间的数据传递，需要用到持久化的卷。</p>
+<p>而<code>Step</code>作为<code>Pod</code>中的容器来运行，</p>
+<h4 id="workspace">Workspace</h4>
+<p>工作区，可以理解为一个挂在到容器上的卷，用于文件的传递。</p>
+<h5 id="persistentvolumeclaim"><code>persistentVolumeClaim</code></h5>
+<p>引用已存在<code>persistentVolumeClaim</code>卷（volume）。这种工作空间，可多次使用，需要先进行创建。比如 Java 项目的 <code>maven</code>，编译需要本地依赖库，这样可以节省每次编译都要下载依赖包的成本。</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">workspaces</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>m2<span class="w">
+</span><span class="w">  </span><span class="k">persistentVolumeClaim</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">claimName</span><span class="p">:</span><span class="w"> </span>m2-pv-claim<span class="w">
+</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>v1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>PersistentVolume<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>m2-pv<span class="w">
+</span><span class="w">  </span><span class="k">labels</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">type</span><span class="p">:</span><span class="w"> </span>local<span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">storageClassName</span><span class="p">:</span><span class="w"> </span>manual<span class="w">
+</span><span class="w">  </span><span class="k">capacity</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">storage</span><span class="p">:</span><span class="w"> </span>10Gi<span class="w">
+</span><span class="w">  </span><span class="k">accessModes</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- ReadWriteMany<span class="w">
+</span><span class="w">  </span><span class="k">hostPath</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;/data/.m2&#34;</span><span class="w">
+</span><span class="w"></span>---<span class="w">
+</span><span class="w"></span><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>v1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>PersistentVolumeClaim<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>m2-pv-claim<span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">storageClassName</span><span class="p">:</span><span class="w"> </span>manual<span class="w">
+</span><span class="w">  </span><span class="c"># volumeName: m2-pv</span><span class="w">
+</span><span class="w">  </span><span class="k">accessModes</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- ReadWriteMany<span class="w">
+</span><span class="w">  </span><span class="k">resources</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">requests</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">storage</span><span class="p">:</span><span class="w"> </span>10Gi<span class="w">
+</span></code></pre></div><h5 id="volumeclaimtemplate"><code>volumeClaimTemplate</code></h5>
+<p>为每个<code>PipelineRun</code>或者<code>TaskRun</code>创建<code>PersistentVolumeClaim</code>卷（volume）的模板。比如一次构建需要从 git 仓库克隆代码，而针对不同的流水线代码仓库是不同的。这里就会用到<code>volumeClaimTemplate</code>，为每次构建创建一个<code>PersistentVolumeClaim</code>卷。（从0.12.0开始）</p>
+<p>生命周期同<code>PipelineRun</code>或者<code>TaskRun</code>，运行之后释放。</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">workspaces</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>git-source<span class="w">
+</span><span class="w">  </span><span class="k">volumeClaimTemplate</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">accessModes</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- ReadWriteMany<span class="w">
+</span><span class="w">      </span><span class="k">resources</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="k">requests</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span><span class="k">storage</span><span class="p">:</span><span class="w"> </span>1Gi<span class="w">
+</span></code></pre></div><p>相较于<code>persistantVolumeClain</code>类型的workspace，<code>volumeClaimTemplate</code>不需要在每次在<code>PipelineRun</code>完成后清理工作区；并发情况下可能会出现问题。</p>
+<h5 id="emptydir"><code>emptyDir</code></h5>
+<p>引用<code>emptyDir</code>卷，跟随<code>Task</code>生命周期的临时目录。适合在<code>Task</code>的<code>Step</code>间共享数据，无法在多个<code>Task</code>间共享。</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">workspaces</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>temp<span class="w">
+</span><span class="w">  </span><span class="k">emptyDir</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></code></pre></div><h5 id="configmap"><code>configMap</code></h5>
+<p>引用一个<code>configMap</code>卷，将<code>configMap</code>卷作为工作区，有如下限制：</p>
+<ul>
+<li>挂载的卷是<code>只读</code>的</li>
+<li>需要提前创建<code>configMap</code></li>
+<li><code>configMap</code>的<a href="https://github.com/kubernetes/kubernetes/blob/f16bfb069a22241a5501f6fe530f5d4e2a82cf0e/pkg/apis/core/validation/validation.go#L5042">大小限制为1MB（K8s的限制）</a></li>
+</ul>
+<p>使用场景，比如使用<code>maven</code>编译Java项目，配置文件<code>settings.xml</code>可以使用<code>configMap</code>作为工作区</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">workspaces</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>maven-settings<span class="w">
+</span><span class="w">  </span><span class="k">configmap</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>maven-settings<span class="w">
+</span></code></pre></div><h5 id="secret"><code>secret</code></h5>
+<p>用于引用<code>secret</code>卷，同<code>configMap</code>工作区一样，也有限制：</p>
+<ul>
+<li>挂载的卷是<code>只读</code>的</li>
+<li>需要提前创建<code>secret</code></li>
+<li><code>secret</code>的<a href="https://github.com/kubernetes/kubernetes/blob/f16bfb069a22241a5501f6fe530f5d4e2a82cf0e/pkg/apis/core/validation/validation.go#L5042">大小限制为1MB（K8s的限制）</a></li>
+</ul>
+<h4 id="result">Result</h4>
+<p><code>results</code>字段可以用来配置多个文件用来存储<code>Tasks</code>的执行结果，这些文件保存在<code>/tekton/results</code>目录中。</p>
+<p>在<code>Pipeline</code>中，可以通过<code>tasks.[task-nanme].results.[result-name]</code>注入到其他<code>Task</code>的参数中。</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>tekton.dev/v1beta1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>Task<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>print-date<span class="w">
+</span><span class="w">  </span><span class="k">annotations</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">description</span><span class="p">:</span><span class="w"> </span><span class="sd">|
+</span><span class="sd">      A simple task that prints the date</span><span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">results</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>current-date-unix-timestamp<span class="w">
+</span><span class="w">      </span><span class="k">description</span><span class="p">:</span><span class="w"> </span>The<span class="w"> </span>current<span class="w"> </span>date<span class="w"> </span>in<span class="w"> </span>unix<span class="w"> </span>timestamp<span class="w"> </span>format<span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>current-date-human-readable<span class="w">
+</span><span class="w">      </span><span class="k">description</span><span class="p">:</span><span class="w"> </span>The<span class="w"> </span>current<span class="w"> </span>date<span class="w"> </span>in<span class="w"> </span>human<span class="w"> </span>readable<span class="w"> </span>format<span class="w">
+</span><span class="w">  </span><span class="k">steps</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>print-date-unix-timestamp<span class="w">
+</span><span class="w">      </span><span class="k">image</span><span class="p">:</span><span class="w"> </span>bash<span class="p">:</span>latest<span class="w">
+</span><span class="w">      </span><span class="k">script</span><span class="p">:</span><span class="w"> </span><span class="sd">|
+</span><span class="sd">        #!/usr/bin/env bash</span><span class="w">
+</span><span class="w">        </span>date<span class="w"> </span>+%s<span class="w"> </span>|<span class="w"> </span>tee<span class="w"> </span>$(results.current-date-unix-timestamp.path)<span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>print-date-humman-readable<span class="w">
+</span><span class="w">      </span><span class="k">image</span><span class="p">:</span><span class="w"> </span>bash<span class="p">:</span>latest<span class="w">
+</span><span class="w">      </span><span class="k">script</span><span class="p">:</span><span class="w"> </span><span class="sd">|
+</span><span class="sd">        #!/usr/bin/env bash</span><span class="w">
+</span><span class="w">        </span>date<span class="w"> </span>|<span class="w"> </span>tee<span class="w"> </span>$(results.current-date-human-readable.path)<span class="w">
+</span><span class="w"></span>---<span class="w">
+</span><span class="w"></span><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>tekton.dev/v1beta1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>PipelineRun<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>pass-date<span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">pipelineSpec</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">tasks</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>print-date<span class="w">
+</span><span class="w">        </span><span class="k">taskRef</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>print-date<span class="w">
+</span><span class="w">      </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>read-date<span class="w">
+</span><span class="w">        </span><span class="k">runAfter</span><span class="p">:</span><span class="w"> </span><span class="c">#配置执行顺序</span><span class="w">
+</span><span class="w">          </span>- print-date<span class="w">
+</span><span class="w">        </span><span class="k">taskSpec</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span><span class="k">params</span><span class="p">:</span><span class="w">
+</span><span class="w">            </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>current-date-unix-timestamp<span class="w">
+</span><span class="w">              </span><span class="k">type</span><span class="p">:</span><span class="w"> </span>string<span class="w">
+</span><span class="w">            </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>current-date-human-readable<span class="w">
+</span><span class="w">              </span><span class="k">type</span><span class="p">:</span><span class="w"> </span>string<span class="w">
+</span><span class="w">          </span><span class="k">steps</span><span class="p">:</span><span class="w">
+</span><span class="w">            </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>read<span class="w">
+</span><span class="w">              </span><span class="k">image</span><span class="p">:</span><span class="w"> </span>busybox<span class="w">
+</span><span class="w">              </span><span class="k">script</span><span class="p">:</span><span class="w"> </span><span class="sd">|
+</span><span class="sd">                echo $(params.current-date-unix-timestamp)</span><span class="w">
+</span><span class="w">                </span>echo<span class="w"> </span>$(params.current-date-human-readable)<span class="w">
+</span><span class="w">        </span><span class="k">params</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>current-date-unix-timestamp<span class="w">
+</span><span class="w">            </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>$(tasks.print-date.results.current-date-unix-timestamp)<span class="w"> </span><span class="c"># 注入参数</span><span class="w">
+</span><span class="w">          </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>current-date-human-readable<span class="w">
+</span><span class="w">            </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>$(tasks.print-date.results.current-date-human-readable)<span class="w"> </span><span class="c"># 注入参数      </span><span class="w">
+</span></code></pre></div><p>执行结果：</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">┌──────Logs(tekton-pipelines/pass-date-read-date-rhlf2-pod-9b2sk)[all] ──────────                                                                       │
+│ place-scripts stream closed                                                                                                                                                                                                                                                             ││ step-read 1590242170                                                                                                                                                                                                                                                                    │
+│ step-read Sat May 23 13:56:10 UTC 2020                                                                                                                                                                                                                                                  ││ step-read + echo 1590242170                                                                                                                                                                                                                                                             │
+│ step-read + echo Sat May 23 13:56:10 UTC 2020                                                                                                                                                                                                                                           │
+│ place-tools stream closed                                                                                                                                                                                                                                                               │
+│ step-read stream closed                                                                                                                                                                                                                                                                 │
+│
+</code></pre></div><h4 id="pipelineresource">PipelineResource</h4>
+<p><code>PipelineResource</code>在最后提，因为目前只是<code>alpha</code>版本，何时会进入<code>beta</code>或者弃用目前还是未知数。有兴趣的可以看下这里：<a href="https://tekton.dev/docs/pipelines/resources/#why-aren-t-pipelineresources-in-beta">Why Aren’t PipelineResources in Beta?</a></p>
+<p>简单来说，<code>PipelineResource</code>可以通过其他的方式实现，而其本身也存在弊端：比如实现不透明，debug有难度；功能不够强；降低了Task的重用性等。</p>
+<p>比如<code>git</code>类型的<code>PipelineResource</code>，可以通过<code>workspace</code>和<code>git-clone</code> Task来实现；存储类型的，也可以通过<code>workspace</code>来实现。</p>
+<p>这也就是为什么<a href="#Workspace">上面介绍workspace的篇幅</a>比较大。个人也偏向于使用<code>workspace</code>，灵活度高；使用workspace的Task重用性强。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li>云原生 CICD: Tekton Pipeline 实战：<a href="https://atbug.com/tekton-trigger-practice">https://atbug.com/tekton-trigger-practice</a></li>
+<li>控制 Pod 内容器的启动顺序：<a href="https://atbug.com/control-process-order-of-pod-containers">https://atbug.com/control-process-order-of-pod-containers</a></li>
+<li>Knative Controller：<a href="https://knative.dev/docs/eventing/samples/writing-receive-adapter-source/03-controller">https://knative.dev/docs/eventing/samples/writing-receive-adapter-source/03-controller</a></li>
+<li>Why Aren’t PipelineResources in Beta?：<a href="https://tekton.dev/docs/pipelines/resources/#why-aren-t-pipelineresources-in-beta">https://tekton.dev/docs/pipelines/resources/#why-aren-t-pipelineresources-in-beta</a></li>
+</ul>
+<hr>
+<p>文章同步发送到公众号：云编码 (微信号：sevenfeet)。</p>
+<p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/23/qrcode.jpg" alt="qrcode"></p>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#pipeline-crd-与核心资源的关系">Pipeline CRD 与核心资源的关系</a></li>
+    <li><a href="#工作原理">工作原理</a>
+      <ul>
+        <li><a href="#task的执行顺序">Task的执行顺序</a></li>
+        <li><a href="#step的执行顺序">Step的执行顺序</a></li>
+        <li><a href="#自动运行的容器">自动运行的容器</a></li>
+        <li><a href="#taskstep间的数据传递">Task/Step间的数据传递</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/tekton">Tekton
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/kubernetes">Kubernetes
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    <nav id="article-nav">
+    
+    
+    <a href="../mysql-timezone-in-java/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">Java 中的 Mysql 时区问题&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "addozhang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2020 Addo Zhang
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>

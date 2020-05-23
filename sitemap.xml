@@ -4,7 +4,56 @@
   
   <url>
     <loc>https://atbug.com/categories/</loc>
-    <lastmod>2020-05-14T11:34:24+08:00</lastmod>
+    <lastmod>2020-05-23T22:47:14+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/tags/kubernetes/</loc>
+    <lastmod>2020-05-23T22:47:14+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/post/</loc>
+    <lastmod>2020-05-23T22:47:14+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/tags/</loc>
+    <lastmod>2020-05-23T22:47:14+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/tags/tekton/</loc>
+    <lastmod>2020-05-23T22:47:14+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/how-tekton-works/</loc>
+    <lastmod>2020-05-23T22:47:14+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/</loc>
+    <lastmod>2020-05-23T22:47:14+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/categories/%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2020-05-23T22:47:14+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -25,34 +74,6 @@
   
   <url>
     <loc>https://atbug.com/tags/mysql/</loc>
-    <lastmod>2020-05-14T11:34:24+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/post/</loc>
-    <lastmod>2020-05-14T11:34:24+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/tags/</loc>
-    <lastmod>2020-05-14T11:34:24+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/</loc>
-    <lastmod>2020-05-14T11:34:24+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/categories/%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2020-05-14T11:34:24+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -82,13 +103,6 @@
   <url>
     <loc>https://atbug.com/translation-multi-runtime-microservices-architecture/</loc>
     <lastmod>2020-04-01T23:18:00+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/tags/kubernetes/</loc>
-    <lastmod>2020-03-12T22:05:16+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -130,13 +144,6 @@
   
   <url>
     <loc>https://atbug.com/tags/cicd/</loc>
-    <lastmod>2020-02-12T21:30:03+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/tags/tekton/</loc>
     <lastmod>2020-02-12T21:30:03+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

@@ -6,10 +6,19 @@
     <description>Recent content in Tekton on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 12 Feb 2020 21:30:03 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 23 May 2020 22:47:14 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/tags/tekton/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Tekton 的工作原理</title>
+      <link>https://atbug.com/how-tekton-works/</link>
+      <pubDate>Sat, 23 May 2020 22:47:14 +0800</pubDate>
+      
+      <guid>https://atbug.com/how-tekton-works/</guid>
+      <description>这篇文章是基于 Tekton Pipeline 的最新版本v0.12.1版本。 快速入门请参考：云原生 CICD: Tekton Pipeline 实战 ，实战是基于版本 v0.10.x。 Pipeline CRD 与核心资源的关系 $ k api-resources --api-group=tekton.dev</description>
+    </item>
     
     <item>
       <title>云原生CICD: Tekton Trigger 实战</title>
