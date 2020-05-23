@@ -140,7 +140,7 @@ tasks                            tekton.dev   <span class="nb">true</span>      
 </code></pre></div><p>为 Task A 创建<code>TaskRun</code>，假如<code>Task</code>配置了<code>Condition</code>。会先为 condition创建一个<code>TaskRun</code>，只有在 condition 的<code>TaskRun</code>运行成功，才会运行 A 的<code>TaskRun</code>；否则就跳过。</p>
 <h3 id="step的执行顺序">Step的执行顺序</h3>
 <p>这一部分篇幅较长，之前的文章 <a href="https://atbug.com/control-process-order-of-pod-containers/">控制 Pod 内容器的启动顺序</a> 中提到过。</p>
-<p>这里补充一下<a href="https://kubernetes.io/docs/tasks/inject-data-application/downward-api-volume-expose-pod-information/#the-downward-api">Kubernetes Downward API</a>的使用，Kubernetes Downward API的引入，控制着 <code>Task</code> 的第一个 <code>Step</code> 在合适执行。</p>
+<p>这里补充一下<a href="https://kubernetes.io/docs/tasks/inject-data-application/downward-api-volume-expose-pod-information/#the-downward-api">Kubernetes Downward API</a>的使用，Kubernetes Downward API的引入，控制着 <code>Task</code> 的第一个 <code>Step</code> 在何时执行。</p>
 <p><code>TaskRun</code> Controller 在 reconciling 的过程中，在相应的 <code>Pod</code> 状态变为<code>Running</code>时，会将<code>tekton.dev/ready=READY</code>写入到 Pod 的 annotation 中，来通知第一个<code>Step</code>的执行。</p>
 <p>Pod的部分内容：</p>
 <div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">spec</span><span class="p">:</span><span class="w">
