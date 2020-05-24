@@ -179,14 +179,53 @@ tasks                            tekton.dev   <span class="nb">true</span>      
 </span><span class="w">            </span><span class="k">fieldPath</span><span class="p">:</span><span class="w"> </span>metadata.annotations<span class="p">[</span><span class="s1">&#39;tekton.dev/ready&#39;</span><span class="p">]</span><span class="w">
 </span><span class="w">          </span><span class="k">path</span><span class="p">:</span><span class="w"> </span>ready<span class="w">
 </span><span class="w">      </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>tekton-internal-downward<span class="w">
-</span></code></pre></div><h3 id="自动运行的容器">自动运行的容器</h3>
+</span></code></pre></div><p>对原生的排序step container进一步处理：启动命令使用<code>entrypoint</code>提供，并设置执行参数：</p>
+<p><code>entrypoint.go</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">orderContainers</span><span class="p">(</span><span class="nx">entrypointImage</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">steps</span> <span class="p">[]</span><span class="nx">corev1</span><span class="p">.</span><span class="nx">Container</span><span class="p">,</span> <span class="nx">results</span> <span class="p">[]</span><span class="nx">v1alpha1</span><span class="p">.</span><span class="nx">TaskResult</span><span class="p">)</span> <span class="p">(</span><span class="nx">corev1</span><span class="p">.</span><span class="nx">Container</span><span class="p">,</span> <span class="p">[]</span><span class="nx">corev1</span><span class="p">.</span><span class="nx">Container</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">initContainer</span> <span class="o">:=</span> <span class="nx">corev1</span><span class="p">.</span><span class="nx">Container</span><span class="p">{</span>
+		<span class="nx">Name</span><span class="p">:</span>         <span class="s">&#34;place-tools&#34;</span><span class="p">,</span>
+		<span class="nx">Image</span><span class="p">:</span>        <span class="nx">entrypointImage</span><span class="p">,</span>
+		<span class="nx">Command</span><span class="p">:</span>      <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;cp&#34;</span><span class="p">,</span> <span class="s">&#34;/ko-app/entrypoint&#34;</span><span class="p">,</span> <span class="nx">entrypointBinary</span><span class="p">},</span>
+		<span class="nx">VolumeMounts</span><span class="p">:</span> <span class="p">[]</span><span class="nx">corev1</span><span class="p">.</span><span class="nx">VolumeMount</span><span class="p">{</span><span class="nx">toolsMount</span><span class="p">},</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nx">steps</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">corev1</span><span class="p">.</span><span class="nx">Container</span><span class="p">{},</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;No steps specified&#34;</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">s</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">steps</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">argsForEntrypoint</span> <span class="p">[]</span><span class="kt">string</span>
+		<span class="k">switch</span> <span class="nx">i</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="nx">argsForEntrypoint</span> <span class="p">=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span>
+				<span class="c1">// First step waits for the Downward volume file.
+</span><span class="c1"></span>				<span class="s">&#34;-wait_file&#34;</span><span class="p">,</span> <span class="nx">filepath</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="nx">downwardMountPoint</span><span class="p">,</span> <span class="nx">downwardMountReadyFile</span><span class="p">),</span>
+				<span class="s">&#34;-wait_file_content&#34;</span><span class="p">,</span> <span class="c1">// Wait for file contents, not just an empty file.
+</span><span class="c1"></span>				<span class="c1">// Start next step.
+</span><span class="c1"></span>				<span class="s">&#34;-post_file&#34;</span><span class="p">,</span> <span class="nx">filepath</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="nx">mountPoint</span><span class="p">,</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%d&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">)),</span>
+				<span class="s">&#34;-termination_path&#34;</span><span class="p">,</span> <span class="nx">terminationPath</span><span class="p">,</span>
+			<span class="p">}</span>
+		<span class="k">default</span><span class="p">:</span>
+			<span class="c1">// All other steps wait for previous file, write next file.
+</span><span class="c1"></span>			<span class="nx">argsForEntrypoint</span> <span class="p">=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span>
+				<span class="s">&#34;-wait_file&#34;</span><span class="p">,</span> <span class="nx">filepath</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="nx">mountPoint</span><span class="p">,</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%d&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span>
+				<span class="s">&#34;-post_file&#34;</span><span class="p">,</span> <span class="nx">filepath</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="nx">mountPoint</span><span class="p">,</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%d&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">)),</span>
+				<span class="s">&#34;-termination_path&#34;</span><span class="p">,</span> <span class="nx">terminationPath</span><span class="p">,</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="自动运行的容器">自动运行的容器</h3>
 <p>这些自动运行的容器作为 pod 的<code>initContainer</code>会在 step 容器运行之前运行</p>
-<ul>
-<li><code>credential-initializer</code></li>
-<li><code>working-dir-initializer</code></li>
-<li><code>place-scripts</code></li>
-<li><code>place-tools</code></li>
-</ul>
+<h4 id="credential-initializer"><code>credential-initializer</code></h4>
+<p>用于将 <code>ServiceAccount</code> 的相关secrets持久化到容器的文件系统中。比如 ssh 相关秘钥、config文件以及know_hosts文件；docker registry 相关的凭证则会被写入到 docker 的配置文件中。</p>
+<h4 id="working-dir-initializer"><code>working-dir-initializer</code></h4>
+<p>收集<code>Task</code>内的各个<code>Step</code>的<code>workingDir</code>配置，初始化目录结构</p>
+<h4 id="place-scripts"><code>place-scripts</code></h4>
+<p>假如<code>Step</code>使用的是<code>script</code>配置（与command+args相对），这个容器会将脚本代码（<code>script</code>字段的内容）持久化到<code>/tekton/scripts</code>目录中。</p>
+<p>注：所有的脚本会自动加上<code>#!/bin/sh\nset -xe\n</code>，所以<code>script</code>字段里就不必写了。</p>
+<h4 id="place-tools"><code>place-tools</code></h4>
+<p>将<code>entrypoint</code>的二进制文件，复制到<code>/tekton/tools/entrypoint</code>.</p>
 <h3 id="taskstep间的数据传递">Task/Step间的数据传递</h3>
 <p>针对不同的数据，有多种不同的选择。比如<code>Workspace</code>、<code>Result</code>、<code>PipelineResource</code>。对于由于<code>Task</code>的执行是通过<code>Pod</code>来完成的，而<code>Pod</code>会调度到不同的节点上。因此<code>Task</code>间的数据传递，需要用到持久化的卷。</p>
 <p>而<code>Step</code>作为<code>Pod</code>中的容器来运行，</p>
