@@ -17,7 +17,7 @@
       <pubDate>Sat, 23 May 2020 22:47:14 +0800</pubDate>
       
       <guid>https://atbug.com/how-tekton-works/</guid>
-      <description>(img from Tekton) 这篇文章是基于 Tekton Pipeline 的最新版本v0.12.1版本。 快速入门请参考：云原生 CICD: Tekton Pipeline 实战 ，实战是基于版本 v0.10.x。 Pipeline CRD 与核心资源的关系 $</description>
+      <description>这篇文章是基于 Tekton Pipeline 的最新版本v0.12.1版本。 快速入门请参考：云原生 CICD: Tekton Pipeline 实战 ，实战是基于版本 v0.10.x。 Pipeline CRD 与核心资源的关系 $ k api-resources --api-group=tekton.dev</description>
     </item>
     
     <item>
