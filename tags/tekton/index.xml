@@ -26,7 +26,7 @@
       <pubDate>Wed, 12 Feb 2020 21:30:03 +0800</pubDate>
       
       <guid>https://atbug.com/tekton-trigger-practice/</guid>
-      <description>Trigger的介绍看这里. 接上文Tekton Pipeline 实战, 我们为某个项目创建了一个Pipeline, 但是执行时通过 PipelineRun 来完成的. 在 PipelineRun 中我们制定了 Pipepline</description>
+      <description>Trigger的介绍看 这里. 接上文Tekton Pipeline 实战, 我们为某个项目创建了一个Pipeline, 但是执行时通过 PipelineRun 来完成的. 在 PipelineRun 中我们制定了 Pipepline</description>
     </item>
     
     <item>
