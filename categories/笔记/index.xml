@@ -6,10 +6,19 @@
     <description>Recent content in 笔记 on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 23 May 2020 22:47:14 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 28 May 2020 22:04:02 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/categories/%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Eureka 实例注册状态保持 STARTING 的问题排查</title>
+      <link>https://atbug.com/troubleshooting-on-eureka-instance-keep-starting/</link>
+      <pubDate>Thu, 28 May 2020 22:04:02 +0800</pubDate>
+      
+      <guid>https://atbug.com/troubleshooting-on-eureka-instance-keep-starting/</guid>
+      <description>这是真实发生在生产环境的 case，实例启动后正常运行，而在注册中心的状态一直保持STARTING，而本地的状态为UP。导致服务的消费方无法发</description>
+    </item>
     
     <item>
       <title>Tekton 的工作原理</title>
