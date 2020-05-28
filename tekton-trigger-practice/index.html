@@ -87,8 +87,8 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            <p>Trigger的介绍看 <a href="https://atbug.com/tekton-pipeline-practice/">这里</a>.</p>
-<p>接上文<a href="mweblib://15794248897463">Tekton Pipeline 实战</a>, 我们为某个项目创建了一个Pipeline, 但是执行时通过 PipelineRun 来完成的. 在 PipelineRun 中我们制定了 Pipepline 以及要使用的 PipelineResource. 但是日常的开发中, 我们更多希望在提交了代码之后开始 Pipeline 的执行. 这时我们就要用到 Tekton Trigger 了.</p>
+            <p>Trigger的介绍看 <a href="https://atbug.com/tekton-trigger-glance/">这里</a>.</p>
+<p>接上文 <a href="https://atbug.com/tekton-pipeline-practice/">Tekton Pipeline 实战</a> , 我们为某个项目创建了一个Pipeline, 但是执行时通过 PipelineRun 来完成的. 在 PipelineRun 中我们制定了 Pipepline 以及要使用的 PipelineResource. 但是日常的开发中, 我们更多希望在提交了代码之后开始 Pipeline 的执行. 这时我们就要用到 Tekton Trigger 了.</p>
 <p>思路是这样: 代码提交后将<code>Push Event</code>发送给<code>Tekton Trigger EventController</code>(以下简称 Controller), 然后 Controller 基于的<code>TriggerBinding</code>的配置从 payload 中提取信息, 装载在&quot;Params&quot;中作为<code>TriggerTemplate</code>的入参. 最后 Controller 创建<code>PipelineRun</code>.</p>
 <h2 id="trigger-相关的资源">Trigger 相关的资源</h2>
 <h3 id="triggertemplate">TriggerTemplate</h3>
