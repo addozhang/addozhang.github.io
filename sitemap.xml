@@ -1333,6 +1333,13 @@
   </url>
   
   <url>
+    <loc>https://atbug.com/blog-migrate-temp/</loc>
+    <lastmod>2010-06-09T20:33:35+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://atbug.com/tags/ci/cd/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
