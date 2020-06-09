@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>带你了解 Ribbon 负载均衡器的实现 // 乱世浮生</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
+    <meta name="keywords" content="Java,Spring Cloud,Architecture,">
+
+        <meta property="og:title" content="带你了解 Ribbon 负载均衡器的实现" />
+    <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh-cn" />
+    <meta property="og:url" content="https://atbug.com/how-loadbalancer-works-in-ribbon/" />
+    
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link href="https://atbug.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://atbug.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://atbug.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.65.1" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://atbug.com/">乱世浮生</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="../">Home</a>
+                
+                <a class="main-nav-link" href="../post/">Archives</a>
+                
+                <a class="main-nav-link" href="../tags/">Tags</a>
+                
+                <a class="main-nav-link" href="../categories/">Categories</a>
+                
+                <a class="main-nav-link" href="../about/">About</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">带你了解 Ribbon 负载均衡器的实现</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="../how-loadbalancer-works-in-ribbon/" class="article-date">
+                <time datetime='2020-06-09T19:35:53.000&#43;08:00' itemprop="datePublished">2020-06-09</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                    
+                </div>
+            </div>
+            
+            
+            <div class="article-comment-link-wrap">
+                <a href="../how-loadbalancer-works-in-ribbon/#disqus_thread" class="article-comment-link">Comments</a>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>Spring Cloud 中 <code>Ribbon</code>有在 <code>Zuul</code> 和 <code>Feign</code> 中使用，当然也可以通过在<code>RestTemplate</code>的 bean 定义上添加<code>@LoadBalanced</code>注解方式获得一个带有负载均衡更能的<code>RestTemplate</code>。</p>
+<p>不过实现的方法都大同小异：对<code>HttpClient</code>进行封装，加上实例的”选择“（这个选择的逻辑就是我们所说的负载均衡）。</p>
+<p>要学习某个框架的时候，最简单的方案就是：<strong>Running+Debugging</strong>。</p>
+<p><strong>跑就是了。</strong></p>
+<blockquote>
+<p>debug 不一定是为了 bug</p>
+<p>debug 出真知</p>
+<p>Debugging = Learning</p>
+</blockquote>
+<p>选用 <a href="https://www.alispit.tel">Ali Spittel</a> 的一条推文：</p>
+<p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/06/09/screenshot-20200609-at-165236.png" alt="screenshot 2020-06-09 at 16.52.36"></p>
+<h3 id="以-zuul-路由的线程栈为例">以 Zuul 路由的线程栈为例</h3>
+<p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/06/09/screenshot-20200609-at-151421.png" alt="screenshot 2020-06-09 at 15.14.21"></p>
+<p>调整下顺序：</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="n">RetryableRibbonLoadBalancingHttpClient</span><span class="err">#</span><span class="n">execute</span><span class="o">(</span><span class="n">RibbonApacheHttpRequest</span><span class="o">,</span> <span class="n">IClientConfig</span><span class="o">)</span>
+<span class="n">RetryableRibbonLoadBalancingHttpClient</span><span class="err">#</span><span class="n">executeWithRetry</span><span class="o">(...)</span>
+<span class="n">RetryTemplate</span><span class="err">#</span><span class="n">execute</span><span class="o">(</span><span class="n">RetryCallback</span><span class="o">&lt;</span><span class="n">T</span><span class="o">,</span> <span class="n">E</span><span class="o">&gt;,</span> <span class="n">RecoveryCallback</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;)</span>
+<span class="n">RetryTemplate</span><span class="err">#</span><span class="n">doExecute</span><span class="o">(</span><span class="n">RetryCallback</span><span class="o">&lt;</span><span class="n">T</span><span class="o">,</span> <span class="n">E</span><span class="o">&gt;,</span> <span class="n">RecoveryCallback</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;,</span> <span class="n">RetryState</span><span class="o">)</span>
+<span class="n">RetryTemplate</span><span class="err">#</span><span class="n">canRetry</span><span class="o">(</span><span class="n">RetryPolicy</span><span class="o">,</span> <span class="n">RetryContext</span><span class="o">)</span>
+<span class="n">InterceptorRetryPolicy</span><span class="err">#</span><span class="n">canRetry</span><span class="o">(</span><span class="n">RetryContext</span><span class="o">)</span>
+<span class="n">AbstractLoadBalancingClient</span><span class="err">#</span><span class="n">choose</span><span class="o">(</span><span class="n">String</span> <span class="n">serviceId</span><span class="o">)</span>
+<span class="n">ZoneAwareLoadBalancer</span><span class="err">#</span><span class="n">chooseServer</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">)</span> <span class="c1">//key as serviceId
+</span><span class="c1"></span><span class="n">BaseLoadBalancer</span><span class="err">#</span><span class="n">chooseServer</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">)</span>
+<span class="n">PredicateBasedRule</span><span class="err">#</span><span class="n">choose</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">)</span>
+<span class="n">AbstractServerPredicate</span><span class="err">#</span><span class="n">chooseRoundRobinAfterFiltering</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Server</span><span class="o">&gt;</span> <span class="n">servers</span><span class="o">,</span> <span class="n">Object</span> <span class="n">loadBalancerKey</span><span class="o">)</span>
+<span class="n">AbstractServerPredicate</span><span class="err">#</span><span class="n">apply</span><span class="o">(</span><span class="n">Predicate</span><span class="o">)</span>
+</code></pre></div><h3 id="分析">分析</h3>
+<p>Zuul 收到请求经过一系列 Filter 的处理，来到 <code>RibbonRoutingFilter</code>；将请求封装成 <code>RibbonCommandContext</code>，然后使用 context 构建 <code>RibbonCommand</code>。最终调用<code>RibbonCommand#execute()</code>方法，将请求路由到下游。</p>
+<p><code>RibbonCommand</code>持有<code>AbstractLoadBalancerAwareClient</code>的对象，通过该 client 在处理请求和响应。</p>
+<p>对于 <strong>retryable</strong> 的 client（比如此处的<code>RetryableRibbonLoadBalancingHttpClient</code>）， <em><em>每次处理请求的时候都会创建一个</em></em> <code>RetryTemplate</code>对象来处理请求；同时根据<code>RetryPolicy</code>来创建<code>RetryContext</code>对象，用来保存重试的上下文，并 <em>检查实例是否可以进行重试</em> 。</p>
+<p>注意重点就在这里：检查的时候<strong>如果重试次数为 0 且要检查的实例为空</strong>（说明是第一次请求），这时便会通过<strong>负载均衡器客户端</strong>（基本都是<code>AbstractLoadBalancingClient</code>的子类）从后端列表择出一个实例，保存在<code>RetryContext</code>中。</p>
+<p>负责均衡器客户端使用<strong>负载均衡器</strong>（<code>ILoadBalancer</code>的实现）来选择实例。每个负载均衡器都有自己的规则（<code>IRule</code>的实现类），通过规则来选择实例。</p>
+<p><code>IRule</code>的实现不是很多，</p>
+<p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/06/09/screenshot-20200609-at-163309.png" alt="screenshot 2020-06-09 at 16.33.09"></p>
+<p>其中的<code>ClientConfigEnabledRoundRobinRule</code>在<code>RoundRobinRule</code>的基础上，增加了配置的接口（因为其实现了<code>IClientConfigAware</code>接口）可以对规则进行配置。</p>
+<p>某些<code>ClientConfigEnabledRoundRobinRule</code>的子类了，增加了<code>Predicate</code>逻辑：使用<code>Predicate</code>（<code>AbstractServerPredicate</code>的子类）的逻辑进行选择；而<code>ClientConfigEnabledRoundRobinRule</code>只是简单的使用<code>RoundRobinRule</code>进行选择。</p>
+<p>因此选择的逻辑都是在<code>AbstractServerPredicate</code>子类中，其有个特别的子类<code>CompositePredicate</code>，顾名思义就是将多个逻辑整合在一起（使用<code>Predicate#and()</code>将所有逻辑串联起来，达到<code>&amp;&amp;</code>的效果），所有的逻辑检查都通过（返回<code>true</code>）时，这个实例就会被选中。</p>
+<p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/06/09/screenshot-20200609-at-165642.png" alt="screenshot 2020-06-09 at 16.56.42"></p>
+<hr>
+<p>那么现在要你写个自己负载均衡规则，应该知道从哪里入手了吧？:D</p>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#以-zuul-路由的线程栈为例">以 Zuul 路由的线程栈为例</a></li>
+        <li><a href="#分析">分析</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/spring-cloud">Spring Cloud
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/ribbon">Ribbon
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/debug">Debug
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        <div class="article-entry">
+            <hr>
+            <p>文章同步发送到公众号：云编码 (微信号：sevenfeet)。</p>
+            <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/23/qrcode.jpg" alt="qrcode"></p>
+        </div>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    
+    <a href="../troubleshooting-on-eureka-instance-keep-starting/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">Eureka 实例注册状态保持 STARTING 的问题排查&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+
+</article>
+
+        
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "addozhang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2020 Addo Zhang
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>

@@ -6,10 +6,46 @@
     <description>Recent content in Tags on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 28 May 2020 22:04:02 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 09 Jun 2020 19:35:53 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Debug</title>
+      <link>https://atbug.com/tags/debug/</link>
+      <pubDate>Tue, 09 Jun 2020 19:35:53 +0800</pubDate>
+      
+      <guid>https://atbug.com/tags/debug/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Ribbon</title>
+      <link>https://atbug.com/tags/ribbon/</link>
+      <pubDate>Tue, 09 Jun 2020 19:35:53 +0800</pubDate>
+      
+      <guid>https://atbug.com/tags/ribbon/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Spring</title>
+      <link>https://atbug.com/tags/spring/</link>
+      <pubDate>Tue, 09 Jun 2020 19:35:53 +0800</pubDate>
+      
+      <guid>https://atbug.com/tags/spring/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud</title>
+      <link>https://atbug.com/tags/spring-cloud/</link>
+      <pubDate>Tue, 09 Jun 2020 19:35:53 +0800</pubDate>
+      
+      <guid>https://atbug.com/tags/spring-cloud/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Eureka</title>
@@ -17,15 +53,6 @@
       <pubDate>Thu, 28 May 2020 22:04:02 +0800</pubDate>
       
       <guid>https://atbug.com/tags/eureka/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Spring</title>
-      <link>https://atbug.com/tags/spring/</link>
-      <pubDate>Thu, 28 May 2020 22:04:02 +0800</pubDate>
-      
-      <guid>https://atbug.com/tags/spring/</guid>
       <description></description>
     </item>
     
@@ -156,15 +183,6 @@
     </item>
     
     <item>
-      <title>Spring Cloud</title>
-      <link>https://atbug.com/tags/spring-cloud/</link>
-      <pubDate>Sun, 05 Jan 2020 14:14:03 +0800</pubDate>
-      
-      <guid>https://atbug.com/tags/spring-cloud/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>dekorate</title>
       <link>https://atbug.com/tags/dekorate/</link>
       <pubDate>Sat, 21 Dec 2019 20:45:22 +0800</pubDate>
@@ -278,15 +296,6 @@
       <pubDate>Tue, 28 Aug 2018 09:14:12 +0000</pubDate>
       
       <guid>https://atbug.com/tags/openshift/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Ribbon</title>
-      <link>https://atbug.com/tags/ribbon/</link>
-      <pubDate>Thu, 02 Aug 2018 08:55:43 +0000</pubDate>
-      
-      <guid>https://atbug.com/tags/ribbon/</guid>
       <description></description>
     </item>
     
