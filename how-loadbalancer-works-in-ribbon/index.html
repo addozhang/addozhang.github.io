@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.65.1" />
+    <meta name="generator" content="Hugo 0.68.3" />
 </head>
 
 
@@ -118,7 +118,7 @@
 <p><code>RibbonCommand</code>持有<code>AbstractLoadBalancerAwareClient</code>的对象，通过该 client 在处理请求和响应。</p>
 <p>对于 <strong>retryable</strong> 的 client（比如此处的<code>RetryableRibbonLoadBalancingHttpClient</code>）， <em><em>每次处理请求的时候都会创建一个</em></em> <code>RetryTemplate</code>对象来处理请求；同时根据<code>RetryPolicy</code>来创建<code>RetryContext</code>对象，用来保存重试的上下文，并 <em>检查实例是否可以进行重试</em> 。</p>
 <p>注意重点就在这里：检查的时候<strong>如果重试次数为 0 且要检查的实例为空</strong>（说明是第一次请求），这时便会通过<strong>负载均衡器客户端</strong>（基本都是<code>AbstractLoadBalancingClient</code>的子类）从后端列表择出一个实例，保存在<code>RetryContext</code>中。</p>
-<p>负责均衡器客户端使用<strong>负载均衡器</strong>（<code>ILoadBalancer</code>的实现）来选择实例。每个负载均衡器都有自己的规则（<code>IRule</code>的实现类），通过规则来选择实例。</p>
+<p>负载均衡器客户端使用<strong>负载均衡器</strong>（<code>ILoadBalancer</code>的实现）来选择实例。每个负载均衡器都有自己的规则（<code>IRule</code>的实现类），通过规则来选择实例。</p>
 <p><code>IRule</code>的实现不是很多，</p>
 <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/06/09/screenshot-20200609-at-163309.png" alt="screenshot 2020-06-09 at 16.33.09"></p>
 <p>其中的<code>ClientConfigEnabledRoundRobinRule</code>在<code>RoundRobinRule</code>的基础上，增加了配置的接口（因为其实现了<code>IClientConfigAware</code>接口）可以对规则进行配置。</p>

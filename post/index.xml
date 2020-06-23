@@ -1067,14 +1067,5 @@ Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置
       <description>基本信息 张晓辉 资深码农，12 年软件开发经验。曾在汇丰软件、唯品会、数人云等公司任职。 目前就职小鹏汽车，在基础架构团队从事技术中台的研发。 这里</description>
     </item>
     
-    <item>
-      <title>将博客搬至CSDN</title>
-      <link>https://atbug.com/blog-migrate-temp/</link>
-      <pubDate>Wed, 09 Jun 2010 20:33:35 +0800</pubDate>
-      
-      <guid>https://atbug.com/blog-migrate-temp/</guid>
-      <description></description>
-    </item>
-    
   </channel>
 </rss>
