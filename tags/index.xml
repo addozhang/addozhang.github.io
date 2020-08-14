@@ -6,10 +6,37 @@
     <description>Recent content in Tags on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 09 Jun 2020 19:35:53 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 15 Aug 2020 02:09:37 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Go</title>
+      <link>https://atbug.com/tags/go/</link>
+      <pubDate>Sat, 15 Aug 2020 02:09:37 +0800</pubDate>
+      
+      <guid>https://atbug.com/tags/go/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>HPA</title>
+      <link>https://atbug.com/tags/hpa/</link>
+      <pubDate>Sat, 15 Aug 2020 02:09:37 +0800</pubDate>
+      
+      <guid>https://atbug.com/tags/hpa/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kubernetes</title>
+      <link>https://atbug.com/tags/kubernetes/</link>
+      <pubDate>Sat, 15 Aug 2020 02:09:37 +0800</pubDate>
+      
+      <guid>https://atbug.com/tags/kubernetes/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Debug</title>
@@ -62,15 +89,6 @@
       <pubDate>Thu, 28 May 2020 22:04:02 +0800</pubDate>
       
       <guid>https://atbug.com/tags/troubleshooting/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Kubernetes</title>
-      <link>https://atbug.com/tags/kubernetes/</link>
-      <pubDate>Sat, 23 May 2020 22:47:14 +0800</pubDate>
-      
-      <guid>https://atbug.com/tags/kubernetes/</guid>
       <description></description>
     </item>
     
@@ -134,15 +152,6 @@
       <pubDate>Wed, 11 Mar 2020 23:00:27 +0800</pubDate>
       
       <guid>https://atbug.com/tags/docker/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Go</title>
-      <link>https://atbug.com/tags/go/</link>
-      <pubDate>Wed, 11 Mar 2020 23:00:27 +0800</pubDate>
-      
-      <guid>https://atbug.com/tags/go/</guid>
       <description></description>
     </item>
     

@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.68.3" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 <body>
@@ -57,6 +57,70 @@
 </header>
 
     <section id="main" class="outer">
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../ribbon-retry-in-zuul/">Zuul网关Ribbon重试</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../ribbon-retry-in-zuul/" class="article-date">
+                        <time datetime='2018-08-02T08:55:43.000&#43;00:00' itemprop="datePublished">2018-08-02</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../ribbon-retry-in-zuul/#disqus_thread" class="article-comment-link"></a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    相关配置 #如果路由转发请求发生超时(连接超时或处理超时), 只要超时时间的设置小于Hystrix的命令超时时间,那么它就会自动发起重试. 默认为
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../ribbon-retry-in-zuul/"></a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/spring-cloud">Spring Cloud
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/zuul">Zuul
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/ribbon">Ribbon
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
         
         <article class="article article-type-post" itemscope itemprop="blogPost">
             <div class="article-inner">
@@ -642,60 +706,6 @@
                     </p>
                     <p class="article-more-link">
                         <a href="../../jenkins-cli-enable/"></a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/jenkins">Jenkins
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../resolve-process-be-killed-after-jenkins-job-done/">Jenkins - 解决execute shell中启动的进程被在Job退出时被杀死问题</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../resolve-process-be-killed-after-jenkins-job-done/" class="article-date">
-                        <time datetime='2018-03-15T17:00:25.000&#43;00:00' itemprop="datePublished">2018-03-15</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../resolve-process-be-killed-after-jenkins-job-done/#disqus_thread" class="article-comment-link"></a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    因为ProcessTreeKiller的存在, 构建过程中使用shell启动的进程在Job完成时都会被kill掉. 各种搜索以及ProcessT
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../resolve-process-be-killed-after-jenkins-job-done/"></a>
                     </p>
                 </div>
 

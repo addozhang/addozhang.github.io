@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.68.3" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 <body>
@@ -57,6 +57,60 @@
 </header>
 
     <section id="main" class="outer">
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../resolve-process-be-killed-after-jenkins-job-done/">Jenkins - 解决execute shell中启动的进程被在Job退出时被杀死问题</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../resolve-process-be-killed-after-jenkins-job-done/" class="article-date">
+                        <time datetime='2018-03-15T17:00:25.000&#43;00:00' itemprop="datePublished">2018-03-15</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../resolve-process-be-killed-after-jenkins-job-done/#disqus_thread" class="article-comment-link"></a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    因为ProcessTreeKiller的存在, 构建过程中使用shell启动的进程在Job完成时都会被kill掉. 各种搜索以及ProcessT
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../resolve-process-be-killed-after-jenkins-job-done/"></a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/jenkins">Jenkins
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
         
         <article class="article article-type-post" itemscope itemprop="blogPost">
             <div class="article-inner">
@@ -690,60 +744,6 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
                         
                         <li class="article-tag-list-item">
                             <a class="article-tag-list-link" href="https://atbug.com//tags/go">Go
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../install-godep-issue-in-custom-gopath/">自定义GOPATH下安装godep失败</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../install-godep-issue-in-custom-gopath/" class="article-date">
-                        <time datetime='2017-12-22T13:02:38.000&#43;00:00' itemprop="datePublished">2017-12-22</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../install-godep-issue-in-custom-gopath/#disqus_thread" class="article-comment-link"></a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    我的环境变量是这样的: export GOROOT=/usr/local/go export GOPATH=/Users/addo/Workspaces/go_w export GOBIN=$GOROOT/bin export PATH=$PATH:$GOBIN 使用下面的命令安装报错: go get -v github.com/tools/godep github.com/tools/godep (download) github.com/tools/godep/vendor/github.com/pmezard/go-difflib/difflib github.com/tools/godep/vendor/github.com/kr/fs github.com/tools/godep/vendor/github.com/kr/text github.com/tools/godep/vendor/golang.org/x/tools/go/vcs github.com/tools/godep/vendor/github.com/kr/pretty github.com/tools/godep go install github.com/tools/godep: open /usr/local/go/bin/godep: permission denied 默认是安装到$GOBIN目录下, 权限不够
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../install-godep-issue-in-custom-gopath/"></a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/golang">golang
                             </a>
                         </li>
                         

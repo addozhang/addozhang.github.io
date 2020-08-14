@@ -6,10 +6,19 @@
     <description>Recent content in Go on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 11 Mar 2020 23:00:27 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 15 Aug 2020 02:09:37 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/tags/go/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernetes 源码解析 - HPA 水平自动伸缩如何工作</title>
+      <link>https://atbug.com/kubernetes-source-code-how-hpa-work/</link>
+      <pubDate>Sat, 15 Aug 2020 02:09:37 +0800</pubDate>
+      
+      <guid>https://atbug.com/kubernetes-source-code-how-hpa-work/</guid>
+      <description>HPA - Horizontal Pod Autoscaler 的缩写，Pod 水平自动伸缩。通过对 Pod 负载的监控，来自动增加或者减少 Pod 的副本数量。 从字面意思来看，其主要包含了两部分： 监控 Pod 的负载 控</description>
+    </item>
     
     <item>
       <title>Go Docker 镜像进阶: 精简镜像</title>

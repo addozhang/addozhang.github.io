@@ -4,20 +4,69 @@
   
   <url>
     <loc>https://atbug.com/categories/</loc>
-    <lastmod>2020-06-09T19:35:53+08:00</lastmod>
+    <lastmod>2020-08-15T02:09:37+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://atbug.com/tags/debug/</loc>
-    <lastmod>2020-06-09T19:35:53+08:00</lastmod>
+    <loc>https://atbug.com/tags/go/</loc>
+    <lastmod>2020-08-15T02:09:37+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/tags/hpa/</loc>
+    <lastmod>2020-08-15T02:09:37+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/tags/kubernetes/</loc>
+    <lastmod>2020-08-15T02:09:37+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/kubernetes-source-code-how-hpa-work/</loc>
+    <lastmod>2020-08-15T02:09:37+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://atbug.com/post/</loc>
+    <lastmod>2020-08-15T02:09:37+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/tags/</loc>
+    <lastmod>2020-08-15T02:09:37+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/</loc>
+    <lastmod>2020-08-15T02:09:37+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2020-08-15T02:09:37+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://atbug.com/tags/debug/</loc>
     <lastmod>2020-06-09T19:35:53+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -39,20 +88,6 @@
   
   <url>
     <loc>https://atbug.com/tags/spring-cloud/</loc>
-    <lastmod>2020-06-09T19:35:53+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/tags/</loc>
-    <lastmod>2020-06-09T19:35:53+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/</loc>
     <lastmod>2020-06-09T19:35:53+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -89,13 +124,6 @@
   <url>
     <loc>https://atbug.com/tags/troubleshooting/</loc>
     <lastmod>2020-05-28T22:04:02+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/tags/kubernetes/</loc>
-    <lastmod>2020-05-23T22:47:14+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -172,13 +200,6 @@
   
   <url>
     <loc>https://atbug.com/tags/docker/</loc>
-    <lastmod>2020-03-11T23:00:27+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://atbug.com/tags/go/</loc>
     <lastmod>2020-03-11T23:00:27+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kubernetes 源码解析 - HPA 水平自动伸缩如何工作 // 乱世浮生</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
+    <meta name="keywords" content="Java,Spring Cloud,Architecture,">
+
+        <meta property="og:title" content="Kubernetes 源码解析 - HPA 水平自动伸缩如何工作" />
+    <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh-cn" />
+    <meta property="og:url" content="https://atbug.com/kubernetes-source-code-how-hpa-work/" />
+    
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link href="https://atbug.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://atbug.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://atbug.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.65.1" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://atbug.com/">乱世浮生</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="../">Home</a>
+                
+                <a class="main-nav-link" href="../post/">Archives</a>
+                
+                <a class="main-nav-link" href="../tags/">Tags</a>
+                
+                <a class="main-nav-link" href="../categories/">Categories</a>
+                
+                <a class="main-nav-link" href="../about/">About</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">Kubernetes 源码解析 - HPA 水平自动伸缩如何工作</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="../kubernetes-source-code-how-hpa-work/" class="article-date">
+                <time datetime='2020-08-15T02:09:37.000&#43;08:00' itemprop="datePublished">2020-08-15</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://atbug.com//categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90">源码解析</a>
+                    
+                </div>
+            </div>
+            
+            
+            <div class="article-comment-link-wrap">
+                <a href="../kubernetes-source-code-how-hpa-work/#disqus_thread" class="article-comment-link">Comments</a>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/08/15/digitalcamera3366701920.jpg" alt="digital-camera-336670_1920"></p>
+<p>HPA - Horizontal Pod Autoscaler 的缩写，Pod 水平自动伸缩。通过对 Pod 负载的监控，来自动增加或者减少 Pod 的副本数量。</p>
+<p>从字面意思来看，其主要包含了两部分：</p>
+<ul>
+<li>监控 Pod 的负载</li>
+<li>控制 Pod 的副本数量</li>
+</ul>
+<p>那具体是如何实现的呢？以下基于1.17 源码，来分析下 HPA 如何工作。</p>
+<p><strong>注意：文章中的代码在源码的基础上进行了精简：删掉了注释、序列化等信息，或保留了部分核心代码，加上新的注释。</strong></p>
+<h2 id="资源">资源</h2>
+<p>HPA 的资源是<code>HorizontalPodAutoscaler</code>，在<code>v1</code>版本中，只支持基于 CPU 指标的计算；在<code>v2beta2</code>版本中加入了基于内存和自定义指标的计算。</p>
+<h3 id="v1">v1</h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//staging/src/k8s.io/api/autoscaling/v1/types.go
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">HorizontalPodAutoscaler</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">metav1</span><span class="p">.</span><span class="nx">TypeMeta</span> 
+	<span class="nx">metav1</span><span class="p">.</span><span class="nx">ObjectMeta</span> 
+	<span class="nx">Spec</span> <span class="nx">HorizontalPodAutoscalerSpec</span> 
+	<span class="nx">Status</span> <span class="nx">HorizontalPodAutoscalerStatus</span> 
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">HorizontalPodAutoscalerSpec</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">ScaleTargetRef</span> <span class="nx">CrossVersionObjectReference</span> <span class="c1">//监控的目标资源
+</span><span class="c1"></span>	<span class="nx">MinReplicas</span> <span class="o">*</span><span class="kt">int32</span> <span class="c1">//最小副本数
+</span><span class="c1"></span>	<span class="nx">MaxReplicas</span> <span class="kt">int32</span>  <span class="c1">//最大副本数
+</span><span class="c1"></span>	<span class="nx">TargetCPUUtilizationPercentage</span> <span class="o">*</span><span class="kt">int32</span>  <span class="c1">//触发调整的CPU 使用率
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><h3 id="v2">v2</h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//staging/src/k8s.io/api/autoscaling/v2beta2/types.go
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">HorizontalPodAutoscaler</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">metav1</span><span class="p">.</span><span class="nx">TypeMeta</span> 
+	<span class="nx">metav1</span><span class="p">.</span><span class="nx">ObjectMeta</span>
+	<span class="nx">Spec</span> <span class="nx">HorizontalPodAutoscalerSpec</span>
+	<span class="nx">Status</span> <span class="nx">HorizontalPodAutoscalerStatus</span> 
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">HorizontalPodAutoscalerSpec</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">ScaleTargetRef</span> <span class="nx">CrossVersionObjectReference</span> <span class="c1">//监控的目标资源
+</span><span class="c1"></span>	<span class="nx">MinReplicas</span> <span class="o">*</span><span class="kt">int32</span> 
+	<span class="nx">MaxReplicas</span> <span class="kt">int32</span>
+	<span class="nx">Metrics</span> <span class="p">[]</span><span class="nx">MetricSpec</span> <span class="c1">//新加入的自定义指标
+</span><span class="c1"></span><span class="p">}</span>
+<span class="kd">type</span> <span class="nx">MetricSpec</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Type</span> <span class="nx">MetricSourceType</span> <span class="c1">//指标源的类型：Object（基于某个对象）、Pods（基于pod 数）、Resource（基于资源使用计算，比如v1 版本中cpu）、External（基于外部的指标）。对应 MetricsClient 接口的四个方法
+</span><span class="c1"></span>	<span class="nx">Object</span> <span class="o">*</span><span class="nx">ObjectMetricSource</span>  <span class="c1">//对应 Object 类型的指标源
+</span><span class="c1"></span>	<span class="nx">Pods</span> <span class="o">*</span><span class="nx">PodsMetricSource</span> <span class="c1">//对应 Pod 类型的指标源
+</span><span class="c1"></span>	<span class="nx">Resource</span> <span class="o">*</span><span class="nx">ResourceMetricSource</span>  <span class="c1">//对应 Resource 类型的指标源
+</span><span class="c1"></span>	<span class="nx">External</span> <span class="o">*</span><span class="nx">ExternalMetricSource</span>  <span class="c1">//对应 External 类型的指标源
+</span><span class="c1"></span><span class="p">}</span>
+<span class="kd">type</span> <span class="nx">ObjectMetricSource</span> <span class="kd">struct</span> <span class="p">{</span> 
+	<span class="nx">DescribedObject</span> <span class="nx">CrossVersionObjectReference</span>  <span class="c1">//目标对象
+</span><span class="c1"></span>	<span class="nx">Target</span> <span class="nx">MetricTarget</span>  <span class="c1">//指定指标的目标值、平均值或者平均使用率
+</span><span class="c1"></span>	<span class="nx">Metric</span> <span class="nx">MetricIdentifier</span>  <span class="c1">//指标标识：名字、label选择器
+</span><span class="c1"></span><span class="p">}</span>
+<span class="kd">type</span> <span class="nx">PodsMetricSource</span> <span class="kd">struct</span> <span class="p">{</span> 
+	<span class="nx">Metric</span> <span class="nx">MetricIdentifier</span> 
+	<span class="nx">Target</span> <span class="nx">MetricTarget</span> 
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">ResourceMetricSource</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Name</span> <span class="nx">v1</span><span class="p">.</span><span class="nx">ResourceName</span> 
+	<span class="nx">Target</span> <span class="nx">MetricTarget</span> 
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">ExternalMetricSource</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Metric</span> <span class="nx">MetricIdentifier</span>
+	<span class="nx">Target</span> <span class="nx">MetricTarget</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">MetricTarget</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Type</span> <span class="nx">MetricTargetType</span> <span class="c1">//类型：Utilization、Value、AverageValue
+</span><span class="c1"></span>	<span class="nx">Value</span> <span class="o">*</span><span class="nx">resource</span><span class="p">.</span><span class="nx">Quantity</span>
+	<span class="nx">AverageValue</span> <span class="o">*</span><span class="nx">resource</span><span class="p">.</span><span class="nx">Quantity</span> 
+	<span class="nx">AverageUtilization</span> <span class="o">*</span><span class="kt">int32</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="控制器-horizontalcontroller">控制器 <code>HorizontalController</code></h2>
+<p><code>HorizontalController</code>被通过 key <code>horizontalpodautoscaling</code> 加入到 controller manager 中。用来控制<code>HorizontalPodAutoscaler</code>实例。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">///cmd/kube-controller-manager/app/controllermanager.go
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">NewControllerInitializers</span><span class="p">(</span><span class="nx">loopMode</span> <span class="nx">ControllerLoopMode</span><span class="p">)</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="nx">InitFunc</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="nx">controllers</span><span class="p">[</span><span class="s">&#34;horizontalpodautoscaling&#34;</span><span class="p">]</span> <span class="p">=</span> <span class="nx">startHPAController</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+
+</code></pre></div><h3 id="获取负载指标">获取负载指标</h3>
+<p>既然 Pod 副本数量的计算是基于 Pod 的负载情况，那边需要途径获取负载数据，这个途径就是<code>MetricsClient</code>。</p>
+<p><code>MetricsClient</code>有两种实现：REST 方式和传统（Legacy）方式，分别是<code>restMetricsClient</code>和<code>HeapsterMetricsClient</code>。一个是REST 实现以支持自定义的指标；一个是传统的 Heapster 指标（heapster 已经从 1.13 版本开始被废弃了）。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//cmd/kube-controller-manager/app/autoscaling.go
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">startHPAController</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">ControllerContext</span><span class="p">)</span> <span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">Handler</span><span class="p">,</span> <span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">!</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">AvailableResources</span><span class="p">[</span><span class="nx">schema</span><span class="p">.</span><span class="nx">GroupVersionResource</span><span class="p">{</span><span class="nx">Group</span><span class="p">:</span> <span class="s">&#34;autoscaling&#34;</span><span class="p">,</span> <span class="nx">Version</span><span class="p">:</span> <span class="s">&#34;v1&#34;</span><span class="p">,</span> <span class="nx">Resource</span><span class="p">:</span> <span class="s">&#34;horizontalpodautoscalers&#34;</span><span class="p">}]</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">ComponentConfig</span><span class="p">.</span><span class="nx">HPAController</span><span class="p">.</span><span class="nx">HorizontalPodAutoscalerUseRESTClients</span> <span class="p">{</span>
+		<span class="c1">// use the new-style clients if support for custom metrics is enabled
+</span><span class="c1"></span>		<span class="k">return</span> <span class="nf">startHPAControllerWithRESTClient</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nf">startHPAControllerWithLegacyClient</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="控制器逻辑horizontalcontrollerrun">控制器逻辑<code>HorizontalController#Run()</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//pkg/controller/podautoscaler/horizontal.go
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><span class="nx">HorizontalController</span><span class="p">)</span> <span class="nf">Run</span><span class="p">(</span><span class="nx">stopCh</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{})</span> <span class="p">{</span>
+	<span class="k">defer</span> <span class="nx">utilruntime</span><span class="p">.</span><span class="nf">HandleCrash</span><span class="p">()</span>
+	<span class="k">defer</span> <span class="nx">a</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nf">ShutDown</span><span class="p">()</span>
+
+	<span class="nx">klog</span><span class="p">.</span><span class="nf">Infof</span><span class="p">(</span><span class="s">&#34;Starting HPA controller&#34;</span><span class="p">)</span>
+	<span class="k">defer</span> <span class="nx">klog</span><span class="p">.</span><span class="nf">Infof</span><span class="p">(</span><span class="s">&#34;Shutting down HPA controller&#34;</span><span class="p">)</span>
+
+      <span class="c1">// 等待 informer 完成HorizontalPodAutoscaler相关事件的同步
+</span><span class="c1"></span>	<span class="k">if</span> <span class="p">!</span><span class="nx">cache</span><span class="p">.</span><span class="nf">WaitForNamedCacheSync</span><span class="p">(</span><span class="s">&#34;HPA&#34;</span><span class="p">,</span> <span class="nx">stopCh</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">hpaListerSynced</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">podListerSynced</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+
+	<span class="c1">// start a single worker (we may wish to start more in the future)
+</span><span class="c1"></span>	<span class="c1">//执行 worker 逻辑，直到收到退出指令
+</span><span class="c1"></span>	<span class="k">go</span> <span class="nx">wait</span><span class="p">.</span><span class="nf">Until</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">worker</span><span class="p">,</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">,</span> <span class="nx">stopCh</span><span class="p">)</span>
+
+	<span class="o">&lt;-</span><span class="nx">stopCh</span>
+<span class="p">}</span>
+</code></pre></div><p><code>worker</code>的核心是从工作队列中获取一个 key（格式为：namespace/name），然后对 key 进行 reconcile（这个词是Kubernetes 的核心，翻译为“调和”、“和解”。个人更喜欢“调整”，即<strong>将实例的状态调整为期望的状态</strong>。此处，对于 hpa 的实例的每个事件，都会按照特定的逻辑调整目标实例的 Pod 的副本数量。）。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//pkg/controller/podautoscaler/horizontal.go
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><span class="nx">HorizontalController</span><span class="p">)</span> <span class="nf">worker</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="nx">a</span><span class="p">.</span><span class="nf">processNextWorkItem</span><span class="p">()</span> <span class="p">{</span>
+	<span class="p">}</span>
+	<span class="nx">klog</span><span class="p">.</span><span class="nf">Infof</span><span class="p">(</span><span class="s">&#34;horizontal pod autoscaler controller worker shutting down&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><span class="nx">HorizontalController</span><span class="p">)</span> <span class="nf">processNextWorkItem</span><span class="p">()</span> <span class="kt">bool</span> <span class="p">{</span>
+	<span class="nx">key</span><span class="p">,</span> <span class="nx">quit</span> <span class="o">:=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nf">Get</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">quit</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">false</span>
+	<span class="p">}</span>
+	<span class="k">defer</span> <span class="nx">a</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nf">Done</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span>
+
+	<span class="nx">deleted</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">a</span><span class="p">.</span><span class="nf">reconcileKey</span><span class="p">(</span><span class="nx">key</span><span class="p">.(</span><span class="kt">string</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">utilruntime</span><span class="p">.</span><span class="nf">HandleError</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+	
+	<span class="k">if</span> <span class="p">!</span><span class="nx">deleted</span> <span class="p">{</span>
+		<span class="nx">a</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nf">AddRateLimited</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div><p>对 key 进行 reconcile 的调用栈：<code>HorizontalController#reconcileKey -&gt; HorizontalController#reconcileAutoscaler -&gt; HorizontalController#computeReplicasForMetrics -&gt; ScaleInterface#Update</code></p>
+<p>简单来说就是先从<code>Informer</code>中拿到 key 对应的<code>HorizontalPodAutoscaler</code>资源实例；然后通过<code>HorizontalPodAutoscaler</code>实例中的信息，检查目标资源的Pod 负载以及当前的副本数，得到期望的 Pod 副本数；最终通过 Scale API 来调整 Pod 的副本数。最后会将调整的原因、计算的结果等信息写入<code>HorizontalPodAutoscaler</code>实例的 condition 中。</p>
+<h3 id="计算期望的副本数">计算期望的副本数</h3>
+<p>对每个指标进行计算，都会得到建议的副本数，然后最大的那个就是最终的期望副本数。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//pkg/controller/podautoscaler/horizontal.go
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><span class="nx">HorizontalController</span><span class="p">)</span> <span class="nf">computeReplicasForMetrics</span><span class="p">(</span><span class="nx">hpa</span> <span class="o">*</span><span class="nx">autoscalingv2</span><span class="p">.</span><span class="nx">HorizontalPodAutoscaler</span><span class="p">,</span> <span class="nx">scale</span> <span class="o">*</span><span class="nx">autoscalingv1</span><span class="p">.</span><span class="nx">Scale</span><span class="p">,</span>
+	<span class="nx">metricSpecs</span> <span class="p">[]</span><span class="nx">autoscalingv2</span><span class="p">.</span><span class="nx">MetricSpec</span><span class="p">)</span> <span class="p">(</span><span class="nx">replicas</span> <span class="kt">int32</span><span class="p">,</span> <span class="nx">metric</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">statuses</span> <span class="p">[]</span><span class="nx">autoscalingv2</span><span class="p">.</span><span class="nx">MetricStatus</span><span class="p">,</span> <span class="nx">timestamp</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">......</span>
+	<span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">metricSpec</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">metricSpecs</span> <span class="p">{</span>
+		<span class="nx">replicaCountProposal</span><span class="p">,</span> <span class="nx">metricNameProposal</span><span class="p">,</span> <span class="nx">timestampProposal</span><span class="p">,</span> <span class="nx">condition</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">a</span><span class="p">.</span><span class="nf">computeReplicasForMetric</span><span class="p">(</span><span class="nx">hpa</span><span class="p">,</span> <span class="nx">metricSpec</span><span class="p">,</span> <span class="nx">specReplicas</span><span class="p">,</span> <span class="nx">statusReplicas</span><span class="p">,</span> <span class="nx">selector</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">statuses</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="nx">invalidMetricsCount</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">{</span>
+				<span class="nx">invalidMetricCondition</span> <span class="p">=</span> <span class="nx">condition</span>
+				<span class="nx">invalidMetricError</span> <span class="p">=</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">invalidMetricsCount</span><span class="o">++</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="kc">nil</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">replicas</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">replicaCountProposal</span> <span class="p">&gt;</span> <span class="nx">replicas</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">timestamp</span> <span class="p">=</span> <span class="nx">timestampProposal</span>
+			<span class="nx">replicas</span> <span class="p">=</span> <span class="nx">replicaCountProposal</span>
+			<span class="nx">metric</span> <span class="p">=</span> <span class="nx">metricNameProposal</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+    <span class="o">......</span>
+<span class="p">}</span>
+</code></pre></div><p><code>#computeStatusForObjectMetric</code>（注意这个方法名少了个 &ldquo;s&rdquo;）使用<code>MetricsClient</code>得到指定指标的值，</p>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#资源">资源</a>
+      <ul>
+        <li><a href="#v1">v1</a></li>
+        <li><a href="#v2">v2</a></li>
+      </ul>
+    </li>
+    <li><a href="#控制器-horizontalcontroller">控制器 HorizontalController</a>
+      <ul>
+        <li><a href="#获取负载指标">获取负载指标</a></li>
+        <li><a href="#控制器逻辑horizontalcontrollerrun">控制器逻辑HorizontalController#Run()</a></li>
+        <li><a href="#计算期望的副本数">计算期望的副本数</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/kubernetes">Kubernetes
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/go">Go
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/hpa">HPA
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        <div class="article-entry">
+            <hr>
+            <p>文章同步发送到公众号：云编码 (微信号：sevenfeet)。</p>
+            <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/23/qrcode.jpg" alt="qrcode"></p>
+        </div>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    
+    <a href="../how-loadbalancer-works-in-ribbon/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">带你了解 Ribbon 负载均衡器的实现&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+
+</article>
+
+        
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "addozhang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2020 Addo Zhang
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>
