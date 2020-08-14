@@ -87,8 +87,7 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/08/15/digitalcamera3366701920.jpg" alt="digital-camera-336670_1920"></p>
-<p>HPA - Horizontal Pod Autoscaler 的缩写，Pod 水平自动伸缩。通过对 Pod 负载的监控，来自动增加或者减少 Pod 的副本数量。</p>
+            <p>HPA - Horizontal Pod Autoscaler 的缩写，Pod 水平自动伸缩。通过对 Pod 负载的监控，来自动增加或者减少 Pod 的副本数量。</p>
 <p>从字面意思来看，其主要包含了两部分：</p>
 <ul>
 <li>监控 Pod 的负载</li>
@@ -253,7 +252,8 @@
 	<span class="p">}</span>
     <span class="o">......</span>
 <span class="p">}</span>
-</code></pre></div><p><code>#computeStatusForObjectMetric</code>（注意这个方法名少了个 &ldquo;s&rdquo;）使用<code>MetricsClient</code>得到指定指标的值，</p>
+</code></pre></div><p><code>#computeStatusForObjectMetric</code>（注意这个方法名少了个 &ldquo;s&rdquo;）使用<code>MetricsClient</code>得到指定指标的值。</p>
+<p>这个流程的细节还可以继续深挖，但到此已够我们理解 HPA​ 的实现方式了。​</p>
 
         </div>
 
