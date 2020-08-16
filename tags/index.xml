@@ -6,7 +6,7 @@
     <description>Recent content in Tags on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 15 Aug 2020 02:09:37 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 16 Aug 2020 23:32:38 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,9 +14,18 @@
     <item>
       <title>Go</title>
       <link>https://atbug.com/tags/go/</link>
-      <pubDate>Sat, 15 Aug 2020 02:09:37 +0800</pubDate>
+      <pubDate>Sun, 16 Aug 2020 23:32:38 +0800</pubDate>
       
       <guid>https://atbug.com/tags/go/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kubernetes</title>
+      <link>https://atbug.com/tags/kubernetes/</link>
+      <pubDate>Sun, 16 Aug 2020 23:32:38 +0800</pubDate>
+      
+      <guid>https://atbug.com/tags/kubernetes/</guid>
       <description></description>
     </item>
     
@@ -26,15 +35,6 @@
       <pubDate>Sat, 15 Aug 2020 02:09:37 +0800</pubDate>
       
       <guid>https://atbug.com/tags/hpa/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Kubernetes</title>
-      <link>https://atbug.com/tags/kubernetes/</link>
-      <pubDate>Sat, 15 Aug 2020 02:09:37 +0800</pubDate>
-      
-      <guid>https://atbug.com/tags/kubernetes/</guid>
       <description></description>
     </item>
     

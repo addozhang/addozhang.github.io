@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kubernetes 源码解析 - Informer // 乱世浮生</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
+    <meta name="keywords" content="Java,Spring Cloud,Architecture,">
+
+        <meta property="og:title" content="Kubernetes 源码解析 - Informer" />
+    <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh-cn" />
+    <meta property="og:url" content="https://atbug.com/kubernetes-source-code-how-informer-work/" />
+    
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link href="https://atbug.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://atbug.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://atbug.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.65.1" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://atbug.com/">乱世浮生</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="../">Home</a>
+                
+                <a class="main-nav-link" href="../post/">Archives</a>
+                
+                <a class="main-nav-link" href="../tags/">Tags</a>
+                
+                <a class="main-nav-link" href="../categories/">Categories</a>
+                
+                <a class="main-nav-link" href="../about/">About</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">Kubernetes 源码解析 - Informer</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="../kubernetes-source-code-how-informer-work/" class="article-date">
+                <time datetime='2020-08-16T23:32:38.000&#43;08:00' itemprop="datePublished">2020-08-16</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://atbug.com//categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90">源码解析</a>
+                    
+                </div>
+            </div>
+            
+            
+            <div class="article-comment-link-wrap">
+                <a href="../kubernetes-source-code-how-informer-work/#disqus_thread" class="article-comment-link">Comments</a>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p><a href="https://mp.weixin.qq.com/s/wY8ZevIHIH7CD-fWGZecPQ">上篇</a>扒了 HPA 的源码，但是没深入细节，今天往细节深入。</p>
+<p>开局先祭出一张图：</p>
+<p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/08/16/15975802542217.png" alt=""></p>
+<h2 id="为什么要有-informer">为什么要有 Informer？</h2>
+<p>Kubernetes 中的持久化数据保存在 etcd中，各个组件并不会直接访问 etcd，而是通过 api-server暴露的 RESTful 接口对集群进行访问和控制。</p>
+<p>资源的控制器（图中右侧灰色的部分）读取数据也并不会直接从 api-server 中获取资源信息（这样会增加 api-server 的压力），而是从其“本地缓存”中读取。这个“本地缓存”只是表象的存在，加上缓存的同步逻辑就是今天要是说的<code>Informer</code>（灰色区域中的第一个蓝色块）所提供的功能。</p>
+<p>从图中可以看到 Informer 的几个组件：</p>
+<ul>
+<li>Reflector：与 <code>api-server</code>交互，监听资源的变更。</li>
+<li>Delta FIFO Queue：增量的 FIFO 队列，保存 Reflector 监听到的资源变更（简单的封装）。</li>
+<li>Indexer：Informer 的本地缓存，FIFO 队列中的数据根据不同的变更类型，在该缓存中进行操作。
+<ul>
+<li>Local Store：</li>
+</ul>
+</li>
+</ul>
+<p><a href="https://mp.weixin.qq.com/s/wY8ZevIHIH7CD-fWGZecPQ">上篇</a> 提到了水平自动伸缩的控制器<code>HorizontalController</code>，其构造方法就需要提供 <code>Informer</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//pkg/controller/podautoscaler/horizontal.go
+</span><span class="c1"></span>
+<span class="kd">type</span> <span class="nx">HorizontalController</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">scaleNamespacer</span> <span class="nx">scaleclient</span><span class="p">.</span><span class="nx">ScalesGetter</span>
+	<span class="nx">hpaNamespacer</span>   <span class="nx">autoscalingclient</span><span class="p">.</span><span class="nx">HorizontalPodAutoscalersGetter</span>
+	<span class="nx">mapper</span>          <span class="nx">apimeta</span><span class="p">.</span><span class="nx">RESTMapper</span>
+	<span class="nx">replicaCalc</span>   <span class="o">*</span><span class="nx">ReplicaCalculator</span>
+	<span class="nx">eventRecorder</span> <span class="nx">record</span><span class="p">.</span><span class="nx">EventRecorder</span>
+	<span class="nx">downscaleStabilisationWindow</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span>
+	<span class="nx">hpaLister</span>       <span class="nx">autoscalinglisters</span><span class="p">.</span><span class="nx">HorizontalPodAutoscalerLister</span>
+	<span class="nx">hpaListerSynced</span> <span class="nx">cache</span><span class="p">.</span><span class="nx">InformerSynced</span>
+	<span class="nx">podLister</span>       <span class="nx">corelisters</span><span class="p">.</span><span class="nx">PodLister</span>
+	<span class="nx">podListerSynced</span> <span class="nx">cache</span><span class="p">.</span><span class="nx">InformerSynced</span>
+	<span class="nx">queue</span> <span class="nx">workqueue</span><span class="p">.</span><span class="nx">RateLimitingInterface</span>
+	<span class="nx">recommendations</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">][]</span><span class="nx">timestampedRecommendation</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">NewHorizontalController</span><span class="p">(</span>
+	<span class="nx">evtNamespacer</span> <span class="nx">v1core</span><span class="p">.</span><span class="nx">EventsGetter</span><span class="p">,</span>
+	<span class="nx">scaleNamespacer</span> <span class="nx">scaleclient</span><span class="p">.</span><span class="nx">ScalesGetter</span><span class="p">,</span>
+	<span class="nx">hpaNamespacer</span> <span class="nx">autoscalingclient</span><span class="p">.</span><span class="nx">HorizontalPodAutoscalersGetter</span><span class="p">,</span>
+	<span class="nx">mapper</span> <span class="nx">apimeta</span><span class="p">.</span><span class="nx">RESTMapper</span><span class="p">,</span>
+	<span class="nx">metricsClient</span> <span class="nx">metricsclient</span><span class="p">.</span><span class="nx">MetricsClient</span><span class="p">,</span>
+	<span class="c1">//从HorizontalPodAutoscalerInformer 获取hpa 实例信息
+</span><span class="c1"></span>	<span class="nx">hpaInformer</span> <span class="nx">autoscalinginformers</span><span class="p">.</span><span class="nx">HorizontalPodAutoscalerInformer</span><span class="p">,</span>
+	<span class="c1">//从PodInformer 中获取 pod 信息
+</span><span class="c1"></span>	<span class="nx">podInformer</span> <span class="nx">coreinformers</span><span class="p">.</span><span class="nx">PodInformer</span><span class="p">,</span>
+	<span class="nx">resyncPeriod</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span><span class="p">,</span>
+	<span class="nx">downscaleStabilisationWindow</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span><span class="p">,</span>
+	<span class="nx">tolerance</span> <span class="kt">float64</span><span class="p">,</span>
+	<span class="nx">cpuInitializationPeriod</span><span class="p">,</span>
+	<span class="nx">delayOfInitialReadinessStatus</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span><span class="p">,</span>
+
+<span class="p">)</span> <span class="o">*</span><span class="nx">HorizontalController</span> <span class="p">{</span>
+    <span class="o">......</span>
+    	<span class="nx">hpaInformer</span><span class="p">.</span><span class="nf">Informer</span><span class="p">().</span><span class="nf">AddEventHandlerWithResyncPeriod</span><span class="p">(</span> <span class="c1">//添加事件处理器
+</span><span class="c1"></span>		<span class="nx">cache</span><span class="p">.</span><span class="nx">ResourceEventHandlerFuncs</span><span class="p">{</span>
+			<span class="nx">AddFunc</span><span class="p">:</span>    <span class="nx">hpaController</span><span class="p">.</span><span class="nx">enqueueHPA</span><span class="p">,</span>
+			<span class="nx">UpdateFunc</span><span class="p">:</span> <span class="nx">hpaController</span><span class="p">.</span><span class="nx">updateHPA</span><span class="p">,</span>
+			<span class="nx">DeleteFunc</span><span class="p">:</span> <span class="nx">hpaController</span><span class="p">.</span><span class="nx">deleteHPA</span><span class="p">,</span>
+		<span class="p">},</span>
+		<span class="nx">resyncPeriod</span><span class="p">,</span>
+	<span class="p">)</span>
+	<span class="o">......</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">HorizontalPodAutoscalerInformer</span> <span class="kd">interface</span> <span class="p">{</span>
+	<span class="nf">Informer</span><span class="p">()</span> <span class="nx">cache</span><span class="p">.</span><span class="nx">SharedIndexInformer</span>
+	<span class="nf">Lister</span><span class="p">()</span> <span class="nx">v1</span><span class="p">.</span><span class="nx">HorizontalPodAutoscalerLister</span>
+<span class="p">}</span>
+</code></pre></div><p><code>HorizontalPodAutoscalerInformer</code>的实例化方法中就出现了今天的正主<code>cache.NewSharedIndexInformer()</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//staging/src/k8s.io/client-go/informers/autoscaling/v1/horizontalpodautoscaler.go
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">NewFilteredHorizontalPodAutoscalerInformer</span><span class="p">(</span><span class="nx">client</span> <span class="nx">kubernetes</span><span class="p">.</span><span class="nx">Interface</span><span class="p">,</span> <span class="nx">namespace</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">resyncPeriod</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span><span class="p">,</span> <span class="nx">indexers</span> <span class="nx">cache</span><span class="p">.</span><span class="nx">Indexers</span><span class="p">,</span> <span class="nx">tweakListOptions</span> <span class="nx">internalinterfaces</span><span class="p">.</span><span class="nx">TweakListOptionsFunc</span><span class="p">)</span> <span class="nx">cache</span><span class="p">.</span><span class="nx">SharedIndexInformer</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">cache</span><span class="p">.</span><span class="nf">NewSharedIndexInformer</span><span class="p">(</span>
+	       <span class="c1">//用于 list 和 watch api-server 中的资源。比如用来创建 Reflector
+</span><span class="c1"></span>		<span class="o">&amp;</span><span class="nx">cache</span><span class="p">.</span><span class="nx">ListWatch</span><span class="p">{</span>
+			<span class="nx">ListFunc</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">options</span> <span class="nx">metav1</span><span class="p">.</span><span class="nx">ListOptions</span><span class="p">)</span> <span class="p">(</span><span class="nx">runtime</span><span class="p">.</span><span class="nx">Object</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="nx">tweakListOptions</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+					<span class="nf">tweakListOptions</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">options</span><span class="p">)</span>
+				<span class="p">}</span>
+				<span class="c1">//使用 HPA API 获取 HPA资源
+</span><span class="c1"></span>				<span class="k">return</span> <span class="nx">client</span><span class="p">.</span><span class="nf">AutoscalingV1</span><span class="p">().</span><span class="nf">HorizontalPodAutoscalers</span><span class="p">(</span><span class="nx">namespace</span><span class="p">).</span><span class="nf">List</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
+			<span class="p">},</span>
+			<span class="nx">WatchFunc</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">options</span> <span class="nx">metav1</span><span class="p">.</span><span class="nx">ListOptions</span><span class="p">)</span> <span class="p">(</span><span class="nx">watch</span><span class="p">.</span><span class="nx">Interface</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="nx">tweakListOptions</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+					<span class="nf">tweakListOptions</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">options</span><span class="p">)</span>
+				<span class="p">}</span>
+				<span class="c1">//使用 HPA API 监控 HPA资源
+</span><span class="c1"></span>				<span class="k">return</span> <span class="nx">client</span><span class="p">.</span><span class="nf">AutoscalingV1</span><span class="p">().</span><span class="nf">HorizontalPodAutoscalers</span><span class="p">(</span><span class="nx">namespace</span><span class="p">).</span><span class="nf">Watch</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
+			<span class="p">},</span>
+		<span class="p">},</span>
+		<span class="o">&amp;</span><span class="nx">autoscalingv1</span><span class="p">.</span><span class="nx">HorizontalPodAutoscaler</span><span class="p">{},</span>
+		<span class="nx">resyncPeriod</span><span class="p">,</span>
+		<span class="nx">indexers</span><span class="p">,</span>
+	<span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="初始化">初始化</h2>
+<h3 id="informer">Informer</h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//staging/src/k8s.io/client-go/tools/cache/index.go
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Indexers</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="nx">IndexFunc</span>
+<span class="kd">type</span> <span class="nx">IndexFunc</span> <span class="kd">func</span><span class="p">(</span><span class="nx">obj</span> <span class="kd">interface</span><span class="p">{})</span> <span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div><p>实例化 Indexers <code>cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//staging/src/k8s.io/client-go/tools/cache/shared_informer.go
+</span><span class="c1">// ListerWatcher 用于 list 和watch api-server 上的资源
+</span><span class="c1">//runtime.Object要监控的资源的运行时对象
+</span><span class="c1">//time.Duration同步的间隔时间
+</span><span class="c1">//Indexers 提供不同资源的索引数据的信息查询方法，如 namespace =&gt; MetaNamespaceIndexFunc
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">NewSharedIndexInformer</span><span class="p">(</span><span class="nx">lw</span> <span class="nx">ListerWatcher</span><span class="p">,</span> <span class="nx">objType</span> <span class="nx">runtime</span><span class="p">.</span><span class="nx">Object</span><span class="p">,</span> <span class="nx">defaultEventHandlerResyncPeriod</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span><span class="p">,</span> <span class="nx">indexers</span> <span class="nx">Indexers</span><span class="p">)</span> <span class="nx">SharedIndexInformer</span> <span class="p">{</span>
+	<span class="nx">realClock</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">clock</span><span class="p">.</span><span class="nx">RealClock</span><span class="p">{}</span>
+	<span class="nx">sharedIndexInformer</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">sharedIndexInformer</span><span class="p">{</span>
+		<span class="nx">processor</span><span class="p">:</span>                       <span class="o">&amp;</span><span class="nx">sharedProcessor</span><span class="p">{</span><span class="nx">clock</span><span class="p">:</span> <span class="nx">realClock</span><span class="p">},</span>
+		<span class="nx">indexer</span><span class="p">:</span>                         <span class="nf">NewIndexer</span><span class="p">(</span><span class="nx">DeletionHandlingMetaNamespaceKeyFunc</span><span class="p">,</span> <span class="nx">indexers</span><span class="p">),</span> <span class="c1">//初始化 Indexer
+</span><span class="c1"></span>		<span class="nx">listerWatcher</span><span class="p">:</span>                   <span class="nx">lw</span><span class="p">,</span>
+		<span class="nx">objectType</span><span class="p">:</span>                      <span class="nx">objType</span><span class="p">,</span>
+		<span class="nx">resyncCheckPeriod</span><span class="p">:</span>               <span class="nx">defaultEventHandlerResyncPeriod</span><span class="p">,</span>
+		<span class="nx">defaultEventHandlerResyncPeriod</span><span class="p">:</span> <span class="nx">defaultEventHandlerResyncPeriod</span><span class="p">,</span>
+		<span class="nx">cacheMutationDetector</span><span class="p">:</span>           <span class="nf">NewCacheMutationDetector</span><span class="p">(</span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%T&#34;</span><span class="p">,</span> <span class="nx">objType</span><span class="p">)),</span>
+		<span class="nx">clock</span><span class="p">:</span>                           <span class="nx">realClock</span><span class="p">,</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">sharedIndexInformer</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="indexer">Indexer</h3>
+<p><code>Indexer</code>提供了本地缓存的实现：计算 key 和对数据进行控制（通过调用<code>ThreadSafeStore</code>的接口）</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Indexer</span> <span class="kd">interface</span> <span class="p">{</span>
+	<span class="nx">Store</span>
+	<span class="nf">Index</span><span class="p">(</span><span class="nx">indexName</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">obj</span> <span class="kd">interface</span><span class="p">{})</span> <span class="p">([]</span><span class="kd">interface</span><span class="p">{},</span> <span class="kt">error</span><span class="p">)</span>
+	<span class="nf">IndexKeys</span><span class="p">(</span><span class="nx">indexName</span><span class="p">,</span> <span class="nx">indexedValue</span> <span class="kt">string</span><span class="p">)</span> <span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+	<span class="nf">ListIndexFuncValues</span><span class="p">(</span><span class="nx">indexName</span> <span class="kt">string</span><span class="p">)</span> <span class="p">[]</span><span class="kt">string</span>
+	<span class="nf">ByIndex</span><span class="p">(</span><span class="nx">indexName</span><span class="p">,</span> <span class="nx">indexedValue</span> <span class="kt">string</span><span class="p">)</span> <span class="p">([]</span><span class="kd">interface</span><span class="p">{},</span> <span class="kt">error</span><span class="p">)</span>
+	<span class="nf">GetIndexers</span><span class="p">()</span> <span class="nx">Indexers</span>
+	<span class="nf">AddIndexers</span><span class="p">(</span><span class="nx">newIndexers</span> <span class="nx">Indexers</span><span class="p">)</span> <span class="kt">error</span>
+<span class="p">}</span>
+</code></pre></div><p><code>Indexer</code> 的创建</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//staging/src/k8s.io/client-go/tools/cache/store.go
+</span><span class="c1">//keyFunc：key 的生成规则
+</span><span class="c1">//indexers：提供了索引资源的不同信息的访问方法，如用于查询命名空间的 namespace =&gt; MetaNamespaceIndexFunc
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">NewIndexer</span><span class="p">(</span><span class="nx">keyFunc</span> <span class="nx">KeyFunc</span><span class="p">,</span> <span class="nx">indexers</span> <span class="nx">Indexers</span><span class="p">)</span> <span class="nx">Indexer</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">cache</span><span class="p">{</span>
+		<span class="nx">cacheStorage</span><span class="p">:</span> <span class="nf">NewThreadSafeStore</span><span class="p">(</span><span class="nx">indexers</span><span class="p">,</span> <span class="nx">Indices</span><span class="p">{}),</span>
+		<span class="nx">keyFunc</span><span class="p">:</span>      <span class="nx">keyFunc</span><span class="p">,</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h4 id="threadsafestore"><code>ThreadSafeStore</code></h4>
+<p>ThreadSafeStore提供了对存储的并发访问接口</p>
+<p>注意事项：不能修改Get或List返回的任何内容，因为它不仅会破坏线程安全，还会破坏索引功能。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//staging/src/k8s.io/client-go/tools/cache/thread_safe_store.go
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">NewThreadSafeStore</span><span class="p">(</span><span class="nx">indexers</span> <span class="nx">Indexers</span><span class="p">,</span> <span class="nx">indices</span> <span class="nx">Indices</span><span class="p">)</span> <span class="nx">ThreadSafeStore</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">threadSafeMap</span><span class="p">{</span>
+		<span class="nx">items</span><span class="p">:</span>    <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{},</span>
+		<span class="nx">indexers</span><span class="p">:</span> <span class="nx">indexers</span><span class="p">,</span>
+		<span class="nx">indices</span><span class="p">:</span>  <span class="nx">indices</span><span class="p">,</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">threadSafeMap</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">lock</span>  <span class="nx">sync</span><span class="p">.</span><span class="nx">RWMutex</span>
+	<span class="nx">items</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}</span> <span class="c1">//key =&gt; value
+</span><span class="c1"></span>	<span class="nx">indexers</span> <span class="nx">Indexers</span> <span class="c1">//value 的信息的访问方法
+</span><span class="c1"></span>	<span class="nx">indices</span> <span class="nx">Indices</span> <span class="c1">//索引
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><h3 id="reflector">Reflector</h3>
+<p><code>Reflector</code>通过<code> ListerWatcher</code>（API）与<code>api-server</code>交互，对资源进行监控。将资源实例的创建、更新、删除等时间封装后保存在<code>Informer</code>的FIFO 队列中。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//staging/src/k8s.io/client-go/tools/cache/reflector.go
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">NewReflector</span><span class="p">(</span><span class="nx">lw</span> <span class="nx">ListerWatcher</span><span class="p">,</span> <span class="nx">expectedType</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">store</span> <span class="nx">Store</span><span class="p">,</span> <span class="nx">resyncPeriod</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span><span class="p">)</span> <span class="o">*</span><span class="nx">Reflector</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nf">NewNamedReflector</span><span class="p">(</span><span class="nx">naming</span><span class="p">.</span><span class="nf">GetNameFromCallsite</span><span class="p">(</span><span class="nx">internalPackages</span><span class="o">...</span><span class="p">),</span> <span class="nx">lw</span><span class="p">,</span> <span class="nx">expectedType</span><span class="p">,</span> <span class="nx">store</span><span class="p">,</span> <span class="nx">resyncPeriod</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// NewNamedReflector same as NewReflector, but with a specified name for logging
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">NewNamedReflector</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">lw</span> <span class="nx">ListerWatcher</span><span class="p">,</span> <span class="nx">expectedType</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">store</span> <span class="nx">Store</span><span class="p">,</span> <span class="nx">resyncPeriod</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span><span class="p">)</span> <span class="o">*</span><span class="nx">Reflector</span> <span class="p">{</span>
+	<span class="nx">r</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Reflector</span><span class="p">{</span>
+		<span class="nx">name</span><span class="p">:</span>          <span class="nx">name</span><span class="p">,</span>
+		<span class="nx">listerWatcher</span><span class="p">:</span> <span class="nx">lw</span><span class="p">,</span>
+		<span class="nx">store</span><span class="p">:</span>         <span class="nx">store</span><span class="p">,</span> <span class="c1">//FIFO队列
+</span><span class="c1"></span>		<span class="nx">period</span><span class="p">:</span>        <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">,</span>
+		<span class="nx">resyncPeriod</span><span class="p">:</span>  <span class="nx">resyncPeriod</span><span class="p">,</span>
+		<span class="nx">clock</span><span class="p">:</span>         <span class="o">&amp;</span><span class="nx">clock</span><span class="p">.</span><span class="nx">RealClock</span><span class="p">{},</span>
+	<span class="p">}</span>
+	<span class="nx">r</span><span class="p">.</span><span class="nf">setExpectedType</span><span class="p">(</span><span class="nx">expectedType</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">r</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="添加同步事件监听器">添加同步事件监听器</h3>
+<p>通过<code>sharedIndexInformer#AddEventHandlerWithResyncPeriod()</code>注册事件监听器。</p>
+<p>以前面的 HorizontalController为例，创建 informer 的时候添加了三个处理方法：<code>AddFunc</code>、<code>UpdateFunc</code>、<code>DeleteFunc</code>。这三个方法的实现是将对应的元素的 key（固定格式 <code>namespace/name</code>）从<code> workequeue</code>中进行入队、出队的操作。（资源控制器监听了该 <code>workqueue</code>）</p>
+<h2 id="运行">运行</h2>
+<h3 id="controller-manager"><code>controller-manager</code></h3>
+<p>在通过<code>InformerFactory</code>创建<code>Informer</code>完成后，都会将新建的<code> Informer</code>加入到<code>InformerFactory</code>的一个<code>map</code>中。</p>
+<p>在<code>controller-manager</code>在完成所有的控制器（各种<code>Controller</code>，包括 CRD）后，会调用<code>InformerFactory#Start()</code>来启动<code>InformerFactory</code>的<code>map</code>中的所有<code> Informer</code>（调用<code>Informer#Run()</code>方法）</p>
+<h3 id="sharedindexinformerrun"><code>sharedIndexInformer#Run()</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//staging/src/k8s.io/client-go/tools/cache/shared_informer.go
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">sharedIndexInformer</span><span class="p">)</span> <span class="nf">Run</span><span class="p">(</span><span class="nx">stopCh</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{})</span> <span class="p">{</span>
+	<span class="k">defer</span> <span class="nx">utilruntime</span><span class="p">.</span><span class="nf">HandleCrash</span><span class="p">()</span>
+      <span class="c1">//创建一个增量的 FIFO队列：DeltaFIFO
+</span><span class="c1"></span>	<span class="nx">fifo</span> <span class="o">:=</span> <span class="nf">NewDeltaFIFO</span><span class="p">(</span><span class="nx">MetaNamespaceKeyFunc</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nx">indexer</span><span class="p">)</span>
+	<span class="nx">cfg</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Config</span><span class="p">{</span>
+		<span class="nx">Queue</span><span class="p">:</span>            <span class="nx">fifo</span><span class="p">,</span>
+		<span class="nx">ListerWatcher</span><span class="p">:</span>    <span class="nx">s</span><span class="p">.</span><span class="nx">listerWatcher</span><span class="p">,</span>
+		<span class="nx">ObjectType</span><span class="p">:</span>       <span class="nx">s</span><span class="p">.</span><span class="nx">objectType</span><span class="p">,</span>
+		<span class="nx">FullResyncPeriod</span><span class="p">:</span> <span class="nx">s</span><span class="p">.</span><span class="nx">resyncCheckPeriod</span><span class="p">,</span>
+		<span class="nx">RetryOnError</span><span class="p">:</span>     <span class="kc">false</span><span class="p">,</span>
+		<span class="nx">ShouldResync</span><span class="p">:</span>     <span class="nx">s</span><span class="p">.</span><span class="nx">processor</span><span class="p">.</span><span class="nx">shouldResync</span><span class="p">,</span>
+
+		<span class="nx">Process</span><span class="p">:</span> <span class="nx">s</span><span class="p">.</span><span class="nx">HandleDeltas</span><span class="p">,</span>
+	<span class="p">}</span>
+     <span class="c1">//启动前的初始化，创建 Controller
+</span><span class="c1"></span>	<span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">s</span><span class="p">.</span><span class="nx">startedLock</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+		<span class="k">defer</span> <span class="nx">s</span><span class="p">.</span><span class="nx">startedLock</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+
+		<span class="nx">s</span><span class="p">.</span><span class="nx">controller</span> <span class="p">=</span> <span class="nf">New</span><span class="p">(</span><span class="nx">cfg</span><span class="p">)</span>
+		<span class="nx">s</span><span class="p">.</span><span class="nx">controller</span><span class="p">.(</span><span class="o">*</span><span class="nx">controller</span><span class="p">).</span><span class="nx">clock</span> <span class="p">=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">clock</span>
+		<span class="nx">s</span><span class="p">.</span><span class="nx">started</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="p">}()</span>
+	<span class="nx">processorStopCh</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{})</span>
+	<span class="kd">var</span> <span class="nx">wg</span> <span class="nx">wait</span><span class="p">.</span><span class="nx">Group</span>
+	<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>              <span class="c1">// Wait for Processor to stop
+</span><span class="c1"></span>	<span class="k">defer</span> <span class="nb">close</span><span class="p">(</span><span class="nx">processorStopCh</span><span class="p">)</span> <span class="c1">// Tell Processor to stop
+</span><span class="c1"></span>	<span class="nx">wg</span><span class="p">.</span><span class="nf">StartWithChannel</span><span class="p">(</span><span class="nx">processorStopCh</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nx">cacheMutationDetector</span><span class="p">.</span><span class="nx">Run</span><span class="p">)</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nf">StartWithChannel</span><span class="p">(</span><span class="nx">processorStopCh</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nx">processor</span><span class="p">.</span><span class="nx">run</span><span class="p">)</span>
+     <span class="c1">//退出时的状态清理
+</span><span class="c1"></span>	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">s</span><span class="p">.</span><span class="nx">startedLock</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+		<span class="k">defer</span> <span class="nx">s</span><span class="p">.</span><span class="nx">startedLock</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+		<span class="nx">s</span><span class="p">.</span><span class="nx">stopped</span> <span class="p">=</span> <span class="kc">true</span> <span class="c1">// Don&#39;t want any new listeners
+</span><span class="c1"></span>	<span class="p">}()</span>
+	<span class="c1">//实行控制逻辑
+</span><span class="c1"></span>	<span class="nx">s</span><span class="p">.</span><span class="nx">controller</span><span class="p">.</span><span class="nf">Run</span><span class="p">(</span><span class="nx">stopCh</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="controllerrun"><code>controller#Run()</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//staging/src/k8s.io/client-go/tools/cache/controller.go
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">controller</span><span class="p">)</span> <span class="nf">Run</span><span class="p">(</span><span class="nx">stopCh</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{})</span> <span class="p">{</span>
+	<span class="k">defer</span> <span class="nx">utilruntime</span><span class="p">.</span><span class="nf">HandleCrash</span><span class="p">()</span>
+	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="o">&lt;-</span><span class="nx">stopCh</span>
+		<span class="nx">c</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">Queue</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+	<span class="p">}()</span>
+	<span class="c1">//创建一个 Reflector，用于从 api-server list 和 watch 资源
+</span><span class="c1"></span>	<span class="nx">r</span> <span class="o">:=</span> <span class="nf">NewReflector</span><span class="p">(</span>
+		<span class="nx">c</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">ListerWatcher</span><span class="p">,</span>
+		<span class="nx">c</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">ObjectType</span><span class="p">,</span>
+		<span class="nx">c</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">Queue</span><span class="p">,</span>
+		<span class="nx">c</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">FullResyncPeriod</span><span class="p">,</span>
+	<span class="p">)</span>
+	<span class="nx">r</span><span class="p">.</span><span class="nx">ShouldResync</span> <span class="p">=</span> <span class="nx">c</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">ShouldResync</span>
+	<span class="nx">r</span><span class="p">.</span><span class="nx">clock</span> <span class="p">=</span> <span class="nx">c</span><span class="p">.</span><span class="nx">clock</span>
+      <span class="c1">//为 controller 指定 Reflector
+</span><span class="c1"></span>	<span class="nx">c</span><span class="p">.</span><span class="nx">reflectorMutex</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+	<span class="nx">c</span><span class="p">.</span><span class="nx">reflector</span> <span class="p">=</span> <span class="nx">r</span>
+	<span class="nx">c</span><span class="p">.</span><span class="nx">reflectorMutex</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+	<span class="kd">var</span> <span class="nx">wg</span> <span class="nx">wait</span><span class="p">.</span><span class="nx">Group</span>
+	<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
+     <span class="c1">//执行Reflector#Run()：会启动一个goroutine开始监控资源，将 watch 到的数据写入到queue（FIFO 队列）中
+</span><span class="c1"></span>	<span class="nx">wg</span><span class="p">.</span><span class="nf">StartWithChannel</span><span class="p">(</span><span class="nx">stopCh</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Run</span><span class="p">)</span>
+      <span class="c1">//持续从 queue（FIFO 队列） 获取数据并进行处理，处理的逻辑在sharedIndexInformer#HandleDeltas()
+</span><span class="c1"></span>	<span class="nx">wait</span><span class="p">.</span><span class="nf">Until</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">processLoop</span><span class="p">,</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">,</span> <span class="nx">stopCh</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="sharedindexinformerhandledeltas"><code>sharedIndexInformer#HandleDeltas()</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//staging/src/k8s.io/client-go/tools/cache/shared_informer.go
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">sharedIndexInformer</span><span class="p">)</span> <span class="nf">HandleDeltas</span><span class="p">(</span><span class="nx">obj</span> <span class="kd">interface</span><span class="p">{})</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="nx">s</span><span class="p">.</span><span class="nx">blockDeltas</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+	<span class="k">defer</span> <span class="nx">s</span><span class="p">.</span><span class="nx">blockDeltas</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+
+	<span class="c1">// from oldest to newest
+</span><span class="c1"></span>	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">d</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">obj</span><span class="p">.(</span><span class="nx">Deltas</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//循环处理 FIFO 队列中取出的资源实例
+</span><span class="c1"></span>		<span class="k">switch</span> <span class="nx">d</span><span class="p">.</span><span class="nx">Type</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="nx">Sync</span><span class="p">,</span> <span class="nx">Added</span><span class="p">,</span> <span class="nx">Updated</span><span class="p">:</span> <span class="c1">//同步（后面详细解读）、新增、更新事件
+</span><span class="c1"></span>			<span class="nx">isSync</span> <span class="o">:=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">Type</span> <span class="o">==</span> <span class="nx">Sync</span>
+			<span class="nx">s</span><span class="p">.</span><span class="nx">cacheMutationDetector</span><span class="p">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">Object</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">old</span><span class="p">,</span> <span class="nx">exists</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">indexer</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">Object</span><span class="p">);</span> <span class="nx">err</span> <span class="o">==</span> <span class="kc">nil</span> <span class="o">&amp;&amp;</span> <span class="nx">exists</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">indexer</span><span class="p">.</span><span class="nf">Update</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">Object</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span> <span class="c1">//如果 indexer 中已经存在，更掉用 update 方法进行更新
+</span><span class="c1"></span>					<span class="k">return</span> <span class="nx">err</span>
+				<span class="p">}</span>
+				<span class="c1">//更新成功后发送“更新”通知：包含了新、旧资源实例
+</span><span class="c1"></span>				<span class="nx">s</span><span class="p">.</span><span class="nx">processor</span><span class="p">.</span><span class="nf">distribute</span><span class="p">(</span><span class="nx">updateNotification</span><span class="p">{</span><span class="nx">oldObj</span><span class="p">:</span> <span class="nx">old</span><span class="p">,</span> <span class="nx">newObj</span><span class="p">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">Object</span><span class="p">},</span> <span class="nx">isSync</span><span class="p">)</span>
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			      <span class="c1">//如果 indexer 中没有该资源实例，则放入 indexer 中
+</span><span class="c1"></span>				<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">indexer</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">Object</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+					<span class="k">return</span> <span class="nx">err</span>
+				<span class="p">}</span>
+				<span class="c1">//添加成功后，发送“新增”通知：包含了新加的资源实例
+</span><span class="c1"></span>				<span class="nx">s</span><span class="p">.</span><span class="nx">processor</span><span class="p">.</span><span class="nf">distribute</span><span class="p">(</span><span class="nx">addNotification</span><span class="p">{</span><span class="nx">newObj</span><span class="p">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">Object</span><span class="p">},</span> <span class="nx">isSync</span><span class="p">)</span>
+			<span class="p">}</span>
+		<span class="k">case</span> <span class="nx">Deleted</span><span class="p">:</span> <span class="c1">//删除事件
+</span><span class="c1"></span>			<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">indexer</span><span class="p">.</span><span class="nf">Delete</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">Object</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span><span class="c1">//从 indexer 中删除
+</span><span class="c1"></span>				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="c1">//删除成功后，发送“删除通知”：包含了删除的资源实例
+</span><span class="c1"></span>			<span class="nx">s</span><span class="p">.</span><span class="nx">processor</span><span class="p">.</span><span class="nf">distribute</span><span class="p">(</span><span class="nx">deleteNotification</span><span class="p">{</span><span class="nx">oldObj</span><span class="p">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">Object</span><span class="p">},</span> <span class="kc">false</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="总结">总结</h2>
+<p>Informer 的实现不算复杂，却在 Kubernetes 中很常见，每种资源的控制也都通过 Informer 来获取<code>api-server</code>的资源实例的变更。</p>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#为什么要有-informer">为什么要有 Informer？</a></li>
+    <li><a href="#初始化">初始化</a>
+      <ul>
+        <li><a href="#informer">Informer</a></li>
+        <li><a href="#indexer">Indexer</a></li>
+        <li><a href="#reflector">Reflector</a></li>
+        <li><a href="#添加同步事件监听器">添加同步事件监听器</a></li>
+      </ul>
+    </li>
+    <li><a href="#运行">运行</a>
+      <ul>
+        <li><a href="#controller-manager">controller-manager</a></li>
+        <li><a href="#sharedindexinformerrun">sharedIndexInformer#Run()</a></li>
+        <li><a href="#controllerrun">controller#Run()</a></li>
+        <li><a href="#sharedindexinformerhandledeltas">sharedIndexInformer#HandleDeltas()</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/kubernetes">Kubernetes
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/go">Go
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        <div class="article-entry">
+            <hr>
+            <p>文章同步发送到公众号：云编码 (微信号：sevenfeet)。</p>
+            <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/23/qrcode.jpg" alt="qrcode"></p>
+        </div>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    
+    <a href="../kubernetes-source-code-how-hpa-work/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">Kubernetes 源码解析 - HPA 水平自动伸缩如何工作&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+
+</article>
+
+        
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "addozhang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2020 Addo Zhang
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>

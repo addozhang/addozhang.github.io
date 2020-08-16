@@ -63,6 +63,70 @@
                 
                 
                 <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../install-docker-and-openshift-client-tools-in-alpine-container/">Alpine容器安装Docker和OpenShift Client Tools</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../install-docker-and-openshift-client-tools-in-alpine-container/" class="article-date">
+                        <time datetime='2018-08-28T09:14:12.000&#43;00:00' itemprop="datePublished">2018-08-28</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../install-docker-and-openshift-client-tools-in-alpine-container/#disqus_thread" class="article-comment-link"></a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    安装Docker echo &#34;http://dl-2.alpinelinux.org/alpine/edge/main&#34; &gt; /etc/apk/repositories echo &#34;http://dl-2.alpinelinux.org/alpine/edge/community&#34; &gt;&gt; /etc/apk/repositories echo &#34;http://dl-2.alpinelinux.org/alpine/edge/testing&#34; &gt;&gt; /etc/apk/repositories apk -U --no-cache \ --allow-untrusted add \ shadow \ docker \ py-pip \ openrc \ &amp;&amp; pip install docker-compose rc-update add docker boot 安装OpenShift Client Tools 需要先安装glibc apk --no-cache add ca-certificates
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../install-docker-and-openshift-client-tools-in-alpine-container/"></a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/docker">Docker
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/openshift">Openshift
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/alpine">Alpine
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
                     <h1 itemprop="name"><a class="article-title" href="../../ribbon-retry-in-zuul/">Zuul网关Ribbon重试</a></h1>
                 </header>
                 
@@ -661,60 +725,6 @@
                         
                         <li class="article-tag-list-item">
                             <a class="article-tag-list-link" href="https://atbug.com//tags/kvm">KVM
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../jenkins-cli-enable/">启用Jenkins CLI</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../jenkins-cli-enable/" class="article-date">
-                        <time datetime='2018-04-09T11:16:38.000&#43;00:00' itemprop="datePublished">2018-04-09</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../jenkins-cli-enable/#disqus_thread" class="article-comment-link"></a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    Jenkins CLI提供了SSH和Client模式. Docker运行Jenkins version:&#39;3&#39;services:jenkins:image:jenkins/jenkins:alpineports:- 8080:8080- 50000:50000- 46059:46059volumes:- &#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&#34;note: 以为是docker运行, ssh端口设置选用了固定端口. Client 从h
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../jenkins-cli-enable/"></a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/jenkins">Jenkins
                             </a>
                         </li>
                         
