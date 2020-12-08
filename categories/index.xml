@@ -6,10 +6,19 @@
     <description>Recent content in Categories on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 16 Aug 2020 23:32:38 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 08 Dec 2020 20:53:39 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>envoy</title>
+      <link>https://atbug.com/categories/envoy/</link>
+      <pubDate>Tue, 08 Dec 2020 20:53:39 +0800</pubDate>
+      
+      <guid>https://atbug.com/categories/envoy/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>源码解析</title>

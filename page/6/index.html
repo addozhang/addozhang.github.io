@@ -63,6 +63,86 @@
                 
                 
                 <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../go-in-action-two/">Go In Action 读书笔记 二</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../go-in-action-two/" class="article-date">
+                        <time datetime='2018-01-01T12:28:04.000&#43;00:00' itemprop="datePublished">2018-01-01</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../go-in-action-two/#disqus_thread" class="article-comment-link"></a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    <h2 id="go语言的类型系统">Go语言的类型系统</h2>
+<p>Go语言是静态类型的变成语言. 编译的时候需要确定类型.</p>
+<h3 id="用户定义的类型">用户定义的类型</h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">user</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">name</span>    <span class="kt">string</span>
+    <span class="nx">email</span>   <span class="kt">string</span>
+    <span class="nx">ext</span>     <span class="kt">int</span>
+    <span class="nx">privileged</span>  <span class="kt">bool</span>
+<span class="p">}</span>
+</code></pre></div><p><strong>使用</strong>
+零值和<strong>结构字面量</strong>初始化</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//引用类型, 各个字段初始化为对应的零值
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">bill</span> <span class="nx">user</span> <span class="err">#</span><span class="p">{</span>  <span class="mi">0</span> <span class="kc">false</span><span class="p">}</span>
+<span class="c1">//创建并初始化, 使用结构字面量
+</span><span class="c1"></span><span class="nx">lisa</span> <span class="o">:=</span> <span class="nx">user</span><span class="p">{</span> <span class="c1">//{Lisa lisa@email.com 123 true}
+</span><span class="c1"></span>    <span class="nx">name</span><span class="p">:</span> <span class="s">&#34;Lisa&#34;</span><span class="p">,</span>
+    <span class="nx">email</span><span class="p">:</span> <span class="s">&#34;lisa@email.com&#34;</span><span class="p">,</span>
+    <span class="nx">ext</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span>
+    <span class="nx">privileged</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div><p><strong>结构字面量的赋值方式:</strong></p>
+<ul>
+<li>不同行声明每一个字段和对应的值, 字段名和字段以<code>:</code>分隔, 末尾以<code>,</code>结尾</li>
+<li>不适用字段名, 只声明对应的值. 写在一行里, 以<code>,</code>分隔, 结尾不需要<code>,</code>. <strong>要保证顺序</strong></li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">lisa</span> <span class="o">:=</span> <span class="p">{</span><span class="s">&#34;Lisa&#34;</span><span class="p">,</span> <span class="s">&#34;lisa@email.com&#34;</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span> <span class="kc">true</span><span class="p">}</span>
+</code></pre></div>
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../go-in-action-two/"></a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/go">Go
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
                     <h1 itemprop="name"><a class="article-title" href="../../go-in-action-one/">Go In Action 读书笔记 一</a></h1>
                 </header>
                 
@@ -585,65 +665,6 @@
                         
                         <li class="article-tag-list-item">
                             <a class="article-tag-list-link" href="https://atbug.com//tags/%E4%B8%80%E8%87%B4%E6%80%A7">一致性
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../kafka-exactly-once-delivery-and-transactional-messaging-example/">Kafka 恰好一次发送和事务消费示例</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../kafka-exactly-once-delivery-and-transactional-messaging-example/" class="article-date">
-                        <time datetime='2017-09-22T18:03:43.000&#43;00:00' itemprop="datePublished">2017-09-22</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../kafka-exactly-once-delivery-and-transactional-messaging-example/#disqus_thread" class="article-comment-link"></a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    核心思想 生产端一致性: 开启幂等和事务, 包含重试, 发送确认, 同一个连接的最大未确认请求数. 消费端一致性: 通过设置读已提交的数据和同时处理完成每
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../kafka-exactly-once-delivery-and-transactional-messaging-example/"></a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/kafka">Kafka
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
                             </a>
                         </li>
                         

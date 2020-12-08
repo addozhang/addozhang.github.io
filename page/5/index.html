@@ -63,6 +63,96 @@
                 
                 
                 <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../kvm-installation-note/">KVM安装手册</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../kvm-installation-note/" class="article-date">
+                        <time datetime='2018-04-12T12:45:15.000&#43;00:00' itemprop="datePublished">2018-04-12</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../kvm-installation-note/#disqus_thread" class="article-comment-link"></a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    <h2 id="添加虚拟机流程">添加虚拟机流程：</h2>
+<pre><code>1. 配置网络
+2. 配置存储池
+3. 上传镜像
+4. 安装虚拟机，指定配置
+</code></pre>
+<h3 id="安装kvm虚拟机">安装KVM虚拟机</h3>
+<h4 id="1-关闭防火墙selinux">1. 关闭防火墙，selinux</h4>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># service iptables stop</span>
+<span class="c1"># setenforce 0 临时关闭</span>
+<span class="c1"># chkconfig NetworkManager off</span>
+</code></pre></div><h4 id="2-安装kvm虚拟机">2. 安装kvm虚拟机</h4>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># yum install kvm libvirt libvirt-devel python-virtinst python-virtinst qemu-kvm virt-viewer bridge-utils virt-top libguestfs-tools ca-certificates audit-libs-python device-mapper-libs virt-install</span>
+<span class="c1"># 启动服务</span>
+<span class="c1"># service libvirtd restart</span>
+下载virtio-win-1.5.2-1.el6.noarch.rpm 如果不安装window虚拟机或者使用带virtio驱动的镜像可以不用安装
+<span class="c1"># rpm -ivh virtio-win-1.5.2-1.el6.noarch.rpm</span>
+</code></pre></div><h4 id="3-libvirt在管理本地或远程hypervisor时的表现形式如下">3. Libvirt在管理本地或远程Hypervisor时的表现形式如下。</h4>
+<p>在libvirt内部管理了五部分：</p>
+<ul>
+<li>节点：所谓的节点就是我们的物理服务器，一个服务器代表一个节点，上边存放着Hyper和Domain</li>
+<li>Hypervisor：即VMM，指虚拟机的监控程序，在KVM中是一个加载了kvm.ko的标准Linux系统。</li>
+<li>域（Domain）：指虚拟机，一个域代表一个虚拟机（估计思路来源于Xen的Domain0）</li>
+<li>存储池（Storage Pool）：存储空间，支持多种协议和网络存储。作为虚拟机磁盘的存储源。</li>
+<li>卷组（Volume）：虚拟机磁盘在Host上的表现形式。
+上边的五部分，我们必须使用的是前三个，因为很多时候根据业务规则或应用的灵活性并没有使用卷组（其实就是有了编制的虚拟磁盘文件），也就没有必要使用存储池。</li>
+</ul>
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../kvm-installation-note/"></a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/linux">Linux
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/ops">ops
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/kvm">KVM
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
                     <h1 itemprop="name"><a class="article-title" href="../../jenkins-cli-enable/">启用Jenkins CLI</a></h1>
                 </header>
                 
@@ -635,86 +725,6 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
                     </p>
                     <p class="article-more-link">
                         <a href="../../go-in-action-three/"></a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/go">Go
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../go-in-action-two/">Go In Action 读书笔记 二</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../go-in-action-two/" class="article-date">
-                        <time datetime='2018-01-01T12:28:04.000&#43;00:00' itemprop="datePublished">2018-01-01</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../go-in-action-two/#disqus_thread" class="article-comment-link"></a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    <h2 id="go语言的类型系统">Go语言的类型系统</h2>
-<p>Go语言是静态类型的变成语言. 编译的时候需要确定类型.</p>
-<h3 id="用户定义的类型">用户定义的类型</h3>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">user</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">name</span>    <span class="kt">string</span>
-    <span class="nx">email</span>   <span class="kt">string</span>
-    <span class="nx">ext</span>     <span class="kt">int</span>
-    <span class="nx">privileged</span>  <span class="kt">bool</span>
-<span class="p">}</span>
-</code></pre></div><p><strong>使用</strong>
-零值和<strong>结构字面量</strong>初始化</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//引用类型, 各个字段初始化为对应的零值
-</span><span class="c1"></span><span class="kd">var</span> <span class="nx">bill</span> <span class="nx">user</span> <span class="err">#</span><span class="p">{</span>  <span class="mi">0</span> <span class="kc">false</span><span class="p">}</span>
-<span class="c1">//创建并初始化, 使用结构字面量
-</span><span class="c1"></span><span class="nx">lisa</span> <span class="o">:=</span> <span class="nx">user</span><span class="p">{</span> <span class="c1">//{Lisa lisa@email.com 123 true}
-</span><span class="c1"></span>    <span class="nx">name</span><span class="p">:</span> <span class="s">&#34;Lisa&#34;</span><span class="p">,</span>
-    <span class="nx">email</span><span class="p">:</span> <span class="s">&#34;lisa@email.com&#34;</span><span class="p">,</span>
-    <span class="nx">ext</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span>
-    <span class="nx">privileged</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-<span class="p">}</span>
-</code></pre></div><p><strong>结构字面量的赋值方式:</strong></p>
-<ul>
-<li>不同行声明每一个字段和对应的值, 字段名和字段以<code>:</code>分隔, 末尾以<code>,</code>结尾</li>
-<li>不适用字段名, 只声明对应的值. 写在一行里, 以<code>,</code>分隔, 结尾不需要<code>,</code>. <strong>要保证顺序</strong></li>
-</ul>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">lisa</span> <span class="o">:=</span> <span class="p">{</span><span class="s">&#34;Lisa&#34;</span><span class="p">,</span> <span class="s">&#34;lisa@email.com&#34;</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span> <span class="kc">true</span><span class="p">}</span>
-</code></pre></div>
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../go-in-action-two/"></a>
                     </p>
                 </div>
 

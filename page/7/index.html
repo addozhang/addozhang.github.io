@@ -63,6 +63,65 @@
                 
                 
                 <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../kafka-exactly-once-delivery-and-transactional-messaging-example/">Kafka 恰好一次发送和事务消费示例</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../kafka-exactly-once-delivery-and-transactional-messaging-example/" class="article-date">
+                        <time datetime='2017-09-22T18:03:43.000&#43;00:00' itemprop="datePublished">2017-09-22</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../kafka-exactly-once-delivery-and-transactional-messaging-example/#disqus_thread" class="article-comment-link"></a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    核心思想 生产端一致性: 开启幂等和事务, 包含重试, 发送确认, 同一个连接的最大未确认请求数. 消费端一致性: 通过设置读已提交的数据和同时处理完成每
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../kafka-exactly-once-delivery-and-transactional-messaging-example/"></a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/kafka">Kafka
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
                     <h1 itemprop="name"><a class="article-title" href="../../kafka-exactly-once-delivery-and-transactional-messaging/">恰好一次发送和事务消息(译)</a></h1>
                 </header>
                 
@@ -560,65 +619,6 @@
                         
                         <li class="article-tag-list-item">
                             <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/docker">Docker
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../run-spring-boot-app-in-docker/">从零开始用docker运行spring boot应用</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../run-spring-boot-app-in-docker/" class="article-date">
-                        <time datetime='2017-04-20T21:58:42.000&#43;00:00' itemprop="datePublished">2017-04-20</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../run-spring-boot-app-in-docker/#disqus_thread" class="article-comment-link"></a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    假设已经安装好Docker Springboot应用 pom添加依赖和构建插件 &lt;parent&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt; &lt;version&gt;1.5.3.RELEASE&lt;/version&gt; &lt;/parent&gt; &lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt; &lt;/dependency&gt; &lt;/dependencies&gt; &lt;build&gt; &lt;plugins&gt; &lt;plugin&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt; &lt;/plugin&gt; &lt;/plugins&gt; &lt;/build&gt; 应用代码 package com.atbug.spring.boot.test; import org.springframework.boot.SpringApplication; import org.springframework.boot.autoconfigure.SpringBootApplication; import org.springframework.boot.web.servlet.FilterRegistrationBean; import org.springframework.context.annotation.Bean;
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../run-spring-boot-app-in-docker/"></a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/spring-boot">Spring-boot
                             </a>
                         </li>
                         

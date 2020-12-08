@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>源码 on 乱世浮生</title>
-    <link>https://atbug.com/tags/%E6%BA%90%E7%A0%81/</link>
-    <description>Recent content in 源码 on 乱世浮生</description>
+    <title>envoy on 乱世浮生</title>
+    <link>https://atbug.com/categories/envoy/</link>
+    <description>Recent content in envoy on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Tue, 08 Dec 2020 20:53:39 +0800</lastBuildDate>
     
-	<atom:link href="https://atbug.com/tags/%E6%BA%90%E7%A0%81/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://atbug.com/categories/envoy/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -18,15 +18,6 @@
       
       <guid>https://atbug.com/read-envoy-source-code-in-clion/</guid>
       <description>虽然不写 C++，但是看点代码还是能看懂。Envoy 的功能配置复杂，有时候处理问题还是需要看下源码的。 Vim 或者 Code 就算了，我只是阅读源码需要关联跳</description>
-    </item>
-    
-    <item>
-      <title>Spring Cloud - Eureka Client源码分析</title>
-      <link>https://atbug.com/spring-cloud-eureka-client-source-code-analysis/</link>
-      <pubDate>Sat, 14 Oct 2017 22:04:59 +0000</pubDate>
-      
-      <guid>https://atbug.com/spring-cloud-eureka-client-source-code-analysis/</guid>
-      <description>准备做个Spring Cloud源码分析系列, 作为Spring Cloud的源码分析笔记. 这一篇是Eureka的客户端. 客户端 两种方式, 最终的实</description>
     </item>
     
   </channel>

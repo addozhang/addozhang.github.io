@@ -6,10 +6,19 @@
     <description>Recent content on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 16 Aug 2020 23:32:38 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 08 Dec 2020 20:53:39 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>使用 cLion 阅读 envoy 源码</title>
+      <link>https://atbug.com/read-envoy-source-code-in-clion/</link>
+      <pubDate>Tue, 08 Dec 2020 20:53:39 +0800</pubDate>
+      
+      <guid>https://atbug.com/read-envoy-source-code-in-clion/</guid>
+      <description>虽然不写 C++，但是看点代码还是能看懂。Envoy 的功能配置复杂，有时候处理问题还是需要看下源码的。 Vim 或者 Code 就算了，我只是阅读源码需要关联跳</description>
+    </item>
     
     <item>
       <title>Kubernetes 源码解析 - Informer</title>
