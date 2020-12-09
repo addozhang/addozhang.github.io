@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.73.0" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -123,7 +123,7 @@
 <p>firewall-cmd &ndash;permanent &ndash;zone=public &ndash;add-port=5432/tcp</p>
 </blockquote>
 <h4 id="修改监听的ip">修改监听的ip</h4>
-<p>需要外部访问的话，需要修改postgresql.conf中的监听ip，&lsquo;0.0.0.0&rsquo;允许所有ipv4的ip访问，''::&lsquo;&lsquo;允许所有ipv6的ip访问</p>
+<p>需要外部访问的话，需要修改postgresql.conf中的监听ip，&lsquo;0.0.0.0'允许所有ipv4的ip访问，''::&lsquo;&lsquo;允许所有ipv6的ip访问</p>
 <blockquote>
 <p>listen_addresses = &ldquo;0.0.0.0&rdquo;</p>
 </blockquote>
