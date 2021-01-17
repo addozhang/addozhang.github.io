@@ -6,10 +6,19 @@
     <description>Recent content in Posts on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 09 Dec 2020 20:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 17 Jan 2021 21:37:23 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>【译】应用架构：为什么要随着市场演进</title>
+      <link>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</link>
+      <pubDate>Sun, 17 Jan 2021 21:37:23 +0800</pubDate>
+      
+      <guid>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</guid>
+      <description>本文译自 Application architecture: why it should evolve with the market 最初由Mia Platform团队发布在Mia Platform的博客上 如今，IT 挑战在于通过有效选择应用架构来适应市</description>
+    </item>
     
     <item>
       <title>Envoy listener filter times out 问题</title>

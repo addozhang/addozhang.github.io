@@ -63,6 +63,65 @@
                 
                 
                 <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../private-constructor-capture-idiom/">私有构造函数捕获模式</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../private-constructor-capture-idiom/" class="article-date">
+                        <time datetime='2017-05-24T06:50:44.000&#43;00:00' itemprop="datePublished">2017-05-24</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../private-constructor-capture-idiom/#disqus_thread" class="article-comment-link"></a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    《Java并发编程实践》的注解中有提到这一概念。 The private constructor exists to avoid the race condition that would occur if the copy constructor were implemented as this (p.x, p.y); this is an example of the private constructor capture idiom (Bloch and Gafter, 2005). 结合原文代码： @ThreadSafe public class
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../private-constructor-capture-idiom/"></a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B">多线程
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
                     <h1 itemprop="name"><a class="article-title" href="../../java-operate-cassandra-deployed-in-docker/">Docker快速构建Cassandra和Java操作</a></h1>
                 </header>
                 
@@ -590,65 +649,6 @@
             </div>
         </article>
         
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../install-postgresql-on-centos/">Centos上安装Postgresql</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../install-postgresql-on-centos/" class="article-date">
-                        <time datetime='2017-04-06T22:54:17.000&#43;00:00' itemprop="datePublished">2017-04-06</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../install-postgresql-on-centos/#disqus_thread" class="article-comment-link"></a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    版本 Centos7 Postgresql9.2 Enable ssh service sshd start Open firewall for 22 firewall-cmd —state firewall-cmd —list-all firewall-cmd —permanent —zone=public —add-port=22/tcp firewall-cmd
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../install-postgresql-on-centos/"></a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/database">Database
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/linux">Linux
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
 
         
 
@@ -708,7 +708,7 @@
     <footer id="footer">
     <div class="outer">
         <div id="footer-info" class="inner">
-            &copy; 2020 Addo Zhang
+            &copy; 2021 Addo Zhang
             <br />
             Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
         </div>
