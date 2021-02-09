@@ -63,6 +63,65 @@
                 
                 
                 <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../install-redis-on-centos/">Centos编译安装Redis</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../install-redis-on-centos/" class="article-date">
+                        <time datetime='2017-04-07T16:48:46.000&#43;00:00' itemprop="datePublished">2017-04-07</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../install-redis-on-centos/#disqus_thread" class="article-comment-link"></a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    版本 Centos7 Redis3.2.8 编译安装 wget http://download.redis.io/releases/redis-3.2.8.tar.gz tar -zxvf redis-3.2.8.tar.gz cd redis-3.2.8 sudo make test sudo make install 启动 redis-server 问题 /bin/sh: cc: command not found **原因：**Centos安装时选择的类型是Infrastructure，没有
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../install-redis-on-centos/"></a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/centos">Centos
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/redis">Redis
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
                     <h1 itemprop="name"><a class="article-title" href="../../install-postgresql-on-centos/">Centos上安装Postgresql</a></h1>
                 </header>
                 
@@ -579,65 +638,6 @@
             </div>
         </article>
         
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../clean-speicified-keys-in-redis/">Redis清理缓存</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../clean-speicified-keys-in-redis/" class="article-date">
-                        <time datetime='2016-12-13T16:54:41.000&#43;00:00' itemprop="datePublished">2016-12-13</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../clean-speicified-keys-in-redis/#disqus_thread" class="article-comment-link"></a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    最近有个需求需要主动的去清理部分缓存，考虑的原子性的问题，用Lua脚本进行实现。 Lua脚本 local count = 0 for _,k in ipairs(redis.call(&#39;KEYS&#39;, ARGV[1])) do redis.call(&#39;DEL&#39;, k) count = count + 1 end return count shell
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../clean-speicified-keys-in-redis/"></a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/reids">reids
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/java">java
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
 
         
 
@@ -684,6 +684,10 @@
     
     
     <a href="../../page/10/">10</a>
+    
+    
+    
+    <a href="../../page/11/">11</a>
     
     
 

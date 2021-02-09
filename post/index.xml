@@ -6,10 +6,19 @@
     <description>Recent content in Posts on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 17 Jan 2021 21:37:23 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 09 Feb 2021 06:43:54 +0800</lastBuildDate>
     
 	<atom:link href="https://atbug.com/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>【译】2021 年及未来的云原生预测</title>
+      <link>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</link>
+      <pubDate>Tue, 09 Feb 2021 06:43:54 +0800</pubDate>
+      
+      <guid>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</guid>
+      <description>本文译自 Cloud Native Predictions for 2021 and Beyond 原文发布在 Chris Aniszczyk 的个人博客 我希望每个人都有一个美好的假期，因为 2021 年 1 月的前几周一直非常疯狂，从叛乱到新的 COVID 菌株。在云原生</description>
+    </item>
     
     <item>
       <title>【译】应用架构：为什么要随着市场演进</title>
