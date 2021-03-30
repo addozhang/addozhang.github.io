@@ -6,11 +6,7 @@
     <description>Recent content in develop on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 14 Sep 2016 09:16:10 +0000</lastBuildDate>
-    
-	<atom:link href="https://atbug.com/tags/develop/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Wed, 14 Sep 2016 09:16:10 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/develop/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Git回车换行</title>
       <link>https://atbug.com/crlf-in-git/</link>

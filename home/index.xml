@@ -5,10 +5,6 @@
     <link>https://atbug.com/home/</link>
     <description>Recent content in Home on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    
-	<atom:link href="https://atbug.com/home/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <language>en</language><atom:link href="https://atbug.com/home/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

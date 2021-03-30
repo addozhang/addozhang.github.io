@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.65.1" />
+    <meta name="generator" content="Hugo 0.81.0" />
 </head>
 
 <body>
@@ -57,6 +57,60 @@
 </header>
 
     <section id="main" class="outer">
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../rsyslogd-high-cpu-trouble-shooting/">解决rsyslogd资源占用率高问题</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../rsyslogd-high-cpu-trouble-shooting/" class="article-date">
+                        <time datetime='2018-06-01T09:32:28.000&#43;00:00' itemprop="datePublished">2018-06-01</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../rsyslogd-high-cpu-trouble-shooting/#disqus_thread" class="article-comment-link"></a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    rsyslogd资源占用高问题记录 问题: openshift集群安装在esxi的虚拟机上. 各个节点出现问题, 集群响应很慢. kswapd0进程c
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../rsyslogd-high-cpu-trouble-shooting/"></a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/linux">Linux
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
         
         <article class="article article-type-post" itemscope itemprop="blogPost">
             <div class="article-inner">
@@ -239,7 +293,7 @@
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    <p>最近开始客串运维做CI/CD的规划设计, 主要是基于&rsquo;Pipeline as Code in Jenkins&rsquo;. 整理了下思路和技术点, 慢慢的写.</p>
+                    <p>最近开始客串运维做CI/CD的规划设计, 主要是基于&rsquo;Pipeline as Code in Jenkins'. 整理了下思路和技术点, 慢慢的写.</p>
 <p>这一篇是关于基于角色的授权策略, 用的是<code>Role-Based Authorization Strategy Plugin</code>.</p>
 <p>授权在CI/CD流程中比较常见, 比如我们只让某些特定用户才可以构建Pre-Release的Job. 而更高级的Release发布, 又会需要某些用户的审批才可以进行. 需要授权时, 可能还需要发邮件提醒用户.</p>
 <p>UI上如何使用就不提了, 这里只说Pipeline as Code. 后面的几篇也会是这个背景.</p>
@@ -706,87 +760,6 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
                         
                         <li class="article-tag-list-item">
                             <a class="article-tag-list-link" href="https://atbug.com//tags/eureka">Eureka
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../learn-netflix-zuul/">初识Netflix Zuul</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../learn-netflix-zuul/" class="article-date">
-                        <time datetime='2018-02-11T10:07:18.000&#43;00:00' itemprop="datePublished">2018-02-11</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../learn-netflix-zuul/#disqus_thread" class="article-comment-link"></a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    <p>嵌入式的zuul代理</p>
-<p>使用了Netfilx OSS的其他组件:</p>
-<ul>
-<li>Hystrix   熔断</li>
-<li>Ribbon    负责发送外出请求的客户端, 提供软件负载均衡功能</li>
-<li>Trubine   实时地聚合细粒度的metrics数据</li>
-<li>Archaius  动态配置</li>
-</ul>
-<h2 id="介绍">介绍</h2>
-<p>由于2.0停止开发且会有bug, 故下面的分析基于1.x版本.</p>
-<h3 id="特性">特性</h3>
-<ul>
-<li>Authentication 认证</li>
-<li>Insights 洞察</li>
-<li>Stress Testing 压力测试</li>
-<li>Canary Testing 金丝雀测试</li>
-<li>Dynamic Routing 动态路由</li>
-<li>Multi-Region Resiliency 多区域弹性</li>
-<li>Load Shedding 负载脱落</li>
-<li>Security 安全</li>
-<li>Static Response handling 静态响应处理</li>
-<li>Multi-Region Resiliency 主动/主动流量管理</li>
-</ul>
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../learn-netflix-zuul/"></a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/netflix">Netflix
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/zuul">Zuul
                             </a>
                         </li>
                         

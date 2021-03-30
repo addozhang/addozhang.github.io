@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.65.1" />
+    <meta name="generator" content="Hugo 0.81.0" />
 </head>
 
 <body>
@@ -57,6 +57,70 @@
 </header>
 
     <section id="main" class="outer">
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../tekton-installation-and-sample/">Tekton安装及Hello world</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../tekton-installation-and-sample/" class="article-date">
+                        <time datetime='2020-01-17T19:17:14.000&#43;08:00' itemprop="datePublished">2020-01-17</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../tekton-installation-and-sample/#disqus_thread" class="article-comment-link"></a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    安装 kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml 检查安装的tekton相关的CRD: kubectl api-resources | grep tekton clustertasks tekton.dev false ClusterTask conditions tekton.dev true Condition pipelineresources tekton.dev true PipelineResource pipelineruns pr,prs tekton.dev true PipelineRun pipelines tekton.dev true Pipeline taskruns tr,trs tekton.dev true TaskRun tasks tekton.dev true Task tekton的两个po
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../tekton-installation-and-sample/"></a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/kubernetes">Kubernetes
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/cicd">CICD
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/tekton">tekton
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
         
         <article class="article article-type-post" itemscope itemprop="blogPost">
             <div class="article-inner">
@@ -564,49 +628,6 @@
                     </p>
                     <p class="article-more-link">
                         <a href="../../zipkin-dependencies-bug-two-timeout-and-oom/"></a>
-                    </p>
-                </div>
-
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../zipkin-dependencies-bug-one/">Zipkin dependencies的坑之一: 耗时越来越长</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../zipkin-dependencies-bug-one/" class="article-date">
-                        <time datetime='2019-09-22T17:59:56.000&#43;08:00' itemprop="datePublished">2019-09-22</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../zipkin-dependencies-bug-one/#disqus_thread" class="article-comment-link"></a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    zipkin-dependencies是zipkin调用链的依赖分析工具. 系统上线时使用了当时的最新版本2.0.1, 运行一年之后随着服务的增
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../zipkin-dependencies-bug-one/"></a>
                     </p>
                 </div>
 

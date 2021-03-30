@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.65.1" />
+    <meta name="generator" content="Hugo 0.81.0" />
 </head>
 
 
@@ -358,87 +358,87 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
 @ConditionalOnBean(ZuulProxyMarkerConfiguration.Marker.class)
 public class ZuulProxyAutoConfiguration extends ZuulServerAutoConfiguration {
 
-    @SuppressWarnings(&quot;rawtypes&quot;)
-    @Autowired(required = false)
-    private List&lt;RibbonRequestCustomizer&gt; requestCustomizers = Collections.emptyList();
+	@SuppressWarnings(&quot;rawtypes&quot;)
+	@Autowired(required = false)
+	private List&lt;RibbonRequestCustomizer&gt; requestCustomizers = Collections.emptyList();
   //网关服务注册实例信息
-    @Autowired(required = false)
-    private Registration registration;
+	@Autowired(required = false)
+	private Registration registration;
   //服务发现客户端
-    @Autowired
-    private DiscoveryClient discovery;
+	@Autowired
+	private DiscoveryClient discovery;
   //serviceId和路由的映射逻辑, 默认为相同
-    @Autowired
-    private ServiceRouteMapper serviceRouteMapper;
+	@Autowired
+	private ServiceRouteMapper serviceRouteMapper;
 
-    @Override
-    public HasFeatures zuulFeature() {
+	@Override
+	public HasFeatures zuulFeature() {
         return HasFeatures.namedFeature(&quot;Zuul (Discovery)&quot;,
                 ZuulProxyAutoConfiguration.class);
-    }
+	}
 
   //静态和动态路由寻址: 静态从配置文件获取, 动态通过服务发现客户端完成. 后者优先级更高
-    @Bean
-    @ConditionalOnMissingBean(DiscoveryClientRouteLocator.class)
-    public DiscoveryClientRouteLocator discoveryRouteLocator() {
+	@Bean
+	@ConditionalOnMissingBean(DiscoveryClientRouteLocator.class)
+	public DiscoveryClientRouteLocator discoveryRouteLocator() {
         return new DiscoveryClientRouteLocator(this.server.getServletPrefix(),
                 this.discovery, this.zuulProperties, this.serviceRouteMapper, this.registration);
-    }
+	}
 
   //装饰过滤器
-    // pre filters
-    @Bean
-    public PreDecorationFilter preDecorationFilter(RouteLocator routeLocator,
+	// pre filters
+	@Bean
+	public PreDecorationFilter preDecorationFilter(RouteLocator routeLocator,
             ProxyRequestHelper proxyRequestHelper) {
         return new PreDecorationFilter(routeLocator, this.server.getServletPrefix(),
                 this.zuulProperties, proxyRequestHelper);
-    }
+	}
   
   //基于Ribbon路由过滤器
-    // route filters
-    @Bean
-    public RibbonRoutingFilter ribbonRoutingFilter(ProxyRequestHelper helper,
+	// route filters
+	@Bean
+	public RibbonRoutingFilter ribbonRoutingFilter(ProxyRequestHelper helper,
             RibbonCommandFactory&lt;?&gt; ribbonCommandFactory) {
         RibbonRoutingFilter filter = new RibbonRoutingFilter(helper, ribbonCommandFactory,
                 this.requestCustomizers);
         return filter;
-    }
+	}
 
   //基于host的路由过滤器
-    @Bean
-    @ConditionalOnMissingBean({SimpleHostRoutingFilter.class, CloseableHttpClient.class})
-    public SimpleHostRoutingFilter simpleHostRoutingFilter(ProxyRequestHelper helper,
+	@Bean
+	@ConditionalOnMissingBean({SimpleHostRoutingFilter.class, CloseableHttpClient.class})
+	public SimpleHostRoutingFilter simpleHostRoutingFilter(ProxyRequestHelper helper,
             ZuulProperties zuulProperties,
             ApacheHttpClientConnectionManagerFactory connectionManagerFactory,
             ApacheHttpClientFactory httpClientFactory) {
         return new SimpleHostRoutingFilter(helper, zuulProperties,
                 connectionManagerFactory, httpClientFactory);
-    }
+	}
 
-    @Bean
-    @ConditionalOnMissingBean({SimpleHostRoutingFilter.class})
-    public SimpleHostRoutingFilter simpleHostRoutingFilter2(ProxyRequestHelper helper,
+	@Bean
+	@ConditionalOnMissingBean({SimpleHostRoutingFilter.class})
+	public SimpleHostRoutingFilter simpleHostRoutingFilter2(ProxyRequestHelper helper,
                                                            ZuulProperties zuulProperties,
                                                            CloseableHttpClient httpClient) {
         return new SimpleHostRoutingFilter(helper, zuulProperties,
                 httpClient);
-    }
+	}
 
   //服务发现寻址刷新监听器
-    @Bean
-    public ApplicationListener&lt;ApplicationEvent&gt; zuulDiscoveryRefreshRoutesListener() {
+	@Bean
+	public ApplicationListener&lt;ApplicationEvent&gt; zuulDiscoveryRefreshRoutesListener() {
         return new ZuulDiscoveryRefreshListener();
-    }
+	}
 
-    @Bean
-    @ConditionalOnMissingBean(ServiceRouteMapper.class)
-    public ServiceRouteMapper serviceRouteMapper() {
+	@Bean
+	@ConditionalOnMissingBean(ServiceRouteMapper.class)
+	public ServiceRouteMapper serviceRouteMapper() {
         return new SimpleServiceRouteMapper();
-    }
+	}
 
-    @Configuration
-    @ConditionalOnMissingClass(&quot;org.springframework.boot.actuate.endpoint.Endpoint&quot;)
-    protected static class NoActuatorConfiguration {
+	@Configuration
+	@ConditionalOnMissingClass(&quot;org.springframework.boot.actuate.endpoint.Endpoint&quot;)
+	protected static class NoActuatorConfiguration {
 
         @Bean
         public ProxyRequestHelper proxyRequestHelper(ZuulProperties zuulProperties) {
@@ -448,11 +448,11 @@ public class ZuulProxyAutoConfiguration extends ZuulServerAutoConfiguration {
             return helper;
         }
 
-    }
+	}
 
-    @Configuration
-    @ConditionalOnClass(Endpoint.class)
-    protected static class EndpointConfiguration {
+	@Configuration
+	@ConditionalOnClass(Endpoint.class)
+	protected static class EndpointConfiguration {
 
         @Autowired(required = false)
         private TraceRepository traces;
@@ -487,9 +487,9 @@ public class ZuulProxyAutoConfiguration extends ZuulServerAutoConfiguration {
             helper.setTraceRequestBody(zuulProperties.isTraceRequestBody());
             return helper;
         }
-    }
+	}
 
-    private static class ZuulDiscoveryRefreshListener
+	private static class ZuulDiscoveryRefreshListener
             implements ApplicationListener&lt;ApplicationEvent&gt; {
 
         private HeartbeatMonitor monitor = new HeartbeatMonitor();
@@ -523,7 +523,7 @@ public class ZuulProxyAutoConfiguration extends ZuulServerAutoConfiguration {
             this.zuulHandlerMapping.setDirty(true);
         }
 
-    }
+	}
 
 }
 ​```

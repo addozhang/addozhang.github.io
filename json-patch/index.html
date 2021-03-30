@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.65.1" />
+    <meta name="generator" content="Hugo 0.81.0" />
 </head>
 
 
@@ -119,7 +119,7 @@
   <span class="nt">&#34;hello&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;world&#34;</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div><h2 id="如何实现">如何实现</h2>
-<p>一个JSON Path文档是一个包含了一组patch操作的JSON文件. 支持的patch操作包括&quot;add&rdquo;, &ldquo;remove&rdquo;, &ldquo;replace&rdquo;, &ldquo;move&rdquo;, &ldquo;copy&quot;和&quot;test&rdquo;. 这些patch操作是按照顺序应用的: 如果有任何一个操作失败, 整个patch都会被终止.</p>
+<p>一个JSON Path文档是一个包含了一组patch操作的JSON文件. 支持的patch操作包括&quot;add&quot;, &ldquo;remove&rdquo;, &ldquo;replace&rdquo;, &ldquo;move&rdquo;, &ldquo;copy&quot;和&quot;test&rdquo;. 这些patch操作是按照顺序应用的: 如果有任何一个操作失败, 整个patch都会被终止.</p>
 <h4 id="json-pointer指针">JSON Pointer(指针)</h4>
 <p>JSON指针<a href="http://tools.ietf.org/html/rfc6901">IETF RFC 6901</a>定义了一个如何在JSON文档中定位指定值的字符格式. 用来在所有的JSON Patch操作中指定要修改的文档部分.</p>
 <p>JSON指针是使用<code>/</code>分隔的token字符串, 这些token指定了对象的key或者是数组的索引. 例如, 给定JSON</p>

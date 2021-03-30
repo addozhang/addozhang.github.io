@@ -6,11 +6,7 @@
     <description>Recent content in Skaffold on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 21 Dec 2019 20:45:22 +0800</lastBuildDate>
-    
-	<atom:link href="https://atbug.com/tags/skaffold/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 21 Dec 2019 20:45:22 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/skaffold/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>加速云原生的 Java 开发</title>
       <link>https://atbug.com/speed-up-java-development-on-kubernetes/</link>
