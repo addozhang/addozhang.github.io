@@ -52,17 +52,17 @@
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>https://atbug.com/translation-distributed-systems-kubernetes/</loc>
-    <lastmod>2021-03-29T23:11:25+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url><url>
     <loc>https://atbug.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/</loc>
     <lastmod>2021-03-29T23:11:25+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://atbug.com/categories/%E7%BF%BB%E8%AF%91/</loc>
+    <lastmod>2021-03-29T23:11:25+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://atbug.com/translation-distributed-systems-kubernetes/</loc>
     <lastmod>2021-03-29T23:11:25+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>分布式系统在 Kubernetes 上的进化 // 乱世浮生</title>
+    <title>译：分布式系统在 Kubernetes 上的进化 // 乱世浮生</title>
 
     <meta charset="utf-8">
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -10,7 +10,7 @@
     <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
     <meta name="keywords" content="Java,Spring Cloud,Architecture,">
 
-        <meta property="og:title" content="分布式系统在 Kubernetes 上的进化" />
+        <meta property="og:title" content="译：分布式系统在 Kubernetes 上的进化" />
     <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="zh-cn" />
@@ -62,7 +62,7 @@
     <div class="article-inner">
         
         <header class="article-header">
-            <h1 class="article-title" itemprop="name">分布式系统在 Kubernetes 上的进化</h1>
+            <h1 class="article-title" itemprop="name">译：分布式系统在 Kubernetes 上的进化</h1>
         </header>
         
         <div class="article-meta">
@@ -97,7 +97,7 @@
 <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/25image0021616431698392.jpg" alt=""></p>
 <p>我们有了网络之后，接下来就是我们希望有能力与不同的 API 和端点交互，即资源绑定&ndash;与其他协议和不同的数据格式交互。甚至能够从一种数据格式转换成另一种数据格式。我还会在这里加入诸如滤光的功能，也就是说，当我们订阅一个主题时，我们也许只对某些事件感兴趣。</p>
 <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/45image0031616431697873.jpg" alt=""></p>
-<p>你认为最后一类是什么？是状态。当我在说状态和有状态的抽象时，我并不是在谈论实际的状态管理，比如数据库或者文件系统的功能。我要说的更多是有关幕后依赖状态的开发人员抽象。可能，你需要具有工作流管理的能力。也许你想管理运行时间长的进程或者做临时调度或者某些定时任务来定期运行服务。也许你还想进行分布式缓存，具有幂等性或者支持回滚。所有这些都是开发人员级的原语，但在幕后，它们依赖于具有某种状态。你想随意使用这些抽象俩创建完善的分布式系统。</p>
+<p>你认为最后一类是什么？是状态。当我在说状态和有状态的抽象时，我并不是在谈论实际的状态管理，比如数据库或者文件系统的功能。我要说的更多是有关幕后依赖状态的开发人员抽象。可能，你需要具有工作流管理的能力。也许你想管理运行时间长的进程或者做临时调度或者某些定时任务来定期运行服务。也许你还想进行分布式缓存，具有幂等性或者支持回滚。所有这些都是开发人员级的原语，但在幕后，它们依赖于具有某种状态。你想随意使用这些抽象来创建完善的分布式系统。</p>
 <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/26image0041616431697348.jpg" alt=""></p>
 <p>我们将使用这个分布式系统原语的框架来评估它们在 Kubernetes 和其他项目上的变化情况。</p>
 <h2 id="单体架构----传统中间件功能">单体架构 &ndash; 传统中间件功能</h2>
