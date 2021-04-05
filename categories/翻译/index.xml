@@ -6,7 +6,11 @@
     <description>Recent content in 翻译 on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 29 Mar 2021 23:11:25 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E7%BF%BB%E8%AF%91/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 29 Mar 2021 23:11:25 +0800</lastBuildDate>
+    
+	<atom:link href="https://atbug.com/categories/%E7%BF%BB%E8%AF%91/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>分布式系统在 Kubernetes 上的进化</title>
       <link>https://atbug.com/translation-distributed-systems-kubernetes/</link>
@@ -40,7 +44,7 @@
       <pubDate>Sun, 19 Jan 2020 14:33:17 +0800</pubDate>
       
       <guid>https://atbug.com/tekton-0.9.0-release/</guid>
-      <description>翻译整理自 What’s New in Tekton 0.9 功能及Bug修复 脚本模式 以前如果要在容器里运行个简单的 bash 脚本, 需要这么写: - name:helloimage:ubuntucommand:[&amp;#39;bash&amp;#39;]args:- -c- |set -ex echo &amp;#34;hello&amp;#</description>
+      <description>翻译整理自 What’s New in Tekton 0.9 功能及Bug修复 脚本模式 以前如果要在容器里运行个简单的 bash 脚本, 需要这么写: - name:helloimage:ubuntucommand:[&amp;#39;bash&amp;#39;]args:- -c- | set -execho&amp;#34;h</description>
     </item>
     
     <item>

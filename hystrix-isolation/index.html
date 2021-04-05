@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -89,7 +89,7 @@
         <div class="article-entry" itemprop="articleBody">
             <h2 id="隔离策略">隔离策略</h2>
 <h3 id="线程和线程池">线程和线程池</h3>
-<p>客户端(库, 网络调用等)在各自的线程上运行. 这种做法将他们与调用线程隔开, 因此调用者可以从一个耗时的依赖调用&quot;离开(walk away)&quot;</p>
+<p>客户端(库, 网络调用等)在各自的线程上运行. 这种做法将他们与调用线程隔开, 因此调用者可以从一个耗时的依赖调用&quot;离开(walk away)&rdquo;</p>
 <p>Hystrix使用单独的, 每个依赖的线程池作为约束任何给定依赖的一种方式, 因此潜在执行的延迟将仅在该池中使可用线程饱和.</p>
 <p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15280741661560.png" alt=""></p>
 <p>如果不试用线程池可以保护你免受故障的影响, 但是这需要客户端可信任地快速失败(网络连接/读取超时, 重试的配置)并始终表现良好.</p>

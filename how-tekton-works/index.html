@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -144,40 +144,40 @@ tasks                            tekton.dev   <span class="nb">true</span>      
 <p>这里补充一下<a href="https://kubernetes.io/docs/tasks/inject-data-application/downward-api-volume-expose-pod-information/#the-downward-api">Kubernetes Downward API</a>的使用，Kubernetes Downward API的引入，控制着 <code>Task</code> 的第一个 <code>Step</code> 在何时执行。</p>
 <p><code>TaskRun</code> Controller 在 reconciling 的过程中，在相应的 <code>Pod</code> 状态变为<code>Running</code>时，会将<code>tekton.dev/ready=READY</code>写入到 Pod 的 annotation 中，来通知第一个<code>Step</code>的执行。</p>
 <p>Pod的部分内容：</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">containers</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">args</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span>- -<span class="l">wait_file</span><span class="w">
-</span><span class="w">      </span>- <span class="l">/tekton/downward/ready</span><span class="w">
-</span><span class="w">      </span>- -<span class="l">wait_file_content</span><span class="w">
-</span><span class="w">      </span>- -<span class="l">post_file</span><span class="w">
-</span><span class="w">      </span>- <span class="l">/tekton/tools/0</span><span class="w">
-</span><span class="w">      </span>- -<span class="l">termination_path</span><span class="w">
-</span><span class="w">      </span>- <span class="l">/tekton/termination</span><span class="w">
-</span><span class="w">      </span>- -<span class="l">entrypoint</span><span class="w">
-</span><span class="w">      </span>- <span class="l">/ko-app/git-init</span><span class="w">
-</span><span class="w">      </span>- --<span class="w">
-</span><span class="w">      </span>- -<span class="l">url</span><span class="w">
-</span><span class="w">      </span>- <span class="l">ssh://git@gitlab.nip.io:8022/addozhang/logan-pulse.git</span><span class="w">
-</span><span class="w">      </span>- -<span class="l">revision</span><span class="w">
-</span><span class="w">      </span>- <span class="l">develop</span><span class="w">
-</span><span class="w">      </span>- -<span class="l">path</span><span class="w">
-</span><span class="w">      </span>- <span class="l">/workspace/git-source</span><span class="w">
-</span><span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span>- <span class="l">/tekton/tools/entrypoint</span><span class="w">
-</span><span class="w">      </span><span class="nt">volumeMounts</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span>- <span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l">/tekton/downward</span><span class="w">
-</span><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">tekton-internal-downward</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">containers</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">args</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- -wait_file<span class="w">
+</span><span class="w">      </span>- /tekton/downward/ready<span class="w">
+</span><span class="w">      </span>- -wait_file_content<span class="w">
+</span><span class="w">      </span>- -post_file<span class="w">
+</span><span class="w">      </span>- /tekton/tools/<span class="m">0</span><span class="w">
+</span><span class="w">      </span>- -termination_path<span class="w">
+</span><span class="w">      </span>- /tekton/termination<span class="w">
+</span><span class="w">      </span>- -entrypoint<span class="w">
+</span><span class="w">      </span>- /ko-app/git-init<span class="w">
+</span><span class="w">      </span>- -<span class="sd">-
+</span><span class="sd">      - -url</span><span class="w">
+</span><span class="w">      </span>- ssh<span class="p">:</span>//git@gitlab.nip.io<span class="p">:</span><span class="m">8022</span>/addozhang/logan-pulse.git<span class="w">
+</span><span class="w">      </span>- -revision<span class="w">
+</span><span class="w">      </span>- develop<span class="w">
+</span><span class="w">      </span>- -path<span class="w">
+</span><span class="w">      </span>- /workspace/git-source<span class="w">
+</span><span class="w">      </span><span class="k">command</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- /tekton/tools/entrypoint<span class="w">
+</span><span class="w">      </span><span class="k">volumeMounts</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="k">mountPath</span><span class="p">:</span><span class="w"> </span>/tekton/downward<span class="w">
+</span><span class="w">        </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>tekton-internal-downward<span class="w">
 </span><span class="w">      
-</span><span class="w">  </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">downwardAPI</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span><span class="nt">defaultMode</span><span class="p">:</span><span class="w"> </span><span class="m">420</span><span class="w">
-</span><span class="w">        </span><span class="nt">items</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span>- <span class="nt">fieldRef</span><span class="p">:</span><span class="w">
-</span><span class="w">            </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
-</span><span class="w">            </span><span class="nt">fieldPath</span><span class="p">:</span><span class="w"> </span><span class="l">metadata.annotations[&#39;tekton.dev/ready&#39;]</span><span class="w">
-</span><span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l">ready</span><span class="w">
-</span><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">tekton-internal-downward</span><span class="w">
+</span><span class="w">  </span><span class="k">volumes</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">downwardAPI</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="k">defaultMode</span><span class="p">:</span><span class="w"> </span><span class="m">420</span><span class="w">
+</span><span class="w">        </span><span class="k">items</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- <span class="k">fieldRef</span><span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>v1<span class="w">
+</span><span class="w">            </span><span class="k">fieldPath</span><span class="p">:</span><span class="w"> </span>metadata.annotations<span class="p">[</span><span class="s1">&#39;tekton.dev/ready&#39;</span><span class="p">]</span><span class="w">
+</span><span class="w">          </span><span class="k">path</span><span class="p">:</span><span class="w"> </span>ready<span class="w">
+</span><span class="w">      </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>tekton-internal-downward<span class="w">
 </span></code></pre></div><p>对原生的排序step container进一步处理：启动命令使用<code>entrypoint</code>提供，并设置执行参数：</p>
 <p><code>entrypoint.go</code></p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">orderContainers</span><span class="p">(</span><span class="nx">entrypointImage</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">steps</span> <span class="p">[]</span><span class="nx">corev1</span><span class="p">.</span><span class="nx">Container</span><span class="p">,</span> <span class="nx">results</span> <span class="p">[]</span><span class="nx">v1alpha1</span><span class="p">.</span><span class="nx">TaskResult</span><span class="p">)</span> <span class="p">(</span><span class="nx">corev1</span><span class="p">.</span><span class="nx">Container</span><span class="p">,</span> <span class="p">[]</span><span class="nx">corev1</span><span class="p">.</span><span class="nx">Container</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
@@ -232,55 +232,55 @@ tasks                            tekton.dev   <span class="nb">true</span>      
 <p>工作区，可以理解为一个挂在到容器上的卷，用于文件的传递。</p>
 <h5 id="persistentvolumeclaim"><code>persistentVolumeClaim</code></h5>
 <p>引用已存在<code>persistentVolumeClaim</code>卷（volume）。这种工作空间，可多次使用，需要先进行创建。比如 Java 项目的 <code>maven</code>，编译需要本地依赖库，这样可以节省每次编译都要下载依赖包的成本。</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">workspaces</span><span class="p">:</span><span class="w">
-</span><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">m2</span><span class="w">
-</span><span class="w">  </span><span class="nt">persistentVolumeClaim</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">claimName</span><span class="p">:</span><span class="w"> </span><span class="l">m2-pv-claim</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
-</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">PersistentVolume</span><span class="w">
-</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">m2-pv</span><span class="w">
-</span><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">local</span><span class="w">
-</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l">manual</span><span class="w">
-</span><span class="w">  </span><span class="nt">capacity</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">10Gi</span><span class="w">
-</span><span class="w">  </span><span class="nt">accessModes</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="l">ReadWriteMany</span><span class="w">
-</span><span class="w">  </span><span class="nt">hostPath</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;/data/.m2&#34;</span><span class="w">
-</span><span class="w"></span><span class="nn">---</span><span class="w">
-</span><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
-</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">PersistentVolumeClaim</span><span class="w">
-</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">m2-pv-claim</span><span class="w">
-</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l">manual</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">workspaces</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>m2<span class="w">
+</span><span class="w">  </span><span class="k">persistentVolumeClaim</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">claimName</span><span class="p">:</span><span class="w"> </span>m2-pv-claim<span class="w">
+</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>v1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>PersistentVolume<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>m2-pv<span class="w">
+</span><span class="w">  </span><span class="k">labels</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">type</span><span class="p">:</span><span class="w"> </span>local<span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">storageClassName</span><span class="p">:</span><span class="w"> </span>manual<span class="w">
+</span><span class="w">  </span><span class="k">capacity</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">storage</span><span class="p">:</span><span class="w"> </span>10Gi<span class="w">
+</span><span class="w">  </span><span class="k">accessModes</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- ReadWriteMany<span class="w">
+</span><span class="w">  </span><span class="k">hostPath</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;/data/.m2&#34;</span><span class="w">
+</span><span class="w"></span>---<span class="w">
+</span><span class="w"></span><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>v1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>PersistentVolumeClaim<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>m2-pv-claim<span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">storageClassName</span><span class="p">:</span><span class="w"> </span>manual<span class="w">
 </span><span class="w">  </span><span class="c"># volumeName: m2-pv</span><span class="w">
-</span><span class="w">  </span><span class="nt">accessModes</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="l">ReadWriteMany</span><span class="w">
-</span><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">requests</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">10Gi</span><span class="w">
+</span><span class="w">  </span><span class="k">accessModes</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- ReadWriteMany<span class="w">
+</span><span class="w">  </span><span class="k">resources</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">requests</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">storage</span><span class="p">:</span><span class="w"> </span>10Gi<span class="w">
 </span></code></pre></div><h5 id="volumeclaimtemplate"><code>volumeClaimTemplate</code></h5>
 <p>为每个<code>PipelineRun</code>或者<code>TaskRun</code>创建<code>PersistentVolumeClaim</code>卷（volume）的模板。比如一次构建需要从 git 仓库克隆代码，而针对不同的流水线代码仓库是不同的。这里就会用到<code>volumeClaimTemplate</code>，为每次构建创建一个<code>PersistentVolumeClaim</code>卷。（从0.12.0开始）</p>
 <p>生命周期同<code>PipelineRun</code>或者<code>TaskRun</code>，运行之后释放。</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">workspaces</span><span class="p">:</span><span class="w">
-</span><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">git-source</span><span class="w">
-</span><span class="w">  </span><span class="nt">volumeClaimTemplate</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span><span class="nt">accessModes</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span>- <span class="l">ReadWriteMany</span><span class="w">
-</span><span class="w">      </span><span class="nt">resources</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span><span class="nt">requests</span><span class="p">:</span><span class="w">
-</span><span class="w">          </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">1Gi</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">workspaces</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>git-source<span class="w">
+</span><span class="w">  </span><span class="k">volumeClaimTemplate</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">accessModes</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- ReadWriteMany<span class="w">
+</span><span class="w">      </span><span class="k">resources</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="k">requests</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span><span class="k">storage</span><span class="p">:</span><span class="w"> </span>1Gi<span class="w">
 </span></code></pre></div><p>相较于<code>persistantVolumeClain</code>类型的workspace，<code>volumeClaimTemplate</code>不需要在每次在<code>PipelineRun</code>完成后清理工作区；并发情况下可能会出现问题。</p>
 <h5 id="emptydir"><code>emptyDir</code></h5>
 <p>引用<code>emptyDir</code>卷，跟随<code>Task</code>生命周期的临时目录。适合在<code>Task</code>的<code>Step</code>间共享数据，无法在多个<code>Task</code>间共享。</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">workspaces</span><span class="p">:</span><span class="w">
-</span><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">temp</span><span class="w">
-</span><span class="w">  </span><span class="nt">emptyDir</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">workspaces</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>temp<span class="w">
+</span><span class="w">  </span><span class="k">emptyDir</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
 </span></code></pre></div><h5 id="configmap"><code>configMap</code></h5>
 <p>引用一个<code>configMap</code>卷，将<code>configMap</code>卷作为工作区，有如下限制：</p>
 <ul>
@@ -289,10 +289,10 @@ tasks                            tekton.dev   <span class="nb">true</span>      
 <li><code>configMap</code>的<a href="https://github.com/kubernetes/kubernetes/blob/f16bfb069a22241a5501f6fe530f5d4e2a82cf0e/pkg/apis/core/validation/validation.go#L5042">大小限制为1MB（K8s的限制）</a></li>
 </ul>
 <p>使用场景，比如使用<code>maven</code>编译Java项目，配置文件<code>settings.xml</code>可以使用<code>configMap</code>作为工作区</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">workspaces</span><span class="p">:</span><span class="w">
-</span><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">maven-settings</span><span class="w">
-</span><span class="w">  </span><span class="nt">configmap</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">maven-settings</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">workspaces</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>maven-settings<span class="w">
+</span><span class="w">  </span><span class="k">configmap</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>maven-settings<span class="w">
 </span></code></pre></div><h5 id="secret"><code>secret</code></h5>
 <p>用于引用<code>secret</code>卷，同<code>configMap</code>工作区一样，也有限制：</p>
 <ul>
@@ -303,61 +303,61 @@ tasks                            tekton.dev   <span class="nb">true</span>      
 <h4 id="result">Result</h4>
 <p><code>results</code>字段可以用来配置多个文件用来存储<code>Tasks</code>的执行结果，这些文件保存在<code>/tekton/results</code>目录中。</p>
 <p>在<code>Pipeline</code>中，可以通过<code>tasks.[task-nanme].results.[result-name]</code>注入到其他<code>Task</code>的参数中。</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">tekton.dev/v1beta1</span><span class="w">
-</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Task</span><span class="w">
-</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">print-date</span><span class="w">
-</span><span class="w">  </span><span class="nt">annotations</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
-</span><span class="sd">      </span><span class="w">      </span><span class="l">A simple task that prints the date</span><span class="w">
-</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">results</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">current-date-unix-timestamp</span><span class="w">
-</span><span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l">The current date in unix timestamp format</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">current-date-human-readable</span><span class="w">
-</span><span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l">The current date in human readable format</span><span class="w">
-</span><span class="w">  </span><span class="nt">steps</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">print-date-unix-timestamp</span><span class="w">
-</span><span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">bash:latest</span><span class="w">
-</span><span class="w">      </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
-</span><span class="sd">        #!/usr/bin/env bash
-</span><span class="sd">        date +%s | tee $(results.current-date-unix-timestamp.path)</span><span class="w">        
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">print-date-humman-readable</span><span class="w">
-</span><span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">bash:latest</span><span class="w">
-</span><span class="w">      </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
-</span><span class="sd">        #!/usr/bin/env bash
-</span><span class="sd">        date | tee $(results.current-date-human-readable.path)</span><span class="w">        
-</span><span class="w"></span><span class="nn">---</span><span class="w">
-</span><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">tekton.dev/v1beta1</span><span class="w">
-</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">PipelineRun</span><span class="w">
-</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">pass-date</span><span class="w">
-</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">pipelineSpec</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">tasks</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">print-date</span><span class="w">
-</span><span class="w">        </span><span class="nt">taskRef</span><span class="p">:</span><span class="w">
-</span><span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">print-date</span><span class="w">
-</span><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">read-date</span><span class="w">
-</span><span class="w">        </span><span class="nt">runAfter</span><span class="p">:</span><span class="w"> </span><span class="c">#配置执行顺序</span><span class="w">
-</span><span class="w">          </span>- <span class="l">print-date</span><span class="w">
-</span><span class="w">        </span><span class="nt">taskSpec</span><span class="p">:</span><span class="w">
-</span><span class="w">          </span><span class="nt">params</span><span class="p">:</span><span class="w">
-</span><span class="w">            </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">current-date-unix-timestamp</span><span class="w">
-</span><span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">string</span><span class="w">
-</span><span class="w">            </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">current-date-human-readable</span><span class="w">
-</span><span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">string</span><span class="w">
-</span><span class="w">          </span><span class="nt">steps</span><span class="p">:</span><span class="w">
-</span><span class="w">            </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">read</span><span class="w">
-</span><span class="w">              </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">busybox</span><span class="w">
-</span><span class="w">              </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
-</span><span class="sd">                echo $(params.current-date-unix-timestamp)
-</span><span class="sd">                echo $(params.current-date-human-readable)</span><span class="w">                
-</span><span class="w">        </span><span class="nt">params</span><span class="p">:</span><span class="w">
-</span><span class="w">          </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">current-date-unix-timestamp</span><span class="w">
-</span><span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">$(tasks.print-date.results.current-date-unix-timestamp)</span><span class="w"> </span><span class="c"># 注入参数</span><span class="w">
-</span><span class="w">          </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">current-date-human-readable</span><span class="w">
-</span><span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">$(tasks.print-date.results.current-date-human-readable)</span><span class="w"> </span><span class="c"># 注入参数      </span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>tekton.dev/v1beta1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>Task<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>print-date<span class="w">
+</span><span class="w">  </span><span class="k">annotations</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">description</span><span class="p">:</span><span class="w"> </span><span class="sd">|
+</span><span class="sd">      A simple task that prints the date</span><span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">results</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>current-date-unix-timestamp<span class="w">
+</span><span class="w">      </span><span class="k">description</span><span class="p">:</span><span class="w"> </span>The<span class="w"> </span>current<span class="w"> </span>date<span class="w"> </span>in<span class="w"> </span>unix<span class="w"> </span>timestamp<span class="w"> </span>format<span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>current-date-human-readable<span class="w">
+</span><span class="w">      </span><span class="k">description</span><span class="p">:</span><span class="w"> </span>The<span class="w"> </span>current<span class="w"> </span>date<span class="w"> </span>in<span class="w"> </span>human<span class="w"> </span>readable<span class="w"> </span>format<span class="w">
+</span><span class="w">  </span><span class="k">steps</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>print-date-unix-timestamp<span class="w">
+</span><span class="w">      </span><span class="k">image</span><span class="p">:</span><span class="w"> </span>bash<span class="p">:</span>latest<span class="w">
+</span><span class="w">      </span><span class="k">script</span><span class="p">:</span><span class="w"> </span><span class="sd">|
+</span><span class="sd">        #!/usr/bin/env bash</span><span class="w">
+</span><span class="w">        </span>date<span class="w"> </span>+%s<span class="w"> </span>|<span class="w"> </span>tee<span class="w"> </span>$(results.current-date-unix-timestamp.path)<span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>print-date-humman-readable<span class="w">
+</span><span class="w">      </span><span class="k">image</span><span class="p">:</span><span class="w"> </span>bash<span class="p">:</span>latest<span class="w">
+</span><span class="w">      </span><span class="k">script</span><span class="p">:</span><span class="w"> </span><span class="sd">|
+</span><span class="sd">        #!/usr/bin/env bash</span><span class="w">
+</span><span class="w">        </span>date<span class="w"> </span>|<span class="w"> </span>tee<span class="w"> </span>$(results.current-date-human-readable.path)<span class="w">
+</span><span class="w"></span>---<span class="w">
+</span><span class="w"></span><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>tekton.dev/v1beta1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>PipelineRun<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>pass-date<span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">pipelineSpec</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">tasks</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>print-date<span class="w">
+</span><span class="w">        </span><span class="k">taskRef</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>print-date<span class="w">
+</span><span class="w">      </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>read-date<span class="w">
+</span><span class="w">        </span><span class="k">runAfter</span><span class="p">:</span><span class="w"> </span><span class="c">#配置执行顺序</span><span class="w">
+</span><span class="w">          </span>- print-date<span class="w">
+</span><span class="w">        </span><span class="k">taskSpec</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span><span class="k">params</span><span class="p">:</span><span class="w">
+</span><span class="w">            </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>current-date-unix-timestamp<span class="w">
+</span><span class="w">              </span><span class="k">type</span><span class="p">:</span><span class="w"> </span>string<span class="w">
+</span><span class="w">            </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>current-date-human-readable<span class="w">
+</span><span class="w">              </span><span class="k">type</span><span class="p">:</span><span class="w"> </span>string<span class="w">
+</span><span class="w">          </span><span class="k">steps</span><span class="p">:</span><span class="w">
+</span><span class="w">            </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>read<span class="w">
+</span><span class="w">              </span><span class="k">image</span><span class="p">:</span><span class="w"> </span>busybox<span class="w">
+</span><span class="w">              </span><span class="k">script</span><span class="p">:</span><span class="w"> </span><span class="sd">|
+</span><span class="sd">                echo $(params.current-date-unix-timestamp)</span><span class="w">
+</span><span class="w">                </span>echo<span class="w"> </span>$(params.current-date-human-readable)<span class="w">
+</span><span class="w">        </span><span class="k">params</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>current-date-unix-timestamp<span class="w">
+</span><span class="w">            </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>$(tasks.print-date.results.current-date-unix-timestamp)<span class="w"> </span><span class="c"># 注入参数</span><span class="w">
+</span><span class="w">          </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>current-date-human-readable<span class="w">
+</span><span class="w">            </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>$(tasks.print-date.results.current-date-human-readable)<span class="w"> </span><span class="c"># 注入参数      </span><span class="w">
 </span></code></pre></div><p>执行结果：</p>
 <div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">┌──────Logs(tekton-pipelines/pass-date-read-date-rhlf2-pod-9b2sk)[all] ──────────                                                                       │
 │ place-scripts stream closed                                                                                                                                                                                                                                                             ││ step-read 1590242170                                                                                                                                                                                                                                                                    │

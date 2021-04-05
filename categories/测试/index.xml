@@ -6,7 +6,11 @@
     <description>Recent content in 测试 on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 02 Dec 2017 07:35:43 +0000</lastBuildDate><atom:link href="https://atbug.com/categories/%E6%B5%8B%E8%AF%95/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 02 Dec 2017 07:35:43 +0000</lastBuildDate>
+    
+	<atom:link href="https://atbug.com/categories/%E6%B5%8B%E8%AF%95/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>Java序列化工具性能对比</title>
       <link>https://atbug.com/java-serval-serializer-benchmark/</link>

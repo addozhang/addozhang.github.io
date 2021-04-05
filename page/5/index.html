@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 <body>
@@ -57,6 +57,65 @@
 </header>
 
     <section id="main" class="outer">
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../how-hystrix-works/">Hystrix工作原理一</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../how-hystrix-works/" class="article-date">
+                        <time datetime='2018-06-04T08:47:40.000&#43;00:00' itemprop="datePublished">2018-06-04</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../how-hystrix-works/#disqus_thread" class="article-comment-link"></a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    运行时的流程图 构建HystrixCommand或者HystrixObservableCommand对象 第一步是构建一个HystrixComm
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../how-hystrix-works/"></a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/%E6%96%AD%E8%B7%AF%E5%99%A8">断路器
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/hystrix">Hystrix
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
         
         <article class="article article-type-post" itemscope itemprop="blogPost">
             <div class="article-inner">
@@ -293,7 +352,7 @@
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    <p>最近开始客串运维做CI/CD的规划设计, 主要是基于&rsquo;Pipeline as Code in Jenkins'. 整理了下思路和技术点, 慢慢的写.</p>
+                    <p>最近开始客串运维做CI/CD的规划设计, 主要是基于&rsquo;Pipeline as Code in Jenkins&rsquo;. 整理了下思路和技术点, 慢慢的写.</p>
 <p>这一篇是关于基于角色的授权策略, 用的是<code>Role-Based Authorization Strategy Plugin</code>.</p>
 <p>授权在CI/CD流程中比较常见, 比如我们只让某些特定用户才可以构建Pre-Release的Job. 而更高级的Release发布, 又会需要某些用户的审批才可以进行. 需要授权时, 可能还需要发邮件提醒用户.</p>
 <p>UI上如何使用就不提了, 这里只说Pipeline as Code. 后面的几篇也会是这个背景.</p>
@@ -685,81 +744,6 @@ Zuul server的路由都通过<code>ZuulProperties</code>进行配置.</p>
                         
                         <li class="article-tag-list-item">
                             <a class="article-tag-list-link" href="https://atbug.com//tags/zuul">Zuul
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../spring-cloud-service-registry-via-eureka/">Spring Cloud - Eureka服务注册</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../spring-cloud-service-registry-via-eureka/" class="article-date">
-                        <time datetime='2018-02-14T07:32:43.000&#43;00:00' itemprop="datePublished">2018-02-14</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../spring-cloud-service-registry-via-eureka/#disqus_thread" class="article-comment-link"></a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    <p>之前分析过<a href="http://atbug.com/spring-cloud-eureka-client-source-code-analysis/">Spring Cloud的Eureka服务发现</a>, 今天分析一下服务注册.</p>
-<h2 id="配置">配置</h2>
-<h3 id="bootstrapconfiguration">BootstrapConfiguration</h3>
-<h4 id="eurekadiscoveryclientconfigservicebootstrapconfiguration">EurekaDiscoveryClientConfigServiceBootstrapConfiguration</h4>
-<p>spring-cloud-config环境中使用的配置</p>
-<p>引入<code>EurekaDiscoveryClientConfiguration</code>和<code>EurekaClientAutoConfiguration</code></p>
-<h5 id="eurekadiscoveryclientconfiguration">EurekaDiscoveryClientConfiguration</h5>
-<ol>
-<li>在spring-cloud中(通过是否存在RefreshScopeRefreshedEvent.class判断), 添加<code>RefreshScopeRefreshedEvent</code>的listener. 收到事件后重新注册实例.</li>
-<li>在<code>eureka.client.healthcheck.enabled</code>设置为true时, 注册<code>EurekaHealthCheckHandler</code>bean. <code>EurekaHealthCheckHandler</code>负责将应用状态映射为实例状态<code>InstanceStatus</code>.</li>
-</ol>
-<h5 id="eurekaclientautoconfiguration">EurekaClientAutoConfiguration</h5>
-<p>支持spring-cloud和非spring-cloud环境, 在spring-cloud环境中, 下面两个bean要使用<code>@RefreshScope</code>标注</p>
-<ol>
-<li>实例化<code>EurekaClient</code>bean, 在spring-cloud中使用实现类<code>CloudEurekaClient</code>.</li>
-<li>使用<code>EurekaInstanceConfig</code>实例, 实例化<code>ApplicationInfoManager</code>bean</li>
-</ol>
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../spring-cloud-service-registry-via-eureka/"></a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/spring">Spring
-                            </a>
-                        </li>
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://atbug.com//tags/eureka">Eureka
                             </a>
                         </li>
                         

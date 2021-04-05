@@ -6,7 +6,11 @@
     <description>Recent content in Docker on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 11 Mar 2020 23:00:27 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 11 Mar 2020 23:00:27 +0800</lastBuildDate>
+    
+	<atom:link href="https://atbug.com/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>Go Docker 镜像进阶: 精简镜像</title>
       <link>https://atbug.com/build-minimal-docker-image-for-go-app/</link>

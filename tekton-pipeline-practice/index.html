@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -105,7 +105,7 @@
 <li><code>tekton-pipelines-webhook</code>: 对 apiserver 提供 http 接口做 CRD 对象的校验.</li>
 </ul>
 <h2 id="安装">安装</h2>
-<p>参考<a href="https://atbug.com/tekton-installation-and-sample/">上一篇文章</a>, 文章中有个简单的&quot;hello world&quot;.</p>
+<p>参考<a href="https://atbug.com/tekton-installation-and-sample/">上一篇文章</a>, 文章中有个简单的&quot;hello world&rdquo;.</p>
 <h2 id="实践">实践</h2>
 <p>到了这里相信已经安装好了 Tekton. 我们使用<a href="https://start.spring.io/">Spring Initializer</a>生成的项目为例, 演示如何使用 Tekton 实现 CICD.</p>
 <p>开始之前简单整理下这个项目的 CICD 流程:</p>
@@ -125,63 +125,63 @@ WORKDIR /app
 COPY target/*.jar /app/app.jar
 ENTRYPOINT [&#34;sh&#34;, &#34;-c&#34;, &#34;java -Xmx128m -Xms64m -jar app.jar&#34;]
 </code></pre></div><p>用于部署 K8s Deployment 的deployment.yml</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;apps/v1&#34;</span><span class="w">
-</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Deployment&#34;</span><span class="w">
-</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;tekton-test&#34;</span><span class="w">
-</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;tekton-test&#34;</span><span class="w">
-</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
-</span><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;tekton-test&#34;</span><span class="w">
-</span><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span><span class="nt">labels</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;tekton-test&#34;</span><span class="w">
-</span><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span><span class="nt">containers</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span>- <span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;addozhang/tekton-test:latest&#34;</span><span class="w">
-</span><span class="w">          </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Always&#34;</span><span class="w">
-</span><span class="w">          </span><span class="nt">livenessProbe</span><span class="p">:</span><span class="w">
-</span><span class="w">            </span><span class="nt">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
-</span><span class="w">            </span><span class="nt">httpGet</span><span class="p">:</span><span class="w">
-</span><span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;/actuator/info&#34;</span><span class="w">
-</span><span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">8080</span><span class="w">
-</span><span class="w">              </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;HTTP&#34;</span><span class="w">
-</span><span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="m">60</span><span class="w">
-</span><span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
-</span><span class="w">            </span><span class="nt">successThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
-</span><span class="w">            </span><span class="nt">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
-</span><span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;tekton-test&#34;</span><span class="w">
-</span><span class="w">          </span><span class="nt">ports</span><span class="p">:</span><span class="w">
-</span><span class="w">            </span>- <span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="m">8080</span><span class="w">
-</span><span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;http&#34;</span><span class="w">
-</span><span class="w">              </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;TCP&#34;</span><span class="w">
-</span><span class="w">          </span><span class="nt">readinessProbe</span><span class="p">:</span><span class="w">
-</span><span class="w">            </span><span class="nt">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
-</span><span class="w">            </span><span class="nt">httpGet</span><span class="p">:</span><span class="w">
-</span><span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;/actuator/info&#34;</span><span class="w">
-</span><span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">8080</span><span class="w">
-</span><span class="w">              </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;HTTP&#34;</span><span class="w">
-</span><span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="m">30</span><span class="w">
-</span><span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
-</span><span class="w">            </span><span class="nt">successThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
-</span><span class="w">            </span><span class="nt">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;apps/v1&#34;</span><span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Deployment&#34;</span><span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">labels</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">app</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;tekton-test&#34;</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;tekton-test&#34;</span><span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">replicas</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">  </span><span class="k">selector</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">matchLabels</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">app</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;tekton-test&#34;</span><span class="w">
+</span><span class="w">  </span><span class="k">template</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">labels</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="k">app</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;tekton-test&#34;</span><span class="w">
+</span><span class="w">    </span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">containers</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- <span class="k">image</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;addozhang/tekton-test:latest&#34;</span><span class="w">
+</span><span class="w">          </span><span class="k">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Always&#34;</span><span class="w">
+</span><span class="w">          </span><span class="k">livenessProbe</span><span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="k">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
+</span><span class="w">            </span><span class="k">httpGet</span><span class="p">:</span><span class="w">
+</span><span class="w">              </span><span class="k">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;/actuator/info&#34;</span><span class="w">
+</span><span class="w">              </span><span class="k">port</span><span class="p">:</span><span class="w"> </span><span class="m">8080</span><span class="w">
+</span><span class="w">              </span><span class="k">scheme</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;HTTP&#34;</span><span class="w">
+</span><span class="w">            </span><span class="k">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="m">60</span><span class="w">
+</span><span class="w">            </span><span class="k">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
+</span><span class="w">            </span><span class="k">successThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">            </span><span class="k">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
+</span><span class="w">          </span><span class="k">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;tekton-test&#34;</span><span class="w">
+</span><span class="w">          </span><span class="k">ports</span><span class="p">:</span><span class="w">
+</span><span class="w">            </span>- <span class="k">containerPort</span><span class="p">:</span><span class="w"> </span><span class="m">8080</span><span class="w">
+</span><span class="w">              </span><span class="k">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;http&#34;</span><span class="w">
+</span><span class="w">              </span><span class="k">protocol</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;TCP&#34;</span><span class="w">
+</span><span class="w">          </span><span class="k">readinessProbe</span><span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="k">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
+</span><span class="w">            </span><span class="k">httpGet</span><span class="p">:</span><span class="w">
+</span><span class="w">              </span><span class="k">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;/actuator/info&#34;</span><span class="w">
+</span><span class="w">              </span><span class="k">port</span><span class="p">:</span><span class="w"> </span><span class="m">8080</span><span class="w">
+</span><span class="w">              </span><span class="k">scheme</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;HTTP&#34;</span><span class="w">
+</span><span class="w">            </span><span class="k">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="m">30</span><span class="w">
+</span><span class="w">            </span><span class="k">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
+</span><span class="w">            </span><span class="k">successThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">            </span><span class="k">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
 </span></code></pre></div><h3 id="0x01-拉取代码">0x01 拉取代码</h3>
 <p>代码作为构建的输入, 需要提供一个 Pipeline CRD 对象来表示输入是从 git 仓库来获取代码</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">tekton.dev/v1alpha1</span><span class="w">
-</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">PipelineResource</span><span class="w">
-</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">git-source</span><span class="w">
-</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">git</span><span class="w">
-</span><span class="w">  </span><span class="nt">params</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">revision</span><span class="w">
-</span><span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">master</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">url</span><span class="w">
-</span><span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">https://github.com/addozhang/tekton-test.git</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>tekton.dev/v1alpha1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>PipelineResource<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>git-source<span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">type</span><span class="p">:</span><span class="w"> </span>git<span class="w">
+</span><span class="w">  </span><span class="k">params</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>revision<span class="w">
+</span><span class="w">      </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>master<span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>url<span class="w">
+</span><span class="w">      </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//github.com/addozhang/tekton-test.git<span class="w">
 </span></code></pre></div><p><strong>说明:</strong></p>
 <ul>
 <li>type: 表示资源类型为 git</li>
@@ -197,28 +197,28 @@ git-source   git    url: https://github.com/addozhang/tekton-test.git
 </code></pre>
 <h3 id="0x02-maven-打包">0x02 maven 打包</h3>
 <p>Task <code>source-to-image.yaml</code>: step <code>maven</code></p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">git-source</span><span class="w">
-</span><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">git</span><span class="w">
-</span><span class="w">  </span><span class="nt">steps</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">maven</span><span class="w">
-</span><span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">maven:3.5.0-jdk-8-alpine</span><span class="w">
-</span><span class="w">      </span><span class="nt">workingDir</span><span class="p">:</span><span class="w"> </span><span class="l">/workspace/git-source</span><span class="w">
-</span><span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span>- <span class="l">mvn</span><span class="w">
-</span><span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span>- <span class="l">clean</span><span class="w">
-</span><span class="w">        </span>- <span class="l">install</span><span class="w">
-</span><span class="w">        </span>- -<span class="l">DskipTests</span><span class="w">
-</span><span class="w">      </span><span class="nt">volumeMounts</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">m2</span><span class="w">
-</span><span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l">/root/.m2</span><span class="w">
-</span><span class="w">  </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">m2</span><span class="w">
-</span><span class="w">      </span><span class="nt">hostPath</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l">/home/docker/.m2                  </span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">inputs</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">resources</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>git-source<span class="w">
+</span><span class="w">        </span><span class="k">type</span><span class="p">:</span><span class="w"> </span>git<span class="w">
+</span><span class="w">  </span><span class="k">steps</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>maven<span class="w">
+</span><span class="w">      </span><span class="k">image</span><span class="p">:</span><span class="w"> </span>maven<span class="p">:</span><span class="m">3.5.0</span>-jdk<span class="m">-8</span>-alpine<span class="w">
+</span><span class="w">      </span><span class="k">workingDir</span><span class="p">:</span><span class="w"> </span>/workspace/git-source<span class="w">
+</span><span class="w">      </span><span class="k">command</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- mvn<span class="w">
+</span><span class="w">      </span><span class="k">args</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- clean<span class="w">
+</span><span class="w">        </span>- install<span class="w">
+</span><span class="w">        </span>- -DskipTests<span class="w">
+</span><span class="w">      </span><span class="k">volumeMounts</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>m2<span class="w">
+</span><span class="w">          </span><span class="k">mountPath</span><span class="p">:</span><span class="w"> </span>/root/.m2<span class="w">
+</span><span class="w">  </span><span class="k">volumes</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>m2<span class="w">
+</span><span class="w">      </span><span class="k">hostPath</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="k">path</span><span class="p">:</span><span class="w"> </span>/home/docker/.m2<span class="w">                  
 </span></code></pre></div><p><strong>说明:</strong></p>
 <p>有了代码下一步就是执行 maven 的编译打包, 在<code>maven:3.5.0-jdk-8-alpine</code>镜像中执行<code>mvn</code>的相关命令.</p>
 <p>这里挂在了一个本地的volume, 避免每次构建重复下载依赖包, 同时里面还有<code> settings.xml</code></p>
@@ -257,35 +257,35 @@ git-source   git    url: https://github.com/addozhang/tekton-test.git
 <p>先添加<code> docker-registry</code>类型的 <code>secret</code>:</p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">kubectl create secret docker-registry dockerhub --docker-server<span class="o">=</span>https://index.docker.io/v1/ --docker-username<span class="o">=</span>&lt;USERNAME&gt; --docker-password<span class="o">=</span>&lt;PASSWORD&gt;
 </code></pre></div><p>创建 <code>ServiceAccount</code>, 并指定上面创建的 secret</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
-</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ServiceAccount</span><span class="w">
-</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">tekton-test</span><span class="w">
-</span><span class="w"></span><span class="nt">secrets</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">dockerhub</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>v1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>ServiceAccount<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>tekton-test<span class="w">
+</span><span class="w"></span><span class="k">secrets</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>dockerhub<span class="w">
 </span></code></pre></div><p>执行 pipeline 的时候需要该<code> ServiceAccount</code>. (后面会提到)</p>
 <p><strong>执行:</strong></p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">kubectl apply -f tasks/source-to-image.yaml
 </code></pre></div><h3 id="0x04-部署">0x04 部署</h3>
 <p>deploy-to-k8s.yaml:</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">tekton.dev/v1alpha1</span><span class="w">
-</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Task</span><span class="w">
-</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">deploy-to-k8s</span><span class="w">
-</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">git-source</span><span class="w">
-</span><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">git</span><span class="w">
-</span><span class="w">    </span><span class="nt">params</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">pathToYamlFile</span><span class="w">
-</span><span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l">The path to the yaml file to deploy within the git source</span><span class="w">
-</span><span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l">deployment.yaml</span><span class="w">
-</span><span class="w">  </span><span class="nt">steps</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">run-kubectl</span><span class="w">
-</span><span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">lachlanevenson/k8s-kubectl</span><span class="w">
-</span><span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;kubectl&#34;</span><span class="p">]</span><span class="w">
-</span><span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>tekton.dev/v1alpha1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>Task<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>deploy-to-k8s<span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">inputs</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">resources</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>git-source<span class="w">
+</span><span class="w">        </span><span class="k">type</span><span class="p">:</span><span class="w"> </span>git<span class="w">
+</span><span class="w">    </span><span class="k">params</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>pathToYamlFile<span class="w">
+</span><span class="w">        </span><span class="k">description</span><span class="p">:</span><span class="w"> </span>The<span class="w"> </span>path<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>yaml<span class="w"> </span>file<span class="w"> </span>to<span class="w"> </span>deploy<span class="w"> </span>within<span class="w"> </span>the<span class="w"> </span>git<span class="w"> </span>source<span class="w">
+</span><span class="w">        </span><span class="k">default</span><span class="p">:</span><span class="w"> </span>deployment.yaml<span class="w">
+</span><span class="w">  </span><span class="k">steps</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>run-kubectl<span class="w">
+</span><span class="w">      </span><span class="k">image</span><span class="p">:</span><span class="w"> </span>lachlanevenson/k8s-kubectl<span class="w">
+</span><span class="w">      </span><span class="k">command</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;kubectl&#34;</span><span class="p">]</span><span class="w">
+</span><span class="w">      </span><span class="k">args</span><span class="p">:</span><span class="w">
 </span><span class="w">        </span>- <span class="s2">&#34;apply&#34;</span><span class="w">
 </span><span class="w">        </span>- <span class="s2">&#34;-f&#34;</span><span class="w">
 </span><span class="w">        </span>- <span class="s2">&#34;/workspace/git-source/$(inputs.params.pathToYamlFile)&#34;</span><span class="w">
@@ -299,70 +299,70 @@ git-source   git    url: https://github.com/addozhang/tekton-test.git
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">kubectl apply -f tasks/deploy-to-k8s.yaml
 </code></pre></div><h3 id="0x05-组装流水线">0x05 组装流水线</h3>
 <p><code>build-pipeline.yaml</code></p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">tekton.dev/v1alpha1</span><span class="w">
-</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Pipeline</span><span class="w">
-</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">build-pipeline</span><span class="w">
-</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">git-source</span><span class="w">
-</span><span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">git</span><span class="w">
-</span><span class="w">  </span><span class="nt">params</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">pathToContext</span><span class="w">
-</span><span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l">The path to the build context, used by Kaniko - within the workspace</span><span class="w">
-</span><span class="w">      </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l">.</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">imageUrl</span><span class="w">
-</span><span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l">Url of image repository</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">imageTag</span><span class="w">
-</span><span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l">Tag to apply to the built image</span><span class="w">
-</span><span class="w">  </span><span class="nt">tasks</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">source-to-image</span><span class="w">
-</span><span class="w">    </span><span class="nt">taskRef</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">source-to-image</span><span class="w">
-</span><span class="w">    </span><span class="nt">params</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">pathToContext</span><span class="w">
-</span><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;$(params.pathToContext)&#34;</span><span class="w">
-</span><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">imageUrl</span><span class="w">
-</span><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;$(params.imageUrl)&#34;</span><span class="w">
-</span><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">imageTag</span><span class="w">
-</span><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;$(params.imageTag)&#34;</span><span class="w">
-</span><span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">git-source</span><span class="w">
-</span><span class="w">          </span><span class="nt">resource</span><span class="p">:</span><span class="w"> </span><span class="l">git-source</span><span class="w">
-</span><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">deploy-to-k8s</span><span class="w">
-</span><span class="w">    </span><span class="nt">runAfter</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span>- <span class="l">source-to-image</span><span class="w">
-</span><span class="w">    </span><span class="nt">taskRef</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">deploy-to-k8s</span><span class="w">
-</span><span class="w">    </span><span class="nt">params</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">pathToYamlFile</span><span class="w">
-</span><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">deployment.yaml</span><span class="w">
-</span><span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">git-source</span><span class="w">
-</span><span class="w">          </span><span class="nt">resource</span><span class="p">:</span><span class="w"> </span><span class="l">git-source</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>tekton.dev/v1alpha1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>Pipeline<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>build-pipeline<span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">resources</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>git-source<span class="w">
+</span><span class="w">      </span><span class="k">type</span><span class="p">:</span><span class="w"> </span>git<span class="w">
+</span><span class="w">  </span><span class="k">params</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>pathToContext<span class="w">
+</span><span class="w">      </span><span class="k">description</span><span class="p">:</span><span class="w"> </span>The<span class="w"> </span>path<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>build<span class="w"> </span>context<span class="p">,</span><span class="w"> </span>used<span class="w"> </span>by<span class="w"> </span>Kaniko<span class="w"> </span>- within<span class="w"> </span>the<span class="w"> </span>workspace<span class="w">
+</span><span class="w">      </span><span class="k">default</span><span class="p">:</span><span class="w"> </span>.<span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>imageUrl<span class="w">
+</span><span class="w">      </span><span class="k">description</span><span class="p">:</span><span class="w"> </span>Url<span class="w"> </span>of<span class="w"> </span>image<span class="w"> </span>repository<span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>imageTag<span class="w">
+</span><span class="w">      </span><span class="k">description</span><span class="p">:</span><span class="w"> </span>Tag<span class="w"> </span>to<span class="w"> </span>apply<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>built<span class="w"> </span>image<span class="w">
+</span><span class="w">  </span><span class="k">tasks</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>source-to-image<span class="w">
+</span><span class="w">    </span><span class="k">taskRef</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>source-to-image<span class="w">
+</span><span class="w">    </span><span class="k">params</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>pathToContext<span class="w">
+</span><span class="w">        </span><span class="k">value</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;$(params.pathToContext)&#34;</span><span class="w">
+</span><span class="w">      </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>imageUrl<span class="w">
+</span><span class="w">        </span><span class="k">value</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;$(params.imageUrl)&#34;</span><span class="w">
+</span><span class="w">      </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>imageTag<span class="w">
+</span><span class="w">        </span><span class="k">value</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;$(params.imageTag)&#34;</span><span class="w">
+</span><span class="w">    </span><span class="k">resources</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">inputs</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>git-source<span class="w">
+</span><span class="w">          </span><span class="k">resource</span><span class="p">:</span><span class="w"> </span>git-source<span class="w">
+</span><span class="w">  </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>deploy-to-k8s<span class="w">
+</span><span class="w">    </span><span class="k">runAfter</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- source-to-image<span class="w">
+</span><span class="w">    </span><span class="k">taskRef</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>deploy-to-k8s<span class="w">
+</span><span class="w">    </span><span class="k">params</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>pathToYamlFile<span class="w">
+</span><span class="w">        </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>deployment.yaml<span class="w">
+</span><span class="w">    </span><span class="k">resources</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">inputs</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>git-source<span class="w">
+</span><span class="w">          </span><span class="k">resource</span><span class="p">:</span><span class="w"> </span>git-source<span class="w">
 </span></code></pre></div><p><strong>执行:</strong></p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">kubectl apply -f tasks/deploy-to-k8s.yaml
 </code></pre></div><h3 id="0x06-执行流水线">0x06 执行流水线</h3>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">tekton.dev/v1alpha1</span><span class="w">
-</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">PipelineRun</span><span class="w">
-</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">generateName</span><span class="p">:</span><span class="w"> </span><span class="l">generic-pr-</span><span class="w">
-</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">generic-pipeline-run</span><span class="w">
-</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">pipelineRef</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">build-pipeline</span><span class="w">
-</span><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">git-source</span><span class="w">
-</span><span class="w">      </span><span class="nt">resourceRef</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">git-source</span><span class="w">
-</span><span class="w">  </span><span class="nt">params</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">imageUrl</span><span class="w">
-</span><span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">addozhang/tekton-test</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">imageTag</span><span class="w">
-</span><span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">latest</span><span class="w">
-</span><span class="w">  </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l">tekton-test</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>tekton.dev/v1alpha1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>PipelineRun<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">generateName</span><span class="p">:</span><span class="w"> </span>generic-pr<span class="sd">-
+</span><span class="sd">  name: generic-pipeline-run</span><span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">pipelineRef</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>build-pipeline<span class="w">
+</span><span class="w">  </span><span class="k">resources</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>git-source<span class="w">
+</span><span class="w">      </span><span class="k">resourceRef</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>git-source<span class="w">
+</span><span class="w">  </span><span class="k">params</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>imageUrl<span class="w">
+</span><span class="w">      </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>addozhang/tekton-test<span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>imageTag<span class="w">
+</span><span class="w">      </span><span class="k">value</span><span class="p">:</span><span class="w"> </span>latest<span class="w">
+</span><span class="w">  </span><span class="k">serviceAccountName</span><span class="p">:</span><span class="w"> </span>tekton-test<span class="w">
 </span></code></pre></div><p><strong>执行:</strong></p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">kubectl apply -f run/run.yaml
 </code></pre></div><h3 id="0x07结果">0x07结果</h3>

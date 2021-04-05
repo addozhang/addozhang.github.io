@@ -6,7 +6,11 @@
     <description>Recent content in Kubenetes on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 23 Aug 2017 19:29:51 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/kubenetes/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 23 Aug 2017 19:29:51 +0000</lastBuildDate>
+    
+	<atom:link href="https://atbug.com/tags/kubenetes/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>如何在Openshift中使用hostPath</title>
       <link>https://atbug.com/how-to-use-hostpath-in-openshift/</link>

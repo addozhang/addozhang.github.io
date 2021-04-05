@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -119,81 +119,81 @@ Dekorate是Java编译时生成和装饰Kubernetes/OpenShift的manifests的工具
 <span class="o">}</span>
 </code></pre></div><h4 id="3-执行命令mvn-clean-install-然后在targetclassesmeta-infdekorate目录下可以找到kubernetesjson和kubernetesyml两个文件">3. 执行命令<code>mvn clean install</code>, 然后在<code>target/classes/META-INF/dekorate</code>目录下可以找到<code>kubernetes.json</code>和<code>kubernetes.yml</code>两个文件.</h4>
 <p><code>kubernetes.yml</code>的内容:</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nn">---</span><span class="w">
-</span><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;v1&#34;</span><span class="w">
-</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Service&#34;</span><span class="w">
-</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
-</span><span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;0.0.1-SNAPSHOT&#34;</span><span class="w">
-</span><span class="w">    </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo&#34;</span><span class="w">
-</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
-</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">ports</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;http&#34;</span><span class="w">
-</span><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
-</span><span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
-</span><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
-</span><span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;0.0.1-SNAPSHOT&#34;</span><span class="w">
-</span><span class="w">    </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo&#34;</span><span class="w">
-</span><span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;ClusterIP&#34;</span><span class="w">
-</span><span class="w"></span><span class="nn">---</span><span class="w">
-</span><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;apps/v1&#34;</span><span class="w">
-</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Deployment&#34;</span><span class="w">
-</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
-</span><span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;0.0.1-SNAPSHOT&#34;</span><span class="w">
-</span><span class="w">    </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo&#34;</span><span class="w">
-</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
-</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
-</span><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
-</span><span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;0.0.1-SNAPSHOT&#34;</span><span class="w">
-</span><span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo&#34;</span><span class="w">
-</span><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span><span class="nt">labels</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
-</span><span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;0.0.1-SNAPSHOT&#34;</span><span class="w">
-</span><span class="w">        </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo&#34;</span><span class="w">
-</span><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span><span class="nt">containers</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span>- <span class="nt">env</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;KUBERNETES_NAMESPACE&#34;</span><span class="w">
-</span><span class="w">          </span><span class="nt">valueFrom</span><span class="p">:</span><span class="w">
-</span><span class="w">            </span><span class="nt">fieldRef</span><span class="p">:</span><span class="w">
-</span><span class="w">              </span><span class="nt">fieldPath</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;metadata.namespace&#34;</span><span class="w">
-</span><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo/dekorate-example:0.0.1-SNAPSHOT&#34;</span><span class="w">
-</span><span class="w">        </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;IfNotPresent&#34;</span><span class="w">
-</span><span class="w">        </span><span class="nt">livenessProbe</span><span class="p">:</span><span class="w">
-</span><span class="w">          </span><span class="nt">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
-</span><span class="w">          </span><span class="nt">httpGet</span><span class="p">:</span><span class="w">
-</span><span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;/actuator/info&#34;</span><span class="w">
-</span><span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
-</span><span class="w">            </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;HTTP&#34;</span><span class="w">
-</span><span class="w">          </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w">
-</span><span class="w">          </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">30</span><span class="w">
-</span><span class="w">          </span><span class="nt">successThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
-</span><span class="w">          </span><span class="nt">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
-</span><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
-</span><span class="w">        </span><span class="nt">ports</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span>- <span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
-</span><span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;http&#34;</span><span class="w">
-</span><span class="w">          </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;TCP&#34;</span><span class="w">
-</span><span class="w">        </span><span class="nt">readinessProbe</span><span class="p">:</span><span class="w">
-</span><span class="w">          </span><span class="nt">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
-</span><span class="w">          </span><span class="nt">httpGet</span><span class="p">:</span><span class="w">
-</span><span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;/actuator/health&#34;</span><span class="w">
-</span><span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
-</span><span class="w">            </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;HTTP&#34;</span><span class="w">
-</span><span class="w">          </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w">
-</span><span class="w">          </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">30</span><span class="w">
-</span><span class="w">          </span><span class="nt">successThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
-</span><span class="w">          </span><span class="nt">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">---<span class="w">
+</span><span class="w"></span><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;v1&#34;</span><span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Service&#34;</span><span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">labels</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">app</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
+</span><span class="w">    </span><span class="k">version</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;0.0.1-SNAPSHOT&#34;</span><span class="w">
+</span><span class="w">    </span><span class="k">group</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo&#34;</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">ports</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;http&#34;</span><span class="w">
+</span><span class="w">    </span><span class="k">port</span><span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
+</span><span class="w">    </span><span class="k">targetPort</span><span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
+</span><span class="w">  </span><span class="k">selector</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">app</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
+</span><span class="w">    </span><span class="k">version</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;0.0.1-SNAPSHOT&#34;</span><span class="w">
+</span><span class="w">    </span><span class="k">group</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo&#34;</span><span class="w">
+</span><span class="w">  </span><span class="k">type</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;ClusterIP&#34;</span><span class="w">
+</span><span class="w"></span>---<span class="w">
+</span><span class="w"></span><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;apps/v1&#34;</span><span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Deployment&#34;</span><span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">labels</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">app</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
+</span><span class="w">    </span><span class="k">version</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;0.0.1-SNAPSHOT&#34;</span><span class="w">
+</span><span class="w">    </span><span class="k">group</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo&#34;</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
+</span><span class="w"></span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">replicas</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">  </span><span class="k">selector</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">matchLabels</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">app</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
+</span><span class="w">      </span><span class="k">version</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;0.0.1-SNAPSHOT&#34;</span><span class="w">
+</span><span class="w">      </span><span class="k">group</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo&#34;</span><span class="w">
+</span><span class="w">  </span><span class="k">template</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">labels</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="k">app</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
+</span><span class="w">        </span><span class="k">version</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;0.0.1-SNAPSHOT&#34;</span><span class="w">
+</span><span class="w">        </span><span class="k">group</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo&#34;</span><span class="w">
+</span><span class="w">    </span><span class="k">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">containers</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="k">env</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;KUBERNETES_NAMESPACE&#34;</span><span class="w">
+</span><span class="w">          </span><span class="k">valueFrom</span><span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="k">fieldRef</span><span class="p">:</span><span class="w">
+</span><span class="w">              </span><span class="k">fieldPath</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;metadata.namespace&#34;</span><span class="w">
+</span><span class="w">        </span><span class="k">image</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;addo/dekorate-example:0.0.1-SNAPSHOT&#34;</span><span class="w">
+</span><span class="w">        </span><span class="k">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;IfNotPresent&#34;</span><span class="w">
+</span><span class="w">        </span><span class="k">livenessProbe</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span><span class="k">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
+</span><span class="w">          </span><span class="k">httpGet</span><span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="k">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;/actuator/info&#34;</span><span class="w">
+</span><span class="w">            </span><span class="k">port</span><span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
+</span><span class="w">            </span><span class="k">scheme</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;HTTP&#34;</span><span class="w">
+</span><span class="w">          </span><span class="k">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w">
+</span><span class="w">          </span><span class="k">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">30</span><span class="w">
+</span><span class="w">          </span><span class="k">successThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">          </span><span class="k">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
+</span><span class="w">        </span><span class="k">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dekorate-example&#34;</span><span class="w">
+</span><span class="w">        </span><span class="k">ports</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- <span class="k">containerPort</span><span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
+</span><span class="w">          </span><span class="k">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;http&#34;</span><span class="w">
+</span><span class="w">          </span><span class="k">protocol</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;TCP&#34;</span><span class="w">
+</span><span class="w">        </span><span class="k">readinessProbe</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span><span class="k">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
+</span><span class="w">          </span><span class="k">httpGet</span><span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="k">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;/actuator/health&#34;</span><span class="w">
+</span><span class="w">            </span><span class="k">port</span><span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
+</span><span class="w">            </span><span class="k">scheme</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;HTTP&#34;</span><span class="w">
+</span><span class="w">          </span><span class="k">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w">
+</span><span class="w">          </span><span class="k">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">30</span><span class="w">
+</span><span class="w">          </span><span class="k">successThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">          </span><span class="k">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
 </span></code></pre></div><p>yml中包含了<code>Service</code>和<code>Deployment</code>两部分, dekorate完美兼容的Spring:</p>
 <ul>
 <li><code>app: dekorate-example</code>: 项目名</li>
@@ -269,19 +269,19 @@ Skaffold是一个命令行工具, 可促进Kubernetes应用程序的持续开发
 <h4 id="1-执行命令skaffold-init---xxenablejibinit并在提示出输入y">1. 执行命令<code>skaffold init --XXenableJibInit</code>并在提示出输入<code>y</code></h4>
 <h4 id="2-该命令会生成一个名为skaffoldyaml的文件">2. 该命令会生成一个名为<code>skaffold.yaml</code>的文件</h4>
 <p>由于<code>dekorate</code>同时生成了<code>json</code>和<code>yaml</code>格式的manifest, 被<code>skaffold</code>检测到. 实际操作中只需要其中一个即可.</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">skaffold/v1</span><span class="w">
-</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Config</span><span class="w">
-</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">dekorate-example</span><span class="w">
-</span><span class="w"></span><span class="nt">build</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span>- <span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">addo/dekorate-example</span><span class="w">
-</span><span class="w">    </span><span class="nt">jib</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span><span class="w"></span><span class="nt">deploy</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">kubectl</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">manifests</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="l">target/classes/META-INF/dekorate/kubernetes.json</span><span class="w">
-</span><span class="w">    </span>- <span class="l">target/classes/META-INF/dekorate/kubernetes.yml</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>skaffold/v1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>Config<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>dekorate-example<span class="w">
+</span><span class="w"></span><span class="k">build</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">artifacts</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="k">image</span><span class="p">:</span><span class="w"> </span>addo/dekorate-example<span class="w">
+</span><span class="w">    </span><span class="k">jib</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w"></span><span class="k">deploy</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">kubectl</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">manifests</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- target/classes/META-INF/dekorate/kubernetes.json<span class="w">
+</span><span class="w">    </span>- target/classes/META-INF/dekorate/kubernetes.yml<span class="w">
 </span></code></pre></div><h4 id="3-执行skaffold-run">3. 执行<code>skaffold run</code></h4>
 <h4 id="4-pod启动完成后-通过kubectl-port-forward-podname-here-8081">4. pod启动完成后, 通过<code>kubectl port-forward PODNAME-HERE 8081</code></h4>
 <h4 id="5-请求http-httplocalhost8081">5. 请求<code>http http://localhost:8081</code></h4>

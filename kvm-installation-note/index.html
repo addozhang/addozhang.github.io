@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -140,7 +140,7 @@ BOOTPROTO=none
 ONBOOT=yes
 BRIDGE=br0</p>
 </blockquote>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># vim /etc/sysconfig/network-scripts/ifcfg-bond0 </span>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># vim /etc/sysconfig/network-scripts/ifcfg-bond0</span> 
 </code></pre></div><blockquote>
 <p>DEVICE=bond0
 TYPE=Ethernet
@@ -149,7 +149,7 @@ BONDING_MASTER=yes
 BOOTPROTO=none
 BRIDGE=br0
 ONBOOT=yes
-BONDING_OPTS=&ldquo;mode=5 miimon=100&rdquo;</p>
+BONDING_OPTS=&quot;mode=5 miimon=100&rdquo;</p>
 </blockquote>
 <p><a href="https://www.jianshu.com/p/110b60c14a8b">方案三</a></p>
 <h4 id="3-关闭宿主机的gso与tso功能">3. 关闭宿主机的GSO与TSO功能</h4>

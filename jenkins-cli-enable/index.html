@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -89,15 +89,15 @@
         <div class="article-entry" itemprop="articleBody">
             <p>Jenkins CLI提供了SSH和Client模式.</p>
 <p>Docker运行Jenkins</p>
-<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml"><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;3&#39;</span><span class="w">
-</span><span class="w"></span><span class="nt">services</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">jenkins</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">jenkins/jenkins:alpine</span><span class="w">
-</span><span class="w">    </span><span class="nt">ports</span><span class="p">:</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml"><span class="k">version</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;3&#39;</span><span class="w">
+</span><span class="w"></span><span class="k">services</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">jenkins</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">image</span><span class="p">:</span><span class="w"> </span>jenkins/jenkins<span class="p">:</span>alpine<span class="w">
+</span><span class="w">    </span><span class="k">ports</span><span class="p">:</span><span class="w">
 </span><span class="w">      </span>- <span class="m">8080</span><span class="p">:</span><span class="m">8080</span><span class="w">
 </span><span class="w">      </span>- <span class="m">50000</span><span class="p">:</span><span class="m">50000</span><span class="w">
 </span><span class="w">      </span>- <span class="m">46059</span><span class="p">:</span><span class="m">46059</span><span class="w">
-</span><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">volumes</span><span class="p">:</span><span class="w">
 </span><span class="w">      </span>- <span class="s2">&#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&#34;</span><span class="w">
 </span></code></pre></div><p>note: 以为是docker运行, ssh端口设置选用了固定端口.</p>
 <h3 id="client">Client</h3>

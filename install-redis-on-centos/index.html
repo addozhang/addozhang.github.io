@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 
@@ -105,12 +105,12 @@ sudo make install
 <li>
 <p><code>/bin/sh: cc: command not found</code></p>
 <p>**原因：**Centos安装时选择的类型是Infrastructure，没有c++的编译工具。</p>
-<p><strong>解决：</strong><code>sudo yum -y install gcc gcc-c++ libstdc++-devel</code></p>
+<p>**解决：**<code>sudo yum -y install gcc gcc-c++ libstdc++-devel</code></p>
 </li>
 <li>
 <p><code>malloc.h:50:31: fatal error: jemalloc/jemalloc.h: No such file or directory</code></p>
 <p>**原因：**Redis使用的默认的memory allocator是libc，而Linux系统中默认的是jemalloc，需要制动<code>MALLOC</code>变量。</p>
-<p><strong>解决：</strong><code>sudo make MALLOC=libc install</code></p>
+<p>**解决：**<code>sudo make MALLOC=libc install</code></p>
 </li>
 </ol>
 

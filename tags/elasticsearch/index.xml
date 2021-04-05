@@ -6,7 +6,11 @@
     <description>Recent content in elasticsearch on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 06 Nov 2018 09:24:24 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/elasticsearch/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 06 Nov 2018 09:24:24 +0000</lastBuildDate>
+    
+	<atom:link href="https://atbug.com/tags/elasticsearch/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>Nginx实现Elasticsearch的HTTP基本认证</title>
       <link>https://atbug.com/elasticsearch-http-basic-authentication-via-nginx/</link>

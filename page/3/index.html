@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="generator" content="Hugo 0.65.1" />
 </head>
 
 <body>
@@ -57,6 +57,65 @@
 </header>
 
     <section id="main" class="outer">
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="../../tekton-0.9.0-release/">Tekton 0.9.0 更新</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="../../tekton-0.9.0-release/" class="article-date">
+                        <time datetime='2020-01-19T14:33:17.000&#43;08:00' itemprop="datePublished">2020-01-19</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://atbug.com//categories/%E7%BF%BB%E8%AF%91">翻译</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="article-comment-link-wrap">
+                        <a href="../../tekton-0.9.0-release/#disqus_thread" class="article-comment-link"></a>
+                    </div>
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    翻译整理自 What’s New in Tekton 0.9 功能及Bug修复 脚本模式 以前如果要在容器里运行个简单的 bash 脚本, 需要这么写: - name:helloimage:ubuntucommand:[&#39;bash&#39;]args:- -c- | set -execho&#34;h
+                    </p>
+                    <p class="article-more-link">
+                        <a href="../../tekton-0.9.0-release/"></a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/cicd">CICD
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://atbug.com//tags/tekton">Tekton
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
         
         <article class="article article-type-post" itemscope itemprop="blogPost">
             <div class="article-inner">
@@ -588,49 +647,6 @@
                         
                     </ul>
                 </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="../../zipkin-dependencies-bug-two-timeout-and-oom/">Zipkin dependencies的坑之二: 心跳超时和Executor OOM</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="../../zipkin-dependencies-bug-two-timeout-and-oom/" class="article-date">
-                        <time datetime='2019-09-22T18:27:37.000&#43;08:00' itemprop="datePublished">2019-09-22</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="article-comment-link-wrap">
-                        <a href="../../zipkin-dependencies-bug-two-timeout-and-oom/#disqus_thread" class="article-comment-link"></a>
-                    </div>
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    上回说为了解决吞吐问题, 将zipkin-dependencies的版本升级到了2.3.0. 好景不长, 从某一天开始作业运行报错: Issue communicating with driver in heartbeater org.apache.spark.rpc.RpcTimeoutException:
-                    </p>
-                    <p class="article-more-link">
-                        <a href="../../zipkin-dependencies-bug-two-timeout-and-oom/"></a>
-                    </p>
-                </div>
-
                 
             </div>
         </article>
