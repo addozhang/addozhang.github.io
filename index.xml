@@ -17,7 +17,7 @@
       <pubDate>Mon, 05 Apr 2021 21:08:40 +0800</pubDate>
       
       <guid>https://atbug.com/hello-quarkus/</guid>
-      <description>Hello, Quarkus Wikipedia上有关 Quarkus 的信息还很少，只有一句简单的介绍： Quarkus 是专为 OpenJDK HotSpot 和 GraalVM 定制的全栈 Kubernetes 原生 Java 应用程序框架。与如 Spring 之类的其他框架相比，它</description>
+      <description>Wikipedia上有关 Quarkus 的信息还很少，只有一句简单的介绍： Quarkus 是专为 OpenJDK HotSpot 和 GraalVM 定制的全栈 Kubernetes 原生 Java 应用程序框架。与如 Spring 之类的其他框架相比，它提供</description>
     </item>
     
     <item>
