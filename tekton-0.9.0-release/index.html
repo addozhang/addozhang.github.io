@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.65.1" />
+    <meta name="generator" content="Hugo 0.81.0" />
 </head>
 
 
@@ -91,20 +91,20 @@
 <h2 id="功能及bug修复">功能及Bug修复</h2>
 <h3 id="脚本模式">脚本模式</h3>
 <p>以前如果要在容器里运行个简单的 bash 脚本, 需要这么写:</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">- <span class="k">name</span><span class="p">:</span><span class="w"> </span>hello<span class="w">
-</span><span class="w">  </span><span class="k">image</span><span class="p">:</span><span class="w"> </span>ubuntu<span class="w">
-</span><span class="w">  </span><span class="k">command</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;bash&#39;</span><span class="p">]</span><span class="w">
-</span><span class="w">  </span><span class="k">args</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span>- -c<span class="w">
-</span><span class="w">  </span>- <span class="sd">|
-</span><span class="sd">      set -ex</span><span class="w">
-</span><span class="w">      </span>echo<span class="w"> </span><span class="s2">&#34;hello&#34;</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">hello</span><span class="w">
+</span><span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">ubuntu</span><span class="w">
+</span><span class="w">  </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;bash&#39;</span><span class="p">]</span><span class="w">
+</span><span class="w">  </span><span class="nt">args</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- -<span class="l">c</span><span class="w">
+</span><span class="w">  </span>- <span class="p">|</span><span class="sd">
+</span><span class="sd">      set -ex
+</span><span class="sd">      echo &#34;hello&#34;</span><span class="w">      
 </span></code></pre></div><p>在 0.9 之后, 可以更加简单, 不需要再写command 和讨厌的<code>-c</code>.</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">- <span class="k">name</span><span class="p">:</span><span class="w"> </span>hello<span class="w">
-</span><span class="w">  </span><span class="k">image</span><span class="p">:</span><span class="w"> </span>ubuntu<span class="w">
-</span><span class="w">  </span><span class="k">script</span><span class="p">:</span><span class="w"> </span><span class="sd">|
-</span><span class="sd">    #!/bin/bash</span><span class="w">
-</span><span class="w">    </span>echo<span class="w"> </span><span class="s2">&#34;hello&#34;</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">hello</span><span class="w">
+</span><span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">ubuntu</span><span class="w">
+</span><span class="w">  </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span><span class="sd">    #!/bin/bash
+</span><span class="sd">    echo &#34;hello&#34;</span><span class="w">    
 </span></code></pre></div><h3 id="性能">性能</h3>
 <p>通过一系列的工作, 每个 PipelineRun 的运行时间缩短了 5-20 秒</p>
 <h2 id="api-变化">API 变化</h2>

@@ -6,11 +6,7 @@
     <description>Recent content in GreenPlum on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 10 Apr 2017 08:29:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://atbug.com/tags/greenplum/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 10 Apr 2017 08:29:00 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/greenplum/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>GreenPlum JDBC和C3P0数据源</title>
       <link>https://atbug.com/greenplum-jdbc-and-c3p0-datasource/</link>

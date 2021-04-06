@@ -6,11 +6,7 @@
     <description>Recent content in 软件 on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 30 Mar 2016 14:27:02 +0000</lastBuildDate>
-    
-	<atom:link href="https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Wed, 30 Mar 2016 14:27:02 +0000</lastBuildDate><atom:link href="https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Rabbitmq延迟队列实现</title>
       <link>https://atbug.com/rabbitmq-delay-queue-implementation/</link>

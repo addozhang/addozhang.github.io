@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.65.1" />
+    <meta name="generator" content="Hugo 0.81.0" />
 </head>
 
 
@@ -92,7 +92,7 @@
 <p>- warning: CRLF will be replaced by LF in *<em>*</em></p>
 <p>- 删除并添加的同样的行</p>
 </blockquote>
-<p>使用git diff -w却没有改动；使用git diff –ws-error-highlight=new,old发现行尾有<strong>^M</strong></p>
+<p>使用git diff -w却没有改动；使用git diff –ws-error-highlight=new,old发现行尾有**^M**</p>
 <p>我本人用的是Linux，其他同事有用Windows，问题就出在平台上。</p>
 <blockquote>
 <p>Windows用CR LF来定义换行，Linux用LF。CR全称是Carriage Return ,或者表示为\r, 意思是回车。 LF全称是Line Feed，它才是真正意义上的换行表示符。</p>

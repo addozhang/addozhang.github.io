@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://atbug.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.65.1" />
+    <meta name="generator" content="Hugo 0.81.0" />
 </head>
 
 
@@ -100,27 +100,27 @@
 <p>近期在研究 CDF (Continuous Delivery Foundation)下的 <a href="https://github.com/tektoncd">Tekton</a>, 其中有个概念是其将流水线(pipeline)中的各个步骤(step)作为应用容器在同一个 Pod 中运行.</p>
 <p>我们都知道流水线中的步骤是按照定义的顺序执行的, 那么 Tekton 是如何保证应用容器的执行顺序的?</p>
 <p>查看 pod 的 manifest 之后发现了下面的容器配置 (这个容器的作用从 git 仓库克隆代码)</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">spec</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="k">containers</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span>- <span class="k">args</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- -wait_file<span class="w">
-</span><span class="w">    </span>- /tekton/downward/ready<span class="w">
-</span><span class="w">    </span>- -wait_file_content<span class="w">
-</span><span class="w">    </span>- -post_file<span class="w">
-</span><span class="w">    </span>- /tekton/tools/<span class="m">0</span><span class="w">
-</span><span class="w">    </span>- -termination_path<span class="w">
-</span><span class="w">    </span>- /tekton/termination<span class="w">
-</span><span class="w">    </span>- -entrypoint<span class="w">
-</span><span class="w">    </span>- /ko-app/git-init<span class="w">
-</span><span class="w">    </span>- -<span class="sd">-
-</span><span class="sd">    - -url</span><span class="w">
-</span><span class="w">    </span>- http<span class="p">:</span>//gitlab.nip.io<span class="p">:</span><span class="m">8088</span>/addozhang/tekton-test<span class="w">
-</span><span class="w">    </span>- -revision<span class="w">
-</span><span class="w">    </span>- develop<span class="w">
-</span><span class="w">    </span>- -path<span class="w">
-</span><span class="w">    </span>- /workspace/git-source<span class="w">
-</span><span class="w">    </span><span class="k">command</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- /tekton/tools/entrypoint<span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">containers</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="nt">args</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- -<span class="l">wait_file</span><span class="w">
+</span><span class="w">    </span>- <span class="l">/tekton/downward/ready</span><span class="w">
+</span><span class="w">    </span>- -<span class="l">wait_file_content</span><span class="w">
+</span><span class="w">    </span>- -<span class="l">post_file</span><span class="w">
+</span><span class="w">    </span>- <span class="l">/tekton/tools/0</span><span class="w">
+</span><span class="w">    </span>- -<span class="l">termination_path</span><span class="w">
+</span><span class="w">    </span>- <span class="l">/tekton/termination</span><span class="w">
+</span><span class="w">    </span>- -<span class="l">entrypoint</span><span class="w">
+</span><span class="w">    </span>- <span class="l">/ko-app/git-init</span><span class="w">
+</span><span class="w">    </span>- --<span class="w">
+</span><span class="w">    </span>- -<span class="l">url</span><span class="w">
+</span><span class="w">    </span>- <span class="l">http://gitlab.nip.io:8088/addozhang/tekton-test</span><span class="w">
+</span><span class="w">    </span>- -<span class="l">revision</span><span class="w">
+</span><span class="w">    </span>- <span class="l">develop</span><span class="w">
+</span><span class="w">    </span>- -<span class="l">path</span><span class="w">
+</span><span class="w">    </span>- <span class="l">/workspace/git-source</span><span class="w">
+</span><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="l">/tekton/tools/entrypoint</span><span class="w">
 </span></code></pre></div><p>克隆代码的命令是:</p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">git-init -url http://gitlab.nip.io:8088/addozhang/tekton-test -revision develop -path /workspace/git-source
 </code></pre></div><p>但是容器的启动命令是<code>/tekton/tools/entrypoint</code>并带上了一坨的参数(此处略过, 后面分析).</p>

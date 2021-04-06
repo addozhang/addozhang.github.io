@@ -6,11 +6,7 @@
     <description>Recent content in CICD on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 12 Feb 2020 21:30:03 +0800</lastBuildDate>
-    
-	<atom:link href="https://atbug.com/tags/cicd/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Wed, 12 Feb 2020 21:30:03 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/cicd/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>云原生CICD: Tekton Trigger 实战</title>
       <link>https://atbug.com/tekton-trigger-practice/</link>
@@ -53,7 +49,7 @@
       <pubDate>Sun, 19 Jan 2020 14:33:17 +0800</pubDate>
       
       <guid>https://atbug.com/tekton-0.9.0-release/</guid>
-      <description>翻译整理自 What’s New in Tekton 0.9 功能及Bug修复 脚本模式 以前如果要在容器里运行个简单的 bash 脚本, 需要这么写: - name:helloimage:ubuntucommand:[&amp;#39;bash&amp;#39;]args:- -c- | set -execho&amp;#34;h</description>
+      <description>翻译整理自 What’s New in Tekton 0.9 功能及Bug修复 脚本模式 以前如果要在容器里运行个简单的 bash 脚本, 需要这么写: - name:helloimage:ubuntucommand:[&amp;#39;bash&amp;#39;]args:- -c- |set -ex echo &amp;#34;hello&amp;#</description>
     </item>
     
     <item>
