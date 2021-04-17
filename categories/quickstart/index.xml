@@ -6,7 +6,16 @@
     <description>Recent content in quickstart on 乱世浮生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 05 Apr 2021 21:08:40 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/quickstart/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 17 Apr 2021 09:08:40 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/quickstart/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>应“云”而生的 Java 框架：构建本机可执行文件</title>
+      <link>https://atbug.com/quarkus-build-native-executable-file/</link>
+      <pubDate>Sat, 17 Apr 2021 09:08:40 +0800</pubDate>
+      
+      <guid>https://atbug.com/quarkus-build-native-executable-file/</guid>
+      <description>应&amp;quot;云&amp;quot;而生的 Java 框架 Quarkus：构建本机可执行文件 电影《功夫》中，火云邪神有句话：“天下武功无坚不摧，唯快不破。” 在</description>
+    </item>
+    
     <item>
       <title>应“云”而生的 Java 框架：Hello, Quarkus</title>
       <link>https://atbug.com/hello-quarkus/</link>

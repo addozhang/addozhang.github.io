@@ -3,42 +3,47 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://atbug.com/categories/</loc>
-    <lastmod>2021-04-05T21:08:40+08:00</lastmod>
+    <lastmod>2021-04-17T09:08:40+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://atbug.com/tags/java/</loc>
-    <lastmod>2021-04-05T21:08:40+08:00</lastmod>
+    <lastmod>2021-04-17T09:08:40+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://atbug.com/post/</loc>
-    <lastmod>2021-04-05T21:08:40+08:00</lastmod>
+    <lastmod>2021-04-17T09:08:40+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://atbug.com/tags/quarkus/</loc>
-    <lastmod>2021-04-05T21:08:40+08:00</lastmod>
+    <lastmod>2021-04-17T09:08:40+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://atbug.com/categories/quickstart/</loc>
-    <lastmod>2021-04-05T21:08:40+08:00</lastmod>
+    <lastmod>2021-04-17T09:08:40+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://atbug.com/tags/</loc>
-    <lastmod>2021-04-05T21:08:40+08:00</lastmod>
+    <lastmod>2021-04-17T09:08:40+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://atbug.com/</loc>
-    <lastmod>2021-04-05T21:08:40+08:00</lastmod>
+    <lastmod>2021-04-17T09:08:40+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://atbug.com/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/</loc>
-    <lastmod>2021-04-05T21:08:40+08:00</lastmod>
+    <lastmod>2021-04-17T09:08:40+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://atbug.com/quarkus-build-native-executable-file/</loc>
+    <lastmod>2021-04-17T09:08:40+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url><url>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>应“云”而生的 Java 框架：构建本机可执行文件 // 乱世浮生</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
+    <meta name="keywords" content="Java,Spring Cloud,Architecture,">
+
+        <meta property="og:title" content="应“云”而生的 Java 框架：构建本机可执行文件" />
+    <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh-cn" />
+    <meta property="og:url" content="https://atbug.com/quarkus-build-native-executable-file/" />
+    
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link href="https://atbug.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://atbug.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://atbug.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.82.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://atbug.com/">乱世浮生</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="../">Home</a>
+                
+                <a class="main-nav-link" href="../post/">Archives</a>
+                
+                <a class="main-nav-link" href="../tags/">Tags</a>
+                
+                <a class="main-nav-link" href="../categories/">Categories</a>
+                
+                <a class="main-nav-link" href="../about/">About</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">应“云”而生的 Java 框架：构建本机可执行文件</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="../quarkus-build-native-executable-file/" class="article-date">
+                <time datetime='2021-04-17T09:08:40.000&#43;08:00' itemprop="datePublished">2021-04-17</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://atbug.com//categories/quickstart">quickstart</a>
+                    
+                </div>
+            </div>
+            
+            
+            <div class="article-comment-link-wrap">
+                <a href="../quarkus-build-native-executable-file/#disqus_thread" class="article-comment-link">Comments</a>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <h1 id="应云而生的-java-框架-quarkus构建本机可执行文件">应&quot;云&quot;而生的 Java 框架 Quarkus：构建本机可执行文件</h1>
+<blockquote>
+<p>电影《功夫》中，火云邪神有句话：“天下武功无坚不摧，唯快不破。”</p>
+</blockquote>
+<p>在 <a href="https://mp.weixin.qq.com/s/YcEqFm3oxlsEvJ3ckRbQyA">上一篇文章</a> 中，我们写了第一个 Quarkus 应用，并尝试着构建了 <code>legacy-jar</code> 和 <code>fast-jar</code>。</p>
+<p>今天来看一下 Quarkus 构建出来的本机可执行文件到底比 Spring 应用能快多少，<strong>生态的成熟度不在这里讨论</strong>。</p>
+<h2 id="tldr">TLDR</h2>
+<p>先上结论， 与只有一个 Controller 的Spring Web 应用做下对比。</p>
+<h3 id="应用启动时间0012s-vs-2294s">应用启动时间：0.012s vs 2.294s</h3>
+<p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/17/cleanshot-20210417-at-0900292x.png" alt="CleanShot 2021-04-17 at 09.00.29@2x"></p>
+<p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/17/cleanshot-20210417-at-0915282x.png" alt="CleanShot 2021-04-17 at 09.15.28@2x"></p>
+<h3 id="镜像大小49mb-vs-237-mb">镜像大小：49MB vs 237 MB</h3>
+<p>Spring 应用镜像使用 <code>openjdk:11.0-jre-slim</code> 作为 base 镜像，大小为 220MB。</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">docker images
+REPOSITORY                                    TAG             IMAGE ID       CREATED          SIZE
+spring/spring-getting-started                 latest          5f47030c5c3f   <span class="m">6</span> minutes ago    237MB
+quarkus/quarkus-getting-started               distroless2     fe973c5ac172   <span class="m">24</span> minutes ago   49MB
+quarkus/quarkus-getting-started               distroless      6fe27dd44e86   <span class="m">31</span> minutes ago   51MB
+quarkus/quarkus-getting-started               ubi             8f86f5915715   <span class="m">58</span> minutes ago   132MB
+</code></pre></div><h2 id="java-应用容器化的困境">Java 应用容器化的困境</h2>
+<p>云原生世界中，应用容器化是个显著的特点。Java 应用容器化时面临了如下问题：</p>
+<ul>
+<li>应用启动慢：其实这是 Java 应用的问题。Java 应用占用内存多；JVM 虚拟机启动时需要做环境的初始化、预加载大量的类、初始化线程等等。启动耗时视应用情况需要几秒，甚至可达分钟级。较长的启动耗时，也抑制了水平伸缩性。即使在 Serverless 这种响应耗时要求不高的场景，也会被嫌弃。</li>
+<li>镜像过大：其实使用了镜像的分层设计，常见的一个 SpringCloud 应用的 über-jar 包可能都有 7、80MB。</li>
+<li>空间占用：虽然用了镜像分层，但积少成多，也会增加存储成本。</li>
+</ul>
+<h2 id="quarkus-与本机映像native-image">Quarkus 与本机映像（native image）</h2>
+<p>Quarkus 的开发遵从了容器优先的原则：</p>
+<ul>
+<li>支持 Graal/SubstrateVM</li>
+<li>构建时处理元数据</li>
+<li>减少反射的使用</li>
+<li>本机映像预启动</li>
+</ul>
+<blockquote>
+<p>本机映像是将 Java 代码提前编译为可执行文件（称为本机映像）的技术。该可执行文件包括应用程序类、其依赖项中的类、运行时库类以及 JDK 中的静态链接本机代码。它不是在 Java VM 上运行，而是包括必要的组件，例如内存管理，线程调度等，这些组件来自另一个运行时系统 “Substrate VM”。“Substrate VM” 是运行时组件（例如反优化器，垃圾收集器，线程调度等）的名称。与 JVM 相比，生成的程序具有更快的启动时间和更低的运行时内存开销。</p>
+</blockquote>
+<h2 id="如何构建本机映像">如何构建本机映像</h2>
+<p>环境配置参考<a href="https://mp.weixin.qq.com/s/YcEqFm3oxlsEvJ3ckRbQyA">上一篇文章</a>，可以直接<a href="https://github.com/addozhang/quarkus-getting-started">从这里下载源码</a>。</p>
+<h3 id="配置-graalvm">配置 GraalVM</h3>
+<p>之前我们使用了<a href="https://sdkman.io/"> sdkman</a> 进行 GraalVM 安装。设置 <code>GRAALVM_HOME</code> 环境变量：</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">export</span> <span class="nv">GRAALVM_HOME</span><span class="o">=</span><span class="sb">`</span>sdk home java 21.0.0.2.r11-grl<span class="sb">`</span>
+</code></pre></div><p>使用 <code>gu</code> 安装 <code>native-image</code>：</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="si">${</span><span class="nv">GRAALVM_HOME</span><span class="si">}</span>/bin/gu install native-image
+</code></pre></div><h3 id="构建本机可执行文件">构建本机可执行文件</h3>
+<p>在源码的 <code>pom.xml</code> 中，我们可以看到如下的 <code>profile</code>：</p>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;profiles&gt;</span>
+    <span class="nt">&lt;profile&gt;</span>
+        <span class="nt">&lt;id&gt;</span>native<span class="nt">&lt;/id&gt;</span>
+        <span class="nt">&lt;properties&gt;</span>
+            <span class="nt">&lt;quarkus.package.type&gt;</span>native<span class="nt">&lt;/quarkus.package.type&gt;</span>
+        <span class="nt">&lt;/properties&gt;</span>
+    <span class="nt">&lt;/profile&gt;</span>
+<span class="nt">&lt;/profiles&gt;</span>
+</code></pre></div><p>我们使用这个 profile 进行本机可执行文件的构建，整个构建耗时 <strong>几分钟</strong> 。</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">./mvnw package -Pnative
+</code></pre></div><p>部分构建日志：</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ quarkus-getting-started ---
+[INFO]
+[INFO] --- quarkus-maven-plugin:1.13.0.Final:build (default) @ quarkus-getting-started ---
+[INFO] [org.jboss.threads] JBoss Threads version 3.2.0.Final
+[INFO] [io.quarkus.deployment.pkg.steps.JarResultBuildStep] Building native image source jar: /Users/addo/Workspaces/private_w/quarkus-getting-started/target/quarkus-getting-started-1.0.0-SNAPSHOT-native-image-source-jar/quarkus-getting-started-1.0.0-SNAPSHOT-runner.jar
+[INFO] [io.quarkus.deployment.pkg.steps.NativeImageBuildStep] Building native image from /Users/addo/Workspaces/private_w/quarkus-getting-started/target/quarkus-getting-started-1.0.0-SNAPSHOT-native-image-source-jar/quarkus-getting-started-1.0.0-SNAPSHOT-runner.jar
+[INFO] [io.quarkus.deployment.pkg.steps.NativeImageBuildContainerRunner] Using docker to run the native image builder
+[INFO] [io.quarkus.deployment.pkg.steps.NativeImageBuildContainerRunner] Checking image status quay.io/quarkus/ubi-quarkus-native-image:21.0.0-java11
+21.0.0-java11: Pulling from quarkus/ubi-quarkus-native-image
+Digest: sha256:becf08de869e707beaa5e57444b533ef93ebef15aad90c92ac660ddf7cea2b11
+Status: Image is up to date for quay.io/quarkus/ubi-quarkus-native-image:21.0.0-java11
+quay.io/quarkus/ubi-quarkus-native-image:21.0.0-java11
+[INFO] [io.quarkus.deployment.pkg.steps.NativeImageBuildStep] Running Quarkus native-image plugin on GraalVM Version 21.0.0 (Java Version 11.0.10+8-jvmci-21.0-b06)
+[INFO] [io.quarkus.deployment.pkg.steps.NativeImageBuildRunner] docker run --env LANG=C --rm -v /Users/addo/Workspaces/private_w/quarkus-getting-started/target/quarkus-getting-started-1.0.0-SNAPSHOT-native-image-source-jar:/project:z quay.io/quarkus/ubi-quarkus-native-image:21.0.0-java11 -J-Dsun.nio.ch.maxUpdateArraySize=100 -J-Djava.util.logging.manager=org.jboss.logmanager.LogManager -J-Dvertx.logger-delegate-factory-class-name=io.quarkus.vertx.core.runtime.VertxLogDelegateFactory -J-Dvertx.disableDnsResolver=true -J-Dio.netty.leakDetection.level=DISABLED -J-Dio.netty.allocator.maxOrder=1 -J-Duser.language=en -J-Duser.country=CN -J-Dfile.encoding=UTF-8 --initialize-at-build-time= -H:InitialCollectionPolicy=com.oracle.svm.core.genscavenge.CollectionPolicy\$BySpaceAndTime -H:+JNI -H:+AllowFoldMethods -jar quarkus-getting-started-1.0.0-SNAPSHOT-runner.jar -H:FallbackThreshold=0 -H:+ReportExceptionStackTraces -J-Xmx5g -H:-AddAllCharsets -H:EnableURLProtocols=http --no-server -H:-UseServiceLoaderFeature -H:+StackTrace quarkus-getting-started-1.0.0-SNAPSHOT-runner
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25]    classlist:   5,859.24 ms,  0.96 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25]        (cap):     633.34 ms,  0.94 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25]        setup:   2,468.19 ms,  0.94 GB
+00:06:00,437 INFO  [org.jbo.threads] JBoss Threads version 3.2.0.Final
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25]     (clinit):     516.65 ms,  2.23 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25]   (typeflow):  12,642.02 ms,  2.23 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25]    (objects):  11,340.37 ms,  2.23 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25]   (features):     525.87 ms,  2.23 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25]     analysis:  26,032.67 ms,  2.23 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25]     universe:   1,394.06 ms,  2.16 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25]      (parse):   2,690.38 ms,  2.16 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25]     (inline):   4,336.77 ms,  2.73 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25]    (compile):  17,580.03 ms,  2.71 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25]      compile:  26,152.06 ms,  2.71 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25]        image:   3,288.43 ms,  2.70 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25]        write:   1,904.64 ms,  2.70 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25]      [total]:  67,414.16 ms,  2.70 GB
+[WARNING] [io.quarkus.deployment.pkg.steps.NativeImageBuildStep] objcopy executable not found in PATH. Debug symbols will not be separated from executable.
+[WARNING] [io.quarkus.deployment.pkg.steps.NativeImageBuildStep] That will result in a larger native image with debug symbols embedded in it.
+[INFO] [io.quarkus.deployment.QuarkusAugmentor] Quarkus augmentation completed in 74739ms
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:21 min
+[INFO] Finished at: 2021-04-17T08:06:47+08:00
+[INFO] ------------------------------------------------------------------------
+</code></pre></div><blockquote>
+<p>假如构建时出现类似 <code>Caused by: java.lang.RuntimeException: Image generation failed. Exit code was 137 which indicates an out of memory error. Consider increasing the Xmx value for native image generation by setting the &quot;quarkus.native.native-image-xmx&quot; property</code> 这种报错。需要调整下 Docker 的设置，比如笔者使用的 macOS，打开 Docker Desktop &gt; Preference &gt; Resource &gt; Advanced，将内存从默认的 2GB 调大，比如 8GB。</p>
+<p>从构建日志可以看出，构建的过程是在 <code>quay.io/quarkus/ubi-quarkus-native-image</code> 的容器中完成的。虽然异常提示调整 &ldquo;quarkus.native.native-image-xmx&rdquo; ，其实是容器内存太小导致的。</p>
+</blockquote>
+<p>构建成功后，可以在 <code>target</code> 中找到 <code>quarkus-getting-started-1.0.0-SNAPSHOT-runner</code>。这是一个可执行文件，大小为 28MB。</p>
+<p>尝试执行该文件，收到 <code>zsh: exec format error: ./target/quarkus-getting-started-1.0.0-SNAPSHOT-runner</code> 错误。因为这是一个 Linux 可执行文件，因此我们需要在容器中运行。</p>
+<h3 id="构建本机镜像">构建本机镜像</h3>
+<p>在源文件的 <code>src/main/docker</code> 目录中，我们可以找到 <code>Dockerfile.native</code>：</p>
+<div class="highlight"><pre class="chroma"><code class="language-Dockerfile" data-lang="Dockerfile"><span class="k">FROM</span><span class="s"> registry.access.redhat.com/ubi8/ubi-minimal:8.3</span><span class="err">
+</span><span class="err"></span><span class="k">WORKDIR</span><span class="s"> /work/</span><span class="err">
+</span><span class="err"></span><span class="k">RUN</span> chown <span class="m">1001</span> /work <span class="se">\
+</span><span class="se"></span>    <span class="o">&amp;&amp;</span> chmod <span class="s2">&#34;g+rwX&#34;</span> /work <span class="se">\
+</span><span class="se"></span>    <span class="o">&amp;&amp;</span> chown 1001:root /work<span class="err">
+</span><span class="err"></span><span class="k">COPY</span> --chown<span class="o">=</span>1001:root target/*-runner /work/application<span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="k">EXPOSE</span><span class="s"> 8080</span><span class="err">
+</span><span class="err"></span><span class="k">USER</span><span class="s"> 1001</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="k">CMD</span> <span class="p">[</span><span class="s2">&#34;./application&#34;</span><span class="p">,</span> <span class="s2">&#34;-Dquarkus.http.host=0.0.0.0&#34;</span><span class="p">]</span><span class="err">
+</span></code></pre></div><h3 id="运行镜像">运行镜像</h3>
+<p>本地运行一下，可以看出启动只需要 <code>0.013s</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">docker run --rm -p 8080:8080 quarkus/quarkus-getting-started:latest
+__  ____  __  _____   ___  __ ____  ______
+ --/ __ <span class="se">\/</span> / / / _ <span class="p">|</span> / _ <span class="se">\/</span> //_/ / / / __/
+ -/ /_/ / /_/ / __ <span class="p">|</span>/ , _/ ,&lt; / /_/ /<span class="se">\ \
+</span><span class="se"></span>--<span class="se">\_</span>__<span class="se">\_\_</span>___/_/ <span class="p">|</span>_/_/<span class="p">|</span>_/_/<span class="p">|</span>_<span class="p">|</span><span class="se">\_</span>___/___/
+2021-04-17 00:22:27,146 INFO  <span class="o">[</span>io.quarkus<span class="o">]</span> <span class="o">(</span>main<span class="o">)</span> quarkus-getting-started 1.0.0-SNAPSHOT native <span class="o">(</span>powered by Quarkus 1.13.0.Final<span class="o">)</span> started in 0.013s. Listening on: http://0.0.0.0:8080
+2021-04-17 00:22:27,147 INFO  <span class="o">[</span>io.quarkus<span class="o">]</span> <span class="o">(</span>main<span class="o">)</span> Profile prod activated.
+2021-04-17 00:22:27,147 INFO  <span class="o">[</span>io.quarkus<span class="o">]</span> <span class="o">(</span>main<span class="o">)</span> Installed features: <span class="o">[</span>cdi, resteasy<span class="o">]</span>
+</code></pre></div><p>测试一下端点：</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">http :8080/hello/greeting/quarkus
+HTTP/1.1 <span class="m">200</span> OK
+Content-Length: <span class="m">14</span>
+Content-Type: text/plain<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
+
+Hello, quarkus
+</code></pre></div><p>看下镜像的信息，大小为 132MB，其中 base 镜像 <code>ubi-minimal</code> 就占了 103 MB。感觉还是有点大，是否继续精简一下？</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">docker images
+REPOSITORY                                    TAG             IMAGE ID       CREATED          SIZE
+quarkus/quarkus-getting-started               latest          8f86f5915715   <span class="m">4</span> minutes ago    132MB
+registry.access.redhat.com/ubi8/ubi-minimal   8.3             604ddd554fec   <span class="m">2</span> weeks ago      103MB
+</code></pre></div><h3 id="镜像瘦身">镜像瘦身</h3>
+<p>在 <code>src/main/docker</code> 中还有个名为 <code>Dockerfile.native-distroless</code> 的Dockerfile，里面使用了 <code>quay.io/quarkus/quarkus-distroless-image:1.0</code> 作为 base 镜像</p>
+<p>使用这个Dockerfile进行构建，得到的镜像就小很多，只有 51MB：</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">docker images
+REPOSITORY                                    TAG          IMAGE ID       CREATED          SIZE
+quarkus/quarkus-getting-started               distroless   6fe27dd44e86   <span class="m">33</span> seconds ago   51MB
+quarkus/quarkus-getting-started               ubi          8f86f5915715   <span class="m">27</span> minutes ago   132MB
+quay.io/quarkus/quarkus-distroless-image      1.0          062663862a83   <span class="m">6</span> days ago       21.3MB
+registry.access.redhat.com/ubi8/ubi-minimal   8.3          604ddd554fec   <span class="m">2</span> weeks ago      103MB
+</code></pre></div><p>运行成功：</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">docker run --rm -p 8080:8080 quarkus/quarkus-getting-started:distroless
+__  ____  __  _____   ___  __ ____  ______
+ --/ __ <span class="se">\/</span> / / / _ <span class="p">|</span> / _ <span class="se">\/</span> //_/ / / / __/
+ -/ /_/ / /_/ / __ <span class="p">|</span>/ , _/ ,&lt; / /_/ /<span class="se">\ \
+</span><span class="se"></span>--<span class="se">\_</span>__<span class="se">\_\_</span>___/_/ <span class="p">|</span>_/_/<span class="p">|</span>_/_/<span class="p">|</span>_<span class="p">|</span><span class="se">\_</span>___/___/
+2021-04-17 00:51:26,070 INFO  <span class="o">[</span>io.quarkus<span class="o">]</span> <span class="o">(</span>main<span class="o">)</span> quarkus-getting-started 1.0.0-SNAPSHOT native <span class="o">(</span>powered by Quarkus 1.13.0.Final<span class="o">)</span> started in 0.013s. Listening on: http://0.0.0.0:8080
+2021-04-17 00:51:26,071 INFO  <span class="o">[</span>io.quarkus<span class="o">]</span> <span class="o">(</span>main<span class="o">)</span> Profile prod activated.
+2021-04-17 00:51:26,071 INFO  <span class="o">[</span>io.quarkus<span class="o">]</span> <span class="o">(</span>main<span class="o">)</span> Installed features: <span class="o">[</span>cdi, resteasy<span class="o">]</span>
+</code></pre></div><p>极致瘦身，参考了<a href="https://capgemini.github.io/development/Introduction-to-Quarkus-Supersonic-Subatomic-Java/#distroless-images">这里</a>，我们创建 <code>Dockerfile.native-distroless2</code>。</p>
+<p>最终镜像的大小为 49MB，与官方提供的 distroless base 镜像只小了 2MB。</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">docker images
+REPOSITORY                                    TAG           IMAGE ID       CREATED          SIZE
+quarkus/quarkus-getting-started               distroless2   fe973c5ac172   <span class="m">3</span> seconds ago    49MB
+</code></pre></div><p>前面对比，用来构建 Spring 应用的 base 镜像 <code>openjdk:11.0-jre-slim</code> 已经有 220MB，这还没算上应用的大小。即使是 <code>openjdk:17-alpine3.13</code> 也有 182 MB。</p>
+<h2 id="next">NEXT</h2>
+<p>下一回，我们试试 Quarkus 在 ArgoCD 中的应用，看下 Serverless 上的使用体验如何。</p>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#tldr">TLDR</a>
+      <ul>
+        <li><a href="#应用启动时间0012s-vs-2294s">应用启动时间：0.012s vs 2.294s</a></li>
+        <li><a href="#镜像大小49mb-vs-237-mb">镜像大小：49MB vs 237 MB</a></li>
+      </ul>
+    </li>
+    <li><a href="#java-应用容器化的困境">Java 应用容器化的困境</a></li>
+    <li><a href="#quarkus-与本机映像native-image">Quarkus 与本机映像（native image）</a></li>
+    <li><a href="#如何构建本机映像">如何构建本机映像</a>
+      <ul>
+        <li><a href="#配置-graalvm">配置 GraalVM</a></li>
+        <li><a href="#构建本机可执行文件">构建本机可执行文件</a></li>
+        <li><a href="#构建本机镜像">构建本机镜像</a></li>
+        <li><a href="#运行镜像">运行镜像</a></li>
+        <li><a href="#镜像瘦身">镜像瘦身</a></li>
+      </ul>
+    </li>
+    <li><a href="#next">NEXT</a></li>
+  </ul>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/%E4%BA%91%E5%8E%9F%E7%94%9F">云原生
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/quarkus">Quarkus
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        <div class="article-entry">
+            <hr>
+            <p>文章同步发送到公众号：云编码 (微信号：sevenfeet)。</p>
+            <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/23/qrcode.jpg" alt="qrcode"></p>
+        </div>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    
+    <a href="../hello-quarkus/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">应“云”而生的 Java 框架：Hello, Quarkus&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+
+</article>
+
+        
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "addozhang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 Addo Zhang
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>
