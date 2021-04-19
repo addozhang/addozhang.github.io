@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Zuul on 乱世浮生</title>
+    <link>https://atbug.com/tags/zuul/</link>
+    <description>Recent content in Zuul on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 02 Aug 2018 08:55:43 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/zuul/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Zuul网关Ribbon重试</title>
+      <link>https://atbug.com/ribbon-retry-in-zuul/</link>
+      <pubDate>Thu, 02 Aug 2018 08:55:43 +0000</pubDate>
+      
+      <guid>https://atbug.com/ribbon-retry-in-zuul/</guid>
+      <description>相关配置 #如果路由转发请求发生超时(连接超时或处理超时), 只要超时时间的设置小于Hystrix的命令超时时间,那么它就会自动发起重试. 默认为</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Zuul详解</title>
+      <link>https://atbug.com/spring-cloud-zuul-breakdown/</link>
+      <pubDate>Thu, 22 Feb 2018 17:02:26 +0000</pubDate>
+      
+      <guid>https://atbug.com/spring-cloud-zuul-breakdown/</guid>
+      <description>&lt;p&gt;Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看&lt;a href=&#34;http://atbug.com/learn-netflix-zuul/&#34;&gt;上一篇&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;实现&#34;&gt;实现&lt;/h2&gt;
+&lt;p&gt;@EnableZuulProxy 与 @EnableZuulServer
+二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用.
+Zuul server的路由都通过&lt;code&gt;ZuulProperties&lt;/code&gt;进行配置.&lt;/p&gt;
+&lt;h3 id=&#34;具体实现&#34;&gt;具体实现:&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;使用&lt;code&gt;ZuulController&lt;/code&gt;(&lt;code&gt;ServletWrappingController&lt;/code&gt;的子类)封装&lt;code&gt;ZuulServlet&lt;/code&gt;实例, 处理从&lt;code&gt;DispatcherServlet&lt;/code&gt;进来的请求.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ZuulHandlerMapping&lt;/code&gt;负责注册handler mapping, 将&lt;code&gt;Route&lt;/code&gt;的&lt;code&gt;fullPath&lt;/code&gt;的请求交由&lt;code&gt;ZuulController&lt;/code&gt;处理.&lt;/li&gt;
+&lt;li&gt;同时使用&lt;code&gt;ServletRegistrationBean&lt;/code&gt;注册&lt;code&gt;ZuulServlet&lt;/code&gt;, 默认使用&lt;code&gt;/zuul&lt;/code&gt;作为urlMapping. 所有来自以&lt;code&gt;/zuul&lt;/code&gt;开头的path的请求都会直接进入&lt;code&gt;ZuulServlet&lt;/code&gt;, 不会进入&lt;code&gt;DispatcherServlet&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;使用注解&#34;&gt;使用注解&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;@EnableZuulProxy&lt;/code&gt;引入了&lt;code&gt;ZuulProxyMarkerConfiguration&lt;/code&gt;, &lt;code&gt;ZuulProxyMarkerConfiguration&lt;/code&gt;只做了一件事, 实例化了内部类&lt;code&gt;Marker&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Configuration&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;ZuulProxyMarkerConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Marker&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;zuulProxyMarkerBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Marker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Marker&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;@EnableZuulServer&lt;/code&gt;引入了&lt;code&gt;ZuulServerMarkerConfiguration&lt;/code&gt;, &lt;code&gt;ZuulServerMarkerConfiguration&lt;/code&gt;也只做了一件事: 实例化了内部类&lt;code&gt;Marker&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Configuration&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;ZuulServerMarkerConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Marker&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;zuulServerMarkerBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Marker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Marker&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>初识Netflix Zuul</title>
+      <link>https://atbug.com/learn-netflix-zuul/</link>
+      <pubDate>Sun, 11 Feb 2018 10:07:18 +0000</pubDate>
+      
+      <guid>https://atbug.com/learn-netflix-zuul/</guid>
+      <description>&lt;p&gt;嵌入式的zuul代理&lt;/p&gt;
+&lt;p&gt;使用了Netfilx OSS的其他组件:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Hystrix   熔断&lt;/li&gt;
+&lt;li&gt;Ribbon    负责发送外出请求的客户端, 提供软件负载均衡功能&lt;/li&gt;
+&lt;li&gt;Trubine   实时地聚合细粒度的metrics数据&lt;/li&gt;
+&lt;li&gt;Archaius  动态配置&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;介绍&#34;&gt;介绍&lt;/h2&gt;
+&lt;p&gt;由于2.0停止开发且会有bug, 故下面的分析基于1.x版本.&lt;/p&gt;
+&lt;h3 id=&#34;特性&#34;&gt;特性&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Authentication 认证&lt;/li&gt;
+&lt;li&gt;Insights 洞察&lt;/li&gt;
+&lt;li&gt;Stress Testing 压力测试&lt;/li&gt;
+&lt;li&gt;Canary Testing 金丝雀测试&lt;/li&gt;
+&lt;li&gt;Dynamic Routing 动态路由&lt;/li&gt;
+&lt;li&gt;Multi-Region Resiliency 多区域弹性&lt;/li&gt;
+&lt;li&gt;Load Shedding 负载脱落&lt;/li&gt;
+&lt;li&gt;Security 安全&lt;/li&gt;
+&lt;li&gt;Static Response handling 静态响应处理&lt;/li&gt;
+&lt;li&gt;Multi-Region Resiliency 主动/主动流量管理&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

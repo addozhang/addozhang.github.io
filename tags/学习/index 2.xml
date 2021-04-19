@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>学习 on 乱世浮生</title>
+    <link>https://atbug.com/tags/%E5%AD%A6%E4%B9%A0/</link>
+    <description>Recent content in 学习 on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 11 Apr 2017 10:15:15 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/%E5%AD%A6%E4%B9%A0/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Scala笔记：用函数字面量块调用高阶函数</title>
+      <link>https://atbug.com/call-high-order-function-in-function-literal/</link>
+      <pubDate>Tue, 11 Apr 2017 10:15:15 +0000</pubDate>
+      
+      <guid>https://atbug.com/call-high-order-function-in-function-literal/</guid>
+      <description>这里会用到几个概念高阶函数、函数字面量、参数组 高阶函数 high-order function 函数的一种，简单来说它包含了一个函数类型的参数或者返回值。 所谓的高阶是跟一阶函数相</description>
+    </item>
+    
+  </channel>
+</rss>

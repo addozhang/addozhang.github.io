@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docker on 乱世浮生</title>
+    <link>https://atbug.com/tags/docker/</link>
+    <description>Recent content in Docker on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 11 Mar 2020 23:00:27 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go Docker 镜像进阶: 精简镜像</title>
+      <link>https://atbug.com/build-minimal-docker-image-for-go-app/</link>
+      <pubDate>Wed, 11 Mar 2020 23:00:27 +0800</pubDate>
+      
+      <guid>https://atbug.com/build-minimal-docker-image-for-go-app/</guid>
+      <description>​[图片来自 https://www.facebook.com/sequenceprocess/] 问题: 入门到生产级的差距 昨天的文章《为 Go 应用创建 Docker 镜像》, 算是入门级的, 并不适用于生产级. 为什么? $ docker images REPOSITORY TAG IMAGE ID CREATED SIZE addozhang/golang-hello-world latest 4cce1292a87a 4 seconds</description>
+    </item>
+    
+    <item>
+      <title>为 Go 应用创建 Docker 镜像</title>
+      <link>https://atbug.com/build-docker-image-for-go-app/</link>
+      <pubDate>Wed, 11 Mar 2020 20:41:58 +0800</pubDate>
+      
+      <guid>https://atbug.com/build-docker-image-for-go-app/</guid>
+      <description>嗯嗯, 最近开始用 Golang 了. 今天需要为 Go 应用创建对象, 看了下官方博客. 拿 hello world 做个测试. 使用下面的命令创建个新的项目 $ mkdir -p $GOPATH/src/github.com/addozhang/golang-hello-world &amp;amp;&amp;amp; cd &amp;#34;$_&amp;#34; $ go mod init github.com/addozhang/golang-hello-world go: creating new go.mod:</description>
+    </item>
+    
+    <item>
+      <title>加速云原生的 Java 开发</title>
+      <link>https://atbug.com/speed-up-java-development-on-kubernetes/</link>
+      <pubDate>Sat, 21 Dec 2019 20:45:22 +0800</pubDate>
+      
+      <guid>https://atbug.com/speed-up-java-development-on-kubernetes/</guid>
+      <description>今天来说说日常在Kubernetes开发Java项目遇到的问题. 当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是copy</description>
+    </item>
+    
+    <item>
+      <title>Alpine容器安装Docker和OpenShift Client Tools</title>
+      <link>https://atbug.com/install-docker-and-openshift-client-tools-in-alpine-container/</link>
+      <pubDate>Tue, 28 Aug 2018 09:14:12 +0000</pubDate>
+      
+      <guid>https://atbug.com/install-docker-and-openshift-client-tools-in-alpine-container/</guid>
+      <description>安装Docker echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/main&amp;#34; &amp;gt; /etc/apk/repositories echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/community&amp;#34; &amp;gt;&amp;gt; /etc/apk/repositories echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/testing&amp;#34; &amp;gt;&amp;gt; /etc/apk/repositories apk -U --no-cache \ --allow-untrusted add \ shadow \ docker \ py-pip \ openrc \ &amp;amp;&amp;amp; pip install docker-compose rc-update add docker boot 安装OpenShift Client Tools 需要先安装glibc apk --no-cache add ca-certificates</description>
+    </item>
+    
+    <item>
+      <title>Docker快速构建Cassandra和Java操作</title>
+      <link>https://atbug.com/java-operate-cassandra-deployed-in-docker/</link>
+      <pubDate>Thu, 18 May 2017 23:33:24 +0000</pubDate>
+      
+      <guid>https://atbug.com/java-operate-cassandra-deployed-in-docker/</guid>
+      <description>搭建Cassandra 使用docker创建Cassandra，方便快捷 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table #cq</description>
+    </item>
+    
+    <item>
+      <title>从零开始用docker运行spring boot应用</title>
+      <link>https://atbug.com/run-spring-boot-app-in-docker/</link>
+      <pubDate>Thu, 20 Apr 2017 21:58:42 +0000</pubDate>
+      
+      <guid>https://atbug.com/run-spring-boot-app-in-docker/</guid>
+      <description>假设已经安装好Docker Springboot应用 pom添加依赖和构建插件 &amp;lt;parent&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-starter-parent&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.5.3.RELEASE&amp;lt;/version&amp;gt; &amp;lt;/parent&amp;gt; &amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-starter-web&amp;lt;/artifactId&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt; &amp;lt;build&amp;gt; &amp;lt;plugins&amp;gt; &amp;lt;plugin&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-maven-plugin&amp;lt;/artifactId&amp;gt; &amp;lt;/plugin&amp;gt; &amp;lt;/plugins&amp;gt; &amp;lt;/build&amp;gt; 应用代码 package com.atbug.spring.boot.test; import org.springframework.boot.SpringApplication; import org.springframework.boot.autoconfigure.SpringBootApplication; import org.springframework.boot.web.servlet.FilterRegistrationBean; import org.springframework.context.annotation.Bean;</description>
+    </item>
+    
+  </channel>
+</rss>

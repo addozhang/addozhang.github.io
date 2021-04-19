@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jenkins CI/CD (一) 基于角色的授权策略 // 乱世浮生</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
+    <meta name="keywords" content="Java,Spring Cloud,Architecture,">
+
+        <meta property="og:title" content="Jenkins CI/CD (一) 基于角色的授权策略" />
+    <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh-cn" />
+    <meta property="og:url" content="https://atbug.com/using-role-based-authorization-strategy-in-jenkins/" />
+    
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link href="https://atbug.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://atbug.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://atbug.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.81.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://atbug.com/">乱世浮生</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="../">Home</a>
+                
+                <a class="main-nav-link" href="../post/">Archives</a>
+                
+                <a class="main-nav-link" href="../tags/">Tags</a>
+                
+                <a class="main-nav-link" href="../categories/">Categories</a>
+                
+                <a class="main-nav-link" href="../about/">About</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">Jenkins CI/CD (一) 基于角色的授权策略</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="../using-role-based-authorization-strategy-in-jenkins/" class="article-date">
+                <time datetime='2018-04-20T12:18:46.000&#43;00:00' itemprop="datePublished">2018-04-20</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://atbug.com//categories/devops">DevOps</a>
+                    
+                </div>
+            </div>
+            
+            
+            <div class="article-comment-link-wrap">
+                <a href="../using-role-based-authorization-strategy-in-jenkins/#disqus_thread" class="article-comment-link">Comments</a>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>最近开始客串运维做CI/CD的规划设计, 主要是基于&rsquo;Pipeline as Code in Jenkins'. 整理了下思路和技术点, 慢慢的写.</p>
+<p>这一篇是关于基于角色的授权策略, 用的是<code>Role-Based Authorization Strategy Plugin</code>.</p>
+<p>授权在CI/CD流程中比较常见, 比如我们只让某些特定用户才可以构建Pre-Release的Job. 而更高级的Release发布, 又会需要某些用户的审批才可以进行. 需要授权时, 可能还需要发邮件提醒用户.</p>
+<p>UI上如何使用就不提了, 这里只说Pipeline as Code. 后面的几篇也会是这个背景.</p>
+<p>参考的这篇<a href="https://www.avioconsulting.com/blog/using-role-based-authorization-strategy-jenkins">文章</a>, 文章里的代码运行失败, 做了修复.</p>
+<h2 id="配置">配置</h2>
+<p>安装完插件, 需要开始<code>基于角色的授权策略</code>. 同时添加角色和为用户分配角色.</p>
+<h3 id="使用role-based-strategy作为验证方式">使用<code>Role-Based Strategy</code>作为验证方式</h3>
+<p><code>Manage Jenkins / Configure Global Security / Configure Global Security</code></p>
+<p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15241955282214.jpg" alt=""></p>
+<h3 id="添加角色">添加角色</h3>
+<p><code>Manage Jenkins / Manage and Assign Roles / Manage Roles / Global roles </code></p>
+<p>输入要添加的角色名</p>
+<p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15241956860233.jpg" alt=""></p>
+<h4 id="为新加的角色配置权限">为新加的角色配置权限</h4>
+<p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15241957585851.jpg" alt=""></p>
+<h3 id="为用户指定角色">为用户指定角色</h3>
+<p>`Manage Jenkins / Manage and Assign Roles / Assign Roles / Global roles'</p>
+<p>输入已有的用户名</p>
+<p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15241960130076.jpg" alt=""></p>
+<p>分配角色</p>
+<p><img src="http://7xvxng.com1.z0.glb.clouddn.com/15241960527215.jpg" alt=""></p>
+<h2 id="编码">编码</h2>
+<p>授权会在很多job里使用, 所以我们使用<code>shared library</code>来定义.</p>
+<div class="highlight"><pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="n">timeout</span><span class="o">(</span><span class="nl">time:</span> <span class="mi">5</span><span class="o">,</span> <span class="nl">unit:</span> <span class="s1">&#39;MINUTES&#39;</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">notifyAwaitApproval</span> <span class="nl">approvers:</span> <span class="n">getApprovers</span><span class="o">(</span><span class="s1">&#39;pre-release&#39;</span><span class="o">),</span>
+        <span class="nl">emailPrompt:</span> <span class="s1">&#39;Build is ready to prepare release&#39;</span>
+<span class="o">}</span>
+</code></pre></div><p>给用户发送待审批邮件, 使用<code>input</code>等待用户的交互, 同时使用<code>milestone</code>阻塞后续的构建请求.
+<code>notifyAwaitApproval.groovy</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="kt">def</span> <span class="nf">call</span><span class="o">(</span><span class="n">options</span><span class="o">)</span> <span class="o">{</span>
+
+    <span class="kt">def</span> <span class="n">jobName</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="na">JOB_NAME</span>
+
+    <span class="k">if</span><span class="o">(</span><span class="n">options</span><span class="o">.</span><span class="na">message</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">options</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span> <span class="s2">&#34;Action Required For Build $jobName&#34;</span>
+    <span class="o">}</span>
+
+    <span class="kt">def</span> <span class="n">csvApproverUsernames</span> <span class="o">=</span> <span class="o">{</span>
+        <span class="k">switch</span> <span class="o">(</span><span class="n">options</span><span class="o">.</span><span class="na">approvers</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">case</span> <span class="nl">String:</span>
+                <span class="c1">// already csv
+</span><span class="c1"></span>                <span class="k">return</span> <span class="n">options</span><span class="o">.</span><span class="na">approvers</span>
+            <span class="k">case</span> <span class="nl">Map:</span>
+                <span class="c1">// keys are usernames and values are names
+</span><span class="c1"></span>                <span class="k">return</span> <span class="n">options</span><span class="o">.</span><span class="na">approvers</span><span class="o">.</span><span class="na">keySet</span><span class="o">().</span><span class="na">join</span><span class="o">(</span><span class="s1">&#39;,&#39;</span><span class="o">)</span>
+            <span class="k">case</span> <span class="nl">ArrayList:</span>
+            <span class="k">case</span> <span class="nl">HashSet:</span>
+                <span class="k">return</span> <span class="n">options</span><span class="o">.</span><span class="na">approvers</span><span class="o">.</span><span class="na">join</span><span class="o">(</span><span class="s1">&#39;,&#39;</span><span class="o">)</span>
+            <span class="k">default</span><span class="o">:</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">Exception</span><span class="o">(</span><span class="s2">&#34;Unexpeced approver type ${options.approvers.class}!&#34;</span><span class="o">)</span>
+        <span class="o">}</span>
+    <span class="o">}()</span>
+
+    <span class="n">echo</span> <span class="s2">&#34;Notify approvers: $csvApproverUsernames for approval&#34;</span>
+    <span class="c1">// emailext needs to be inside a node block but don&#39;t want to take up a node while waiting for approval
+</span><span class="c1"></span>    <span class="n">emailext</span> <span class="nl">body:</span> <span class="s2">&#34;Action Required For Build \${jobName} (#\${env.BUILD_NUMBER})&#34;</span><span class="o">,</span>
+            <span class="nl">to:</span> <span class="n">csvApproverUsernames</span><span class="o">,</span>
+            <span class="nl">subject:</span> <span class="s2">&#34;Action Required For Build \${jobName} (#\${env.BUILD_NUMBER})&#34;</span>
+
+    <span class="n">milestone</span><span class="o">()</span>
+    <span class="n">input</span> <span class="nl">id:</span> <span class="s1">&#39;Approval&#39;</span><span class="o">,</span>
+            <span class="nl">message:</span> <span class="n">options</span><span class="o">.</span><span class="na">message</span><span class="o">,</span>
+            <span class="nl">submitter:</span> <span class="n">csvApproverUsernames</span><span class="o">,</span>
+            <span class="nl">submitterParameter:</span> <span class="s1">&#39;submitter&#39;</span>
+    <span class="n">milestone</span><span class="o">()</span>
+<span class="o">}</span>
+
+</code></pre></div><p>检查并获取Jenkins当前配置的授权策略, 如果是<code>Role-Based Authorization</code>, 返回拥有指定角色的用户列表.
+<code>getApprovers.groovy</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="kn">import</span> <span class="nn">com.cloudbees.groovy.cps.NonCPS</span>
+<span class="kn">import</span> <span class="nn">com.michelin.cio.hudson.plugins.rolestrategy.RoleBasedAuthorizationStrategy</span>
+
+<span class="nd">@NonCPS</span>
+<span class="kt">def</span> <span class="nf">call</span><span class="o">(</span><span class="n">role</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">echo</span> <span class="s2">&#34;Retrieving users for $role&#34;</span>
+
+    <span class="kt">def</span> <span class="n">strategy</span> <span class="o">=</span> <span class="n">RoleBasedAuthorizationStrategy</span><span class="o">.</span><span class="na">instance</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">strategy</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">strategy</span><span class="o">.</span><span class="na">getGrantedRoles</span><span class="o">(</span><span class="n">RoleBasedAuthorizationStrategy</span><span class="o">.</span><span class="na">GLOBAL</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">entrySet</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">find</span> <span class="o">{</span> <span class="n">entry</span> <span class="o">-&gt;</span> <span class="n">entry</span><span class="o">.</span><span class="na">key</span><span class="o">.</span><span class="na">getName</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="n">role</span><span class="o">)</span> <span class="o">}.</span><span class="na">getValue</span><span class="o">()</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">Exception</span><span class="o">(</span><span class="s2">&#34;Role Strategy Plugin not in use.  Please enable to retrieve users for a role&#34;</span><span class="o">)</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#配置">配置</a>
+      <ul>
+        <li><a href="#使用role-based-strategy作为验证方式">使用<code>Role-Based Strategy</code>作为验证方式</a></li>
+        <li><a href="#添加角色">添加角色</a></li>
+        <li><a href="#为用户指定角色">为用户指定角色</a></li>
+      </ul>
+    </li>
+    <li><a href="#编码">编码</a></li>
+  </ul>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/devops">DevOps
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/ci/cd">CI/CD
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/jenkins">Jenkins
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/groovy">Groovy
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        <div class="article-entry">
+            <hr>
+            <p>文章同步发送到公众号：云编码 (微信号：sevenfeet)。</p>
+            <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/23/qrcode.jpg" alt="qrcode"></p>
+        </div>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    <a href="../spring-cloud-ribbon-breakdown-1/" id="article-nav-newer" class="article-nav-link-wrap">
+        <div class="article-nav-title"><span>&lt;</span>&nbsp;
+            Spring Cloud Ribbon 详解
+        </div>
+    </a>
+    
+    
+    <a href="../kvm-installation-note/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">KVM安装手册&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+
+</article>
+
+        
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "addozhang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 Addo Zhang
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>

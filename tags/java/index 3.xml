@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Java on 乱世浮生</title>
+    <link>https://atbug.com/tags/java/</link>
+    <description>Recent content in Java on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 05 Apr 2021 21:08:40 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>应“云”而生的 Java 框架：Hello, Quarkus</title>
+      <link>https://atbug.com/hello-quarkus/</link>
+      <pubDate>Mon, 05 Apr 2021 21:08:40 +0800</pubDate>
+      
+      <guid>https://atbug.com/hello-quarkus/</guid>
+      <description>Wikipedia上有关 Quarkus 的信息还很少，只有一句简单的介绍： Quarkus 是专为 OpenJDK HotSpot 和 GraalVM 定制的全栈 Kubernetes 原生 Java 应用程序框架。与如 Spring 之类的其他框架相比，它提供</description>
+    </item>
+    
+    <item>
+      <title>Java 中的 Mysql 时区问题</title>
+      <link>https://atbug.com/mysql-timezone-in-java/</link>
+      <pubDate>Thu, 14 May 2020 11:34:24 +0800</pubDate>
+      
+      <guid>https://atbug.com/mysql-timezone-in-java/</guid>
+      <description>(Photo by Andrea Piacquadio from Pexels) 话说工作十多年，mysql 还真没用几年。起初是外企银行，无法直接接触到 DB；后来一直从事架构方面，也多是解决问题为主。 这次搭建海</description>
+    </item>
+    
+    <item>
+      <title>加速云原生的 Java 开发</title>
+      <link>https://atbug.com/speed-up-java-development-on-kubernetes/</link>
+      <pubDate>Sat, 21 Dec 2019 20:45:22 +0800</pubDate>
+      
+      <guid>https://atbug.com/speed-up-java-development-on-kubernetes/</guid>
+      <description>今天来说说日常在Kubernetes开发Java项目遇到的问题. 当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是copy</description>
+    </item>
+    
+    <item>
+      <title>SpringBoot源码 - 启动</title>
+      <link>https://atbug.com/glance-over-spring-boot-source/</link>
+      <pubDate>Fri, 08 Dec 2017 17:48:43 +0000</pubDate>
+      
+      <guid>https://atbug.com/glance-over-spring-boot-source/</guid>
+      <description>SpringBoot Application启动部分的源码阅读. SpringApplication 常用的SpringApplication.run(Class, Args)启动Spring应用,</description>
+    </item>
+    
+    <item>
+      <title>Kafka 恰好一次发送和事务消费示例</title>
+      <link>https://atbug.com/kafka-exactly-once-delivery-and-transactional-messaging-example/</link>
+      <pubDate>Fri, 22 Sep 2017 18:03:43 +0000</pubDate>
+      
+      <guid>https://atbug.com/kafka-exactly-once-delivery-and-transactional-messaging-example/</guid>
+      <description>核心思想 生产端一致性: 开启幂等和事务, 包含重试, 发送确认, 同一个连接的最大未确认请求数. 消费端一致性: 通过设置读已提交的数据和同时处理完成每</description>
+    </item>
+    
+    <item>
+      <title>暴力停止ExecutorService的线程</title>
+      <link>https://atbug.com/stop-a-thread-of-executor-service/</link>
+      <pubDate>Wed, 19 Jul 2017 22:25:19 +0000</pubDate>
+      
+      <guid>https://atbug.com/stop-a-thread-of-executor-service/</guid>
+      <description>停止，stop，这里说的是真的停止。如何优雅的结束，这里就不提了。 这里要用Thread.stop()。众所周知，stop()方法在JDK中是</description>
+    </item>
+    
+    <item>
+      <title>私有构造函数捕获模式</title>
+      <link>https://atbug.com/private-constructor-capture-idiom/</link>
+      <pubDate>Wed, 24 May 2017 06:50:44 +0000</pubDate>
+      
+      <guid>https://atbug.com/private-constructor-capture-idiom/</guid>
+      <description>《Java并发编程实践》的注解中有提到这一概念。 The private constructor exists to avoid the race condition that would occur if the copy constructor were implemented as this (p.x, p.y); this is an example of the private constructor capture idiom (Bloch and Gafter, 2005). 结合原文代码： @ThreadSafe public class</description>
+    </item>
+    
+    <item>
+      <title>Docker快速构建Cassandra和Java操作</title>
+      <link>https://atbug.com/java-operate-cassandra-deployed-in-docker/</link>
+      <pubDate>Thu, 18 May 2017 23:33:24 +0000</pubDate>
+      
+      <guid>https://atbug.com/java-operate-cassandra-deployed-in-docker/</guid>
+      <description>搭建Cassandra 使用docker创建Cassandra，方便快捷 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table #cq</description>
+    </item>
+    
+    <item>
+      <title>MetaspaceSize的坑</title>
+      <link>https://atbug.com/java8-metaspace-size-issue/</link>
+      <pubDate>Thu, 13 Apr 2017 11:55:14 +0000</pubDate>
+      
+      <guid>https://atbug.com/java8-metaspace-size-issue/</guid>
+      <description>这几天生产上有台机器的Metaspace一直在告警，Metaspace使用达到了97%。使用-XX:MetaspaceSize=512m，告</description>
+    </item>
+    
+    <item>
+      <title>一个Tomcat类加载问题</title>
+      <link>https://atbug.com/one-tomcat-class-load-issue/</link>
+      <pubDate>Wed, 12 Apr 2017 10:40:01 +0000</pubDate>
+      
+      <guid>https://atbug.com/one-tomcat-class-load-issue/</guid>
+      <description>背景 一个Tomcat实例中运行了三个应用，其中一个对接了Apereo的CAS系统。现在要求另外两个系统也对接CAS系统，问题就出现了： 应用启</description>
+    </item>
+    
+    <item>
+      <title>GreenPlum JDBC和C3P0数据源</title>
+      <link>https://atbug.com/greenplum-jdbc-and-c3p0-datasource/</link>
+      <pubDate>Mon, 10 Apr 2017 08:29:00 +0000</pubDate>
+      
+      <guid>https://atbug.com/greenplum-jdbc-and-c3p0-datasource/</guid>
+      <description>在网上搜索GreenPlum（GPDB）的数据源配置的时候，发现搜索结果都是用postgresql的配置。 import com.mchange.v2.c3p0.DataSources; import javax.sql.DataSource; import java.sql.*; import java.util.Properties; /** * Created by addo on 2017/4/10. */ public</description>
+    </item>
+    
+    <item>
+      <title>Key长度对Redis性能影响</title>
+      <link>https://atbug.com/redis-performance-key-length/</link>
+      <pubDate>Thu, 16 Mar 2017 10:37:03 +0000</pubDate>
+      
+      <guid>https://atbug.com/redis-performance-key-length/</guid>
+      <description>最近Redis的使用中用的到key可能比较长，但是Redis的官方文档没提到key长度对性能的影响，故简单做了个测试。 环境 Redis和测试程</description>
+    </item>
+    
+    <item>
+      <title>遍历Collection时删除元素</title>
+      <link>https://atbug.com/remove-element-while-looping-collection/</link>
+      <pubDate>Sun, 05 Mar 2017 22:04:58 +0000</pubDate>
+      
+      <guid>https://atbug.com/remove-element-while-looping-collection/</guid>
+      <description>其实标题我想用《为什么foreach边循环边移除元素要用Iterator？》可是太长。 不用Iterator，用Collection.remo</description>
+    </item>
+    
+    <item>
+      <title>Java Volatile关键字</title>
+      <link>https://atbug.com/deep-in-java-volatile-keywork/</link>
+      <pubDate>Thu, 02 Mar 2017 08:30:29 +0000</pubDate>
+      
+      <guid>https://atbug.com/deep-in-java-volatile-keywork/</guid>
+      <description>volatile通过保证对变量的读或写都是直接从内存中读取或直接写入内存中，保证了可见性；但是volatile并不足以保证线程安全，因为无法</description>
+    </item>
+    
+    <item>
+      <title>mybatis报错“Result Maps collection already contains value for ***”</title>
+      <link>https://atbug.com/duplicate-resultmap-in-mybatis-mapper/</link>
+      <pubDate>Wed, 22 Feb 2017 14:12:18 +0000</pubDate>
+      
+      <guid>https://atbug.com/duplicate-resultmap-in-mybatis-mapper/</guid>
+      <description>这是工作中遇到的一个问题：测试环境部署出错，报了下面的问题。 Caused by: java.lang.IllegalArgumentException: Result Maps collection already contains value for xxx.xxx.xxxRepository.BaseResultMap at org.apache.ibatis.session.Configuration$StrictMap.put(Configuration.java:802) at org.apache.ibatis.session.Configuration$StrictMap.put(Configuration.java:774) at org.apache.ibatis.session.Configuration.addResultMap(Configuration.java:556) at org.apache.ibatis.builder.MapperBuilderAssistant.addResultMap(MapperBuilderAssistant.java:217) at org.apache.ibatis.builder.ResultMapResolver.resolve(ResultMapResolver.java:47) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElement(XMLMapperBuilder.java:285) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElement(XMLMapperBuilder.java:252) at org.apache.ibatis.builder.xml.XMLMapperBuilder.resultMapElements(XMLMapperBuilder.java:244) at org.apache.ibatis.builder.xml.XMLMapperBuilder.configurationElement(XMLMapperBuilder.java:116) 检查了对应的mappe</description>
+    </item>
+    
+    <item>
+      <title>消费时offset被重置导致重复消费</title>
+      <link>https://atbug.com/offset-be-reset-when-consuming/</link>
+      <pubDate>Mon, 20 Feb 2017 13:23:49 +0000</pubDate>
+      
+      <guid>https://atbug.com/offset-be-reset-when-consuming/</guid>
+      <description>这是实际使用时遇到的问题：kafka api的版本是0.10，发现有重复消费问题；检查log后发现在commit offset的时候发生超时。 Auto</description>
+    </item>
+    
+    <item>
+      <title>TheadPoolExecutor源码分析</title>
+      <link>https://atbug.com/threadpoolexecutor-sourcecode-analysis/</link>
+      <pubDate>Mon, 20 Feb 2017 09:56:07 +0000</pubDate>
+      
+      <guid>https://atbug.com/threadpoolexecutor-sourcecode-analysis/</guid>
+      <description>TheadPoolExecutor源码分析 ThreadPoolExecutor是多线程中经常用到的类，其使用一个线程池执行提交的任务。 实现 没</description>
+    </item>
+    
+    <item>
+      <title>Kafka Java生产者模型</title>
+      <link>https://atbug.com/kafka-java-producer-model/</link>
+      <pubDate>Wed, 04 Jan 2017 16:33:02 +0000</pubDate>
+      
+      <guid>https://atbug.com/kafka-java-producer-model/</guid>
+      <description>Producer初始化 初始化KafkaProducer实例，同时通过Config数据初始化MetaData、NetWorkClient、Ac</description>
+    </item>
+    
+    <item>
+      <title>Redis清理缓存</title>
+      <link>https://atbug.com/clean-speicified-keys-in-redis/</link>
+      <pubDate>Tue, 13 Dec 2016 16:54:41 +0000</pubDate>
+      
+      <guid>https://atbug.com/clean-speicified-keys-in-redis/</guid>
+      <description>最近有个需求需要主动的去清理部分缓存，考虑的原子性的问题，用Lua脚本进行实现。 Lua脚本 local count = 0 for _,k in ipairs(redis.call(&amp;#39;KEYS&amp;#39;, ARGV[1])) do redis.call(&amp;#39;DEL&amp;#39;, k) count = count + 1 end return count shell</description>
+    </item>
+    
+    <item>
+      <title>探索Rabbitmq的Java客户端</title>
+      <link>https://atbug.com/deep-in-rabbitmq-java-client/</link>
+      <pubDate>Sun, 09 Oct 2016 09:20:07 +0000</pubDate>
+      
+      <guid>https://atbug.com/deep-in-rabbitmq-java-client/</guid>
+      <description>AMQPConnection 实例初始化 创建Connection时会通过FrameHandlerFacotry创建一个SocketFrameHandler，Socket</description>
+    </item>
+    
+    <item>
+      <title>深入剖析HashSet和HashMap实现</title>
+      <link>https://atbug.com/deep-in-implementation-of-hashset/</link>
+      <pubDate>Mon, 11 Jul 2016 14:57:16 +0000</pubDate>
+      
+      <guid>https://atbug.com/deep-in-implementation-of-hashset/</guid>
+      <description>HashSet是一个包含非重复元素的集合，如何实现的，要从底层实现代码看起。 背景 首先非重复元素如何定义，看Set的描述： More formally, sets contain no pair of elements e1 and</description>
+    </item>
+    
+    <item>
+      <title>多线程下的单例模式&#43;反汇编</title>
+      <link>https://atbug.com/singleton-in-multi-threads-programming/</link>
+      <pubDate>Wed, 06 Jul 2016 16:57:09 +0000</pubDate>
+      
+      <guid>https://atbug.com/singleton-in-multi-threads-programming/</guid>
+      <description>多线程下的单例模式的实现，顺便做了反汇编。 public class MySingleton { private static MySingleton INSTANCE; private MySingleton() { } public static MySingleton getInstance() { if (INSTANCE == null) { synchronized (MySingleton.class) { INSTANCE = new MySingleton(); } } return INSTANCE; } } Compiled from &amp;#34;MySingleton.java&amp;#34; public class MySingleton { public static MySingleton getInstance(); Code: 0: getstatic</description>
+    </item>
+    
+    <item>
+      <title>使用Kryo替换spring amqp的Java序列化</title>
+      <link>https://atbug.com/use-kryo-in-spring-amqp-serialization/</link>
+      <pubDate>Wed, 29 Jun 2016 05:29:14 +0000</pubDate>
+      
+      <guid>https://atbug.com/use-kryo-in-spring-amqp-serialization/</guid>
+      <description>spring amqp的原生并没有对Kryo加以支持，Kryo的优点就不多说了。 git地址：https://github.com/addozhang/s</description>
+    </item>
+    
+    <item>
+      <title>关于SLF4J</title>
+      <link>https://atbug.com/about-slf4j/</link>
+      <pubDate>Sat, 18 Apr 2015 11:16:26 +0000</pubDate>
+      
+      <guid>https://atbug.com/about-slf4j/</guid>
+      <description>Spring的功能越来越强大，同时也越来越臃肿。比如想快速搭建一个基于Spring的项目，解决依赖问题非常耗时。Spring的项目模板的出现</description>
+    </item>
+    
+  </channel>
+</rss>

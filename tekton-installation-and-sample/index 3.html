@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tekton安装及Hello world // 乱世浮生</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
+    <meta name="keywords" content="Java,Spring Cloud,Architecture,">
+
+        <meta property="og:title" content="Tekton安装及Hello world" />
+    <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh-cn" />
+    <meta property="og:url" content="https://atbug.com/tekton-installation-and-sample/" />
+    
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link href="https://atbug.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://atbug.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://atbug.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.81.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://atbug.com/">乱世浮生</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="../">Home</a>
+                
+                <a class="main-nav-link" href="../post/">Archives</a>
+                
+                <a class="main-nav-link" href="../tags/">Tags</a>
+                
+                <a class="main-nav-link" href="../categories/">Categories</a>
+                
+                <a class="main-nav-link" href="../about/">About</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">Tekton安装及Hello world</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="../tekton-installation-and-sample/" class="article-date">
+                <time datetime='2020-01-17T19:17:14.000&#43;08:00' itemprop="datePublished">2020-01-17</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                    
+                </div>
+            </div>
+            
+            
+            <div class="article-comment-link-wrap">
+                <a href="../tekton-installation-and-sample/#disqus_thread" class="article-comment-link">Comments</a>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <h2 id="安装">安装</h2>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+</code></pre></div><p>检查安装的tekton相关的CRD:</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">kubectl api-resources <span class="p">|</span> grep tekton
+clustertasks                                   tekton.dev                     <span class="nb">false</span>        ClusterTask
+conditions                                     tekton.dev                     <span class="nb">true</span>         Condition
+pipelineresources                              tekton.dev                     <span class="nb">true</span>         PipelineResource
+pipelineruns                      pr,prs       tekton.dev                     <span class="nb">true</span>         PipelineRun
+pipelines                                      tekton.dev                     <span class="nb">true</span>         Pipeline
+taskruns                          tr,trs       tekton.dev                     <span class="nb">true</span>         TaskRun
+tasks                                          tekton.dev                     <span class="nb">true</span>         Task
+</code></pre></div><p>tekton的两个pod:</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">kubectl get pods --namespace tekton-pipelines
+NAME                                           READY   STATUS    RESTARTS   AGE
+tekton-pipelines-controller-556d8f4494-2qthv   1/1     Running   <span class="m">0</span>          11m
+tekton-pipelines-webhook-849cff5cf-8m5qq       1/1     Running   <span class="m">0</span>          11m
+</code></pre></div><h3 id="安装cli">安装CLI</h3>
+<p>cli: <a href="https://github.com/tektoncd/cli#installing-tkn">https://github.com/tektoncd/cli#installing-tkn</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">brew install tektoncd-cli
+</code></pre></div><h2 id="tekton-hello-world">Tekton: hello world</h2>
+<p>创建一个简单的<code>Task</code>, 只有一个<code>step</code>就是打印出&quot;hello world&quot;</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">tekton.dev/v1alpha1</span><span class="w">
+</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Task</span><span class="w">
+</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">echo-hello-world</span><span class="w">
+</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">echo</span><span class="w">
+</span><span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">alpine</span><span class="w">
+</span><span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- <span class="l">echo</span><span class="w">
+</span><span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- <span class="s2">&#34;hello world&#34;</span><span class="w">
+</span></code></pre></div><p>创建一个<code>TaskRun</code>执行上面的<code>Task</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">tekton.dev/v1alpha1</span><span class="w">
+</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">TaskRun</span><span class="w">
+</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">echo-hello-world-task-run</span><span class="w">
+</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">taskRef</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">echo-hello-world</span><span class="w">
+</span></code></pre></div><p>运行task:</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">kubectl apply -f &lt;name-of-file.yaml&gt;
+</code></pre></div><p>检查<code>TaskRun</code>的输出, 执行命令:</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">tkn taskrun describe echo-hello-world-task-run
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">Name:        echo-hello-world-task-run
+Namespace:   tekton-pipelines
+Task Ref:    echo-hello-world
+
+Status
+STARTED          DURATION    STATUS
+21 minutes ago   1 minute    Succeeded
+
+Input Resources
+No resources
+
+Output Resources
+No resources
+
+Params
+No params
+
+Steps
+NAME   STATUS
+echo   Completed
+</code></pre></div><p><code>Succeeded</code>状态表示task执行成功.</p>
+<p>查看实际的输出, 执行命令:</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">tkn taskrun logs echo-hello-world-task-run
+</code></pre></div><p>结果:</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">[echo] hello world
+</code></pre></div>
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装">安装</a>
+      <ul>
+        <li><a href="#安装cli">安装CLI</a></li>
+      </ul>
+    </li>
+    <li><a href="#tekton-hello-world">Tekton: hello world</a></li>
+  </ul>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/kubernetes">Kubernetes
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/cicd">CICD
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/tekton">tekton
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        <div class="article-entry">
+            <hr>
+            <p>文章同步发送到公众号：云编码 (微信号：sevenfeet)。</p>
+            <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/23/qrcode.jpg" alt="qrcode"></p>
+        </div>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    <a href="../tekton-0.9.0-release/" id="article-nav-newer" class="article-nav-link-wrap">
+        <div class="article-nav-title"><span>&lt;</span>&nbsp;
+            Tekton 0.9.0 更新
+        </div>
+    </a>
+    
+    
+    <a href="../install-istio-on-minikube/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">Minikube安装istio&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+
+</article>
+
+        
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "addozhang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 Addo Zhang
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>

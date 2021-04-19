@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>遍历Collection时删除元素 // 乱世浮生</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
+    <meta name="keywords" content="Java,Spring Cloud,Architecture,">
+
+        <meta property="og:title" content="遍历Collection时删除元素" />
+    <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh-cn" />
+    <meta property="og:url" content="https://atbug.com/remove-element-while-looping-collection/" />
+    
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link href="https://atbug.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://atbug.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://atbug.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.81.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://atbug.com/">乱世浮生</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="../">Home</a>
+                
+                <a class="main-nav-link" href="../post/">Archives</a>
+                
+                <a class="main-nav-link" href="../tags/">Tags</a>
+                
+                <a class="main-nav-link" href="../categories/">Categories</a>
+                
+                <a class="main-nav-link" href="../about/">About</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">遍历Collection时删除元素</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="../remove-element-while-looping-collection/" class="article-date">
+                <time datetime='2017-03-05T22:04:58.000&#43;00:00' itemprop="datePublished">2017-03-05</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://atbug.com//categories/%E5%AD%A6%E4%B9%A0">学习</a>
+                    
+                </div>
+            </div>
+            
+            
+            <div class="article-comment-link-wrap">
+                <a href="../remove-element-while-looping-collection/#disqus_thread" class="article-comment-link">Comments</a>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>其实标题我想用《为什么foreach边循环边移除元素要用Iterator？》可是太长。</p>
+<p>不用Iterator，用Collection.remove()，会报ConcurrentModificationException错误。</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="k">for</span><span class="o">(</span><span class="n">Integer</span> <span class="n">i</span> <span class="o">:</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">list</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">i</span><span class="o">);</span> <span class="c1">//Throw ConcurrentModificationException
+</span><span class="c1"></span><span class="o">}</span>
+</code></pre></div><p>其实使用foreach的时候，会自动生成一个Iterator来遍历list。不只是remove，使用add、clear等方法一样会出错。</p>
+<p>拿ArrayList来说，它有一个私有的Iterator接口的内部类Itr：</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="kd">class</span> <span class="nc">Itr</span> <span class="kd">implements</span> <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">cursor</span><span class="o">;</span>       <span class="c1">// index of next element to return
+</span><span class="c1"></span>    <span class="kt">int</span> <span class="n">lastRet</span> <span class="o">=</span> <span class="o">-</span><span class="n">1</span><span class="o">;</span> <span class="c1">// index of last element returned; -1 if no such
+</span><span class="c1"></span>    <span class="kt">int</span> <span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="o">;</span>
+  	
+  <span class="c1">//sevrval methods
+</span><span class="c1"></span><span class="o">}</span>
+</code></pre></div><p>使用Iterator来遍历ArrayList实际上是通过两个指针来遍历ArrayList底层的数组：cursor是下一个返回的元素在数组中的下标；lastRet是上一个元素的下标。还有一个重要的expectedModCount使用的是ArrayList的modCount的（modCount具体是什么意思下文会提到）。</p>
+<p>从Itr的实现来看，有三种情况会抛出ConcurrentModificationException：</p>
+<ul>
+<li>cursor超出了数组的最大下标</li>
+<li>expectedModCount不等于modCount</li>
+<li>删除元素最终还是调用ArrayList的remove方法，此方法可能会抛出IndexOutOfBoundsException</li>
+</ul>
+<h3 id="expectedmodcount不等于modcount">expectedModCount不等于modCount</h3>
+<p>开头所说的问题正是是<strong>第二种情况</strong>下出现的。modCount简单说记录了Collection被修改的次数：添加或者删除元素。</p>
+<p>假如在foreach循环中删除元素，且此时modCount等2：</p>
+<ul>
+<li>循环开始创建新Itr实例，expectedModCount=modCount=2</li>
+<li>使用ArrayList.remove()删除元素，modCount加1</li>
+<li>继续调用next()方法指向下一个元素，此时检查expectedModCount是否等于modCount，不等则抛ConcurrentModificationException</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="n">E</span> <span class="nf">next</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">checkForComodification</span><span class="o">();</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">size</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">NoSuchElementException</span><span class="o">();</span>
+    <span class="n">Object</span><span class="o">[]</span> <span class="n">elementData</span> <span class="o">=</span> <span class="n">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">elementData</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">elementData</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="o">();</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">1</span><span class="o">;</span>
+    <span class="k">return</span> <span class="o">(</span><span class="n">E</span><span class="o">)</span> <span class="n">elementData</span><span class="o">[</span><span class="n">lastRet</span> <span class="o">=</span> <span class="n">i</span><span class="o">];</span>
+<span class="o">}</span>
+<span class="kd">final</span> <span class="kt">void</span> <span class="nf">checkForComodification</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">modCount</span> <span class="o">!=</span> <span class="n">expectedModCount</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div><p>上面提到Iterator的实现中删除元素实际调用的还是ArrayList.remove()方法，为什么不会抛错？</p>
+<p>Itr的remove方法在调用ArrayList.remove()之后，会更新<strong>expectedModCount</strong>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">lastRet</span> <span class="o">&lt;</span> <span class="n">0</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">();</span>
+    <span class="n">checkForComodification</span><span class="o">();</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">lastRet</span><span class="o">);</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">lastRet</span><span class="o">;</span>
+        <span class="n">lastRet</span> <span class="o">=</span> <span class="o">-</span><span class="n">1</span><span class="o">;</span>
+        <span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IndexOutOfBoundsException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#expectedmodcount不等于modcount">expectedModCount不等于modCount</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/java">Java
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        <div class="article-entry">
+            <hr>
+            <p>文章同步发送到公众号：云编码 (微信号：sevenfeet)。</p>
+            <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/23/qrcode.jpg" alt="qrcode"></p>
+        </div>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    <a href="../redis-performance-key-length/" id="article-nav-newer" class="article-nav-link-wrap">
+        <div class="article-nav-title"><span>&lt;</span>&nbsp;
+            Key长度对Redis性能影响
+        </div>
+    </a>
+    
+    
+    <a href="../deep-in-java-volatile-keywork/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">Java Volatile关键字&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+
+</article>
+
+        
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "addozhang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 Addo Zhang
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>

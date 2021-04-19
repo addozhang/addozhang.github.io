@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tools on 乱世浮生</title>
+    <link>https://atbug.com/tags/tools/</link>
+    <description>Recent content in Tools on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 09 Dec 2019 10:05:30 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/tools/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 Jib 为 Java 应用构建镜像</title>
+      <link>https://atbug.com/build-docker-or-oci-image-with-jib-for-java/</link>
+      <pubDate>Mon, 09 Dec 2019 10:05:30 +0800</pubDate>
+      
+      <guid>https://atbug.com/build-docker-or-oci-image-with-jib-for-java/</guid>
+      <description>Jib是Google Container Tools中的一个工具。 Jib builds optimized Docker and OCI images for your Java applications without a Docker daemon - and without deep mastery of Docker best-practices. It is available as plugins for Maven and Gradle and as a Java library. Jib无需Docke</description>
+    </item>
+    
+  </channel>
+</rss>

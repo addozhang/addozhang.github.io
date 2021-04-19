@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GreenPlum on 乱世浮生</title>
+    <link>https://atbug.com/tags/greenplum/</link>
+    <description>Recent content in GreenPlum on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 10 Apr 2017 08:29:00 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/greenplum/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GreenPlum JDBC和C3P0数据源</title>
+      <link>https://atbug.com/greenplum-jdbc-and-c3p0-datasource/</link>
+      <pubDate>Mon, 10 Apr 2017 08:29:00 +0000</pubDate>
+      
+      <guid>https://atbug.com/greenplum-jdbc-and-c3p0-datasource/</guid>
+      <description>在网上搜索GreenPlum（GPDB）的数据源配置的时候，发现搜索结果都是用postgresql的配置。 import com.mchange.v2.c3p0.DataSources; import javax.sql.DataSource; import java.sql.*; import java.util.Properties; /** * Created by addo on 2017/4/10. */ public</description>
+    </item>
+    
+  </channel>
+</rss>

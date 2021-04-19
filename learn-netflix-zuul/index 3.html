@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>初识Netflix Zuul // 乱世浮生</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
+    <meta name="keywords" content="Java,Spring Cloud,Architecture,">
+
+        <meta property="og:title" content="初识Netflix Zuul" />
+    <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh-cn" />
+    <meta property="og:url" content="https://atbug.com/learn-netflix-zuul/" />
+    
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link href="https://atbug.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://atbug.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://atbug.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.81.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://atbug.com/">乱世浮生</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="../">Home</a>
+                
+                <a class="main-nav-link" href="../post/">Archives</a>
+                
+                <a class="main-nav-link" href="../tags/">Tags</a>
+                
+                <a class="main-nav-link" href="../categories/">Categories</a>
+                
+                <a class="main-nav-link" href="../about/">About</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">初识Netflix Zuul</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="../learn-netflix-zuul/" class="article-date">
+                <time datetime='2018-02-11T10:07:18.000&#43;00:00' itemprop="datePublished">2018-02-11</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                    
+                </div>
+            </div>
+            
+            
+            <div class="article-comment-link-wrap">
+                <a href="../learn-netflix-zuul/#disqus_thread" class="article-comment-link">Comments</a>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>嵌入式的zuul代理</p>
+<p>使用了Netfilx OSS的其他组件:</p>
+<ul>
+<li>Hystrix   熔断</li>
+<li>Ribbon    负责发送外出请求的客户端, 提供软件负载均衡功能</li>
+<li>Trubine   实时地聚合细粒度的metrics数据</li>
+<li>Archaius  动态配置</li>
+</ul>
+<h2 id="介绍">介绍</h2>
+<p>由于2.0停止开发且会有bug, 故下面的分析基于1.x版本.</p>
+<h3 id="特性">特性</h3>
+<ul>
+<li>Authentication 认证</li>
+<li>Insights 洞察</li>
+<li>Stress Testing 压力测试</li>
+<li>Canary Testing 金丝雀测试</li>
+<li>Dynamic Routing 动态路由</li>
+<li>Multi-Region Resiliency 多区域弹性</li>
+<li>Load Shedding 负载脱落</li>
+<li>Security 安全</li>
+<li>Static Response handling 静态响应处理</li>
+<li>Multi-Region Resiliency 主动/主动流量管理</li>
+</ul>
+<h3 id="zuul核心架构">Zuul核心架构</h3>
+<h4 id="过滤器加载器">过滤器加载器</h4>
+<p>从文件目录定时的监控文件, 编译成Class并加载到过滤器链中.</p>
+<h4 id="贯穿整个请求的requestcontext">贯穿整个请求的RequestContext</h4>
+<p>将Servlet的请求和响应初始化成<code>RequestContext</code>, 保存在ThreadLocal中贯穿整个请求.</p>
+<p>以及添加Netfix库的指定概念和数据的扩展对象<code>NFRequestContext</code>, 如<code>Eureka</code></p>
+<h4 id="四种过滤器">四种过滤器:</h4>
+<ul>
+<li>preRoute</li>
+<li>route</li>
+<li>postRoute</li>
+<li>error</li>
+</ul>
+<p><img src="https://cdn-images-1.medium.com/max/1000/1*j9iGkeQ7bPK2nC1a7BgFOw.png" alt="Zuul Core Architecture"></p>
+<h3 id="zuul请求生命周期">Zuul请求生命周期</h3>
+<p><img src="https://camo.githubusercontent.com/4eb7754152028cdebd5c09d1c6f5acc7683f0094/687474703a2f2f6e6574666c69782e6769746875622e696f2f7a75756c2f696d616765732f7a75756c2d726571756573742d6c6966656379636c652e706e67" alt="Request Lifecycle"></p>
+<h3 id="zuul-netflix">Zuul Netflix</h3>
+<p>使用Netflix的其他组件</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*pz6sv69la9ek6yWNTPqymQ.png" alt="Netflix OSS libraries in Zuul"></p>
+<h3 id="zull在netfilx的应用">zull在Netfilx的应用</h3>
+<h4 id="精确路由">精确路由</h4>
+<p>创建一个过滤器是特定的用户或者设备的请求重定向到独立的API集群达到调试的目的.</p>
+<h4 id="多区域弹">多区域弹</h4>
+<p>Zuul是我们称为地峡(Isthmus)的多地区ELB弹性项目的核心. 作为Isthmus的一部分, Zuul被用来将请求从西海岸数据中心传送到东海岸, 以帮助我们在我们的关键领域的ELB中实现多区域冗余.</p>
+<h4 id="压力测试">压力测试</h4>
+<p>在<code>Zuul</code>过滤器中使用动态<code>Archaius</code>配置逐步提升进入一部分服务器的流量, 自动实现压力测试.</p>
+<h2 id="原理">原理</h2>
+<h3 id="如何工作">如何工作</h3>
+<h4 id="startserver初始化">StartServer初始化</h4>
+<p>实现了ServletContextListener接口, 如果需要与netflix oss其他组件集成(如Eureka, Archaius)实例化的时候启动一个Karyon服务器.</p>
+<p>在ServletContext初始化完成后调用<code>initGroovyFilterManager</code>和<code>initJavaFilters</code>.</p>
+<h5 id="initgroovyfiltermanager">initGroovyFilterManager</h5>
+<p>向过滤器注册表中添加Groovy过滤器.</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">initGroovyFilterManager</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">//设置GroovyCompiler
+</span><span class="c1"></span>    <span class="c1">//GroovyCompiler是DynamicCompiler的实现类
+</span><span class="c1"></span>    <span class="n">FilterLoader</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">setCompiler</span><span class="o">(</span><span class="k">new</span> <span class="n">GroovyCompiler</span><span class="o">());</span>
+
+    <span class="c1">//从配置中是获取过滤器源文件的根目录
+</span><span class="c1"></span>    <span class="n">String</span> <span class="n">scriptRoot</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">&#34;zuul.filter.root&#34;</span><span class="o">,</span> <span class="s">&#34;&#34;</span><span class="o">);</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">scriptRoot</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="n">scriptRoot</span> <span class="o">=</span> <span class="n">scriptRoot</span> <span class="o">+</span> <span class="n">File</span><span class="o">.</span><span class="na">separator</span><span class="o">;</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="c1">//设置文件名过滤器, 这里只过滤`.groovy`类型文件.
+</span><span class="c1"></span>        <span class="n">FilterFileManager</span><span class="o">.</span><span class="na">setFilenameFilter</span><span class="o">(</span><span class="k">new</span> <span class="n">GroovyFileFilter</span><span class="o">());</span>
+        <span class="c1">//初始化过滤器文件管理器
+</span><span class="c1"></span>        <span class="c1">//第一个参数是扫描目录的间隔时间, 单位为秒
+</span><span class="c1"></span>        <span class="c1">//后面跟要扫描的子目录
+</span><span class="c1"></span>        <span class="c1">//1. 初始化的时候会扫描各个子目录, 使用文件名过滤器获取到所有的过滤器源文件. 
+</span><span class="c1"></span>        <span class="c1">//2. 遍历这些文件, 使用`FilterLoader.getInstance().putFilter(file)`, compiler编译之后使用FilterFactory进行实例化, 并添加到过滤器注册表中. 是否实例化的逻辑判断是否在上次修改且文件最后修改时间是否相同. 如果是上次修改之后又有改动, 要重建改类型过滤器的列表. 如果没有修改, 对改文件不做任何处理.
+</span><span class="c1"></span>        <span class="c1">//3. 启动线程, 每个5秒执行一个1和2的操作.
+</span><span class="c1"></span>        <span class="n">FilterFileManager</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="n">5</span><span class="o">,</span> <span class="n">scriptRoot</span> <span class="o">+</span> <span class="s">&#34;pre&#34;</span><span class="o">,</span> <span class="n">scriptRoot</span> <span class="o">+</span> <span class="s">&#34;route&#34;</span><span class="o">,</span> <span class="n">scriptRoot</span> <span class="o">+</span> <span class="s">&#34;post&#34;</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><h5 id="initjavafilters">initJavaFilters</h5>
+<p>向过滤器注册表中添加Java过滤器.</p>
+<p>*官方没有提供从java源代码到classs的编译器.</p>
+<h4 id="zuulservlet">ZuulServlet</h4>
+<p>核心zuul servlet, 初始化和卸掉zullFilter的运行.
+使用ZuulRunner将Servlet的请求和响应初始化成<code>RequestContext</code>, 并将<code>FilterProcessor</code>的调用包装成<code>preRoute()</code>, <code>route()</code>, <code>postRoute()</code>和<code>error()</code>方法. 初始化时可以选择将请求包装成<code>HttpServletRequestWrapper</code>并缓冲请求消息体.</p>
+<p>初始化后的<code>RequestContext</code>会放在<code>ThreadLocal</code>中, 供后续的filter访问.</p>
+<p><strong>Service方法</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">service</span><span class="o">(</span><span class="n">javax</span><span class="o">.</span><span class="na">servlet</span><span class="o">.</span><span class="na">ServletRequest</span> <span class="n">servletRequest</span><span class="o">,</span> <span class="n">javax</span><span class="o">.</span><span class="na">servlet</span><span class="o">.</span><span class="na">ServletResponse</span> <span class="n">servletResponse</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ServletException</span><span class="o">,</span> <span class="n">IOException</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">init</span><span class="o">((</span><span class="n">HttpServletRequest</span><span class="o">)</span> <span class="n">servletRequest</span><span class="o">,</span> <span class="o">(</span><span class="n">HttpServletResponse</span><span class="o">)</span> <span class="n">servletResponse</span><span class="o">);</span>
+
+        <span class="c1">// Marks this request as having passed through the &#34;Zuul engine&#34;, as opposed to servlets
+</span><span class="c1"></span>        <span class="c1">// explicitly bound in web.xml, for which requests will not have the same data attached
+</span><span class="c1"></span>        <span class="n">RequestContext</span> <span class="n">context</span> <span class="o">=</span> <span class="n">RequestContext</span><span class="o">.</span><span class="na">getCurrentContext</span><span class="o">();</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">setZuulEngineRan</span><span class="o">();</span>
+
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">preRoute</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ZuulException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">error</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+            <span class="n">postRoute</span><span class="o">();</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">route</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ZuulException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">error</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+            <span class="n">postRoute</span><span class="o">();</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">postRoute</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ZuulException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">error</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">error</span><span class="o">(</span><span class="k">new</span> <span class="n">ZuulException</span><span class="o">(</span><span class="n">e</span><span class="o">,</span> <span class="n">500</span><span class="o">,</span> <span class="s">&#34;UNHANDLED_EXCEPTION_&#34;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getName</span><span class="o">()));</span>
+    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+        <span class="n">RequestContext</span><span class="o">.</span><span class="na">getCurrentContext</span><span class="o">().</span><span class="na">unset</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>通过<code>FilterProcessor.getInstnace()</code>调用<code>FilterProcessor</code>的<code>preRoute()</code>, <code>route()</code>, <code>postRoute()</code>和<code>error()</code>方法.</p>
+<p>四个方法都是通过<code>FilterLoader.getInstance()</code>获取对应类型的filter列表.</p>
+<p>遍历filter列表, 调用filter的<code>runFilter()</code>方法.</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="cm">/**
+</span><span class="cm"> * runFilter checks !isFilterDisabled() and shouldFilter(). The run() method is invoked if both are true.
+</span><span class="cm"> *
+</span><span class="cm"> * @return the return from ZuulFilterResult
+</span><span class="cm"> */</span>
+<span class="kd">public</span> <span class="n">ZuulFilterResult</span> <span class="nf">runFilter</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">ZuulFilterResult</span> <span class="n">zr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZuulFilterResult</span><span class="o">();</span>
+    <span class="c1">//动态获取`zuul.filerClassName.filterType.disable`的值
+</span><span class="c1"></span>    <span class="c1">//动态获取使用Archaius的DynamicPropertyFactory获取*, 通过这个可实现动态配置
+</span><span class="c1"></span>    <span class="k">if</span> <span class="o">(!</span><span class="n">isFilterDisabled</span><span class="o">())</span> <span class="o">{</span>
+        <span class="c1">//调用filter类的校验逻辑
+</span><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">shouldFilter</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">Tracer</span> <span class="n">t</span> <span class="o">=</span> <span class="n">TracerFactory</span><span class="o">.</span><span class="na">instance</span><span class="o">().</span><span class="na">startMicroTracer</span><span class="o">(</span><span class="s">&#34;ZUUL::&#34;</span> <span class="o">+</span> <span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getSimpleName</span><span class="o">());</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="c1">//执行filter的逻辑处理
+</span><span class="c1"></span>                <span class="n">Object</span> <span class="n">res</span> <span class="o">=</span> <span class="n">run</span><span class="o">();</span>
+                <span class="c1">//执行成功
+</span><span class="c1"></span>                <span class="n">zr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZuulFilterResult</span><span class="o">(</span><span class="n">res</span><span class="o">,</span> <span class="n">ExecutionStatus</span><span class="o">.</span><span class="na">SUCCESS</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">t</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;ZUUL::&#34;</span> <span class="o">+</span> <span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getSimpleName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; failed&#34;</span><span class="o">);</span>
+                <span class="c1">//执行失败
+</span><span class="c1"></span>                <span class="n">zr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZuulFilterResult</span><span class="o">(</span><span class="n">ExecutionStatus</span><span class="o">.</span><span class="na">FAILED</span><span class="o">);</span>
+                <span class="n">zr</span><span class="o">.</span><span class="na">setException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+                <span class="n">t</span><span class="o">.</span><span class="na">stopAndLog</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="c1">//filter不适用, 直接跳过
+</span><span class="c1"></span>            <span class="n">zr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZuulFilterResult</span><span class="o">(</span><span class="n">ExecutionStatus</span><span class="o">.</span><span class="na">SKIPPED</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">zr</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div><h4 id="contextlifecyclefilter">ContextLifecycleFilter</h4>
+<p>清空<code>ThreadLocal</code>中的<code>RequestContext</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">doFilter</span><span class="o">(</span><span class="n">ServletRequest</span> <span class="n">req</span><span class="o">,</span> <span class="n">ServletResponse</span> <span class="n">res</span><span class="o">,</span> <span class="n">FilterChain</span> <span class="n">chain</span><span class="o">)</span>
+    <span class="kd">throws</span> <span class="n">IOException</span><span class="o">,</span> <span class="n">ServletException</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">chain</span><span class="o">.</span><span class="na">doFilter</span><span class="o">(</span><span class="n">req</span><span class="o">,</span> <span class="n">res</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+        <span class="n">RequestContext</span><span class="o">.</span><span class="na">getCurrentContext</span><span class="o">().</span><span class="na">unset</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><h3 id="调试">调试</h3>
+<p>调试信息中的名词</p>
+<ul>
+<li>ZUUL_DEBUG    输出zuul的诊断信息</li>
+<li>REQUEST_DUBG  输出Http请求的信息. REQUEST -&gt; ZUUL -&gt; ORIGIN_RESPONSE -&gt; OUTBOUND
+<ul>
+<li>REQUEST   进入zuul的请求</li>
+<li>ZUUL  zuul转发给原目标的请求</li>
+<li>ORIGIN_RESPONSE   原目标返回的原始响应</li>
+<li>OUTBOND   zuul返回给客户端的响应</li>
+</ul>
+</li>
+</ul>
+<h2 id="接口和类">接口和类</h2>
+<h3 id="接口">接口</h3>
+<h4 id="dynamiccodecompiler">DynamicCodeCompiler</h4>
+<p>从源代码编译成Classes的接口, 目前只有一个<code>GroovyCompiler</code>实现类</p>
+<h4 id="filterfactory">FilterFactory</h4>
+<p>生成给定的过滤器类实例的接口, 实现类<code>DefaultFilterFactory</code></p>
+<h4 id="filterusagenotifier">FilterUsageNotifier</h4>
+<p>注册过滤器使用时的回调的接口</p>
+<h3 id="类">类</h3>
+<h4 id="defaultfilterfactory">DefaultFilterFactory</h4>
+<p>使用反射实现</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="n">ZuulFilter</span> <span class="nf">newInstance</span><span class="o">(</span><span class="n">Class</span> <span class="n">clazz</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InstantiationException</span><span class="o">,</span> <span class="n">IllegalAccessException</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="o">(</span><span class="n">ZuulFilter</span><span class="o">)</span> <span class="n">clazz</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div><h4 id="filterfilemanager">FilterFileManager</h4>
+<p>从过滤器目录中获取修改和新增的Groovy过滤器文件.</p>
+<h4 id="filterloader">FilterLoader</h4>
+<p>持有过滤器注册表, 加载过滤器.</p>
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#介绍">介绍</a>
+      <ul>
+        <li><a href="#特性">特性</a></li>
+        <li><a href="#zuul核心架构">Zuul核心架构</a></li>
+        <li><a href="#zuul请求生命周期">Zuul请求生命周期</a></li>
+        <li><a href="#zuul-netflix">Zuul Netflix</a></li>
+        <li><a href="#zull在netfilx的应用">zull在Netfilx的应用</a></li>
+      </ul>
+    </li>
+    <li><a href="#原理">原理</a>
+      <ul>
+        <li><a href="#如何工作">如何工作</a></li>
+        <li><a href="#调试">调试</a></li>
+      </ul>
+    </li>
+    <li><a href="#接口和类">接口和类</a>
+      <ul>
+        <li><a href="#接口">接口</a></li>
+        <li><a href="#类">类</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/netflix">Netflix
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/zuul">Zuul
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        <div class="article-entry">
+            <hr>
+            <p>文章同步发送到公众号：云编码 (微信号：sevenfeet)。</p>
+            <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/23/qrcode.jpg" alt="qrcode"></p>
+        </div>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    <a href="../spring-cloud-service-registry-via-eureka/" id="article-nav-newer" class="article-nav-link-wrap">
+        <div class="article-nav-title"><span>&lt;</span>&nbsp;
+            Spring Cloud - Eureka服务注册
+        </div>
+    </a>
+    
+    
+    <a href="../configurationproperties-requires-getter-or-not/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">ConfigurationProperties到底需不需要getter&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+
+</article>
+
+        
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "addozhang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 Addo Zhang
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>

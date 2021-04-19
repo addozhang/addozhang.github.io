@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>使用 Jib 为 Java 应用构建镜像 // 乱世浮生</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    <meta name="description" content="知我者谓我何忧 不知我者谓我何求.">
+    <meta name="keywords" content="Java,Spring Cloud,Architecture,">
+
+        <meta property="og:title" content="使用 Jib 为 Java 应用构建镜像" />
+    <meta property="og:description" content="知我者谓我何忧 不知我者谓我何求." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh-cn" />
+    <meta property="og:url" content="https://atbug.com/build-docker-or-oci-image-with-jib-for-java/" />
+    
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link href="https://atbug.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://atbug.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://atbug.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.81.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://atbug.com/">乱世浮生</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="../">Home</a>
+                
+                <a class="main-nav-link" href="../post/">Archives</a>
+                
+                <a class="main-nav-link" href="../tags/">Tags</a>
+                
+                <a class="main-nav-link" href="../categories/">Categories</a>
+                
+                <a class="main-nav-link" href="../about/">About</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">使用 Jib 为 Java 应用构建镜像</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="../build-docker-or-oci-image-with-jib-for-java/" class="article-date">
+                <time datetime='2019-12-09T10:05:30.000&#43;08:00' itemprop="datePublished">2019-12-09</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://atbug.com//categories/%E7%AC%94%E8%AE%B0">笔记</a>
+                    
+                </div>
+            </div>
+            
+            
+            <div class="article-comment-link-wrap">
+                <a href="../build-docker-or-oci-image-with-jib-for-java/#disqus_thread" class="article-comment-link">Comments</a>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p><img src="https://github.com/GoogleContainerTools/jib/raw/master/logo/jib-build-docker-java-container-image.png" alt="pic from jib github"></p>
+<p><a href="https://github.com/GoogleContainerTools/jib">Jib</a>是Google Container Tools中的一个工具。</p>
+<blockquote>
+<p>Jib builds optimized Docker and OCI images for your Java applications without a Docker daemon - and without deep mastery of Docker best-practices. It is available as plugins for Maven and Gradle and as a Java library.</p>
+<p>Jib无需Docker守护程序即可为Java应用程序构建优化的Docker和OCI映像-无需深入了解Docker最佳实践. 它可以作为Maven和Gradle的插件以及Java库使用.</p>
+</blockquote>
+<h2 id="与docker构建流程比较">与Docker构建流程比较</h2>
+<p>Docker镜像构建流程:</p>
+<p><img src="https://4.bp.blogspot.com/-SXeItzMS_oo/WzVemqaj7CI/AAAAAAAAF_w/t5Lau7EOC84Kywct_OPiDGIomCiFTywgwCLcBGAs/s1600/docker_build_flow.png" alt="pic from Google Cloud Platform Blog"></p>
+<p>Jib构建流程:</p>
+<p><img src="https://3.bp.blogspot.com/-_qNyJdVno8E/WzVeqmuC5PI/AAAAAAAAF_0/AHaZ1_ZnJmg8eaUnTlUGyUVe06KRmvlYQCLcBGAs/s1600/jib_build_flow.png" alt=""></p>
+<p><em>(pic from Google Cloud Platform Blog)</em></p>
+<h2 id="快速开始">快速开始</h2>
+<p>构建镜像, 并推送到对应的镜像仓库, 比如Docker Hub等, 或者自建仓库.</p>
+<p><code>mvn compile com.google.cloud.tools:jib-maven-plugin:1.8.0:build -Dimage=&lt;MY IMAGE&gt;</code></p>
+<p>假如要构建到Docker守护进程的话:</p>
+<p><code>mvn compile com.google.cloud.tools:jib-maven-plugin:1.8.0:dockerBuild</code></p>
+<h3 id="插件">插件</h3>
+<h4 id="设置">设置</h4>
+<p><code>pom.xml</code>中使用<code>jib-maven-plugin</code>插件.</p>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;project&gt;</span>
+  ...
+  <span class="nt">&lt;build&gt;</span>
+    <span class="nt">&lt;plugins&gt;</span>
+      ...
+      <span class="nt">&lt;plugin&gt;</span>
+        <span class="nt">&lt;groupId&gt;</span>com.google.cloud.tools<span class="nt">&lt;/groupId&gt;</span>
+        <span class="nt">&lt;artifactId&gt;</span>jib-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;version&gt;</span>1.8.0<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;configuration&gt;</span>
+          <span class="nt">&lt;to&gt;</span>
+            <span class="nt">&lt;image&gt;</span>myimage<span class="nt">&lt;/image&gt;</span>
+          <span class="nt">&lt;/to&gt;</span>
+        <span class="nt">&lt;/configuration&gt;</span>
+      <span class="nt">&lt;/plugin&gt;</span>
+      ...
+    <span class="nt">&lt;/plugins&gt;</span>
+  <span class="nt">&lt;/build&gt;</span>
+  ...
+<span class="nt">&lt;/project&gt;</span>
+</code></pre></div><h4 id="插件配置">插件配置</h4>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;plugin&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>com.google.cloud.tools<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>jib-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>${jib.maven-plugin-version}<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;configuration&gt;</span>
+        <span class="nt">&lt;container&gt;</span>
+            <span class="nt">&lt;jvmFlags&gt;</span>
+                <span class="nt">&lt;jvmFlag&gt;</span>-Xmx1024m<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag&gt;</span>-Xms512m<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag&gt;</span>-XX:NewRatio=1<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag&gt;</span>-XX:+UseConcMarkSweepGC<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag&gt;</span>-XX:CMSInitiatingOccupancyFraction=75<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag&gt;</span>-XX:+UseCMSInitiatingOccupancyOnly<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag&gt;</span>-XX:ReservedCodeCacheSize=128M<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag&gt;</span>-XX:ParallelGCThreads=2<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag&gt;</span>-XX:+ExplicitGCInvokesConcurrent<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag&gt;</span>-Duser.timezone=Asia/Shanghai<span class="nt">&lt;/jvmFlag&gt;</span>
+                <span class="nt">&lt;jvmFlag&gt;</span>-Djava.security.egd=file:/dev/./urandom<span class="nt">&lt;/jvmFlag&gt;</span>
+            <span class="nt">&lt;/jvmFlags&gt;</span>
+            <span class="nt">&lt;labels&gt;</span>
+                <span class="nt">&lt;Author&gt;</span>Addo.Zhang<span class="nt">&lt;/Author&gt;</span>
+            <span class="nt">&lt;/labels&gt;</span>
+            <span class="nt">&lt;user&gt;</span>apps<span class="nt">&lt;/user&gt;</span>
+            <span class="nt">&lt;appRoot&gt;</span>/home/apps/local<span class="nt">&lt;/appRoot&gt;</span>
+            <span class="nt">&lt;workingDirectory&gt;</span>/home/apps/local<span class="nt">&lt;/workingDirectory&gt;</span>
+            <span class="nt">&lt;creationTime&gt;</span>USE_CURRENT_TIMESTAMP<span class="nt">&lt;/creationTime&gt;</span>
+        <span class="nt">&lt;/container&gt;</span>
+        <span class="nt">&lt;from&gt;</span>
+            <span class="nt">&lt;image&gt;</span>PRIVATE_REGISTRY/REPOSITORY/GLOBAL_BASE:1.0.0<span class="nt">&lt;/image&gt;</span>
+            <span class="nt">&lt;auth&gt;</span>
+                <span class="nt">&lt;username&gt;</span>USERNAME<span class="nt">&lt;/username&gt;</span>
+                <span class="nt">&lt;password&gt;</span>PASSWORD<span class="nt">&lt;/password&gt;</span>
+            <span class="nt">&lt;/auth&gt;</span>
+        <span class="nt">&lt;/from&gt;</span>
+        <span class="nt">&lt;to&gt;</span>
+            <span class="nt">&lt;image&gt;</span>PRIVATE_REGISTRY/REPOSITORY/${project.artifactId}<span class="nt">&lt;/image&gt;</span>
+            <span class="nt">&lt;auth&gt;</span>
+                <span class="nt">&lt;username&gt;</span>USERNAME<span class="nt">&lt;/username&gt;</span>
+                <span class="nt">&lt;password&gt;</span>PASSWORD<span class="nt">&lt;/password&gt;</span>
+            <span class="nt">&lt;/auth&gt;</span>
+        <span class="nt">&lt;/to&gt;</span>
+        <span class="nt">&lt;allowInsecureRegistries&gt;</span>true<span class="nt">&lt;/allowInsecureRegistries&gt;</span>
+    <span class="nt">&lt;/configuration&gt;</span>
+<span class="nt">&lt;/plugin&gt;</span>
+</code></pre></div><p>注意: 如果你的私库是insecure的, 需要指定<code>allowInsecureRegistries</code>为true. 同时命令行构建的时候添加<code>-DsendCredentialsOverHttp=true</code></p>
+<p>更多的配置参见<a href="https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin">官方文档</a></p>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#与docker构建流程比较">与Docker构建流程比较</a></li>
+    <li><a href="#快速开始">快速开始</a>
+      <ul>
+        <li><a href="#插件">插件</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/docekr">Docekr
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/jib">Jib
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/oci">OCI
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://atbug.com//tags/tools">Tools
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        <div class="article-entry">
+            <hr>
+            <p>文章同步发送到公众号：云编码 (微信号：sevenfeet)。</p>
+            <p><img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/23/qrcode.jpg" alt="qrcode"></p>
+        </div>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    <a href="../speed-up-java-development-on-kubernetes/" id="article-nav-newer" class="article-nav-link-wrap">
+        <div class="article-nav-title"><span>&lt;</span>&nbsp;
+            加速云原生的 Java 开发
+        </div>
+    </a>
+    
+    
+    <a href="../spring-cloud-hoxton-release/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">Spring Cloud Hoxton发布&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+
+</article>
+
+        
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "addozhang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 Addo Zhang
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-47966140-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>

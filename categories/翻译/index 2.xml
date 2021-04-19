@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>翻译 on 乱世浮生</title>
+    <link>https://atbug.com/categories/%E7%BF%BB%E8%AF%91/</link>
+    <description>Recent content in 翻译 on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 29 Mar 2021 23:11:25 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E7%BF%BB%E8%AF%91/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>分布式系统在 Kubernetes 上的进化</title>
+      <link>https://atbug.com/translation-distributed-systems-kubernetes/</link>
+      <pubDate>Mon, 29 Mar 2021 23:11:25 +0800</pubDate>
+      
+      <guid>https://atbug.com/translation-distributed-systems-kubernetes/</guid>
+      <description>本文译自 The Evolution of Distributed Systems on Kubernetes 在 3 月份的 QCon 上，我做了一个关于 Kubernetes 的分布式系统进化的演讲。首先，我想先问一个问题，微服务之后是什么？我相信大家都有各自的</description>
+    </item>
+    
+    <item>
+      <title>【译】2021 年及未来的云原生预测</title>
+      <link>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</link>
+      <pubDate>Tue, 09 Feb 2021 06:43:54 +0800</pubDate>
+      
+      <guid>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</guid>
+      <description>本文译自 Cloud Native Predictions for 2021 and Beyond 原文发布在 Chris Aniszczyk 的个人博客 我希望每个人都有一个美好的假期，因为 2021 年 1 月的前几周一直非常疯狂，从叛乱到新的 COVID 菌株。在云原生</description>
+    </item>
+    
+    <item>
+      <title>【译】应用架构：为什么要随着市场演进</title>
+      <link>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</link>
+      <pubDate>Sun, 17 Jan 2021 21:37:23 +0800</pubDate>
+      
+      <guid>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</guid>
+      <description>本文译自 Application architecture: why it should evolve with the market 最初由Mia Platform团队发布在Mia Platform的博客上 如今，IT 挑战在于通过有效选择应用架构来适应市</description>
+    </item>
+    
+    <item>
+      <title>Tekton 0.9.0 更新</title>
+      <link>https://atbug.com/tekton-0.9.0-release/</link>
+      <pubDate>Sun, 19 Jan 2020 14:33:17 +0800</pubDate>
+      
+      <guid>https://atbug.com/tekton-0.9.0-release/</guid>
+      <description>翻译整理自 What’s New in Tekton 0.9 功能及Bug修复 脚本模式 以前如果要在容器里运行个简单的 bash 脚本, 需要这么写: - name:helloimage:ubuntucommand:[&amp;#39;bash&amp;#39;]args:- -c- |set -ex echo &amp;#34;hello&amp;#</description>
+    </item>
+    
+    <item>
+      <title>神秘的Eureka自我保护</title>
+      <link>https://atbug.com/translation-the-mystery-of-eurekas-self-preservation/</link>
+      <pubDate>Sun, 05 Jan 2020 14:14:03 +0800</pubDate>
+      
+      <guid>https://atbug.com/translation-the-mystery-of-eurekas-self-preservation/</guid>
+      <description>本文翻译自The Mystery of Eureka Self-Preservation 根据CAP定理, Eureka是一个AP系统, 这就导致了在网络分区期间多个注册表中的信息不一致. 自我保护功能则是为了尽</description>
+    </item>
+    
+  </channel>
+</rss>

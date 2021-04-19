@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Serializer on 乱世浮生</title>
+    <link>https://atbug.com/tags/serializer/</link>
+    <description>Recent content in Serializer on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 02 Dec 2017 07:35:43 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/serializer/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Java序列化工具性能对比</title>
+      <link>https://atbug.com/java-serval-serializer-benchmark/</link>
+      <pubDate>Sat, 02 Dec 2017 07:35:43 +0000</pubDate>
+      
+      <guid>https://atbug.com/java-serval-serializer-benchmark/</guid>
+      <description>最近在调整系统的性能, 系统中正使用Jackson作为序列化工具. 做了下与fastJson, Avro, ProtoStuff的序列化吞吐对比. 由于只是做</description>
+    </item>
+    
+  </channel>
+</rss>

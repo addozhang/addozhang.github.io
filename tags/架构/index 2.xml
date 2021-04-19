@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>架构 on 乱世浮生</title>
+    <link>https://atbug.com/tags/%E6%9E%B6%E6%9E%84/</link>
+    <description>Recent content in 架构 on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 09 Feb 2021 06:43:54 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E6%9E%B6%E6%9E%84/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>【译】2021 年及未来的云原生预测</title>
+      <link>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</link>
+      <pubDate>Tue, 09 Feb 2021 06:43:54 +0800</pubDate>
+      
+      <guid>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</guid>
+      <description>本文译自 Cloud Native Predictions for 2021 and Beyond 原文发布在 Chris Aniszczyk 的个人博客 我希望每个人都有一个美好的假期，因为 2021 年 1 月的前几周一直非常疯狂，从叛乱到新的 COVID 菌株。在云原生</description>
+    </item>
+    
+    <item>
+      <title>【译】应用架构：为什么要随着市场演进</title>
+      <link>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</link>
+      <pubDate>Sun, 17 Jan 2021 21:37:23 +0800</pubDate>
+      
+      <guid>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</guid>
+      <description>本文译自 Application architecture: why it should evolve with the market 最初由Mia Platform团队发布在Mia Platform的博客上 如今，IT 挑战在于通过有效选择应用架构来适应市</description>
+    </item>
+    
+    <item>
+      <title>翻译：多运行时微服务架构</title>
+      <link>https://atbug.com/translation-multi-runtime-microservices-architecture/</link>
+      <pubDate>Wed, 01 Apr 2020 23:18:00 +0800</pubDate>
+      
+      <guid>https://atbug.com/translation-multi-runtime-microservices-architecture/</guid>
+      <description>这样文章通过Google翻译和人工逐字修改的方式完成的，某些位置也加上自己的理解。如有错误，请指出。 翻译这篇文章的目的其实是为了自己加深对微</description>
+    </item>
+    
+  </channel>
+</rss>

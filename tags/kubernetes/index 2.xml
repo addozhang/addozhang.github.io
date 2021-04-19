@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kubernetes on 乱世浮生</title>
+    <link>https://atbug.com/tags/kubernetes/</link>
+    <description>Recent content in Kubernetes on 乱世浮生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 29 Mar 2021 23:11:25 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>分布式系统在 Kubernetes 上的进化</title>
+      <link>https://atbug.com/translation-distributed-systems-kubernetes/</link>
+      <pubDate>Mon, 29 Mar 2021 23:11:25 +0800</pubDate>
+      
+      <guid>https://atbug.com/translation-distributed-systems-kubernetes/</guid>
+      <description>本文译自 The Evolution of Distributed Systems on Kubernetes 在 3 月份的 QCon 上，我做了一个关于 Kubernetes 的分布式系统进化的演讲。首先，我想先问一个问题，微服务之后是什么？我相信大家都有各自的</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes 源码解析 - Informer</title>
+      <link>https://atbug.com/kubernetes-source-code-how-informer-work/</link>
+      <pubDate>Sun, 16 Aug 2020 23:32:38 +0800</pubDate>
+      
+      <guid>https://atbug.com/kubernetes-source-code-how-informer-work/</guid>
+      <description>上篇扒了 HPA 的源码，但是没深入细节，今天往细节深入。 开局先祭出一张图： 为什么要有 Informer？ Kubernetes 中的持久化数据保存在 etcd中，各个组件并</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes 源码解析 - HPA 水平自动伸缩如何工作</title>
+      <link>https://atbug.com/kubernetes-source-code-how-hpa-work/</link>
+      <pubDate>Sat, 15 Aug 2020 02:09:37 +0800</pubDate>
+      
+      <guid>https://atbug.com/kubernetes-source-code-how-hpa-work/</guid>
+      <description>HPA - Horizontal Pod Autoscaler 的缩写，Pod 水平自动伸缩。通过对 Pod 负载的监控，来自动增加或者减少 Pod 的副本数量。 从字面意思来看，其主要包含了两部分： 监控 Pod 的负载 控</description>
+    </item>
+    
+    <item>
+      <title>Tekton 的工作原理</title>
+      <link>https://atbug.com/how-tekton-works/</link>
+      <pubDate>Sat, 23 May 2020 22:47:14 +0800</pubDate>
+      
+      <guid>https://atbug.com/how-tekton-works/</guid>
+      <description>这篇文章是基于 Tekton Pipeline 的最新版本v0.12.1版本。 快速入门请参考：云原生 CICD: Tekton Pipeline 实战 ，实战是基于版本 v0.10.x。 Pipeline CRD 与核心资源的关系 $ k api-resources --api-group=tekton.dev</description>
+    </item>
+    
+    <item>
+      <title>控制 Pod 内容器的启动顺序</title>
+      <link>https://atbug.com/control-process-order-of-pod-containers/</link>
+      <pubDate>Thu, 12 Mar 2020 22:05:16 +0800</pubDate>
+      
+      <guid>https://atbug.com/control-process-order-of-pod-containers/</guid>
+      <description>背景 众所周知, Kubernetes Pod 内有两种容器: 初始化容器(init container)和应用容器(app container). 其中初始化容器的执行先于应用容器, 并且初始化容器</description>
+    </item>
+    
+    <item>
+      <title>Tekton Trigger 介绍</title>
+      <link>https://atbug.com/tekton-trigger-glance/</link>
+      <pubDate>Wed, 05 Feb 2020 18:03:15 +0800</pubDate>
+      
+      <guid>https://atbug.com/tekton-trigger-glance/</guid>
+      <description>背景 Tekton 的介绍请参考Tekton Pipeline 实战. 通常, CI/CD 事件应该包含如下信息: 确定事件的类型(比如 GitHub Push, GitLab Issue, Docker Hub Webhook 等) 可从特定管道访问并映射到特定管道 (</description>
+    </item>
+    
+    <item>
+      <title>Tekton Dashboard 安装</title>
+      <link>https://atbug.com/tekton-dashboard-installation/</link>
+      <pubDate>Sat, 01 Feb 2020 12:39:28 +0800</pubDate>
+      
+      <guid>https://atbug.com/tekton-dashboard-installation/</guid>
+      <description>Tekton 提供了dashboard方便用户管理和查看 Tekton PipelineRun 和 TaskRun 以及创建, 执行和完成过程中涉及的资源. 它还允许按标签过滤 PipelineRun 和 TaskRun. 安装方法 kubectl apply --filename https://github.com/tektoncd/dashboard/releases/download/v0.4.1/dashboard_latest_release.yaml 检查das</description>
+    </item>
+    
+    <item>
+      <title>CICD: Tekton Pipeline 实战</title>
+      <link>https://atbug.com/tekton-pipeline-practice/</link>
+      <pubDate>Tue, 21 Jan 2020 20:19:33 +0800</pubDate>
+      
+      <guid>https://atbug.com/tekton-pipeline-practice/</guid>
+      <description>Tekton 是 Google 开源的 Kubernetes 原生CI/CD 系统, 功能强大扩展性强. 前身是 Knavite 里的 build-pipeline 项目, 后期孵化成独立的项目. 并成为 CDF 下的四个项目之一, 其他三个分别是 Jenkins, Jenkins X,</description>
+    </item>
+    
+    <item>
+      <title>Tekton安装及Hello world</title>
+      <link>https://atbug.com/tekton-installation-and-sample/</link>
+      <pubDate>Fri, 17 Jan 2020 19:17:14 +0800</pubDate>
+      
+      <guid>https://atbug.com/tekton-installation-and-sample/</guid>
+      <description>安装 kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml 检查安装的tekton相关的CRD: kubectl api-resources | grep tekton clustertasks tekton.dev false ClusterTask conditions tekton.dev true Condition pipelineresources tekton.dev true PipelineResource pipelineruns pr,prs tekton.dev true PipelineRun pipelines tekton.dev true Pipeline taskruns tr,trs tekton.dev true TaskRun tasks tekton.dev true Task tekton的两个po</description>
+    </item>
+    
+    <item>
+      <title>Minikube安装istio</title>
+      <link>https://atbug.com/install-istio-on-minikube/</link>
+      <pubDate>Fri, 17 Jan 2020 08:02:42 +0800</pubDate>
+      
+      <guid>https://atbug.com/install-istio-on-minikube/</guid>
+      <description>准备 注意: istioctl的安装要使用安装里的, 不要是用homebrew里的. github issue curl -L https://istio.io/downloadIstio | sh - cd istio-1.4.2 cp bin/istioctl /usr/local/bin/istioctl 安装前检查 istioctl verify-install 如果检查没问题, 会看到</description>
+    </item>
+    
+    <item>
+      <title>加速云原生的 Java 开发</title>
+      <link>https://atbug.com/speed-up-java-development-on-kubernetes/</link>
+      <pubDate>Sat, 21 Dec 2019 20:45:22 +0800</pubDate>
+      
+      <guid>https://atbug.com/speed-up-java-development-on-kubernetes/</guid>
+      <description>今天来说说日常在Kubernetes开发Java项目遇到的问题. 当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是copy</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes中的Nginx动态解析</title>
+      <link>https://atbug.com/nginx-dynamic-domain-parse-in-kubernetes/</link>
+      <pubDate>Wed, 30 May 2018 12:10:32 +0000</pubDate>
+      
+      <guid>https://atbug.com/nginx-dynamic-domain-parse-in-kubernetes/</guid>
+      <description>背景 Nginx运行在kubernets中, 反向代理service提供服务. kubernetes版本v1.9.1+a0ce1bc657. 问题:</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes — 持久卷</title>
+      <link>https://atbug.com/kubernetes-persistent-volumes/</link>
+      <pubDate>Sun, 20 Aug 2017 22:25:40 +0000</pubDate>
+      
+      <guid>https://atbug.com/kubernetes-persistent-volumes/</guid>
+      <description>Persistent Volume 译自Persistent Volumes 介绍 管理存储是管理计算的独特问题。 PersistentVolume子系统为用户和管理员提供了一个API，其中提</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes学习 — Macos安装Kubernetes</title>
+      <link>https://atbug.com/install-kubernetes-on-macos/</link>
+      <pubDate>Thu, 17 Aug 2017 09:44:17 +0000</pubDate>
+      
+      <guid>https://atbug.com/install-kubernetes-on-macos/</guid>
+      <description>Kubernetes 安装 macos 检查环境 sysctl -a | grep machdep.cpu.features | grep VMX 安装VirtualBox http://download.virtualbox.org/virtualbox/5.1.26/Oracle_VM_VirtualBox_Extension_Pack-5.1.26-117224.vbox-extpack 安装minikube curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.21.0/minikube-darwin-amd64 &amp;amp;&amp;amp; chmod +x minikube &amp;amp;&amp;amp; sudo mv minikube /usr/local/bin/ 创建集群 默认使用virtualbox</description>
+    </item>
+    
+  </channel>
+</rss>
