@@ -1,20 +1,16 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>google on 乱世浮生</title>
-    <link>https://atbug.com/tags/google/</link>
-    <description>Recent content in google on 乱世浮生</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Sun, 09 Feb 2014 09:26:50 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/google/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>日常工作中使用的chrome插件</title>
-      <link>https://atbug.com/chrome-extensions-for-daily-work/</link>
-      <pubDate>Sun, 09 Feb 2014 09:26:50 +0000</pubDate>
-      
-      <guid>https://atbug.com/chrome-extensions-for-daily-work/</guid>
-      <description>先说下背景，Java程序猿一枚，兼做hybrid app。所以日常工作中免不了要跟浏览器打交道，一般就只用chrome了，看中它的调试功能和庞</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>google on 乱世浮生</title><link>https://atbug.com/tags/google/</link><description>Recent content in google on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 09 Feb 2014 09:26:50 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/google/index.xml" rel="self" type="application/rss+xml"/><item><title>日常工作中使用的chrome插件</title><link>https://atbug.com/chrome-extensions-for-daily-work/</link><pubDate>Sun, 09 Feb 2014 09:26:50 +0000</pubDate><guid>https://atbug.com/chrome-extensions-for-daily-work/</guid><description>
+&lt;p>先说下背景，Java程序猿一枚，兼做hybrid app。所以日常工作中免不了要跟浏览器打交道，一般就只用chrome了，看中它的调试功能和庞大的插件库。下面就列出工作中使用的各种插件，排名不分先后。&lt;/p>
+&lt;ul>
+&lt;li>google帐号要有，而且两个。一个日常生活娱乐，一个工作使用。可以同步各种数据到云端，如app、插件、设置、自动填写数据、密码、访问历史、打开的标签等等。原谅我把同步也当作插件，简直就是插件中的战斗机。&lt;/li>
+&lt;li>Developer tool，这个是chrome自带的开发人员工具，集前台设计、代码调试、资源管理等功能。&lt;/li>
+&lt;li>&lt;a href="https://chrome.google.com/webstore/detail/adblock-plus/cfhdojbkjhnklbpkdaibdccddilifddb">Adblock Plus&lt;/a> 不管工作还是生活用，这个插件必装。有适合国人使用的屏蔽清单（&lt;a href="https://github.com/chinalist/chinalist">ChinaList+EasyList&lt;/a>），轻松搞定各种广告，尤其是现在的广告无节操，影响工作。&lt;/li>
+&lt;li>&lt;a href="https://chrome.google.com/webstore/detail/clear-cache/cppjkneekbjaeellbfkmgnhonkkjfpdn">Clear Cache&lt;/a> 开发中常常遇到缓存引起的各种奇葩问题，缓存清理使用方便，可设置快捷键。&lt;/li>
+&lt;li>&lt;a href="https://chrome.google.com/webstore/detail/edit-this-cookie/fngmhnnpilhplaeedifhccceomclgfbg">Edit This Cookie&lt;/a> Cookie的修改，不解释。&lt;/li>
+&lt;li>&lt;a href="https://chrome.google.com/webstore/detail/gmbgaklkmjakoegficnlkhebmhkjfich">Google Calendar (by Google)&lt;/a> 日程安排管理。&lt;/li>
+&lt;li>&lt;a href="https://chrome.google.com/webstore/detail/niloccemoadcdkdjlinkgdfekeahmflj">Pocket&lt;/a> 常说的read it later，用作收藏或者遇到暂时没时间阅读（或者不方便阅读的，你懂的）。跨平台，有移动端应用。非常好用，根本停步下来。&lt;/li>
+&lt;li>&lt;a href="https://chrome.google.com/webstore/detail/cpngackimfmofbokmjmljamhdncknpmg">Screen Capture (by Google)&lt;/a> google出品的网页截图插件，强大，可截取整张页面。&lt;/li>
+&lt;li>&lt;a href="http://streamus.com/">Streamus™ (Beta!)&lt;/a> 好吧，这是娱乐的，work life balance嘛！公司网络是VPN从香港出境，并block掉各种娱乐非娱乐网站，唯独youtube还在。这个插件可以收听youtube上的音乐，推荐！&lt;/li>
+&lt;li>&lt;a href="https://chrome.google.com/webstore/detail/djflhoibgkdhkhhcedjiklpkjnoahfmg">User-Agent Switcher for Chrome&lt;/a> 修改浏览器的user agent，多浏览器调试用。&lt;/li>
+&lt;li>&lt;a href="https://chrome.google.com/webstore/detail/%E7%AE%80%E5%8D%95-qr-%E7%94%9F%E6%88%90%E5%99%A8/ajaomcmkalmeeahjfdklkcjbljhbokjl">简单 QR 生成器&lt;/a> 生成当前标签网址的二维码，方便手机扫描。
+ &lt;/li>
+&lt;/ul></description></item></channel></rss>

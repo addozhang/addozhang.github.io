@@ -1,20 +1,56 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>slf4j on 乱世浮生</title>
-    <link>https://atbug.com/tags/slf4j/</link>
-    <description>Recent content in slf4j on 乱世浮生</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Sat, 18 Apr 2015 11:16:26 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/slf4j/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>关于SLF4J</title>
-      <link>https://atbug.com/about-slf4j/</link>
-      <pubDate>Sat, 18 Apr 2015 11:16:26 +0000</pubDate>
-      
-      <guid>https://atbug.com/about-slf4j/</guid>
-      <description>Spring的功能越来越强大，同时也越来越臃肿。比如想快速搭建一个基于Spring的项目，解决依赖问题非常耗时。Spring的项目模板的出现</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>slf4j on 乱世浮生</title><link>https://atbug.com/tags/slf4j/</link><description>Recent content in slf4j on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 18 Apr 2015 11:16:26 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/slf4j/index.xml" rel="self" type="application/rss+xml"/><item><title>关于SLF4J</title><link>https://atbug.com/about-slf4j/</link><pubDate>Sat, 18 Apr 2015 11:16:26 +0000</pubDate><guid>https://atbug.com/about-slf4j/</guid><description>
+&lt;p>Spring的功能越来越强大，同时也越来越臃肿。比如想快速搭建一个基于Spring的项目，解决依赖问题非常耗时。Spring的项目模板的出现就解决了这个问题，通过&lt;a href="http://dist.springsource.com/release/STS/help/descriptors-3.0.xml">这个描述文件&lt;/a>，可以快速的找到你所需要的模板。&lt;/p>
+&lt;p>第一次认识SLF4J就是在这些项目模板里，它的全称是Simple Logging Facade for Java。从字面上可以看出它只是一个Facade，不提供具体的日志解决方案，只服务于各个日志系统。简单说有了它，我们就可以&lt;strong>随意&lt;/strong>的更换日志系统（如java.util.logging、logback、log4j）。比如在开发的时候使用logback，部署的时候可以切换到log4j；如果关闭所有的log，切换到NOP就可以了。只需要更改依赖，提供日志配置文件，免去了修改代码的麻烦。&lt;/p>
+&lt;p>首先看如何使用：&lt;/p>
+&lt;p>[java]
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;&lt;/p>
+&lt;p>public class HelloWorld {
+public static void main(String[] args) {
+Logger logger = LoggerFactory.getLogger(HelloWorld.class);
+logger.info(&amp;quot;Hello World&amp;quot;);
+}
+}
+[/java]&lt;/p>
+&lt;p>SLF4J封装了使用起来和其他日志系统一样简单。上面提到过SLF4J不提供具体的日志解决方案，所以使用的时候除了要引用SLF4J包，还要引用具体的日志解决方案包（log4j、logging&amp;ndash;JDK提供、logback），还有所对应的binding包（&lt;em>slf4j-log4j&lt;/em>_、slf4j-jdk14、logback-classic_）。&lt;/p>
+&lt;p>以log4j为例，我们看SLF4J的实现方式。&lt;/p>
+&lt;p>SLF4J类在初始化的时候会尝试从ClassLoader中&lt;strong>org/slf4j/impl/StaticLoggerBinder.class&lt;/strong>。这个类比较特殊，每个binding包里都有。不同binding包里的StaticLoggerBinder类会去初始化一个相应的实例，如slf4j-log4j里：&lt;/p>
+&lt;p>[java]
+/**&lt;/p>
+&lt;ul>
+&lt;li>截取的部分代码
+*/
+private StaticLoggerBinder() {
+loggerFactory = new Log4jLoggerFactory();
+}
+[/java]&lt;/li>
+&lt;/ul>
+&lt;p>而Log4jLoggerAdapter实现了SLF4J的Logger接口，使用了Adapter模式对Log4j的Logger进行了封装并暴露了Logger的接口，Log4jLoggerFactory持有了Log4jLoggerAdapter的实例。&lt;/p>
+&lt;p>[java]
+/**&lt;/p>
+&lt;ul>
+&lt;li>截取的部分代码
+*/
+public class Log4jLoggerFactory implements ILoggerFactory {
+public Logger getLogger(String name) {
+Logger slf4jLogger = null;
+// protect against concurrent access of loggerMap
+synchronized (this) {
+slf4jLogger = (Logger) loggerMap.get(name);
+if (slf4jLogger == null) {
+org.apache.log4j.Logger log4jLogger;
+if(name.equalsIgnoreCase(Logger.ROOT_LOGGER_NAME)) {
+log4jLogger = LogManager.getRootLogger();
+} else {
+log4jLogger = LogManager.getLogger(name);
+}
+slf4jLogger = new Log4jLoggerAdapter(log4jLogger);
+loggerMap.put(name, slf4jLogger);
+}
+}
+return slf4jLogger;
+}
+}
+[/java]&lt;/li>
+&lt;/ul>
+&lt;p>具体的Log解决方案就不做剖析了。&lt;/p></description></item></channel></rss>

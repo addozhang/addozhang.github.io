@@ -1,20 +1,73 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>GreenPlum on 乱世浮生</title>
-    <link>https://atbug.com/tags/greenplum/</link>
-    <description>Recent content in GreenPlum on 乱世浮生</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Mon, 10 Apr 2017 08:29:00 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/greenplum/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>GreenPlum JDBC和C3P0数据源</title>
-      <link>https://atbug.com/greenplum-jdbc-and-c3p0-datasource/</link>
-      <pubDate>Mon, 10 Apr 2017 08:29:00 +0000</pubDate>
-      
-      <guid>https://atbug.com/greenplum-jdbc-and-c3p0-datasource/</guid>
-      <description>在网上搜索GreenPlum（GPDB）的数据源配置的时候，发现搜索结果都是用postgresql的配置。 import com.mchange.v2.c3p0.DataSources; import javax.sql.DataSource; import java.sql.*; import java.util.Properties; /** * Created by addo on 2017/4/10. */ public</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GreenPlum on 乱世浮生</title><link>https://atbug.com/tags/greenplum/</link><description>Recent content in GreenPlum on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 10 Apr 2017 08:29:00 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/greenplum/index.xml" rel="self" type="application/rss+xml"/><item><title>GreenPlum JDBC和C3P0数据源</title><link>https://atbug.com/greenplum-jdbc-and-c3p0-datasource/</link><pubDate>Mon, 10 Apr 2017 08:29:00 +0000</pubDate><guid>https://atbug.com/greenplum-jdbc-and-c3p0-datasource/</guid><description>
+&lt;p>在网上搜索GreenPlum（GPDB）的数据源配置的时候，发现搜索结果都是用postgresql的配置。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kn">import&lt;/span> &lt;span class="nn">com.mchange.v2.c3p0.DataSources&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">javax.sql.DataSource&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">java.sql.*&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">java.util.Properties&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Created by addo on 2017/4/10.
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">JDBCTest&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">POSTGRESQL_URL&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;jdbc:postgresql://192.168.56.101:5432/example&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">POSTGRESQL_USERNAME&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;dbuser&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">POSTGRESQL_PASSWORD&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;password&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">GPDB_URL&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;jdbc:pivotal:greenplum://192.168.56.101:5432;DatabaseName=test&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">GPDB_USERNAME&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;dbuser&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">GPDB_PASSWORD&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;password&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Postgresql Connection
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> * @return
+&lt;/span>&lt;span class="cm"> * @throws ClassNotFoundException
+&lt;/span>&lt;span class="cm"> * @throws SQLException
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">Connection&lt;/span> &lt;span class="nf">postgresqlConnection&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">ClassNotFoundException&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Class&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">forName&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;org.postgresql.Driver&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">DriverManager&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getConnection&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">POSTGRESQL_URL&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">POSTGRESQL_USERNAME&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">POSTGRESQL_PASSWORD&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * GreenPlum Connection
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> * @return
+&lt;/span>&lt;span class="cm"> * @throws ClassNotFoundException
+&lt;/span>&lt;span class="cm"> * @throws SQLException
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">Connection&lt;/span> &lt;span class="nf">gpdbConnection&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">ClassNotFoundException&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Class&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">forName&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;com.pivotal.jdbc.GreenplumDriver&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">DriverManager&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getConnection&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">GPDB_URL&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">GPDB_USERNAME&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">GPDB_PASSWORD&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * GreenPlud C3P0 Datasource Connection
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> * @return
+&lt;/span>&lt;span class="cm"> * @throws SQLException
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">Connection&lt;/span> &lt;span class="nf">gpdbC3P0Connection&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Properties&lt;/span> &lt;span class="n">c3p0Props&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Properties&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">c3p0Props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setProperty&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;driverClass&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;com.pivotal.jdbc.GreenplumDriver&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">c3p0Props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setProperty&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;jdbcUrl&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">GPDB_URL&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">c3p0Props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setProperty&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;user&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">GPDB_USERNAME&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">c3p0Props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setProperty&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;password&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">GPDB_PASSWORD&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">c3p0Props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setProperty&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;acquireIncrement&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;5&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">c3p0Props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setProperty&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;initialPoolSize1&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;1&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">c3p0Props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setProperty&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;maxIdleTime&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;60&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">c3p0Props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setProperty&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;maxPoolSize&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;50&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">c3p0Props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setProperty&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;minPoolSize&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;1&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">c3p0Props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setProperty&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;idleConnectionTestPeriod&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;60&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">DataSources&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">unpooledDataSource&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">GPDB_URL&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">c3p0Props&lt;/span>&lt;span class="o">).&lt;/span>&lt;span class="na">getConnection&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">ClassNotFoundException&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Connection&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">connections&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Connection&lt;/span>&lt;span class="o">[]{&lt;/span>&lt;span class="n">postgresqlConnection&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">gpdbConnection&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">gpdbC3P0Connection&lt;/span>&lt;span class="o">()};&lt;/span>
+&lt;span class="k">for&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">Connection&lt;/span> &lt;span class="n">connection&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="n">connections&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">CallableStatement&lt;/span> &lt;span class="n">callableStatement&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">connection&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">prepareCall&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;select * from user&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="kt">boolean&lt;/span> &lt;span class="n">execute&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">callableStatement&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">execute&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">ResultSet&lt;/span> &lt;span class="n">resultSet&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">callableStatement&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getResultSet&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">resultSet&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">next&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">resultSet&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getString&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;current_user&amp;#34;&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="n">callableStatement&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">close&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">connection&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">close&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;a href="https://gist.github.com/addozhang/0d83704af6656079878bd5614c82c16c">源代码&lt;/a>&lt;/p></description></item></channel></rss>

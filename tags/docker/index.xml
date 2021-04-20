@@ -1,65 +1,465 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Docker on 乱世浮生</title>
-    <link>https://atbug.com/tags/docker/</link>
-    <description>Recent content in Docker on 乱世浮生</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Wed, 11 Mar 2020 23:00:27 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/docker/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Go Docker 镜像进阶: 精简镜像</title>
-      <link>https://atbug.com/build-minimal-docker-image-for-go-app/</link>
-      <pubDate>Wed, 11 Mar 2020 23:00:27 +0800</pubDate>
-      
-      <guid>https://atbug.com/build-minimal-docker-image-for-go-app/</guid>
-      <description>​[图片来自 https://www.facebook.com/sequenceprocess/] 问题: 入门到生产级的差距 昨天的文章《为 Go 应用创建 Docker 镜像》, 算是入门级的, 并不适用于生产级. 为什么? $ docker images REPOSITORY TAG IMAGE ID CREATED SIZE addozhang/golang-hello-world latest 4cce1292a87a 4 seconds</description>
-    </item>
-    
-    <item>
-      <title>为 Go 应用创建 Docker 镜像</title>
-      <link>https://atbug.com/build-docker-image-for-go-app/</link>
-      <pubDate>Wed, 11 Mar 2020 20:41:58 +0800</pubDate>
-      
-      <guid>https://atbug.com/build-docker-image-for-go-app/</guid>
-      <description>嗯嗯, 最近开始用 Golang 了. 今天需要为 Go 应用创建对象, 看了下官方博客. 拿 hello world 做个测试. 使用下面的命令创建个新的项目 $ mkdir -p $GOPATH/src/github.com/addozhang/golang-hello-world &amp;amp;&amp;amp; cd &amp;#34;$_&amp;#34; $ go mod init github.com/addozhang/golang-hello-world go: creating new go.mod:</description>
-    </item>
-    
-    <item>
-      <title>加速云原生的 Java 开发</title>
-      <link>https://atbug.com/speed-up-java-development-on-kubernetes/</link>
-      <pubDate>Sat, 21 Dec 2019 20:45:22 +0800</pubDate>
-      
-      <guid>https://atbug.com/speed-up-java-development-on-kubernetes/</guid>
-      <description>今天来说说日常在Kubernetes开发Java项目遇到的问题. 当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是copy</description>
-    </item>
-    
-    <item>
-      <title>Alpine容器安装Docker和OpenShift Client Tools</title>
-      <link>https://atbug.com/install-docker-and-openshift-client-tools-in-alpine-container/</link>
-      <pubDate>Tue, 28 Aug 2018 09:14:12 +0000</pubDate>
-      
-      <guid>https://atbug.com/install-docker-and-openshift-client-tools-in-alpine-container/</guid>
-      <description>安装Docker echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/main&amp;#34; &amp;gt; /etc/apk/repositories echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/community&amp;#34; &amp;gt;&amp;gt; /etc/apk/repositories echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/testing&amp;#34; &amp;gt;&amp;gt; /etc/apk/repositories apk -U --no-cache \ --allow-untrusted add \ shadow \ docker \ py-pip \ openrc \ &amp;amp;&amp;amp; pip install docker-compose rc-update add docker boot 安装OpenShift Client Tools 需要先安装glibc apk --no-cache add ca-certificates</description>
-    </item>
-    
-    <item>
-      <title>Docker快速构建Cassandra和Java操作</title>
-      <link>https://atbug.com/java-operate-cassandra-deployed-in-docker/</link>
-      <pubDate>Thu, 18 May 2017 23:33:24 +0000</pubDate>
-      
-      <guid>https://atbug.com/java-operate-cassandra-deployed-in-docker/</guid>
-      <description>搭建Cassandra 使用docker创建Cassandra，方便快捷 docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table #cq</description>
-    </item>
-    
-    <item>
-      <title>从零开始用docker运行spring boot应用</title>
-      <link>https://atbug.com/run-spring-boot-app-in-docker/</link>
-      <pubDate>Thu, 20 Apr 2017 21:58:42 +0000</pubDate>
-      
-      <guid>https://atbug.com/run-spring-boot-app-in-docker/</guid>
-      <description>假设已经安装好Docker Springboot应用 pom添加依赖和构建插件 &amp;lt;parent&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-starter-parent&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.5.3.RELEASE&amp;lt;/version&amp;gt; &amp;lt;/parent&amp;gt; &amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-starter-web&amp;lt;/artifactId&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt; &amp;lt;build&amp;gt; &amp;lt;plugins&amp;gt; &amp;lt;plugin&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-maven-plugin&amp;lt;/artifactId&amp;gt; &amp;lt;/plugin&amp;gt; &amp;lt;/plugins&amp;gt; &amp;lt;/build&amp;gt; 应用代码 package com.atbug.spring.boot.test; import org.springframework.boot.SpringApplication; import org.springframework.boot.autoconfigure.SpringBootApplication; import org.springframework.boot.web.servlet.FilterRegistrationBean; import org.springframework.context.annotation.Bean;</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on 乱世浮生</title><link>https://atbug.com/tags/docker/</link><description>Recent content in Docker on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 11 Mar 2020 23:00:27 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>Go Docker 镜像进阶: 精简镜像</title><link>https://atbug.com/build-minimal-docker-image-for-go-app/</link><pubDate>Wed, 11 Mar 2020 23:00:27 +0800</pubDate><guid>https://atbug.com/build-minimal-docker-image-for-go-app/</guid><description>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/03/11/15839387687383.jpg" alt="">
+​[图片来自 https://www.facebook.com/sequenceprocess/]&lt;/p>
+&lt;h3 id="问题-入门到生产级的差距">问题: 入门到生产级的差距&lt;/h3>
+&lt;p>昨天的文章《为 Go 应用创建 Docker 镜像》, 算是入门级的, 并不适用于生产级. 为什么?&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ docker images
+REPOSITORY TAG IMAGE ID CREATED SIZE
+addozhang/golang-hello-world latest 4cce1292a87a &lt;span class="m">4&lt;/span> seconds ago 813MB
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>整个镜像的大小有 813MB, 这还只有一个简单的 Hello world. 因为其中包含了 Golang 的编译和运行环境. 但是实际生产环境中, 我们并不需要这么多.&lt;/p>
+&lt;h3 id="先看结果">先看结果&lt;/h3>
+&lt;p>精简之后只有 2.07MB, 而且并不影响运行.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ docker images
+REPOSITORY TAG IMAGE ID CREATED SIZE
+addozhang/golang-hello-world latest 4cce1292a87a &lt;span class="m">3&lt;/span> minutes ago 813MB
+addozhang/golang-hello-world2 latest 1da5bb994074 &lt;span class="m">7&lt;/span> minutes ago 2.07MB
+$ docker run --rm addozhang/golang-hello-world2
+Hello world
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="解决方案">解决方案&lt;/h3>
+&lt;p>如果做到的? 首先从基础镜像开始, 换成&lt;code>scratch&lt;/code>&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>. 构建时将编译好的文件复制到镜像中&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">FROM scratch
+ADD golang-hello-world /
+CMD [&amp;#34;/golang-hello-world&amp;#34;]
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>假如你是使用&lt;code>go build&lt;/code>来编译, 在 Macos 上会遇到如下问题:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ docker run --rm addozhang/golang-hello-world2
+standard_init_linux.go:211: &lt;span class="nb">exec&lt;/span> user process caused &lt;span class="s2">&amp;#34;exec format error&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>解决方案是&lt;code>CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build&lt;/code>&lt;/p>
+&lt;p>从头来看, 构建出一个精简的镜像, 我们需要:&lt;/p>
+&lt;ol>
+&lt;li>运行&lt;code>CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build&lt;/code>构建 linux 环境的可执行文件. 该文件并不能在 mac 上运行&lt;/li>
+&lt;li>使用&lt;code>docker build&lt;/code>进行构建&lt;/li>
+&lt;/ol>
+&lt;p>这样的操作步骤太麻烦, 还能不能精简一下?&lt;/p>
+&lt;h3 id="进阶-使用-docker-的多步构建">进阶: 使用 Docker 的多步构建&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">#build stage
+FROM golang as builder
+ENV GO111MODULE=on
+ENV GOPROXY=https://goproxy.io
+WORKDIR /app
+COPY go.mod .
+RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build
+#image stage
+FROM scratch
+COPY --from=builder /app/golang-hello-world /
+CMD [&amp;#34;/golang-hello-world&amp;#34;]
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="参考">参考&lt;/h3>
+&lt;p>&lt;a href="https://dev.to/plutov/docker-and-go-modules-3kkn">https://dev.to/plutov/docker-and-go-modules-3kkn&lt;/a>&lt;/p>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>&lt;code>scratch&lt;/code>是一个空的镜像文件 &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section></description></item><item><title>为 Go 应用创建 Docker 镜像</title><link>https://atbug.com/build-docker-image-for-go-app/</link><pubDate>Wed, 11 Mar 2020 20:41:58 +0800</pubDate><guid>https://atbug.com/build-docker-image-for-go-app/</guid><description>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/03/11/15839304511808.jpg" alt="">&lt;/p>
+&lt;p>嗯嗯, 最近开始用 Golang 了.&lt;/p>
+&lt;p>今天需要为 Go 应用创建对象, 看了下官方博客. 拿 hello world 做个测试.&lt;/p>
+&lt;p>使用下面的命令创建个新的项目&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ mkdir -p &lt;span class="nv">$GOPATH&lt;/span>/src/github.com/addozhang/golang-hello-world &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nb">cd&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+$ go mod init github.com/addozhang/golang-hello-world
+go: creating new go.mod: module github.com/addozhang/golang-hello-world
+$ cat &lt;span class="s">&amp;lt;&amp;lt; EOF &amp;gt; main.go
+&lt;/span>&lt;span class="s">package main
+&lt;/span>&lt;span class="s">
+&lt;/span>&lt;span class="s">import &amp;#34;fmt&amp;#34;
+&lt;/span>&lt;span class="s">
+&lt;/span>&lt;span class="s">func main() {
+&lt;/span>&lt;span class="s"> fmt.Println(&amp;#34;Hello world&amp;#34;)
+&lt;/span>&lt;span class="s">}
+&lt;/span>&lt;span class="s">EOF&lt;/span>
+&lt;span class="c1"># go fmt&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>运行检查一次&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ go run main.go
+Hello world
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>程序没问题, 下面就是构建镜像了. 创建一个 Dockerfile 文件, 内容如下:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">FROM golang
+LABEL Author=&amp;#34;addozhang&amp;#34;
+ADD . /go/src/github.com/addozhang/golang-hello-world
+RUN go install github.com/addozhang/golang-hello-world
+ENTRYPOINT [ &amp;#34;/go/bin/golang-hello-world&amp;#34; ]
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>构建镜像:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ docker build -t addozhang/golang-hello-world .
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>运行镜像:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ docker run --rm addozhang/golang-hello-world:latest
+Hello world
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>运行没问题, 收工&lt;/p></description></item><item><title>加速云原生的 Java 开发</title><link>https://atbug.com/speed-up-java-development-on-kubernetes/</link><pubDate>Sat, 21 Dec 2019 20:45:22 +0800</pubDate><guid>https://atbug.com/speed-up-java-development-on-kubernetes/</guid><description>
+&lt;p>今天来说说日常在Kubernetes开发Java项目遇到的问题.&lt;/p>
+&lt;p>当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是&lt;code>copy+paste+modify&lt;/code>. 能否以变成的方式来生成?&lt;/p>
+&lt;p>开发时的步骤也比较繁琐: &lt;code>docker build&lt;/code>, &lt;code>docker push&lt;/code>, &lt;code>kubectl apple&lt;/code>, &lt;code>kubectl delete pod&lt;/code>. 对于一个Java应用来说还多了一步编译. 操作一次还ok, 但是一天十几次总会有想吐的感觉. 这些步骤能否简化成一个命令, 甚至修改了代码自动就完成上面一系列的操作?&lt;/p>
+&lt;p>实现这些我们需要几个工具: &lt;a href="https://github.com/dekorateio/dekorate">dekorate&lt;/a>, &lt;a href="https://github.com/GoogleContainerTools/jib">Jib&lt;/a>, &lt;a href="https://github.com/GoogleContainerTools/skaffold">Skaffold&lt;/a>. 其中Jib也在上一篇文章&lt;a href="https://atbug.com/build-docker-or-oci-image-with-jib-for-java/">使用Jib为Java应用构建镜像&lt;/a>中介绍过.&lt;/p>
+&lt;h2 id="dekorate">dekorate&lt;/h2>
+&lt;blockquote>
+&lt;p>Dekorate is a collection of Java compile-time generators and decorators for Kubernetes/OpenShift manifests.
+Dekorate是Java编译时生成和装饰Kubernetes/OpenShift的manifests的工具&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="快速开始">快速开始&lt;/h3>
+&lt;h4 id="1-通过使用spring-initializerhttpsstartspringio生成一个项目spring-boot-222-并加入依赖">1. 通过使用&lt;a href="https://start.spring.io">Spring Initializer&lt;/a>生成一个项目(Spring Boot 2.2.2), 并加入依赖:&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="nt">&amp;lt;dependency&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;groupId&amp;gt;&lt;/span>io.dekorate&lt;span class="nt">&amp;lt;/groupId&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;artifactId&amp;gt;&lt;/span>kubernetes-spring-starter&lt;span class="nt">&amp;lt;/artifactId&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;version&amp;gt;&lt;/span>0.10.0&lt;span class="nt">&amp;lt;/version&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/dependency&amp;gt;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="2-加入一个简单的controller">2. 加入一个简单的&lt;code>Controller&lt;/code>:&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * @author Addo.Zhang
+&lt;/span>&lt;span class="cm"> * @date 2019/12/22
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="nd">@RestController&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">DekorateExampleController&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="nd">@GetMapping&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="nf">hi&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="s">&amp;#34;Hello World&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="3-执行命令mvn-clean-install-然后在targetclassesmeta-infdekorate目录下可以找到kubernetesjson和kubernetesyml两个文件">3. 执行命令&lt;code>mvn clean install&lt;/code>, 然后在&lt;code>target/classes/META-INF/dekorate&lt;/code>目录下可以找到&lt;code>kubernetes.json&lt;/code>和&lt;code>kubernetes.yml&lt;/code>两个文件.&lt;/h4>
+&lt;p>&lt;code>kubernetes.yml&lt;/code>的内容:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nn">---&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;v1&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;Service&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;dekorate-example&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;0.0.1-SNAPSHOT&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">group&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;addo&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;dekorate-example&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">ports&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;http&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">8081&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">targetPort&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">8081&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">selector&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;dekorate-example&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;0.0.1-SNAPSHOT&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">group&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;addo&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;ClusterIP&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nn">---&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;apps/v1&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;Deployment&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;dekorate-example&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;0.0.1-SNAPSHOT&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">group&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;addo&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;dekorate-example&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">replicas&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">selector&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">matchLabels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;dekorate-example&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;0.0.1-SNAPSHOT&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">group&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;addo&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">template&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;dekorate-example&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;0.0.1-SNAPSHOT&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">group&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;addo&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">containers&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">env&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;KUBERNETES_NAMESPACE&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">valueFrom&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">fieldRef&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">fieldPath&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;metadata.namespace&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;addo/dekorate-example:0.0.1-SNAPSHOT&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">imagePullPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;IfNotPresent&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">livenessProbe&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">failureThreshold&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">3&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">httpGet&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">path&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;/actuator/info&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">8081&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">scheme&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;HTTP&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">initialDelaySeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">periodSeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">30&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">successThreshold&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">timeoutSeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">10&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;dekorate-example&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">ports&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">containerPort&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">8081&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;http&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">protocol&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;TCP&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">readinessProbe&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">failureThreshold&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">3&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">httpGet&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">path&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;/actuator/health&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">8081&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">scheme&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;HTTP&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">initialDelaySeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">periodSeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">30&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">successThreshold&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">timeoutSeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">10&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>yml中包含了&lt;code>Service&lt;/code>和&lt;code>Deployment&lt;/code>两部分, dekorate完美兼容的Spring:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>app: dekorate-example&lt;/code>: 项目名&lt;/li>
+&lt;li>&lt;code>version: 0.0.1-SNAPSHOT&lt;/code>: 项目当前版本&lt;/li>
+&lt;li>&lt;code>group: addo&lt;/code>: 是我系统当前用户名&lt;/li>
+&lt;li>&lt;code>/actuator/health&lt;/code>: Spring Boot 2.2后actuator的health endpoint, 作为&lt;code>readinessProbe&lt;/code>&lt;/li>
+&lt;li>&lt;code>/actuator/info&lt;/code>: Spring Boot 2.2后actuator的endpoint, 作为&lt;code>livenessProbe&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h3 id="进阶">进阶&lt;/h3>
+&lt;p>&lt;strong>前面yml的内容都是自动生成的, 假如有些特殊的需求. 比如修改镜像的&lt;code>repository&lt;/code>即这里的&lt;code>group&lt;/code>, 如何操作?&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">dekorate.kubernetes.group = addozhang
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>结果:&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/5zgkfl.jpg" alt="Change Image Repository">&lt;/p>
+&lt;p>&lt;strong>或者修改Service的类型为NodePort&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">dekorate.kubernetes.service-type = NodePort
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/vIen3M.jpg" alt="NodePort Service">&lt;/p>
+&lt;h4 id="配置">配置&lt;/h4>
+&lt;p>dekoration提供了&lt;a href="https://github.com/dekorateio/dekorate/blob/master/assets/config.md">丰富的配置&lt;/a>来个性化manifest.&lt;/p>
+&lt;p>除了上面使用的配置文件(properties/yaml)的方式, 还提供了&lt;code>Annotation&lt;/code>注解配置方式.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kn">import&lt;/span> &lt;span class="nn">io.dekorate.kubernetes.annotation.Env&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">io.dekorate.kubernetes.annotation.KubernetesApplication&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="nd">@KubernetesApplication&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">envVars&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nd">@Env&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">name&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;key1&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;var1&amp;#34;&lt;/span>&lt;span class="o">))&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">Main&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">//Your code goes here
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/exQoxy.jpg" alt="@KubernetesApplication Annotation">&lt;/p>
+&lt;h2 id="jib">Jib&lt;/h2>
+&lt;p>Jib的说明请看上一篇文章:&lt;a href="https://atbug.com/build-docker-or-oci-image-with-jib-for-java/">使用Jib为Java应用构建镜像&lt;/a>&lt;/p>
+&lt;h3 id="插件配置">插件配置&lt;/h3>
+&lt;p>下面是针对该项目添加的配置:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="nt">&amp;lt;plugin&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;groupId&amp;gt;&lt;/span>com.google.cloud.tools&lt;span class="nt">&amp;lt;/groupId&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;artifactId&amp;gt;&lt;/span>jib-maven-plugin&lt;span class="nt">&amp;lt;/artifactId&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;version&amp;gt;&lt;/span>1.8.0&lt;span class="nt">&amp;lt;/version&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;configuration&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;container&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;jvmFlags&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;jvmFlag&amp;gt;&lt;/span>-Xmx128m&lt;span class="nt">&amp;lt;/jvmFlag&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;jvmFlag&amp;gt;&lt;/span>-Xms64m&lt;span class="nt">&amp;lt;/jvmFlag&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/jvmFlags&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;labels&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;Author&amp;gt;&lt;/span>Addo.Zhang&lt;span class="nt">&amp;lt;/Author&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/labels&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;creationTime&amp;gt;&lt;/span>USE_CURRENT_TIMESTAMP&lt;span class="nt">&amp;lt;/creationTime&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/container&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;from&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;image&amp;gt;&lt;/span>openjdk:8-jdk-alpine&lt;span class="nt">&amp;lt;/image&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/from&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;to&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;image&amp;gt;&lt;/span>addo/dekorate-example&lt;span class="nt">&amp;lt;/image&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;tags&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;tag&amp;gt;&lt;/span>latest&lt;span class="nt">&amp;lt;/tag&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/tags&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/to&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;allowInsecureRegistries&amp;gt;&lt;/span>true&lt;span class="nt">&amp;lt;/allowInsecureRegistries&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/configuration&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/plugin&amp;gt;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行命令&lt;code>mvn compile jib:dockerBuild&lt;/code>便可以编译代码, 构建镜像并推送到镜像仓库.&lt;/p>
+&lt;h2 id="skaffold">Skaffold&lt;/h2>
+&lt;p>&lt;a href="https://github.com/GoogleContainerTools/skaffold">Skaffold&lt;/a>也是GoogleContainerTools中的一个工具.&lt;/p>
+&lt;blockquote>
+&lt;p>Skaffold is a command line tool that facilitates continuous development for Kubernetes applications. You can iterate on your application source code locally then deploy to local or remote Kubernetes clusters. Skaffold handles the workflow for building, pushing and deploying your application. It also provides building blocks and describe customizations for a CI/CD pipeline.
+Skaffold是一个命令行工具, 可促进Kubernetes应用程序的持续开发. 可以在本地迭代应用程序源代码, 然后部署到本地或远程Kubernetes集群. Skaffold处理构建, 推送和部署应用程序的工作流程. 它还提供了构建块并描述了CI/CD管道的自定义.&lt;/p>
+&lt;/blockquote>
+&lt;p>在我们这个例子中, 通过与Jib的联动, 完成编译代码, 构建镜像, 推送镜像, 部署一系列操作.&lt;/p>
+&lt;p>![Run](&lt;a href="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/2019-12-23">https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/2019-12-23&lt;/a> 15.12.24.gif)&lt;/p>
+&lt;p>截屏中的操作, 因为没有代码改动而不续构建镜像, Skaffold直接从cache中获取镜像并部署到Kubernetes中.&lt;/p>
+&lt;h3 id="skaffold操作">Skaffold操作&lt;/h3>
+&lt;h4 id="1-执行命令skaffold-init---xxenablejibinit并在提示出输入y">1. 执行命令&lt;code>skaffold init --XXenableJibInit&lt;/code>并在提示出输入&lt;code>y&lt;/code>&lt;/h4>
+&lt;h4 id="2-该命令会生成一个名为skaffoldyaml的文件">2. 该命令会生成一个名为&lt;code>skaffold.yaml&lt;/code>的文件&lt;/h4>
+&lt;p>由于&lt;code>dekorate&lt;/code>同时生成了&lt;code>json&lt;/code>和&lt;code>yaml&lt;/code>格式的manifest, 被&lt;code>skaffold&lt;/code>检测到. 实际操作中只需要其中一个即可.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">skaffold/v1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Config&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">dekorate-example&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">build&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">artifacts&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">addo/dekorate-example&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">jib&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>{}&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">deploy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">kubectl&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">manifests&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">target/classes/META-INF/dekorate/kubernetes.json&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">target/classes/META-INF/dekorate/kubernetes.yml&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="3-执行skaffold-run">3. 执行&lt;code>skaffold run&lt;/code>&lt;/h4>
+&lt;h4 id="4-pod启动完成后-通过kubectl-port-forward-podname-here-8081">4. pod启动完成后, 通过&lt;code>kubectl port-forward PODNAME-HERE 8081&lt;/code>&lt;/h4>
+&lt;h4 id="5-请求http-httplocalhost8081">5. 请求&lt;code>http http://localhost:8081&lt;/code>&lt;/h4>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/wt2BVU.jpg" alt="">&lt;/p>
+&lt;h3 id="进阶-1">进阶&lt;/h3>
+&lt;p>Skaffold的功能强大, 目前个人使用的有限, 有时间新开一篇来学习一下.&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/FXu4Hy.jpg" alt="">&lt;/p>
+&lt;h4 id="cli">CLI&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">➜ ~ skaffold &lt;span class="nb">help&lt;/span>
+A tool that facilitates continuous development &lt;span class="k">for&lt;/span> Kubernetes applications.
+Find more information at: https://skaffold.dev/docs/getting-started/
+End-to-end pipelines:
+run Run a pipeline
+dev Run a pipeline in development mode
+debug &lt;span class="o">[&lt;/span>beta&lt;span class="o">]&lt;/span> Run a pipeline in debug mode
+Pipeline building blocks &lt;span class="k">for&lt;/span> CI/CD:
+build Build the artifacts
+deploy Deploy pre-built artifacts
+delete Delete the deployed application
+render &lt;span class="o">[&lt;/span>alpha&lt;span class="o">]&lt;/span> Perform all image builds, and output rendered Kubernetes manifests
+Getting started with a new project:
+init &lt;span class="o">[&lt;/span>alpha&lt;span class="o">]&lt;/span> Generate configuration &lt;span class="k">for&lt;/span> deploying an application
+fix Update old configuration to newest schema version
+Other Commands:
+completion Output shell completion &lt;span class="k">for&lt;/span> the given shell &lt;span class="o">(&lt;/span>bash or zsh&lt;span class="o">)&lt;/span>
+config Interact with the Skaffold configuration
+credits Export third party notices to given path &lt;span class="o">(&lt;/span>./skaffold-credits by default&lt;span class="o">)&lt;/span>
+diagnose Run a diagnostic on Skaffold
+version Print the version information
+Usage:
+skaffold &lt;span class="o">[&lt;/span>flags&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>options&lt;span class="o">]&lt;/span>
+Use &lt;span class="s2">&amp;#34;skaffold &amp;lt;command&amp;gt; --help&amp;#34;&lt;/span> &lt;span class="k">for&lt;/span> more information about a given command.
+Use &lt;span class="s2">&amp;#34;skaffold options&amp;#34;&lt;/span> &lt;span class="k">for&lt;/span> a list of global command-line options &lt;span class="o">(&lt;/span>applies to all commands&lt;span class="o">)&lt;/span>.
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="yaml配置">Yaml配置&lt;/h4>
+&lt;p>参考&lt;a href="https://skaffold.dev/docs/references/yaml/">skaffold.yaml&lt;/a>&lt;/p>
+&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>文章的开头我们提到如何做到修改代码后自动完成一些列的操作, 通过&lt;code>skaffold dev&lt;/code>就可以实现.&lt;/p>
+&lt;p>文章中使用的&lt;code>dekoration-example&lt;/code>可在&lt;a href="https://github.com/addozhang/dekorate-example">GitHub&lt;/a>上找到.&lt;/p></description></item><item><title>Alpine容器安装Docker和OpenShift Client Tools</title><link>https://atbug.com/install-docker-and-openshift-client-tools-in-alpine-container/</link><pubDate>Tue, 28 Aug 2018 09:14:12 +0000</pubDate><guid>https://atbug.com/install-docker-and-openshift-client-tools-in-alpine-container/</guid><description>
+&lt;h2 id="安装docker">安装Docker&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;http://dl-2.alpinelinux.org/alpine/edge/main&amp;#34;&lt;/span> &amp;gt; /etc/apk/repositories
+&lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;http://dl-2.alpinelinux.org/alpine/edge/community&amp;#34;&lt;/span> &amp;gt;&amp;gt; /etc/apk/repositories
+&lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;http://dl-2.alpinelinux.org/alpine/edge/testing&amp;#34;&lt;/span> &amp;gt;&amp;gt; /etc/apk/repositories
+apk -U --no-cache &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> --allow-untrusted add &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> shadow &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> docker &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> py-pip &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> openrc &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> pip install docker-compose
+rc-update add docker boot
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="安装openshift-client-tools">安装OpenShift Client Tools&lt;/h2>
+&lt;p>需要先安装glibc&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">apk --no-cache add ca-certificates wget
+wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.28-r0/glibc-2.28-r0.apk
+apk add glibc-2.28-r0.apk
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>curl --retry 7 -Lo /tmp/client-tools.tar.gz &amp;quot;https://mirror.openshift.com/pub/openshift-v3/clients/3.9.1/linux/oc.tar.gz&amp;quot;&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">curl --retry &lt;span class="m">7&lt;/span> -Lo /tmp/client-tools.tar.gz &lt;span class="s2">&amp;#34;https://mirror.openshift.com/pub/openshift-v3/clients/3.9.1/linux/oc.tar.gz&amp;#34;&lt;/span>
+tar zxf /tmp/client-tools.tar.gz -C /usr/local/bin oc &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> rm /tmp/client-tools.tar.gz &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> apk del .build-deps
+&lt;span class="c1"># ADDED: Resolve issue x509 oc login issue&lt;/span>
+apk add --update ca-certificates
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>参考: &lt;a href="https://github.com/openshift/origin/issues/11135">github issue&lt;/a>&lt;/p></description></item><item><title>Docker快速构建Cassandra和Java操作</title><link>https://atbug.com/java-operate-cassandra-deployed-in-docker/</link><pubDate>Thu, 18 May 2017 23:33:24 +0000</pubDate><guid>https://atbug.com/java-operate-cassandra-deployed-in-docker/</guid><description>
+&lt;h3 id="搭建cassandra">搭建Cassandra&lt;/h3>
+&lt;p>使用docker创建Cassandra，方便快捷&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker pull cassandra:latest
+docker run -d --name cassandra -p 9042:9042 cassandra
+docker &lt;span class="nb">exec&lt;/span> -it cassandra bash
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建keyspacetable">创建keyspace、table&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-cql" data-lang="cql">&lt;span class="o">#&lt;/span>&lt;span class="n">cqlsh&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="o">#&lt;/span>&lt;span class="k">create&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">keyspace&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="k">CREATE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">KEYSPACE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">contacts&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">WITH&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">REPLICATION&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;class&amp;#39;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;SimpleStrategy&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;replication_factor&amp;#39;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="mf">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="p">};&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="o">#&lt;/span>&lt;span class="k">use&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="k">USE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">contacts&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="o">#&lt;/span>&lt;span class="k">create&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">table&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="k">CREATE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">TABLE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">contact&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">id&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nb">UUID&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">email&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nb">TEXT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">PRIMARY&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">KEY&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="查看表数据">查看表数据&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">cqlsh:contacts&amp;gt; SELECT * FROM contact&lt;span class="p">;&lt;/span>
+email &lt;span class="p">|&lt;/span> id
+-------+----
+&lt;span class="o">(&lt;/span>&lt;span class="m">0&lt;/span> rows&lt;span class="o">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="java客户端">Java客户端&lt;/h3>
+&lt;h4 id="引入依赖">引入依赖&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="nt">&amp;lt;dependency&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;groupId&amp;gt;&lt;/span>com.datastax.cassandra&lt;span class="nt">&amp;lt;/groupId&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;artifactId&amp;gt;&lt;/span>cassandra-driver-core&lt;span class="nt">&amp;lt;/artifactId&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;version&amp;gt;&lt;/span>3.2.0&lt;span class="nt">&amp;lt;/version&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/dependency&amp;gt;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="连接到cassandra并插入数据">连接到Cassandra并插入数据&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="n">Cluster&lt;/span> &lt;span class="n">cluster&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Cluster&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">builder&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">addContactPoint&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;127.0.0.1&amp;#34;&lt;/span>&lt;span class="o">).&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">Session&lt;/span> &lt;span class="n">session&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">cluster&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">connect&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;contacts&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">String&lt;/span> &lt;span class="n">insert&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;INSERT INTO contact (id, email) &amp;#34;&lt;/span> &lt;span class="o">+&lt;/span>
+&lt;span class="s">&amp;#34;VALUES (&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span>
+&lt;span class="s">&amp;#34;bd297650-2885-11e4-8c21-0800200c9a66,&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span>
+&lt;span class="s">&amp;#34;&amp;#39;contact@example.com&amp;#39; &amp;#34;&lt;/span> &lt;span class="o">+&lt;/span>
+&lt;span class="s">&amp;#34;);&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="n">session&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">execute&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">insert&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="查看表数据-1">查看表数据&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">cqlsh:contacts&amp;gt; SELECT * FROM contact&lt;span class="p">;&lt;/span>
+email &lt;span class="p">|&lt;/span> id
+---------------------+--------------------------------------
+contact@example.com &lt;span class="p">|&lt;/span> bd297650-2885-11e4-8c21-0800200c9a66
+&lt;span class="o">(&lt;/span>&lt;span class="m">1&lt;/span> rows&lt;span class="o">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>从零开始用docker运行spring boot应用</title><link>https://atbug.com/run-spring-boot-app-in-docker/</link><pubDate>Thu, 20 Apr 2017 21:58:42 +0000</pubDate><guid>https://atbug.com/run-spring-boot-app-in-docker/</guid><description>
+&lt;p>假设已经安装好Docker&lt;/p>
+&lt;h3 id="springboot应用">Springboot应用&lt;/h3>
+&lt;h4 id="pom添加依赖和构建插件">pom添加依赖和构建插件&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="nt">&amp;lt;parent&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;groupId&amp;gt;&lt;/span>org.springframework.boot&lt;span class="nt">&amp;lt;/groupId&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;artifactId&amp;gt;&lt;/span>spring-boot-starter-parent&lt;span class="nt">&amp;lt;/artifactId&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;version&amp;gt;&lt;/span>1.5.3.RELEASE&lt;span class="nt">&amp;lt;/version&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/parent&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;dependencies&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;dependency&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;groupId&amp;gt;&lt;/span>org.springframework.boot&lt;span class="nt">&amp;lt;/groupId&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;artifactId&amp;gt;&lt;/span>spring-boot-starter-web&lt;span class="nt">&amp;lt;/artifactId&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/dependency&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/dependencies&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;build&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;plugins&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;plugin&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;groupId&amp;gt;&lt;/span>org.springframework.boot&lt;span class="nt">&amp;lt;/groupId&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;artifactId&amp;gt;&lt;/span>spring-boot-maven-plugin&lt;span class="nt">&amp;lt;/artifactId&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/plugin&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/plugins&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/build&amp;gt;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="应用代码">应用代码&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kn">package&lt;/span> &lt;span class="nn">com.atbug.spring.boot.test&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">org.springframework.boot.SpringApplication&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">org.springframework.boot.autoconfigure.SpringBootApplication&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">org.springframework.boot.web.servlet.FilterRegistrationBean&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">org.springframework.context.annotation.Bean&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">org.springframework.web.bind.annotation.RequestMapping&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">org.springframework.web.bind.annotation.RestController&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Created by addo on 2017/5/15.
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="nd">@SpringBootApplication&lt;/span>
+&lt;span class="nd">@RestController&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">Application&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="nd">@RequestMapping&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;/&amp;#34;&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="nf">home&lt;/span>&lt;span class="o">(){&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="s">&amp;#34;Hello world!&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">SpringApplication&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">run&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Application&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">class&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="应用构建">应用构建&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">mvn clean package
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="centos-7-with-java8">Centos 7 with Java8&lt;/h3>
+&lt;h4 id="获取centos7-镜像">获取Centos7 镜像&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker pull centos:7
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="准备centos-java8的dockerfile">准备centos-java8的dockerfile&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">FROM centos:7
+MAINTAINER Addo Zhang &lt;span class="s2">&amp;#34;duwasai@gmail.com&amp;#34;&lt;/span>
+&lt;span class="c1"># Set correct environment variables.&lt;/span>
+ENV HOME /root
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+RUN yum install -y curl&lt;span class="p">;&lt;/span> yum upgrade -y&lt;span class="p">;&lt;/span> yum update -y&lt;span class="p">;&lt;/span> yum clean all
+ENV JDK_VERSION 8u11
+ENV JDK_BUILD_VERSION b12
+RUN curl -LO &lt;span class="s2">&amp;#34;http://download.oracle.com/otn-pub/java/jdk/&lt;/span>&lt;span class="nv">$JDK_VERSION&lt;/span>&lt;span class="s2">-&lt;/span>&lt;span class="nv">$JDK_BUILD_VERSION&lt;/span>&lt;span class="s2">/jdk-&lt;/span>&lt;span class="nv">$JDK_VERSION&lt;/span>&lt;span class="s2">-linux-x64.rpm&amp;#34;&lt;/span> -H &lt;span class="s1">&amp;#39;Cookie: oraclelicense=accept-securebackup-cookie&amp;#39;&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> rpm -i jdk-&lt;span class="nv">$JDK_VERSION&lt;/span>-linux-x64.rpm&lt;span class="p">;&lt;/span> rm -f jdk-&lt;span class="nv">$JDK_VERSION&lt;/span>-linux-x64.rpm&lt;span class="p">;&lt;/span> yum clean all
+ENV JAVA_HOME /usr/java/default
+RUN yum remove curl&lt;span class="p">;&lt;/span> yum clean all
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="创建centos-java8镜像">创建centos-java8镜像&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker build -t addo/centos-java8 .
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="docker中运行应用">Docker中运行应用&lt;/h3>
+&lt;h4 id="准备应用镜像的dockerfile">准备应用镜像的dockerfile&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">FROM addo/centos-java8
+ADD target/boot-test-1.0-SNAPSHOT.jar /opt/app.jar
+EXPOSE &lt;span class="m">8080&lt;/span>
+CMD java -jar /opt/app.jar
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="构建应用镜像">构建应用镜像&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker build -t temp/spring-boot-app .
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="运行">运行&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker run --name spring-boot-app -p 8080:8080 temp/spring-boot-app
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

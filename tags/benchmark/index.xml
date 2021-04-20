@@ -1,29 +1,39 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Benchmark on 乱世浮生</title>
-    <link>https://atbug.com/tags/benchmark/</link>
-    <description>Recent content in Benchmark on 乱世浮生</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Sat, 02 Dec 2017 07:35:43 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/benchmark/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Java序列化工具性能对比</title>
-      <link>https://atbug.com/java-serval-serializer-benchmark/</link>
-      <pubDate>Sat, 02 Dec 2017 07:35:43 +0000</pubDate>
-      
-      <guid>https://atbug.com/java-serval-serializer-benchmark/</guid>
-      <description>最近在调整系统的性能, 系统中正使用Jackson作为序列化工具. 做了下与fastJson, Avro, ProtoStuff的序列化吞吐对比. 由于只是做</description>
-    </item>
-    
-    <item>
-      <title>Kafka发送不同确认方式的性能差异</title>
-      <link>https://atbug.com/kafka-producer-acknowledge-benchmark/</link>
-      <pubDate>Tue, 10 Oct 2017 11:49:58 +0000</pubDate>
-      
-      <guid>https://atbug.com/kafka-producer-acknowledge-benchmark/</guid>
-      <description>背景 Kafka的性能众所周知，Producer支持acknowledge模式。即Kafka会想Producer返回消息发送的结果。但是在Ja</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Benchmark on 乱世浮生</title><link>https://atbug.com/tags/benchmark/</link><description>Recent content in Benchmark on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 02 Dec 2017 07:35:43 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/benchmark/index.xml" rel="self" type="application/rss+xml"/><item><title>Java序列化工具性能对比</title><link>https://atbug.com/java-serval-serializer-benchmark/</link><pubDate>Sat, 02 Dec 2017 07:35:43 +0000</pubDate><guid>https://atbug.com/java-serval-serializer-benchmark/</guid><description>
+&lt;p>最近在调整系统的性能, 系统中正使用Jackson作为序列化工具. 做了下与fastJson, Avro, ProtoStuff的序列化吞吐对比.&lt;/p>
+&lt;p>由于只是做横向对比, 没有优化系统或者JVM任何参数. 服务器一般都用Linux, 在Docker里做了Linux系统的测试.&lt;/p>
+&lt;p>Mac:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">Benchmark Mode Cnt Score Error Units
+JMHTest.avroSerializer thrpt 2 3124799.325 ops/s
+JMHTest.fastJsonSerializer thrpt 2 3122720.917 ops/s
+JMHTest.jacksonSerializer thrpt 2 2373347.208 ops/s
+JMHTest.protostuffSerializer thrpt 2 4196009.673 ops/s
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Docker:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">Benchmark Mode Cnt Score Error Units
+JMHTest.avroSerializer thrpt 2 3293260.676 ops/s
+JMHTest.fastJsonSerializer thrpt 2 2996908.084 ops/s
+JMHTest.jacksonSerializer thrpt 2 2189518.443 ops/s
+JMHTest.protostuffSerializer thrpt 2 3998265.173 ops/s
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Kafka发送不同确认方式的性能差异</title><link>https://atbug.com/kafka-producer-acknowledge-benchmark/</link><pubDate>Tue, 10 Oct 2017 11:49:58 +0000</pubDate><guid>https://atbug.com/kafka-producer-acknowledge-benchmark/</guid><description>
+&lt;h2 id="背景">背景&lt;/h2>
+&lt;p>Kafka的性能众所周知，Producer支持acknowledge模式。即Kafka会想Producer返回消息发送的结果。但是在Java Client中，acknowledge的确认有两种：同步和异步。
+同步是通过调用future.get()实现的；异步则是通过提供callback方法来实现。写了个简单的程序测试一下单线程中吞吐差异能有多大。&lt;strong>注意这里只考虑横向对比。&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>发送端单线程&lt;/li>
+&lt;li>Kafka为单集群节点&lt;/li>
+&lt;li>topic的分区数为1&lt;/li>
+&lt;li>key长度1&lt;/li>
+&lt;li>payload长度100&lt;/li>
+&lt;/ul>
+&lt;h2 id="测试工具">测试工具&lt;/h2>
+&lt;ul>
+&lt;li>JMeter&lt;/li>
+&lt;li>&lt;a href="https://github.com/addozhang/kafka-meter">Kafka Meter&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="futureget--batch-size-1">future.get() + batch size =1&lt;/h3>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15076056852541.jpg" alt="">&lt;/p>
+&lt;h3 id="futureget--batch-size--16k">future.get() + batch size = 16K&lt;/h3>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15076057041954.jpg" alt="">&lt;/p>
+&lt;h3 id="callback--batch-size--16k">callback + batch size = 16k&lt;/h3>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15076057158000.jpg" alt="">&lt;/p>
+&lt;h3 id="callback--batch-size--1">callback + batch size = 1&lt;/h3>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15076057250088.jpg" alt="">&lt;/p></description></item></channel></rss>

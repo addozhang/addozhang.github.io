@@ -1,65 +1,630 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>云原生 on 乱世浮生</title>
-    <link>https://atbug.com/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/</link>
-    <description>Recent content in 云原生 on 乱世浮生</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Sat, 17 Apr 2021 09:08:40 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>应“云”而生的 Java 框架：构建本机可执行文件</title>
-      <link>https://atbug.com/quarkus-build-native-executable-file/</link>
-      <pubDate>Sat, 17 Apr 2021 09:08:40 +0800</pubDate>
-      
-      <guid>https://atbug.com/quarkus-build-native-executable-file/</guid>
-      <description>电影《功夫》中，火云邪神有句话：“天下武功无坚不摧，唯快不破。” 在 上一篇文章 中，我们写了第一个 Quarkus 应用，并尝试着构建了 legacy-jar 和 fast-jar。 今</description>
-    </item>
-    
-    <item>
-      <title>应“云”而生的 Java 框架：Hello, Quarkus</title>
-      <link>https://atbug.com/hello-quarkus/</link>
-      <pubDate>Mon, 05 Apr 2021 21:08:40 +0800</pubDate>
-      
-      <guid>https://atbug.com/hello-quarkus/</guid>
-      <description>Wikipedia上有关 Quarkus 的信息还很少，只有一句简单的介绍： Quarkus 是专为 OpenJDK HotSpot 和 GraalVM 定制的全栈 Kubernetes 原生 Java 应用程序框架。与如 Spring 之类的其他框架相比，它提供</description>
-    </item>
-    
-    <item>
-      <title>分布式系统在 Kubernetes 上的进化</title>
-      <link>https://atbug.com/translation-distributed-systems-kubernetes/</link>
-      <pubDate>Mon, 29 Mar 2021 23:11:25 +0800</pubDate>
-      
-      <guid>https://atbug.com/translation-distributed-systems-kubernetes/</guid>
-      <description>本文译自 The Evolution of Distributed Systems on Kubernetes 在 3 月份的 QCon 上，我做了一个关于 Kubernetes 的分布式系统进化的演讲。首先，我想先问一个问题，微服务之后是什么？我相信大家都有各自的</description>
-    </item>
-    
-    <item>
-      <title>【译】2021 年及未来的云原生预测</title>
-      <link>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</link>
-      <pubDate>Tue, 09 Feb 2021 06:43:54 +0800</pubDate>
-      
-      <guid>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</guid>
-      <description>本文译自 Cloud Native Predictions for 2021 and Beyond 原文发布在 Chris Aniszczyk 的个人博客 我希望每个人都有一个美好的假期，因为 2021 年 1 月的前几周一直非常疯狂，从叛乱到新的 COVID 菌株。在云原生</description>
-    </item>
-    
-    <item>
-      <title>【译】应用架构：为什么要随着市场演进</title>
-      <link>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</link>
-      <pubDate>Sun, 17 Jan 2021 21:37:23 +0800</pubDate>
-      
-      <guid>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</guid>
-      <description>本文译自 Application architecture: why it should evolve with the market 最初由Mia Platform团队发布在Mia Platform的博客上 如今，IT 挑战在于通过有效选择应用架构来适应市</description>
-    </item>
-    
-    <item>
-      <title>翻译：多运行时微服务架构</title>
-      <link>https://atbug.com/translation-multi-runtime-microservices-architecture/</link>
-      <pubDate>Wed, 01 Apr 2020 23:18:00 +0800</pubDate>
-      
-      <guid>https://atbug.com/translation-multi-runtime-microservices-architecture/</guid>
-      <description>这样文章通过Google翻译和人工逐字修改的方式完成的，某些位置也加上自己的理解。如有错误，请指出。 翻译这篇文章的目的其实是为了自己加深对微</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>云原生 on 乱世浮生</title><link>https://atbug.com/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/</link><description>Recent content in 云原生 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 17 Apr 2021 09:08:40 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/index.xml" rel="self" type="application/rss+xml"/><item><title>应“云”而生的 Java 框架：构建本机可执行文件</title><link>https://atbug.com/quarkus-build-native-executable-file/</link><pubDate>Sat, 17 Apr 2021 09:08:40 +0800</pubDate><guid>https://atbug.com/quarkus-build-native-executable-file/</guid><description>
+&lt;blockquote>
+&lt;p>电影《功夫》中，火云邪神有句话：“天下武功无坚不摧，唯快不破。”&lt;/p>
+&lt;/blockquote>
+&lt;p>在 &lt;a href="https://mp.weixin.qq.com/s/YcEqFm3oxlsEvJ3ckRbQyA">上一篇文章&lt;/a> 中，我们写了第一个 Quarkus 应用，并尝试着构建了 &lt;code>legacy-jar&lt;/code> 和 &lt;code>fast-jar&lt;/code>。&lt;/p>
+&lt;p>今天来看一下 Quarkus 构建出来的本机可执行文件到底比 Spring 应用能快多少，&lt;strong>生态的成熟度不在这里讨论&lt;/strong>。&lt;/p>
+&lt;h2 id="tldr">TLDR&lt;/h2>
+&lt;p>先上结论， 与只有一个 Controller 的Spring Web 应用做下对比。&lt;/p>
+&lt;h3 id="应用启动时间0012s-vs-2294s">应用启动时间：0.012s vs 2.294s&lt;/h3>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/17/cleanshot-20210417-at-0900292x.png" alt="CleanShot 2021-04-17 at 09.00.29@2x">&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/17/cleanshot-20210417-at-0915282x.png" alt="CleanShot 2021-04-17 at 09.15.28@2x">&lt;/p>
+&lt;h3 id="镜像大小49mb-vs-237-mb">镜像大小：49MB vs 237 MB&lt;/h3>
+&lt;p>Spring 应用镜像使用 &lt;code>openjdk:11.0-jre-slim&lt;/code> 作为 base 镜像，大小为 220MB。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker images
+REPOSITORY TAG IMAGE ID CREATED SIZE
+spring/spring-getting-started latest 5f47030c5c3f &lt;span class="m">6&lt;/span> minutes ago 237MB
+quarkus/quarkus-getting-started distroless2 fe973c5ac172 &lt;span class="m">24&lt;/span> minutes ago 49MB
+quarkus/quarkus-getting-started distroless 6fe27dd44e86 &lt;span class="m">31&lt;/span> minutes ago 51MB
+quarkus/quarkus-getting-started ubi 8f86f5915715 &lt;span class="m">58&lt;/span> minutes ago 132MB
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="java-应用容器化的困境">Java 应用容器化的困境&lt;/h2>
+&lt;p>云原生世界中，应用容器化是个显著的特点。Java 应用容器化时面临了如下问题：&lt;/p>
+&lt;ul>
+&lt;li>应用启动慢：其实这是 Java 应用的问题。Java 应用占用内存多；JVM 虚拟机启动时需要做环境的初始化、预加载大量的类、初始化线程等等。启动耗时视应用情况需要几秒，甚至可达分钟级。较长的启动耗时，也抑制了水平伸缩性。即使在 Serverless 这种响应耗时要求不高的场景，也会被嫌弃。&lt;/li>
+&lt;li>镜像过大：其实使用了镜像的分层设计，常见的一个 SpringCloud 应用的 über-jar 包可能都有 7、80MB。&lt;/li>
+&lt;li>空间占用：虽然用了镜像分层，但积少成多，也会增加存储成本。&lt;/li>
+&lt;/ul>
+&lt;h2 id="quarkus-与本机映像native-image">Quarkus 与本机映像（native image）&lt;/h2>
+&lt;p>Quarkus 的开发遵从了容器优先的原则：&lt;/p>
+&lt;ul>
+&lt;li>支持 Graal/SubstrateVM&lt;/li>
+&lt;li>构建时处理元数据&lt;/li>
+&lt;li>减少反射的使用&lt;/li>
+&lt;li>本机映像预启动&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>本机映像是将 Java 代码提前编译为可执行文件（称为本机映像）的技术。该可执行文件包括应用程序类、其依赖项中的类、运行时库类以及 JDK 中的静态链接本机代码。它不是在 Java VM 上运行，而是包括必要的组件，例如内存管理，线程调度等，这些组件来自另一个运行时系统 “Substrate VM”。“Substrate VM” 是运行时组件（例如反优化器，垃圾收集器，线程调度等）的名称。与 JVM 相比，生成的程序具有更快的启动时间和更低的运行时内存开销。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="如何构建本机映像">如何构建本机映像&lt;/h2>
+&lt;p>环境配置参考&lt;a href="https://mp.weixin.qq.com/s/YcEqFm3oxlsEvJ3ckRbQyA">上一篇文章&lt;/a>，可以直接&lt;a href="https://github.com/addozhang/quarkus-getting-started">从这里下载源码&lt;/a>。&lt;/p>
+&lt;h3 id="配置-graalvm">配置 GraalVM&lt;/h3>
+&lt;p>之前我们使用了&lt;a href="https://sdkman.io/"> sdkman&lt;/a> 进行 GraalVM 安装。设置 &lt;code>GRAALVM_HOME&lt;/code> 环境变量：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="nb">export&lt;/span> &lt;span class="nv">GRAALVM_HOME&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="sb">`&lt;/span>sdk home java 21.0.0.2.r11-grl&lt;span class="sb">`&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用 &lt;code>gu&lt;/code> 安装 &lt;code>native-image&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="si">${&lt;/span>&lt;span class="nv">GRAALVM_HOME&lt;/span>&lt;span class="si">}&lt;/span>/bin/gu install native-image
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="构建本机可执行文件">构建本机可执行文件&lt;/h3>
+&lt;p>在源码的 &lt;code>pom.xml&lt;/code> 中，我们可以看到如下的 &lt;code>profile&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="nt">&amp;lt;profiles&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;profile&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;id&amp;gt;&lt;/span>native&lt;span class="nt">&amp;lt;/id&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;properties&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;quarkus.package.type&amp;gt;&lt;/span>native&lt;span class="nt">&amp;lt;/quarkus.package.type&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/properties&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/profile&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/profiles&amp;gt;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>我们使用这个 profile 进行本机可执行文件的构建，整个构建耗时 &lt;strong>几分钟&lt;/strong> 。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">./mvnw package -Pnative
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>部分构建日志：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ quarkus-getting-started ---
+[INFO]
+[INFO] --- quarkus-maven-plugin:1.13.0.Final:build (default) @ quarkus-getting-started ---
+[INFO] [org.jboss.threads] JBoss Threads version 3.2.0.Final
+[INFO] [io.quarkus.deployment.pkg.steps.JarResultBuildStep] Building native image source jar: /Users/addo/Workspaces/private_w/quarkus-getting-started/target/quarkus-getting-started-1.0.0-SNAPSHOT-native-image-source-jar/quarkus-getting-started-1.0.0-SNAPSHOT-runner.jar
+[INFO] [io.quarkus.deployment.pkg.steps.NativeImageBuildStep] Building native image from /Users/addo/Workspaces/private_w/quarkus-getting-started/target/quarkus-getting-started-1.0.0-SNAPSHOT-native-image-source-jar/quarkus-getting-started-1.0.0-SNAPSHOT-runner.jar
+[INFO] [io.quarkus.deployment.pkg.steps.NativeImageBuildContainerRunner] Using docker to run the native image builder
+[INFO] [io.quarkus.deployment.pkg.steps.NativeImageBuildContainerRunner] Checking image status quay.io/quarkus/ubi-quarkus-native-image:21.0.0-java11
+21.0.0-java11: Pulling from quarkus/ubi-quarkus-native-image
+Digest: sha256:becf08de869e707beaa5e57444b533ef93ebef15aad90c92ac660ddf7cea2b11
+Status: Image is up to date for quay.io/quarkus/ubi-quarkus-native-image:21.0.0-java11
+quay.io/quarkus/ubi-quarkus-native-image:21.0.0-java11
+[INFO] [io.quarkus.deployment.pkg.steps.NativeImageBuildStep] Running Quarkus native-image plugin on GraalVM Version 21.0.0 (Java Version 11.0.10+8-jvmci-21.0-b06)
+[INFO] [io.quarkus.deployment.pkg.steps.NativeImageBuildRunner] docker run --env LANG=C --rm -v /Users/addo/Workspaces/private_w/quarkus-getting-started/target/quarkus-getting-started-1.0.0-SNAPSHOT-native-image-source-jar:/project:z quay.io/quarkus/ubi-quarkus-native-image:21.0.0-java11 -J-Dsun.nio.ch.maxUpdateArraySize=100 -J-Djava.util.logging.manager=org.jboss.logmanager.LogManager -J-Dvertx.logger-delegate-factory-class-name=io.quarkus.vertx.core.runtime.VertxLogDelegateFactory -J-Dvertx.disableDnsResolver=true -J-Dio.netty.leakDetection.level=DISABLED -J-Dio.netty.allocator.maxOrder=1 -J-Duser.language=en -J-Duser.country=CN -J-Dfile.encoding=UTF-8 --initialize-at-build-time= -H:InitialCollectionPolicy=com.oracle.svm.core.genscavenge.CollectionPolicy\$BySpaceAndTime -H:+JNI -H:+AllowFoldMethods -jar quarkus-getting-started-1.0.0-SNAPSHOT-runner.jar -H:FallbackThreshold=0 -H:+ReportExceptionStackTraces -J-Xmx5g -H:-AddAllCharsets -H:EnableURLProtocols=http --no-server -H:-UseServiceLoaderFeature -H:+StackTrace quarkus-getting-started-1.0.0-SNAPSHOT-runner
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25] classlist: 5,859.24 ms, 0.96 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25] (cap): 633.34 ms, 0.94 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25] setup: 2,468.19 ms, 0.94 GB
+00:06:00,437 INFO [org.jbo.threads] JBoss Threads version 3.2.0.Final
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25] (clinit): 516.65 ms, 2.23 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25] (typeflow): 12,642.02 ms, 2.23 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25] (objects): 11,340.37 ms, 2.23 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25] (features): 525.87 ms, 2.23 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25] analysis: 26,032.67 ms, 2.23 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25] universe: 1,394.06 ms, 2.16 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25] (parse): 2,690.38 ms, 2.16 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25] (inline): 4,336.77 ms, 2.73 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25] (compile): 17,580.03 ms, 2.71 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25] compile: 26,152.06 ms, 2.71 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25] image: 3,288.43 ms, 2.70 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25] write: 1,904.64 ms, 2.70 GB
+[quarkus-getting-started-1.0.0-SNAPSHOT-runner:25] [total]: 67,414.16 ms, 2.70 GB
+[WARNING] [io.quarkus.deployment.pkg.steps.NativeImageBuildStep] objcopy executable not found in PATH. Debug symbols will not be separated from executable.
+[WARNING] [io.quarkus.deployment.pkg.steps.NativeImageBuildStep] That will result in a larger native image with debug symbols embedded in it.
+[INFO] [io.quarkus.deployment.QuarkusAugmentor] Quarkus augmentation completed in 74739ms
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 01:21 min
+[INFO] Finished at: 2021-04-17T08:06:47+08:00
+[INFO] ------------------------------------------------------------------------
+&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>假如构建时出现类似 &lt;code>Caused by: java.lang.RuntimeException: Image generation failed. Exit code was 137 which indicates an out of memory error. Consider increasing the Xmx value for native image generation by setting the &amp;quot;quarkus.native.native-image-xmx&amp;quot; property&lt;/code> 这种报错。需要调整下 Docker 的设置，比如笔者使用的 macOS，打开 Docker Desktop &amp;gt; Preference &amp;gt; Resource &amp;gt; Advanced，将内存从默认的 2GB 调大，比如 8GB。&lt;/p>
+&lt;p>从构建日志可以看出，构建的过程是在 &lt;code>quay.io/quarkus/ubi-quarkus-native-image&lt;/code> 的容器中完成的。虽然异常提示调整 &amp;ldquo;quarkus.native.native-image-xmx&amp;rdquo; ，其实是容器内存太小导致的。&lt;/p>
+&lt;/blockquote>
+&lt;p>构建成功后，可以在 &lt;code>target&lt;/code> 中找到 &lt;code>quarkus-getting-started-1.0.0-SNAPSHOT-runner&lt;/code>。这是一个可执行文件，大小为 28MB。&lt;/p>
+&lt;p>尝试执行该文件，收到 &lt;code>zsh: exec format error: ./target/quarkus-getting-started-1.0.0-SNAPSHOT-runner&lt;/code> 错误。因为这是一个 Linux 可执行文件，因此我们需要在容器中运行。&lt;/p>
+&lt;h3 id="构建本机镜像">构建本机镜像&lt;/h3>
+&lt;p>在源文件的 &lt;code>src/main/docker&lt;/code> 目录中，我们可以找到 &lt;code>Dockerfile.native&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-Dockerfile" data-lang="Dockerfile">&lt;span class="k">FROM&lt;/span>&lt;span class="s"> registry.access.redhat.com/ubi8/ubi-minimal:8.3&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">WORKDIR&lt;/span>&lt;span class="s"> /work/&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">RUN&lt;/span> chown &lt;span class="m">1001&lt;/span> /work &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> chmod &lt;span class="s2">&amp;#34;g+rwX&amp;#34;&lt;/span> /work &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> chown 1001:root /work&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">COPY&lt;/span> --chown&lt;span class="o">=&lt;/span>1001:root target/*-runner /work/application&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">EXPOSE&lt;/span>&lt;span class="s"> 8080&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">USER&lt;/span>&lt;span class="s"> 1001&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">CMD&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;./application&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;-Dquarkus.http.host=0.0.0.0&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="运行镜像">运行镜像&lt;/h3>
+&lt;p>本地运行一下，可以看出启动只需要 &lt;code>0.013s&lt;/code>。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker run --rm -p 8080:8080 quarkus/quarkus-getting-started:latest
+__ ____ __ _____ ___ __ ____ ______
+--/ __ &lt;span class="se">\/&lt;/span> / / / _ &lt;span class="p">|&lt;/span> / _ &lt;span class="se">\/&lt;/span> //_/ / / / __/
+-/ /_/ / /_/ / __ &lt;span class="p">|&lt;/span>/ , _/ ,&amp;lt; / /_/ /&lt;span class="se">\ \
+&lt;/span>&lt;span class="se">&lt;/span>--&lt;span class="se">\_&lt;/span>__&lt;span class="se">\_\_&lt;/span>___/_/ &lt;span class="p">|&lt;/span>_/_/&lt;span class="p">|&lt;/span>_/_/&lt;span class="p">|&lt;/span>_&lt;span class="p">|&lt;/span>&lt;span class="se">\_&lt;/span>___/___/
+2021-04-17 00:22:27,146 INFO &lt;span class="o">[&lt;/span>io.quarkus&lt;span class="o">]&lt;/span> &lt;span class="o">(&lt;/span>main&lt;span class="o">)&lt;/span> quarkus-getting-started 1.0.0-SNAPSHOT native &lt;span class="o">(&lt;/span>powered by Quarkus 1.13.0.Final&lt;span class="o">)&lt;/span> started in 0.013s. Listening on: http://0.0.0.0:8080
+2021-04-17 00:22:27,147 INFO &lt;span class="o">[&lt;/span>io.quarkus&lt;span class="o">]&lt;/span> &lt;span class="o">(&lt;/span>main&lt;span class="o">)&lt;/span> Profile prod activated.
+2021-04-17 00:22:27,147 INFO &lt;span class="o">[&lt;/span>io.quarkus&lt;span class="o">]&lt;/span> &lt;span class="o">(&lt;/span>main&lt;span class="o">)&lt;/span> Installed features: &lt;span class="o">[&lt;/span>cdi, resteasy&lt;span class="o">]&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>测试一下端点：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">http :8080/hello/greeting/quarkus
+HTTP/1.1 &lt;span class="m">200&lt;/span> OK
+Content-Length: &lt;span class="m">14&lt;/span>
+Content-Type: text/plain&lt;span class="p">;&lt;/span>&lt;span class="nv">charset&lt;/span>&lt;span class="o">=&lt;/span>UTF-8
+Hello, quarkus
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>看下镜像的信息，大小为 132MB，其中 base 镜像 &lt;code>ubi-minimal&lt;/code> 就占了 103 MB。感觉还是有点大，是否继续精简一下？&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker images
+REPOSITORY TAG IMAGE ID CREATED SIZE
+quarkus/quarkus-getting-started latest 8f86f5915715 &lt;span class="m">4&lt;/span> minutes ago 132MB
+registry.access.redhat.com/ubi8/ubi-minimal 8.3 604ddd554fec &lt;span class="m">2&lt;/span> weeks ago 103MB
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="镜像瘦身">镜像瘦身&lt;/h3>
+&lt;p>在 &lt;code>src/main/docker&lt;/code> 中还有个名为 &lt;code>Dockerfile.native-distroless&lt;/code> 的Dockerfile，里面使用了 &lt;code>quay.io/quarkus/quarkus-distroless-image:1.0&lt;/code> 作为 base 镜像&lt;/p>
+&lt;p>使用这个Dockerfile进行构建，得到的镜像就小很多，只有 51MB：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker images
+REPOSITORY TAG IMAGE ID CREATED SIZE
+quarkus/quarkus-getting-started distroless 6fe27dd44e86 &lt;span class="m">33&lt;/span> seconds ago 51MB
+quarkus/quarkus-getting-started ubi 8f86f5915715 &lt;span class="m">27&lt;/span> minutes ago 132MB
+quay.io/quarkus/quarkus-distroless-image 1.0 062663862a83 &lt;span class="m">6&lt;/span> days ago 21.3MB
+registry.access.redhat.com/ubi8/ubi-minimal 8.3 604ddd554fec &lt;span class="m">2&lt;/span> weeks ago 103MB
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>运行成功：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker run --rm -p 8080:8080 quarkus/quarkus-getting-started:distroless
+__ ____ __ _____ ___ __ ____ ______
+--/ __ &lt;span class="se">\/&lt;/span> / / / _ &lt;span class="p">|&lt;/span> / _ &lt;span class="se">\/&lt;/span> //_/ / / / __/
+-/ /_/ / /_/ / __ &lt;span class="p">|&lt;/span>/ , _/ ,&amp;lt; / /_/ /&lt;span class="se">\ \
+&lt;/span>&lt;span class="se">&lt;/span>--&lt;span class="se">\_&lt;/span>__&lt;span class="se">\_\_&lt;/span>___/_/ &lt;span class="p">|&lt;/span>_/_/&lt;span class="p">|&lt;/span>_/_/&lt;span class="p">|&lt;/span>_&lt;span class="p">|&lt;/span>&lt;span class="se">\_&lt;/span>___/___/
+2021-04-17 00:51:26,070 INFO &lt;span class="o">[&lt;/span>io.quarkus&lt;span class="o">]&lt;/span> &lt;span class="o">(&lt;/span>main&lt;span class="o">)&lt;/span> quarkus-getting-started 1.0.0-SNAPSHOT native &lt;span class="o">(&lt;/span>powered by Quarkus 1.13.0.Final&lt;span class="o">)&lt;/span> started in 0.013s. Listening on: http://0.0.0.0:8080
+2021-04-17 00:51:26,071 INFO &lt;span class="o">[&lt;/span>io.quarkus&lt;span class="o">]&lt;/span> &lt;span class="o">(&lt;/span>main&lt;span class="o">)&lt;/span> Profile prod activated.
+2021-04-17 00:51:26,071 INFO &lt;span class="o">[&lt;/span>io.quarkus&lt;span class="o">]&lt;/span> &lt;span class="o">(&lt;/span>main&lt;span class="o">)&lt;/span> Installed features: &lt;span class="o">[&lt;/span>cdi, resteasy&lt;span class="o">]&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>极致瘦身，参考了&lt;a href="https://capgemini.github.io/development/Introduction-to-Quarkus-Supersonic-Subatomic-Java/#distroless-images">这里&lt;/a>，我们创建 &lt;code>Dockerfile.native-distroless2&lt;/code>。&lt;/p>
+&lt;p>最终镜像的大小为 49MB，与官方提供的 distroless base 镜像只小了 2MB。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker images
+REPOSITORY TAG IMAGE ID CREATED SIZE
+quarkus/quarkus-getting-started distroless2 fe973c5ac172 &lt;span class="m">3&lt;/span> seconds ago 49MB
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>前面对比，用来构建 Spring 应用的 base 镜像 &lt;code>openjdk:11.0-jre-slim&lt;/code> 已经有 220MB，这还没算上应用的大小。即使是 &lt;code>openjdk:17-alpine3.13&lt;/code> 也有 182 MB。&lt;/p>
+&lt;h2 id="next">NEXT&lt;/h2>
+&lt;p>下一回，我们试试 Quarkus 在 ArgoCD 中的应用，看下 Serverless 上的使用体验如何。&lt;/p></description></item><item><title>应“云”而生的 Java 框架：Hello, Quarkus</title><link>https://atbug.com/hello-quarkus/</link><pubDate>Mon, 05 Apr 2021 21:08:40 +0800</pubDate><guid>https://atbug.com/hello-quarkus/</guid><description>
+&lt;p>Wikipedia上有关 Quarkus 的信息还很少，只有一句简单的介绍：&lt;/p>
+&lt;blockquote>
+&lt;p>Quarkus 是专为 OpenJDK HotSpot 和 GraalVM 定制的全栈 Kubernetes 原生 Java 应用程序框架。与如 Spring 之类的其他框架相比，它提供了较小的内存占用并缩短了启动时间。它允许结合命令式和非阻塞响应式编程。&lt;/p>
+&lt;/blockquote>
+&lt;p>从 Quarkus 的&lt;a href="https://quarkus.io/">官网&lt;/a>，可以看到其有几个特性：&lt;/p>
+&lt;ul>
+&lt;li>容器优先&lt;/li>
+&lt;li>统一了命令式和响应式编程&lt;/li>
+&lt;li>开发者友好&lt;/li>
+&lt;li>最佳品种的库及标准&lt;/li>
+&lt;/ul>
+&lt;p>更多 Quarkus 可以参考&lt;a href="https://quarkus.io/">官网&lt;/a>的介绍及文档。今天主要就是跑一下 Quarkus 的 &lt;code>Hello world&lt;/code>。&lt;/p>
+&lt;p>放一张官网的图：&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/05/16176279246527.jpg" alt="">&lt;/p>
+&lt;h2 id="环境准备">环境准备&lt;/h2>
+&lt;ul>
+&lt;li>基于 Java 11 的 GraalVM&lt;/li>
+&lt;li>Maven 3.6.2+&lt;/li>
+&lt;/ul>
+&lt;p>笔者使用的是 macos 10.15.4，GraalVM 和 Maven 建议通过 &lt;a href="https://sdkman.io">sdkman&lt;/a> 进行安装。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ sdk install java 21.0.0.2.r11-grl &lt;span class="c1">#如果已使用其他 java 版本，可以使用命令 sdk use java 21.0.0.2.r11-grl 进行切换&lt;/span>
+$ sdk install maven 3.6.3
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="验证安装">验证安装&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ java -version
+openjdk version &lt;span class="s2">&amp;#34;11.0.10&amp;#34;&lt;/span> 2021-01-19
+OpenJDK Runtime Environment GraalVM CE 21.0.0.2 &lt;span class="o">(&lt;/span>build 11.0.10+8-jvmci-21.0-b06&lt;span class="o">)&lt;/span>
+OpenJDK 64-Bit Server VM GraalVM CE 21.0.0.2 &lt;span class="o">(&lt;/span>build 11.0.10+8-jvmci-21.0-b06, mixed mode, sharing&lt;span class="o">)&lt;/span>
+$ mvn -version
+Apache Maven 3.6.3 &lt;span class="o">(&lt;/span>cecedd343002696d0abb50b32b541b8a6ba2883f&lt;span class="o">)&lt;/span>
+Maven home: /Users/addo/.sdkman/candidates/maven/current
+Java version: 11.0.10, vendor: GraalVM Community, runtime: /Users/addo/.sdkman/candidates/java/21.0.0.2.r11-grl
+Default locale: en_CN, platform encoding: UTF-8
+OS name: &lt;span class="s2">&amp;#34;mac os x&amp;#34;&lt;/span>, version: &lt;span class="s2">&amp;#34;10.15.4&amp;#34;&lt;/span>, arch: &lt;span class="s2">&amp;#34;x86_64&amp;#34;&lt;/span>, family: &lt;span class="s2">&amp;#34;mac&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="快速开始">快速开始&lt;/h2>
+&lt;h3 id="创建项目">创建项目&lt;/h3>
+&lt;p>创建 quarkus 项目最快的方式是通过 &lt;code>quarkus-maven-plugin&lt;/code> 来创建，使用如下的命令快速可以创建&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ mvn io.quarkus:quarkus-maven-plugin:1.13.0.Final:create &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> -DprojectGroupId&lt;span class="o">=&lt;/span>com.atbug.quickstart &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> -DprojectArtifactId&lt;span class="o">=&lt;/span>quarkus-getting-started &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> -DclassName&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;com.atbug.quickstart.GreetingResource&amp;#34;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> -Dpath&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;/hello&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>在 &lt;code>./quarkus-getting-started&lt;/code> 中提供了：&lt;/p>
+&lt;ul>
+&lt;li>maven 的项目结构&lt;/li>
+&lt;li>&lt;code>com.atbug.quickstart.GreetingResource&lt;/code> 暴露了 &lt;code>/hello&lt;/code> 端点，通过 &lt;code>JAX-RS&lt;/code> 注解实现&lt;/li>
+&lt;li>相关的单元测试&lt;/li>
+&lt;li>应用启动后可以通过 &lt;code>http://localhost:8080&lt;/code> 打开的启动页面&lt;/li>
+&lt;li>&lt;code>src/main/docker&lt;/code> 下提供了 &lt;code>native&lt;/code> 和 &lt;code>jvm&lt;/code> 风格的 Dockerfile&lt;/li>
+&lt;li>应用配置文件&lt;/li>
+&lt;/ul>
+&lt;h3 id="运行应用">运行应用&lt;/h3>
+&lt;p>执行 &lt;code>./mvnw compile quarkus:dev&lt;/code> 命令可启动应用&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">__ ____ __ _____ ___ __ ____ ______
+--/ __ &lt;span class="se">\/&lt;/span> / / / _ &lt;span class="p">|&lt;/span> / _ &lt;span class="se">\/&lt;/span> //_/ / / / __/
+-/ /_/ / /_/ / __ &lt;span class="p">|&lt;/span>/ , _/ ,&amp;lt; / /_/ /&lt;span class="se">\ \
+&lt;/span>&lt;span class="se">&lt;/span>--&lt;span class="se">\_&lt;/span>__&lt;span class="se">\_\_&lt;/span>___/_/ &lt;span class="p">|&lt;/span>_/_/&lt;span class="p">|&lt;/span>_/_/&lt;span class="p">|&lt;/span>_&lt;span class="p">|&lt;/span>&lt;span class="se">\_&lt;/span>___/___/
+2021-04-05 19:48:36,419 INFO &lt;span class="o">[&lt;/span>io.quarkus&lt;span class="o">]&lt;/span> &lt;span class="o">(&lt;/span>Quarkus Main Thread&lt;span class="o">)&lt;/span> quarkus-getting-started 1.0.0-SNAPSHOT on JVM &lt;span class="o">(&lt;/span>powered by Quarkus 1.13.0.Final&lt;span class="o">)&lt;/span> started in 2.135s. Listening on: http://localhost:8080
+2021-04-05 19:48:36,448 INFO &lt;span class="o">[&lt;/span>io.quarkus&lt;span class="o">]&lt;/span> &lt;span class="o">(&lt;/span>Quarkus Main Thread&lt;span class="o">)&lt;/span> Profile dev activated. Live Coding activated.
+2021-04-05 19:48:36,448 INFO &lt;span class="o">[&lt;/span>io.quarkus&lt;span class="o">]&lt;/span> &lt;span class="o">(&lt;/span>Quarkus Main Thread&lt;span class="o">)&lt;/span> Installed features: &lt;span class="o">[&lt;/span>cdi, resteasy&lt;span class="o">]&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>访问 &lt;code>/hello&lt;/code> 断点&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">$ http :8080/hello
+HTTP/1.1 200 OK
+Content-Length: 5
+Content-Type: text/plain;charset=UTF-8
+Hello
+&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>笔者通过 &lt;code>httpie&lt;/code> 进行访问，可以通过 &lt;code>brew install httpie&lt;/code> 进行安装，推荐使用。&lt;/p>
+&lt;/blockquote>
+&lt;h4 id="增加新的断点">增加新的断点&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java"> &lt;span class="nd">@GET&lt;/span>
+&lt;span class="nd">@Produces&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">MediaType&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">TEXT_PLAIN&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="nd">@Path&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;/greeting/{name}&amp;#34;&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="nf">greeting&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="nd">@PathParam&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">name&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="s">&amp;#34;Hello, &amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">name&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>注：&lt;code>PathParam&lt;/code> 来自 &lt;code>org.jboss.resteasy.annotations.jaxrs.PathParam&lt;/code>&lt;/p>
+&lt;p>测试：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ http :8080/hello/greeting/Quarkus
+HTTP/1.1 &lt;span class="m">200&lt;/span> OK
+Content-Length: &lt;span class="m">14&lt;/span>
+Content-Type: text/plain&lt;span class="p">;&lt;/span>&lt;span class="nv">charset&lt;/span>&lt;span class="o">=&lt;/span>UTF-8
+Hello, Quarkus
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>为新的端点增加单元测试&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java"> &lt;span class="nd">@Test&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">testGreetingEndpoint&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">final&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">uuid&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">UUID&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">randomUUID&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">toString&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">given&lt;/span>&lt;span class="o">()&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="na">pathParam&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">uuid&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="na">when&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;/hello/greeting/{name}&amp;#34;&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="na">then&lt;/span>&lt;span class="o">()&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="na">statusCode&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">200&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="na">body&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">is&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;Hello, &amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">uuid&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>通过 &lt;code>./mvnw test&lt;/code> 运行单元测试&lt;/p>
+&lt;blockquote>
+&lt;p>注意这里使用 intellij 运行单元测试的话，会报错。需要修改 Java Compiler 的配置，添加额外的命令行参数 &lt;code>-parameters&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/05/16176241035940.jpg" alt="">&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="打包">打包&lt;/h3>
+&lt;p>与通常的 maven 项目打包方式一样，执行 &lt;code>./mvnw package&lt;/code>，在 &lt;code>target&lt;/code> 目录中：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>quarkus-getting-started-1.0.0-SNAPSHOT.jar&lt;/code> 仅包含了项目编译的类和资源文件，是不可执行的 jar&lt;/li>
+&lt;li>&lt;code>quarkus-app&lt;/code> 目录中包含了可执行的 jar 文件 &lt;code>quarkus-run.jar&lt;/code> ，&lt;strong>但是&lt;/strong>，其并不是一个 &lt;code>über-jar&lt;/code>，项目的依赖库都位于 &lt;code>lib&lt;/code>目录中。&lt;/li>
+&lt;/ul>
+&lt;p>可以通过执行 &lt;code>java -jar target/quarkus-app/quarkus-run.jar&lt;/code> 在启动应用。&lt;/p>
+&lt;blockquote>
+&lt;p>这意味着假如你想在容器中运行，需要部署整个 &lt;code>quarkus-app&lt;/code> 目录&lt;/p>
+&lt;/blockquote>
+&lt;h4 id="使用-fast-jar">使用 fast-jar&lt;/h4>
+&lt;p>qurakus 的打包方式有两种：&lt;code>legacy-jar&lt;/code> 和 &lt;code>fast-jar&lt;/code>。可以在 &lt;code>application.properties&lt;/code> 文件中进行指定，未显式指定默认为 &lt;code>legacy-jar&lt;/code>。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">quarkus.package.type=fast-jar
+&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>如果要在容器中运行，同样需要部署整个 &lt;code>quarkus-app&lt;/code> 目录
+&lt;code>fast-jar&lt;/code> 类型的包比 &lt;code>legacy-jar&lt;/code> 的包启动会快一点点，同时占用的内存也更低。因为 &lt;code>fast-jar&lt;/code> 的包含了依赖包中的类和资源文件的索引，避免在类和资源文件加载时对 classpath 下的包的查找。&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;strong>下一篇，试试构建一个原生的可执行文件。&lt;/strong>&lt;/p></description></item><item><title>分布式系统在 Kubernetes 上的进化</title><link>https://atbug.com/translation-distributed-systems-kubernetes/</link><pubDate>Mon, 29 Mar 2021 23:11:25 +0800</pubDate><guid>https://atbug.com/translation-distributed-systems-kubernetes/</guid><description>
+&lt;p>本文译自 &lt;a href="https://www.infoq.com/articles/distributed-systems-kubernetes/">The Evolution of Distributed Systems on Kubernetes&lt;/a>&lt;/p>
+&lt;p>在 3 月份的 QCon 上，我做了一个关于 Kubernetes 的分布式系统进化的演讲。首先，我想先问一个问题，微服务之后是什么？我相信大家都有各自的答案，我也有我的答案。你会在最后发现我的想法是什么。为了达到这个目的，我建议大家看看分布式系统的需求是什么？以及这些需求在过去是如何发展的，从单体应用开始到 Kubernetes，再到最近的 Dapr、Istio、Knative 等项目，它们是如何改变我们做分布式系统的方式。我们将尝试对未来做一些预测。&lt;/p>
+&lt;h2 id="现代分布式应用">现代分布式应用&lt;/h2>
+&lt;p>为了给这个话题提供更多的背景信息，我认为的分布式系统是由数百个组件组成的系统。这些组件可以是有状态的、无状态的或者无服务器的。此外，这些组件可以用不同的语言创建，运行在混合环境上，并开发开源技术、开放标准和互操作性。我相信你可以使用闭源软件来构建这样的系统，也可以在 AWS 和其他地方构建。具体到这次演讲，我将关注 Kubernetes 生态系统，以及你如何在 Kubernetes 平台上构建这样一个系统。&lt;/p>
+&lt;p>我们从分布式系统的需求讲起。我认为是我们要创建一个应用或者服务，并写一些业务逻辑。那从运行时的平台到构建分布式系统，我们还需要什么呢？在底层，最开始是我们要一些生命周期的能力。当你用任一语言开发你的应用时，我们希望有能力把这个应用可靠地打包和部署、回滚、健康检查。并且能够把应用部署到不同的节点上，并实现资源隔离、扩展、配置管理，以及所有这些。这些都是你创建分布式应用所需要的第一点。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/55image0011616431697020.jpg" alt="">&lt;/p>
+&lt;p>第二点是围绕网络。我们有了应用之后，我们希望它能够可靠地连接到其他服务，无论该服务是在集群内部还是在外部。我们希望其具有服务发现、负载均衡的能力。为了不同的发布策略或是其他的一些原因的我们希望有流量转移的能力。然后我们还希望其具有与其他系统进行弹性通信的能力，无论是通过重试、超时还是断路器。要有适当的安全保障，并且要有足够的监控、追踪、可观察性等等。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/25image0021616431698392.jpg" alt="">&lt;/p>
+&lt;p>我们有了网络之后，接下来就是我们希望有能力与不同的 API 和端点交互，即资源绑定&amp;ndash;与其他协议和不同的数据格式交互。甚至能够从一种数据格式转换成另一种数据格式。我还会在这里加入诸如滤光的功能，也就是说，当我们订阅一个主题时，我们也许只对某些事件感兴趣。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/45image0031616431697873.jpg" alt="">&lt;/p>
+&lt;p>你认为最后一类是什么？是状态。当我在说状态和有状态的抽象时，我并不是在谈论实际的状态管理，比如数据库或者文件系统的功能。我要说的更多是有关幕后依赖状态的开发人员抽象。可能，你需要具有工作流管理的能力。也许你想管理运行时间长的进程或者做临时调度或者某些定时任务来定期运行服务。也许你还想进行分布式缓存，具有幂等性或者支持回滚。所有这些都是开发人员级的原语，但在幕后，它们依赖于具有某种状态。你想随意使用这些抽象俩创建完善的分布式系统。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/26image0041616431697348.jpg" alt="">&lt;/p>
+&lt;p>我们将使用这个分布式系统原语的框架来评估它们在 Kubernetes 和其他项目上的变化情况。&lt;/p>
+&lt;h2 id="单体架构----传统中间件功能">单体架构 &amp;ndash; 传统中间件功能&lt;/h2>
+&lt;p>假设我们从单体架构以及如何获得这些能力开始。在那种情况下，首先是当我说单体的时候，在分布式应用的情况下我想到的是 ESB。ESB 是相当强大的，当我们检查我们的需求列表时，我们会说 ESB 对所有有状态的抽象有很好的支持。&lt;/p>
+&lt;p>使用 ESB，你可以进行长时间运行的流程的编排、分布式事务、回滚和幂等。此外，ESB 还提供了出色的资源绑定能力，并且有数百个连接器，支持转换、编排，甚至有联网功能。最后，ESB 甚至可以做服务发现和负载均衡。&lt;/p>
+&lt;p>它具有围绕网络连接的弹性的所有功能，因此它可以进行重试。可能 ESB 本质上不是很分布式，所以它不需要非常高级的网络和发布能力。ESB 欠缺的主要是生命周期管理。因为它是单一运行时，所以第一件事就是你只能使用一种语言。通常是创建实际运行时的语言，Java、.NET、或者其他的语言。然后，因为是单一运行时，我们不能轻松地进行声明式的部署或者自动防止。部署是相当大且非常重的，所以它通常涉及到人机交互。这种单体架构的另一个难点是扩展：“我们无法扩展单个组件。”&lt;/p>
+&lt;p>最后却并非最不重要的一点是，围绕隔离，无论是资源隔离还是故障隔离。使用单体架构无法完成所有这些工作。从我们的需求框架来看，ESB 的单体架构不符合条件。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/40image0051616431696438.jpg" alt="">&lt;/p>
+&lt;h2 id="云原生架构----微服务和-kubernetes">云原生架构 &amp;ndash; 微服务和 Kubernetes&lt;/h2>
+&lt;p>接下来，我建议我们研究一下云原生架构以及这些需求是如何变化的。如果我们从一个非常高的层面来看，这些架构是如何发生变化的，云原生可能始于微服务运动。微服务使我们可以按业务领域进行拆分单体应用。事实证明，容器和 Kubernetes 实际上是管理这些微服务的优秀平台。让我们来看一下 Kubernetes 对于微服务特别有吸引力的一些具体特性和功能。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/13image0061616431699209.jpg" alt="">&lt;/p>
+&lt;p>从一开始，进行健康状况探测的能力就是 Kubernetes 受欢迎的原因。在实践中，这意味着当你将容器部署到 Pod 中时，Kubernetes 会检查进程的运行状况。通常情况下，该过程模型还不够好。你可能仍然有一个已启动并正在运行的进程，但是它并不健康。这就是为什么还可以使用就绪度和存活度检查的原因。Kubernetes 会做一个就绪度检查，以确定你的应用在启动期间何时准备接受流量。它将进行活跃度检查，以检查服务的运行状况。在 Kubernetes 之前，这并不是很流行，但今天几乎所有语言、所有框架、所有运行时都有健康检查功能，你可以在其中快速启动端点。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/29image0071616431696697.jpg" alt="">&lt;/p>
+&lt;p>Kubernetes 引入的下一个特性是围绕应用程序的托管生命周期&amp;ndash;我的意思是，你不再控制何时启动、何时关闭服务。你相信平台可以做到这一点。Kubernetes 可以启动你的应用；它可以将其关闭，然后在不同的节点上移动它。为此，你必须正确执行平台在应用启动和关闭期间告诉你的事件。&lt;/p>
+&lt;p>Kubernetes 刘兴的另一件特性是围绕着声明式部署。这意味着你不再需要启动服务；检查日志是否已经启动。你不必手动升级实例&amp;ndash;支持声明式部署的 Kubernetes 可以为你做到这一点。根据你选择的策略，它可以停止旧实例并启动新实例。此外，如果出现问题，可以进行回滚。&lt;/p>
+&lt;p>另外就是声明你的资源需求。创建服务时，将其容器化。最好告诉平台该服务将需要多少 CPU 和内存。Kubernetes 利用这些信息为你的工作负载找到最佳节点。在使用 Kubernetes 之前，我们必须根据我们的标准将实例手动放置到一个节点上。现在，我们可以根据自己的偏好来指导 Kubernetes，它将为我们做出最佳的决策。&lt;/p>
+&lt;p>如今，在 Kubernetes 上，你可以进行多语言配置管理。无需在应用程序运行时进行配置查找就可以进行任何操作。Kubernetes 会确保配置最终在工作负载所在的同一节点上。这些配置被映射为卷或环境变量，以供你的应用程序使用。&lt;/p>
+&lt;p>事实证明，我刚才谈到的那些特定功能也是相关的。比如说，如果要进行自动放置，则必须告诉 Kubernetes 服务的资源需求。然后，你必须告诉它要使用的部署策略。为了让策略正确运行，你的应用程序必须执行来自环境的事件。它必须执行健康检查。一旦采用了所有这些最佳实践并使用所有这些功能，你的应用就会成为出色的云原生公民，并且可以在 Kubernetes 上实现自动化了（这是在 Kubernetes 上运行工作负载的基本模式）。最后，还有围绕着构建 Pod 中的容器、配置管理和行为，还有其他模式。&lt;/p>
+&lt;p>我要简要介绍的下一个主题是工作负载。从生命周期的角度来看，我们希望能够运行不同的工作负载。我们也可以在 Kubernetes 上做到这一点。运行十二要素应用程序和无状态微服务非常简单。Kubernetes 可以做到这一点。这不是你将要承担的唯一工作量。可能你还有有状态的工作负载，你可以使用有状态集在 Kubernetes 上完成此工作。&lt;/p>
+&lt;p>你可能还有的另一个工作负载是单例。也许你希望某个应用程序的实例是整个集群中应用程序的唯一一个实例&amp;ndash;你希望它成为可靠的单例。如果失败，则重新启动。因此，你可以根据需求以及是否希望单例至少具有一种或最多一种语义来在有状态集和副本集之间进行选择。你可能还有的另一个工作负载是围绕作业和定时作业&amp;ndash;有了 Kubernetes，你也可以实现这些。&lt;/p>
+&lt;p>如果我们将所有这些 Kubernetes 功能映射到我们的需求，则 Kubernetes 可以满足生命周期需求。我通常创建的需求列表主要是由 Kubernetes 今天提供给我们的。这些是任何平台上的预期功能，而 Kubernetes 可以为你的部署做的是配置管理、资源隔离和故障隔离。此外，除了无服务器本身之外，它还支持其他工作负载。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/12image0081616431698134.jpg" alt="">&lt;/p>
+&lt;p>然后，如果这就是 Kubernetes 给开发者提供的全部功能，那么我们该如何扩展 Kubernetes 呢？以及如何使它具有更多功能？因此，我想描述当今使用的两种常用方法。&lt;/p>
+&lt;h2 id="进程外扩展机制">进程外扩展机制&lt;/h2>
+&lt;p>首先是 Pod 的概念，Pod 是用于在节点上部署容器的抽象。此外，Pod 给我们提供了两组保证：&lt;/p>
+&lt;ul>
+&lt;li>第一组是部署保证 &amp;ndash; Pod 中的所有容器始终位于同一个节点上。这意味着它们可以通过 localhost 相互通信，也可以使用文件系统或通过其他 IPC 机制进行异步通信。&lt;/li>
+&lt;li>Pod 给我们的另一组保证是围绕生命周期的。Pod 中的所有容器并非都相等。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/22image0091616431698660.jpg" alt="">&lt;/p>
+&lt;p>根据使用的是 init 容器还是应用程序容器，你会获得不同的保证。例如，init 容器在开始时运行；当 Pod 启动时，它按顺序一个接一个地运行。他们仅在之前的容器已成功完成时运行。它们有助于实现由容器驱动的类似工作流的逻辑。&lt;/p>
+&lt;p>另一方面，应用程序容器是并行运行的。它们在整个 Pod 的生命周期中运行，这也是 sidecar 模式的基础。sidecar 可以运行多个容器，这些容器可以协作并共同为用户提供价值。这也是当今我们看到的扩展 Kubernetes 附加功能的主要机制之一。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/9image0101616431695489.jpg" alt="">&lt;/p>
+&lt;p>为了解释以下功能，我必须简要地告诉你 Kubernetes 内部的工作方式。它是基于调谐循环的。调谐循环的思想是将期望状态驱动到实际状态。在 Kubernetes 中，很多功能都是靠这个来实现的。例如，当你说我要两个 Pod 实例，这系统的期望状态。有一个控制循环不断地运行，并检查你的 Pod 是否有两个实例。如果不存在两个实例，它将计算差值。它将确保存在两个实例。&lt;/p>
+&lt;p>这方面的例子有很多。一些是副本集或有状态集。资源定义映射到控制器是什么，并且每个资源定义都有一个控制器。该控制器确保现实世界与所需控制器相匹配，你甚至可以编写自己的自定义控制器。&lt;/p>
+&lt;p>当在 Pod 中运行应用程序时，你将无法在运行时加载任何配置文件更改。然而，你可以编写一个自定义控制器，检测 config map 的变化，重新启动 Pod 和应用程序&amp;ndash;从而获取配置更改。&lt;/p>
+&lt;p>事实证明，即使 Kubernetes 拥有丰富的资源集合，但它们并不能满足你的所有不同需求。Kubernetes 引入了自定义资源定义的概念。这意味着你可以对需求进行建模并定义适用于 Kubernetes 的 API。它与其他 Kubernetes 原生资源共存。你可以用能理解模型的任何语言编写自己的控制器。你可以设计一个用 Java 实现的 ConfigWatcher，描述我们前面所解释的内容。这就是 operator 模式，即与自定义资源定义一起使用的控制器。如今，我们看到很多 operator 假如，这就是第二种扩展 Kubernetes 附加功能的方式。&lt;/p>
+&lt;p>接下来，我想简单介绍一下基于 Kubernetes 构建的一些平台，这些平台大量使用 sidecar 和 operator 来给开发者提供额外的功能。&lt;/p>
+&lt;h2 id="什么是服务网格">什么是服务网格？&lt;/h2>
+&lt;p>让我们从服务网格开始，什么是服务网格？&lt;/p>
+&lt;p>我们有两个服务，服务 A 要调用服务 B，并且可以用任何语言。把这个当做是我们的应用工作负载。服务网格使用 sidecar 控制器，并在我们的服务旁边注入一个代理。你最终会在 Pod 中得到两个容器。代理是一个透明的代理，你的应用对这个代理完全无感知&amp;ndash;它拦截所有传入和传出的流量。此外，代理还充当数据防火墙。&lt;/p>
+&lt;p>这些服务代理的集合代表了你的数据平面，并且很小且无状态。为了获得所有状态和配置，它们依赖于控制平面。控制平面是保持所有配置，收集指标，做出决定并与数据平面进行交互的有状态部分。此外，它们是不同控制平面和数据平面的正确选择。事实证明，我们还需要一个组件-一个 API 网关，以将数据获取到我们的集群中。一些服务网格具有自己的 API 网关，而某些使用第三方。如果你研究下所有这些组件，它们将提供我们所需的功能。&lt;/p>
+&lt;p>API 网关主要专注于抽象我们服务的实现。它隐藏细节并提供边界功能。服务网格则相反。在某种程度上，它增强了服务内的可见性和可靠性。可以说，API 网关和服务网格共同提供了所有网络需求。要在 Kubernetes 上获得网络功能，仅使用服务是不够的：“你需要一些服务网格。”&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/19image0111616431696146.jpg" alt="">&lt;/p>
+&lt;h2 id="什么是-knative">什么是 Knative？&lt;/h2>
+&lt;p>我要讨论的下一个主题是 Knative，这是 Google 几年前启动的一个项目。它是 Kubernetes 之上的一层，可为您提供无服务器功能，并具有两个主要模块：&lt;/p>
+&lt;ul>
+&lt;li>Knative 服务 - 围绕着请求-应答交互，以及&lt;/li>
+&lt;li>Knative Eventing - 更多的是用于事件驱动的交互。&lt;/li>
+&lt;/ul>
+&lt;p>只是让你感受一下，Knative Serving 是什么？通过 Knative Serving，你可以定义服务，但这不同于 Kubernetes 服务。这是 Knative 服务。使用 Knative 服务定义工作负载后，你就会得到具有无服务器的特征的部署。你不需要有启动并运行实例。它可以在请求到达时从零开始。你得到的是无服务器的能力；它可以迅速扩容，也可以缩容到零。&lt;/p>
+&lt;p>Knative Eventing 为我们提供了一个完全声明式的事件管理系统。假设我们有一些要与之集成的外部系统，以及一些外部的事件生产者。在底部，我们将应用程序放在具有 HTTP 端点的容器中。借助 Knative Eventing，我们可以启动代理，该代理可以触发 Kafka 映射的代理，也可以在内存或者某些云服务中。此外，我们可以启动连接到外部系统的导入器，并将事件导入到我们的代理中。这些导入器可以基于，例如，具有数百个连接器的 Apache Camel。&lt;/p>
+&lt;p>一旦我们将事件发送给代理，然后用 YAML 文件声明，我们可以让容器订阅这些事件。在我们的容器中，我们不需要任何消息客户端&amp;ndash;比如 Kafka 客户端。我们的容器将使用云事件通过 HTTP POST 获取事件。这是一个完全平台管理的消息传递基础设施。作为开发人员，你必须在容器中编写业务代码，并且不处理任何消息传递逻辑。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/8image0121616431698919.jpg" alt="">&lt;/p>
+&lt;p>从我们的需求的角度来看，Knative 可以满足其中的一些要求。从生命周期的角度来看，它为我们的工作负载提供了无服务器的功能，因此能够将其扩展到零，并从零开始激活。从网络的角度来看，如果服务网格之间存在某些重叠，则 Knative 也可以进行流量转移。从绑定的角度来看，它对使用 Knative 导入程序进行绑定提供了很好的支持。它可以使我们进行发布/订阅，或点对点交互，甚至可以进行一些排序。它可以满足几类需求。&lt;/p>
+&lt;h2 id="什么是-dapr">什么是 Dapr？&lt;/h2>
+&lt;p>另一个使用 sidecar 和 operator 的项目是 &lt;a href="https://dapr.io/">Dapr&lt;/a>，它是微软几个月前才开始并且正在迅速流行起来。此外，1.0 版本 &lt;a href="https://www.infoq.com/news/2021/02/dapr-production-ready/">被认为是生产可用的&lt;/a>。它是一个作为 sidecar 的分布式系统工具包&amp;ndash;Dapr 中的所有内容都是作为 sidecar 提供的，并且有一套他们所谓的构件或功能集的集合。&lt;/p>
+&lt;p>这些功能是什么呢？第一组功能是围绕网络。Dapr 可以进行服务发现和服务之间的点对点集成。同样，它也可以进行服务网格的追踪、可靠通信、重试和恢复。第二套功能是围绕资源绑定：&lt;/p>
+&lt;ul>
+&lt;li>它有很多云 API、不同系统的连接器，以及&lt;/li>
+&lt;li>也可以做消息发布/订阅和其他逻辑。&lt;/li>
+&lt;/ul>
+&lt;p>有趣的是，Dapr 还引入了状态管理的概念。除了 Knative 和服务网格提供的功能外，Dapr 在状态存储之上进行了抽象。此外，你通过存储机制支持与 Dapr 进行基于键值的交互。&lt;/p>
+&lt;p>在较高的层次上，架构是你的应用程序位于顶部，可以使用任何语言。你可以使用 Dapr 提供的客户端库，但你不必这样做。你可以使用语言功能来执行称为 sidecar 的 HTTP 和 gRPC。与 服务网格的区别在于，这里的 Dapr sidecar 不是一个透明的代理。它是一个显式代理，你必须从你的应用中调用它，并通过 HTTP 或 gRPC 与之交互。根据你需要的功能，Dapr 可以与其他如云服务的系统对话。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/18image0131616431699532.jpg" alt="">&lt;/p>
+&lt;p>在 Kubernetes 上，Dapr 是作为 sidecar 部署的，并且可以在 Kubernetes 之外工作（不仅仅是 Kubernetes）。此外，它还有一个 operator &amp;ndash; 而 sidecar 和 Operator 是主要的扩展机制。其他一些组件管理证书、处理基于 actor 的建模并注入 sidecar。你的工作负载与 sidecar 交互，并尽其所能与其他服务对话，让你与不同的云提供商进行互操作。它还为你提供了额外的分布式系统功能。&lt;/p>
+&lt;p>综上所述，这些项目所提供的功能，我们可以说 ESB 是分布式系统的早期化身，其中我们有集中式的控制平面和数据平面&amp;ndash;但是扩展性不好。在云原生中，集中式控制平面仍然存在，但是数据平面是分散的&amp;ndash;并且具有隔音功能和高度的可扩展性。&lt;/p>
+&lt;p>我们始终需要 Kubernetes 来做良好的生命周期管理，除此之外，你可能还需要一个或多个附加组件。你可能需要 Istio 来进行高级联网。你可能会使用 Knative 来进行无服务器工作负载，或者使用 Dapr 来做集成。这些框架可与 Istio 和 Envoy 很好的配合使用。从 Dapr 和 Knative 的角度来看，你可能必须选择一个。它们共同以云原生的方式提供了我们过去在 ESB 上拥有的东西。&lt;/p>
+&lt;h2 id="未来云原生趋势--生命周期趋势">未来云原生趋势&amp;ndash;生命周期趋势&lt;/h2>
+&lt;p>在接下来的部分，我列出了一些我认为在这些领域正在发生令人振奋的发展的项目。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/8image0141616431695762.jpg" alt="">&lt;/p>
+&lt;p>我想从生命周期开始。通过 Kubernetes，我们可以为应用程序提供一个有用的生命周期，这可能不足以进行更复杂的生命周期管理。比如，如果你有一个更复杂的有状态应用，则可能会有这样的场景，其中 Kubernetes 中的部署原语不足以为应用提供支持。&lt;/p>
+&lt;p>在这些场景下，你可以使用 operator 模式。你可以使用一个 operator 来进行部署和升级，还可以将 S3 作为服务备份的存储介质。此外，你可能还会发现 Kubernetes 的实际健康检查机制不够好。假设存活检查和就绪检查不够好。在这种情况下，你可以使用 operator 对你的应用进行更智能的存活和就绪检查，然后在此基础上进行恢复。&lt;/p>
+&lt;p>第三个领域就是自动伸缩和调整。你可以让 operator 更好的了解你的应用，并在平台上进行自动调整。目前，编写 operator 的框架主要有两个，一个是 Kubernetes 特别兴趣小组的 Kubebuilder，另一个是红帽创建的 operator 框架的一部分&amp;ndash;operator SDK。它有以下几个方面的内容：&lt;/p>
+&lt;p>Operator SDK 让你可以编写 operator &amp;ndash; operator 生命周期管理器来管理 operator 的生命周期，以及可以发布你的 operator 到 OperatorHub。如今在 OperatorHub，你会看到 100 多个 operator 用于管理数据库、消息队列和监控工具。从生命周期空间来看，operator 可能是 Kubernetes 生态系统中发展最活跃的领域。&lt;/p>
+&lt;h2 id="网络趋势---envoy">网络趋势 - Envoy&lt;/h2>
+&lt;p>我选的另一个项目是 &lt;a href="https://www.envoyproxy.io/">Envoy&lt;/a>。服务网格接口规范的引入将使你更轻松地切换不同的服务网格实现。在部署上 Istio 对架构进行了一些整合。你不再需要为控制平面部署 7 个 Pod；现在，你只需要部署一次就可以了。更有趣的是在 Envoy 项目的数据平面上所正在发生的：越来越多的第 7 层协议被添加到 Envoy 中。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/11image0151616431697613.jpg" alt="">&lt;/p>
+&lt;p>服务网格增加了对更多协议的支持，比如 MongoDB、ZooKeeper、MySQL、Redis，而最新的协议是 Kafka。我看到 Kafka 社区现在正在进一步改进他们的协议，使其对服务网格更加友好。我们可以预料将会有更紧密的集成、更多的功能。最有可能的是，会有一些桥接的能力。你可以从服务中在你的应用本地做一个 HTTP 调用，而代理将在后台使用 Kafka。你可以在应用外部，在 sidecar 中针对 Kafka 协议进行转换和加密。&lt;/p>
+&lt;p>另一个令人兴奋的发展是引入了 HTTP 缓存。现在 Envoy 可以进行 HTTP 缓存。你不必在你的应用中使用缓存客户端。所有这些都是在 sidecar 中透明地完成的。有了 tap 过滤器，你可以 tap 流量并获得流量的副本。最近，WebAssembly 的引入，意味着如果你要为 Envoy 编写一些自定义的过滤器，你不必用 C++ 编写，也不必编译整个 Envoy 运行时。你可以用 WebAssembly 写你的过滤器，然后在运行时进行部署。这些大多数还在进行中。它们不存在，说明数据平面和服务网格无意停止，仅支持 HTTP 和 gRPC。他们有兴趣支持更多的应用层协议，为你提供更多的功能，以实现更多的用例。最主要的是，随着 WebAssembly 的引入，你现在可以在 sidecar 中编写自定义逻辑。只要你没有在其中添加一些业务逻辑就可以了。&lt;/p>
+&lt;h2 id="绑定趋势---apache-camel">绑定趋势 - Apache Camel&lt;/h2>
+&lt;p>&lt;a href="https://camel.apache.org/">Apache Camel&lt;/a> 是一个用于集成的项目，它具有很多使用企业集成模式连接到不同系统的连接器。 比如 &lt;a href="https://camel.apache.org/releases/release-3.0.0/">Camel version 3&lt;/a> 就深度集成到了 Kubernetes 中，并且使用了我们到目前为止所讲的那些原语，比如 operator。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/7image0161616431694981.jpg" alt="">&lt;/p>
+&lt;p>你可以在 Camel 中用 Java、JavaScript 或 YAML 等语言编写你的集成逻辑。最新的版本引入了一个 Camel operator，它在 Kubernetes 中运行并理解你的集成。当你写好 Camel 应用，将其部署到自定义资源中，operator 就知道如何构建容器或查找依赖项。根据平台的能力，不管是只用 Kubernetes，还是带有 Knative 的 Kubernetes，它都可以决定要使用的服务以及如何实现集成。在运行时之外有相当多的智能 &amp;ndash; 包括 operator &amp;ndash; 所有这些都非常快地发生。为什么我会说这是一个绑定的趋势？主要是因为 Apache Camel 提供的连接器的功能。这里有趣的一点是它如何与 Kubernetes 深度集成。&lt;/p>
+&lt;h2 id="状态趋势---cloudstate">状态趋势 - Cloudstate&lt;/h2>
+&lt;p>另一个我想讨论的项目是 &lt;a href="https://cloudstate.io/">Cloudstate&lt;/a> 和与状态相关的趋势。Cloudstate 是 Lightbend 的一个项目，主要致力于无服务器和功能驱动的开发。最新发布的版本，正在使用 sidecar 和 operator 与 Kubernetes 进行深度集成。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/8image0171616431996943.jpg" alt="">&lt;/p>
+&lt;p>这个创意是，当你编写你的功能时，你在功能中要做的就是使用 gRPC 来获取状态并与之进行交互。整个状态管理在与其他 sidecar 群集的 sidear 中进行。它使你能够进行事件溯源、CQRS、键值查询、消息传递。&lt;/p>
+&lt;p>从应用程序角度来看，你并不了解所有这些复杂性。你所做的只是调用一个本地的 sidecar，而 sidecar 会处理这些复杂的事情。它可以在后台使用两个不同的数据源。而且它拥有开发人员所需的所有有状态抽象。&lt;/p>
+&lt;p>到目前为止，我们已经看到了云原生生态系统中的最新技术以及一些仍在进行中的开发。我们如何理解这一切？&lt;/p>
+&lt;h2 id="多运行时微服务已经到来">多运行时微服务已经到来&lt;/h2>
+&lt;p>如果你看微服务在 Kubernetes 上的样子，则将需要使用某些平台功能。此外，你将需要首先使用 Kubernetes 的功能进行生命周期管理。然后，很有可能透明地，你的服务会使用某些服务网格（例如 Envoy）来获得增强的网络功能，无论是流量路由、弹性、增强的安全性，甚至出于监控的目的。除此之外，根据你的场景和使用的工作负载可能需要 Dapr 或者 Knative。所有这些都代表了进程外附加的功能。剩下的就是编写业务逻辑，不是放在最上面而是作为一个单独的运行时来编写。未来的微服务很有可能将是由多个容器组成的这种多运行时。有些是透明的，有些则是非常明确的。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/6image0181616431996411.jpg" alt="">&lt;/p>
+&lt;h2 id="智能的-sidecar-和愚蠢的管道">智能的 sidecar 和愚蠢的管道&lt;/h2>
+&lt;p>如果更深入地看，那可能是什么样的，你可以使用一些高级语言编写业务逻辑。是什么并不重要，不必仅是 Java，因为你可以使用任何其他语言并在内部开发自定义逻辑。&lt;/p>
+&lt;p>你的业务逻辑与外部世界的所有交互都是通过 sidecar 发生的，并与平台集成进行生命周期管理。它为外部系统执行网络抽象，为你提供高级的绑定功能和状态抽象。sidecar 是你不需要开发的东西。你可以从货架上拿到它。你用一点 YAML 或 JSON 配置它，然后就可以使用它。这意味着你可以轻松地更新 sidecar，因为它不再被嵌入到你的运行时。这使得打补丁、更新变得更加更容易。它为我们的业务逻辑启用了多语言运行时。&lt;/p>
+&lt;h2 id="微服务之后是什么">微服务之后是什么？&lt;/h2>
+&lt;p>这让我想到了最初的问题，微服务之后是什么？&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/6image0201616431995910.jpg" alt="">&lt;/p>
+&lt;p>如果我们看下架构的发展历程，应用架构在很高的层面上是从单体应用开始的。然而微服务给我们提供了如何把一个单体应用拆分成独立的业务域的指导原则。之后又出现了无服务器和功能即服务（FaaS），我们说过可以按操作将其进一步拆分，从而实现极高的可扩展性-因为我们可以分别扩展每个操作。&lt;/p>
+&lt;p>我想说的是 FaaS 并不是最好的模式 &amp;ndash; 因为功能并不是实现合理的复杂服务的最佳模式，在这种情况下，当多个操作必须与同一个数据集进行交互时，你希望它们驻留在一起。可能是多运行时（我把它称为 &lt;a href="https://www.infoq.com/articles/multi-runtime-microservice-architecture/">Mecha 架构&lt;/a>），在该架构中你将业务逻辑放在一个容器中，而所有与基础设施相关的关注点作为一个单独的容器存在。它们共同代表多运行时微服务。也许这是一个更合适的模型，因为它有更好的属性。&lt;/p>
+&lt;p>你可以获得微服务的所有好处。仍然将所有域和所有限界上下文放在一处。你将所有的基础设施和分布式应用需求放在一个单独的容器中，并在运行时将它们组合在一起。大概，现在最接近这种模型的是 Dapr。他们正在遵循这种模型。如果你仅对网络方面感兴趣，那么可能使用 Envoy 也会接近这种模型。&lt;/p>
+&lt;h2 id="关于作者">关于作者&lt;/h2>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/21bilgin-ibryam15886810412341616480845087.jpeg" alt="">&lt;/p>
+&lt;p>&lt;strong>Bilgin Ibryam&lt;/strong> 是红帽公司的产品经理和前架构师、提交人，并且是 Apache 软件基金会的成员。他是开源布道者，经常写博客、发表演讲，是 &lt;a href="https://k8spatterns.io/">Kubernetes Patterns&lt;/a> 和 Camel Design Patterns 书籍的作者。Bilgin 目前的工作主要集中在分布式系统、事件驱动架构以及可重复的云原生应用开发模式和实践上。请关注他 @bibryam 了解未来类似主题的更新。&lt;/p></description></item><item><title>【译】2021 年及未来的云原生预测</title><link>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</link><pubDate>Tue, 09 Feb 2021 06:43:54 +0800</pubDate><guid>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</guid><description>
+&lt;p>本文译自 &lt;a href="https://www.cncf.io/blog/2021/01/29/cloud-native-predictions-for-2021-and-beyond/">Cloud Native Predictions for 2021 and Beyond&lt;/a>&lt;/p>
+&lt;p>原文发布在 &lt;a href="https://www.aniszczyk.org/2021/01/19/cloud-native-predictions-for-2021-and-beyond/">Chris Aniszczyk 的个人博客&lt;/a>&lt;/p>
+&lt;p>我希望每个人都有一个美好的假期，因为 2021 年 1 月的前几周一直非常疯狂，从叛乱到新的 COVID 菌株。在云原生国度，CNCF 最近发布了关于我们去年完成的所有工作的&lt;a href="https://www.cncf.io/cncf-annual-report-2020/">年度报告&lt;/a>。我建议大家找个机会去看一下这份报告，在疫情大流行的这一年，我们收获颇丰。&lt;a href="https://twitter.com/CloudNativeFdn/status/1343914259177222145">https://twitter.com/CloudNativeFdn/status/1343914259177222145&lt;/a>&lt;/p>
+&lt;p>作为我工作的一部分，我对云原生趋势有一个独特的观点，送给所有与我合作的会员公司和开发人员，所以我想我会分享我对 2021 年及以后云原生发展的想法。&lt;/p>
+&lt;p>&lt;strong>云原生的 IDE&lt;/strong>&lt;/p>
+&lt;p>作为一个在 Eclipse 基金会内部从事开发者工具工作的人，我对最近的技术状态进展感到无比兴奋。未来，开发生命周期（代码、构建、调试）将主要发生在云端，而不是你本地的 Emacs 或 VSCode。你将每一个拉动请求最终得到一个完整的开发环境设置，预先配置并连接到他们自己的部署，以协助你的开发和调试需求。今天这种技术的一个具体例子是通过 GitHub &lt;a href="https://github.com/features/codespaces">Codespaces&lt;/a> 和 &lt;a href="https://gitpod.io/">GitPod&lt;/a> 实现的。虽然 GitHub Codespaces 还处于测试阶段，但今天你可以通过 GitPod 来体验，以 &lt;a href="https://gitpod.io/#https://github.com/prometheus/prometheus">Prometheus&lt;/a> 为例。一分钟左右，你就拥有了一个有编辑器和预览环境的完全实时的开发环境。最疯狂的是，这个开发环境（工作空间）是 &lt;a href="https://github.com/prometheus/prometheus/blob/master/.gitpod.yml">用代码描述&lt;/a>，并且可以像其他代码工件一样，与你团队的其他开发者共享。&lt;/p>
+&lt;p>最后，我期望在接下来的一年里，能看到云原生 IDE 领域出现令人难以置信的创新，特别是随着 GitHub Codespaces 进入测试版之后，并得到广泛地使用，让开发者可以体验到这个新概念，并爱上它。&lt;/p>
+&lt;p>&lt;strong>边缘的 Kubernetes&lt;/strong>&lt;/p>
+&lt;p>Kubernetes 是通过在大规模数据中心的使用而诞生的，但 Kubernetes 会像 Linux 一样为新的环境而进化。Linux 所发生的事情是，终端用户最终对内核进行了扩展，以支持从移动、嵌入式等各种新的部署场景。我坚信 Kubernetes 也会经历类似的进化，我们已经见证了 Telcos（和其他初创公司）通过将 VNFs 转化为 &lt;a href="https://github.com/cncf/cnf-wg">云原生网络功能&lt;/a>（CNFs），以及 &lt;a href="https://k3s.io/">k3s&lt;/a>、KubeEdge、k0s、&lt;a href="https://www.lfedge.org/">LFEdge&lt;/a>、Eclipse ioFog 等开源项目，来探索 Kubernetes 作为边缘平台。推动超大规模云服务支持电信公司和边缘的能力，再加上重用云原生软件的能力，以及建立在现有庞大的生态系统基础上的能力，将巩固 Kubernetes 在未来几年内成为边缘计算的主导平台。&lt;/p>
+&lt;p>&lt;strong>云原生 + Wasm&lt;/strong>&lt;/p>
+&lt;p>&lt;a href="https://webassembly.org/">Web Assembly&lt;/a>(Wasm) 是一项新的技术，但我预计它将成为云原生生态系统中不断增长的实用工具和工作负载，特别是随着 &lt;a href="https://wasi.dev/">WASI&lt;/a> 的成熟，以及 Kubernetes 更多地作为边缘编排工具使用，如前所述。一个场景是增强扩展机制，就像 Envoy 对过滤器和 LuaJIT 所做的那样。你可以与一个支持各种编程语言的更小的优化运行时协同，而不是直接与 Lua 打交道。Envoy 项目目前正处于 &lt;a href="https://www.solo.io/blog/the-state-of-webassembly-in-envoy-proxy/">采用 Wasm&lt;/a> 的过程中，我预计任何使用脚本语言作为流行扩展机制的环境都会出现被 Wasm 全盘取代的情况。&lt;/p>
+&lt;p>在 Kubernetes 方面，有像微软的 &lt;a href="https://deislabs.io/posts/introducing-krustlet/">Krustlet&lt;/a> 这样的项目，正在探索如何在 Kubernetes 中支持基于 WASI 的运行时。这不应该太令人惊讶，因为 Kubernetes 已经在通过 CRD 和其他机制扩展，以运行不同类型的工作负载，如 VM（&lt;a href="https://kubevirt.io/">KubeVirt&lt;/a>）等等。&lt;/p>
+&lt;p>另外，如果你是 Wasm 的新手，我推荐 Linux 基金会的这本新的 &lt;a href="https://www.edx.org/course/introduction-to-webassembly-runtime">入门课程&lt;/a>，它对其进行了介绍，以及优选的文档。&lt;/p>
+&lt;p>&lt;strong>FinOps 的崛起（CFM）&lt;/strong>&lt;/p>
+&lt;p>新冠病毒的爆发加速了向云原生的转变。至少有一半的公司在危机中加快了他们的云计划。近 60% 的受访者表示，由于 COVID-19 大流行，云计算的使用量将超过之前的计划 (&lt;a href="https://info.flexera.com/SLO-CM-REPORT-State-of-the-Cloud-2020">2020 年云计算现状报告&lt;/a>)。除此之外，云财务管理 (或 FinOps) 对许多公司来说是一个日益严重的问题和 &lt;a href="https://www.wsj.com/articles/cloud-bills-will-get-loftier-1518363001">关注&lt;/a>，老实说，在过去 6 个月里，我与正在进行云原生之旅的公司进行的讨论中，大约有一半的讨论都会提到这个问题。你也可以说，云提供商没有动力让云财务管理变得更容易，因为这将使客户更容易减少支出，然而，在我看来，真正的痛苦是缺乏围绕云财务管理的开源创新和标准化（所有的云都以不同的方式进行成本管理）。在 CNCF 的背景下，试图让 FinOps 变得更容易的开源项目并不多，有 &lt;a href="https://github.com/kubecost/cost-model">KubeCost&lt;/a> 项目，但还相当早期。&lt;/p>
+&lt;p>另外，Linux 基金会最近推出了 &lt;a href="https://www.finops.org/blog/linux-foundation">FinOps 基金会&lt;/a> 来帮助这个领域的创新，他们在这个领域有一些 &lt;a href="https://www.edx.org/course/introduction-to-finops">很棒的入门材料&lt;/a>。我期望在未来几年，在 FinOps 领域能看到更多的开源项目和规范。&lt;/p>
+&lt;p>&lt;strong>云原生中更多的使用 Rust&lt;/strong>&lt;/p>
+&lt;p>Rust 仍然是一门年轻而小众的编程语言，特别是如果你以 Redmonk 的 &lt;a href="https://redmonk.com/sogrady/2020/07/27/language-rankings-6-20/">编程语言排名&lt;/a> 为例。然而，我的感觉是，鉴于已经有一些 &lt;a href="https://www.cncf.io/blog/2020/06/22/rust-at-cncf/">使用 Rust 的 CNCF 项目&lt;/a>，以及它出现在像 microvm &lt;a href="https://firecracker-microvm.github.io/">Firecracker&lt;/a> 这样有趣的基础设施项目中，你将在未来一年中看到 Rust 出现在更多的云原生项目中。虽然 CNCF 目前有超多的项目是用 Golang 编写的，但我预计随着 &lt;a href="https://blog.rust-lang.org/2020/08/18/laying-the-foundation-for-rusts-future.html">Rust 社区的成熟&lt;/a>，几年后基于 Rust 的项目将与基于 Go 的项目平起平坐。&lt;/p>
+&lt;p>&lt;strong>GitOps+CD/PD 增长显著&lt;/strong>&lt;/p>
+&lt;p>&lt;a href="https://www.weave.works/blog/what-is-gitops-really">GitOps&lt;/a> 是云原生技术的一种操作模式，提供了一套统一部署、管理和监控应用程序的最佳实践 (最初是由 Weaveworks 名气很大的 Alexis Richardson&lt;a href="https://www.weave.works/blog/gitops-operations-by-pull-request">创造&lt;/a>)。GitOps 最重要的方面是通过声明的方式描述所需的在 Git 中版本化的系统状态，这基本上可以使一系列复杂的系统变更被正确地应用，然后进行验证（通过 Git 和其他工具启用的漂亮的审计日志）。从实用的角度来看，GitOps 改善了开发者的体验，随着 Argo、GitLab、Flux 等项目的发展，我预计今年 GitOps 工具会更多地冲击企业。如果你看过 GitLab 的 &lt;a href="https://about.gitlab.com/blog/2020/07/14/gitops-next-big-thing-automation/">数据&lt;/a>，GitOps 还是一个大部分公司还没有探索出来的新兴的实践，但随着越来越多的公司大规模采用云原生软件，我认为 GitOps 自然会随之而来。如果你有兴趣了解更多关于这个领域的信息，我推荐你去看看 CNCF 中 &lt;a href="https://codefresh.io/devops/announcing-gitops-working-group/">新&lt;/a> 成立的 &lt;a href="https://github.com/gitops-working-group/gitops-working-group">GitOps 工作组&lt;/a>。&lt;/p>
+&lt;p>&lt;strong>服务目录2.0：云原生开发者仪表盘&lt;/strong>&lt;/p>
+&lt;p>服务目录的概念并不是一个新事物，对于我们一些在 &lt;a href="https://en.wikipedia.org/wiki/ITIL">ITIL&lt;/a> 时代成长起来的老人们来说，你可能还记得 &lt;a href="https://en.wikipedia.org/wiki/Configuration_management_database">CMDBs&lt;/a> （恐怖）等东西。然而，随着微服务和云原生开发的兴起，对服务进行编目和索引各种实时服务元数据的能力对于推动开发者自动化是至关重要的。这可以包括使用服务目录来了解所有权来处理事件管理、管理 SLO 等。&lt;/p>
+&lt;p>在未来，你将看到开发人员仪表盘的趋势，它不仅是一个服务目录，而且提供了通过各种自动化功能在扩展仪表盘的能力。这方面的典范开源例子是 Lyft 的 &lt;a href="https://engineering.atspotify.com/2020/03/17/what-the-heck-is-backstage-anyway/">Backstage&lt;/a> 和 &lt;a href="https://eng.lyft.com/announcing-clutch-the-open-source-platform-for-infrastructure-tooling-143d00de9713">Clutch&lt;/a>，然而，任何拥有相当现代的云原生部署的公司往往都有一个平台基础设施团队，他们已经尝试构建类似的东西。随着开源开发者仪表盘与 &lt;a href="https://backstage.io/plugins">大型插件生态系统&lt;/a> 的成熟，你会看到其被各地的平台工程团队加速采用。&lt;/p>
+&lt;p>&lt;strong>跨云变得更真实&lt;/strong>&lt;/p>
+&lt;p>Kubernetes 和云原生运动已经证明了云原生和多云方式在生产环境中是可行的，数据很清楚地表明“93% 的企业都有使用微软 Azure、亚马逊网络服务和谷歌云等多个提供商的策略” (&lt;a href="https://info.flexera.com/SLO-CM-REPORT-State-of-the-Cloud-2020">2020 年云计算现状报告&lt;/a>)。事实上，Kubernetes 这些年伴随着云市场的发展而更加成熟，将有望解锁程序化的跨云管理服务。这种方法的一个具体例子体现在 Crossplane 项目中，该项目提供了一个开源的跨云控制平面，利用 Kubernetes API 的可扩展性来实现跨云工作负载管理（参见 &lt;a href="https://thenewstack.io/gitlab-deploys-the-crossplane-control-plane-to-offer-multicloud-deployments/">&amp;ldquo;GitLab 部署 Crossplane 控制平面，提供多云部署 &amp;ldquo;&lt;/a>）。&lt;/p>
+&lt;p>&lt;strong>主流 eBPF&lt;/strong>&lt;/p>
+&lt;p>&lt;a href="https://en.wikipedia.org/wiki/Berkeley_Packet_Filter">eBPF&lt;/a> 允许你在不改变内核代码或加载模块的情况下，在 Linux 内核中运行程序，你可以把它看作是一种沙箱扩展机制。eBPF 允许 &lt;a href="https://ebpf.io/projects">新一代软件&lt;/a> 从改进的网络、监控和安全等各种不同的方向扩展 Linux 内核的行为。从历史上看，eBPF 的缺点是它需要一个现代的内核版本来利用它，在很长一段时间里，这对许多公司来说都不是一个现实的选择。然而，事情正在发生变化，甚至新版本的 RHEL 终于支持 eBPF，所以你会看到更多的项目利用其 [优势]（https://sysdig.com/blog/sysdig-and-falco-now-powered-by-ebpf/）。如果你看过 Sysdig 最新的 &lt;a href="https://sysdig.com/blog/sysdig-2021-container-security-usage-report/">容器报告&lt;/a>，你会发现 Falco 的采用率最近在上升，虽然 Sysdig 的报告可能有点偏颇，但它反映在生产使用上。所以请继续关注，并期待未来更多基于 eBPF 的项目。&lt;/p>
+&lt;p>&lt;strong>最后，祝大家 2021 年快乐！&lt;/strong>&lt;/p>
+&lt;p>我还有一些预测和趋势要分享，尤其是围绕终端用户驱动的开源、服务网格拆解/标准化、Prometheus+OTel、保障软件供应链安全的 KYC 等等，但我会把这些留到更详细的文章中去，9 个预测足以开启新的一年！总之，感谢大家的阅读，希望在 2021 年 5 月的 &lt;a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/">KubeCon+CloudNativeCon EU&lt;/a> 上与大家见面，报名已开始！&lt;/p></description></item><item><title>【译】应用架构：为什么要随着市场演进</title><link>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</link><pubDate>Sun, 17 Jan 2021 21:37:23 +0800</pubDate><guid>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</guid><description>
+&lt;p>本文译自 &lt;a href="https://www.cncf.io/blog/2021/01/07/application-architecture-why-it-should-evolve-with-the-market/">Application architecture: why it should evolve with the market&lt;/a>
+最初由Mia Platform团队发布在&lt;a href="https://blog.mia-platform.eu/en/application-architecture-why-it-should-evolve-with-the-market">Mia Platform的博客&lt;/a>上&lt;/p>
+&lt;p>如今，IT 挑战在于通过有效选择应用架构来适应市场和业务需求的发展。为了满足业务和客户的需求，IT 部门应能够对技术和&lt;strong>方法&lt;/strong>采取行动以确保软件具有灵活性，并实现产品和服务的持续创新流程，从而做出更快的反应 。&lt;/p>
+&lt;p>当然，过去的单体应用程序和刚性基础设施无法做到这一点。相反，它可以通过&lt;strong>为演化而设计的架构&lt;/strong>来实现，该架构在需要时易于更新和重构。容器化实践的广泛应用（根据 &lt;a href="https://www.gartner.com/en/newsroom/press-releases/2020-06-25-gartner-forecasts-strong-revenue-growth-for-global-co">Gartner&lt;/a>，到2022年，大公司的就业人数将从目前的 30％ 增长到 75％），这种情况下采用云原生方法重新设计微服务应用是成功的关键。&lt;/p>
+&lt;h2 id="如何构建不断发展的应用架构">如何构建不断发展的应用架构&lt;/h2>
+&lt;p>海外专家称它们为&lt;strong>可演进的架构&lt;/strong>，以将它们与当今阻碍或无助于改变的传统架构区分开。应用架构基于&lt;a href="https://blog.mia-platform.eu/it/architettura-a-microservizi-i-vantaggi-per-il-business-e-per-lit">微服务架构风格&lt;/a> ，被设计成在现代虚拟化 IT 和云环境中发挥最佳性能。&lt;/p>
+&lt;p>基本思想是&lt;strong>创建可以轻松“分解”的应用程序，其组件可以在其他上下文或组合中重用&lt;/strong>，如 Lego 系列。开发一系列微服务，每个微服务都用于执行单个业务功能（根据“单一职责原则”），可以在应用本身的开发和演进中获得相当大的灵活性。实际上，可以根据支持功能的特定生命周期独立开发、更新和测试服务。&lt;/p>
+&lt;p>此外，谈到部署，微服务应用的架构具有很大的优势：可以根据需要在内部或云中通过使用可用资源来扩展单个微服务。&lt;/p>
+&lt;p>为此，微服务应用获得&lt;strong>基于容器的基础设施&lt;/strong>的支持，该基础设施通过业务编排系统（通常为 &lt;a href="https://blog.mia-platform.eu/en/kubernetes-why-it-is-so-popular-and-who-should-use-it">Kubernetes&lt;/a>）进行管理，该流程可以自动化并促进公司系统之间以及从这些系统到云提供商服务的软件作业的迁移。&lt;/p>
+&lt;h2 id="随着业务发展的应用架构的优势">随着业务发展的应用架构的优势&lt;/h2>
+&lt;p>基于微服务的应用架构在开发和部署方面具有更大的自治权。如我们所见，微服务可以在其他应用程序中单独实现、“分解”、更新和重用。因此，通过产品或客户需求的演变，它有降低&lt;strong>减少市场所需的每个新产品的设计/开发时间和成本&lt;/strong>。&lt;/p>
+&lt;p>此外，通过使用容器化实践，可以简化在本地、云、多云或混合环境的任何环境中应用程序的部署，从而优化成本。&lt;/p>
+&lt;p>在微服务架构风格的优点中，我们还发现有可能在各种服务之间的对话及其健康状况上获得更大的&lt;strong>透明度&lt;/strong>：更好的可观察性意味着可以轻松解决复杂应用的问题。实际上，管理员可以&lt;strong>更快地定位和解决性能和安全性问题&lt;/strong>，在运维和代码层面实施措施，从而使响应速度与变更的长期有效性保持一致。&lt;/p>
+&lt;p>通过采用微服务以及新的开发和部署方法，可以创建能够随时间发展的应用架构。除了 IT 团队必须掌握的新技能外，还必须对公司的未来有一个清晰的愿景，以确保所提供的服务对业务发展有用。&lt;/p>
+&lt;h2 id="创建可演进的应用架构">创建可演进的应用架构&lt;/h2>
+&lt;p>我们已经看到了基于微服务的现代应用架构如何保证软件的灵活性，并允许你利用本地和按需使用的所有资源，在可以&lt;strong>方便地&lt;/strong>获得所需性能、降低成本或保护数据的&lt;strong>位置分配作业&lt;/strong>。&lt;/p>
+&lt;p>为了使之成为可能，有必要在云和混合环境中创建和管理虚拟化的 IT 环境，并&lt;strong>采用最合适的方法和策略&lt;/strong>。例如，在用于将开发和运维活动链接在一起的DevOps领域中，&lt;strong>持续集成/持续交付&lt;/strong>（CI / CD）策略的方法学支持可帮助提高更新速度和应用软件的质量。&lt;/p>
+&lt;p>此外，微服务可促进对&lt;a href="https://blog.mia-platform.eu/it/da-monolite-a-microservizi-come-far-evolvere-unapplicazione-legacy">遗留应用程序的集成&lt;/a>，从而使公司更加敏捷，并利用市场上最&lt;strong>先进的解决方案&lt;/strong>。除了需要新的技术和工作方法外，现在还需要可演进的应用架构来&lt;strong>支持数字化转型所决定的不断变化的需求&lt;/strong>。&lt;/p></description></item><item><title>翻译：多运行时微服务架构</title><link>https://atbug.com/translation-multi-runtime-microservices-architecture/</link><pubDate>Wed, 01 Apr 2020 23:18:00 +0800</pubDate><guid>https://atbug.com/translation-multi-runtime-microservices-architecture/</guid><description>
+&lt;p>这样文章通过Google翻译和人工逐字修改的方式完成的，某些位置也加上自己的理解。如有错误，请指出。&lt;/p>
+&lt;p>翻译这篇文章的目的其实是为了自己加深对微服务、分布式架构以及多运行时架构的理解。整篇文章从”战略“上分析了微服务”从古至今“解决的问题，以及带来的新问题；进而在“战术”层面，给出了解决这些新问题的手段。&lt;/p>
+&lt;p>个人见解：架构从来都是解决问题并带来问题， &lt;em>取舍之道&lt;/em> 。&lt;/p>
+&lt;h3 id="背景知识">背景知识&lt;/h3>
+&lt;p>微服务的 12 要素：&lt;/p>
+&lt;ol>
+&lt;li>基准代码：一份基准代码，多份部署&lt;/li>
+&lt;li>依赖：显式声明依赖关系&lt;/li>
+&lt;li>配置：在环境中存储配置&lt;/li>
+&lt;li>后端服务：把后端服务当做附加资源&lt;/li>
+&lt;li>构建、发布、运行：严格分离构建和运行&lt;/li>
+&lt;li>进程：以一个或多个无状态进程运行应用&lt;/li>
+&lt;li>端口绑定：通过端口绑定提供服务&lt;/li>
+&lt;li>并发：通过进程模型进行扩展&lt;/li>
+&lt;li>易处理：快速启动和优雅终止可最大化健壮性&lt;/li>
+&lt;li>开发环境与线上环境等价：尽可能的保持开发、预发布、线上环境相同&lt;/li>
+&lt;li>日志：把日志当做事件流&lt;/li>
+&lt;li>管理进程：后台管理任务当做一次性进程运行&lt;/li>
+&lt;/ol>
+&lt;p>&lt;em>原文从此处开始：&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>创建分布式系统并非易事。围绕“微服务”架构和“ 12要素应用程序”设计出现了最佳实践。这些提供了与交付生命周期，网络，状态管理以及对外部依赖项的绑定有关的准则。&lt;/li>
+&lt;li>但是，以可扩展和可维护的方式一致地实施这些原则是具有挑战性的。&lt;/li>
+&lt;li>解决这些原理的以技术为中心的传统方法包括企业服务总线（ESB）和面向消息的中间件（MOM）。虽然这些解决方案提供了良好的功能集，但主要的挑战是整体架构以及业务逻辑和平台之间的紧密技术耦合。&lt;/li>
+&lt;li>随着云，容器和容器协调器（Kubernetes）的流行，出现了解决这些原理的新解决方案。例如，Knative用于交付，服务网格用于网络，而Camel-K用于绑定和集成。&lt;/li>
+&lt;li>通过这种方法，业务逻辑（称为“微逻辑”）构成了应用程序的核心，并且可以创建提供强大的现成分布式原语的sidecar“ mecha”组件。&lt;/li>
+&lt;li>微观组件和机械组件的这种分离可以改善第二天的操作，例如打补丁和升级，并有助于维持业务逻辑内聚单元的长期可维护性。&lt;/li>
+&lt;/ul>
+&lt;p>创建良好的分布式应用程序并非易事：此类系统通常遵循12要素应用程序和微服务原则。它们必须是无状态的，可伸缩的，可配置的，独立发布的，容器化的，可自动化的，并且有时是事件驱动的和无服务器的。创建后，它们应该易于升级，并且长期可以承受。在当今的技术中，要在这些相互竞争的要求之间找到良好的平衡仍然是一项艰巨的努力。&lt;/p>
+&lt;p>在本文中，我将探讨分布式平台如何发展以实现这种平衡，更重要的是，在分布式系统的演进中还需要发生什么事情，以简化可维护的分布式体系结构的创建。如果您想让我实时谈论这个话题，请加入我的QCon 三月的伦敦。&lt;/p>
+&lt;h2 id="分布式应用程序需求">分布式应用程序需求&lt;/h2>
+&lt;p>在此讨论中，我将把现代分布式应用程序的需求分为四个类别-生命周期，网络，状态，绑定-并简要分析它们在最近几年中的发展情况。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/04/01/15856635785757.jpg" alt="">&lt;/p>
+&lt;h3 id="生命周期-lifecycle">生命周期 Lifecycle&lt;/h3>
+&lt;ul>
+&lt;li>打包 Packaging&lt;/li>
+&lt;li>健康检查 Healthcheck&lt;/li>
+&lt;li>部署 Deployment&lt;/li>
+&lt;li>扩展 Scaling&lt;/li>
+&lt;li>配置 Configuration&lt;/li>
+&lt;/ul>
+&lt;p>让我们从基础开始。当我们编写一项功能时，编程语言将指示生态系统中的可用库，打包格式和运行时。例如，Java使用.jar格式，将所有Maven依赖项用作生态系统，并将JVM用作运行时。如今，随着发布周期的缩短，生命周期更重要的是能够自动部署，从错误中恢复以及扩展服务的能力。这组功能广泛地代表了我们的应用程序生命周期需求。&lt;/p>
+&lt;blockquote>
+&lt;p>译者：错误恢复依赖健康检查&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="网络-networking">网络 Networking&lt;/h3>
+&lt;ul>
+&lt;li>服务发现 Service Discovery&lt;/li>
+&lt;li>A/B 测试、金丝雀部署 A/B Testing，Canary rollouts&lt;/li>
+&lt;li>重试、超时、断路器 Retry，timeout，circuit breaker&lt;/li>
+&lt;li>点到点、发布/订阅 Point-to-point，pub/sub&lt;/li>
+&lt;li>安全、可观测性 Security observability&lt;/li>
+&lt;/ul>
+&lt;p>从某种意义上讲，今天几乎每个应用程序都是分布式应用程序，因此需要联网。但是现代分布式系统需要从更广泛的角度掌握网络。从服务发现和错误恢复开始，到启用现代软件发布技术以及各种跟踪和遥测。为了我们的目的，我们甚至将不同的消息交换模式，点对点和发布/订阅方法以及智能路由机制包括在此类别中。&lt;/p>
+&lt;h3 id="状态-state">状态 State&lt;/h3>
+&lt;ul>
+&lt;li>工作流管理 Workflow mgmt&lt;/li>
+&lt;li>幂等性 Idempotency&lt;/li>
+&lt;li>临时调度 Temporal scheduling&lt;/li>
+&lt;li>缓存 Caching&lt;/li>
+&lt;li>应用状态 Application State&lt;/li>
+&lt;/ul>
+&lt;p>当我们谈论状态时，通常是关于服务状态以及为什么最好是无状态的。但是管理服务的平台本身需要状态。这对于执行可靠的服务编排和工作流，分布式单例，临时调度（cron作业），幂等性，有状态的错误恢复，缓存等是必需的。此处列出的所有功能都依赖于底层的状态。虽然实际的状态管理不在本文讨论范围之内，但关注状态的分布式原语及其抽象却很受关注。&lt;/p>
+&lt;h3 id="绑定-binding">绑定 Binding&lt;/h3>
+&lt;ul>
+&lt;li>连接器 Connectors&lt;/li>
+&lt;li>协议转换 Protocol conversion&lt;/li>
+&lt;li>消息转换 Message transformation&lt;/li>
+&lt;li>消息路由 Message routeing&lt;/li>
+&lt;li>事务性 Transactionality&lt;/li>
+&lt;/ul>
+&lt;p>分布式系统的组件不仅必须彼此对话，而且还必须与现代或旧式外部系统集成。这就要求连接器能够转换各种协议，支持不同的消息交换模式（例如轮询，事件驱动，请求/答复）转换消息格式，甚至能够执行自定义的错误恢复过程和安全机制。&lt;/p>
+&lt;blockquote>
+&lt;p>译者：执行自定义的错误恢复过程和安全机制 &amp;ndash; 事务&lt;/p>
+&lt;/blockquote>
+&lt;p>在不涉及一次性使用案例的情况下，以上内容代表了创建良好的分布式系统所需的通用原语的良好集合。如今，许多平台都提供了这样的功能，但是本文中我们要寻找的是过去十年中我们使用这些功能的方式如何变化，以及在下一个十年中它将如何变化。为了进行比较，让我们看一下过去的十年，看看基于Java的中间件如何满足这些需求。&lt;/p>
+&lt;h2 id="传统中间件的限制">传统中间件的限制&lt;/h2>
+&lt;p>上一代的企业服务总线（ESB）及其变体（例如面向消息的中间件，更轻量级的集成框架等）可满足上述需求，这是一种众所周知的传统解决方案。ESB 是一种中间件，可以使用面向服务的体系结构（即经典SOA）在异构环境之间实现互操作性。&lt;/p>
+&lt;p>ESB可以为您提供良好的功能集，但ESB的主要挑战是整体架构以及业务逻辑和平台之间紧密的技术耦合，从而导致技术和组织集中化。在将服务开发并部署到这样的系统中时，它与分布式系统框架紧密结合，从而限制了服务的发展。这通常只会在软件生命周期的后期才变得明显。&lt;/p>
+&lt;p>以下是每类需求的一些问题和局限性，这些问题和局限性使得ESB在现代时代不再有用。&lt;/p>
+&lt;h3 id="生命周期">生命周期&lt;/h3>
+&lt;p>在传统的中间件中，通常只有一个受支持的语言运行时（例如Java），它规定了软件的打包方式，可用的库，必须定期对其进行打补丁等。业务服务必须使用那些使其与以相同语言编写的平台紧密结合的库。实际上，这导致协调的服务和平台升级，从而阻止了独立和常规的服务和平台发布。&lt;/p>
+&lt;h3 id="联网">联网&lt;/h3>
+&lt;p>尽管传统的中间件拥有围绕与其他内部和外部服务交互的高级功能集，但它具有一些主要缺点。 网络功能集中于一种主要语言及其相关技术。 对于Java来说，即JMS，JDBC，JTA等。更重要的是，网络问题和语义也深深地刻在业务服务中。 有一些具有抽象的库来解决网络问题（例如曾经很受欢迎的Hystrix项目），但是该库的抽象“泄漏”到了服务的编程模型，交换模式和错误处理语义以及库本身中。 虽然可以方便地在一个位置编写和读取与网络方面混合的整个业务逻辑，但是这将两个问题紧密地耦合到一个实现中，最终形成了一条共同的演进路径。&lt;/p>
+&lt;p>译者：这里问题在于一些通用的高级功能与语言绑定。这里提到的 Hystrix 作为断路器的一个实现，使用的时候需要采用 Hystrix 的编程模型。如果切换到其他的实现，则需要学习和改造的成本。&lt;/p>
+&lt;h3 id="状态">状态&lt;/h3>
+&lt;p>为了进行可靠的服务编排，业务流程管理以及实施模式（例如Saga模式和其他运行缓慢的流程），平台需要在幕后保持持久状态。同样，临时动作（例如触发计时器和cron作业）建立在状态之上，并且需要在分布式环境中对数据库进行集群化和恢复。这里的主要约束是以下事实：与状态交互的库和接口没有完全抽象出来，也没有与服务运行时分离。通常，这些库必须配置有数据库详细信息，并且它们存在于服务中，从而将语义和依赖关系泄漏到应用程序域中&lt;/p>
+&lt;h3 id="绑定">绑定&lt;/h3>
+&lt;p>使用集成中间件的主要驱动程序之一是能够使用不同的协议，数据格式和消息交换模式连接到其他各种系统。但是，这些连接器必须与应用程序一起使用，这意味着必须将依赖关系与业务逻辑一起进行更新和修补。这意味着必须在服务内来回转换数据类型和数据格式。这意味着必须根据消息交换模式来构造代码并设计流程。这些是即使抽象的端点如何影响传统中间件中服务实现的一些示例。&lt;/p>
+&lt;blockquote>
+&lt;p>译者：使用不同 RPC 实现的服务之间的对话，比如某个服务调用会同时（空间上）调用使用 Dubbo 协议的服务和使用 RESTful 协议的服务&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="云原生趋势">云原生趋势&lt;/h2>
+&lt;p>传统的中间件功能强大。它具有所有必要的技术功能，但缺乏现代数字业务需求所要求的快速更改和扩展的能力。这就是微服务体系结构及其设计现代分布式应用程序的指导原则所要解决的问题。&lt;/p>
+&lt;p>微服务背后的思想及其技术要求促进了容器和Kubernetes的普及和广泛使用。这开始了一种新的创新方式，这种方式将影响我们今后几年处理分布式应用程序的方式。让我们看看Kubernetes和相关技术如何影响每组需求。&lt;/p>
+&lt;h3 id="生命周期-1">生命周期&lt;/h3>
+&lt;p>容器和Kubernetes将我们打包、分发和部署应用程序的方式发展为与语言无关的格式。关于Kubernetes模式和Kubernetes对开发人员的影响的文章很多，在这里我将简短介绍。但是请注意，对于Kubernetes，要管理的最小原语是容器，它专注于在容器级别和流程模型上交付分布式原语。这意味着它在管理应用程序的生命周期方面，运行状况检查、恢复、部署和扩展方面做得很好，但是在容器内的分布式应用程序的其他方面却没有做得那么好，例如灵活的网络、状态管理和绑定。&lt;/p>
+&lt;p>您可能会指出，Kubernetes具有状态工作负载、服务发现、cron作业和其他功能。的确如此，但是所有这些原语都是在容器级别的，并且在容器内部，开发人员仍然必须使用特定于语言的库来访问我们在本文开头列出的更详细的功能。这就是推动诸如Envoy、Linkerd、Consul、Knative、Dapr、Camel-K等项目的原因。&lt;/p>
+&lt;h3 id="网络">网络&lt;/h3>
+&lt;p>事实证明，Kubernetes提供的围绕服务发现的基本网络功能是一个很好的基础，但对于现代应用程序来说还不够。随着微服务数量的增加和部署速度的加快，对更高级的发布策略、管理安全性、指标、跟踪、从错误中恢复、错误模拟等等方面的需求变得越来越具有吸引力，并产生了一种新的软件类别，称为服务网格。&lt;/p>
+&lt;p>这里更令人兴奋的是，趋势是将与网络相关的问题从包含业务逻辑的服务移出到单独的运行时（无论是sidecar还是节点级代理）。如今，服务网格可以执行高级路由、助力测试、处理安全性的某些部分，更甚至特定于应用程序的协议（例如，Envoy支持Kafka，MongoDB，Redis，MySQL等）。尽管作为解决方案的服务网格可能尚未得到广泛采用，但它触及了分布式系统中的真正痛点，我相信它将找到其形状和存在形式。&lt;/p>
+&lt;p>除了典型的服务机制外，还有其他项目，例如Skupper，这些项目证实了将网络功能放入外部运行时代理的趋势。Skupper通过第7层虚拟网络解决了多集群间的通信难题，并提供了先进的路由和连接功能。但是，Skupper并没有被嵌入到业务服务运行时中，而是每个Kubernetes命名空间运行一个实例，该实例充当共享的补充工具。&lt;/p>
+&lt;p>综上所述，容器和Kubernetes在应用程序的生命周期管理方面迈出了重要的一步。服务网格和相关技术遇到了真正的痛点，并为将更多职责从应用程序移到代理中奠定了基础。让我们看看下一步。&lt;/p>
+&lt;h3 id="状态-1">状态&lt;/h3>
+&lt;p>我们在前面列出了依赖状态的主要集成原语。管理状态非常困难，应将其委派给专门的存储软件和托管服务。这不是这里的主题，而是在语言无关的抽象中使用状态来帮助集成用例。今天，许多努力试图在语言无关的抽象后面提供有状态的原语。有状态的工作流管理是基于云的服务中的强制性功能，例如AWS Step Functions，Azure Durable Functions等示例。在基于容器的部署中，CloudState和Dapr都依赖于sidecar模型来进一步解耦分布式应用程序中的状态抽象。&lt;/p>
+&lt;p>我也期待将上面列出的所有有状态功能抽象到一个单独的运行时中。这意味着工作流管理、单例、幂等、事务管理、cron作业触发器和有状态错误处理都可靠地发生在Sidecar（或主机级代理）中，而不是存在于服务中。业务逻辑不需要在应用程序中包含此类依赖关系和语义，并且可以从绑定环境中声明性地请求此类行为。例如，Sidecar可以充当cron作业触发器、幂等消费者和工作流管理器，而自定义业务逻辑可以作为回调调用或插入工作流的某些阶段、错误处理、临时调用或唯一幂等要求等。&lt;/p>
+&lt;p>另一个有状态用例是缓存。无论是由服务网格层执行请求缓存，还是使用诸如Infinispan，Redis，Hazelcast等之类的数据缓存，都有一些将缓存功能推到应用程序运行时之外的示例。&lt;/p>
+&lt;h3 id="绑定-1">绑定&lt;/h3>
+&lt;p>尽管我们的主题是将所有分布式需求与应用程序运行时脱钩，但这种趋势也继续伴随着绑定。连接器、协议转换、消息转换
+、错误处理和安全中介都可以移出服务运行时。我们还没有到那里，但是在诸如Knative和Dapr之类的项目中朝这个方向进行了尝试。将所有这些职责移出应用程序运行时将导致更小，更注重业务逻辑的代码。这样的代码将在独立于分布式系统需求的运行时中运行，而分布式系统需求可以作为预包装功能使用。&lt;/p>
+&lt;p>Apache Camel-K 采用了另一种有趣的方法。该项目没有使用来伴随主应用程序的代理运行时，而是依靠智能的Kubernetes Operator来构建具有Kubernetes和Knative的附加平台功能的应用程序运行时。在这里，单一代理是负责包括应用程序所需的分布式系统原语的操作员。不同之处在于，某些分布式原语已添加到应用程序运行时中，而某些已在平台中启用（也可能包括Sidecar）。&lt;/p>
+&lt;h2 id="未来架构趋势">未来架构趋势&lt;/h2>
+&lt;p>概括地说，我们可以得出结论，通过将功能部件转移到平台级别，分布式应用程序的产品化达到了新的领域。除了生命周期之外，现在我们还可以观察到联网，状态抽象，声明性事件和端点绑定（拆箱即用），并且EIPs在此列表中排在后面。有趣的是，产品化使用进程外模型（sidecar）进行功能扩展，而不是使用运行时库或纯平台功能（例如新的Kubernetes功能）。&lt;/p>
+&lt;blockquote>
+&lt;p>译者：产品化可以理解为分布式原语的内聚：便于独立发布和演进。&lt;/p>
+&lt;/blockquote>
+&lt;p>现在，我们通过将所有传统的中间件功能（也称为ESB）转移到其他运行时中来，不久，我们在服务中要做的就只是编写业务逻辑。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/04/01/15857495038535.jpg" alt="">
+传统中间件平台和云原生平台概述&lt;/p>
+&lt;p>与传统的ESB时代相比，此体系结构将业务逻辑与平台更好地分离了，但是还没有完全分离。许多分布式原语，例如经典的企业集成模式（EIP）：拆分器、聚合器、过滤器、基于内容的路由器；流处理模式：映射、过滤、折叠、联接、合并、滑动窗口；仍然必须包含在业务逻辑运行时中，许多其他依赖于多个不同且重叠的平台附加组件。&lt;/p>
+&lt;p>如果我们将在不同领域进行创新的各种云原生项目进行堆叠，那么最终将得到如下图所示：&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/04/01/15857496466055.jpg" alt="">
+多运行时微服务&lt;/p>
+&lt;p>这里的图仅用于说明目的，它有目的地选择代表性的项目并将其映射到分布式原语的类别。实际上，您不会同时使用所有这些项目，因为其中一些项目是重叠的且不兼容的工作负载模型。如何解释这个图？&lt;/p>
+&lt;ul>
+&lt;li>Kubernetes和容器在多语言应用程序的生命周期管理中取得了巨大飞跃，并为未来的创新奠定了基础。&lt;/li>
+&lt;li>服务网格技术通过高级网络功能在Kubernetes上进行了改进，并开始涉足应用程序方面。&lt;/li>
+&lt;li>尽管Knative通过快速扩展主要专注于无服务器工作负载，但它也满足了服务编排和事件驱动的绑定需求。&lt;/li>
+&lt;li>Dapr以Kubernetes、Knative和Service Mesh的思想为基础，并深入应用程序运行时以解决有状态的工作负载、绑定和集成需求，充当现代的分布式中间件。&lt;/li>
+&lt;/ul>
+&lt;p>该图可帮助您直观地看到，很可能在将来，我们最终将使用多个运行时来实现分布式系统。多个运行时，不是因为有多个微服务，而是因为每个微服务都将由多个运行时组成，最有可能是两个运行时-&lt;strong>自定义业务逻辑运行时&lt;/strong>和&lt;strong>分布式原语运行时&lt;/strong>。&lt;/p>
+&lt;h2 id="引入多运行时微服务">引入多运行时微服务&lt;/h2>
+&lt;p>这是开始形成的多运行时微服务体系结构的简要说明。&lt;/p>
+&lt;p>您还记得科学家们制作的电影中的Avatar和机甲（机械套件），他们去旷野探索潘多拉吗？这种多运行时架构类似于这些Mecha-为类人动物驾驶员赋予超能力的套装。在电影中，您要穿上套装才能获得力量并获得破坏性武器。在这种软件架构中，您具有构成应用程序核心的业务逻辑（称为micrologic微逻辑）和提供强大且拆箱即用的分布式原语的sidecar mecha组件。微逻辑与mecha功能相结合，形成了一个多运行时微服务，该服务将进程外功能用于解决其分布式系统需求。最棒的是，Avatar 2即将面世，以帮助推广这种架构。我们最终可以在所有软件会议上用令人赞叹的机甲图片代替老式的边车摩托车；-)。接下来，让我们看看该软件体系结构的详细信息。&lt;/p>
+&lt;p>这是一个类似于客户端-服务器体系结构的两组件模型，其中每个组件都是独立的运行时。它与纯客户端-服务器体系结构的不同之处在于，这两个组件都位于同一主机上，彼此之间没有可靠的网络连接。这两个组件的重要性相同，它们可以在任一方向上启动操作并充当客户端或服务器。其中的一个组件称为为逻辑（Micrologic），它拥有从几乎所有分布式系统问题中剥离出来的非常少的业务逻辑。另一个随附的组件是Mecha，它提供了我们在本文中一直讨论的所有分布式系统功能（生命周期除外，它是一个平台功能）。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/04/01/15857504765833.jpg" alt="">
+多运行时（进程外）微服务架构&lt;/p>
+&lt;p>Micrologic和Mecha可能是一对一的部署（称为sidecar模型），也可以是带有几个Micrologic运行时的共享Mecha。第一种模型最适用于Kubernetes等环境，而第二种模型则适用于边缘部署。&lt;/p>
+&lt;h3 id="微逻辑运行时特征">微逻辑运行时特征&lt;/h3>
+&lt;p>让我们简要地探讨Micrologic运行时的一些特征：&lt;/p>
+&lt;ul>
+&lt;li>Micrologic组件本身不是微服务。它包含微服务将具有的业务逻辑，但是该逻辑只能与Mecha组件结合使用。另一方面，微服务是自包含的，没有整体功能的一部分，也没有一部分处理流程扩展到其他运行时中。Micrologic及其与Mecha对应的产品的组合形成了微服务。&lt;/li>
+&lt;li>这也不是函数或无服务器架构。无服务器最著名的是其提供的快速扩展和从零扩展到零的能力。在无服务器体系结构中，函数实现单个操作，因为这是可伸缩性的单位。在这方面，函数不同于实现多种操作的Micrologic，但实现方式不是端到端的。最重要的是，操作的实现分布在Mecha和Micrologic运行时上。&lt;/li>
+&lt;li>这是客户端-服务器体系结构的一种特殊形式，针对无需编码即可使用众所周知的分布式原语进行了优化。另外，如果我们假设Mecha扮演服务器角色，那么每个实例都必须经过专门配置以便与单个客户端一起工作。它不是那种旨在与典型的客户端-服务器体系结构同时支持多个客户端的通用服务器实例。（译者：多运行时架构中假如 mecha 作为服务端，那么微逻辑作为客户端。客户端与服务端的关系多为一对一，或者多对一。而传统微服务架构中的客户端服务端一般是多对多）&lt;/li>
+&lt;li>Micrologic中的用户代码不会直接与其他系统交互，也不会实现任何分布式系统原语。它通过事实上的标准（例如HTTP / gRPC，CloudEvents规范）与Mecha进行交互，并且Mecha使用丰富的功能并在配置的步骤和机制的指导下与其他系统进行通信。&lt;/li>
+&lt;li>尽管Micrologic仅负责实现从分布式系统问题中剥离出来的业务逻辑，但它仍必须至少实现一些API。它必须允许Mecha和平台通过预定义的API和协议与其进行交互（例如，通过遵循Kubernetes部署的云原生设计原则）。（译者：比如微逻辑需要实现健康检查的 API，方便平台-Kubernetes 或者 mecha 进行健康检查）&lt;/li>
+&lt;/ul>
+&lt;h3 id="mecha运行时特征">Mecha运行时特征&lt;/h3>
+&lt;p>以下是一些Mecha运行时特征：&lt;/p>
+&lt;ul>
+&lt;li>Mecha是一个通用的、高度可配置的、可重用的组件、提供分布式原语作为现成的功能。&lt;/li>
+&lt;li>Mecha的每个实例都必须配置为与一个Micrologic组件（边车模型）一起使用，或者配置为与几个组件共享（节点级别）。&lt;/li>
+&lt;li>Mecha不对Micrologic运行时做任何假设。它与使用开放协议和格式（例如HTTP / gRPC，JSON，Protobuf，CloudEvents）的多语言微服务甚至单片系统一起使用。&lt;/li>
+&lt;li>Mecha以简单的文本格式（例如YAML，JSON）声明性地配置，该格式表明要启用的功能以及如何将其绑定到Micrologic端点。对于专门的API交互，可以为Mechan附加规范，例如OpenAPI，AsyncAPI，ANSI-SQL等。对于由多个处理步骤组成的有状态工作流，可以使用诸如Amazon State Language的规范。对于无状态集成，可以使用与Camel-K YAML DSL类似的方法来使用企业集成模式（EIP）。这里的关键点是，所有这些都是Mecha无需编码即可实现的简单的、基于文本的、声明性的、多种语言的定义。请注意，这些都是未来派的预测，当前，没有用于状态编排或EIP的Mechas，但是我希望现有的Mechas（Envoy，Dapr，Cloudstate等）很快就会开始添加此类功能。Mecha是应用程序级别的分布式原语抽象层。&lt;/li>
+&lt;li>与其为了不同目的而依赖于多个代理的（例如网络代理、缓存代理、绑定代理），而应该由一个Mecha提供所有这些功能。一些功能（例如存储、消息持久性、缓存等）的实现将被其他云或本地服务注入并支持。&lt;/li>
+&lt;li>一些与生命周期管理有关的分布式系统问题可以由管理平台（例如Kubernetes或其他云服务）来处理，而不是使用通用的开放规范（例如Open App Model）提供的Mecha运行时。&lt;/li>
+&lt;/ul>
+&lt;h3 id="这种架构的主要好处是什么">这种架构的主要好处是什么？&lt;/h3>
+&lt;p>好处是业务逻辑和越来越多的分布式系统问题之间的耦合变得松散。软件系统的这两个要素具有完全不同的动力学。业务逻辑始终是内部编写的唯一的自定义代码。它经常更改，具体取决于您的组织优先级和执行能力。另一方面，用于解决本文中列出的问题的分布式原语，并且众所周知。这些由软件供应商开发，并作为库，容器或服务使用。该代码根据供应商的优先级、发布周期、安全补丁、开放源代码管理规则等而更改。这两部分之间几乎不可见并且无法相互控制。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/04/01/15857520911736.jpg" alt="">
+业务逻辑和分布式系统关注不同架构中的耦合&lt;/p>
+&lt;p>微服务原理有助于通过有限的上下文使不同的业务领域脱钩，每个微服务都可以独立发展。但是微服务架构无法解决将业务逻辑与中间件问题耦合在一起带来的困难。对于某些依赖于集成用例的微服务，这可能不是一个大因素。但是，如果您的领域涉及复杂的集成（也是越来越多的人所面临的），那么遵循微服务原则也无法帮助您避免与中间件的耦合。即使中间件是为您包含在微服务中的库，当您开始迁移和更改这些库时，这种耦合便会显现出来。还有您需要的分布的原语越多，您与集成平台的耦合就越强。通过预定义的API（而不是库）来访问作为独立运行时/进程的中间件，有助于解耦并实现每个组件的独立演进。&lt;/p>
+&lt;p>这也是为供应商分发和维护复杂的中间件软件的较好的方法。只要与中间件的交互是通过开放API和标准的进程间通信进行的，软件供应商就可以按照自己的节奏自由发布补丁和升级。消费者可以自由使用他们喜欢的语言、库、运行时、部署方法和过程。&lt;/p>
+&lt;h3 id="这种架构的主要缺点是什么">这种架构的主要缺点是什么？&lt;/h3>
+&lt;p>进程间通信。分布式系统的业务逻辑和中间件机制（您可以看到名称的来源）在不同的运行时中，并且需要HTTP或gRPC调用而不是进程内方法调用。但是请注意，这并不是跨机器或数据中心的网络调用。Micrologic运行时和Mecha应当位于同一主机上，并且延迟时间短，并且出现网络问题的可能性最小。&lt;/p>
+&lt;p>复杂。下一个问题是，是否值得为获得某些好处而进行复杂的开发、并维护此类系统。我认为答案将越来越倾向于是。分布式系统的需求和发布周期的步伐正在增加，并且此架构为此进行了优化。我前段时间写道，未来的开发人员必须具备混合开发技能。这种体系结构进一步证实了这一趋势。应用程序的一部分将使用高级编程语言编写，部分功能将由必须进行声明性配置的现成组件提供。这两个部分的互连不是在编译时或在启动时通过进程内依赖注入，而是在部署时通过进程间通信互连。该模型可实现更高的软件重用率和更快的变更速度。&lt;/p>
+&lt;h3 id="微服务后无法使用的功能">微服务后无法使用的功能&lt;/h3>
+&lt;p>微服务架构有一个明确的目标。它为变化而优化。通过将应用程序划分到业务域中，此软件架构通过独立的团队分离、管理并以独立的步调发布的服务，为软件演进和可维护性提供了最佳的服务边界。&lt;/p>
+&lt;p>如果我们看一下无服务器体系结构的编程模型，它主要基于功能。功能已针对可伸缩性进行了优化。通过功能，我们将每个操作分解为一个独立的组件，以便可以快速，独立和按需扩展。在此模型中，部署粒度是一项功能。之所以选择该函数，是因为它是代码结构：其输入的速率与缩放行为直接相关。这是一种针对极端可伸缩性（而不是复杂系统的长期可维护性）进行了优化的体系结构。&lt;/p>
+&lt;p>从AWS Lambda的流行及其完全托管的运营性质来看，Serverless的其他方面又如何呢？在这方面，“AWS无服务器”为配置速度进行了优化，但缺少控制和锁定功能。但是完全托管的方面不是应用程序体系结构，而是一种软件使用模型。它在功能上是正交的，类似于使用基于SaaS的平台，该平台在理想情况下应适用于任何类型的体系结构，无论是整体式、微服务、机甲还是功能。在许多方面，AWS Lambda类似于完全托管的Mecha架构，但有一个很大的区别：Mecha不执行功能模型，而是允许围绕业务域使用更具凝聚力的代码构造，而与所有中间件无关。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/04/01/15857521845846.jpg" alt="">
+架构优化&lt;/p>
+&lt;p>另一方面，Mecha架构为中间件独立性优化了微服务。尽管微服务彼此独立，但它们在很大程度上依赖于嵌入的分布式原语。Mecha架构将这两个问题分为单独的运行时，从而允许独立团队独立发布它们。这种解耦可以改善第二天（day-2）的操作（例如修补和升级），并改善业务逻辑内聚单元的长期可维护性。在这方面，Mecha架构是微服务架构的自然发展，它通过根据引起最大摩擦的边界拆分软件来进行开发。与功能模型相比，该优化以软件重用和演化的形式提供了更多好处，而功能模型则以代码的过度分配为代价进行了优化，以实现极高的可伸缩性。&lt;/p>
+&lt;blockquote>
+&lt;p>译者：day-2可以理解为前一天的发布带来的问题需要第二天的发布进行修复，而多运行时解耦了业务逻辑和分布式原语，允许其中一个的独立发布，不需要统一安排升级的节点。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="结论">结论&lt;/h2>
+&lt;p>分布式应用程序有许多要求。创建高效的分布式系统需要多种技术和良好的集成方法。尽管传统的单体中间件提供了分布式系统所需的所有必要的技术功能，但它缺乏业务所需的快速更改、适应和扩展的能力。这就是为什么基于微服务的架构背后的思想为容器和Kubernetes的快速普及做出了贡献。随着云原生领域的最新发展，我们现在通过将所有传统中间件功能转移到平台和现成的辅助运行时中来全面发展。&lt;/p>
+&lt;p>应用程序功能的这种产品化主要是使用进程外模型进行功能扩展，而不是运行时库或纯平台功能。这意味着，将来很有可能我们将使用多个运行时来实现分布式系统。多个运行时，不是因为有多个微服务，而是因为每个微服务都将由多个运行时组成。自定义微业务逻辑的运行时，以及拆箱即用的分布式原语运行时。&lt;/p>
+&lt;h2 id="关于作者">关于作者&lt;/h2>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/04/01/15857522443912.jpg" alt="">&lt;/p>
+&lt;p>Bilgin Ibryam是Red Hat的首席架构师、提交者和Apache Software Foundation的成员。他是一位开源的传播者
+、博客作者、偶尔的演讲者，并且是Kubernetes Patterns和Camel Design Patterns书籍的作者。在日常工作中，Bilgin乐于指导、编码并带领开发人员成功构建开源解决方案。他当前的工作集中在区块链、分布式系统、微服务、devops和云原生应用程序开发上。&lt;/p>
+&lt;p>原文的某些连接：&lt;/p>
+&lt;ul>
+&lt;li>12-Factors：https://12factor.net/zh_cn/&lt;/li>
+&lt;li>原文：https://www.infoq.com/articles/multi-runtime-microservice-architecture/&lt;/li>
+&lt;/ul></description></item></channel></rss>

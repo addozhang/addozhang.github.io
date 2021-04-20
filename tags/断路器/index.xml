@@ -1,20 +1,72 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>断路器 on 乱世浮生</title>
-    <link>https://atbug.com/tags/%E6%96%AD%E8%B7%AF%E5%99%A8/</link>
-    <description>Recent content in 断路器 on 乱世浮生</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Mon, 04 Jun 2018 08:47:40 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/%E6%96%AD%E8%B7%AF%E5%99%A8/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Hystrix工作原理一</title>
-      <link>https://atbug.com/how-hystrix-works/</link>
-      <pubDate>Mon, 04 Jun 2018 08:47:40 +0000</pubDate>
-      
-      <guid>https://atbug.com/how-hystrix-works/</guid>
-      <description>运行时的流程图 构建HystrixCommand或者HystrixObservableCommand对象 第一步是构建一个HystrixComm</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>断路器 on 乱世浮生</title><link>https://atbug.com/tags/%E6%96%AD%E8%B7%AF%E5%99%A8/</link><description>Recent content in 断路器 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 04 Jun 2018 08:47:40 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/%E6%96%AD%E8%B7%AF%E5%99%A8/index.xml" rel="self" type="application/rss+xml"/><item><title>Hystrix工作原理一</title><link>https://atbug.com/how-hystrix-works/</link><pubDate>Mon, 04 Jun 2018 08:47:40 +0000</pubDate><guid>https://atbug.com/how-hystrix-works/</guid><description>
+&lt;h2 id="运行时的流程图">运行时的流程图&lt;/h2>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15273755001891.png" alt="图片来自netflix hystrix">&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>构建&lt;code>HystrixCommand&lt;/code>或者&lt;code>HystrixObservableCommand&lt;/code>对象&lt;/p>
+&lt;p>第一步是构建一个HystrixCommand或HystrixObservableCommand对象来代表对依赖服务所做的请求。 将在请求发生时将需要的任何参数传递给构造函数。&lt;/p>
+&lt;p>如果依赖的服务预期会返回单一的响应, 构造一个&lt;code>HystrixCommand&lt;/code>对象, 例如:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="n">HystrixCommand&lt;/span> &lt;span class="n">command&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">HystrixCommand&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">arg1&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">arg2&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果依赖的服务预期会返回一个发出响应的Observable对象, 则构造一个&lt;code>HystrixObservableCommand&lt;/code>对象, 例如:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="n">HystrixObservableCommand&lt;/span> &lt;span class="n">command&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">HystrixObservableCommand&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">arg1&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">arg2&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>执行Command&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>响应是否被缓存?&lt;/p>
+&lt;p>如果Command的缓存请求被开启, 同时请求的响应在缓存中可用, 缓存的响应被立即以一个&lt;code>Observable&lt;/code>的方式返回.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>断路器是否开启?&lt;/p>
+&lt;p>执行Command时, Hystrix会检查断路器(circuti-breaker)是否开始回路(circuit).&lt;/p>
+&lt;p>如果回路开启, Hystrix将不会执行Command, 而直接去到流程&lt;strong>8&lt;/strong>: Get the Fallback
+如果关闭, 则执行流程&lt;strong>5&lt;/strong>检查是否有足够的容量来运行该命令&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>线程池/队列/限号量是否满?&lt;/p>
+&lt;p>假如与Command相关的线程池和队列(或者信号量, 不适用隔离线程的话)满了, Hystrix将不会执行Command, 而是直接去到流程&lt;strong>8&lt;/strong>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>HystrixObservableCommand.construct()&lt;/code>或&lt;code>HystrixCommand.run()&lt;/code>&lt;/p>
+&lt;p>Hystrix使用下面任一的方式向依赖的服务发出请求:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>HystrixCommand.run()&lt;/code> 返回单个响应或抛出异常&lt;/li>
+&lt;li>&lt;code>HystrixObservableCommand.construct()&lt;/code> 返回一个发出响应的Observable对象, 或者发送&lt;code>onError&lt;/code>通知&lt;/li>
+&lt;/ul>
+&lt;p>如果&lt;code>run()&lt;/code>或者&lt;code>construct()&lt;/code>方法执行超过Command的超时设置, 线程会抛出一个&lt;code>TimeoutException&lt;/code>(或者独立的timer线程抛出, 如果Command不是运行在它自己的线程上). 这是Hystrix直接去到流程&lt;strong>8&lt;/strong>. 获取&lt;code>Fallback&lt;/code>, 如果没有cancel/interrup, 则抛弃&lt;code>run()&lt;/code>或&lt;code>construct()&lt;/code>的最终返回值.&lt;/p>
+&lt;p>请注意, 没有任何方法可以强制任务线程停止工作, 最佳的方式是Hystrix抛出一个&lt;code>InterruptException&lt;/code>. 如果Hystrix封装的任务忽略&lt;code>InterruptException&lt;/code>, 该任务线程会继续工作, 即使客户端已经收到了一个&lt;code>TimeoutException&lt;/code>. 这种行为会是Hystrix的线程池饱和, 尽管负载&lt;code>正确地流出(correctly shed)&lt;/code>. 大多数Java HTTP客户端库不解释InterruptedExceptions. 因此, 请确保在HTTP客户端上正确配置连接和读/写超时.&lt;/p>
+&lt;p>如果Command执行没有超时而返回一个响应, Hystrix在执行某些日志记录和指标报告之后返回这个响应.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>计算电路健康&lt;/p>
+&lt;p>Hystrix将成功, 失败, 拒绝服务和超时上报给断路器, 断路器维护着一个计算统计数据的计数器.&lt;/p>
+&lt;p>它通过这些统计数据决定断路器何时应该打开, 在哪个点开始短路后续的请求知道恢复期过去, 或者决定在第一次健康检查请求结束后是否要关闭断路器.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>获取&lt;code>Fallback&lt;/code>&lt;/p>
+&lt;p>在command执行失败后: 当&lt;code>run()&lt;/code>或&lt;code>construct()&lt;/code>抛出异常(6), command因为断路器开启而短路(4), command的线程池和队列或者计数器处于满负荷(6), 或者执行超时, Hystrix尝试转向你的&lt;code>Fallback&lt;/code>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>返回成功的响应&lt;/p>
+&lt;p>如果Command处理成功, 它将以&lt;code>Obervable&lt;/code>的实行返回response或者responses给调用者. 取决于上面流程2中的Command的执行方式, 该&lt;code>Observable&lt;/code>可能在返回给你之前被转换:&lt;/p>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15279954901603.png" alt="">&lt;/p>
+&lt;ul>
+&lt;li>execute() - 返回一个&lt;code>Fature&lt;/code>对象, 可以通过调用&lt;code>get()&lt;/code>获取&lt;code>Obervable&lt;/code>返回的单个值&lt;/li>
+&lt;li>queue() - 把&lt;code>Observable&lt;/code>转换为&lt;code>BlockingObservable&lt;/code>, 因此&lt;code>BlockingObservable&lt;/code>可以被转换成&lt;code>Future&lt;/code>, 并返回&lt;/li>
+&lt;li>observe() - 理解订阅&lt;code>Observable&lt;/code>, 并开始Command的执行流程. 返回一个&lt;code>Observable&lt;/code>, 当订阅它时, 重播返回和通知(replay emissions and notifiactions).&lt;/li>
+&lt;li>toObservable() - 不变地返回Observable; 必须订阅它才能真正开始导致执行命令的流程.&lt;/li>
+&lt;/ul>
+&lt;p>更详细的流程图&lt;a href="https://design.codelytics.io/hystrix/how-it-works">&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="断路器">断路器&lt;/h2>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15279966397767.png" alt="">&lt;/p>
+&lt;ol>
+&lt;li>假设通过断路器的负载达到了阈值 (HystrixCommandProperties.circuitBreakerRequestVolumeThreshold())&lt;/li>
+&lt;li>假设错误百分比超过错误的阈值 (HystrixCommandProperties.circuitBreakerErrorThresholdPercentage())&lt;/li>
+&lt;li>断路器状态从关闭变为打开&lt;/li>
+&lt;li>打开后, 断路器会短路所有针对该断路器的请求&lt;/li>
+&lt;li>过了一段时间后(HystrixCommandProperties.circuitBreakerSleepWindowInMilliseconds()), 下一条请求会被放行(半开状态). 如果请求失败, 断路器重回打开状态(OPEN)并持续一个睡眠窗口(sleep window). 如果成功, 状态变为关闭(CLOSED). 下个请求从逻辑1开始.&lt;/li>
+&lt;/ol>
+&lt;p>翻译自&lt;a href="https://github.com/Netflix/Hystrix/wiki/How-it-Works">Hystrix Wiki - How it works&lt;/a>&lt;/p></description></item></channel></rss>

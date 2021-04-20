@@ -1,56 +1,270 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>翻译 on 乱世浮生</title>
-    <link>https://atbug.com/categories/%E7%BF%BB%E8%AF%91/</link>
-    <description>Recent content in 翻译 on 乱世浮生</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Mon, 29 Mar 2021 23:11:25 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E7%BF%BB%E8%AF%91/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>分布式系统在 Kubernetes 上的进化</title>
-      <link>https://atbug.com/translation-distributed-systems-kubernetes/</link>
-      <pubDate>Mon, 29 Mar 2021 23:11:25 +0800</pubDate>
-      
-      <guid>https://atbug.com/translation-distributed-systems-kubernetes/</guid>
-      <description>本文译自 The Evolution of Distributed Systems on Kubernetes 在 3 月份的 QCon 上，我做了一个关于 Kubernetes 的分布式系统进化的演讲。首先，我想先问一个问题，微服务之后是什么？我相信大家都有各自的</description>
-    </item>
-    
-    <item>
-      <title>【译】2021 年及未来的云原生预测</title>
-      <link>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</link>
-      <pubDate>Tue, 09 Feb 2021 06:43:54 +0800</pubDate>
-      
-      <guid>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</guid>
-      <description>本文译自 Cloud Native Predictions for 2021 and Beyond 原文发布在 Chris Aniszczyk 的个人博客 我希望每个人都有一个美好的假期，因为 2021 年 1 月的前几周一直非常疯狂，从叛乱到新的 COVID 菌株。在云原生</description>
-    </item>
-    
-    <item>
-      <title>【译】应用架构：为什么要随着市场演进</title>
-      <link>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</link>
-      <pubDate>Sun, 17 Jan 2021 21:37:23 +0800</pubDate>
-      
-      <guid>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</guid>
-      <description>本文译自 Application architecture: why it should evolve with the market 最初由Mia Platform团队发布在Mia Platform的博客上 如今，IT 挑战在于通过有效选择应用架构来适应市</description>
-    </item>
-    
-    <item>
-      <title>Tekton 0.9.0 更新</title>
-      <link>https://atbug.com/tekton-0.9.0-release/</link>
-      <pubDate>Sun, 19 Jan 2020 14:33:17 +0800</pubDate>
-      
-      <guid>https://atbug.com/tekton-0.9.0-release/</guid>
-      <description>翻译整理自 What’s New in Tekton 0.9 功能及Bug修复 脚本模式 以前如果要在容器里运行个简单的 bash 脚本, 需要这么写: - name:helloimage:ubuntucommand:[&amp;#39;bash&amp;#39;]args:- -c- |set -ex echo &amp;#34;hello&amp;#</description>
-    </item>
-    
-    <item>
-      <title>神秘的Eureka自我保护</title>
-      <link>https://atbug.com/translation-the-mystery-of-eurekas-self-preservation/</link>
-      <pubDate>Sun, 05 Jan 2020 14:14:03 +0800</pubDate>
-      
-      <guid>https://atbug.com/translation-the-mystery-of-eurekas-self-preservation/</guid>
-      <description>本文翻译自The Mystery of Eureka Self-Preservation 根据CAP定理, Eureka是一个AP系统, 这就导致了在网络分区期间多个注册表中的信息不一致. 自我保护功能则是为了尽</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>翻译 on 乱世浮生</title><link>https://atbug.com/categories/%E7%BF%BB%E8%AF%91/</link><description>Recent content in 翻译 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 29 Mar 2021 23:11:25 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E7%BF%BB%E8%AF%91/index.xml" rel="self" type="application/rss+xml"/><item><title>分布式系统在 Kubernetes 上的进化</title><link>https://atbug.com/translation-distributed-systems-kubernetes/</link><pubDate>Mon, 29 Mar 2021 23:11:25 +0800</pubDate><guid>https://atbug.com/translation-distributed-systems-kubernetes/</guid><description>
+&lt;p>本文译自 &lt;a href="https://www.infoq.com/articles/distributed-systems-kubernetes/">The Evolution of Distributed Systems on Kubernetes&lt;/a>&lt;/p>
+&lt;p>在 3 月份的 QCon 上，我做了一个关于 Kubernetes 的分布式系统进化的演讲。首先，我想先问一个问题，微服务之后是什么？我相信大家都有各自的答案，我也有我的答案。你会在最后发现我的想法是什么。为了达到这个目的，我建议大家看看分布式系统的需求是什么？以及这些需求在过去是如何发展的，从单体应用开始到 Kubernetes，再到最近的 Dapr、Istio、Knative 等项目，它们是如何改变我们做分布式系统的方式。我们将尝试对未来做一些预测。&lt;/p>
+&lt;h2 id="现代分布式应用">现代分布式应用&lt;/h2>
+&lt;p>为了给这个话题提供更多的背景信息，我认为的分布式系统是由数百个组件组成的系统。这些组件可以是有状态的、无状态的或者无服务器的。此外，这些组件可以用不同的语言创建，运行在混合环境上，并开发开源技术、开放标准和互操作性。我相信你可以使用闭源软件来构建这样的系统，也可以在 AWS 和其他地方构建。具体到这次演讲，我将关注 Kubernetes 生态系统，以及你如何在 Kubernetes 平台上构建这样一个系统。&lt;/p>
+&lt;p>我们从分布式系统的需求讲起。我认为是我们要创建一个应用或者服务，并写一些业务逻辑。那从运行时的平台到构建分布式系统，我们还需要什么呢？在底层，最开始是我们要一些生命周期的能力。当你用任一语言开发你的应用时，我们希望有能力把这个应用可靠地打包和部署、回滚、健康检查。并且能够把应用部署到不同的节点上，并实现资源隔离、扩展、配置管理，以及所有这些。这些都是你创建分布式应用所需要的第一点。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/55image0011616431697020.jpg" alt="">&lt;/p>
+&lt;p>第二点是围绕网络。我们有了应用之后，我们希望它能够可靠地连接到其他服务，无论该服务是在集群内部还是在外部。我们希望其具有服务发现、负载均衡的能力。为了不同的发布策略或是其他的一些原因的我们希望有流量转移的能力。然后我们还希望其具有与其他系统进行弹性通信的能力，无论是通过重试、超时还是断路器。要有适当的安全保障，并且要有足够的监控、追踪、可观察性等等。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/25image0021616431698392.jpg" alt="">&lt;/p>
+&lt;p>我们有了网络之后，接下来就是我们希望有能力与不同的 API 和端点交互，即资源绑定&amp;ndash;与其他协议和不同的数据格式交互。甚至能够从一种数据格式转换成另一种数据格式。我还会在这里加入诸如滤光的功能，也就是说，当我们订阅一个主题时，我们也许只对某些事件感兴趣。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/45image0031616431697873.jpg" alt="">&lt;/p>
+&lt;p>你认为最后一类是什么？是状态。当我在说状态和有状态的抽象时，我并不是在谈论实际的状态管理，比如数据库或者文件系统的功能。我要说的更多是有关幕后依赖状态的开发人员抽象。可能，你需要具有工作流管理的能力。也许你想管理运行时间长的进程或者做临时调度或者某些定时任务来定期运行服务。也许你还想进行分布式缓存，具有幂等性或者支持回滚。所有这些都是开发人员级的原语，但在幕后，它们依赖于具有某种状态。你想随意使用这些抽象俩创建完善的分布式系统。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/26image0041616431697348.jpg" alt="">&lt;/p>
+&lt;p>我们将使用这个分布式系统原语的框架来评估它们在 Kubernetes 和其他项目上的变化情况。&lt;/p>
+&lt;h2 id="单体架构----传统中间件功能">单体架构 &amp;ndash; 传统中间件功能&lt;/h2>
+&lt;p>假设我们从单体架构以及如何获得这些能力开始。在那种情况下，首先是当我说单体的时候，在分布式应用的情况下我想到的是 ESB。ESB 是相当强大的，当我们检查我们的需求列表时，我们会说 ESB 对所有有状态的抽象有很好的支持。&lt;/p>
+&lt;p>使用 ESB，你可以进行长时间运行的流程的编排、分布式事务、回滚和幂等。此外，ESB 还提供了出色的资源绑定能力，并且有数百个连接器，支持转换、编排，甚至有联网功能。最后，ESB 甚至可以做服务发现和负载均衡。&lt;/p>
+&lt;p>它具有围绕网络连接的弹性的所有功能，因此它可以进行重试。可能 ESB 本质上不是很分布式，所以它不需要非常高级的网络和发布能力。ESB 欠缺的主要是生命周期管理。因为它是单一运行时，所以第一件事就是你只能使用一种语言。通常是创建实际运行时的语言，Java、.NET、或者其他的语言。然后，因为是单一运行时，我们不能轻松地进行声明式的部署或者自动防止。部署是相当大且非常重的，所以它通常涉及到人机交互。这种单体架构的另一个难点是扩展：“我们无法扩展单个组件。”&lt;/p>
+&lt;p>最后却并非最不重要的一点是，围绕隔离，无论是资源隔离还是故障隔离。使用单体架构无法完成所有这些工作。从我们的需求框架来看，ESB 的单体架构不符合条件。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/40image0051616431696438.jpg" alt="">&lt;/p>
+&lt;h2 id="云原生架构----微服务和-kubernetes">云原生架构 &amp;ndash; 微服务和 Kubernetes&lt;/h2>
+&lt;p>接下来，我建议我们研究一下云原生架构以及这些需求是如何变化的。如果我们从一个非常高的层面来看，这些架构是如何发生变化的，云原生可能始于微服务运动。微服务使我们可以按业务领域进行拆分单体应用。事实证明，容器和 Kubernetes 实际上是管理这些微服务的优秀平台。让我们来看一下 Kubernetes 对于微服务特别有吸引力的一些具体特性和功能。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/13image0061616431699209.jpg" alt="">&lt;/p>
+&lt;p>从一开始，进行健康状况探测的能力就是 Kubernetes 受欢迎的原因。在实践中，这意味着当你将容器部署到 Pod 中时，Kubernetes 会检查进程的运行状况。通常情况下，该过程模型还不够好。你可能仍然有一个已启动并正在运行的进程，但是它并不健康。这就是为什么还可以使用就绪度和存活度检查的原因。Kubernetes 会做一个就绪度检查，以确定你的应用在启动期间何时准备接受流量。它将进行活跃度检查，以检查服务的运行状况。在 Kubernetes 之前，这并不是很流行，但今天几乎所有语言、所有框架、所有运行时都有健康检查功能，你可以在其中快速启动端点。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/29image0071616431696697.jpg" alt="">&lt;/p>
+&lt;p>Kubernetes 引入的下一个特性是围绕应用程序的托管生命周期&amp;ndash;我的意思是，你不再控制何时启动、何时关闭服务。你相信平台可以做到这一点。Kubernetes 可以启动你的应用；它可以将其关闭，然后在不同的节点上移动它。为此，你必须正确执行平台在应用启动和关闭期间告诉你的事件。&lt;/p>
+&lt;p>Kubernetes 刘兴的另一件特性是围绕着声明式部署。这意味着你不再需要启动服务；检查日志是否已经启动。你不必手动升级实例&amp;ndash;支持声明式部署的 Kubernetes 可以为你做到这一点。根据你选择的策略，它可以停止旧实例并启动新实例。此外，如果出现问题，可以进行回滚。&lt;/p>
+&lt;p>另外就是声明你的资源需求。创建服务时，将其容器化。最好告诉平台该服务将需要多少 CPU 和内存。Kubernetes 利用这些信息为你的工作负载找到最佳节点。在使用 Kubernetes 之前，我们必须根据我们的标准将实例手动放置到一个节点上。现在，我们可以根据自己的偏好来指导 Kubernetes，它将为我们做出最佳的决策。&lt;/p>
+&lt;p>如今，在 Kubernetes 上，你可以进行多语言配置管理。无需在应用程序运行时进行配置查找就可以进行任何操作。Kubernetes 会确保配置最终在工作负载所在的同一节点上。这些配置被映射为卷或环境变量，以供你的应用程序使用。&lt;/p>
+&lt;p>事实证明，我刚才谈到的那些特定功能也是相关的。比如说，如果要进行自动放置，则必须告诉 Kubernetes 服务的资源需求。然后，你必须告诉它要使用的部署策略。为了让策略正确运行，你的应用程序必须执行来自环境的事件。它必须执行健康检查。一旦采用了所有这些最佳实践并使用所有这些功能，你的应用就会成为出色的云原生公民，并且可以在 Kubernetes 上实现自动化了（这是在 Kubernetes 上运行工作负载的基本模式）。最后，还有围绕着构建 Pod 中的容器、配置管理和行为，还有其他模式。&lt;/p>
+&lt;p>我要简要介绍的下一个主题是工作负载。从生命周期的角度来看，我们希望能够运行不同的工作负载。我们也可以在 Kubernetes 上做到这一点。运行十二要素应用程序和无状态微服务非常简单。Kubernetes 可以做到这一点。这不是你将要承担的唯一工作量。可能你还有有状态的工作负载，你可以使用有状态集在 Kubernetes 上完成此工作。&lt;/p>
+&lt;p>你可能还有的另一个工作负载是单例。也许你希望某个应用程序的实例是整个集群中应用程序的唯一一个实例&amp;ndash;你希望它成为可靠的单例。如果失败，则重新启动。因此，你可以根据需求以及是否希望单例至少具有一种或最多一种语义来在有状态集和副本集之间进行选择。你可能还有的另一个工作负载是围绕作业和定时作业&amp;ndash;有了 Kubernetes，你也可以实现这些。&lt;/p>
+&lt;p>如果我们将所有这些 Kubernetes 功能映射到我们的需求，则 Kubernetes 可以满足生命周期需求。我通常创建的需求列表主要是由 Kubernetes 今天提供给我们的。这些是任何平台上的预期功能，而 Kubernetes 可以为你的部署做的是配置管理、资源隔离和故障隔离。此外，除了无服务器本身之外，它还支持其他工作负载。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/12image0081616431698134.jpg" alt="">&lt;/p>
+&lt;p>然后，如果这就是 Kubernetes 给开发者提供的全部功能，那么我们该如何扩展 Kubernetes 呢？以及如何使它具有更多功能？因此，我想描述当今使用的两种常用方法。&lt;/p>
+&lt;h2 id="进程外扩展机制">进程外扩展机制&lt;/h2>
+&lt;p>首先是 Pod 的概念，Pod 是用于在节点上部署容器的抽象。此外，Pod 给我们提供了两组保证：&lt;/p>
+&lt;ul>
+&lt;li>第一组是部署保证 &amp;ndash; Pod 中的所有容器始终位于同一个节点上。这意味着它们可以通过 localhost 相互通信，也可以使用文件系统或通过其他 IPC 机制进行异步通信。&lt;/li>
+&lt;li>Pod 给我们的另一组保证是围绕生命周期的。Pod 中的所有容器并非都相等。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/22image0091616431698660.jpg" alt="">&lt;/p>
+&lt;p>根据使用的是 init 容器还是应用程序容器，你会获得不同的保证。例如，init 容器在开始时运行；当 Pod 启动时，它按顺序一个接一个地运行。他们仅在之前的容器已成功完成时运行。它们有助于实现由容器驱动的类似工作流的逻辑。&lt;/p>
+&lt;p>另一方面，应用程序容器是并行运行的。它们在整个 Pod 的生命周期中运行，这也是 sidecar 模式的基础。sidecar 可以运行多个容器，这些容器可以协作并共同为用户提供价值。这也是当今我们看到的扩展 Kubernetes 附加功能的主要机制之一。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/9image0101616431695489.jpg" alt="">&lt;/p>
+&lt;p>为了解释以下功能，我必须简要地告诉你 Kubernetes 内部的工作方式。它是基于调谐循环的。调谐循环的思想是将期望状态驱动到实际状态。在 Kubernetes 中，很多功能都是靠这个来实现的。例如，当你说我要两个 Pod 实例，这系统的期望状态。有一个控制循环不断地运行，并检查你的 Pod 是否有两个实例。如果不存在两个实例，它将计算差值。它将确保存在两个实例。&lt;/p>
+&lt;p>这方面的例子有很多。一些是副本集或有状态集。资源定义映射到控制器是什么，并且每个资源定义都有一个控制器。该控制器确保现实世界与所需控制器相匹配，你甚至可以编写自己的自定义控制器。&lt;/p>
+&lt;p>当在 Pod 中运行应用程序时，你将无法在运行时加载任何配置文件更改。然而，你可以编写一个自定义控制器，检测 config map 的变化，重新启动 Pod 和应用程序&amp;ndash;从而获取配置更改。&lt;/p>
+&lt;p>事实证明，即使 Kubernetes 拥有丰富的资源集合，但它们并不能满足你的所有不同需求。Kubernetes 引入了自定义资源定义的概念。这意味着你可以对需求进行建模并定义适用于 Kubernetes 的 API。它与其他 Kubernetes 原生资源共存。你可以用能理解模型的任何语言编写自己的控制器。你可以设计一个用 Java 实现的 ConfigWatcher，描述我们前面所解释的内容。这就是 operator 模式，即与自定义资源定义一起使用的控制器。如今，我们看到很多 operator 假如，这就是第二种扩展 Kubernetes 附加功能的方式。&lt;/p>
+&lt;p>接下来，我想简单介绍一下基于 Kubernetes 构建的一些平台，这些平台大量使用 sidecar 和 operator 来给开发者提供额外的功能。&lt;/p>
+&lt;h2 id="什么是服务网格">什么是服务网格？&lt;/h2>
+&lt;p>让我们从服务网格开始，什么是服务网格？&lt;/p>
+&lt;p>我们有两个服务，服务 A 要调用服务 B，并且可以用任何语言。把这个当做是我们的应用工作负载。服务网格使用 sidecar 控制器，并在我们的服务旁边注入一个代理。你最终会在 Pod 中得到两个容器。代理是一个透明的代理，你的应用对这个代理完全无感知&amp;ndash;它拦截所有传入和传出的流量。此外，代理还充当数据防火墙。&lt;/p>
+&lt;p>这些服务代理的集合代表了你的数据平面，并且很小且无状态。为了获得所有状态和配置，它们依赖于控制平面。控制平面是保持所有配置，收集指标，做出决定并与数据平面进行交互的有状态部分。此外，它们是不同控制平面和数据平面的正确选择。事实证明，我们还需要一个组件-一个 API 网关，以将数据获取到我们的集群中。一些服务网格具有自己的 API 网关，而某些使用第三方。如果你研究下所有这些组件，它们将提供我们所需的功能。&lt;/p>
+&lt;p>API 网关主要专注于抽象我们服务的实现。它隐藏细节并提供边界功能。服务网格则相反。在某种程度上，它增强了服务内的可见性和可靠性。可以说，API 网关和服务网格共同提供了所有网络需求。要在 Kubernetes 上获得网络功能，仅使用服务是不够的：“你需要一些服务网格。”&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/19image0111616431696146.jpg" alt="">&lt;/p>
+&lt;h2 id="什么是-knative">什么是 Knative？&lt;/h2>
+&lt;p>我要讨论的下一个主题是 Knative，这是 Google 几年前启动的一个项目。它是 Kubernetes 之上的一层，可为您提供无服务器功能，并具有两个主要模块：&lt;/p>
+&lt;ul>
+&lt;li>Knative 服务 - 围绕着请求-应答交互，以及&lt;/li>
+&lt;li>Knative Eventing - 更多的是用于事件驱动的交互。&lt;/li>
+&lt;/ul>
+&lt;p>只是让你感受一下，Knative Serving 是什么？通过 Knative Serving，你可以定义服务，但这不同于 Kubernetes 服务。这是 Knative 服务。使用 Knative 服务定义工作负载后，你就会得到具有无服务器的特征的部署。你不需要有启动并运行实例。它可以在请求到达时从零开始。你得到的是无服务器的能力；它可以迅速扩容，也可以缩容到零。&lt;/p>
+&lt;p>Knative Eventing 为我们提供了一个完全声明式的事件管理系统。假设我们有一些要与之集成的外部系统，以及一些外部的事件生产者。在底部，我们将应用程序放在具有 HTTP 端点的容器中。借助 Knative Eventing，我们可以启动代理，该代理可以触发 Kafka 映射的代理，也可以在内存或者某些云服务中。此外，我们可以启动连接到外部系统的导入器，并将事件导入到我们的代理中。这些导入器可以基于，例如，具有数百个连接器的 Apache Camel。&lt;/p>
+&lt;p>一旦我们将事件发送给代理，然后用 YAML 文件声明，我们可以让容器订阅这些事件。在我们的容器中，我们不需要任何消息客户端&amp;ndash;比如 Kafka 客户端。我们的容器将使用云事件通过 HTTP POST 获取事件。这是一个完全平台管理的消息传递基础设施。作为开发人员，你必须在容器中编写业务代码，并且不处理任何消息传递逻辑。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/8image0121616431698919.jpg" alt="">&lt;/p>
+&lt;p>从我们的需求的角度来看，Knative 可以满足其中的一些要求。从生命周期的角度来看，它为我们的工作负载提供了无服务器的功能，因此能够将其扩展到零，并从零开始激活。从网络的角度来看，如果服务网格之间存在某些重叠，则 Knative 也可以进行流量转移。从绑定的角度来看，它对使用 Knative 导入程序进行绑定提供了很好的支持。它可以使我们进行发布/订阅，或点对点交互，甚至可以进行一些排序。它可以满足几类需求。&lt;/p>
+&lt;h2 id="什么是-dapr">什么是 Dapr？&lt;/h2>
+&lt;p>另一个使用 sidecar 和 operator 的项目是 &lt;a href="https://dapr.io/">Dapr&lt;/a>，它是微软几个月前才开始并且正在迅速流行起来。此外，1.0 版本 &lt;a href="https://www.infoq.com/news/2021/02/dapr-production-ready/">被认为是生产可用的&lt;/a>。它是一个作为 sidecar 的分布式系统工具包&amp;ndash;Dapr 中的所有内容都是作为 sidecar 提供的，并且有一套他们所谓的构件或功能集的集合。&lt;/p>
+&lt;p>这些功能是什么呢？第一组功能是围绕网络。Dapr 可以进行服务发现和服务之间的点对点集成。同样，它也可以进行服务网格的追踪、可靠通信、重试和恢复。第二套功能是围绕资源绑定：&lt;/p>
+&lt;ul>
+&lt;li>它有很多云 API、不同系统的连接器，以及&lt;/li>
+&lt;li>也可以做消息发布/订阅和其他逻辑。&lt;/li>
+&lt;/ul>
+&lt;p>有趣的是，Dapr 还引入了状态管理的概念。除了 Knative 和服务网格提供的功能外，Dapr 在状态存储之上进行了抽象。此外，你通过存储机制支持与 Dapr 进行基于键值的交互。&lt;/p>
+&lt;p>在较高的层次上，架构是你的应用程序位于顶部，可以使用任何语言。你可以使用 Dapr 提供的客户端库，但你不必这样做。你可以使用语言功能来执行称为 sidecar 的 HTTP 和 gRPC。与 服务网格的区别在于，这里的 Dapr sidecar 不是一个透明的代理。它是一个显式代理，你必须从你的应用中调用它，并通过 HTTP 或 gRPC 与之交互。根据你需要的功能，Dapr 可以与其他如云服务的系统对话。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/18image0131616431699532.jpg" alt="">&lt;/p>
+&lt;p>在 Kubernetes 上，Dapr 是作为 sidecar 部署的，并且可以在 Kubernetes 之外工作（不仅仅是 Kubernetes）。此外，它还有一个 operator &amp;ndash; 而 sidecar 和 Operator 是主要的扩展机制。其他一些组件管理证书、处理基于 actor 的建模并注入 sidecar。你的工作负载与 sidecar 交互，并尽其所能与其他服务对话，让你与不同的云提供商进行互操作。它还为你提供了额外的分布式系统功能。&lt;/p>
+&lt;p>综上所述，这些项目所提供的功能，我们可以说 ESB 是分布式系统的早期化身，其中我们有集中式的控制平面和数据平面&amp;ndash;但是扩展性不好。在云原生中，集中式控制平面仍然存在，但是数据平面是分散的&amp;ndash;并且具有隔音功能和高度的可扩展性。&lt;/p>
+&lt;p>我们始终需要 Kubernetes 来做良好的生命周期管理，除此之外，你可能还需要一个或多个附加组件。你可能需要 Istio 来进行高级联网。你可能会使用 Knative 来进行无服务器工作负载，或者使用 Dapr 来做集成。这些框架可与 Istio 和 Envoy 很好的配合使用。从 Dapr 和 Knative 的角度来看，你可能必须选择一个。它们共同以云原生的方式提供了我们过去在 ESB 上拥有的东西。&lt;/p>
+&lt;h2 id="未来云原生趋势--生命周期趋势">未来云原生趋势&amp;ndash;生命周期趋势&lt;/h2>
+&lt;p>在接下来的部分，我列出了一些我认为在这些领域正在发生令人振奋的发展的项目。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/8image0141616431695762.jpg" alt="">&lt;/p>
+&lt;p>我想从生命周期开始。通过 Kubernetes，我们可以为应用程序提供一个有用的生命周期，这可能不足以进行更复杂的生命周期管理。比如，如果你有一个更复杂的有状态应用，则可能会有这样的场景，其中 Kubernetes 中的部署原语不足以为应用提供支持。&lt;/p>
+&lt;p>在这些场景下，你可以使用 operator 模式。你可以使用一个 operator 来进行部署和升级，还可以将 S3 作为服务备份的存储介质。此外，你可能还会发现 Kubernetes 的实际健康检查机制不够好。假设存活检查和就绪检查不够好。在这种情况下，你可以使用 operator 对你的应用进行更智能的存活和就绪检查，然后在此基础上进行恢复。&lt;/p>
+&lt;p>第三个领域就是自动伸缩和调整。你可以让 operator 更好的了解你的应用，并在平台上进行自动调整。目前，编写 operator 的框架主要有两个，一个是 Kubernetes 特别兴趣小组的 Kubebuilder，另一个是红帽创建的 operator 框架的一部分&amp;ndash;operator SDK。它有以下几个方面的内容：&lt;/p>
+&lt;p>Operator SDK 让你可以编写 operator &amp;ndash; operator 生命周期管理器来管理 operator 的生命周期，以及可以发布你的 operator 到 OperatorHub。如今在 OperatorHub，你会看到 100 多个 operator 用于管理数据库、消息队列和监控工具。从生命周期空间来看，operator 可能是 Kubernetes 生态系统中发展最活跃的领域。&lt;/p>
+&lt;h2 id="网络趋势---envoy">网络趋势 - Envoy&lt;/h2>
+&lt;p>我选的另一个项目是 &lt;a href="https://www.envoyproxy.io/">Envoy&lt;/a>。服务网格接口规范的引入将使你更轻松地切换不同的服务网格实现。在部署上 Istio 对架构进行了一些整合。你不再需要为控制平面部署 7 个 Pod；现在，你只需要部署一次就可以了。更有趣的是在 Envoy 项目的数据平面上所正在发生的：越来越多的第 7 层协议被添加到 Envoy 中。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/11image0151616431697613.jpg" alt="">&lt;/p>
+&lt;p>服务网格增加了对更多协议的支持，比如 MongoDB、ZooKeeper、MySQL、Redis，而最新的协议是 Kafka。我看到 Kafka 社区现在正在进一步改进他们的协议，使其对服务网格更加友好。我们可以预料将会有更紧密的集成、更多的功能。最有可能的是，会有一些桥接的能力。你可以从服务中在你的应用本地做一个 HTTP 调用，而代理将在后台使用 Kafka。你可以在应用外部，在 sidecar 中针对 Kafka 协议进行转换和加密。&lt;/p>
+&lt;p>另一个令人兴奋的发展是引入了 HTTP 缓存。现在 Envoy 可以进行 HTTP 缓存。你不必在你的应用中使用缓存客户端。所有这些都是在 sidecar 中透明地完成的。有了 tap 过滤器，你可以 tap 流量并获得流量的副本。最近，WebAssembly 的引入，意味着如果你要为 Envoy 编写一些自定义的过滤器，你不必用 C++ 编写，也不必编译整个 Envoy 运行时。你可以用 WebAssembly 写你的过滤器，然后在运行时进行部署。这些大多数还在进行中。它们不存在，说明数据平面和服务网格无意停止，仅支持 HTTP 和 gRPC。他们有兴趣支持更多的应用层协议，为你提供更多的功能，以实现更多的用例。最主要的是，随着 WebAssembly 的引入，你现在可以在 sidecar 中编写自定义逻辑。只要你没有在其中添加一些业务逻辑就可以了。&lt;/p>
+&lt;h2 id="绑定趋势---apache-camel">绑定趋势 - Apache Camel&lt;/h2>
+&lt;p>&lt;a href="https://camel.apache.org/">Apache Camel&lt;/a> 是一个用于集成的项目，它具有很多使用企业集成模式连接到不同系统的连接器。 比如 &lt;a href="https://camel.apache.org/releases/release-3.0.0/">Camel version 3&lt;/a> 就深度集成到了 Kubernetes 中，并且使用了我们到目前为止所讲的那些原语，比如 operator。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/7image0161616431694981.jpg" alt="">&lt;/p>
+&lt;p>你可以在 Camel 中用 Java、JavaScript 或 YAML 等语言编写你的集成逻辑。最新的版本引入了一个 Camel operator，它在 Kubernetes 中运行并理解你的集成。当你写好 Camel 应用，将其部署到自定义资源中，operator 就知道如何构建容器或查找依赖项。根据平台的能力，不管是只用 Kubernetes，还是带有 Knative 的 Kubernetes，它都可以决定要使用的服务以及如何实现集成。在运行时之外有相当多的智能 &amp;ndash; 包括 operator &amp;ndash; 所有这些都非常快地发生。为什么我会说这是一个绑定的趋势？主要是因为 Apache Camel 提供的连接器的功能。这里有趣的一点是它如何与 Kubernetes 深度集成。&lt;/p>
+&lt;h2 id="状态趋势---cloudstate">状态趋势 - Cloudstate&lt;/h2>
+&lt;p>另一个我想讨论的项目是 &lt;a href="https://cloudstate.io/">Cloudstate&lt;/a> 和与状态相关的趋势。Cloudstate 是 Lightbend 的一个项目，主要致力于无服务器和功能驱动的开发。最新发布的版本，正在使用 sidecar 和 operator 与 Kubernetes 进行深度集成。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/8image0171616431996943.jpg" alt="">&lt;/p>
+&lt;p>这个创意是，当你编写你的功能时，你在功能中要做的就是使用 gRPC 来获取状态并与之进行交互。整个状态管理在与其他 sidecar 群集的 sidear 中进行。它使你能够进行事件溯源、CQRS、键值查询、消息传递。&lt;/p>
+&lt;p>从应用程序角度来看，你并不了解所有这些复杂性。你所做的只是调用一个本地的 sidecar，而 sidecar 会处理这些复杂的事情。它可以在后台使用两个不同的数据源。而且它拥有开发人员所需的所有有状态抽象。&lt;/p>
+&lt;p>到目前为止，我们已经看到了云原生生态系统中的最新技术以及一些仍在进行中的开发。我们如何理解这一切？&lt;/p>
+&lt;h2 id="多运行时微服务已经到来">多运行时微服务已经到来&lt;/h2>
+&lt;p>如果你看微服务在 Kubernetes 上的样子，则将需要使用某些平台功能。此外，你将需要首先使用 Kubernetes 的功能进行生命周期管理。然后，很有可能透明地，你的服务会使用某些服务网格（例如 Envoy）来获得增强的网络功能，无论是流量路由、弹性、增强的安全性，甚至出于监控的目的。除此之外，根据你的场景和使用的工作负载可能需要 Dapr 或者 Knative。所有这些都代表了进程外附加的功能。剩下的就是编写业务逻辑，不是放在最上面而是作为一个单独的运行时来编写。未来的微服务很有可能将是由多个容器组成的这种多运行时。有些是透明的，有些则是非常明确的。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/6image0181616431996411.jpg" alt="">&lt;/p>
+&lt;h2 id="智能的-sidecar-和愚蠢的管道">智能的 sidecar 和愚蠢的管道&lt;/h2>
+&lt;p>如果更深入地看，那可能是什么样的，你可以使用一些高级语言编写业务逻辑。是什么并不重要，不必仅是 Java，因为你可以使用任何其他语言并在内部开发自定义逻辑。&lt;/p>
+&lt;p>你的业务逻辑与外部世界的所有交互都是通过 sidecar 发生的，并与平台集成进行生命周期管理。它为外部系统执行网络抽象，为你提供高级的绑定功能和状态抽象。sidecar 是你不需要开发的东西。你可以从货架上拿到它。你用一点 YAML 或 JSON 配置它，然后就可以使用它。这意味着你可以轻松地更新 sidecar，因为它不再被嵌入到你的运行时。这使得打补丁、更新变得更加更容易。它为我们的业务逻辑启用了多语言运行时。&lt;/p>
+&lt;h2 id="微服务之后是什么">微服务之后是什么？&lt;/h2>
+&lt;p>这让我想到了最初的问题，微服务之后是什么？&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/6image0201616431995910.jpg" alt="">&lt;/p>
+&lt;p>如果我们看下架构的发展历程，应用架构在很高的层面上是从单体应用开始的。然而微服务给我们提供了如何把一个单体应用拆分成独立的业务域的指导原则。之后又出现了无服务器和功能即服务（FaaS），我们说过可以按操作将其进一步拆分，从而实现极高的可扩展性-因为我们可以分别扩展每个操作。&lt;/p>
+&lt;p>我想说的是 FaaS 并不是最好的模式 &amp;ndash; 因为功能并不是实现合理的复杂服务的最佳模式，在这种情况下，当多个操作必须与同一个数据集进行交互时，你希望它们驻留在一起。可能是多运行时（我把它称为 &lt;a href="https://www.infoq.com/articles/multi-runtime-microservice-architecture/">Mecha 架构&lt;/a>），在该架构中你将业务逻辑放在一个容器中，而所有与基础设施相关的关注点作为一个单独的容器存在。它们共同代表多运行时微服务。也许这是一个更合适的模型，因为它有更好的属性。&lt;/p>
+&lt;p>你可以获得微服务的所有好处。仍然将所有域和所有限界上下文放在一处。你将所有的基础设施和分布式应用需求放在一个单独的容器中，并在运行时将它们组合在一起。大概，现在最接近这种模型的是 Dapr。他们正在遵循这种模型。如果你仅对网络方面感兴趣，那么可能使用 Envoy 也会接近这种模型。&lt;/p>
+&lt;h2 id="关于作者">关于作者&lt;/h2>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/21bilgin-ibryam15886810412341616480845087.jpeg" alt="">&lt;/p>
+&lt;p>&lt;strong>Bilgin Ibryam&lt;/strong> 是红帽公司的产品经理和前架构师、提交人，并且是 Apache 软件基金会的成员。他是开源布道者，经常写博客、发表演讲，是 &lt;a href="https://k8spatterns.io/">Kubernetes Patterns&lt;/a> 和 Camel Design Patterns 书籍的作者。Bilgin 目前的工作主要集中在分布式系统、事件驱动架构以及可重复的云原生应用开发模式和实践上。请关注他 @bibryam 了解未来类似主题的更新。&lt;/p></description></item><item><title>【译】2021 年及未来的云原生预测</title><link>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</link><pubDate>Tue, 09 Feb 2021 06:43:54 +0800</pubDate><guid>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</guid><description>
+&lt;p>本文译自 &lt;a href="https://www.cncf.io/blog/2021/01/29/cloud-native-predictions-for-2021-and-beyond/">Cloud Native Predictions for 2021 and Beyond&lt;/a>&lt;/p>
+&lt;p>原文发布在 &lt;a href="https://www.aniszczyk.org/2021/01/19/cloud-native-predictions-for-2021-and-beyond/">Chris Aniszczyk 的个人博客&lt;/a>&lt;/p>
+&lt;p>我希望每个人都有一个美好的假期，因为 2021 年 1 月的前几周一直非常疯狂，从叛乱到新的 COVID 菌株。在云原生国度，CNCF 最近发布了关于我们去年完成的所有工作的&lt;a href="https://www.cncf.io/cncf-annual-report-2020/">年度报告&lt;/a>。我建议大家找个机会去看一下这份报告，在疫情大流行的这一年，我们收获颇丰。&lt;a href="https://twitter.com/CloudNativeFdn/status/1343914259177222145">https://twitter.com/CloudNativeFdn/status/1343914259177222145&lt;/a>&lt;/p>
+&lt;p>作为我工作的一部分，我对云原生趋势有一个独特的观点，送给所有与我合作的会员公司和开发人员，所以我想我会分享我对 2021 年及以后云原生发展的想法。&lt;/p>
+&lt;p>&lt;strong>云原生的 IDE&lt;/strong>&lt;/p>
+&lt;p>作为一个在 Eclipse 基金会内部从事开发者工具工作的人，我对最近的技术状态进展感到无比兴奋。未来，开发生命周期（代码、构建、调试）将主要发生在云端，而不是你本地的 Emacs 或 VSCode。你将每一个拉动请求最终得到一个完整的开发环境设置，预先配置并连接到他们自己的部署，以协助你的开发和调试需求。今天这种技术的一个具体例子是通过 GitHub &lt;a href="https://github.com/features/codespaces">Codespaces&lt;/a> 和 &lt;a href="https://gitpod.io/">GitPod&lt;/a> 实现的。虽然 GitHub Codespaces 还处于测试阶段，但今天你可以通过 GitPod 来体验，以 &lt;a href="https://gitpod.io/#https://github.com/prometheus/prometheus">Prometheus&lt;/a> 为例。一分钟左右，你就拥有了一个有编辑器和预览环境的完全实时的开发环境。最疯狂的是，这个开发环境（工作空间）是 &lt;a href="https://github.com/prometheus/prometheus/blob/master/.gitpod.yml">用代码描述&lt;/a>，并且可以像其他代码工件一样，与你团队的其他开发者共享。&lt;/p>
+&lt;p>最后，我期望在接下来的一年里，能看到云原生 IDE 领域出现令人难以置信的创新，特别是随着 GitHub Codespaces 进入测试版之后，并得到广泛地使用，让开发者可以体验到这个新概念，并爱上它。&lt;/p>
+&lt;p>&lt;strong>边缘的 Kubernetes&lt;/strong>&lt;/p>
+&lt;p>Kubernetes 是通过在大规模数据中心的使用而诞生的，但 Kubernetes 会像 Linux 一样为新的环境而进化。Linux 所发生的事情是，终端用户最终对内核进行了扩展，以支持从移动、嵌入式等各种新的部署场景。我坚信 Kubernetes 也会经历类似的进化，我们已经见证了 Telcos（和其他初创公司）通过将 VNFs 转化为 &lt;a href="https://github.com/cncf/cnf-wg">云原生网络功能&lt;/a>（CNFs），以及 &lt;a href="https://k3s.io/">k3s&lt;/a>、KubeEdge、k0s、&lt;a href="https://www.lfedge.org/">LFEdge&lt;/a>、Eclipse ioFog 等开源项目，来探索 Kubernetes 作为边缘平台。推动超大规模云服务支持电信公司和边缘的能力，再加上重用云原生软件的能力，以及建立在现有庞大的生态系统基础上的能力，将巩固 Kubernetes 在未来几年内成为边缘计算的主导平台。&lt;/p>
+&lt;p>&lt;strong>云原生 + Wasm&lt;/strong>&lt;/p>
+&lt;p>&lt;a href="https://webassembly.org/">Web Assembly&lt;/a>(Wasm) 是一项新的技术，但我预计它将成为云原生生态系统中不断增长的实用工具和工作负载，特别是随着 &lt;a href="https://wasi.dev/">WASI&lt;/a> 的成熟，以及 Kubernetes 更多地作为边缘编排工具使用，如前所述。一个场景是增强扩展机制，就像 Envoy 对过滤器和 LuaJIT 所做的那样。你可以与一个支持各种编程语言的更小的优化运行时协同，而不是直接与 Lua 打交道。Envoy 项目目前正处于 &lt;a href="https://www.solo.io/blog/the-state-of-webassembly-in-envoy-proxy/">采用 Wasm&lt;/a> 的过程中，我预计任何使用脚本语言作为流行扩展机制的环境都会出现被 Wasm 全盘取代的情况。&lt;/p>
+&lt;p>在 Kubernetes 方面，有像微软的 &lt;a href="https://deislabs.io/posts/introducing-krustlet/">Krustlet&lt;/a> 这样的项目，正在探索如何在 Kubernetes 中支持基于 WASI 的运行时。这不应该太令人惊讶，因为 Kubernetes 已经在通过 CRD 和其他机制扩展，以运行不同类型的工作负载，如 VM（&lt;a href="https://kubevirt.io/">KubeVirt&lt;/a>）等等。&lt;/p>
+&lt;p>另外，如果你是 Wasm 的新手，我推荐 Linux 基金会的这本新的 &lt;a href="https://www.edx.org/course/introduction-to-webassembly-runtime">入门课程&lt;/a>，它对其进行了介绍，以及优选的文档。&lt;/p>
+&lt;p>&lt;strong>FinOps 的崛起（CFM）&lt;/strong>&lt;/p>
+&lt;p>新冠病毒的爆发加速了向云原生的转变。至少有一半的公司在危机中加快了他们的云计划。近 60% 的受访者表示，由于 COVID-19 大流行，云计算的使用量将超过之前的计划 (&lt;a href="https://info.flexera.com/SLO-CM-REPORT-State-of-the-Cloud-2020">2020 年云计算现状报告&lt;/a>)。除此之外，云财务管理 (或 FinOps) 对许多公司来说是一个日益严重的问题和 &lt;a href="https://www.wsj.com/articles/cloud-bills-will-get-loftier-1518363001">关注&lt;/a>，老实说，在过去 6 个月里，我与正在进行云原生之旅的公司进行的讨论中，大约有一半的讨论都会提到这个问题。你也可以说，云提供商没有动力让云财务管理变得更容易，因为这将使客户更容易减少支出，然而，在我看来，真正的痛苦是缺乏围绕云财务管理的开源创新和标准化（所有的云都以不同的方式进行成本管理）。在 CNCF 的背景下，试图让 FinOps 变得更容易的开源项目并不多，有 &lt;a href="https://github.com/kubecost/cost-model">KubeCost&lt;/a> 项目，但还相当早期。&lt;/p>
+&lt;p>另外，Linux 基金会最近推出了 &lt;a href="https://www.finops.org/blog/linux-foundation">FinOps 基金会&lt;/a> 来帮助这个领域的创新，他们在这个领域有一些 &lt;a href="https://www.edx.org/course/introduction-to-finops">很棒的入门材料&lt;/a>。我期望在未来几年，在 FinOps 领域能看到更多的开源项目和规范。&lt;/p>
+&lt;p>&lt;strong>云原生中更多的使用 Rust&lt;/strong>&lt;/p>
+&lt;p>Rust 仍然是一门年轻而小众的编程语言，特别是如果你以 Redmonk 的 &lt;a href="https://redmonk.com/sogrady/2020/07/27/language-rankings-6-20/">编程语言排名&lt;/a> 为例。然而，我的感觉是，鉴于已经有一些 &lt;a href="https://www.cncf.io/blog/2020/06/22/rust-at-cncf/">使用 Rust 的 CNCF 项目&lt;/a>，以及它出现在像 microvm &lt;a href="https://firecracker-microvm.github.io/">Firecracker&lt;/a> 这样有趣的基础设施项目中，你将在未来一年中看到 Rust 出现在更多的云原生项目中。虽然 CNCF 目前有超多的项目是用 Golang 编写的，但我预计随着 &lt;a href="https://blog.rust-lang.org/2020/08/18/laying-the-foundation-for-rusts-future.html">Rust 社区的成熟&lt;/a>，几年后基于 Rust 的项目将与基于 Go 的项目平起平坐。&lt;/p>
+&lt;p>&lt;strong>GitOps+CD/PD 增长显著&lt;/strong>&lt;/p>
+&lt;p>&lt;a href="https://www.weave.works/blog/what-is-gitops-really">GitOps&lt;/a> 是云原生技术的一种操作模式，提供了一套统一部署、管理和监控应用程序的最佳实践 (最初是由 Weaveworks 名气很大的 Alexis Richardson&lt;a href="https://www.weave.works/blog/gitops-operations-by-pull-request">创造&lt;/a>)。GitOps 最重要的方面是通过声明的方式描述所需的在 Git 中版本化的系统状态，这基本上可以使一系列复杂的系统变更被正确地应用，然后进行验证（通过 Git 和其他工具启用的漂亮的审计日志）。从实用的角度来看，GitOps 改善了开发者的体验，随着 Argo、GitLab、Flux 等项目的发展，我预计今年 GitOps 工具会更多地冲击企业。如果你看过 GitLab 的 &lt;a href="https://about.gitlab.com/blog/2020/07/14/gitops-next-big-thing-automation/">数据&lt;/a>，GitOps 还是一个大部分公司还没有探索出来的新兴的实践，但随着越来越多的公司大规模采用云原生软件，我认为 GitOps 自然会随之而来。如果你有兴趣了解更多关于这个领域的信息，我推荐你去看看 CNCF 中 &lt;a href="https://codefresh.io/devops/announcing-gitops-working-group/">新&lt;/a> 成立的 &lt;a href="https://github.com/gitops-working-group/gitops-working-group">GitOps 工作组&lt;/a>。&lt;/p>
+&lt;p>&lt;strong>服务目录2.0：云原生开发者仪表盘&lt;/strong>&lt;/p>
+&lt;p>服务目录的概念并不是一个新事物，对于我们一些在 &lt;a href="https://en.wikipedia.org/wiki/ITIL">ITIL&lt;/a> 时代成长起来的老人们来说，你可能还记得 &lt;a href="https://en.wikipedia.org/wiki/Configuration_management_database">CMDBs&lt;/a> （恐怖）等东西。然而，随着微服务和云原生开发的兴起，对服务进行编目和索引各种实时服务元数据的能力对于推动开发者自动化是至关重要的。这可以包括使用服务目录来了解所有权来处理事件管理、管理 SLO 等。&lt;/p>
+&lt;p>在未来，你将看到开发人员仪表盘的趋势，它不仅是一个服务目录，而且提供了通过各种自动化功能在扩展仪表盘的能力。这方面的典范开源例子是 Lyft 的 &lt;a href="https://engineering.atspotify.com/2020/03/17/what-the-heck-is-backstage-anyway/">Backstage&lt;/a> 和 &lt;a href="https://eng.lyft.com/announcing-clutch-the-open-source-platform-for-infrastructure-tooling-143d00de9713">Clutch&lt;/a>，然而，任何拥有相当现代的云原生部署的公司往往都有一个平台基础设施团队，他们已经尝试构建类似的东西。随着开源开发者仪表盘与 &lt;a href="https://backstage.io/plugins">大型插件生态系统&lt;/a> 的成熟，你会看到其被各地的平台工程团队加速采用。&lt;/p>
+&lt;p>&lt;strong>跨云变得更真实&lt;/strong>&lt;/p>
+&lt;p>Kubernetes 和云原生运动已经证明了云原生和多云方式在生产环境中是可行的，数据很清楚地表明“93% 的企业都有使用微软 Azure、亚马逊网络服务和谷歌云等多个提供商的策略” (&lt;a href="https://info.flexera.com/SLO-CM-REPORT-State-of-the-Cloud-2020">2020 年云计算现状报告&lt;/a>)。事实上，Kubernetes 这些年伴随着云市场的发展而更加成熟，将有望解锁程序化的跨云管理服务。这种方法的一个具体例子体现在 Crossplane 项目中，该项目提供了一个开源的跨云控制平面，利用 Kubernetes API 的可扩展性来实现跨云工作负载管理（参见 &lt;a href="https://thenewstack.io/gitlab-deploys-the-crossplane-control-plane-to-offer-multicloud-deployments/">&amp;ldquo;GitLab 部署 Crossplane 控制平面，提供多云部署 &amp;ldquo;&lt;/a>）。&lt;/p>
+&lt;p>&lt;strong>主流 eBPF&lt;/strong>&lt;/p>
+&lt;p>&lt;a href="https://en.wikipedia.org/wiki/Berkeley_Packet_Filter">eBPF&lt;/a> 允许你在不改变内核代码或加载模块的情况下，在 Linux 内核中运行程序，你可以把它看作是一种沙箱扩展机制。eBPF 允许 &lt;a href="https://ebpf.io/projects">新一代软件&lt;/a> 从改进的网络、监控和安全等各种不同的方向扩展 Linux 内核的行为。从历史上看，eBPF 的缺点是它需要一个现代的内核版本来利用它，在很长一段时间里，这对许多公司来说都不是一个现实的选择。然而，事情正在发生变化，甚至新版本的 RHEL 终于支持 eBPF，所以你会看到更多的项目利用其 [优势]（https://sysdig.com/blog/sysdig-and-falco-now-powered-by-ebpf/）。如果你看过 Sysdig 最新的 &lt;a href="https://sysdig.com/blog/sysdig-2021-container-security-usage-report/">容器报告&lt;/a>，你会发现 Falco 的采用率最近在上升，虽然 Sysdig 的报告可能有点偏颇，但它反映在生产使用上。所以请继续关注，并期待未来更多基于 eBPF 的项目。&lt;/p>
+&lt;p>&lt;strong>最后，祝大家 2021 年快乐！&lt;/strong>&lt;/p>
+&lt;p>我还有一些预测和趋势要分享，尤其是围绕终端用户驱动的开源、服务网格拆解/标准化、Prometheus+OTel、保障软件供应链安全的 KYC 等等，但我会把这些留到更详细的文章中去，9 个预测足以开启新的一年！总之，感谢大家的阅读，希望在 2021 年 5 月的 &lt;a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/">KubeCon+CloudNativeCon EU&lt;/a> 上与大家见面，报名已开始！&lt;/p></description></item><item><title>【译】应用架构：为什么要随着市场演进</title><link>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</link><pubDate>Sun, 17 Jan 2021 21:37:23 +0800</pubDate><guid>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</guid><description>
+&lt;p>本文译自 &lt;a href="https://www.cncf.io/blog/2021/01/07/application-architecture-why-it-should-evolve-with-the-market/">Application architecture: why it should evolve with the market&lt;/a>
+最初由Mia Platform团队发布在&lt;a href="https://blog.mia-platform.eu/en/application-architecture-why-it-should-evolve-with-the-market">Mia Platform的博客&lt;/a>上&lt;/p>
+&lt;p>如今，IT 挑战在于通过有效选择应用架构来适应市场和业务需求的发展。为了满足业务和客户的需求，IT 部门应能够对技术和&lt;strong>方法&lt;/strong>采取行动以确保软件具有灵活性，并实现产品和服务的持续创新流程，从而做出更快的反应 。&lt;/p>
+&lt;p>当然，过去的单体应用程序和刚性基础设施无法做到这一点。相反，它可以通过&lt;strong>为演化而设计的架构&lt;/strong>来实现，该架构在需要时易于更新和重构。容器化实践的广泛应用（根据 &lt;a href="https://www.gartner.com/en/newsroom/press-releases/2020-06-25-gartner-forecasts-strong-revenue-growth-for-global-co">Gartner&lt;/a>，到2022年，大公司的就业人数将从目前的 30％ 增长到 75％），这种情况下采用云原生方法重新设计微服务应用是成功的关键。&lt;/p>
+&lt;h2 id="如何构建不断发展的应用架构">如何构建不断发展的应用架构&lt;/h2>
+&lt;p>海外专家称它们为&lt;strong>可演进的架构&lt;/strong>，以将它们与当今阻碍或无助于改变的传统架构区分开。应用架构基于&lt;a href="https://blog.mia-platform.eu/it/architettura-a-microservizi-i-vantaggi-per-il-business-e-per-lit">微服务架构风格&lt;/a> ，被设计成在现代虚拟化 IT 和云环境中发挥最佳性能。&lt;/p>
+&lt;p>基本思想是&lt;strong>创建可以轻松“分解”的应用程序，其组件可以在其他上下文或组合中重用&lt;/strong>，如 Lego 系列。开发一系列微服务，每个微服务都用于执行单个业务功能（根据“单一职责原则”），可以在应用本身的开发和演进中获得相当大的灵活性。实际上，可以根据支持功能的特定生命周期独立开发、更新和测试服务。&lt;/p>
+&lt;p>此外，谈到部署，微服务应用的架构具有很大的优势：可以根据需要在内部或云中通过使用可用资源来扩展单个微服务。&lt;/p>
+&lt;p>为此，微服务应用获得&lt;strong>基于容器的基础设施&lt;/strong>的支持，该基础设施通过业务编排系统（通常为 &lt;a href="https://blog.mia-platform.eu/en/kubernetes-why-it-is-so-popular-and-who-should-use-it">Kubernetes&lt;/a>）进行管理，该流程可以自动化并促进公司系统之间以及从这些系统到云提供商服务的软件作业的迁移。&lt;/p>
+&lt;h2 id="随着业务发展的应用架构的优势">随着业务发展的应用架构的优势&lt;/h2>
+&lt;p>基于微服务的应用架构在开发和部署方面具有更大的自治权。如我们所见，微服务可以在其他应用程序中单独实现、“分解”、更新和重用。因此，通过产品或客户需求的演变，它有降低&lt;strong>减少市场所需的每个新产品的设计/开发时间和成本&lt;/strong>。&lt;/p>
+&lt;p>此外，通过使用容器化实践，可以简化在本地、云、多云或混合环境的任何环境中应用程序的部署，从而优化成本。&lt;/p>
+&lt;p>在微服务架构风格的优点中，我们还发现有可能在各种服务之间的对话及其健康状况上获得更大的&lt;strong>透明度&lt;/strong>：更好的可观察性意味着可以轻松解决复杂应用的问题。实际上，管理员可以&lt;strong>更快地定位和解决性能和安全性问题&lt;/strong>，在运维和代码层面实施措施，从而使响应速度与变更的长期有效性保持一致。&lt;/p>
+&lt;p>通过采用微服务以及新的开发和部署方法，可以创建能够随时间发展的应用架构。除了 IT 团队必须掌握的新技能外，还必须对公司的未来有一个清晰的愿景，以确保所提供的服务对业务发展有用。&lt;/p>
+&lt;h2 id="创建可演进的应用架构">创建可演进的应用架构&lt;/h2>
+&lt;p>我们已经看到了基于微服务的现代应用架构如何保证软件的灵活性，并允许你利用本地和按需使用的所有资源，在可以&lt;strong>方便地&lt;/strong>获得所需性能、降低成本或保护数据的&lt;strong>位置分配作业&lt;/strong>。&lt;/p>
+&lt;p>为了使之成为可能，有必要在云和混合环境中创建和管理虚拟化的 IT 环境，并&lt;strong>采用最合适的方法和策略&lt;/strong>。例如，在用于将开发和运维活动链接在一起的DevOps领域中，&lt;strong>持续集成/持续交付&lt;/strong>（CI / CD）策略的方法学支持可帮助提高更新速度和应用软件的质量。&lt;/p>
+&lt;p>此外，微服务可促进对&lt;a href="https://blog.mia-platform.eu/it/da-monolite-a-microservizi-come-far-evolvere-unapplicazione-legacy">遗留应用程序的集成&lt;/a>，从而使公司更加敏捷，并利用市场上最&lt;strong>先进的解决方案&lt;/strong>。除了需要新的技术和工作方法外，现在还需要可演进的应用架构来&lt;strong>支持数字化转型所决定的不断变化的需求&lt;/strong>。&lt;/p></description></item><item><title>Tekton 0.9.0 更新</title><link>https://atbug.com/tekton-0.9.0-release/</link><pubDate>Sun, 19 Jan 2020 14:33:17 +0800</pubDate><guid>https://atbug.com/tekton-0.9.0-release/</guid><description>
+&lt;p>翻译整理自 &lt;a href="https://cd.foundation/blog/2019/12/12/whats-new-in-tekton-0-9/">What’s New in Tekton 0.9&lt;/a>&lt;/p>
+&lt;h2 id="功能及bug修复">功能及Bug修复&lt;/h2>
+&lt;h3 id="脚本模式">脚本模式&lt;/h3>
+&lt;p>以前如果要在容器里运行个简单的 bash 脚本, 需要这么写:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">hello&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ubuntu&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">command&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;bash&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">args&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- -&lt;span class="l">c&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="p">|&lt;/span>&lt;span class="sd">
+&lt;/span>&lt;span class="sd"> set -ex
+&lt;/span>&lt;span class="sd"> echo &amp;#34;hello&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在 0.9 之后, 可以更加简单, 不需要再写command 和讨厌的&lt;code>-c&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">hello&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ubuntu&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">|&lt;/span>&lt;span class="sd">
+&lt;/span>&lt;span class="sd"> #!/bin/bash
+&lt;/span>&lt;span class="sd"> echo &amp;#34;hello&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="性能">性能&lt;/h3>
+&lt;p>通过一系列的工作, 每个 PipelineRun 的运行时间缩短了 5-20 秒&lt;/p>
+&lt;h2 id="api-变化">API 变化&lt;/h2>
+&lt;p>为了 beta 版本的发布, API 做了一些调整:&lt;/p>
+&lt;h3 id="镜像摘要输出路径的标准化">镜像摘要输出路径的标准化&lt;/h3>
+&lt;p>Tekton 目前提供了一个机制用于存储 task 构建出的镜像的摘要. 这个机制早于&lt;code> PipelineResource&lt;/code>子系统, 并要求 Task 编写者镜像这些摘要写到指定的位置&lt;code>/builder/image-outputs&lt;/code>. 从现在开始, 有了输出资源的标准路径&lt;code>/workspace/output/&amp;lt;resource-name&amp;gt;&lt;/code>&lt;/p>
+&lt;h3 id="简化集群资源">简化集群资源&lt;/h3>
+&lt;p>集群&lt;code>PipelineResource&lt;/code>使从 Tasks 内部部署和使用 Kubernetes 集群变得简单. 它为用户提供了声明集群的位置以及如何进行身份验证的机制. 然后再执行 Task 过程中, 他们会自动配置&lt;code>.kubeconfig&lt;/code>文件, 以便 Kubernetes 工具可以找到该集群.&lt;/p>
+&lt;p>这个版本保函了一些更改, 使集群&lt;code> PipelineResource&lt;/code>更易于使用.&lt;/p>
+&lt;p>以前用户必须两次指定名字参数: 一次在资源名称中指定, 一次作为资源参数. 现在第二个参数不需要了.&lt;/p>
+&lt;h2 id="基础工作">基础工作&lt;/h2>
+&lt;p>每个Tekton版本中包含的大部分工作都是针对某些功能的, 这些功能要等到以后的版本才能公开.况。&lt;/p>
+&lt;h3 id="改进的-pipelineresource">改进的 PipelineResource&lt;/h3>
+&lt;p>源于&lt;a href="https://github.com/tektoncd/pipeline/issues/1673">Pipeline Resource Redesign&lt;/a>&lt;/p>
+&lt;h3 id="api-的版本控制">API 的版本控制&lt;/h3>
+&lt;p>源于&lt;a href="https://github.com/tektoncd/pipeline/issues/1526">Create a v1alpha2 apiVersion&lt;/a>&lt;/p>
+&lt;h2 id="独立的包">独立的包&lt;/h2>
+&lt;p>Tekton项目发展惊人. 除了这里提到的&lt;a href="https://github.com/tektoncd/pipeline">Pipeline&lt;/a>更新, 其他比如&lt;a href="https://github.com/tektoncd/triggers">Triggers&lt;/a>, &lt;a href="https://github.com/tektoncd/cli">CLI&lt;/a>, &lt;a href="https://github.com/tektoncd/dashboard">Dashboard&lt;/a>也有显著的成果.&lt;/p>
+&lt;p>Triggers 现在支持开箱即用的 Github 和 Gitlab 校验.
+CLI加入了交互式创建&lt;code>PipelineResource&lt;/code>和启动 task 的支持.
+Dashboard 接下来也会假如可视化特性.&lt;/p></description></item><item><title>神秘的Eureka自我保护</title><link>https://atbug.com/translation-the-mystery-of-eurekas-self-preservation/</link><pubDate>Sun, 05 Jan 2020 14:14:03 +0800</pubDate><guid>https://atbug.com/translation-the-mystery-of-eurekas-self-preservation/</guid><description>
+&lt;p>本文翻译自&lt;a href="https://dzone.com/articles/the-mystery-of-eurekas-self-preservation">The Mystery of Eureka Self-Preservation&lt;/a>&lt;/p>
+&lt;p>根据CAP定理, Eureka是一个AP系统, 这就导致了在网络分区期间多个注册表中的信息不一致. 自我保护功能则是为了尽可能降低这种不一致.&lt;/p>
+&lt;h2 id="自我保护的定义">自我保护的定义&lt;/h2>
+&lt;p>自我保护(self preservation)是Eureka的一项功能, Eureka注册表在未收到实例的心跳情况超过一定阈值时停止驱逐过期的实例.&lt;/p>
+&lt;h3 id="从一个健康的系统开始">从一个健康的系统开始&lt;/h3>
+&lt;p>把下面看成一个健康的系统&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/addozhang/oss/master/uPic/n5wZMX.jpg" alt="The healthy system — before encountering network partition">&lt;/p>
+&lt;p>假设所有的微服务都处于健康的状态并成功注册到Eureka注册表中.&lt;/p>
+&lt;p>多个注册表间会同步注册表记录, 所有的微服务实例都处于UP状态. 假设实例2从注册中心发现里实例4, 并调用实例4上的服务.&lt;/p>
+&lt;h3 id="突发网络分区">突发网络分区&lt;/h3>
+&lt;p>假设出现了网络分区, 系统变成下面的状态.&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/addozhang/oss/master/uPic/MznWWr.jpg" alt="During network partition  -  enters self-preservation">&lt;/p>
+&lt;p>由于网络分区, 实例4和5丢失了注册中心的连接, 但是实例2仍然可以连接到实例4. Eureka服务端因为没有收到实例4和5的心跳(超过一定时间后), 将他们驱逐. 然后Eureka服务端意识到突然丢失了超过15%(2/5)的心跳, 因此其进入&lt;em>自我保护&lt;/em>模式&lt;/p>
+&lt;p>从此时开始, Eureka服务端不在驱逐任何实例, 即使实例真正的下线了.&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/addozhang/oss/master/uPic/7c9eHt.jpg" alt="During self-preservation  -  stops expiring instances">&lt;/p>
+&lt;p>实例3下线, 但其始终存在注册表中.&lt;/p>
+&lt;p>但此时注册表还会接受新实例的注册.&lt;/p>
+&lt;h2 id="自我保护的基本原理">自我保护的基本原理&lt;/h2>
+&lt;p>自我保护功能在下面两种情况下是合理的:&lt;/p>
+&lt;ul>
+&lt;li>Eureka服务端因为弱网分区问题没有收到心跳(这并不意味着客户端下线), 但是这种问题可能会很快被修复.&lt;/li>
+&lt;li>即使Eureka服务端和客户端的连接断开, 客户端间还可以继续保持连接. (比如上面实例2仍然可以连接到实例4)&lt;/li>
+&lt;/ul>
+&lt;h3 id="配置-默认">配置 (默认)&lt;/h3>
+&lt;p>下面的配置会直接或间接影响到自我保护的行为.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">eureka.instance.lease-renewal-interval-in-seconds = 30
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>客户端发送心跳的频率. 服务端会以此在计算期望收到心跳数, 默认30秒&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">eureka.instance.lease-expiration-duration-in-seconds = 90
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>多长时间未收到心跳后, 实例才可以被驱逐, 默认90秒&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">eureka.server.eviction-interval-timer-in-ms = 60 * 1000
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Eureka服务端驱逐操作的执行频率, 默认60秒&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">eureka.server.renewal-percent-threshold = 0.85
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>期望心跳数达到该阈值后, 就会进入自我保护模式, 默认0.85&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">eureka.server.renewal-threshold-update-interval-ms = 15 * 60 * 1000
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>期望心跳数的计算间隔, 默认15分钟&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">eureka.server.enable-self-preservation = true
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>是否允许Eureka服务端进入自我保护模式, 默认开启&lt;/p>
+&lt;h2 id="理解配置">理解配置&lt;/h2>
+&lt;p>Eureka服务端在&amp;quot;上一分钟实际收到的心跳数&amp;quot;小于&amp;quot;每分钟期望的心跳数&amp;quot;时就会进入自我保护模式&lt;/p>
+&lt;h3 id="期望的每分钟心跳数">期望的每分钟心跳数&lt;/h3>
+&lt;p>假设&lt;code>renewal-percent-threshold&lt;/code>设置为&lt;code>0.85&lt;/code>&lt;/p>
+&lt;p>计算方式:&lt;/p>
+&lt;ul>
+&lt;li>单个实例每分钟期望的心跳数是: 2&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>&lt;/li>
+&lt;/ul>
+&lt;ul>
+&lt;li>N个实例的每分钟期望的心跳数: 2 * N&lt;/li>
+&lt;li>期望的上一分钟最小心跳数: 2 * N * 0.85&lt;/li>
+&lt;/ul>
+&lt;h3 id="实际的每分钟心跳数">实际的每分钟心跳数&lt;/h3>
+&lt;p>正如上面所述, 两个定时调度器独立地运行计算&lt;em>实际&lt;/em>和&lt;em>期望&lt;/em>的心跳数. 此外还有另一个调度任务&lt;code>EvictionTask&lt;/code>进行结果比较, 并识别当前系统是否在自我保护状态.&lt;/p>
+&lt;p>这个调度任务每个&lt;code>eviction-interval-timer-in-ms&lt;/code>时间执行一次, 并决定是否驱逐实例.&lt;/p>
+&lt;h2 id="结论">结论&lt;/h2>
+&lt;ul>
+&lt;li>基于使用的经验, 大多数情况下自我保护模式都是错误的, 它错误地认为一些下线的微服务实例是不良的网络分区&lt;/li>
+&lt;li>自我保护永远不会过期, 除非下线的实例重新上线&lt;/li>
+&lt;li>如果启用了自我保留, 则无法对实例的心跳间隔进行微调, 因为自我保护在计算期望心跳数是按照30s间隔来计算的&lt;/li>
+&lt;li>除非环境中经常出现类似的网络分区故障, 否则建议关闭&lt;/li>
+&lt;/ul>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>这个值是固定的, 源于默认的心跳间隔是30s, 故每分钟2次. 见eureka-core-1.7.2的&lt;code>AbstractInstanceRegistryL226&lt;/code> &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section></description></item></channel></rss>

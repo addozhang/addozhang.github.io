@@ -1,20 +1,60 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Macos on 乱世浮生</title>
-    <link>https://atbug.com/tags/macos/</link>
-    <description>Recent content in Macos on 乱世浮生</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Thu, 17 Aug 2017 09:44:17 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/macos/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Kubernetes学习 — Macos安装Kubernetes</title>
-      <link>https://atbug.com/install-kubernetes-on-macos/</link>
-      <pubDate>Thu, 17 Aug 2017 09:44:17 +0000</pubDate>
-      
-      <guid>https://atbug.com/install-kubernetes-on-macos/</guid>
-      <description>Kubernetes 安装 macos 检查环境 sysctl -a | grep machdep.cpu.features | grep VMX 安装VirtualBox http://download.virtualbox.org/virtualbox/5.1.26/Oracle_VM_VirtualBox_Extension_Pack-5.1.26-117224.vbox-extpack 安装minikube curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.21.0/minikube-darwin-amd64 &amp;amp;&amp;amp; chmod +x minikube &amp;amp;&amp;amp; sudo mv minikube /usr/local/bin/ 创建集群 默认使用virtualbox</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Macos on 乱世浮生</title><link>https://atbug.com/tags/macos/</link><description>Recent content in Macos on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 17 Aug 2017 09:44:17 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/macos/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes学习 — Macos安装Kubernetes</title><link>https://atbug.com/install-kubernetes-on-macos/</link><pubDate>Thu, 17 Aug 2017 09:44:17 +0000</pubDate><guid>https://atbug.com/install-kubernetes-on-macos/</guid><description>
+&lt;h1 id="kubernetes">Kubernetes&lt;/h1>
+&lt;h2 id="安装">安装&lt;/h2>
+&lt;h2 id="macos">macos&lt;/h2>
+&lt;h3 id="检查环境">检查环境&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">sysctl -a &lt;span class="p">|&lt;/span> grep machdep.cpu.features &lt;span class="p">|&lt;/span> grep VMX
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装virtualbox">安装VirtualBox&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">http://download.virtualbox.org/virtualbox/5.1.26/Oracle_VM_VirtualBox_Extension_Pack-5.1.26-117224.vbox-extpack
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装minikube">安装minikube&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.21.0/minikube-darwin-amd64 &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> chmod +x minikube &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> sudo mv minikube /usr/local/bin/
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建集群">创建集群&lt;/h3>
+&lt;p>默认使用virtualbox。&lt;/p>
+&lt;p>主机的ip是&lt;code>192.168.31.186&lt;/code>， &lt;code>1087&lt;/code>是proxy的端口。需要将ss的http代理监听地址从&lt;code>127.0.0.1&lt;/code>改为主机的ip。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="c1">#启动&lt;/span>
+minikube start
+&lt;span class="c1">#使用私有库&lt;/span>
+minikube start --insecure-registry&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;192.168.31.34&amp;#34;&lt;/span>
+&lt;span class="c1">#使用proxy，用于获取镜像&lt;/span>
+minikube start --docker-env &lt;span class="nv">HTTP_PROXY&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;192.168.31.186:1087&amp;#34;&lt;/span> --docker-env &lt;span class="nv">HTTPS_PROXY&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;192.168.31.186:1087&amp;#34;&lt;/span> --docker-env &lt;span class="nv">NO_PROXY&lt;/span>&lt;span class="o">=&lt;/span>192.168.99.0/24
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装kubectl">安装kubectl&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">curl -Lo kubectl http://storage.googleapis.com/kubernetes-release/release/v1.7.3/bin/darwin/amd64/kubectl &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> chmod +x kubectl &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> sudo mv kubectl /usr/local/bin/
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="oh-my-zsh-tab-completion">oh-my-zsh tab completion&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">vi ~/.zshrc
+&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>添加到plugin部分&lt;br>
+plugins=(git zsh-completions kubectl)&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="使用">使用&lt;/h2>
+&lt;h3 id="minikube">minikube&lt;/h3>
+&lt;h4 id="检查版本">检查版本&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">minikube version
+&lt;span class="c1">#minikube version: v0.21.0&lt;/span>
+kubectl version
+&lt;span class="c1">#Client Version: version.Info{Major:&amp;#34;1&amp;#34;, Minor:&amp;#34;3&amp;#34;, GitVersion:&amp;#34;v1.3.0&amp;#34;, GitCommit:&amp;#34;283137936a498aed572ee22af6774b6fb6e9fd94&amp;#34;, GitTreeState:&amp;#34;clean&amp;#34;, BuildDate:&amp;#34;2016-07-01T19:26:38Z&amp;#34;, GoVersion:&amp;#34;go1.6.2&amp;#34;, Compiler:&amp;#34;gc&amp;#34;, Platform:&amp;#34;darwin/amd64&amp;#34;}&lt;/span>
+&lt;span class="c1">#Server Version: version.Info{Major:&amp;#34;1&amp;#34;, Minor:&amp;#34;7&amp;#34;, GitVersion:&amp;#34;v1.7.0&amp;#34;, GitCommit:&amp;#34;d3ada0119e776222f11ec7945e6d860061339aad&amp;#34;, GitTreeState:&amp;#34;clean&amp;#34;, BuildDate:&amp;#34;2017-07-26T00:12:31Z&amp;#34;, GoVersion:&amp;#34;go1.8.3&amp;#34;, Compiler:&amp;#34;gc&amp;#34;, Platform:&amp;#34;linux/amd64&amp;#34;}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="获取集群地址">获取集群地址&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">minikube ip
+192.168.99.100
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="获取服务列表">获取服务列表&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">minikube service list
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="打开dashboard">打开dashboard&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">minikube dashboard
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="kubectl">kubectl&lt;/h2>
+&lt;h4 id="部署dashboard-ui">部署Dashboard UI&lt;/h4>
+&lt;p>默认minikube会自动部署dashboard&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl create -f https://rawgit.com/kubernetes/dashboard/master/src/deploy/kubernetes-dashboard.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="启动proxy">启动proxy&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl proxy
+&lt;span class="c1">#Starting to serve on 127.0.0.1:8001&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="获取pod信息">获取pod信息&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl get pods --namespace kube-system
+NAME READY STATUS RESTARTS AGE
+kube-addon-manager-minikube 0/1 Running &lt;span class="m">0&lt;/span> 1h
+kubernetes-dashboard-3313488171-90s64 0/1 Running &lt;span class="m">0&lt;/span> 20m
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果STATUS一直处于&lt;strong>ContainerCreating&lt;/strong>状态，应该是pull image失败。默认是去gcr.io拉镜像，被墙了。需要在启动minikube的时候设置docker使用的代理。&lt;/p>
+&lt;h4 id="获取pod详细信息">获取pod详细信息&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">kubectl describe pod kubernetes-dashboard-3313488171-90s64 --namespace kube-system
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="查看log">查看log&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl logs -f kubernetes-dashboard-3313488171-90s64
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

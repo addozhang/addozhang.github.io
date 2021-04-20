@@ -1,20 +1,41 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Debug on 乱世浮生</title>
-    <link>https://atbug.com/tags/debug/</link>
-    <description>Recent content in Debug on 乱世浮生</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Tue, 09 Jun 2020 19:35:53 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/debug/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>带你了解 Ribbon 负载均衡器的实现</title>
-      <link>https://atbug.com/how-loadbalancer-works-in-ribbon/</link>
-      <pubDate>Tue, 09 Jun 2020 19:35:53 +0800</pubDate>
-      
-      <guid>https://atbug.com/how-loadbalancer-works-in-ribbon/</guid>
-      <description>Spring Cloud 中 Ribbon有在 Zuul 和 Feign 中使用，当然也可以通过在RestTemplate的 bean 定义上添加@LoadBalanced注解方式获得一个带有负载</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Debug on 乱世浮生</title><link>https://atbug.com/tags/debug/</link><description>Recent content in Debug on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 09 Jun 2020 19:35:53 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/debug/index.xml" rel="self" type="application/rss+xml"/><item><title>带你了解 Ribbon 负载均衡器的实现</title><link>https://atbug.com/how-loadbalancer-works-in-ribbon/</link><pubDate>Tue, 09 Jun 2020 19:35:53 +0800</pubDate><guid>https://atbug.com/how-loadbalancer-works-in-ribbon/</guid><description>
+&lt;p>Spring Cloud 中 &lt;code>Ribbon&lt;/code>有在 &lt;code>Zuul&lt;/code> 和 &lt;code>Feign&lt;/code> 中使用，当然也可以通过在&lt;code>RestTemplate&lt;/code>的 bean 定义上添加&lt;code>@LoadBalanced&lt;/code>注解方式获得一个带有负载均衡更能的&lt;code>RestTemplate&lt;/code>。&lt;/p>
+&lt;p>不过实现的方法都大同小异：对&lt;code>HttpClient&lt;/code>进行封装，加上实例的”选择“（这个选择的逻辑就是我们所说的负载均衡）。&lt;/p>
+&lt;p>要学习某个框架的时候，最简单的方案就是：&lt;strong>Running+Debugging&lt;/strong>。&lt;/p>
+&lt;p>&lt;strong>跑就是了。&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;p>debug 不一定是为了 bug&lt;/p>
+&lt;p>debug 出真知&lt;/p>
+&lt;p>Debugging = Learning&lt;/p>
+&lt;/blockquote>
+&lt;p>选用 &lt;a href="https://www.alispit.tel">Ali Spittel&lt;/a> 的一条推文：&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/06/09/screenshot-20200609-at-165236.png" alt="screenshot 2020-06-09 at 16.52.36">&lt;/p>
+&lt;h3 id="以-zuul-路由的线程栈为例">以 Zuul 路由的线程栈为例&lt;/h3>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/06/09/screenshot-20200609-at-151421.png" alt="screenshot 2020-06-09 at 15.14.21">&lt;/p>
+&lt;p>调整下顺序：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="n">RetryableRibbonLoadBalancingHttpClient&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">execute&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">RibbonApacheHttpRequest&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">IClientConfig&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="n">RetryableRibbonLoadBalancingHttpClient&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">executeWithRetry&lt;/span>&lt;span class="o">(...)&lt;/span>
+&lt;span class="n">RetryTemplate&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">execute&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">RetryCallback&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">E&lt;/span>&lt;span class="o">&amp;gt;,&lt;/span> &lt;span class="n">RecoveryCallback&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="o">&amp;gt;)&lt;/span>
+&lt;span class="n">RetryTemplate&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">doExecute&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">RetryCallback&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">E&lt;/span>&lt;span class="o">&amp;gt;,&lt;/span> &lt;span class="n">RecoveryCallback&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="o">&amp;gt;,&lt;/span> &lt;span class="n">RetryState&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="n">RetryTemplate&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">canRetry&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">RetryPolicy&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">RetryContext&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="n">InterceptorRetryPolicy&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">canRetry&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">RetryContext&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="n">AbstractLoadBalancingClient&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">choose&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span> &lt;span class="n">serviceId&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="n">ZoneAwareLoadBalancer&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">chooseServer&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Object&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="c1">//key as serviceId
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="n">BaseLoadBalancer&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">chooseServer&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Object&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="n">PredicateBasedRule&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">choose&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Object&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="n">AbstractServerPredicate&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">chooseRoundRobinAfterFiltering&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">List&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">Server&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">servers&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">Object&lt;/span> &lt;span class="n">loadBalancerKey&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="n">AbstractServerPredicate&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">apply&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Predicate&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="分析">分析&lt;/h3>
+&lt;p>Zuul 收到请求经过一系列 Filter 的处理，来到 &lt;code>RibbonRoutingFilter&lt;/code>；将请求封装成 &lt;code>RibbonCommandContext&lt;/code>，然后使用 context 构建 &lt;code>RibbonCommand&lt;/code>。最终调用&lt;code>RibbonCommand#execute()&lt;/code>方法，将请求路由到下游。&lt;/p>
+&lt;p>&lt;code>RibbonCommand&lt;/code>持有&lt;code>AbstractLoadBalancerAwareClient&lt;/code>的对象，通过该 client 在处理请求和响应。&lt;/p>
+&lt;p>对于 &lt;strong>retryable&lt;/strong> 的 client（比如此处的&lt;code>RetryableRibbonLoadBalancingHttpClient&lt;/code>）， &lt;em>&lt;em>每次处理请求的时候都会创建一个&lt;/em>&lt;/em> &lt;code>RetryTemplate&lt;/code>对象来处理请求；同时根据&lt;code>RetryPolicy&lt;/code>来创建&lt;code>RetryContext&lt;/code>对象，用来保存重试的上下文，并 &lt;em>检查实例是否可以进行重试&lt;/em> 。&lt;/p>
+&lt;p>注意重点就在这里：检查的时候&lt;strong>如果重试次数为 0 且要检查的实例为空&lt;/strong>（说明是第一次请求），这时便会通过&lt;strong>负载均衡器客户端&lt;/strong>（基本都是&lt;code>AbstractLoadBalancingClient&lt;/code>的子类）从后端列表择出一个实例，保存在&lt;code>RetryContext&lt;/code>中。&lt;/p>
+&lt;p>负载均衡器客户端使用&lt;strong>负载均衡器&lt;/strong>（&lt;code>ILoadBalancer&lt;/code>的实现）来选择实例。每个负载均衡器都有自己的规则（&lt;code>IRule&lt;/code>的实现类），通过规则来选择实例。&lt;/p>
+&lt;p>&lt;code>IRule&lt;/code>的实现不是很多，&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/06/09/screenshot-20200609-at-163309.png" alt="screenshot 2020-06-09 at 16.33.09">&lt;/p>
+&lt;p>其中的&lt;code>ClientConfigEnabledRoundRobinRule&lt;/code>在&lt;code>RoundRobinRule&lt;/code>的基础上，增加了配置的接口（因为其实现了&lt;code>IClientConfigAware&lt;/code>接口）可以对规则进行配置。&lt;/p>
+&lt;p>某些&lt;code>ClientConfigEnabledRoundRobinRule&lt;/code>的子类了，增加了&lt;code>Predicate&lt;/code>逻辑：使用&lt;code>Predicate&lt;/code>（&lt;code>AbstractServerPredicate&lt;/code>的子类）的逻辑进行选择；而&lt;code>ClientConfigEnabledRoundRobinRule&lt;/code>只是简单的使用&lt;code>RoundRobinRule&lt;/code>进行选择。&lt;/p>
+&lt;p>因此选择的逻辑都是在&lt;code>AbstractServerPredicate&lt;/code>子类中，其有个特别的子类&lt;code>CompositePredicate&lt;/code>，顾名思义就是将多个逻辑整合在一起（使用&lt;code>Predicate#and()&lt;/code>将所有逻辑串联起来，达到&lt;code>&amp;amp;&amp;amp;&lt;/code>的效果），所有的逻辑检查都通过（返回&lt;code>true&lt;/code>）时，这个实例就会被选中。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/06/09/screenshot-20200609-at-165642.png" alt="screenshot 2020-06-09 at 16.56.42">&lt;/p>
+&lt;hr>
+&lt;p>那么现在要你写个自己负载均衡规则，应该知道从哪里入手了吧？:D&lt;/p></description></item></channel></rss>

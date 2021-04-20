@@ -1,65 +1,617 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>CICD on 乱世浮生</title>
-    <link>https://atbug.com/tags/cicd/</link>
-    <description>Recent content in CICD on 乱世浮生</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Wed, 12 Feb 2020 21:30:03 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/cicd/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>云原生CICD: Tekton Trigger 实战</title>
-      <link>https://atbug.com/tekton-trigger-practice/</link>
-      <pubDate>Wed, 12 Feb 2020 21:30:03 +0800</pubDate>
-      
-      <guid>https://atbug.com/tekton-trigger-practice/</guid>
-      <description>Trigger的介绍看 这里. 接上文 Tekton Pipeline 实战 , 我们为某个项目创建了一个Pipeline, 但是执行时通过 PipelineRun 来完成的. 在 PipelineRun 中我们制定了 Pipepline 以及要使用</description>
-    </item>
-    
-    <item>
-      <title>Tekton Trigger 介绍</title>
-      <link>https://atbug.com/tekton-trigger-glance/</link>
-      <pubDate>Wed, 05 Feb 2020 18:03:15 +0800</pubDate>
-      
-      <guid>https://atbug.com/tekton-trigger-glance/</guid>
-      <description>背景 Tekton 的介绍请参考Tekton Pipeline 实战. 通常, CI/CD 事件应该包含如下信息: 确定事件的类型(比如 GitHub Push, GitLab Issue, Docker Hub Webhook 等) 可从特定管道访问并映射到特定管道 (</description>
-    </item>
-    
-    <item>
-      <title>Tekton Dashboard 安装</title>
-      <link>https://atbug.com/tekton-dashboard-installation/</link>
-      <pubDate>Sat, 01 Feb 2020 12:39:28 +0800</pubDate>
-      
-      <guid>https://atbug.com/tekton-dashboard-installation/</guid>
-      <description>Tekton 提供了dashboard方便用户管理和查看 Tekton PipelineRun 和 TaskRun 以及创建, 执行和完成过程中涉及的资源. 它还允许按标签过滤 PipelineRun 和 TaskRun. 安装方法 kubectl apply --filename https://github.com/tektoncd/dashboard/releases/download/v0.4.1/dashboard_latest_release.yaml 检查das</description>
-    </item>
-    
-    <item>
-      <title>CICD: Tekton Pipeline 实战</title>
-      <link>https://atbug.com/tekton-pipeline-practice/</link>
-      <pubDate>Tue, 21 Jan 2020 20:19:33 +0800</pubDate>
-      
-      <guid>https://atbug.com/tekton-pipeline-practice/</guid>
-      <description>Tekton 是 Google 开源的 Kubernetes 原生CI/CD 系统, 功能强大扩展性强. 前身是 Knavite 里的 build-pipeline 项目, 后期孵化成独立的项目. 并成为 CDF 下的四个项目之一, 其他三个分别是 Jenkins, Jenkins X,</description>
-    </item>
-    
-    <item>
-      <title>Tekton 0.9.0 更新</title>
-      <link>https://atbug.com/tekton-0.9.0-release/</link>
-      <pubDate>Sun, 19 Jan 2020 14:33:17 +0800</pubDate>
-      
-      <guid>https://atbug.com/tekton-0.9.0-release/</guid>
-      <description>翻译整理自 What’s New in Tekton 0.9 功能及Bug修复 脚本模式 以前如果要在容器里运行个简单的 bash 脚本, 需要这么写: - name:helloimage:ubuntucommand:[&amp;#39;bash&amp;#39;]args:- -c- |set -ex echo &amp;#34;hello&amp;#</description>
-    </item>
-    
-    <item>
-      <title>Tekton安装及Hello world</title>
-      <link>https://atbug.com/tekton-installation-and-sample/</link>
-      <pubDate>Fri, 17 Jan 2020 19:17:14 +0800</pubDate>
-      
-      <guid>https://atbug.com/tekton-installation-and-sample/</guid>
-      <description>安装 kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml 检查安装的tekton相关的CRD: kubectl api-resources | grep tekton clustertasks tekton.dev false ClusterTask conditions tekton.dev true Condition pipelineresources tekton.dev true PipelineResource pipelineruns pr,prs tekton.dev true PipelineRun pipelines tekton.dev true Pipeline taskruns tr,trs tekton.dev true TaskRun tasks tekton.dev true Task tekton的两个po</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CICD on 乱世浮生</title><link>https://atbug.com/tags/cicd/</link><description>Recent content in CICD on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 12 Feb 2020 21:30:03 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/cicd/index.xml" rel="self" type="application/rss+xml"/><item><title>云原生CICD: Tekton Trigger 实战</title><link>https://atbug.com/tekton-trigger-practice/</link><pubDate>Wed, 12 Feb 2020 21:30:03 +0800</pubDate><guid>https://atbug.com/tekton-trigger-practice/</guid><description>
+&lt;p>Trigger的介绍看 &lt;a href="https://atbug.com/tekton-trigger-glance/">这里&lt;/a>.&lt;/p>
+&lt;p>接上文 &lt;a href="https://atbug.com/tekton-pipeline-practice/">Tekton Pipeline 实战&lt;/a> , 我们为某个项目创建了一个Pipeline, 但是执行时通过 PipelineRun 来完成的. 在 PipelineRun 中我们制定了 Pipepline 以及要使用的 PipelineResource. 但是日常的开发中, 我们更多希望在提交了代码之后开始 Pipeline 的执行. 这时我们就要用到 Tekton Trigger 了.&lt;/p>
+&lt;p>思路是这样: 代码提交后将&lt;code>Push Event&lt;/code>发送给&lt;code>Tekton Trigger EventController&lt;/code>(以下简称 Controller), 然后 Controller 基于的&lt;code>TriggerBinding&lt;/code>的配置从 payload 中提取信息, 装载在&amp;quot;Params&amp;quot;中作为&lt;code>TriggerTemplate&lt;/code>的入参. 最后 Controller 创建&lt;code>PipelineRun&lt;/code>.&lt;/p>
+&lt;h2 id="trigger-相关的资源">Trigger 相关的资源&lt;/h2>
+&lt;h3 id="triggertemplate">TriggerTemplate&lt;/h3>
+&lt;p>回看&lt;a href="https://atbug.com/tekton-pipeline-practice/#0x06-%E6%89%A7%E8%A1%8C%E6%B5%81%E6%B0%B4%E7%BA%BF">上回用的PipelineRun Yaml&lt;/a>, 参数有&lt;code>revision&lt;/code>, &lt;code>url&lt;/code>, &lt;code>imageUrl&lt;/code>和&lt;code>imageTag&lt;/code>. (imageUrl 与项目名一直)&lt;/p>
+&lt;p>因此定义&lt;code>TriggerTemplate&lt;/code>将这 4 个元素作为入参, 然后复用之前的&lt;code>Pipeline&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton.dev/v1alpha1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">TriggerTemplate&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">trigger-test-triggertemplate&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-pipelines&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">params&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">gitrevision&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">description&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">The git revision&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">default&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">master&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">gitrepositoryurl&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">description&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">The git repository url&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">namespace&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">description&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">The namespace to create the resources&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">default&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-pielines&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">projectname&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">description&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">The project name&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">imagetag&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">description&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">The image tag&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">default&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">latest&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resourcetemplates&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton.dev/v1alpha1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">PipelineRun&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-test-pipeline-run-$(uid)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">$(params.namespace)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">serviceAccountName&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-test&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">params&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">imageUrl&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">addozhang/$(params.projectname)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">imageTag&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">$(params.imagetag)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">pipelineRef&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">build-pipeline&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">git-source&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resourceSpec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">git&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">params&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">revision&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">$(params.gitrevision)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">url&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">$(params.gitrepositoryurl)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行&lt;code>kubectl apply -f trigger/trigger-template.yaml&lt;/code>&lt;/p>
+&lt;h3 id="triggerbinding">TriggerBinding&lt;/h3>
+&lt;p>&lt;code>TriggerTemplate&lt;/code>的入参都可以从&lt;code>PushEvent&lt;/code>的 payload中通过 JsonPath 表达式来提取. 更多表达式的使用参考&lt;a href="https://github.com/tektoncd/triggers/blob/master/docs/triggerbindings.md#event-variable-interpolation">官方的文档&lt;/a>.&lt;/p>
+&lt;p>&lt;em>注意: 这里的 payload 格式使用的是 Gitlab 的 PushEvent 定义. 为什么要用 Gitlab 后什么会解释&lt;/em>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton.dev/v1alpha1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">TriggerBinding&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">trigger-test-triggerbinding&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-pipelines&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">params&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">gitrevision&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">$(body.after)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">namespace&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-pipelines&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">gitrepositoryurl&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">$(body.project.git_http_url)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">projectname&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">$(body.project.name)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行&lt;code>kubectl apply -f trigger/trigger-binding.yaml&lt;/code>&lt;/p>
+&lt;h3 id="eventlistener">EventListener&lt;/h3>
+&lt;p>&lt;code>EventController&lt;/code>将&lt;code>TriggerTemplate&lt;/code>和&lt;code>TriggerBinding&lt;/code>关联在一起, 资源在创建后会自动创建对应的 pod 和 service.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton.dev/v1alpha1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">EventListener&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">trigger-test-eventlistener&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-pipelines&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">serviceAccountName&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-test //需要访问 API, 用上回创建 serviceaccount&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">triggers&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">bindings&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">trigger-test-triggerbinding&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">template&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">trigger-test-triggertemplate&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行&lt;code>kubectl apply -f trigger/event-listener.yaml&lt;/code>&lt;/p>
+&lt;p>提供 WebHook 的访问入口, 为&lt;code>EventListener&lt;/code>创建&lt;code>ingress&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">extensions/v1beta1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Ingress&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">el-trigger-test-eventlistener&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-pipelines&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">rules&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">host&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">trigger-test.el.nip.io&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">http&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">paths&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">backend&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">serviceName&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">el-trigger-test-eventlistener&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">servicePort&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">8080&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>做完之后记得添加解析&lt;code>sudo echo &amp;quot;$(minikube ip) trigger-test.el.nip.io&amp;quot; &amp;gt;&amp;gt; /etc/hosts&lt;/code>&lt;/p>
+&lt;h2 id="gitlab">GitLab&lt;/h2>
+&lt;p>这里我们没有继续用 github 作为 CVS, minikube 运行在本地, ingress 地址无法在 github 上解析(webhook 无法工作). 因此只能本地搭建个 gitlab.&lt;/p>
+&lt;p>使用 Docker Compose 的方式部署, 并制定域名&lt;code>gitlab.nip.io&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;3.6&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">services&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">web&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;gitlab/gitlab-ce:latest&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">restart&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">always&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">hostname&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;gitlab.nip.io&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">environment&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">GITLAB_OMNIBUS_CONFIG&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">|&lt;/span>&lt;span class="sd">
+&lt;/span>&lt;span class="sd"> external_url &amp;#39;http://gitlab.nip.io:8088&amp;#39;
+&lt;/span>&lt;span class="sd"> gitlab_rails[&amp;#39;gitlab_shell_ssh_port&amp;#39;] = 8022
+&lt;/span>&lt;span class="sd"> # Add any other gitlab.rb configuration here, each on its own line&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">ports&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="s1">&amp;#39;8088:8088&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="s1">&amp;#39;8022:22&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>记得添加解析&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">sudo echo &amp;#34;$(ifconfig | grep -Eo &amp;#39;inet (addr:)?([0-9]*\.){3}[0-9]*&amp;#39; | grep -Eo &amp;#39;([0-9]*\.){3}[0-9]*&amp;#39; | grep -v &amp;#39;127.0.0.1&amp;#39; | head -n 1) gitlab.nip.io&amp;#34; &amp;gt;&amp;gt; /etc/hosts
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>GitLab 的默认账号是&lt;code>root&lt;/code>, 首次访问&lt;code>http://gitlab.nip.io:8088&lt;/code>的时候会提示设置密码.&lt;/p>
+&lt;p>创建项目, 提交代码的操作不多说了. 添加 webhook 前, 要先去&amp;quot;Admin Area &amp;raquo; Settings &amp;raquo; Network &amp;raquo; Outbound Requests&amp;quot;勾选&lt;code>Allow requests to the local network from web hooks and services&lt;/code>.&lt;/p>
+&lt;h3 id="dns-解析问题">DNS 解析问题&lt;/h3>
+&lt;p>Docker 和 minikube 是在两个独立的虚拟机中运行, 并且我们添加了两个地址解析. 互相访问的时候便会出现 domain 无法解析的问题, 这里是通过部署一个 dnsmasq 作为独立的 dns 解析服务器.&lt;/p>
+&lt;p>安装和配置 dnsmasq, dnsmasq 会将 &lt;code>/etc/hosts&lt;/code> 中的记录加入到记录中.&lt;/p>
+&lt;p>我本地的 minikube 位于&lt;code>192.168.64.0&lt;/code>网段, 因次 dnsmasq 添加监听地址&lt;code>192.168.64.1&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">brew install dnsmasq
+cat &lt;span class="s">&amp;lt;&amp;lt; EOF &amp;gt;&amp;gt; /usr/local/etc/dnsmasq.conf
+&lt;/span>&lt;span class="s">strict-order
+&lt;/span>&lt;span class="s">listen-address=127.0.0.1,192.168.64.1
+&lt;/span>&lt;span class="s">EOF&lt;/span>
+sudo brew services start dnsmasq
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>检查一下, &lt;code>192.168.1.136&lt;/code>是我本机 ip.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ dig gitlab.nip.io @192.168.64.1
+&lt;span class="p">;&lt;/span> &amp;lt;&amp;lt;&amp;gt;&amp;gt; DiG 9.10.6 &amp;lt;&amp;lt;&amp;gt;&amp;gt; gitlab.nip.io @192.168.64.1
+&lt;span class="p">;;&lt;/span> global options: +cmd
+&lt;span class="p">;;&lt;/span> Got answer:
+&lt;span class="p">;;&lt;/span> -&amp;gt;&amp;gt;HEADER&lt;span class="s">&amp;lt;&amp;lt;- opco&lt;/span>de: QUERY, status: NOERROR, id: &lt;span class="m">63393&lt;/span>
+&lt;span class="p">;;&lt;/span> flags: qr aa rd ra&lt;span class="p">;&lt;/span> QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: &lt;span class="m">1&lt;/span>
+&lt;span class="p">;;&lt;/span> OPT PSEUDOSECTION:
+&lt;span class="p">;&lt;/span> EDNS: version: 0, flags:&lt;span class="p">;&lt;/span> udp: &lt;span class="m">4096&lt;/span>
+&lt;span class="p">;;&lt;/span> QUESTION SECTION:
+&lt;span class="p">;&lt;/span>gitlab.nip.io. IN A
+&lt;span class="p">;;&lt;/span> ANSWER SECTION:
+gitlab.nip.io. 0 IN A 192.168.1.136
+&lt;span class="p">;;&lt;/span> Query time: &lt;span class="m">0&lt;/span> msec
+&lt;span class="p">;;&lt;/span> SERVER: 192.168.64.1#53&lt;span class="o">(&lt;/span>192.168.64.1&lt;span class="o">)&lt;/span>
+&lt;span class="p">;;&lt;/span> WHEN: Thu Feb &lt;span class="m">13&lt;/span> 18:20:19 CST &lt;span class="m">2020&lt;/span>
+&lt;span class="p">;;&lt;/span> MSG SIZE rcvd: &lt;span class="m">58&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="测试">测试&lt;/h2>
+&lt;p>推送一个空的提交到代码仓库: &lt;code>git commit -a -m &amp;quot;trigger commit&amp;quot; --allow-empty &amp;amp;&amp;amp; git push origin master&lt;/code>&lt;/p>
+&lt;p>然后就可以看到新的&lt;code>PipelineRun&lt;/code>创建并运行.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ tkn pr list
+NAME STARTED DURATION STATUS
+tekton-test-pipeline-run-fk2xj &lt;span class="m">42&lt;/span> seconds ago --- Running
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="其他文章">其他文章&lt;/h2>
+&lt;p>Tekton Pipeline 实战: &lt;a href="https://atbug.com/tekton-pipeline-practice">https://atbug.com/tekton-pipeline-practice&lt;/a>&lt;/p></description></item><item><title>Tekton Trigger 介绍</title><link>https://atbug.com/tekton-trigger-glance/</link><pubDate>Wed, 05 Feb 2020 18:03:15 +0800</pubDate><guid>https://atbug.com/tekton-trigger-glance/</guid><description>
+&lt;h2 id="背景">背景&lt;/h2>
+&lt;p>Tekton 的介绍请参考&lt;a href="https://atbug.com/tekton-pipeline-practice/">Tekton Pipeline 实战&lt;/a>.&lt;/p>
+&lt;p>通常, CI/CD 事件应该包含如下信息:&lt;/p>
+&lt;ul>
+&lt;li>确定事件的类型(比如 GitHub Push, GitLab Issue, Docker Hub Webhook 等)&lt;/li>
+&lt;li>可从特定管道访问并映射到特定管道 (从事件负载中获取 SHA 信息, 然后在管道中使用)&lt;/li>
+&lt;li>准确地触发管道 (基于有效负载值触发管道)&lt;/li>
+&lt;/ul>
+&lt;p>Tekton API 的设计分离了配置(比如 PipelineRun VS Pipeline), 保证了 step 可以被重用. 但是没有提供动态封装配置的机制来生成资源(尤其是 PipelineRun 和 PipelineResource). &lt;a href="https://github.com/tektoncd/triggers">Triggers&lt;/a> 通过下面的 CRDs 在架构上对 Tekton 进行了扩展:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>TriggerTemplate&lt;/code>: 创建资源的模板(比如用来创建 PipelineResource 和 PipelineRun)&lt;/li>
+&lt;li>&lt;code>TriggerBinding&lt;/code>: 校验事件并提取负载字段&lt;/li>
+&lt;li>&lt;code>EventListener&lt;/code>: 连接&lt;code>TriggerBinding&lt;/code>和&lt;code>TriggerTemplate&lt;/code>到可寻址的端点(事件接收器). 使用从各个&lt;code> TriggerBinding&lt;/code>中提取的参数来创建&lt;code>TriggerTemplate&lt;/code>中指定的 resources. 同样通过&lt;code> interceptor&lt;/code>字段来指定外部服务来对事件负载进行预处理.&lt;/li>
+&lt;li>&lt;code>ClusterTriggerBinding&lt;/code>: cluster级别的&lt;code>TriggerBinding&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/addozhang/oss/master/uPic/rymZ0w.jpg" alt="">&lt;/p>
+&lt;h2 id="安装">安装&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">kubectl apply --filename https://storage.googleapis.com/tekton-releases/triggers/latest/release.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>检查新增的 CRD: &lt;code>kubectl api-resources | grep tekton&lt;/code>. Triggers 引入了 3 个 CRD: &lt;code>TriggerTemplate&lt;/code>, &lt;code>TriggerBinding&lt;/code>,&lt;code>EventListener&lt;/code>.&lt;/p>
+&lt;p>检查新增的 deployment: &lt;code>tekton-triggers-webhook&lt;/code>, &lt;code>tekton-triggers-controller&lt;/code>.&lt;/p></description></item><item><title>Tekton Dashboard 安装</title><link>https://atbug.com/tekton-dashboard-installation/</link><pubDate>Sat, 01 Feb 2020 12:39:28 +0800</pubDate><guid>https://atbug.com/tekton-dashboard-installation/</guid><description>
+&lt;p>Tekton 提供了&lt;a href="https://github.com/tektoncd/dashboard">dashboard&lt;/a>方便用户管理和查看 Tekton PipelineRun 和 TaskRun 以及创建, 执行和完成过程中涉及的资源. 它还允许按标签过滤 PipelineRun 和 TaskRun.&lt;/p>
+&lt;h3 id="安装方法">安装方法&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply --filename https://github.com/tektoncd/dashboard/releases/download/v0.4.1/dashboard_latest_release.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>检查dashboard的运行情况, &lt;code>STATUS&lt;/code>为&lt;code>Running&lt;/code>的话则说明运行成功.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl get pods --namespace tekton-pipelines
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="访问">访问&lt;/h3>
+&lt;p>访问Tekton的Dashboard有两种方式, 一种是通过&lt;code>port-forward&lt;/code>, 另一种是通过&lt;code>ingress&lt;/code>来访问.&lt;/p>
+&lt;h4 id="port-forward">port-forward&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl port-forward svc/tekton-dashboard &lt;span class="m">9097&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="ingress">ingress&lt;/h4>
+&lt;p>先检查ingress是否开启.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">minikube addon list
+...
+- ingress: enabled
+...
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果是disabled的话, 通过命令&lt;code>minikube addons enable ingress&lt;/code>.&lt;/p>
+&lt;p>&lt;em>注意: 这里拉取&lt;code>quay.io/kubernetes-ingress-controller/nginx-ingress-controller&lt;/code>镜像可能比较慢, 建议使用国内的镜像, 比如&lt;code>quay.mirrors.ustc.edu.cn/kubernetes-ingress-controller/nginx-ingress-controller&lt;/code>&lt;/em>&lt;/p>
+&lt;p>修改&lt;code>basic-dashboard-ingress.yaml&lt;/code>中的&lt;code>host&lt;/code>地址:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">extensions/v1beta1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Ingress&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-dashboard&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-pipelines&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">rules&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">host&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-dashboard.nip.io&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">http&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">paths&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">backend&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">serviceName&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-dashboard&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">servicePort&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">9097&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行&lt;code>kubectl apply -f basic-dashboard-ingress.yaml&lt;/code>.&lt;/p>
+&lt;p>还有最后一步, 在&lt;code>/etc/hosts&lt;/code>中添加一条解析&lt;code>x.x.x.x tekton-dashboard.nip.io&lt;/code>, ip地址通过&lt;code>minikube ip&lt;/code>来获取&lt;/p>
+&lt;p>浏览器中打开&lt;code> tekton-dashboard.nip.io&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/addozhang/oss/master/uPic/6weoXL.jpg" alt="">&lt;/p></description></item><item><title>CICD: Tekton Pipeline 实战</title><link>https://atbug.com/tekton-pipeline-practice/</link><pubDate>Tue, 21 Jan 2020 20:19:33 +0800</pubDate><guid>https://atbug.com/tekton-pipeline-practice/</guid><description>
+&lt;p>Tekton 是 Google 开源的 Kubernetes 原生CI/CD 系统, 功能强大扩展性强. 前身是 Knavite 里的 build-pipeline 项目, 后期孵化成&lt;a href="https://github.com/tektoncd/pipeline">独立的项目&lt;/a>. 并成为 &lt;a href="https://cd.foundation/projects/">CDF&lt;/a> 下的四个项目之一, 其他三个分别是 Jenkins, Jenkins X, Spinnaker.&lt;/p>
+&lt;p>为什么说 Tekton 是 Kubernetes 原生的, 以内其基于 Kubernetes 的 CRD 定义了 Pipeline 流水线.&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/addozhang/oss/master/uPic/bquuTV.jpg" alt="">&lt;/p>
+&lt;p>CRD 及说明:&lt;/p>
+&lt;ul>
+&lt;li>Task: 构建任务, 可以定义一些列的 steps. 每个 step 由一个 container 执行.&lt;/li>
+&lt;li>TaskRun: task 实际的执行, 并提供执行所需的参数. 这个对象创建后, 就会有 pod 被创建.&lt;/li>
+&lt;li>Pipeline: 定义一个或者多个 task 的执行, 以及 PipelineResource 和各种定义参数的集合&lt;/li>
+&lt;li>PipelineRun: 类似 task 和 taskrun 的关系: 一个定义一个执行. PipelineRun 则是 pipeline 的实际执行. 创建后也会创建 pod 来执行各个 task.&lt;/li>
+&lt;li>PipelineResource: 流水线的输入资源, 比如 github/gitlab 的源码, 某种存储服务的文件, 或者镜像等. 执行时, 也会作为 pod 的其中一个 container 来运行(比如拉取代码).&lt;/li>
+&lt;li>Condition: 在 pipeline 的 task 执行时通过添加 condition 来对条件进行评估, 进而判断是否执行 task. 目前是WIP的状态, 待&lt;a href="https://github.com/tektoncd/pipeline/issues/1137">#1137&lt;/a>的完成.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>组件:&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>tekton-pipelines-controller&lt;/code>: 监控 CRD 对象(TaskRun, PipelineRun)的创建, 为该次执行创建 pod.&lt;/li>
+&lt;li>&lt;code>tekton-pipelines-webhook&lt;/code>: 对 apiserver 提供 http 接口做 CRD 对象的校验.&lt;/li>
+&lt;/ul>
+&lt;h2 id="安装">安装&lt;/h2>
+&lt;p>参考&lt;a href="https://atbug.com/tekton-installation-and-sample/">上一篇文章&lt;/a>, 文章中有个简单的&amp;quot;hello world&amp;quot;.&lt;/p>
+&lt;h2 id="实践">实践&lt;/h2>
+&lt;p>到了这里相信已经安装好了 Tekton. 我们使用&lt;a href="https://start.spring.io/">Spring Initializer&lt;/a>生成的项目为例, 演示如何使用 Tekton 实现 CICD.&lt;/p>
+&lt;p>开始之前简单整理下这个项目的 CICD 流程:&lt;/p>
+&lt;ol>
+&lt;li>拉取代码&lt;/li>
+&lt;li>maven 打包&lt;/li>
+&lt;li>构建镜像并推送&lt;/li>
+&lt;li>部署&lt;/li>
+&lt;/ol>
+&lt;p>&lt;em>注: 所有的操作都是在 &lt;code>tekton-pipelines&lt;/code> namespace 下操作&lt;/em>&lt;/p>
+&lt;h3 id="0x00-添加-dockerfile-和部署用的-yaml">0x00 添加 dockerfile 和部署用的 yaml&lt;/h3>
+&lt;p>用于构建镜像的Dockerfile&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">FROM openjdk:8-jdk-alpine
+RUN mkdir /app
+WORKDIR /app
+COPY target/*.jar /app/app.jar
+ENTRYPOINT [&amp;#34;sh&amp;#34;, &amp;#34;-c&amp;#34;, &amp;#34;java -Xmx128m -Xms64m -jar app.jar&amp;#34;]
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>用于部署 K8s Deployment 的deployment.yml&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;apps/v1&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;Deployment&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;tekton-test&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;tekton-test&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">replicas&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">selector&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">matchLabels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;tekton-test&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">template&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;tekton-test&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">containers&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;addozhang/tekton-test:latest&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">imagePullPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;Always&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">livenessProbe&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">failureThreshold&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">3&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">httpGet&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">path&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;/actuator/info&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">8080&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">scheme&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;HTTP&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">initialDelaySeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">60&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">periodSeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">10&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">successThreshold&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">timeoutSeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">10&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;tekton-test&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">ports&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">containerPort&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">8080&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;http&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">protocol&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;TCP&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">readinessProbe&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">failureThreshold&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">3&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">httpGet&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">path&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;/actuator/info&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">8080&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">scheme&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;HTTP&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">initialDelaySeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">30&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">periodSeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">10&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">successThreshold&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">timeoutSeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">10&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="0x01-拉取代码">0x01 拉取代码&lt;/h3>
+&lt;p>代码作为构建的输入, 需要提供一个 Pipeline CRD 对象来表示输入是从 git 仓库来获取代码&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton.dev/v1alpha1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">PipelineResource&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">git-source&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">git&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">params&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">revision&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">master&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">url&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/addozhang/tekton-test.git&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>说明:&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>type: 表示资源类型为 git&lt;/li>
+&lt;li>revision: 表示从仓库的 master 分支拉取代码&lt;/li>
+&lt;li>url: 表示仓库的位置&lt;/li>
+&lt;/ul>
+&lt;p>由于测试的代码放在 github 上作为public 仓库, 所以这里不需要 ssh key. 如果是私有仓库, 请参考&lt;a href="https://github.com/tektoncd/pipeline/blob/master/docs/auth.md">官方文档&lt;/a>&lt;/p>
+&lt;p>&lt;strong>执行:&lt;/strong>
+添加资源对象&lt;code>kubectl apply -f resource/git-resource.yaml&lt;/code>&lt;/p>
+&lt;p>运行&lt;code>tkn res list&lt;/code>检查资源&lt;/p>
+&lt;pre>&lt;code>NAME TYPE DETAILS
+git-source git url: https://github.com/addozhang/tekton-test.git
+&lt;/code>&lt;/pre>
+&lt;h3 id="0x02-maven-打包">0x02 maven 打包&lt;/h3>
+&lt;p>Task &lt;code>source-to-image.yaml&lt;/code>: step &lt;code>maven&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">inputs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">git-source&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">git&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">steps&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">maven&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">maven:3.5.0-jdk-8-alpine&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">workingDir&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">/workspace/git-source&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">command&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">mvn&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">args&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">clean&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">install&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- -&lt;span class="l">DskipTests&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">volumeMounts&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">m2&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">mountPath&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">/root/.m2&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">volumes&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">m2&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">hostPath&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">path&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">/home/docker/.m2 &lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>说明:&lt;/strong>&lt;/p>
+&lt;p>有了代码下一步就是执行 maven 的编译打包, 在&lt;code>maven:3.5.0-jdk-8-alpine&lt;/code>镜像中执行&lt;code>mvn&lt;/code>的相关命令.&lt;/p>
+&lt;p>这里挂在了一个本地的volume, 避免每次构建重复下载依赖包, 同时里面还有&lt;code> settings.xml&lt;/code>&lt;/p>
+&lt;p>&lt;em>注意: 对于 minikube, hostPath 请使用/data/.m2, 否则minikube重启后无法持久化&lt;/em>&lt;/p>
+&lt;h3 id="0x03-构建镜像并推送">0x03 构建镜像并推送&lt;/h3>
+&lt;p>Task &lt;code>source-to-image.yaml&lt;/code>: step &lt;code>build-and-push&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">spec:
+inputs:
+resources:
+- name: git-source
+type: git
+params:
+- name: pathToContext
+description: The path to the build context, used by Kaniko - within the workspace
+default: .
+- name: pathToDockerFile
+description: The path to the dockerfile to build (relative to the context)
+default: Dockerfile
+- name: imageUrl
+description: Url of image repository
+- name: imageTag
+description: Tag to apply to the built image
+default: latest
+steps:
+- name: build-and-push
+image: gcr.io/kaniko-project/executor
+command:
+- /kaniko/executor
+args:
+- --dockerfile=$(inputs.params.pathToDockerFile)
+- --destination=$(inputs.params.imageUrl):$(inputs.params.imageTag)
+- --context=/workspace/git-source/$(inputs.params.pathToContext)
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>说明:&lt;/strong>&lt;/p>
+&lt;p>镜像的构建, 我们采用了 kaniko.&lt;/p>
+&lt;p>镜像仓库我们选择了Docker Hub, 推送的时候需要使用 credentials.&lt;/p>
+&lt;p>先添加&lt;code> docker-registry&lt;/code>类型的 &lt;code>secret&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl create secret docker-registry dockerhub --docker-server&lt;span class="o">=&lt;/span>https://index.docker.io/v1/ --docker-username&lt;span class="o">=&lt;/span>&amp;lt;USERNAME&amp;gt; --docker-password&lt;span class="o">=&lt;/span>&amp;lt;PASSWORD&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>创建 &lt;code>ServiceAccount&lt;/code>, 并指定上面创建的 secret&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">v1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ServiceAccount&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-test&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">secrets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">dockerhub&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行 pipeline 的时候需要该&lt;code> ServiceAccount&lt;/code>. (后面会提到)&lt;/p>
+&lt;p>&lt;strong>执行:&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply -f tasks/source-to-image.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="0x04-部署">0x04 部署&lt;/h3>
+&lt;p>deploy-to-k8s.yaml:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton.dev/v1alpha1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Task&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">deploy-to-k8s&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">inputs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">git-source&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">git&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">params&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pathToYamlFile&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">description&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">The path to the yaml file to deploy within the git source&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">default&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">deployment.yaml&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">steps&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">run-kubectl&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">lachlanevenson/k8s-kubectl&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">command&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;kubectl&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">args&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="s2">&amp;#34;apply&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="s2">&amp;#34;-f&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="s2">&amp;#34;/workspace/git-source/$(inputs.params.pathToYamlFile)&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>说明:&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>pathToYamlFile: 指定部署应用的 yaml.&lt;/li>
+&lt;/ul>
+&lt;p>需要为上面创建的 &lt;code>ServiceAccount&lt;/code> 添加分配权限用于对象的操作: 这里直接给了 &lt;code>admin&lt;/code> &lt;code>clusterrole&lt;/code>, 实际不需要对权限进行细分控制.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl create clusterrolebinding pipeline-admin-binding --clusterrole&lt;span class="o">=&lt;/span>admin --serviceaccount&lt;span class="o">=&lt;/span>tekton-pipelines:tekton-test
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>执行:&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply -f tasks/deploy-to-k8s.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="0x05-组装流水线">0x05 组装流水线&lt;/h3>
+&lt;p>&lt;code>build-pipeline.yaml&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton.dev/v1alpha1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Pipeline&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">build-pipeline&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">git-source&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">git&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">params&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pathToContext&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">description&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">The path to the build context, used by Kaniko - within the workspace&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">default&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">.&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">imageUrl&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">description&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Url of image repository&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">imageTag&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">description&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Tag to apply to the built image&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">tasks&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">source-to-image&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">taskRef&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">source-to-image&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">params&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pathToContext&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;$(params.pathToContext)&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">imageUrl&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;$(params.imageUrl)&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">imageTag&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;$(params.imageTag)&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">inputs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">git-source&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resource&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">git-source&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">deploy-to-k8s&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">runAfter&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">source-to-image&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">taskRef&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">deploy-to-k8s&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">params&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pathToYamlFile&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">deployment.yaml&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">inputs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">git-source&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resource&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">git-source&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>执行:&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply -f tasks/deploy-to-k8s.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="0x06-执行流水线">0x06 执行流水线&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton.dev/v1alpha1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">PipelineRun&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">generateName&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">generic-pr-&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">generic-pipeline-run&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">pipelineRef&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">build-pipeline&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">git-source&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resourceRef&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">git-source&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">params&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">imageUrl&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">addozhang/tekton-test&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">imageTag&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">latest&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">serviceAccountName&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-test&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>执行:&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply -f run/run.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="0x07结果">0x07结果&lt;/h3>
+&lt;p>执行流水线后, 可以看到分别创建了下面的几个 pod:&lt;/p>
+&lt;ol>
+&lt;li>&lt;code>generic-pipeline-run-source-to-image-ltcnh-pod-xxxxx&lt;/code>&lt;/li>
+&lt;li>&lt;code>generic-pipeline-run-deploy-to-k8s-lxmnh-pod-xxxxx&lt;/code>&lt;/li>
+&lt;li>&lt;code>tekton-test-xxxx-xxxx&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;p>就此我们完成了使用 Tekton 部署 Java 应用&lt;/p>
+&lt;p>做个端口转发:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">kubectl port-forward &amp;lt;POD_NAME&amp;gt; 8080
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>访问应用的&lt;code>/hi&lt;/code>接口: &lt;code>curl http://localhost:8080/hi&lt;/code>, 成功返回&lt;code> hello world&lt;/code>&lt;/p>
+&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>目前 Tekton 还只是出于 alpha 阶段, 最新的版本是&lt;code> 0.9.0&lt;/code>. 提供的 Dashboard 也是比较简陋的, 后期会提供可视化的界面.&lt;/p>
+&lt;p>基于 CRD 的实现让 Tekton 在实际使用中可以灵活的设计自己的 CICD 流程.&lt;/p>
+&lt;p>接下来准备再写下&lt;a href="https://github.com/tektoncd/dashboard">Dashboard&lt;/a>的安装, 及&lt;a href="https://github.com/tektoncd/triggers">Triggers&lt;/a>的入门.&lt;/p>
+&lt;p>文中的 Java 项目以及 tekton 的相关 yaml 都已经提交到了 &lt;a href="https://github.com/addozhang/tekton-test">tekton-test&lt;/a>.&lt;/p>
+&lt;p>更多文章:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://atbug.com/tekton-dashboard-installation/">Tekton Dashboard 安装&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://atbug.com/tekton-trigger-glance/">Tekton Trigger 介绍&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://atbug.com/tekton-trigger-practice/">Tekton Trigger 实战&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Tekton 0.9.0 更新</title><link>https://atbug.com/tekton-0.9.0-release/</link><pubDate>Sun, 19 Jan 2020 14:33:17 +0800</pubDate><guid>https://atbug.com/tekton-0.9.0-release/</guid><description>
+&lt;p>翻译整理自 &lt;a href="https://cd.foundation/blog/2019/12/12/whats-new-in-tekton-0-9/">What’s New in Tekton 0.9&lt;/a>&lt;/p>
+&lt;h2 id="功能及bug修复">功能及Bug修复&lt;/h2>
+&lt;h3 id="脚本模式">脚本模式&lt;/h3>
+&lt;p>以前如果要在容器里运行个简单的 bash 脚本, 需要这么写:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">hello&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ubuntu&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">command&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;bash&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">args&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- -&lt;span class="l">c&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="p">|&lt;/span>&lt;span class="sd">
+&lt;/span>&lt;span class="sd"> set -ex
+&lt;/span>&lt;span class="sd"> echo &amp;#34;hello&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在 0.9 之后, 可以更加简单, 不需要再写command 和讨厌的&lt;code>-c&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">hello&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ubuntu&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">|&lt;/span>&lt;span class="sd">
+&lt;/span>&lt;span class="sd"> #!/bin/bash
+&lt;/span>&lt;span class="sd"> echo &amp;#34;hello&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="性能">性能&lt;/h3>
+&lt;p>通过一系列的工作, 每个 PipelineRun 的运行时间缩短了 5-20 秒&lt;/p>
+&lt;h2 id="api-变化">API 变化&lt;/h2>
+&lt;p>为了 beta 版本的发布, API 做了一些调整:&lt;/p>
+&lt;h3 id="镜像摘要输出路径的标准化">镜像摘要输出路径的标准化&lt;/h3>
+&lt;p>Tekton 目前提供了一个机制用于存储 task 构建出的镜像的摘要. 这个机制早于&lt;code> PipelineResource&lt;/code>子系统, 并要求 Task 编写者镜像这些摘要写到指定的位置&lt;code>/builder/image-outputs&lt;/code>. 从现在开始, 有了输出资源的标准路径&lt;code>/workspace/output/&amp;lt;resource-name&amp;gt;&lt;/code>&lt;/p>
+&lt;h3 id="简化集群资源">简化集群资源&lt;/h3>
+&lt;p>集群&lt;code>PipelineResource&lt;/code>使从 Tasks 内部部署和使用 Kubernetes 集群变得简单. 它为用户提供了声明集群的位置以及如何进行身份验证的机制. 然后再执行 Task 过程中, 他们会自动配置&lt;code>.kubeconfig&lt;/code>文件, 以便 Kubernetes 工具可以找到该集群.&lt;/p>
+&lt;p>这个版本保函了一些更改, 使集群&lt;code> PipelineResource&lt;/code>更易于使用.&lt;/p>
+&lt;p>以前用户必须两次指定名字参数: 一次在资源名称中指定, 一次作为资源参数. 现在第二个参数不需要了.&lt;/p>
+&lt;h2 id="基础工作">基础工作&lt;/h2>
+&lt;p>每个Tekton版本中包含的大部分工作都是针对某些功能的, 这些功能要等到以后的版本才能公开.况。&lt;/p>
+&lt;h3 id="改进的-pipelineresource">改进的 PipelineResource&lt;/h3>
+&lt;p>源于&lt;a href="https://github.com/tektoncd/pipeline/issues/1673">Pipeline Resource Redesign&lt;/a>&lt;/p>
+&lt;h3 id="api-的版本控制">API 的版本控制&lt;/h3>
+&lt;p>源于&lt;a href="https://github.com/tektoncd/pipeline/issues/1526">Create a v1alpha2 apiVersion&lt;/a>&lt;/p>
+&lt;h2 id="独立的包">独立的包&lt;/h2>
+&lt;p>Tekton项目发展惊人. 除了这里提到的&lt;a href="https://github.com/tektoncd/pipeline">Pipeline&lt;/a>更新, 其他比如&lt;a href="https://github.com/tektoncd/triggers">Triggers&lt;/a>, &lt;a href="https://github.com/tektoncd/cli">CLI&lt;/a>, &lt;a href="https://github.com/tektoncd/dashboard">Dashboard&lt;/a>也有显著的成果.&lt;/p>
+&lt;p>Triggers 现在支持开箱即用的 Github 和 Gitlab 校验.
+CLI加入了交互式创建&lt;code>PipelineResource&lt;/code>和启动 task 的支持.
+Dashboard 接下来也会假如可视化特性.&lt;/p></description></item><item><title>Tekton安装及Hello world</title><link>https://atbug.com/tekton-installation-and-sample/</link><pubDate>Fri, 17 Jan 2020 19:17:14 +0800</pubDate><guid>https://atbug.com/tekton-installation-and-sample/</guid><description>
+&lt;h2 id="安装">安装&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>检查安装的tekton相关的CRD:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl api-resources &lt;span class="p">|&lt;/span> grep tekton
+clustertasks tekton.dev &lt;span class="nb">false&lt;/span> ClusterTask
+conditions tekton.dev &lt;span class="nb">true&lt;/span> Condition
+pipelineresources tekton.dev &lt;span class="nb">true&lt;/span> PipelineResource
+pipelineruns pr,prs tekton.dev &lt;span class="nb">true&lt;/span> PipelineRun
+pipelines tekton.dev &lt;span class="nb">true&lt;/span> Pipeline
+taskruns tr,trs tekton.dev &lt;span class="nb">true&lt;/span> TaskRun
+tasks tekton.dev &lt;span class="nb">true&lt;/span> Task
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>tekton的两个pod:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl get pods --namespace tekton-pipelines
+NAME READY STATUS RESTARTS AGE
+tekton-pipelines-controller-556d8f4494-2qthv 1/1 Running &lt;span class="m">0&lt;/span> 11m
+tekton-pipelines-webhook-849cff5cf-8m5qq 1/1 Running &lt;span class="m">0&lt;/span> 11m
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装cli">安装CLI&lt;/h3>
+&lt;p>cli: &lt;a href="https://github.com/tektoncd/cli#installing-tkn">https://github.com/tektoncd/cli#installing-tkn&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">brew install tektoncd-cli
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="tekton-hello-world">Tekton: hello world&lt;/h2>
+&lt;p>创建一个简单的&lt;code>Task&lt;/code>, 只有一个&lt;code>step&lt;/code>就是打印出&amp;quot;hello world&amp;quot;&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton.dev/v1alpha1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Task&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">echo-hello-world&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">steps&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">echo&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">alpine&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">command&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">echo&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">args&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="s2">&amp;#34;hello world&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>创建一个&lt;code>TaskRun&lt;/code>执行上面的&lt;code>Task&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton.dev/v1alpha1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">TaskRun&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">echo-hello-world-task-run&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">taskRef&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">echo-hello-world&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>运行task:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply -f &amp;lt;name-of-file.yaml&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>检查&lt;code>TaskRun&lt;/code>的输出, 执行命令:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">tkn taskrun describe echo-hello-world-task-run
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">Name: echo-hello-world-task-run
+Namespace: tekton-pipelines
+Task Ref: echo-hello-world
+Status
+STARTED DURATION STATUS
+21 minutes ago 1 minute Succeeded
+Input Resources
+No resources
+Output Resources
+No resources
+Params
+No params
+Steps
+NAME STATUS
+echo Completed
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>Succeeded&lt;/code>状态表示task执行成功.&lt;/p>
+&lt;p>查看实际的输出, 执行命令:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">tkn taskrun logs echo-hello-world-task-run
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>结果:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">[echo] hello world
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

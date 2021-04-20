@@ -1,38 +1,275 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Hystrix on 乱世浮生</title>
-    <link>https://atbug.com/tags/hystrix/</link>
-    <description>Recent content in Hystrix on 乱世浮生</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Sun, 24 Jun 2018 16:20:16 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/hystrix/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Hystrix工作原理三</title>
-      <link>https://atbug.com/hystrix-exception-handling/</link>
-      <pubDate>Sun, 24 Jun 2018 16:20:16 +0000</pubDate>
-      
-      <guid>https://atbug.com/hystrix-exception-handling/</guid>
-      <description>异常处理 Hystrix异常类型 HystrixRuntimeException HystrixBadRequestException HystrixTimeoutException RejectedExecutionException HystrixRuntimeException HystrixCommand失败时抛出, 不会触发fallback. HystrixBadRequestException 用提供的参数或状态表示错误的异常</description>
-    </item>
-    
-    <item>
-      <title>Hystrix工作原理二</title>
-      <link>https://atbug.com/hystrix-isolation/</link>
-      <pubDate>Sun, 24 Jun 2018 16:18:52 +0000</pubDate>
-      
-      <guid>https://atbug.com/hystrix-isolation/</guid>
-      <description>隔离策略 线程和线程池 客户端(库, 网络调用等)在各自的线程上运行. 这种做法将他们与调用线程隔开, 因此调用者可以从一个耗时的依赖调用&amp;quot;</description>
-    </item>
-    
-    <item>
-      <title>Hystrix工作原理一</title>
-      <link>https://atbug.com/how-hystrix-works/</link>
-      <pubDate>Mon, 04 Jun 2018 08:47:40 +0000</pubDate>
-      
-      <guid>https://atbug.com/how-hystrix-works/</guid>
-      <description>运行时的流程图 构建HystrixCommand或者HystrixObservableCommand对象 第一步是构建一个HystrixComm</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Hystrix on 乱世浮生</title><link>https://atbug.com/tags/hystrix/</link><description>Recent content in Hystrix on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 24 Jun 2018 16:20:16 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/hystrix/index.xml" rel="self" type="application/rss+xml"/><item><title>Hystrix工作原理三</title><link>https://atbug.com/hystrix-exception-handling/</link><pubDate>Sun, 24 Jun 2018 16:20:16 +0000</pubDate><guid>https://atbug.com/hystrix-exception-handling/</guid><description>
+&lt;h2 id="异常处理">异常处理&lt;/h2>
+&lt;h3 id="hystrix异常类型">Hystrix异常类型&lt;/h3>
+&lt;ul>
+&lt;li>HystrixRuntimeException&lt;/li>
+&lt;li>HystrixBadRequestException&lt;/li>
+&lt;li>HystrixTimeoutException&lt;/li>
+&lt;li>RejectedExecutionException&lt;/li>
+&lt;/ul>
+&lt;h4 id="hystrixruntimeexception">HystrixRuntimeException&lt;/h4>
+&lt;p>&lt;code>HystrixCommand&lt;/code>失败时抛出, 不会触发fallback.&lt;/p>
+&lt;h4 id="hystrixbadrequestexception">HystrixBadRequestException&lt;/h4>
+&lt;p>用提供的参数或状态表示错误的异常, 而不是执行失败. 与其他&lt;code>HystrixCommand&lt;/code>抛出的异常不同, 这个异常不会触发&lt;code>fallback&lt;/code>, 也不会记录进&lt;code>failure&lt;/code>的指标, 因而也不会触发断路器,&lt;/p>
+&lt;p>应该在用户输入引起的错误是抛出, 否则会它与容错和后退行为的目的相悖.&lt;/p>
+&lt;p>&lt;strong>不会触发fallback, 也不会记录到错误的指标中, 也不会触发断路器&lt;/strong>.&lt;/p>
+&lt;h4 id="rejectedexecutionexception">RejectedExecutionException&lt;/h4>
+&lt;p>线程池发生&lt;code>reject&lt;/code>时抛出&lt;/p>
+&lt;h4 id="hystrixtimeoutexception">HystrixTimeoutException&lt;/h4>
+&lt;p>在&lt;code>HystrixCommand.run()&lt;/code>或者&lt;code>HystrixObservableCommand.construct()&lt;/code>时抛出, 会记录&lt;code>timeout&lt;/code>的次数. 如果希望某些类型的失败被记录为&lt;code>timeout&lt;/code>, 应该将这些类型的失败包装为&lt;code>HystrixTimeoutException&lt;/code>&lt;/p>
+&lt;h3 id="异常处理-1">异常处理&lt;/h3>
+&lt;p>&lt;code>ignoreExceptions&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">final&lt;/span> &lt;span class="n">Func1&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">Throwable&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">Observable&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;&amp;gt;&lt;/span> &lt;span class="n">handleFallback&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Func1&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">Throwable&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">Observable&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;&amp;gt;()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">Observable&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="nf">call&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Throwable&lt;/span> &lt;span class="n">t&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">circuitBreaker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">markNonSuccess&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">Exception&lt;/span> &lt;span class="n">e&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">getExceptionFromThrowable&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">t&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">executionResult&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">executionResult&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setExecutionException&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">e&lt;/span> &lt;span class="k">instanceof&lt;/span> &lt;span class="n">RejectedExecutionException&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">handleThreadPoolRejectionViaFallback&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">t&lt;/span> &lt;span class="k">instanceof&lt;/span> &lt;span class="n">HystrixTimeoutException&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">handleTimeoutViaFallback&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">t&lt;/span> &lt;span class="k">instanceof&lt;/span> &lt;span class="n">HystrixBadRequestException&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">handleBadRequestByEmittingError&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="cm">/*
+&lt;/span>&lt;span class="cm"> * Treat HystrixBadRequestException from ExecutionHook like a plain HystrixBadRequestException.
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">e&lt;/span> &lt;span class="k">instanceof&lt;/span> &lt;span class="n">HystrixBadRequestException&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">eventNotifier&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">markEvent&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">HystrixEventType&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">BAD_REQUEST&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">commandKey&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">Observable&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">error&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">handleFailureViaFallback&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">};&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="feign中响应状态码处理">Feign中响应状态码处理&lt;/h4>
+&lt;p>Feign使用&lt;code>SynchronousMethodHandler&lt;/code>做请求的执行和响应的处理. 响应处理的部分, 对&lt;code>[200, 300)&lt;/code>区间的状态, 会将response返回; 如果是&lt;code>404&lt;/code>, 根据&lt;code>@FeignClient&lt;/code>中&lt;code>decode404&lt;/code>(默认为false)和方法返回值判断是否熔断, 如果响应返回&lt;code>404&lt;/code>, &lt;code>decode&lt;/code>为&lt;code>false&lt;/code>, 同时方法返回值不是&lt;code>void&lt;/code>, 会包装成&lt;code>FeignException&lt;/code>抛出; 其他的状态, 通过包装成&lt;code>FeignException&lt;/code>抛出.&lt;/p>
+&lt;p>&lt;code>FeignException&lt;/code>是&lt;code>RuntimeException&lt;/code>的实现, 如果没有ignore的话, 会计入熔断器的计算中.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">final&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">SynchronousMethodHandler&lt;/span> &lt;span class="kd">implements&lt;/span> &lt;span class="n">MethodHandler&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Object&lt;/span> &lt;span class="nf">executeAndDecode&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">RequestTemplate&lt;/span> &lt;span class="n">template&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">Throwable&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">status&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">&amp;gt;=&lt;/span> &lt;span class="n">200&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">status&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">300&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="kt">void&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">class&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">metadata&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">returnType&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">decode&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">decode404&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">status&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">404&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="kt">void&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">class&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">metadata&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">returnType&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">decode&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">throw&lt;/span> &lt;span class="n">errorDecoder&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">decode&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">metadata&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">configKey&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="ribbon中响应状态码处理">Ribbon中响应状态码处理&lt;/h4>
+&lt;p>在Zuul中, 路由使用&lt;code>Ribbon&lt;/code>做负载均衡, 同时使用&lt;code>Hystrix&lt;/code>做断路器, 使用&lt;code>RibbonCommand&lt;/code>接口的实现. &lt;code>RibbonCommand&lt;/code>的实现&lt;strong>并没有对响应编码封装异常, 因此也不会触发熔断器&lt;/strong>.&lt;/p>
+&lt;p>&lt;code>AbstractRibbonCommand&lt;/code>是&lt;code>RibbonCommand&lt;/code>的抽象实现, 所有其他实现的父类. 核心&lt;code>run()&lt;/code>方法并没有针对响应编码重新封装异常.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">abstract&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">AbstractRibbonCommand&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">LBC&lt;/span> &lt;span class="kd">extends&lt;/span> &lt;span class="n">AbstractLoadBalancerAwareClient&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">RQ&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">RS&lt;/span>&lt;span class="o">&amp;gt;,&lt;/span> &lt;span class="n">RQ&lt;/span> &lt;span class="kd">extends&lt;/span> &lt;span class="n">ClientRequest&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">RS&lt;/span> &lt;span class="kd">extends&lt;/span> &lt;span class="n">HttpResponse&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>
+&lt;span class="kd">extends&lt;/span> &lt;span class="n">HystrixCommand&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">ClientHttpResponse&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="kd">implements&lt;/span> &lt;span class="n">RibbonCommand&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">protected&lt;/span> &lt;span class="n">ClientHttpResponse&lt;/span> &lt;span class="nf">run&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">Exception&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">final&lt;/span> &lt;span class="n">RequestContext&lt;/span> &lt;span class="n">context&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">RequestContext&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getCurrentContext&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">RQ&lt;/span> &lt;span class="n">request&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">createRequest&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">RS&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kt">boolean&lt;/span> &lt;span class="n">retryableClient&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">client&lt;/span> &lt;span class="k">instanceof&lt;/span> &lt;span class="n">AbstractLoadBalancingClient&lt;/span>
+&lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="o">((&lt;/span>&lt;span class="n">AbstractLoadBalancingClient&lt;/span>&lt;span class="o">)&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">client&lt;/span>&lt;span class="o">).&lt;/span>&lt;span class="na">isClientRetryable&lt;/span>&lt;span class="o">((&lt;/span>&lt;span class="n">ContextAwareRequest&lt;/span>&lt;span class="o">)&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">retryableClient&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">response&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">execute&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">config&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">response&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">executeWithLoadBalancer&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">config&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="n">context&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">set&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;ribbonResponse&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">// Explicitly close the HttpResponse if the Hystrix command timed out to
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// release the underlying HTTP connection held by the response.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isResponseTimedOut&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">response&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">close&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">RibbonHttpResponse&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>Observable.error(ex)&lt;/code>会捕获&lt;code>run()&lt;/code>方法抛出的异常.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">abstract&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">HystrixCommand&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="kd">extends&lt;/span> &lt;span class="n">AbstractCommand&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="kd">implements&lt;/span> &lt;span class="n">HystrixExecutable&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;,&lt;/span> &lt;span class="n">HystrixInvokableInfo&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;,&lt;/span> &lt;span class="n">HystrixObservable&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="kd">final&lt;/span> &lt;span class="kd">protected&lt;/span> &lt;span class="n">Observable&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="nf">getExecutionObservable&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">Observable&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">defer&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="n">Func0&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">Observable&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;&amp;gt;()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">Observable&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="nf">call&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">try&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">Observable&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">just&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">run&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">catch&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">Throwable&lt;/span> &lt;span class="n">ex&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">Observable&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">error&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ex&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}).&lt;/span>&lt;span class="na">doOnSubscribe&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="n">Action0&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">call&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// Save thread on which we get subscribed so that we can interrupt it later if needed
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">executionThread&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">set&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Thread&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">currentThread&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">});&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="hystrix-超时处理">Hystrix 超时处理&lt;/h2>
+&lt;p>在Hystrix版本1.4之前, Seamphore策略是不支持超时的. 目前&lt;code>spring-cloud-netflix&lt;/code>的1.4.4中使用的是1.5.12&lt;/p>
+&lt;p>如果开启了timeout, HystrixCommand会&lt;code>lift&lt;/code>一个&lt;code>HystrixObservableTimeoutOperator&lt;/code>到&lt;code>Observable&lt;/code>中.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">abstract&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">AbstractCommand&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="kd">implements&lt;/span> &lt;span class="n">HystrixInvokableInfo&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;,&lt;/span> &lt;span class="n">HystrixObservable&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="n">Observable&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="nf">executeCommandAndObserve&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">AbstractCommand&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">_cmd&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="n">Observable&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">execution&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">properties&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">executionTimeoutEnabled&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">execution&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">executeCommandWithSpecifiedIsolation&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">_cmd&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="na">lift&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="n">HystrixObservableTimeoutOperator&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="o">&amp;gt;(&lt;/span>&lt;span class="n">_cmd&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">execution&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">executeCommandWithSpecifiedIsolation&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">_cmd&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">execution&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">doOnNext&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">markEmits&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="na">doOnCompleted&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">markOnCompleted&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="na">onErrorResumeNext&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">handleFallback&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="na">doOnEach&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">setRequestContext&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这个&lt;code>HystrixObservableTimeoutOperator&lt;/code>会添加注册&lt;code>TimeListener&lt;/code>. &lt;code>TimeListener&lt;/code>是以&lt;code>tick&lt;/code>的方式运行, 即启动一个线程延迟&lt;code>executionTimeoutInMilliseconds&lt;/code>运行, 然后每次在&lt;code>executionTimeoutInMilliseconds + n * executionTimeoutInMilliseconds&lt;/code>时运行.&lt;/p>
+&lt;p>如果判断操作超时? 看&lt;code>tick&lt;/code>方法的实现, 线程每次运行时, 尝试修改Command的状态从&lt;code>NOT_EXECUTED&lt;/code>到&lt;code>TIMED_OUT&lt;/code>. 如果成功, 说明运行超时. 最后抛出&lt;code>HystrixTimeoutException&lt;/code>异常, 被&lt;code>handleFallback&lt;/code>处理.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="c1">// if we can go from NOT_EXECUTED to TIMED_OUT then we do the timeout codepath
+&lt;/span>&lt;span class="c1">// otherwise it means we lost a race and the run() execution completed or did not start
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">originalCommand&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isCommandTimedOut&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">compareAndSet&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">TimedOutStatus&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">NOT_EXECUTED&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">TimedOutStatus&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">TIMED_OUT&lt;/span>&lt;span class="o">))&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// report timeout failure
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">originalCommand&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">eventNotifier&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">markEvent&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">HystrixEventType&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">TIMEOUT&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">originalCommand&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">commandKey&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">// shut down the original request
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">s&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">unsubscribe&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="kd">final&lt;/span> &lt;span class="n">HystrixContextRunnable&lt;/span> &lt;span class="n">timeoutRunnable&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">HystrixContextRunnable&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">originalCommand&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">concurrencyStrategy&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">hystrixRequestContext&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Runnable&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">run&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">child&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">onError&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="n">HystrixTimeoutException&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">});&lt;/span>
+&lt;span class="n">timeoutRunnable&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">run&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="c1">//if it did not start, then we need to mark a command start for concurrency metrics, and then issue the timeout
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Hystrix工作原理二</title><link>https://atbug.com/hystrix-isolation/</link><pubDate>Sun, 24 Jun 2018 16:18:52 +0000</pubDate><guid>https://atbug.com/hystrix-isolation/</guid><description>
+&lt;h2 id="隔离策略">隔离策略&lt;/h2>
+&lt;h3 id="线程和线程池">线程和线程池&lt;/h3>
+&lt;p>客户端(库, 网络调用等)在各自的线程上运行. 这种做法将他们与调用线程隔开, 因此调用者可以从一个耗时的依赖调用&amp;quot;离开(walk away)&amp;quot;&lt;/p>
+&lt;p>Hystrix使用单独的, 每个依赖的线程池作为约束任何给定依赖的一种方式, 因此潜在执行的延迟将仅在该池中使可用线程饱和.&lt;/p>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15280741661560.png" alt="">&lt;/p>
+&lt;p>如果不试用线程池可以保护你免受故障的影响, 但是这需要客户端可信任地快速失败(网络连接/读取超时, 重试的配置)并始终表现良好.&lt;/p>
+&lt;p>在Hystrix的设计中, Netflix选择试用线程和线程池来达到隔离的目的, 原因有:&lt;/p>
+&lt;ul>
+&lt;li>很多应用程序调用了由很多不同的团队开发的许多(有时超过1000)不同的后端服务&lt;/li>
+&lt;li>每个服务都各自提供了其客户端库&lt;/li>
+&lt;li>客户端库不断地在更新&lt;/li>
+&lt;li>客户端库可能被添加使用新的网络调用&lt;/li>
+&lt;li>客户端库的逻辑中可能包含重试, 数据解析, 缓存(内存或者跨网络)和其他类似的行为&lt;/li>
+&lt;li>客户端库更类似于一个黑盒, 其实现细节, 网络访问模式, 默认配置等是对使用者不透明的&lt;/li>
+&lt;li>在实际的生产问题中, 根源经常是 &amp;ldquo;有些东西改变了, 配置应该被修改&amp;rdquo; 或者 &amp;ldquo;客户端库修改了逻辑&amp;rdquo;&lt;/li>
+&lt;li>即使客户端没有改变, 服务端自身发生了变会员. 这种变化会是客户端设置无效而影响性能特性&lt;/li>
+&lt;li>传递依赖会引入其他客户端, 这些客户端不是可预期的, 也可能没有被正确地配置&lt;/li>
+&lt;li>大多数网络访问是同步的&lt;/li>
+&lt;li>失败和延迟也可能发生在客户端, 不只是网络调用&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15274259800386.png" alt="">&lt;/p>
+&lt;h4 id="线程池的优势">线程池的优势&lt;/h4>
+&lt;ul>
+&lt;li>该应用程序完全免受失控客户端库的保护. 给定依赖库的线程池可以填满而不会影响应用程序的其余部分.&lt;/li>
+&lt;li>应用程序可以接受风险低得多的新客户端库. 如果发生问题, 它会与其他依赖库隔离, 不会影响其他的依赖库&lt;/li>
+&lt;li>当发生故障的客户端再次健康时, 线程池将进行清理, 应用程序会立即恢复健康的性能, 而不是整个Tomcat容器不堪重负的长时间恢复.&lt;/li>
+&lt;li>如果客户端库配置错误, 线程池的运行状况将很快证明这一点(通过增加错误, 延迟, 超时, 拒绝等), 并且你可以在不影响应用程序功能的情况下处理它(通常通过动态属性进行实时修改).&lt;/li>
+&lt;li>如果客户端服务改变了性能特征(经常发生会以成为一个问题), 从而导致需要调整属性(增加/减少超时, 更改重试等), 这通过线程池指标(错误, 延迟, 超时, 拒绝), 并且可以在不影响其他客户端, 请求或用户的情况下进行处理.&lt;/li>
+&lt;li>除了隔离优势外, 拥有专用线程池还提供了内置并发性, 可用于在同步客户端库之上构建异步特性(类似于Netflix API在Hystrix命令之上构建反应式, 完全异步的Java API).&lt;/li>
+&lt;/ul>
+&lt;p>简而言之, 由线程池提供的隔离功能可以使客户端库和子系统性能特性的不断变化和动态组合得到适度处理, 而不会造成中断.&lt;/p>
+&lt;p>&lt;strong>注意&lt;/strong>: 尽管单独的线程提供了隔离, 但你的底层客户端代码也应该有超时 和/或 响应线程中断, 以便它不会无限制地阻塞并使Hystrix线程池饱和.&lt;/p>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15274259098702.png" alt="">&lt;/p>
+&lt;p>&lt;strong>线程池的缺点&lt;/strong>&lt;/p>
+&lt;p>线程池的主要缺点是增加了计算开销, 每个Command的执行设计到队列, 调度和Command单独运行的线程的上下文的切换.&lt;/p>
+&lt;p>在设计这个系统时, Netflix决定接受这种开销, 以换取其提供的好处, 并认为它足够小, 不会对成本或性能产生重大影响,.&lt;/p>
+&lt;p>&lt;strong>线程成本&lt;/strong>&lt;/p>
+&lt;p>Hystrix在子线程上执行construct()或run()方法时测量延迟, 以及父线程上的总端到端时间. 通过这种方式, 你可以看到Hystrix开销的成本(线程, 指标, 日志记录, 断路器等).&lt;/p>
+&lt;p>Netflix API每天使用线程隔离处理10亿多Hystrix Command执行. 每个API实例都有40多个线程池, 每个线程池中有5-20个线程(大多数设置为10).&lt;/p>
+&lt;h3 id="信号量">信号量&lt;/h3>
+&lt;p>你可以使用信号量(或计数器)来限制对任何给定依赖项的并发调用数量, 而不是使用线程池/队列大小. 这允许Hystrix在不使用线程池的情况下卸载负载. 如果你信任下客户端, 而你只想要卸载, 你可以使用这种方法.&lt;/p>
+&lt;p>&lt;code>HystrixCommand&lt;/code>和&lt;code>HystrixObservableCommand&lt;/code>支持2个地方的信号量:&lt;/p>
+&lt;p>&lt;strong>回退:&lt;/strong> 当Hystrix执行回退时, 它总是在调用Tomcat线程上执行回退
+&lt;strong>执行:&lt;/strong> 如果将属性&lt;code>execution.isolation.strategy&lt;/code>设置为&lt;code>SEMAPHORE&lt;/code>, 则Hystrix将使用信号而不是线程来限制调用该命令的并发父线程的数量.&lt;/p>
+&lt;p>你可以通过动态属性来配置这两种信号量的使用, 这些动态属性定义了可以执行多少个并发线程. 在调整线程池大小时, 你应该使用类似的计算来调整它们的大小(内存调用返回的次毫秒时间可以在信号量仅为1或2的情况下执行超过5000rps, 但默认值为10).&lt;/p>
+&lt;p>一旦达到限制, 信号量拒绝将开始, 但填充信号量的线程不能离开.&lt;/p>
+&lt;p>翻译自&lt;a href="https://github.com/Netflix/Hystrix/wiki/How-it-Works">How it Works&lt;/a>&lt;/p></description></item><item><title>Hystrix工作原理一</title><link>https://atbug.com/how-hystrix-works/</link><pubDate>Mon, 04 Jun 2018 08:47:40 +0000</pubDate><guid>https://atbug.com/how-hystrix-works/</guid><description>
+&lt;h2 id="运行时的流程图">运行时的流程图&lt;/h2>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15273755001891.png" alt="图片来自netflix hystrix">&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>构建&lt;code>HystrixCommand&lt;/code>或者&lt;code>HystrixObservableCommand&lt;/code>对象&lt;/p>
+&lt;p>第一步是构建一个HystrixCommand或HystrixObservableCommand对象来代表对依赖服务所做的请求。 将在请求发生时将需要的任何参数传递给构造函数。&lt;/p>
+&lt;p>如果依赖的服务预期会返回单一的响应, 构造一个&lt;code>HystrixCommand&lt;/code>对象, 例如:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="n">HystrixCommand&lt;/span> &lt;span class="n">command&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">HystrixCommand&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">arg1&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">arg2&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果依赖的服务预期会返回一个发出响应的Observable对象, 则构造一个&lt;code>HystrixObservableCommand&lt;/code>对象, 例如:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="n">HystrixObservableCommand&lt;/span> &lt;span class="n">command&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">HystrixObservableCommand&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">arg1&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">arg2&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>执行Command&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>响应是否被缓存?&lt;/p>
+&lt;p>如果Command的缓存请求被开启, 同时请求的响应在缓存中可用, 缓存的响应被立即以一个&lt;code>Observable&lt;/code>的方式返回.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>断路器是否开启?&lt;/p>
+&lt;p>执行Command时, Hystrix会检查断路器(circuti-breaker)是否开始回路(circuit).&lt;/p>
+&lt;p>如果回路开启, Hystrix将不会执行Command, 而直接去到流程&lt;strong>8&lt;/strong>: Get the Fallback
+如果关闭, 则执行流程&lt;strong>5&lt;/strong>检查是否有足够的容量来运行该命令&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>线程池/队列/限号量是否满?&lt;/p>
+&lt;p>假如与Command相关的线程池和队列(或者信号量, 不适用隔离线程的话)满了, Hystrix将不会执行Command, 而是直接去到流程&lt;strong>8&lt;/strong>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>HystrixObservableCommand.construct()&lt;/code>或&lt;code>HystrixCommand.run()&lt;/code>&lt;/p>
+&lt;p>Hystrix使用下面任一的方式向依赖的服务发出请求:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>HystrixCommand.run()&lt;/code> 返回单个响应或抛出异常&lt;/li>
+&lt;li>&lt;code>HystrixObservableCommand.construct()&lt;/code> 返回一个发出响应的Observable对象, 或者发送&lt;code>onError&lt;/code>通知&lt;/li>
+&lt;/ul>
+&lt;p>如果&lt;code>run()&lt;/code>或者&lt;code>construct()&lt;/code>方法执行超过Command的超时设置, 线程会抛出一个&lt;code>TimeoutException&lt;/code>(或者独立的timer线程抛出, 如果Command不是运行在它自己的线程上). 这是Hystrix直接去到流程&lt;strong>8&lt;/strong>. 获取&lt;code>Fallback&lt;/code>, 如果没有cancel/interrup, 则抛弃&lt;code>run()&lt;/code>或&lt;code>construct()&lt;/code>的最终返回值.&lt;/p>
+&lt;p>请注意, 没有任何方法可以强制任务线程停止工作, 最佳的方式是Hystrix抛出一个&lt;code>InterruptException&lt;/code>. 如果Hystrix封装的任务忽略&lt;code>InterruptException&lt;/code>, 该任务线程会继续工作, 即使客户端已经收到了一个&lt;code>TimeoutException&lt;/code>. 这种行为会是Hystrix的线程池饱和, 尽管负载&lt;code>正确地流出(correctly shed)&lt;/code>. 大多数Java HTTP客户端库不解释InterruptedExceptions. 因此, 请确保在HTTP客户端上正确配置连接和读/写超时.&lt;/p>
+&lt;p>如果Command执行没有超时而返回一个响应, Hystrix在执行某些日志记录和指标报告之后返回这个响应.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>计算电路健康&lt;/p>
+&lt;p>Hystrix将成功, 失败, 拒绝服务和超时上报给断路器, 断路器维护着一个计算统计数据的计数器.&lt;/p>
+&lt;p>它通过这些统计数据决定断路器何时应该打开, 在哪个点开始短路后续的请求知道恢复期过去, 或者决定在第一次健康检查请求结束后是否要关闭断路器.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>获取&lt;code>Fallback&lt;/code>&lt;/p>
+&lt;p>在command执行失败后: 当&lt;code>run()&lt;/code>或&lt;code>construct()&lt;/code>抛出异常(6), command因为断路器开启而短路(4), command的线程池和队列或者计数器处于满负荷(6), 或者执行超时, Hystrix尝试转向你的&lt;code>Fallback&lt;/code>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>返回成功的响应&lt;/p>
+&lt;p>如果Command处理成功, 它将以&lt;code>Obervable&lt;/code>的实行返回response或者responses给调用者. 取决于上面流程2中的Command的执行方式, 该&lt;code>Observable&lt;/code>可能在返回给你之前被转换:&lt;/p>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15279954901603.png" alt="">&lt;/p>
+&lt;ul>
+&lt;li>execute() - 返回一个&lt;code>Fature&lt;/code>对象, 可以通过调用&lt;code>get()&lt;/code>获取&lt;code>Obervable&lt;/code>返回的单个值&lt;/li>
+&lt;li>queue() - 把&lt;code>Observable&lt;/code>转换为&lt;code>BlockingObservable&lt;/code>, 因此&lt;code>BlockingObservable&lt;/code>可以被转换成&lt;code>Future&lt;/code>, 并返回&lt;/li>
+&lt;li>observe() - 理解订阅&lt;code>Observable&lt;/code>, 并开始Command的执行流程. 返回一个&lt;code>Observable&lt;/code>, 当订阅它时, 重播返回和通知(replay emissions and notifiactions).&lt;/li>
+&lt;li>toObservable() - 不变地返回Observable; 必须订阅它才能真正开始导致执行命令的流程.&lt;/li>
+&lt;/ul>
+&lt;p>更详细的流程图&lt;a href="https://design.codelytics.io/hystrix/how-it-works">&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="断路器">断路器&lt;/h2>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15279966397767.png" alt="">&lt;/p>
+&lt;ol>
+&lt;li>假设通过断路器的负载达到了阈值 (HystrixCommandProperties.circuitBreakerRequestVolumeThreshold())&lt;/li>
+&lt;li>假设错误百分比超过错误的阈值 (HystrixCommandProperties.circuitBreakerErrorThresholdPercentage())&lt;/li>
+&lt;li>断路器状态从关闭变为打开&lt;/li>
+&lt;li>打开后, 断路器会短路所有针对该断路器的请求&lt;/li>
+&lt;li>过了一段时间后(HystrixCommandProperties.circuitBreakerSleepWindowInMilliseconds()), 下一条请求会被放行(半开状态). 如果请求失败, 断路器重回打开状态(OPEN)并持续一个睡眠窗口(sleep window). 如果成功, 状态变为关闭(CLOSED). 下个请求从逻辑1开始.&lt;/li>
+&lt;/ol>
+&lt;p>翻译自&lt;a href="https://github.com/Netflix/Hystrix/wiki/How-it-Works">Hystrix Wiki - How it works&lt;/a>&lt;/p></description></item></channel></rss>

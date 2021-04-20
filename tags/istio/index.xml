@@ -1,20 +1,176 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>istio on 乱世浮生</title>
-    <link>https://atbug.com/tags/istio/</link>
-    <description>Recent content in istio on 乱世浮生</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Fri, 17 Jan 2020 08:02:42 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/istio/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Minikube安装istio</title>
-      <link>https://atbug.com/install-istio-on-minikube/</link>
-      <pubDate>Fri, 17 Jan 2020 08:02:42 +0800</pubDate>
-      
-      <guid>https://atbug.com/install-istio-on-minikube/</guid>
-      <description>准备 注意: istioctl的安装要使用安装里的, 不要是用homebrew里的. github issue curl -L https://istio.io/downloadIstio | sh - cd istio-1.4.2 cp bin/istioctl /usr/local/bin/istioctl 安装前检查 istioctl verify-install 如果检查没问题, 会看到</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>istio on 乱世浮生</title><link>https://atbug.com/tags/istio/</link><description>Recent content in istio on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 17 Jan 2020 08:02:42 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/istio/index.xml" rel="self" type="application/rss+xml"/><item><title>Minikube安装istio</title><link>https://atbug.com/install-istio-on-minikube/</link><pubDate>Fri, 17 Jan 2020 08:02:42 +0800</pubDate><guid>https://atbug.com/install-istio-on-minikube/</guid><description>
+&lt;h2 id="准备">准备&lt;/h2>
+&lt;p>&lt;strong>注意: istioctl的安装要使用安装里的, 不要是用homebrew里的. &lt;a href="https://github.com/istio/istio/issues/19029">github issue&lt;/a>&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">curl -L https://istio.io/downloadIstio &lt;span class="p">|&lt;/span> sh -
+&lt;span class="nb">cd&lt;/span> istio-1.4.2
+cp bin/istioctl /usr/local/bin/istioctl
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装前检查">安装前检查&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">istioctl verify-install
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果检查没问题, 会看到&lt;code>Install Pre-Check passed! The cluster is ready for Istio installation.&lt;/code>&lt;/p>
+&lt;h2 id="安装">安装&lt;/h2>
+&lt;p>istio有5种内建的安装配置&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>: remote, sds, default, demo, minimal&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">istioctl profile list
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>minimal: 使用istio的流量管理所需组件的最小化安装&lt;/li>
+&lt;li>default: 根据IstioControlPlane API的默认设置(建议用于生产部署)启用组件. 您可以通过运行命令istioctl profile dump显示默认设置.&lt;/li>
+&lt;li>demo: 几乎安装所有的特性, 包括logging和tracing的比例为100%. 不适合生产环境, 负载太重&lt;/li>
+&lt;/ul>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>&lt;/th>
+&lt;th>default&lt;/th>
+&lt;th>demo&lt;/th>
+&lt;th>minimal&lt;/th>
+&lt;th>sds&lt;/th>
+&lt;th>remote&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Core components&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>istio-citadel&lt;/code>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>X&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>istio-egressgateway&lt;/code>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>istio-galley&lt;/code>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>istio-ingressgateway&lt;/code>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>istio-nodeagent&lt;/code>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>istio-pilot&lt;/code>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>istio-policy&lt;/code>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>istio-sidecar-injector&lt;/code>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>X&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>istio-telemetry&lt;/code>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Addons&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>grafana&lt;/code>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>istio-tracing&lt;/code>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>kiali&lt;/code>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>prometheus&lt;/code>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>&lt;code>demo&lt;/code> profile安装&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">istioctl manifest apply --set &lt;span class="nv">profile&lt;/span>&lt;span class="o">=&lt;/span>demo
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>验证安装结果&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">istioctl manifest generate --set &lt;span class="nv">profile&lt;/span>&lt;span class="o">=&lt;/span>demo &amp;gt; /tmp/generated-manifest.yaml
+istioctl verify-install -f /tmp/generated-manifest.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>&amp;hellip;&amp;hellip;
+Checked 23 crds
+Checked 9 Istio Deployments
+Istio is installed successfully&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="卸载">卸载&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">helm template install/kubernetes/helm/istio --namespace istio-system &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> --values install/kubernetes/helm/istio/values-istio-demo.yaml &lt;span class="p">|&lt;/span> kubectl delete -f -
+kubectl delete namespace istio-system
+&lt;span class="c1">#delete all CRDs&lt;/span>
+kubectl delete -f install/kubernetes/helm/istio-init/files
+&lt;/code>&lt;/pre>&lt;/div>&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>&lt;a href="https://istio.io/docs/setup/additional-setup/config-profiles/">这里&lt;/a>可以查看各个配置的详细说明 &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section></description></item></channel></rss>
