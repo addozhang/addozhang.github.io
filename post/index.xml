@@ -1,4 +1,71 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 乱世浮生</title><link>https://atbug.com/post/</link><description>Recent content in Posts on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 17 Apr 2021 09:08:40 +0800</lastBuildDate><atom:link href="https://atbug.com/post/index.xml" rel="self" type="application/rss+xml"/><item><title>应“云”而生的 Java 框架：构建本机可执行文件</title><link>https://atbug.com/quarkus-build-native-executable-file/</link><pubDate>Sat, 17 Apr 2021 09:08:40 +0800</pubDate><guid>https://atbug.com/quarkus-build-native-executable-file/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 乱世浮生</title><link>https://atbug.com/post/</link><description>Recent content in Posts on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 21 Apr 2021 08:13:04 +0800</lastBuildDate><atom:link href="https://atbug.com/post/index.xml" rel="self" type="application/rss+xml"/><item><title>Istio 中精准控制 Sidecar 的注入</title><link>https://atbug.com/how-to-control-istio-sidecar-injection/</link><pubDate>Wed, 21 Apr 2021 08:13:04 +0800</pubDate><guid>https://atbug.com/how-to-control-istio-sidecar-injection/</guid><description>
+&lt;p>为应用&lt;/p>
+&lt;h2 id="为什么">为什么&lt;/h2>
+&lt;p>说起服务网格，这幅图大家肯定不会陌生。这就是服务网格的网络，也是网格架构的终极形态。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/21/cleanshot-20210420-at-2314142x.png" alt="">&lt;/p>
+&lt;p>那在迁移到网格架构之前，我们的系统是什么样的？&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/21/cleanshot-20210420-at-2316432x.png" alt="">&lt;/p>
+&lt;p>我们的系统在演进的过程中，不可避免的会遇到各种 0 到 1 过程中的中间态。比如下面这种，可以比较直观的看出 Istio 或者网格是部分覆盖的。这个过程中，我们需要平滑、可控的推进，才能在保障系统可用性的前提下进行架构的演进。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/21/cleanshot-20210420-at-2318242x.png" alt="">&lt;/p>
+&lt;h2 id="怎么做">怎么做&lt;/h2>
+&lt;p>Sidecar 的注入分两种：手动和自动。&lt;/p>
+&lt;h3 id="手动">手动&lt;/h3>
+&lt;p>手动就是利用 Istio 的 cli 工具 &lt;code>istioctl kube-inject&lt;/code> 对资源 yaml 进行修改：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ istioctl kube-inject -f samples/sleep/sleep.yaml &lt;span class="p">|&lt;/span> kubectl apply -f -
+serviceaccount/sleep created
+service/sleep created
+deployment.apps/sleep created
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>手动的方式比较适合开发阶段使用。&lt;/p>
+&lt;h3 id="自动">自动&lt;/h3>
+&lt;p>sidecar 的自动注入则是通过 &lt;a href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/">mutating webhook admission controller&lt;/a> 实现的。其原理简单说就是拦截 pod的创建请求来对 pod 的资源定义进行修改。&lt;/p>
+&lt;p>我们对截取了 &lt;code>istio-sidecar-injector&lt;/code> &lt;code>MutatingWebhookConfiguration&lt;/code> 的部分内容。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">webhooks&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">matchPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Exact&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c">#1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">sidecar-injector.istio.io&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespaceSelector&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c">#2&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">matchLabels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">istio-injection&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">enabled&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">objectSelector&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c">#3&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">matchExpressions&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">key&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">sidecar.istio.io/inject&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">operator&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">NotIn&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">values&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="s2">&amp;#34;false&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">rules&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c">#4&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">apiGroups&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">apiVersions&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">v1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">operations&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">CREATE&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">pods&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">scope&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;*&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol>
+&lt;li>这里的 &lt;code>matchPolicy: Exact&lt;/code> 针对的是 #4 中的 &lt;code>apiGroups&lt;/code>与&lt;code>apiVersions&lt;/code> 的组合，即精确匹配 &lt;code>v1/pods&lt;/code> 的 &lt;code>CREATE&lt;/code> 请求&lt;/li>
+&lt;li>顾名思义，匹配符合条件的 &lt;code>namespace&lt;/code>&lt;/li>
+&lt;li>同2，匹配符合条件的 &lt;code>object&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;p>注： #2、#3 支持 Kubernetes 的&lt;a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/">标签选择语法&lt;/a>&lt;/p>
+&lt;p>按照前面的说明，这个 hook 会拦截打了 &lt;code>istio-injection: enabled&lt;/code> label 的 namespace 下，没有打 &lt;code>sidecar.istio.io/inject: false&lt;/code> 标签的 &lt;code>v1/pod&lt;/code> 的创建。通过 &lt;code>https://istiod.istio-system:443/inject&lt;/code> 端点对 pod 的定义进行定制（添加 &lt;code>init-container&lt;/code>、sidecar 容器等）。&lt;/p>
+&lt;p>有人可能会说这样还不够精准，因为可能某个 namespace 下只有部分对象才会注入 sidecar。&lt;/p>
+&lt;p>这就需要借助 &lt;code>istiod&lt;/code> 的逻辑了。&lt;/p>
+&lt;h3 id="只针对特定-pod-注入sidecar-或忽略注入">只针对特定 pod 注入sidecar 或忽略注入&lt;/h3>
+&lt;p>在 &lt;code>configmap&lt;/code> &lt;code>istio-sidecar-injector&lt;/code> 中有两个字段 &lt;code>alwaysInjectSelector&lt;/code> 和 &lt;code>neverInjectSelector&lt;/code>。从名字来看这两个分别提供了白名单、黑名单的功能。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">alwaysInjectSelector&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="l">neverInjectSelector:[]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>我们只需如下调整（需要重启 istiod），然后为需要注入 sidecar 的资源打上相应的标签即可。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">alwaysInjectSelector&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">matchExpressions&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">key&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">sidecar.istio.io/inject&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">operator&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">In&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">values&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="s2">&amp;#34;true&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="s2">&amp;#34;enabled&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="s2">&amp;#34;yes&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>应“云”而生的 Java 框架：构建本机可执行文件</title><link>https://atbug.com/quarkus-build-native-executable-file/</link><pubDate>Sat, 17 Apr 2021 09:08:40 +0800</pubDate><guid>https://atbug.com/quarkus-build-native-executable-file/</guid><description>
 &lt;blockquote>
 &lt;p>电影《功夫》中，火云邪神有句话：“天下武功无坚不摧，唯快不破。”&lt;/p>
 &lt;/blockquote>
