@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>笔记 on 乱世浮生</title><link>https://atbug.com/categories/%E7%AC%94%E8%AE%B0/</link><description>Recent content in 笔记 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 21 Apr 2021 08:13:04 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml"/><item><title>服务网格平稳落地：Istio 中精准控制 Sidecar 的注入</title><link>https://atbug.com/how-to-control-istio-sidecar-injection/</link><pubDate>Wed, 21 Apr 2021 08:13:04 +0800</pubDate><guid>https://atbug.com/how-to-control-istio-sidecar-injection/</guid><description>
-&lt;p>为应用&lt;/p>
 &lt;h2 id="为什么">为什么&lt;/h2>
 &lt;p>说起服务网格，这幅图大家肯定不会陌生。这就是服务网格的网络，也是网格架构的终极形态。&lt;/p>
 &lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/21/cleanshot-20210420-at-2314142x.png" alt="">&lt;/p>
