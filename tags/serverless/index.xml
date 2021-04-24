@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Serverless on 乱世浮生</title><link>https://atbug.com/tags/serverless/</link><description>Recent content in Serverless on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 24 Apr 2021 09:16:05 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/serverless/index.xml" rel="self" type="application/rss+xml"/><item><title>谁说 Java 不能跑 Serverless？</title><link>https://atbug.com/quarkus-enable-java-running-in-serverless/</link><pubDate>Sat, 24 Apr 2021 09:16:05 +0800</pubDate><guid>https://atbug.com/quarkus-enable-java-running-in-serverless/</guid><description>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/24/whynotjava.png" alt="why-not-java">&lt;/p>
+&lt;p>想到这个标题的时候，我第一时间想到的就是星爷的《唐伯虎点秋香》的这一幕。&lt;/p>
+&lt;p>当讨论起世界上最好的开发语言是什么的时候，Java 的粉丝们总会遇到这种场景：&lt;/p>
+&lt;blockquote>
+&lt;p>吹：“Java 语法简单，容易上手！”
+黑：“Java 启动慢，性能差，耗资源！”
+吹：“Java 有世界上最多的程序员！”
+黑：“Java 启动慢，性能差，耗资源！”
+吹：“Java 生态好！”
+黑：“Java 启动慢，性能差，耗资源！”
+吹：“滚！”&lt;/p>
+&lt;/blockquote>
+&lt;p>今天我们继续说说 Quarkus，应“云”而生的 Java 框架。今天算是第三篇了，没看过的同学可以回顾一下：&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://mp.weixin.qq.com/s/YcEqFm3oxlsEvJ3ckRbQyA">Hello, Quarkus&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://mp.weixin.qq.com/s/Dq3hQrXE4XWH-MyjBAGMEw">应&amp;quot;云&amp;quot;而生的 Java 框架 Quarkus：构建本机可执行文件&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>上一篇的结尾预告：试试 Quarkus 在 ArgoCD 中的应用，看下 Serverless 上的使用体验。不过不想用 ArgoCD 了，因为这 workflow 这种场景实在体现不出 Quarkus 到底有多快。但又想做 Serverless，那就想到了 Knative Serving 了。&lt;/p>
+&lt;p>其实，还有一个原因是比较懒，上次的镜像还可以直接拿来用。&lt;/p>
+&lt;h2 id="tldr">TL;DR&lt;/h2>
+&lt;p>废话不多说，先上结论。Quarkus 与 Spring 首个请求的响应耗时：&lt;strong>2.5s vs 5.7s&lt;/strong>。&lt;/p>
+&lt;p>&lt;em>注：为了忽略拉取镜像的时间差异，提前 pull 镜像。&lt;/em>&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/24/cleanshot-20210424-at-0831012x.png" alt="">&lt;/p>
+&lt;h2 id="验证">验证&lt;/h2>
+&lt;h3 id="环境准备">环境准备&lt;/h3>
+&lt;ul>
+&lt;li>Kubernetes 1.18+ via minikube&lt;/li>
+&lt;li>Istio 1.9.2&lt;/li>
+&lt;li>Knative 0.22.0&lt;/li>
+&lt;li>Knative CLI （brew 安装）&lt;/li>
+&lt;li>watch （brew 安装）&lt;/li>
+&lt;/ul>
+&lt;p>环境的安装准备参考官方的文档。&lt;/p>
+&lt;h4 id="镜像">镜像&lt;/h4>
+&lt;p>资源镜像就使用&lt;a href="https://mp.weixin.qq.com/s/Dq3hQrXE4XWH-MyjBAGMEw">上一篇文章&lt;/a>构建的，但需要做下调整：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker tag quarkus/quarkus-getting-started:distroless dev.local/quarkus/quarkus-getting-started:distroless
+docker tag spring/spring-getting-started:latest dev.local/spring/spring-getting-started:latest
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>注：knative 会忽略 &lt;code>dev.local&lt;/code> 镜像的预加载，不会在创建 knative service 的时候拉取。&lt;/p>
+&lt;p>然后使用 &lt;code>minikube image load&lt;/code> 加载到 minikube环境中：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">minikube image load dev.local/quarkus/quarkus-getting-started:distroless
+minikube image load dev.local/spring/spring-getting-started:latest
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="knative-配置可选">knative 配置（可选）&lt;/h4>
+&lt;p>修改 &lt;code>istio-system&lt;/code> namespace 下的 configmap &lt;code>config-domain&lt;/code>，增加新的 domain：&lt;code>nip.io&lt;/code>&lt;/p>
+&lt;p>注：这个操作纯属个人喜好，不喜欢那个 &lt;code>example.com&lt;/code>，可跳过。&lt;/p>
+&lt;h4 id="获取-istio-ingress-地址">获取 Istio Ingress 地址&lt;/h4>
+&lt;p>使用命令获取 Ingress 的访问方式，这里 &lt;code>http2/80&lt;/code> 后的 &lt;code>http://192.168.64.2:31608&lt;/code> 就是我们需要的，记下这个 ip 和端口。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">minikube service list
+&lt;span class="p">|&lt;/span>------------------&lt;span class="p">|&lt;/span>----------------------------&lt;span class="p">|&lt;/span>-------------------&lt;span class="p">|&lt;/span>---------------------------&lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> NAMESPACE &lt;span class="p">|&lt;/span> NAME &lt;span class="p">|&lt;/span> TARGET PORT &lt;span class="p">|&lt;/span> URL &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span>------------------&lt;span class="p">|&lt;/span>----------------------------&lt;span class="p">|&lt;/span>-------------------&lt;span class="p">|&lt;/span>---------------------------&lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> default &lt;span class="p">|&lt;/span> kubernetes &lt;span class="p">|&lt;/span> No node port &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> istio-system &lt;span class="p">|&lt;/span> istio-egressgateway &lt;span class="p">|&lt;/span> No node port &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> istio-system &lt;span class="p">|&lt;/span> istio-ingressgateway &lt;span class="p">|&lt;/span> status-port/15021 &lt;span class="p">|&lt;/span> http://192.168.64.2:32431 &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span> http2/80 &lt;span class="p">|&lt;/span> http://192.168.64.2:31608 &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span> https/443 &lt;span class="p">|&lt;/span> http://192.168.64.2:31795 &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span> tcp/31400 &lt;span class="p">|&lt;/span> http://192.168.64.2:31369 &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span> tls/15443 &lt;span class="p">|&lt;/span> http://192.168.64.2:30293 &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> istio-system &lt;span class="p">|&lt;/span> istiod &lt;span class="p">|&lt;/span> No node port &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> istio-system &lt;span class="p">|&lt;/span> knative-local-gateway &lt;span class="p">|&lt;/span> No node port &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> knative-eventing &lt;span class="p">|&lt;/span> broker-filter &lt;span class="p">|&lt;/span> No node port &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> knative-eventing &lt;span class="p">|&lt;/span> broker-ingress &lt;span class="p">|&lt;/span> No node port &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> knative-eventing &lt;span class="p">|&lt;/span> eventing-webhook &lt;span class="p">|&lt;/span> No node port &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> knative-eventing &lt;span class="p">|&lt;/span> imc-dispatcher &lt;span class="p">|&lt;/span> No node port &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> knative-serving &lt;span class="p">|&lt;/span> activator-service &lt;span class="p">|&lt;/span> No node port &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> knative-serving &lt;span class="p">|&lt;/span> autoscaler &lt;span class="p">|&lt;/span> No node port &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> knative-serving &lt;span class="p">|&lt;/span> autoscaler-bucket-00-of-01 &lt;span class="p">|&lt;/span> No node port &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> knative-serving &lt;span class="p">|&lt;/span> autoscaler-hpa &lt;span class="p">|&lt;/span> No node port &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> knative-serving &lt;span class="p">|&lt;/span> controller &lt;span class="p">|&lt;/span> No node port &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> knative-serving &lt;span class="p">|&lt;/span> istio-webhook &lt;span class="p">|&lt;/span> No node port &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> knative-serving &lt;span class="p">|&lt;/span> webhook &lt;span class="p">|&lt;/span> No node port &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span> kube-system &lt;span class="p">|&lt;/span> kube-dns &lt;span class="p">|&lt;/span> No node port &lt;span class="p">|&lt;/span>
+&lt;span class="p">|&lt;/span>------------------&lt;span class="p">|&lt;/span>----------------------------&lt;span class="p">|&lt;/span>-------------------&lt;span class="p">|&lt;/span>---------------------------&lt;span class="p">|&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建-knative-service">创建 Knative service&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="c">#quarkus&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">serving.knative.dev/v1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Service&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">hello-quarkus&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">default&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">template&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">containers&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">dev.local/quarkus/quarkus-getting-started:distroless&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">imagePullPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Never&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nn">---&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="c">#spring&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">serving.knative.dev/v1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Service&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">hello-spring&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">default&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">template&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">containers&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">dev.local/spring/spring-getting-started:latest&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">imagePullPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Never&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>通过 cli &lt;code>kn&lt;/code> 命令查看下 service 的信息：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kn service describe hello-quarkus -n default
+Name: hello-quarkus
+Namespace: default
+Age: 21s
+URL: http://hello-quarkus.default.nip.io
+Revisions:
+100% @latest &lt;span class="o">(&lt;/span>hello-quarkus-00001&lt;span class="o">)&lt;/span> &lt;span class="o">[&lt;/span>1&lt;span class="o">]&lt;/span> &lt;span class="o">(&lt;/span>21s&lt;span class="o">)&lt;/span>
+Image: dev.local/quarkus/quarkus-getting-started:distroless
+Conditions:
+OK TYPE AGE REASON
+++ Ready 9s
+++ ConfigurationsReady 10s
+++ RoutesReady 9s
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kn service describe hello-spring -n default
+Name: hello-spring
+Namespace: default
+Age: 44s
+URL: http://hello-spring.default.nip.io
+Revisions:
+100% @latest &lt;span class="o">(&lt;/span>hello-spring-00001&lt;span class="o">)&lt;/span> &lt;span class="o">[&lt;/span>1&lt;span class="o">]&lt;/span> &lt;span class="o">(&lt;/span>44s&lt;span class="o">)&lt;/span>
+Image: dev.local/spring/spring-getting-started:latest
+Conditions:
+OK TYPE AGE REASON
+++ Ready 31s
+++ ConfigurationsReady 32s
+++ RoutesReady 31s
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>从描述信息中可以拿到服务的访问地址，分别是 &lt;code>http://hello-quarkus.default.nip.io&lt;/code> 和 &lt;code>http://hello-spring.default.nip.io&lt;/code>。&lt;/p>
+&lt;p>接下来就需要在本地主机的 hosts 中加入解析：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">192.168.64.2 hello-quarkus.default.nip.io
+192.168.64.2 hello-spring.default.nip.io
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="测试">测试&lt;/h3>
+&lt;p>上面操作完之后，就可以使用下面的地址访问服务了。&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;a href="http://hello-quarkus.default.nip.io:31608/hello/greeting/quarkus">http://hello-quarkus.default.nip.io:31608/hello/greeting/quarkus&lt;/a>
+&lt;a href="http://hello-spring.default.nip.io:31608/hello/greeting/spring">http://hello-spring.default.nip.io:31608/hello/greeting/spring&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;p>在测试的过程中，可以通过 &lt;code>watch -n 1 'kubectl get po -n default | grep hello'&lt;/code> 命令来查看 pod 的创建和销毁。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/24/20210424-090756.gif" alt="2021-04-24 09.07.56">&lt;/p></description></item></channel></rss>
