@@ -2395,7 +2395,7 @@ mysql &amp;ldquo;5.7&amp;rdquo; 时区 TZ=Europe/London
 &lt;li>12-Factors：https://12factor.net/zh_cn/&lt;/li>
 &lt;li>原文：https://www.infoq.com/articles/multi-runtime-microservice-architecture/&lt;/li>
 &lt;/ul></description></item><item><title>控制 Pod 内容器的启动顺序</title><link>https://atbug.com/control-process-order-of-pod-containers/</link><pubDate>Thu, 12 Mar 2020 22:05:16 +0800</pubDate><guid>https://atbug.com/control-process-order-of-pod-containers/</guid><description>
-&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/03/12/15840218660840.jpg" alt="">&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/30/screenshot-20210430-at-092623.png" alt="">&lt;/p>
 &lt;p>2021.4.30 更新：&lt;/p>
 &lt;p>最新的方案，请跳转新篇 &lt;a href="https://atbug.com/k8s-1.18-container-start-sequence-control/">Kubernetes 上如何控制容器的启动顺序&lt;/a>。&lt;/p>
 &lt;hr>

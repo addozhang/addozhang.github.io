@@ -1021,7 +1021,7 @@ tasks tekton.dev &lt;span class="nb">true&lt;/span> Task
 &lt;li>&lt;a href="https://knative.dev/docs/eventing/samples/writing-receive-adapter-source/03-controller">Knative Controller&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://tekton.dev/docs/pipelines/resources/#why-aren-t-pipelineresources-in-beta">Why Aren’t PipelineResources in Beta?&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>控制 Pod 内容器的启动顺序</title><link>https://atbug.com/control-process-order-of-pod-containers/</link><pubDate>Thu, 12 Mar 2020 22:05:16 +0800</pubDate><guid>https://atbug.com/control-process-order-of-pod-containers/</guid><description>
-&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/03/12/15840218660840.jpg" alt="">&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/30/screenshot-20210430-at-092623.png" alt="">&lt;/p>
 &lt;p>2021.4.30 更新：&lt;/p>
 &lt;p>最新的方案，请跳转新篇 &lt;a href="https://atbug.com/k8s-1.18-container-start-sequence-control/">Kubernetes 上如何控制容器的启动顺序&lt;/a>。&lt;/p>
 &lt;hr>
