@@ -141,12 +141,6 @@
 &lt;li>通过跨所有服务的会话记录和活动监视来满足 FedRamp 和 SOC2 等合规性标准的可审核性&lt;/li>
 &lt;li>基于访问者的身份，通过细粒度的授权策略来限制或清除敏感数据，从而实现隐私和数据治理&lt;/li>
 &lt;/ul>
-&lt;p>The architecture is built upon the following three core principles, whose implementation allows DevOps and Security teams to exercise full control over all of their environment while improving user productivity with a simple and consistent experience.&lt;/p>
-&lt;ul>
-&lt;li>Establishing a non-repudiable identity for users accessing resources&lt;/li>
-&lt;li>Using short-lived ephemeral tokens and certificates in place of static credentials and keys&lt;/li>
-&lt;li>Centralizing fine-grained access policies across all resources types in a single place&lt;/li>
-&lt;/ul>
 &lt;p>该架构建立在以下三个核心原则的基础上，这些原则的实现使 DevOps 和 Security 团队可以在对所有环境进行全面控制的同时，通过简单而一致的体验来提高用户的工作效率。&lt;/p>
 &lt;ul>
 &lt;li>为访问资源的用户建立不可否认的身份&lt;/li>
