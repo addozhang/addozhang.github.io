@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>告警 on 乱世浮生</title><link>https://atbug.com/tags/%E5%91%8A%E8%AD%A6/</link><description>Recent content in 告警 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="https://atbug.com/tags/%E5%91%8A%E8%AD%A6/index.xml" rel="self" type="application/rss+xml"/><item><title>开箱即用的 Prometheus 告警规则集</title><link>https://atbug.com/introduction-awesome-prometheus-alerts/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://atbug.com/introduction-awesome-prometheus-alerts/</guid><description>
-&lt;h1 id="开箱即用的-prometheus-告警规则集">开箱即用的 Prometheus 告警规则集&lt;/h1>
 &lt;p>在配置系统监控的时候，是不是即使绞尽脑汁监控的也还是不够全面，或者不知如何获取想要的指标。&lt;/p>
 &lt;p>&lt;a href="https://awesome-prometheus-alerts.grep.to/">Awesome Prometheus alerts&lt;/a> 维护了一套开箱即用的 Prometheus 告警规则集合，有 300 多个告警规则。同时，还是说明如何获取对应的指标。这些规则，对每个 Prometheus 都是通用的。&lt;/p>
 &lt;p>涉及如主机、硬件、容器等基础资源，到数据库、消息代理、运行时、反向代理、负责均衡器，运行时、服务编排，甚至是网络层面和 Prometheus 自身和集群。&lt;/p>
