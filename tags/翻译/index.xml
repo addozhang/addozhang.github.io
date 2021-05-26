@@ -282,10 +282,7 @@ quarkus.log.handler.gelf.port=12201
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>输出方面没有任何变化，但是日志行已传输到 Fluentd。如果使用 &lt;a href="https://www.elastic.co/kibana">Kibana&lt;/a> 可视化数据，我们将看到存储的日志行：&lt;/p>
 &lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/05/26/16219856876241.jpg" alt="">&lt;/p>
 &lt;h3 id="监控">监控&lt;/h3>
-&lt;p>Monitoring is another &amp;ldquo;microservicilitie&amp;rdquo; that needs to be implemented in our microservice architecture. Quarkus integrates with &lt;a href="https://micrometer.io/">Micrometer&lt;/a> for application monitoring. Micrometer provides a single entry point to the most popular monitoring systems, allowing you to instrument your JVM-based application code without vendor lock-in.&lt;/p>
-&lt;p>For this example, &lt;a href="https://prometheus.io/">Prometheus&lt;/a> format is used as monitoring output but Micrometer (and Quarkus) also supports other formats like Azure Monitor, Stackdriver, SignalFx, StatsD, and DataDog.&lt;/p>
-&lt;p>You can register the following Maven dependency to provide Prometheus output:
-监控是另一个需要在我们的微服务架构中实现的 “微服务特性”。Quarkus 与 &lt;a href="https://micrometer.io/">Micrometer&lt;/a> 集成在一起以进行应用程序监控。Micrometer 提供了最流行的监控系统的单个入口点，使你无需供应商锁定即可检测基于 JVM 的应用程序代码。&lt;/p>
+&lt;p>监控是另一个需要在我们的微服务架构中实现的 “微服务特性”。Quarkus 与 &lt;a href="https://micrometer.io/">Micrometer&lt;/a> 集成在一起以进行应用程序监控。Micrometer 提供了最流行的监控系统的单个入口点，使你无需供应商锁定即可检测基于 JVM 的应用程序代码。&lt;/p>
 &lt;p>对于此示例，监控输出采用 &lt;a href="https://prometheus.io/">Prometheus&lt;/a> 格式，但 Micrometer（和 Quarkus）还支持其他格式，例如 Azure Monitor、Stackdriver、SignalFx、StatsD 和 DataDog。&lt;/p>
 &lt;p>你可以注册以下 Maven 依赖项以提供 Prometheus 输出：&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="nt">&amp;lt;dependency&amp;gt;&lt;/span>
