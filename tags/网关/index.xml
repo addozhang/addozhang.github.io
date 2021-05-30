@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>网关 on 乱世浮生</title><link>https://atbug.com/tags/%E7%BD%91%E5%85%B3/</link><description>Recent content in 网关 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 31 May 2021 00:45:08 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E7%BD%91%E5%85%B3/index.xml" rel="self" type="application/rss+xml"/><item><title>初探可编程网关 Pipy</title><link>https://atbug.com/glance-at-programmable-gateway-pipy/</link><pubDate>Mon, 31 May 2021 00:45:08 +0800</pubDate><guid>https://atbug.com/glance-at-programmable-gateway-pipy/</guid><description>
-&lt;p>有幸参加了 Flomesh 组织的workshop，了解了他们的 Pipy 网络代理，以及围绕 Pipy 构建起来的生态。Pipy 在生态中，不止是代理的角色，还是 Flomesh 服务网格​中的数据平面。&lt;/p>
+&lt;p>有幸参加了 &lt;a href="https://flomesh.cn/">Flomesh&lt;/a> 组织的workshop，了解了他们的 Pipy 网络代理，以及围绕 Pipy 构建起来的生态。Pipy 在生态中，不止是代理的角色，还是 Flomesh 服务网格​中的数据平面。&lt;/p>
 &lt;p>整理一下，做个记录，顺便瞄一下 Pipy 的部分源码。&lt;/p>
 &lt;h2 id="介绍">介绍&lt;/h2>
 &lt;p>下面是摘自 Github 上关于 Pipy 的介绍：&lt;/p>
@@ -7,7 +7,7 @@
 &lt;p>Pipy 是一个轻量级、高性能、高稳定、可编程的网络代理。Pipy 核心框架使用 C++ 开发，网络 IO 采用 ASIO 库。 Pipy 的可执行文件仅有 5M 左右，运行期的内存占用 10M 左右，因此 Pipy 非常适合做 Sidecar proxy。&lt;/p>
 &lt;/blockquote>
 &lt;blockquote>
-&lt;p>Pipy 内置了 QuickJS 作为脚本扩展，使得Pipy 可以用 JS 脚本根据特定需求快速定制逻辑与功能。QuickJS 的“确定性垃圾回收”机制，进一步保证了 Pipy 的可靠性与确定性，避免了很多脚本类语言因 GC 导致的不确定性问题。&lt;/p>
+&lt;p>Pipy 内置了自研的 pjs 作为脚本扩展，使得Pipy 可以用 JS 脚本根据特定需求快速定制逻辑与功能。&lt;/p>
 &lt;/blockquote>
 &lt;blockquote>
 &lt;p>Pipy 采用了模块化、链式的处理架构，用顺序执行的模块来对网络数据块进行处理。这种简单的架构使得 Pipy 底层简单可靠，同时具备了动态编排流量的能力，兼顾了简单和灵活。通过使用 REUSE_PORT 的机制（主流 Linux 和 BSD 版本都支持该功能），Pipy 可以以多进程模式运行，使得 Pipy 不仅适用于 Sidecar 模式，也适用于大规模的流量处理场景。 在实践中，Pipy 独立部署的时候用作“软负载”，可以在低延迟的情况下，实现媲美硬件的负载均衡吞吐能力，同时具有灵活的扩展性。&lt;/p>
@@ -26,7 +26,7 @@
 &lt;li>上下文（Context）&lt;/li>
 &lt;/ul>
 &lt;p>&lt;!-- raw HTML omitted -->以下是个人浅见&lt;!-- raw HTML omitted -->：&lt;/p>
-&lt;p>Pipy 使用 &lt;code>QuickJS&lt;/code> 引擎将 JavaScript格式的配置，解析成其抽象的 &lt;code>Configuration&lt;/code> 对象。每个 &lt;code>Configuration&lt;/code> 中包含了多个 &lt;code>Pipeline&lt;/code>，每个 &lt;code>Configuration&lt;/code> 中又会用到多个 &lt;code>Filter&lt;/code>。这些都属于 Pipy 的&lt;em>静态&lt;/em>配置部分。（后面会提到 Pipeline 的三种不同类型）&lt;/p>
+&lt;p>Pipy 使用 &lt;code>pjs&lt;/code> 引擎将 JavaScript格式的配置，解析成其抽象的 &lt;code>Configuration&lt;/code> 对象。每个 &lt;code>Configuration&lt;/code> 中包含了多个 &lt;code>Pipeline&lt;/code>，每个 &lt;code>Configuration&lt;/code> 中又会用到多个 &lt;code>Filter&lt;/code>。这些都属于 Pipy 的&lt;em>静态&lt;/em>配置部分。（后面会提到 Pipeline 的三种不同类型）&lt;/p>
 &lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/05/31/16223905428188.jpg" alt="">&lt;/p>
 &lt;p>而属于&lt;strong>运行时&lt;/strong>的就是流、会话和上下文了，在 Pipy 中，数据流是由对象（Pipy 的&lt;em>抽象&lt;/em>）组成的。而这些对象抵达 Pipy，被抽象成不同的&lt;!-- raw HTML omitted -->事件&lt;!-- raw HTML omitted -->。而事件触发不同的过滤器的执行。&lt;/p>
 &lt;p>我个人更喜欢将其核心理解为：对数据流的事件处理引擎。&lt;/p>
@@ -82,9 +82,9 @@ HTTP/1.1 &lt;span class="m">200&lt;/span> OK
 Connection: keep-alive
 Content-Length: &lt;span class="m">7&lt;/span>
 Hello!
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="pipe-过滤器">Pipe 过滤器&lt;/h3>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="pipy-过滤器">Pipy 过滤器&lt;/h3>
 &lt;p>通过 pipe 的命令可以输出其支持的过滤器列表，一共 31 个。通过将一系列过滤器进行组装，可以实现复杂的流处理。&lt;/p>
-&lt;p>比如 &lt;code>007-logging&lt;/code> 目录下的配置，通过 &lt;code>fork&lt;/code> 过滤器&lt;/p>
+&lt;p>比如 &lt;code>007-logging&lt;/code> 的配置实现了日志的功能：记录请求和响应的数据，并批量发送到 ElasticSearch。这里就用到了 &lt;code>fork&lt;/code>、&lt;code>connect&lt;/code>、&lt;code>onSessionStart&lt;/code>、&lt;code>encodeHttpRequest&lt;/code>、&lt;code>decodeHttpRequest&lt;/code>、&lt;code>onMessageStart&lt;/code>、&lt;code>onMessage&lt;/code>、&lt;code>decodeHttpResponse&lt;/code>、&lt;code>replaceMessage&lt;/code>、&lt;code>link&lt;/code>、&lt;code>mux&lt;/code>、&lt;code>task&lt;/code> 十二种过滤器。&lt;/p>
 &lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/05/31/16223878872474.jpg" alt="">&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ bin/pipy --list-filters
 connect &lt;span class="o">(&lt;/span>target&lt;span class="o">[&lt;/span>, options&lt;span class="o">])&lt;/span> Sends data to a remote endpoint and receives data from it
@@ -131,7 +131,7 @@ use &lt;span class="o">(&lt;/span>module, pipeline&lt;span class="o">[&lt;/span>
 &lt;li>启动 worker，执行&lt;code>Configuration::apply()&lt;/code>&lt;/li>
 &lt;li>卸载旧的 worker&lt;/li>
 &lt;/ol>
-&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/05/31/16223847975099.jpg" alt="">&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/05/31/16224186469477.jpg" alt="">&lt;/p>
 &lt;p>从 &lt;code>src/api/configuration.cpp:267&lt;/code> 处看：&lt;code>pipeline&lt;/code>、&lt;code>listen&lt;/code> 和 &lt;code>task&lt;/code> 配置实际在 Pipy 的配置中都是被抽象为 &lt;code>Pipeline&lt;/code> 对象，只是在类型上有差异分别为：&lt;code>NAMED&lt;/code>、&lt;code>LISTEN&lt;/code> 和 &lt;code>TASK&lt;/code>。比如 &lt;code>listen&lt;/code> 中可以通过 &lt;code>fork&lt;/code> 过滤器将事件的副本发送到指定的 &lt;code>pipeline&lt;/code> 中。&lt;/p>
 &lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/05/31/16223897550113.jpg" alt="">&lt;/p>
 &lt;h4 id="基于数据流事件的处理">基于数据流事件的处理&lt;/h4>
@@ -139,5 +139,6 @@ use &lt;span class="o">(&lt;/span>module, pipeline&lt;span class="o">[&lt;/span>
 &lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/05/31/16223918853729.jpg" alt="">&lt;/p>
 &lt;h2 id="结语">结语&lt;/h2>
 &lt;p>Pipy 虽小（只有 11M），但以其可编程的特性提供了灵活的配置能力，潜力无限。&lt;/p>
+&lt;p>Pipy 像处理 HTTP 一样处理任意的七层协议。内部版本支持Dubbo、Redis、Socks 等，目前正在迁移到开源版本。&lt;/p>
 &lt;p>期待即将开源的 Portal，以及服务网格 Flomesh。持续关注，后面考虑再写几篇。&lt;/p>
 &lt;p>“未来可期！”&lt;/p></description></item></channel></rss>
