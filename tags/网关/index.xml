@@ -136,4 +136,8 @@ use &lt;span class="o">(&lt;/span>module, pipeline&lt;span class="o">[&lt;/span>
 &lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/05/31/16223897550113.jpg" alt="">&lt;/p>
 &lt;h4 id="基于数据流事件的处理">基于数据流事件的处理&lt;/h4>
 &lt;p>&lt;code>src/inbound.cpp:171&lt;/code>&lt;/p>
-&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/05/31/16223918853729.jpg" alt="">&lt;/p></description></item></channel></rss>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/05/31/16223918853729.jpg" alt="">&lt;/p>
+&lt;h2 id="结语">结语&lt;/h2>
+&lt;p>Pipy 虽小（只有 11M），但以其可编程的特性提供了灵活的配置能力，潜力无限。&lt;/p>
+&lt;p>期待即将开源的 Portal，以及服务网格 Flomesh。持续关注，后面考虑再写几篇。&lt;/p>
+&lt;p>“未来可期！”&lt;/p></description></item></channel></rss>

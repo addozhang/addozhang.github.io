@@ -136,7 +136,11 @@ use &lt;span class="o">(&lt;/span>module, pipeline&lt;span class="o">[&lt;/span>
 &lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/05/31/16223897550113.jpg" alt="">&lt;/p>
 &lt;h4 id="基于数据流事件的处理">基于数据流事件的处理&lt;/h4>
 &lt;p>&lt;code>src/inbound.cpp:171&lt;/code>&lt;/p>
-&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/05/31/16223918853729.jpg" alt="">&lt;/p></description></item><item><title>云上细粒度访问管理的参考架构</title><link>https://atbug.com/translation-access-management-reference-architecture/</link><pubDate>Wed, 28 Apr 2021 08:02:11 +0800</pubDate><guid>https://atbug.com/translation-access-management-reference-architecture/</guid><description>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/05/31/16223918853729.jpg" alt="">&lt;/p>
+&lt;h2 id="结语">结语&lt;/h2>
+&lt;p>Pipy 虽小（只有 11M），但以其可编程的特性提供了灵活的配置能力，潜力无限。&lt;/p>
+&lt;p>期待即将开源的 Portal，以及服务网格 Flomesh。持续关注，后面考虑再写几篇。&lt;/p>
+&lt;p>“未来可期！”&lt;/p></description></item><item><title>云上细粒度访问管理的参考架构</title><link>https://atbug.com/translation-access-management-reference-architecture/</link><pubDate>Wed, 28 Apr 2021 08:02:11 +0800</pubDate><guid>https://atbug.com/translation-access-management-reference-architecture/</guid><description>
 &lt;p>本文由 &lt;a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&amp;amp;__biz=MjM5OTg2MTM0MQ==&amp;amp;scene=124#wechat_redirect">Addo Zhang&lt;/a> 翻译自 &lt;a href="https://www.infoq.com/articles/access-management-reference-architecture/">A Reference Architecture for Fine-Grained Access Management on the Cloud&lt;/a>&lt;/p>
 &lt;h1 id="什么是访问管理">什么是访问管理？&lt;/h1>
 &lt;p>访问管理是识别用户或一组用户是否应该能够访问给定资源（例如主机、服务或数据库）的过程。例如，对于开发人员来说是否可以使用 SSH 登录生产应用程序服务器，如果可以，那么可以登录多长时间？如果 SRE 在非支持时间尝试访问数据库，他们这样做？如果数据工程师已转移到其他团队，他们是否应该继续访问 ETL 管道的 S3 存储桶？&lt;/p>
