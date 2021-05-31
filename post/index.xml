@@ -19,7 +19,7 @@
 &lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/05/31/16221838630400.jpg" alt="">&lt;/p>
 &lt;h3 id="核心概念">核心概念&lt;/h3>
 &lt;ul>
-&lt;li>流（Stream）：Pipy&lt;/li>
+&lt;li>流（Stream）&lt;/li>
 &lt;li>管道（Pipeline）&lt;/li>
 &lt;li>模块（Module）&lt;/li>
 &lt;li>会话（Session）&lt;/li>
