@@ -84,7 +84,7 @@ Content-Length: &lt;span class="m">7&lt;/span>
 Hello!
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="pipy-过滤器">Pipy 过滤器&lt;/h3>
 &lt;p>通过 pipe 的命令可以输出其支持的过滤器列表，一共 31 个。通过将一系列过滤器进行组装，可以实现复杂的流处理。&lt;/p>
-&lt;p>比如 &lt;code>007-logging&lt;/code> 的配置实现了日志的功能：记录请求和响应的数据，并批量发送到 ElasticSearch。这里就用到了 &lt;code>fork&lt;/code>、&lt;code>connect&lt;/code>、&lt;code>onSessionStart&lt;/code>、&lt;code>encodeHttpRequest&lt;/code>、&lt;code>decodeHttpRequest&lt;/code>、&lt;code>onMessageStart&lt;/code>、&lt;code>onMessage&lt;/code>、&lt;code>decodeHttpResponse&lt;/code>、&lt;code>replaceMessage&lt;/code>、&lt;code>link&lt;/code>、&lt;code>mux&lt;/code>、&lt;code>task&lt;/code> 十二种过滤器。&lt;/p>
+&lt;p>比如 &lt;code>007-logging&lt;/code> 的配置实现了日志的功能：记录请求和响应的数据，并批量发送到 ElasticSearch。这里就用到了 &lt;code>fork&lt;/code>、&lt;code>connect&lt;/code>、&lt;code>onSessionStart&lt;/code>、&lt;code>encodeHttpRequest&lt;/code>、&lt;code>decodeHttpRequest&lt;/code>、&lt;code>onMessageStart&lt;/code>、&lt;code>onMessage&lt;/code>、&lt;code>decodeHttpResponse&lt;/code>、&lt;code>replaceMessage&lt;/code>、&lt;code>link&lt;/code>、&lt;code>mux&lt;/code>、&lt;code>task&lt;/code> 等十多种过滤器。&lt;/p>
 &lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/05/31/16223878872474.jpg" alt="">&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ bin/pipy --list-filters
 connect &lt;span class="o">(&lt;/span>target&lt;span class="o">[&lt;/span>, options&lt;span class="o">])&lt;/span> Sends data to a remote endpoint and receives data from it
