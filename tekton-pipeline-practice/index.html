@@ -1,16 +1,16 @@
-<!doctype html><html lang=zh-cn data-figures class=page data-mode=dim><head><title>CICD: Tekton Pipeline 实战 | 乱世浮生</title><meta charset=utf-8><meta name=generator content="Hugo 0.81.0"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta http-equiv=x-ua-compatible content="IE=edge"><script async src="https://www.googletagmanager.com/gtag/js?id=UA-47966140-1"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-47966140-1')</script><meta property="og:locale" content="zh-cn"><meta property="og:type" content="article"><meta name=description content="Tekton 是 Google 开源的 Kubernetes 原生CI/CD 系统, 功能强大扩展性强. 前身是 Knavite 里的 build-pipeline 项目, 后期孵化成独立的项目. 并成为 CDF 下的四个项目之一, 其他三个分别是 Jenkins, Jenkins X, Spinnaker. …"><meta name=twitter:card content="summary"><meta name=twitter:creator content><meta name=twitter:title content="CICD: Tekton Pipeline 实战"><meta property="og:url" content="https://atbug.com/tekton-pipeline-practice/"><meta property="og:title" content="CICD: Tekton Pipeline 实战"><meta property="og:description" content="Tekton 是 Google 开源的 Kubernetes 原生CI/CD 系统, 功能强大扩展性强. 前身是 Knavite 里的 build-pipeline 项目, 后期孵化成独立的项目. 并成为 CDF 下的四个项目之一, 其他三个分别是 Jenkins, Jenkins X, Spinnaker. …"><meta property="og:image" content="https://atbug.com/"><link rel=apple-touch-icon sizes=180x180 href=https://atbug.com/icons/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://atbug.com/icons/favicon-32x32.png><link rel=manifest href=https://atbug.com/icons/site.webmanifest><link rel=canonical href=https://atbug.com/tekton-pipeline-practice/><link rel=preload href=https://atbug.com/css/styles.f447efe4c4b72136d91de28493ae7ef4ecc0c35f80359801224320ede7871c488414b1dfba5913dffd7a1ed5f70440802a87e8795f124086b949e35e6579b5d9.css integrity="sha512-9Efv5MS3ITbZHeKEk65+9OzAw1+ANZgBIkMg7eeHHEiEFLHfulkT3/16HtX3BECAKofoeV8SQIa5SeNeZXm12Q==" as=style crossorigin=anonymous><link rel=preload href=https://atbug.com/js/bundle.min.90cbe84f27859868a1c2f20af76ac2cc69c32540555dbbdae845870af41ba688e06385e7e720680cc34e65b9fdd5381585b444e33c735f35d05e6c5dc7d7bdc0.js as=script integrity="sha512-kMvoTyeFmGihwvIK92rCzGnDJUBVXbva6EWHCvQbpojgY4Xn5yBoDMNOZbn91TgVhbRE4zxzXzXQXmxdx9e9wA==" crossorigin=anonymous><link rel=stylesheet type=text/css href=https://atbug.com/css/styles.f447efe4c4b72136d91de28493ae7ef4ecc0c35f80359801224320ede7871c488414b1dfba5913dffd7a1ed5f70440802a87e8795f124086b949e35e6579b5d9.css integrity="sha512-9Efv5MS3ITbZHeKEk65+9OzAw1+ANZgBIkMg7eeHHEiEFLHfulkT3/16HtX3BECAKofoeV8SQIa5SeNeZXm12Q==" crossorigin=anonymous></head><body data-code=100 data-lines=true id=documentTop><header class=nav_header><nav class=nav><a href=https://atbug.com/ class="nav_brand nav_item" title=乱世浮生><img src=https://atbug.com/logo.png class=logo alt=乱世浮生><div class=nav_close><div><svg class="icon"><use xlink:href="#open-menu"/></svg><svg class="icon"><use xlink:href="#closeme"/></svg></div></div></a><div class="nav_body nav_body_left"><div class=nav_parent><a href=https://atbug.com/ class=nav_item title=Home>Home</a></div><div class=nav_parent><a href=https://atbug.com/post/ class=nav_item title=Archives>Archives</a></div><div class=nav_parent><a href=https://atbug.com/about/ class=nav_item title=About>About</a></div><div class=follow><a href=https://github.com/addozhang><svg class="icon"><use xlink:href="#github"/></svg></a><a href=https://twitter.com/duwasai><svg class="icon"><use xlink:href="#twitter"/></svg></a><a href=https://atbug.com/index.xml><svg class="icon"><use xlink:href="#rss"/></svg></a><div class=color_mode><input type=checkbox class=color_choice id=mode></div></div></div></nav></header><main><div class="grid-inverse wrap content"><article class=post_content><h1 class=post_title>CICD: Tekton Pipeline 实战</h1><div class=post_meta><span><svg class="icon"><use xlink:href="#calendar"/></svg></span><span class=post_date>Jan 21, 2020</span>
+<!doctype html><html lang=zh-cn data-figures class=page data-mode=dim><head><title>云原生 CICD: Tekton Pipeline 实战 | 乱世浮生</title><meta charset=utf-8><meta name=generator content="Hugo 0.81.0"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta http-equiv=x-ua-compatible content="IE=edge"><script async src="https://www.googletagmanager.com/gtag/js?id=UA-47966140-1"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-47966140-1')</script><meta property="og:locale" content="zh-cn"><meta property="og:type" content="article"><meta name=description content="更新历史： v1：2020.1.21 基于 Tekton Pipline v0.9.0 v2（当前）：2021.6.22 基于 Tekton Pipeline v0.25.0 Tekton 是 Google 开源的 Kubernetes 原生CI/CD 系统, 功能强大扩展性强. 前身是 Knavite …"><meta name=twitter:card content="summary"><meta name=twitter:creator content><meta name=twitter:title content="云原生 CICD: Tekton Pipeline 实战"><meta property="og:url" content="https://atbug.com/tekton-pipeline-practice/"><meta property="og:title" content="云原生 CICD: Tekton Pipeline 实战"><meta property="og:description" content="更新历史： v1：2020.1.21 基于 Tekton Pipline v0.9.0 v2（当前）：2021.6.22 基于 Tekton Pipeline v0.25.0 Tekton 是 Google 开源的 Kubernetes 原生CI/CD 系统, 功能强大扩展性强. 前身是 Knavite …"><meta property="og:image" content="https://atbug.com/"><link rel=apple-touch-icon sizes=180x180 href=https://atbug.com/icons/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://atbug.com/icons/favicon-32x32.png><link rel=manifest href=https://atbug.com/icons/site.webmanifest><link rel=canonical href=https://atbug.com/tekton-pipeline-practice/><link rel=preload href=https://atbug.com/css/styles.f447efe4c4b72136d91de28493ae7ef4ecc0c35f80359801224320ede7871c488414b1dfba5913dffd7a1ed5f70440802a87e8795f124086b949e35e6579b5d9.css integrity="sha512-9Efv5MS3ITbZHeKEk65+9OzAw1+ANZgBIkMg7eeHHEiEFLHfulkT3/16HtX3BECAKofoeV8SQIa5SeNeZXm12Q==" as=style crossorigin=anonymous><link rel=preload href=https://atbug.com/js/bundle.min.90cbe84f27859868a1c2f20af76ac2cc69c32540555dbbdae845870af41ba688e06385e7e720680cc34e65b9fdd5381585b444e33c735f35d05e6c5dc7d7bdc0.js as=script integrity="sha512-kMvoTyeFmGihwvIK92rCzGnDJUBVXbva6EWHCvQbpojgY4Xn5yBoDMNOZbn91TgVhbRE4zxzXzXQXmxdx9e9wA==" crossorigin=anonymous><link rel=stylesheet type=text/css href=https://atbug.com/css/styles.f447efe4c4b72136d91de28493ae7ef4ecc0c35f80359801224320ede7871c488414b1dfba5913dffd7a1ed5f70440802a87e8795f124086b949e35e6579b5d9.css integrity="sha512-9Efv5MS3ITbZHeKEk65+9OzAw1+ANZgBIkMg7eeHHEiEFLHfulkT3/16HtX3BECAKofoeV8SQIa5SeNeZXm12Q==" crossorigin=anonymous></head><body data-code=100 data-lines=true id=documentTop><header class=nav_header><nav class=nav><a href=https://atbug.com/ class="nav_brand nav_item" title=乱世浮生><img src=https://atbug.com/logo.png class=logo alt=乱世浮生><div class=nav_close><div><svg class="icon"><use xlink:href="#open-menu"/></svg><svg class="icon"><use xlink:href="#closeme"/></svg></div></div></a><div class="nav_body nav_body_left"><div class=nav_parent><a href=https://atbug.com/ class=nav_item title=Home>Home</a></div><div class=nav_parent><a href=https://atbug.com/post/ class=nav_item title=Archives>Archives</a></div><div class=nav_parent><a href=https://atbug.com/about/ class=nav_item title=About>About</a></div><div class=follow><a href=https://github.com/addozhang><svg class="icon"><use xlink:href="#github"/></svg></a><a href=https://twitter.com/duwasai><svg class="icon"><use xlink:href="#twitter"/></svg></a><a href=https://atbug.com/index.xml><svg class="icon"><use xlink:href="#rss"/></svg></a><div class=color_mode><input type=checkbox class=color_choice id=mode></div></div></div></nav></header><main><div class="grid-inverse wrap content"><article class=post_content><h1 class=post_title>云原生 CICD: Tekton Pipeline 实战</h1><div class=post_meta><span><svg class="icon"><use xlink:href="#calendar"/></svg></span><span class=post_date>Jun 22, 2021</span>
 <span class=post_time>· 4 min read&nbsp;</span>
 <span>·
 <a href=https://atbug.com/tags/cicd title=CICD class="post_tag button button_translucent">CICD</a> ·
 <a href=https://atbug.com/tags/tekton title=Tekton class="post_tag button button_translucent">Tekton</a> ·
 <a href=https://atbug.com/tags/kubernetes title=Kubernetes class="post_tag button button_translucent">Kubernetes</a></span>
-<span class=page_only>·</span></div><p>Tekton 是 Google 开源的 Kubernetes 原生CI/CD 系统, 功能强大扩展性强. 前身是 Knavite 里的 build-pipeline 项目, 后期孵化成<a href=https://github.com/tektoncd/pipeline>独立的项目</a>. 并成为 <a href=https://cd.foundation/projects/>CDF</a> 下的四个项目之一, 其他三个分别是 Jenkins, Jenkins X, Spinnaker.</p><p>为什么说 Tekton 是 Kubernetes 原生的, 以内其基于 Kubernetes 的 CRD 定义了 Pipeline 流水线.</p><p><img src=https://raw.githubusercontent.com/addozhang/oss/master/uPic/bquuTV.jpg alt></p><p>CRD 及说明:</p><ul><li>Task: 构建任务, 可以定义一些列的 steps. 每个 step 由一个 container 执行.</li><li>TaskRun: task 实际的执行, 并提供执行所需的参数. 这个对象创建后, 就会有 pod 被创建.</li><li>Pipeline: 定义一个或者多个 task 的执行, 以及 PipelineResource 和各种定义参数的集合</li><li>PipelineRun: 类似 task 和 taskrun 的关系: 一个定义一个执行. PipelineRun 则是 pipeline 的实际执行. 创建后也会创建 pod 来执行各个 task.</li><li>PipelineResource: 流水线的输入资源, 比如 github/gitlab 的源码, 某种存储服务的文件, 或者镜像等. 执行时, 也会作为 pod 的其中一个 container 来运行(比如拉取代码).</li><li>Condition: 在 pipeline 的 task 执行时通过添加 condition 来对条件进行评估, 进而判断是否执行 task. 目前是WIP的状态, 待<a href=https://github.com/tektoncd/pipeline/issues/1137>#1137</a>的完成.</li></ul><p><strong>组件:</strong></p><ul><li><code>tekton-pipelines-controller</code>: 监控 CRD 对象(TaskRun, PipelineRun)的创建, 为该次执行创建 pod.</li><li><code>tekton-pipelines-webhook</code>: 对 apiserver 提供 http 接口做 CRD 对象的校验.</li></ul><h2 id=安装>安装</h2><p>参考<a href=https://atbug.com/tekton-installation-and-sample/>上一篇文章</a>, 文章中有个简单的"hello world".</p><h2 id=实践>实践</h2><p>到了这里相信已经安装好了 Tekton. 我们使用<a href=https://start.spring.io/>Spring Initializer</a>生成的项目为例, 演示如何使用 Tekton 实现 CICD.</p><p>开始之前简单整理下这个项目的 CICD 流程:</p><ol><li>拉取代码</li><li>maven 打包</li><li>构建镜像并推送</li><li>部署</li></ol><p><em>注: 所有的操作都是在 <code>tekton-pipelines</code> namespace 下操作</em></p><h3 id=0x00-添加-dockerfile-和部署用的-yaml>0x00 添加 dockerfile 和部署用的 yaml</h3><p>用于构建镜像的Dockerfile</p><div class=highlight><pre class=chroma><code class=language-fallback data-lang=fallback>FROM openjdk:8-jdk-alpine
+<span class=page_only>·</span></div><p>更新历史：</p><ul><li>v1：2020.1.21 基于 Tekton Pipline <a href=https://github.com/tektoncd/pipeline/tree/v0.9.0/docs#tekton-pipelines>v0.9.0</a></li><li>v2（当前）：2021.6.22 基于 Tekton Pipeline <a href=https://github.com/tektoncd/pipeline/tree/v0.25.0/docs#tekton-pipelines>v0.25.0</a></li></ul><hr><p>Tekton 是 Google 开源的 Kubernetes 原生CI/CD 系统, 功能强大扩展性强. 前身是 Knavite 里的 build-pipeline 项目, 后期孵化成<a href=https://github.com/tektoncd/pipeline>独立的项目</a>. 并成为 <a href=https://cd.foundation/projects/>CDF</a> 下的四个项目之一, 其他三个分别是 Jenkins, Jenkins X, Spinnaker.</p><p>为什么说 Tekton 是 Kubernetes 原生的, 以内其基于 Kubernetes 的 CRD 定义了 Pipeline 流水线.</p><p><img src=https://raw.githubusercontent.com/addozhang/oss/master/uPic/bquuTV.jpg alt></p><p>CRD 及说明:</p><ul><li>Task: 构建任务, 可以定义一些列的 steps. 每个 step 由一个 container 执行.</li><li>TaskRun: task 实际的执行, 并提供执行所需的参数. 这个对象创建后, 就会有 pod 被创建.</li><li>Pipeline: 定义一个或者多个 task 的执行, 以及 PipelineResource 和各种定义参数的集合</li><li>PipelineRun: 类似 task 和 taskrun 的关系: 一个定义一个执行. PipelineRun 则是 pipeline 的实际执行. 创建后也会创建 pod 来执行各个 task.</li><li><del>PipelineResource: 流水线的输入资源, 比如 github/gitlab 的源码, 某种存储服务的文件, 或者镜像等. 执行时, 也会作为 pod 的其中一个 container 来运行(比如拉取代码).</del> PipelineResource 目前处于 Alaha，至于原因可以看<a href=https://github.com/tektoncd/pipeline/blob/v0.25.0/docs/resources.md#why-arent-pipelineresources-in-beta>Why Aren&rsquo;t PipelineResources in Beta?</a></li><li>Condition: 在 pipeline 的 task 执行时通过添加 condition 来对条件进行评估, 进而判断是否执行 task. 目前是WIP的状态, 待<a href=https://github.com/tektoncd/pipeline/issues/1137>#1137</a>的完成.</li></ul><p><strong>组件:</strong></p><ul><li><code>tekton-pipelines-controller</code>: 监控 CRD 对象(TaskRun, PipelineRun)的创建, 为该次执行创建 pod.</li><li><code>tekton-pipelines-webhook</code>: 对 apiserver 提供 http 接口做 CRD 对象的校验.</li></ul><h2 id=前置条件>前置条件</h2><p>文中使用的一些工具，基本都可以通过 homebrew 安装：</p><ul><li><a href=https://stedolan.github.io/jq/>jq</a> ：操作 json 的命令行工具</li><li><a href=https://httpie.io/>httpie</a>：HTTP 客户端命令行工具</li><li><a href=https://minikube.sigs.k8s.io/docs/start/>minikube 环境</a></li></ul><p>文中的 Java 项目以及 tekton 的相关 yaml 都已经提交到了 <a href=https://github.com/addozhang/tekton-test>tekton-test</a>.</p><h2 id=安装>安装</h2><p>参考<a href=https://atbug.com/tekton-installation-and-sample/>上一篇文章</a>, 文章中有个简单的"hello world".</p><h2 id=实践>实践</h2><p>到了这里相信已经安装好了 Tekton. 我们使用<a href=https://start.spring.io/>Spring Initializer</a>生成的项目为例, 演示如何使用 Tekton 实现 CICD.</p><p>开始之前简单整理下这个项目的 CICD 流程:</p><ol><li>拉取代码</li><li>maven 打包</li><li>构建镜像并推送</li><li>部署</li></ol><p><em>注: 所有的操作都是在 <code>tekton-pipelines</code> namespace 下操作</em></p><h3 id=0x00-添加-dockerfile-和部署用的-yaml>0x00 添加 Dockerfile 和部署用的 yaml</h3><p>用于构建镜像的Dockerfile</p><div class=highlight><pre class=chroma><code class=language-fallback data-lang=fallback>FROM openjdk:8-jdk-alpine
 
 RUN mkdir /app
 WORKDIR /app
 COPY target/*.jar /app/app.jar
 ENTRYPOINT [&#34;sh&#34;, &#34;-c&#34;, &#34;java -Xmx128m -Xms64m -jar app.jar&#34;]
-</code></pre></div><p>用于部署 K8s Deployment 的deployment.yml</p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;apps/v1&#34;</span><span class=w>
+</code></pre></div><p>用于部署 K8s Deployment 的 deployment.yml，同时通过创建 <code>NodePort</code> 类型的 Service 用于访问应用。</p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;apps/v1&#34;</span><span class=w>
 </span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;Deployment&#34;</span><span class=w>
 </span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>labels</span><span class=p>:</span><span class=w>
@@ -54,29 +54,50 @@ ENTRYPOINT [&#34;sh&#34;, &#34;-c&#34;, &#34;java -Xmx128m -Xms64m -jar app.jar&
 </span><span class=w>            </span><span class=nt>periodSeconds</span><span class=p>:</span><span class=w> </span><span class=m>10</span><span class=w>
 </span><span class=w>            </span><span class=nt>successThreshold</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
 </span><span class=w>            </span><span class=nt>timeoutSeconds</span><span class=p>:</span><span class=w> </span><span class=m>10</span><span class=w>
-</span></code></pre></div><h3 id=0x01-拉取代码>0x01 拉取代码</h3><p>代码作为构建的输入, 需要提供一个 Pipeline CRD 对象来表示输入是从 git 仓库来获取代码</p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>tekton.dev/v1alpha1</span><span class=w>
-</span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>PipelineResource</span><span class=w>
+</span><span class=w></span><span class=nn>---</span><span class=w>
+</span><span class=w></span><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
+</span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Service</span><span class=w>
 </span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>git-source</span><span class=w>
+</span><span class=w>  </span><span class=nt>creationTimestamp</span><span class=p>:</span><span class=w> </span><span class=kc>null</span><span class=w>
+</span><span class=w>  </span><span class=nt>labels</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>app</span><span class=p>:</span><span class=w> </span><span class=l>tekton-test</span><span class=w>
+</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>tekton-test</span><span class=w>
 </span><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>type</span><span class=p>:</span><span class=w> </span><span class=l>git</span><span class=w>
-</span><span class=w>  </span><span class=nt>params</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>revision</span><span class=w>
-</span><span class=w>      </span><span class=nt>value</span><span class=p>:</span><span class=w> </span><span class=l>master</span><span class=w>
-</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>url</span><span class=w>
-</span><span class=w>      </span><span class=nt>value</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/addozhang/tekton-test.git</span><span class=w>
-</span></code></pre></div><p><strong>说明:</strong></p><ul><li>type: 表示资源类型为 git</li><li>revision: 表示从仓库的 master 分支拉取代码</li><li>url: 表示仓库的位置</li></ul><p>由于测试的代码放在 github 上作为public 仓库, 所以这里不需要 ssh key. 如果是私有仓库, 请参考<a href=https://github.com/tektoncd/pipeline/blob/master/docs/auth.md>官方文档</a></p><p><strong>执行:</strong>
-添加资源对象<code>kubectl apply -f resource/git-resource.yaml</code></p><p>运行<code>tkn res list</code>检查资源</p><pre><code>NAME         TYPE   DETAILS
-git-source   git    url: https://github.com/addozhang/tekton-test.git
-</code></pre><h3 id=0x02-maven-打包>0x02 maven 打包</h3><p>Task <code>source-to-image.yaml</code>: step <code>maven</code></p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>spec</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>inputs</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span><span class=nt>resources</span><span class=p>:</span><span class=w>
-</span><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>git-source</span><span class=w>
-</span><span class=w>        </span><span class=nt>type</span><span class=p>:</span><span class=w> </span><span class=l>git</span><span class=w>
+</span><span class=w>  </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>port</span><span class=p>:</span><span class=w> </span><span class=m>8080</span><span class=w>
+</span><span class=w>    </span><span class=nt>protocol</span><span class=p>:</span><span class=w> </span><span class=l>TCP</span><span class=w>
+</span><span class=w>    </span><span class=nt>targetPort</span><span class=p>:</span><span class=w> </span><span class=m>8080</span><span class=w>
+</span><span class=w>  </span><span class=nt>selector</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>app</span><span class=p>:</span><span class=w> </span><span class=l>tekton-test</span><span class=w>
+</span><span class=w>  </span><span class=nt>type</span><span class=p>:</span><span class=w> </span><span class=l>NodePort             </span><span class=w>
+</span></code></pre></div><h3 id=0x01-rbac>0x01 RBAC</h3><p>创建 ServiceAccount 用于 Pipeline 的运行。</p><p><strong>注：这里为了方便，授予了 <code>ClusterRole</code> <code>admin</code>。</strong></p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=c># serviceaccount.yaml</span><span class=w>
+</span><span class=w></span><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
+</span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>ServiceAccount</span><span class=w>
+</span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>tekton-build</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nn>---</span><span class=w>
+</span><span class=w></span><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>rbac.authorization.k8s.io/v1</span><span class=w>
+</span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>ClusterRoleBinding</span><span class=w>
+</span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>pipeline-admin-binding</span><span class=w>
+</span><span class=w></span><span class=nt>roleRef</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>apiGroup</span><span class=p>:</span><span class=w> </span><span class=l>rbac.authorization.k8s.io</span><span class=w>
+</span><span class=w>  </span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>ClusterRole</span><span class=w>
+</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>admin</span><span class=w> </span><span class=c># user cluster role admin</span><span class=w>
+</span><span class=w></span><span class=nt>subjects</span><span class=p>:</span><span class=w>
+</span><span class=w></span>- <span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>ServiceAccount</span><span class=w>
+</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>tekton-build</span><span class=w>
+</span><span class=w>  </span><span class=nt>namespace</span><span class=p>:</span><span class=w> </span><span class=l>tekton-pipelines</span><span class=w>
+</span></code></pre></div><h3 id=0x02-拉取代码>0x02 拉取代码</h3><p>代码作为构建的输入, 需要提供一个 Pipeline CRD 对象来表示输入是从 git 仓库来获取代码。</p><p>访问 Tekton Hub 可以找到现成的 <a href=https://hub.tekton.dev/tekton/task/git-clone>git-clone task</a>。</p><p>使用 kubectl 安装：</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl apply -f https://raw.githubusercontent.com/tektoncd/catalog/main/task/git-clone/0.4/git-clone.yaml
+</code></pre></div><p>或者使用 tekton-cli 安装：</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>tkn hub install task git-clone
+</code></pre></div><h3 id=0x03-maven-打包>0x03 maven 打包</h3><p>Task <code>source-to-image.yaml</code>的 step <code>maven</code>：</p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>spec</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>workspaces</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>source</span><span class=w>
 </span><span class=w>  </span><span class=nt>steps</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>maven</span><span class=w>
 </span><span class=w>      </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>maven:3.5.0-jdk-8-alpine</span><span class=w>
-</span><span class=w>      </span><span class=nt>workingDir</span><span class=p>:</span><span class=w> </span><span class=l>/workspace/git-source</span><span class=w>
+</span><span class=w>      </span><span class=nt>workingDir</span><span class=p>:</span><span class=w> </span><span class=l>$(workspaces.source.path)</span><span class=w>
 </span><span class=w>      </span><span class=nt>command</span><span class=p>:</span><span class=w>
 </span><span class=w>        </span>- <span class=l>mvn</span><span class=w>
 </span><span class=w>      </span><span class=nt>args</span><span class=p>:</span><span class=w>
@@ -90,41 +111,32 @@ git-source   git    url: https://github.com/addozhang/tekton-test.git
 </span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>m2</span><span class=w>
 </span><span class=w>      </span><span class=nt>hostPath</span><span class=p>:</span><span class=w>
 </span><span class=w>        </span><span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=l>/home/docker/.m2                  </span><span class=w>
-</span></code></pre></div><p><strong>说明:</strong></p><p>有了代码下一步就是执行 maven 的编译打包, 在<code>maven:3.5.0-jdk-8-alpine</code>镜像中执行<code>mvn</code>的相关命令.</p><p>这里挂在了一个本地的volume, 避免每次构建重复下载依赖包, 同时里面还有<code> settings.xml</code></p><p><em>注意: 对于 minikube, hostPath 请使用/data/.m2, 否则minikube重启后无法持久化</em></p><h3 id=0x03-构建镜像并推送>0x03 构建镜像并推送</h3><p>Task <code>source-to-image.yaml</code>: step <code>build-and-push</code></p><div class=highlight><pre class=chroma><code class=language-fallback data-lang=fallback>spec:
-  inputs:
-    resources:
-      - name: git-source
-        type: git
-    params:
-      - name: pathToContext
-        description: The path to the build context, used by Kaniko - within the workspace
-        default: .
-      - name: pathToDockerFile
-        description: The path to the dockerfile to build (relative to the context)
-        default: Dockerfile
-      - name: imageUrl
-        description: Url of image repository
-      - name: imageTag
-        description: Tag to apply to the built image
-        default: latest        
+</span></code></pre></div><p><strong>说明:</strong></p><p>有了代码下一步就是执行 maven 的编译打包, 在<code>maven:3.5.0-jdk-8-alpine</code>镜像中执行<code>mvn</code>的相关命令.</p><p>这里挂在了一个本地的volume, 避免每次构建重复下载依赖包, 同时里面还有<code> settings.xml</code></p><p><em>注意: 对于 minikube, hostPath 请使用/data/.m2, 否则minikube重启后无法持久化</em></p><h3 id=0x04-构建镜像并推送>0x04 构建镜像并推送</h3><p>Task <code>source-to-image.yaml</code> 的 step <code>build-and-push</code>：</p><div class=highlight><pre class=chroma><code class=language-fallback data-lang=fallback>spec:
+  params:
+    - name: pathToDockerFile
+      description: The path to the dockerfile to build (relative to the context)
+      default: Dockerfile
+    - name: imageUrl
+      description: Url of image repository
+    - name: imageTag
+      description: Tag to apply to the built image
+      default: latest
+  workspaces:
+    - name: source
+    - name: dockerconfig
+      mountPath: /kaniko/.docker # config.json 的挂载目录
   steps:
     - name: build-and-push
-      image: gcr.io/kaniko-project/executor
+      image: gcr.io/kaniko-project/executor:v1.6.0-debug
       command:
         - /kaniko/executor
       args:
-        - --dockerfile=$(inputs.params.pathToDockerFile)
-        - --destination=$(inputs.params.imageUrl):$(inputs.params.imageTag)
-        - --context=/workspace/git-source/$(inputs.params.pathToContext)
-</code></pre></div><p><strong>说明:</strong></p><p>镜像的构建, 我们采用了 kaniko.</p><p>镜像仓库我们选择了Docker Hub, 推送的时候需要使用 credentials.</p><p>先添加<code> docker-registry</code>类型的 <code>secret</code>:</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl create secret docker-registry dockerhub --docker-server<span class=o>=</span>https://index.docker.io/v1/ --docker-username<span class=o>=</span>&lt;USERNAME&gt; --docker-password<span class=o>=</span>&lt;PASSWORD&gt;
-</code></pre></div><p>创建 <code>ServiceAccount</code>, 并指定上面创建的 secret</p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
-</span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>ServiceAccount</span><span class=w>
-</span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>tekton-test</span><span class=w>
-</span><span class=w></span><span class=nt>secrets</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>dockerhub</span><span class=w>
-</span></code></pre></div><p>执行 pipeline 的时候需要该<code> ServiceAccount</code>. (后面会提到)</p><p><strong>执行:</strong></p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl apply -f tasks/source-to-image.yaml
-</code></pre></div><h3 id=0x04-部署>0x04 部署</h3><p>deploy-to-k8s.yaml:</p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>tekton.dev/v1alpha1</span><span class=w>
+        - --dockerfile=$(params.pathToDockerFile)
+        - --destination=$(params.imageUrl):$(params.imageTag)
+        - --context=$(workspaces.source.path)
+</code></pre></div><p><strong>说明:</strong></p><p>镜像的构建, 我们采用了 kaniko。</p><p>镜像仓库我们选择了Docker Hub, 推送的时候需要使用 credentials。</p><p>kaniko 需要将 docker config 的文件存在于 <code>/kanika/.docker</code> 目录下。这里的思路是将 docker 的 <code>config.json</code>，以 <code>secret</code> 的方式持久化，在通过先添加<code> docker-registry</code>类型的 <code>secret</code>，然后通过 <code>workspace</code> 的方式输入到 kaniko 运行环境中。</p><p><code>config.json</code> 里面保存的 json 结构化的数据，为了方便通过 dry run 创建</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl create secret docker-registry dockerhub --docker-server<span class=o>=</span>https://index.docker.io/v1/ --docker-username<span class=o>=[</span>USERNAME<span class=o>]</span> --docker-password<span class=o>=[</span>PASSWORD<span class=o>]</span> --dry-run<span class=o>=</span>client -o json <span class=p>|</span> jq -r <span class=s1>&#39;.data.&#34;.dockerconfigjson&#34;&#39;</span> <span class=p>|</span> base64 -d &gt; /tmp/config.json <span class=o>&amp;&amp;</span> kubectl create secret generic docker-config --from-file<span class=o>=</span>/tmp/config.json <span class=o>&amp;&amp;</span> rm -f /tmp/config.json
+</code></pre></div><p><strong>执行:</strong></p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl apply -f tasks/source-to-image.yaml
+</code></pre></div><h3 id=0x05-部署>0x05 部署</h3><p>deploy-to-k8s.yaml:</p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>tekton.dev/v1alpha1</span><span class=w>
 </span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Task</span><span class=w>
 </span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>deploy-to-k8s</span><span class=w>
@@ -145,17 +157,15 @@ git-source   git    url: https://github.com/addozhang/tekton-test.git
 </span><span class=w>        </span>- <span class=s2>&#34;apply&#34;</span><span class=w>
 </span><span class=w>        </span>- <span class=s2>&#34;-f&#34;</span><span class=w>
 </span><span class=w>        </span>- <span class=s2>&#34;/workspace/git-source/$(inputs.params.pathToYamlFile)&#34;</span><span class=w>
-</span></code></pre></div><p><strong>说明:</strong></p><ul><li>pathToYamlFile: 指定部署应用的 yaml.</li></ul><p>需要为上面创建的 <code>ServiceAccount</code> 添加分配权限用于对象的操作: 这里直接给了 <code>admin</code> <code>clusterrole</code>, 实际不需要对权限进行细分控制.</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl create clusterrolebinding pipeline-admin-binding --clusterrole<span class=o>=</span>admin --serviceaccount<span class=o>=</span>tekton-pipelines:tekton-test
-</code></pre></div><p><strong>执行:</strong></p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl apply -f tasks/deploy-to-k8s.yaml
-</code></pre></div><h3 id=0x05-组装流水线>0x05 组装流水线</h3><p><code>build-pipeline.yaml</code></p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>tekton.dev/v1alpha1</span><span class=w>
+</span></code></pre></div><p><strong>说明:</strong></p><ul><li>pathToYamlFile: 指定部署应用的 yaml。</li></ul><p><strong>执行:</strong></p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl apply -f tasks/deploy-to-k8s.yaml
+</code></pre></div><h3 id=0x06-组装流水线>0x06 组装流水线</h3><p><code>build-pipeline.yaml</code></p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>tekton.dev/v1beta1</span><span class=w>
 </span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Pipeline</span><span class=w>
 </span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>build-pipeline</span><span class=w>
 </span><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>resources</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>git-source</span><span class=w>
-</span><span class=w>      </span><span class=nt>type</span><span class=p>:</span><span class=w> </span><span class=l>git</span><span class=w>
 </span><span class=w>  </span><span class=nt>params</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>git-url</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>git-revision</span><span class=w>
 </span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>pathToContext</span><span class=w>
 </span><span class=w>      </span><span class=nt>description</span><span class=p>:</span><span class=w> </span><span class=l>The path to the build context, used by Kaniko - within the workspace</span><span class=w>
 </span><span class=w>      </span><span class=nt>default</span><span class=p>:</span><span class=w> </span><span class=l>.</span><span class=w>
@@ -163,35 +173,49 @@ git-source   git    url: https://github.com/addozhang/tekton-test.git
 </span><span class=w>      </span><span class=nt>description</span><span class=p>:</span><span class=w> </span><span class=l>Url of image repository</span><span class=w>
 </span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>imageTag</span><span class=w>
 </span><span class=w>      </span><span class=nt>description</span><span class=p>:</span><span class=w> </span><span class=l>Tag to apply to the built image</span><span class=w>
+</span><span class=w>  </span><span class=nt>workspaces</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>git-source</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>docker-config</span><span class=w>
 </span><span class=w>  </span><span class=nt>tasks</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>source-to-image</span><span class=w>
-</span><span class=w>    </span><span class=nt>taskRef</span><span class=p>:</span><span class=w>
-</span><span class=w>      </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>source-to-image</span><span class=w>
-</span><span class=w>    </span><span class=nt>params</span><span class=p>:</span><span class=w>
-</span><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>pathToContext</span><span class=w>
-</span><span class=w>        </span><span class=nt>value</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;$(params.pathToContext)&#34;</span><span class=w>
-</span><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>imageUrl</span><span class=w>
-</span><span class=w>        </span><span class=nt>value</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;$(params.imageUrl)&#34;</span><span class=w>
-</span><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>imageTag</span><span class=w>
-</span><span class=w>        </span><span class=nt>value</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;$(params.imageTag)&#34;</span><span class=w>
-</span><span class=w>    </span><span class=nt>resources</span><span class=p>:</span><span class=w>
-</span><span class=w>      </span><span class=nt>inputs</span><span class=p>:</span><span class=w>
-</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>git-source</span><span class=w>
-</span><span class=w>          </span><span class=nt>resource</span><span class=p>:</span><span class=w> </span><span class=l>git-source</span><span class=w>
-</span><span class=w>  </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>deploy-to-k8s</span><span class=w>
-</span><span class=w>    </span><span class=nt>runAfter</span><span class=p>:</span><span class=w>
-</span><span class=w>      </span>- <span class=l>source-to-image</span><span class=w>
-</span><span class=w>    </span><span class=nt>taskRef</span><span class=p>:</span><span class=w>
-</span><span class=w>      </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>deploy-to-k8s</span><span class=w>
-</span><span class=w>    </span><span class=nt>params</span><span class=p>:</span><span class=w>
-</span><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>pathToYamlFile</span><span class=w>
-</span><span class=w>        </span><span class=nt>value</span><span class=p>:</span><span class=w> </span><span class=l>deployment.yaml</span><span class=w>
-</span><span class=w>    </span><span class=nt>resources</span><span class=p>:</span><span class=w>
-</span><span class=w>      </span><span class=nt>inputs</span><span class=p>:</span><span class=w>
-</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>git-source</span><span class=w>
-</span><span class=w>          </span><span class=nt>resource</span><span class=p>:</span><span class=w> </span><span class=l>git-source</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>fetch-from-git</span><span class=w>
+</span><span class=w>      </span><span class=nt>taskRef</span><span class=p>:</span><span class=w>
+</span><span class=w>        </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>git-clone</span><span class=w>
+</span><span class=w>      </span><span class=nt>params</span><span class=p>:</span><span class=w>
+</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>url</span><span class=w>
+</span><span class=w>          </span><span class=nt>value</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;$(params.git-url)&#34;</span><span class=w>
+</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>revision</span><span class=w>
+</span><span class=w>          </span><span class=nt>value</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;$(params.git-revision)&#34;</span><span class=w>
+</span><span class=w>      </span><span class=nt>workspaces</span><span class=p>:</span><span class=w>
+</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>output</span><span class=w>
+</span><span class=w>          </span><span class=nt>workspace</span><span class=p>:</span><span class=w> </span><span class=l>git-source</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>source-to-image</span><span class=w>
+</span><span class=w>      </span><span class=nt>taskRef</span><span class=p>:</span><span class=w>
+</span><span class=w>        </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>source-to-image</span><span class=w>
+</span><span class=w>      </span><span class=nt>params</span><span class=p>:</span><span class=w>
+</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>imageUrl</span><span class=w>
+</span><span class=w>          </span><span class=nt>value</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;$(params.imageUrl)&#34;</span><span class=w>
+</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>imageTag</span><span class=w>
+</span><span class=w>          </span><span class=nt>value</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;$(params.imageTag)&#34;</span><span class=w>
+</span><span class=w>      </span><span class=nt>workspaces</span><span class=p>:</span><span class=w>
+</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>source</span><span class=w>
+</span><span class=w>          </span><span class=nt>workspace</span><span class=p>:</span><span class=w> </span><span class=l>git-source</span><span class=w>
+</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>dockerconfig</span><span class=w>
+</span><span class=w>          </span><span class=nt>workspace</span><span class=p>:</span><span class=w> </span><span class=l>docker-config</span><span class=w>
+</span><span class=w>      </span><span class=nt>runAfter</span><span class=p>:</span><span class=w>
+</span><span class=w>        </span>- <span class=l>fetch-from-git</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>deploy-to-k8s</span><span class=w>
+</span><span class=w>      </span><span class=nt>taskRef</span><span class=p>:</span><span class=w> 
+</span><span class=w>        </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>deploy-to-k8s</span><span class=w>
+</span><span class=w>      </span><span class=nt>params</span><span class=p>:</span><span class=w>
+</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>pathToYamlFile</span><span class=w>
+</span><span class=w>          </span><span class=nt>value</span><span class=p>:</span><span class=w> </span><span class=l>deployment.yaml</span><span class=w>
+</span><span class=w>      </span><span class=nt>workspaces</span><span class=p>:</span><span class=w>
+</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>source</span><span class=w>
+</span><span class=w>          </span><span class=nt>workspace</span><span class=p>:</span><span class=w> </span><span class=l>git-source</span><span class=w>
+</span><span class=w>      </span><span class=nt>runAfter</span><span class=p>:</span><span class=w>
+</span><span class=w>        </span>- <span class=l>source-to-image</span><span class=w>
 </span></code></pre></div><p><strong>执行:</strong></p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl apply -f tasks/deploy-to-k8s.yaml
-</code></pre></div><h3 id=0x06-执行流水线>0x06 执行流水线</h3><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>tekton.dev/v1alpha1</span><span class=w>
+</code></pre></div><h3 id=0x07-执行流水线>0x07 执行流水线</h3><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>tekton.dev/v1beta1</span><span class=w>
 </span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>PipelineRun</span><span class=w>
 </span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>generateName</span><span class=p>:</span><span class=w> </span><span class=l>generic-pr-</span><span class=w>
@@ -199,19 +223,32 @@ git-source   git    url: https://github.com/addozhang/tekton-test.git
 </span><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>pipelineRef</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>build-pipeline</span><span class=w>
-</span><span class=w>  </span><span class=nt>resources</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>git-source</span><span class=w>
-</span><span class=w>      </span><span class=nt>resourceRef</span><span class=p>:</span><span class=w>
-</span><span class=w>        </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>git-source</span><span class=w>
 </span><span class=w>  </span><span class=nt>params</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>git-revision</span><span class=w>
+</span><span class=w>      </span><span class=nt>value</span><span class=p>:</span><span class=w> </span><span class=l>main</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>git-url</span><span class=w>
+</span><span class=w>      </span><span class=nt>value</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/addozhang/tekton-test.git  </span><span class=w>
 </span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>imageUrl</span><span class=w>
 </span><span class=w>      </span><span class=nt>value</span><span class=p>:</span><span class=w> </span><span class=l>addozhang/tekton-test</span><span class=w>
 </span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>imageTag</span><span class=w>
 </span><span class=w>      </span><span class=nt>value</span><span class=p>:</span><span class=w> </span><span class=l>latest</span><span class=w>
-</span><span class=w>  </span><span class=nt>serviceAccountName</span><span class=p>:</span><span class=w> </span><span class=l>tekton-test</span><span class=w>
+</span><span class=w>  </span><span class=nt>workspaces</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>git-source</span><span class=w>
+</span><span class=w>      </span><span class=nt>volumeClaimTemplate</span><span class=p>:</span><span class=w>
+</span><span class=w>        </span><span class=nt>spec</span><span class=p>:</span><span class=w>
+</span><span class=w>          </span><span class=nt>accessModes</span><span class=p>:</span><span class=w>
+</span><span class=w>          </span>- <span class=l>ReadWriteOnce</span><span class=w>
+</span><span class=w>          </span><span class=nt>resources</span><span class=p>:</span><span class=w>
+</span><span class=w>            </span><span class=nt>requests</span><span class=p>:</span><span class=w>
+</span><span class=w>              </span><span class=nt>storage</span><span class=p>:</span><span class=w> </span><span class=l>1Gi</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>docker-config</span><span class=w>
+</span><span class=w>      </span><span class=nt>secret</span><span class=p>:</span><span class=w>
+</span><span class=w>        </span><span class=nt>secretName</span><span class=p>:</span><span class=w> </span><span class=l>docker-config</span><span class=w>
+</span><span class=w>  </span><span class=nt>serviceAccountName</span><span class=p>:</span><span class=w> </span><span class=l>tekton-build</span><span class=w>
 </span></code></pre></div><p><strong>执行:</strong></p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl apply -f run/run.yaml
-</code></pre></div><h3 id=0x07结果>0x07结果</h3><p>执行流水线后, 可以看到分别创建了下面的几个 pod:</p><ol><li><code>generic-pipeline-run-source-to-image-ltcnh-pod-xxxxx</code></li><li><code>generic-pipeline-run-deploy-to-k8s-lxmnh-pod-xxxxx</code></li><li><code>tekton-test-xxxx-xxxx</code></li></ol><p>就此我们完成了使用 Tekton 部署 Java 应用</p><p>做个端口转发:</p><div class=highlight><pre class=chroma><code class=language-fallback data-lang=fallback>kubectl port-forward &lt;POD_NAME&gt; 8080
-</code></pre></div><p>访问应用的<code>/hi</code>接口: <code>curl http://localhost:8080/hi</code>, 成功返回<code> hello world</code></p><h2 id=总结>总结</h2><p>目前 Tekton 还只是出于 alpha 阶段, 最新的版本是<code> 0.9.0</code>. 提供的 Dashboard 也是比较简陋的, 后期会提供可视化的界面.</p><p>基于 CRD 的实现让 Tekton 在实际使用中可以灵活的设计自己的 CICD 流程.</p><p>接下来准备再写下<a href=https://github.com/tektoncd/dashboard>Dashboard</a>的安装, 及<a href=https://github.com/tektoncd/triggers>Triggers</a>的入门.</p><p>文中的 Java 项目以及 tekton 的相关 yaml 都已经提交到了 <a href=https://github.com/addozhang/tekton-test>tekton-test</a>.</p><p>更多文章:</p><ul><li><a href=https://atbug.com/tekton-dashboard-installation/>Tekton Dashboard 安装</a></li><li><a href=https://atbug.com/tekton-trigger-glance/>Tekton Trigger 介绍</a></li><li><a href=https://atbug.com/tekton-trigger-practice/>Tekton Trigger 实战</a></li></ul><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//addozhang.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></article><aside class=sidebar><section class=sidebar_inner><h2>张晓辉</h2><div class=sidebar_description><ul><li>资深码农、云原生践行者</li><li>Kubernetes、DevOps、微服务</li></ul><p><img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/kubelet-source-code-analysis/ class=nav-link title="源码解析：一文读懂 Kubelet">源码解析：一文读懂 Kubelet</a></li><li><a href=https://atbug.com/programming-archive-metrics-with-pipy/ class=nav-link title="可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读">可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读</a></li><li><a href=https://atbug.com/auto-scaling-best-practice-in-kubernetes/ class=nav-link title="Kubernetes 的自动伸缩你用对了吗？">Kubernetes 的自动伸缩你用对了吗？</a></li><li><a href=https://atbug.com/glance-at-programmable-gateway-pipy/ class=nav-link title="初探可编程网关 Pipy">初探可编程网关 Pipy</a></li><li><a href=https://atbug.com/microservicilities-quarkus/ class=nav-link title="使用 Quarkus 和 MicroProfile 实现微服务特性">使用 Quarkus 和 MicroProfile 实现微服务特性</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
+</code></pre></div><h3 id=0x08-结果>0x08 结果</h3><p>执行流水线后, 可以看到分别创建了下面的几个 pod:</p><ul><li>generic-pipeline-run-deploy-to-k8s-xxx</li><li>generic-pipeline-run-fetch-from-git-xxx</li><li>generic-pipeline-run-source-to-image-xxx</li></ul><p>以及我们的应用 <code>tekton-test-xxx</code>，发起请求测试：</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>$ http <span class=k>$(</span>minikube ip<span class=k>)</span>:<span class=k>$(</span>kubectl get svc tekton-test -o <span class=nv>jsonpath</span><span class=o>=</span><span class=s2>&#34;{.spec.ports[0].nodePort}&#34;</span><span class=k>)</span>/hi --body
+hello world
+</code></pre></div><h2 id=总结>总结</h2><p>目前 Tekton 进入 beta 阶段, 最新的版本是 <code>0.25.0</code>。基于 CRD 的实现让 Tekton 在实际使用中可以灵活的设计自己的 CICD 流程.</p><p>生态也越来越完善，比如 <a href=https://hub.tekton.dev/>Tekton Hub</a> 提供了大量的可重用最佳实现的 Task 和 Pipeline。</p><p>下一篇，我们尝试下如何在 Jenkins 中与 Tekton Pipeline 进行交互。</p><p>更多文章:</p><ul><li><a href=https://mp.weixin.qq.com/s/_hK6bqODJv3LrwnQaou-hA>Tekton 的工作原理</a></li><li><a href=https://atbug.com/tekton-dashboard-installation/>Tekton Dashboard 安装</a></li><li><a href=https://atbug.com/tekton-trigger-glance/>Tekton Trigger 介绍</a></li><li><a href=https://atbug.com/tekton-trigger-practice/>Tekton Trigger 实战</a></li></ul><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//addozhang.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></article><aside class=sidebar><section class=sidebar_inner><h2>张晓辉</h2><div class=sidebar_description><ul><li>资深码农、云原生践行者</li><li>Kubernetes、DevOps、微服务</li></ul><p><img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/kubelet-source-code-analysis/ class=nav-link title="源码解析：一文读懂 Kubelet">源码解析：一文读懂 Kubelet</a></li><li><a href=https://atbug.com/programming-archive-metrics-with-pipy/ class=nav-link title="可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读">可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读</a></li><li><a href=https://atbug.com/auto-scaling-best-practice-in-kubernetes/ class=nav-link title="Kubernetes 的自动伸缩你用对了吗？">Kubernetes 的自动伸缩你用对了吗？</a></li><li><a href=https://atbug.com/glance-at-programmable-gateway-pipy/ class=nav-link title="初探可编程网关 Pipy">初探可编程网关 Pipy</a></li><li><a href=https://atbug.com/microservicilities-quarkus/ class=nav-link title="使用 Quarkus 和 MicroProfile 实现微服务特性">使用 Quarkus 和 MicroProfile 实现微服务特性</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
 <span class=button_tally>45</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" title=学习>学习
 <span class=button_tally>40</span></a>
