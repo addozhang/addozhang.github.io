@@ -162,7 +162,7 @@ hello world
 &lt;li>&lt;a href="https://www.jenkins.io/doc/book/installing/kubernetes/">Jenkins on Kubernetes&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://github.com/jenkinsci/tekton-client-plugin/blob/master/docs/tutorial.md">Tekton Client Plugin Tutorial&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.jenkins.io/blog/2021/04/21/tekton-plugin/#easily-reuse-tekton-and-jenkins-x-from-jenkins">Easily reuse Tekton and Jenkins X from Jenkins&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>启动与 web 控制台的使用</title><link>https://atbug.com/pipy-console-introduction/</link><pubDate>Wed, 23 Jun 2021 00:43:39 +0800</pubDate><guid>https://atbug.com/pipy-console-introduction/</guid><description>
+&lt;/ul></description></item><item><title>Pipy 启动与 web 控制台的使用</title><link>https://atbug.com/pipy-console-introduction/</link><pubDate>Wed, 23 Jun 2021 00:43:39 +0800</pubDate><guid>https://atbug.com/pipy-console-introduction/</guid><description>
 &lt;h2 id="启动">启动&lt;/h2>
 &lt;p>Pipy 编译之后的 &lt;code>bin&lt;/code> 目录中只有一个 11 Mb 大小的可执行文件。&lt;/p>
 &lt;p>启动也很简单，只需要指定 javascript 脚本文件即可：&lt;code>bin/pipy path_to_js_file&lt;/code>。&lt;/p>
