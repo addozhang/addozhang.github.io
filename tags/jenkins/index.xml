@@ -3,7 +3,7 @@
 &lt;p>关于如何使用 Tekton Pipeline 实现 CICD 可以看这篇文章 &lt;a href="https://atbug.com/tekton-pipeline-practice/">云原生 CICD: Tekton Pipeline 实战&lt;/a>&lt;/p>
 &lt;p>本文用于构建的项目以及所有 manifest yaml 都在可以在&lt;a href="https://github.com/addozhang/tekton-test">这里&lt;/a>下载。&lt;/p>
 &lt;h2 id="tldr">TL;DR&lt;/h2>
-&lt;p>惯例，先上总结。&lt;code>tekton-client-plugin&lt;/code> 虽然还是处于初期阶段，但是 &lt;em>其价值非常明显，尤其是对先用使用 Jenkins 作为 CICD 实现的用户来说。可以省掉用户界面的开发成本，而且尽可能少的改变用户习惯&lt;/em> ，依靠 GitOps 手段可以控制迁移的节奏。&lt;/p>
+&lt;p>惯例，先上总结。&lt;code>tekton-client-plugin&lt;/code> 虽然还是处于初期阶段，但是 &lt;em>其价值非常明显，尤其是对先用使用 Jenkins 作为 CICD 实现的用户来说。从 Jenkins 迁移到云原生的 Tekton 时，可以省掉用户界面的开发成本，而且尽可能少的改变用户习惯&lt;/em> ，依靠版本管理可以控制迁移的节奏。&lt;/p>
 &lt;p>&lt;code>tekton-client-plugin&lt;/code> 在今年 5 月 7 日发布的 &lt;code>1.0.0&lt;/code> 版本，目前为 &lt;code>1.0.02&lt;/code>。目前还处于初期阶段，我个人感觉目前仅仅算是打通 Jenkins 与 Tekton 交互这条路，扩展性还不够好。&lt;/p>
 &lt;p>比如目前仅仅支持如下几个参数注入到 &lt;code>PipelineRun&lt;/code> 中，难以支撑复杂的流程控制，&lt;a href="https://github.com/jenkinsci/tekton-client-plugin/blob/1.0.2/src/main/java/org/waveywaves/jenkins/plugins/tekton/client/build/create/CreateRaw.java#L292">支持的 Pipeline 参数 hardcode 在代码中&lt;/a>。&lt;/p>
 &lt;blockquote>
