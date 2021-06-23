@@ -7,7 +7,7 @@
 </code></pre></div><p>如果依赖的服务预期会返回一个发出响应的Observable对象, 则构造一个<code>HystrixObservableCommand</code>对象, 例如:</p><div class=highlight><pre class=chroma><code class=language-java data-lang=java><span class=n>HystrixObservableCommand</span> <span class=n>command</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HystrixObservableCommand</span><span class=o>(</span><span class=n>arg1</span><span class=o>,</span> <span class=n>arg2</span><span class=o>);</span>
 </code></pre></div></li><li><p>执行Command</p></li><li><p>响应是否被缓存?</p><p>如果Command的缓存请求被开启, 同时请求的响应在缓存中可用, 缓存的响应被立即以一个<code>Observable</code>的方式返回.</p></li><li><p>断路器是否开启?</p><p>执行Command时, Hystrix会检查断路器(circuti-breaker)是否开始回路(circuit).</p><p>如果回路开启, Hystrix将不会执行Command, 而直接去到流程<strong>8</strong>: Get the Fallback
 如果关闭, 则执行流程<strong>5</strong>检查是否有足够的容量来运行该命令</p></li><li><p>线程池/队列/限号量是否满?</p><p>假如与Command相关的线程池和队列(或者信号量, 不适用隔离线程的话)满了, Hystrix将不会执行Command, 而是直接去到流程<strong>8</strong>.</p></li><li><p><code>HystrixObservableCommand.construct()</code>或<code>HystrixCommand.run()</code></p><p>Hystrix使用下面任一的方式向依赖的服务发出请求:</p><ul><li><code>HystrixCommand.run()</code> 返回单个响应或抛出异常</li><li><code>HystrixObservableCommand.construct()</code> 返回一个发出响应的Observable对象, 或者发送<code>onError</code>通知</li></ul><p>如果<code>run()</code>或者<code>construct()</code>方法执行超过Command的超时设置, 线程会抛出一个<code>TimeoutException</code>(或者独立的timer线程抛出, 如果Command不是运行在它自己的线程上). 这是Hystrix直接去到流程<strong>8</strong>. 获取<code>Fallback</code>, 如果没有cancel/interrup, 则抛弃<code>run()</code>或<code>construct()</code>的最终返回值.</p><p>请注意, 没有任何方法可以强制任务线程停止工作, 最佳的方式是Hystrix抛出一个<code>InterruptException</code>. 如果Hystrix封装的任务忽略<code>InterruptException</code>, 该任务线程会继续工作, 即使客户端已经收到了一个<code>TimeoutException</code>. 这种行为会是Hystrix的线程池饱和, 尽管负载<code>正确地流出(correctly shed)</code>. 大多数Java HTTP客户端库不解释InterruptedExceptions. 因此, 请确保在HTTP客户端上正确配置连接和读/写超时.</p><p>如果Command执行没有超时而返回一个响应, Hystrix在执行某些日志记录和指标报告之后返回这个响应.</p></li><li><p>计算电路健康</p><p>Hystrix将成功, 失败, 拒绝服务和超时上报给断路器, 断路器维护着一个计算统计数据的计数器.</p><p>它通过这些统计数据决定断路器何时应该打开, 在哪个点开始短路后续的请求知道恢复期过去, 或者决定在第一次健康检查请求结束后是否要关闭断路器.</p></li><li><p>获取<code>Fallback</code></p><p>在command执行失败后: 当<code>run()</code>或<code>construct()</code>抛出异常(6), command因为断路器开启而短路(4), command的线程池和队列或者计数器处于满负荷(6), 或者执行超时, Hystrix尝试转向你的<code>Fallback</code>.</p></li><li><p>返回成功的响应</p><p>如果Command处理成功, 它将以<code>Obervable</code>的实行返回response或者responses给调用者. 取决于上面流程2中的Command的执行方式, 该<code>Observable</code>可能在返回给你之前被转换:</p><p><img src=http://7xvxng.com1.z0.glb.clouddn.com/15279954901603.png alt></p><ul><li>execute() - 返回一个<code>Fature</code>对象, 可以通过调用<code>get()</code>获取<code>Obervable</code>返回的单个值</li><li>queue() - 把<code>Observable</code>转换为<code>BlockingObservable</code>, 因此<code>BlockingObservable</code>可以被转换成<code>Future</code>, 并返回</li><li>observe() - 理解订阅<code>Observable</code>, 并开始Command的执行流程. 返回一个<code>Observable</code>, 当订阅它时, 重播返回和通知(replay emissions and notifiactions).</li><li>toObservable() - 不变地返回Observable; 必须订阅它才能真正开始导致执行命令的流程.</li></ul><p>更详细的流程图<a href=https://design.codelytics.io/hystrix/how-it-works></a></p></li></ol><h2 id=断路器>断路器</h2><p><img src=http://7xvxng.com1.z0.glb.clouddn.com/15279966397767.png alt></p><ol><li>假设通过断路器的负载达到了阈值 (HystrixCommandProperties.circuitBreakerRequestVolumeThreshold())</li><li>假设错误百分比超过错误的阈值 (HystrixCommandProperties.circuitBreakerErrorThresholdPercentage())</li><li>断路器状态从关闭变为打开</li><li>打开后, 断路器会短路所有针对该断路器的请求</li><li>过了一段时间后(HystrixCommandProperties.circuitBreakerSleepWindowInMilliseconds()), 下一条请求会被放行(半开状态). 如果请求失败, 断路器重回打开状态(OPEN)并持续一个睡眠窗口(sleep window). 如果成功, 状态变为关闭(CLOSED). 下个请求从逻辑1开始.</li></ol><p>翻译自<a href=https://github.com/Netflix/Hystrix/wiki/How-it-Works>Hystrix Wiki - How it works</a></p><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//addozhang.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></article><aside class=sidebar><section class=sidebar_inner><h2>张晓辉</h2><div class=sidebar_description><ul><li>资深码农、云原生践行者</li><li>Kubernetes、DevOps、微服务</li></ul><p>微信订阅号：云原生指北。
-<img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/pipy-console-introduction/ class=nav-link title="启动与 web 控制台的使用">启动与 web 控制台的使用</a></li><li><a href=https://atbug.com/tekton-pipeline-practice/ class=nav-link title="云原生 CICD: Tekton Pipeline 实战">云原生 CICD: Tekton Pipeline 实战</a></li><li><a href=https://atbug.com/kubelet-source-code-analysis/ class=nav-link title="源码解析：一文读懂 Kubelet">源码解析：一文读懂 Kubelet</a></li><li><a href=https://atbug.com/programming-archive-metrics-with-pipy/ class=nav-link title="可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读">可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读</a></li><li><a href=https://atbug.com/auto-scaling-best-practice-in-kubernetes/ class=nav-link title="Kubernetes 的自动伸缩你用对了吗？">Kubernetes 的自动伸缩你用对了吗？</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
+<img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/jenkins-interact-with-tekton-pipelines-via-plugin/ class=nav-link title="# Jenkins 如何与 Kubernetes 集群的 Tekton Pipeline 交互？"># Jenkins 如何与 Kubernetes 集群的 Tekton Pipeline 交互？</a></li><li><a href=https://atbug.com/pipy-console-introduction/ class=nav-link title="启动与 web 控制台的使用">启动与 web 控制台的使用</a></li><li><a href=https://atbug.com/tekton-pipeline-practice/ class=nav-link title="云原生 CICD: Tekton Pipeline 实战">云原生 CICD: Tekton Pipeline 实战</a></li><li><a href=https://atbug.com/kubelet-source-code-analysis/ class=nav-link title="源码解析：一文读懂 Kubelet">源码解析：一文读懂 Kubelet</a></li><li><a href=https://atbug.com/programming-archive-metrics-with-pipy/ class=nav-link title="可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读">可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
 <span class=button_tally>45</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" title=学习>学习
 <span class=button_tally>40</span></a>
@@ -15,12 +15,12 @@
 <span class=button_tally>7</span></a>
 <a href=https://atbug.com/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/ class="post_tag button button_translucent" title=源码解析>源码解析
 <span class=button_tally>4</span></a>
+<a href=https://atbug.com/categories/devops/ class="post_tag button button_translucent" title=devops>DEVOPS
+<span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/quickstart/ class="post_tag button button_translucent" title=quickstart>QUICKSTART
 <span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/ class="post_tag button button_translucent" title=软件>软件
 <span class=button_tally>2</span></a>
-<a href=https://atbug.com/categories/devops/ class="post_tag button button_translucent" title=devops>DEVOPS
-<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/envoy/ class="post_tag button button_translucent" title=envoy>ENVOY
 <span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/serverless/ class="post_tag button button_translucent" title=serverless>SERVERLESS
@@ -34,7 +34,7 @@
 <a href=https://atbug.com/categories/%E6%8A%98%E8%85%BE/ class="post_tag button button_translucent" title=折腾>折腾
 <span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E6%95%99%E7%A8%8B/ class="post_tag button button_translucent" title=教程>教程
-<span class=button_tally>1</span></a><br><div class="post_tags_toggle button">所有分类</div><div class=post_tags><div class=tags_list><a href=https://atbug.com/categories/devops/ class="post_tag button button_translucent" data-position=1 title=devops>DEVOPS<span class=button_tally>1</span></a>
+<span class=button_tally>1</span></a><br><div class="post_tags_toggle button">所有分类</div><div class=post_tags><div class=tags_list><a href=https://atbug.com/categories/devops/ class="post_tag button button_translucent" data-position=2 title=devops>DEVOPS<span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/envoy/ class="post_tag button button_translucent" data-position=1 title=envoy>ENVOY<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/quickstart/ class="post_tag button button_translucent" data-position=2 title=quickstart>QUICKSTART<span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/serverless/ class="post_tag button button_translucent" data-position=1 title=serverless>SERVERLESS<span class=button_tally>1</span></a>
@@ -54,16 +54,16 @@
 <a href=https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/ class="post_tag button button_translucent" data-position=2 title=软件>软件<span class=button_tally>2</span></a><div class=tags_sort><span title="sort alphabetically">[A~Z]</span><span title="sort by count">[0~9]</span></div><span class=tags_hide><svg class="icon"><use xlink:href="#closeme"/></svg></span></div></div></nav></div><div><h2 class="mt-4 taxonomy" id=tags-section>标签</h2><nav class=tags_nav><a href=https://atbug.com/tags/java/ class="post_tag button button_translucent" title=java>JAVA
 <span class=button_tally>25</span></a>
 <a href=https://atbug.com/tags/kubernetes/ class="post_tag button button_translucent" title=kubernetes>KUBERNETES
-<span class=button_tally>17</span></a>
+<span class=button_tally>18</span></a>
 <a href=https://atbug.com/tags/kafka/ class="post_tag button button_translucent" title=kafka>KAFKA
 <span class=button_tally>9</span></a>
 <a href=https://atbug.com/tags/go/ class="post_tag button button_translucent" title=go>GO
 <span class=button_tally>8</span></a>
+<a href=https://atbug.com/tags/tekton/ class="post_tag button button_translucent" title=tekton>TEKTON
+<span class=button_tally>8</span></a>
 <a href=https://atbug.com/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/ class="post_tag button button_translucent" title=云原生>云原生
 <span class=button_tally>8</span></a>
 <a href=https://atbug.com/tags/spring-cloud/ class="post_tag button button_translucent" title=spring-cloud>SPRING-CLOUD
-<span class=button_tally>7</span></a>
-<a href=https://atbug.com/tags/tekton/ class="post_tag button button_translucent" title=tekton>TEKTON
 <span class=button_tally>7</span></a>
 <a href=https://atbug.com/tags/cicd/ class="post_tag button button_translucent" title=cicd>CICD
 <span class=button_tally>6</span></a>
@@ -71,14 +71,14 @@
 <span class=button_tally>6</span></a>
 <a href=https://atbug.com/tags/spring/ class="post_tag button button_translucent" title=spring>SPRING
 <span class=button_tally>5</span></a>
+<a href=https://atbug.com/tags/jenkins/ class="post_tag button button_translucent" title=jenkins>JENKINS
+<span class=button_tally>4</span></a>
 <a href=https://atbug.com/tags/netflix/ class="post_tag button button_translucent" title=netflix>NETFLIX
 <span class=button_tally>4</span></a>
 <a href=https://atbug.com/tags/quarkus/ class="post_tag button button_translucent" title=quarkus>QUARKUS
 <span class=button_tally>4</span></a>
 <a href=https://atbug.com/tags/%E6%9E%B6%E6%9E%84/ class="post_tag button button_translucent" title=架构>架构
-<span class=button_tally>4</span></a>
-<a href=https://atbug.com/tags/eureka/ class="post_tag button button_translucent" title=eureka>EUREKA
-<span class=button_tally>3</span></a><br><div class="post_tags_toggle button">所有标签</div><div class=post_tags><div class=tags_list><a href=https://atbug.com/tags/alpine/ class="post_tag button button_translucent" data-position=1 title=alpine>ALPINE<span class=button_tally>1</span></a>
+<span class=button_tally>4</span></a><br><div class="post_tags_toggle button">所有标签</div><div class=post_tags><div class=tags_list><a href=https://atbug.com/tags/alpine/ class="post_tag button button_translucent" data-position=1 title=alpine>ALPINE<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/apache-camel/ class="post_tag button button_translucent" data-position=1 title=apache-camel>APACHE-CAMEL<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/benchmark/ class="post_tag button button_translucent" data-position=2 title=benchmark>BENCHMARK<span class=button_tally>2</span></a>
 <a href=https://atbug.com/tags/c3p0/ class="post_tag button button_translucent" data-position=1 title=c3p0>C3P0<span class=button_tally>1</span></a>
@@ -114,7 +114,7 @@
 <a href=https://atbug.com/tags/istio/ class="post_tag button button_translucent" data-position=3 title=istio>ISTIO<span class=button_tally>3</span></a>
 <a href=https://atbug.com/tags/java/ class="post_tag button button_translucent" data-position=25 title=java>JAVA<span class=button_tally>25</span></a>
 <a href=https://atbug.com/tags/java8/ class="post_tag button button_translucent" data-position=1 title=java8>JAVA8<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/jenkins/ class="post_tag button button_translucent" data-position=3 title=jenkins>JENKINS<span class=button_tally>3</span></a>
+<a href=https://atbug.com/tags/jenkins/ class="post_tag button button_translucent" data-position=4 title=jenkins>JENKINS<span class=button_tally>4</span></a>
 <a href=https://atbug.com/tags/jib/ class="post_tag button button_translucent" data-position=2 title=jib>JIB<span class=button_tally>2</span></a>
 <a href=https://atbug.com/tags/json/ class="post_tag button button_translucent" data-position=1 title=json>JSON<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/jvm/ class="post_tag button button_translucent" data-position=1 title=jvm>JVM<span class=button_tally>1</span></a>
@@ -122,7 +122,7 @@
 <a href=https://atbug.com/tags/knative/ class="post_tag button button_translucent" data-position=2 title=knative>KNATIVE<span class=button_tally>2</span></a>
 <a href=https://atbug.com/tags/kubelet/ class="post_tag button button_translucent" data-position=1 title=kubelet>KUBELET<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/kubenetes/ class="post_tag button button_translucent" data-position=1 title=kubenetes>KUBENETES<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/kubernetes/ class="post_tag button button_translucent" data-position=17 title=kubernetes>KUBERNETES<span class=button_tally>17</span></a>
+<a href=https://atbug.com/tags/kubernetes/ class="post_tag button button_translucent" data-position=18 title=kubernetes>KUBERNETES<span class=button_tally>18</span></a>
 <a href=https://atbug.com/tags/kuernetes/ class="post_tag button button_translucent" data-position=1 title=kuernetes>KUERNETES<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/kvm/ class="post_tag button button_translucent" data-position=1 title=kvm>KVM<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/linux/ class="post_tag button button_translucent" data-position=3 title=linux>LINUX<span class=button_tally>3</span></a>
@@ -157,7 +157,7 @@
 <a href=https://atbug.com/tags/spring-boot/ class="post_tag button button_translucent" data-position=3 title=spring-boot>SPRING-BOOT<span class=button_tally>3</span></a>
 <a href=https://atbug.com/tags/spring-cloud/ class="post_tag button button_translucent" data-position=7 title=spring-cloud>SPRING-CLOUD<span class=button_tally>7</span></a>
 <a href=https://atbug.com/tags/ssl/ class="post_tag button button_translucent" data-position=1 title=ssl>SSL<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/tekton/ class="post_tag button button_translucent" data-position=7 title=tekton>TEKTON<span class=button_tally>7</span></a>
+<a href=https://atbug.com/tags/tekton/ class="post_tag button button_translucent" data-position=8 title=tekton>TEKTON<span class=button_tally>8</span></a>
 <a href=https://atbug.com/tags/tomcat/ class="post_tag button button_translucent" data-position=1 title=tomcat>TOMCAT<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/tools/ class="post_tag button button_translucent" data-position=1 title=tools>TOOLS<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/troubleshooting/ class="post_tag button button_translucent" data-position=1 title=troubleshooting>TROUBLESHOOTING<span class=button_tally>1</span></a>
