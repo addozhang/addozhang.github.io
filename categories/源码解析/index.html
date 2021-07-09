@@ -24,7 +24,7 @@
 <a href=https://atbug.com/tags/go title=Go class="post_tag button button_translucent">Go</a> ·
 <a href=https://atbug.com/tags/hpa title=HPA class="post_tag button button_translucent">HPA</a></span>
 <span class=page_only>·</span></div></div><div class="excerpt_footer partition"><div class=excerpt_thumbnail><img src=https://atbug.com/images/source-code.png alt="Kubernetes 源码解析 - HPA 水平自动伸缩如何工作"></div><div><p class=pale>HPA - Horizontal Pod Autoscaler 的缩写，Pod 水平自动伸缩。通过对 Pod 负载的监控，来自动增加或者减少 Pod 的副本数量。 从字面意思来看，其主要包含了两部分： 监控 Pod 的负载 控制 Pod 的副本数量 那具体是如何实现的呢？以下基于1.17 源码，来分析下 HPA 如何工作。 注意：文章中的代码在源码的基础上进行了精简：删掉了注释、序列化等信息，或保留了部分核心代码，加上新的注释。 资源 HPA 的资源是HorizontalPodAutoscaler，在v1版本中，只支持基于 CPU 指标的计算；在v2beta2版本中加入了基于内存和自定义指标的计算。 v1 …</p><a href=https://atbug.com/kubernetes-source-code-how-hpa-work/ title=阅读更多 class="excerpt_more button">阅读更多</a></div></div></div></li><li></li></ul><aside class=sidebar><section class=sidebar_inner><h2>张晓辉</h2><div class=sidebar_description><ul><li>资深码农、云原生践行者</li><li>Kubernetes、DevOps、微服务</li></ul><p>微信订阅号：云原生指北。
-<img src=../../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/notes-for-cka-preparation/ class=nav-link title="Kubernetes CKA 证书备考笔记">Kubernetes CKA 证书备考笔记</a></li><li><a href=https://atbug.com/pipy-event-handling-design/ class=nav-link title="可编程网关 Pipy 第三弹：事件模型设计">可编程网关 Pipy 第三弹：事件模型设计</a></li><li><a href=https://atbug.com/tools-accelerate-work-on-kubernetes-cluster/ class=nav-link title="常用的几款工具让 Kubernetes 集群上的工作更容易">常用的几款工具让 Kubernetes 集群上的工作更容易</a></li><li><a href=https://atbug.com/jenkins-interact-with-tekton-pipelines-via-plugin/ class=nav-link title="Jenkins 如何与 Kubernetes 集群的 Tekton Pipeline 交互？">Jenkins 如何与 Kubernetes 集群的 Tekton Pipeline 交互？</a></li><li><a href=https://atbug.com/tekton-pipeline-practice/ class=nav-link title="云原生 CICD: Tekton Pipeline 实战">云原生 CICD: Tekton Pipeline 实战</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
+<img src=../../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/image-trusted-repository-with-open-policy-agent/ class=nav-link title="使用 Open Policy Agent 实现可信镜像仓库检查">使用 Open Policy Agent 实现可信镜像仓库检查</a></li><li><a href=https://atbug.com/notes-for-cka-preparation/ class=nav-link title="Kubernetes CKA 证书备考笔记">Kubernetes CKA 证书备考笔记</a></li><li><a href=https://atbug.com/pipy-event-handling-design/ class=nav-link title="可编程网关 Pipy 第三弹：事件模型设计">可编程网关 Pipy 第三弹：事件模型设计</a></li><li><a href=https://atbug.com/tools-accelerate-work-on-kubernetes-cluster/ class=nav-link title="常用的几款工具让 Kubernetes 集群上的工作更容易">常用的几款工具让 Kubernetes 集群上的工作更容易</a></li><li><a href=https://atbug.com/jenkins-interact-with-tekton-pipelines-via-plugin/ class=nav-link title="Jenkins 如何与 Kubernetes 集群的 Tekton Pipeline 交互？">Jenkins 如何与 Kubernetes 集群的 Tekton Pipeline 交互？</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
 <span class=button_tally>46</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" title=学习>学习
 <span class=button_tally>40</span></a>
@@ -42,6 +42,8 @@
 <span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/envoy/ class="post_tag button button_translucent" title=envoy>ENVOY
 <span class=button_tally>1</span></a>
+<a href=https://atbug.com/categories/kubernetes/ class="post_tag button button_translucent" title=kubernetes>KUBERNETES
+<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/serverless/ class="post_tag button button_translucent" title=serverless>SERVERLESS
 <span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E5%AE%B9%E5%99%A8/ class="post_tag button button_translucent" title=容器>容器
@@ -49,10 +51,9 @@
 <a href=https://atbug.com/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/ class="post_tag button button_translucent" title=微服务>微服务
 <span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E6%8A%98%E8%85%BE/ class="post_tag button button_translucent" title=折腾>折腾
-<span class=button_tally>1</span></a>
-<a href=https://atbug.com/categories/%E6%B5%8B%E8%AF%95/ class="post_tag button button_translucent" title=测试>测试
 <span class=button_tally>1</span></a><br><div class="post_tags_toggle button">所有分类</div><div class=post_tags><div class=tags_list><a href=https://atbug.com/categories/devops/ class="post_tag button button_translucent" data-position=2 title=devops>DEVOPS<span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/envoy/ class="post_tag button button_translucent" data-position=1 title=envoy>ENVOY<span class=button_tally>1</span></a>
+<a href=https://atbug.com/categories/kubernetes/ class="post_tag button button_translucent" data-position=1 title=kubernetes>KUBERNETES<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/quickstart/ class="post_tag button button_translucent" data-position=2 title=quickstart>QUICKSTART<span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/serverless/ class="post_tag button button_translucent" data-position=1 title=serverless>SERVERLESS<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" data-position=40 title=学习>学习<span class=button_tally>40</span></a>
@@ -152,11 +153,13 @@
 <a href=https://atbug.com/tags/netflix/ class="post_tag button button_translucent" data-position=4 title=netflix>NETFLIX<span class=button_tally>4</span></a>
 <a href=https://atbug.com/tags/nginx/ class="post_tag button button_translucent" data-position=2 title=nginx>NGINX<span class=button_tally>2</span></a>
 <a href=https://atbug.com/tags/oci/ class="post_tag button button_translucent" data-position=1 title=oci>OCI<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/opa/ class="post_tag button button_translucent" data-position=1 title=opa>OPA<span class=button_tally>1</span></a>
+<a href=https://atbug.com/tags/opa/ class="post_tag button button_translucent" data-position=2 title=opa>OPA<span class=button_tally>2</span></a>
+<a href=https://atbug.com/tags/open-policy-agent/ class="post_tag button button_translucent" data-position=1 title=open-policy-agent>OPEN-POLICY-AGENT<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/openshift/ class="post_tag button button_translucent" data-position=3 title=openshift>OPENSHIFT<span class=button_tally>3</span></a>
 <a href=https://atbug.com/tags/ops/ class="post_tag button button_translucent" data-position=1 title=ops>OPS<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/pipy/ class="post_tag button button_translucent" data-position=1 title=pipy>PIPY<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/plugin/ class="post_tag button button_translucent" data-position=1 title=plugin>PLUGIN<span class=button_tally>1</span></a>
+<a href=https://atbug.com/tags/policy/ class="post_tag button button_translucent" data-position=1 title=policy>POLICY<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/prometheus/ class="post_tag button button_translucent" data-position=1 title=prometheus>PROMETHEUS<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/quarkus/ class="post_tag button button_translucent" data-position=4 title=quarkus>QUARKUS<span class=button_tally>4</span></a>
 <a href=https://atbug.com/tags/rabbitmq/ class="post_tag button button_translucent" data-position=1 title=rabbitmq>RABBITMQ<span class=button_tally>1</span></a>
