@@ -1,4 +1,47 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>乱世浮生</title><link>https://atbug.com/</link><description>Recent content on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 10 Jul 2021 07:14:47 +0800</lastBuildDate><atom:link href="https://atbug.com/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Open Policy Agent 实现可信镜像仓库检查</title><link>https://atbug.com/image-trusted-repository-with-open-policy-agent/</link><pubDate>Sat, 10 Jul 2021 07:14:47 +0800</pubDate><guid>https://atbug.com/image-trusted-repository-with-open-policy-agent/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>乱世浮生</title><link>https://atbug.com/</link><description>Recent content on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 11 Jul 2021 08:05:42 +0800</lastBuildDate><atom:link href="https://atbug.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes 的魔力在于企业标准化，而不是应用程序的可移植性</title><link>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</link><pubDate>Sun, 11 Jul 2021 08:05:42 +0800</pubDate><guid>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</guid><description>
+&lt;p>笔者：Kubernetes 抽象了资源和工作负载的操作模式，统一了工具集，实现人机接口的标准化。正如类 Docker 工具提供了应用运行时的操作模式；Spring Framework 提供了 Java 应用的开发模式。&lt;/p>
+&lt;blockquote>
+&lt;p>Kubernetes 是关于跨云的技能、工具和实践的可移植性。不是工作负载的可移植性。 &amp;ndash; Bilgin Lbryam @bibryam&lt;/p>
+&lt;/blockquote>
+&lt;p>本文翻译自 &lt;a href="https://www.techrepublic.com/google-amp/article/kubernetes-magic-is-in-enterprise-standardization-not-app-portability">Kubernetes magic is in enterprise standardization, not app portability&lt;/a>&lt;/p>
+&lt;hr>
+&lt;blockquote>
+&lt;p>Kubernetes 不会神奇地使你的应用程序具有可移植性，但它可能会给你带来更好的东西。&lt;/p>
+&lt;/blockquote>
+&lt;p>云为企业提供了看似无限的选择。然而，根据 &lt;a href="https://juju.is/cloud-native-kubernetes-usage-report-2021">Canonical-sponsored 的一项调查&lt;/a>，这并不是大多数企业采用 &lt;a href="https://www.techrepublic.com/article/kubernetes-the-smart-persons-guide/">Kubernetes&lt;/a> 等云友好技术的原因。相反，Kubernetes 的主要目标是标准化——外观和操作与其他人一样。&lt;/p>
+&lt;h2 id="可移植性不是目标">可移植性不是目标&lt;/h2>
+&lt;p>我之前已经讨论过这个问题，参考了 Gartner 关于 Kubernetes 和可移植性的指南。许多人认为 Kubernetes（和&lt;a href="https://www.techrepublic.com/article/containers-the-smart-persons-guide">容器&lt;/a>）可以让他们在云之间轻松移植，但事实证明并不是这样的。正如 Gartner 分析师 &lt;a href="https://blogs.gartner.com/marco-meinardi/2020/09/04/adopting-kubernetes-application-portability-not-good-idea/">Marco Meinardi 所写&lt;/a>，当被问及公司是否应该采用“Kubernetes 使他们的应用程序可移植&amp;hellip;&amp;hellip;答案是：不。” 再说一次？&lt;/p>
+&lt;blockquote>
+&lt;p>调查显示，[在云提供商之间移动应用程序] 的可能性实际上非常低。一旦部署在供应商中，应用程序往往会留在那里。这是因为数据湖难以移植且成本高昂，因此最终成为迁移的重心。&lt;/p>
+&lt;/blockquote>
+&lt;p>因此 Kubernetes 通常不会被公司接受，以增强应用程序的可移植性；相反，谈论人员可移植性或换言之，技能可移植性更接近事实。Weaveworks 首席执行官亚历克西斯·理查森（Alexis Richardson）&lt;a href="https://twitter.com/monadic/status/1302257531025264642">将这个主题打回家&lt;/a>：&lt;/p>
+&lt;blockquote>
+&lt;p>重点是“技能可移植性”，因为使用标准操作模型和工具链。大型组织希望开发人员使用标准的工作方式，因为这可以降低培训成本，并消除员工在不同项目之间转移的障碍。如果你的“平台”（或多个平台）基于相同的核心云原生工具集，那么它也可以更轻松、更便宜地应用策略。&lt;/p>
+&lt;/blockquote>
+&lt;p>这让我们回到规范调查。&lt;/p>
+&lt;h2 id="samesies">Samesies&lt;/h2>
+&lt;p>当被问及确定与采用 Kubernetes 等云原生技术相关的技术目标时，调查受访者将可移植性排在最后，将更直接的问题排在第一位：&lt;/p>
+&lt;ul>
+&lt;li>改进维护、监控和自动化 - 64.6%。&lt;/li>
+&lt;li>基础设施现代化 - 46.4%。&lt;/li>
+&lt;li>更快的上线时间 - 26.5%。&lt;/li>
+&lt;li>删除供应商依赖项 - 12.8%。&lt;/li>
+&lt;li>全球覆盖率 - 12.5%。&lt;/li>
+&lt;li>围绕流量高峰的敏捷性 - 9.2%。&lt;/li>
+&lt;li>确保便携性 - 8.9%&lt;/li>
+&lt;/ul>
+&lt;p>我喜欢 Google Cloud 的开发者倡导者 Kelsey Hightower 在调查报告中评论这些结果的方式：&lt;/p>
+&lt;blockquote>
+&lt;p>很多人认为组织转向 Kubernetes 是因为规模，或者因为他们想成为超大规模者，或者与 Twitter 拥有相同的流量水平。对于大多数组织而言，情况并非一定如此。很多人都喜欢 K8s 中内置了许多决策，例如日志记录、监控和负载平衡。&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>人们往往会忘记事情有多么复杂，只是为了构建一个没有所有自动化的应用程序。如果你在公有云上，你可以使用一些本机集成和工具。但是，如果你在本地，那不是给定的——你必须自己将解决方案粘合在一起。使用 Kubernetes，你几乎将 25 种不同的工具合二为一。&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>这就是人们所说的“现代基础设施”的意思——他们并不是在谈论做一些以前从未做过的事情。他们谈论的是过去 10 年或 15 年一直在生产的东西。Kubernetes 是当今所有“现代模式”的检查站。&lt;/p>
+&lt;/blockquote>
+&lt;p>换句话说，人们真正想要从 Kubernetes 获得的是一种标准的基础设施思考方式。回到 Richardson 之前的观点，虽然 Kubernetes 和云原生技术使公司能够以更高的速度运营，但最大的好处可能是使技能在组织之间可以互换——这为雇主和员工都创造了巨大的绩效收益。这是企业不断增加对 Kubernetes 投资的另一个原因。&lt;/p>
+&lt;p>&lt;em>声明：我为 AWS 工作，但此处表达的观点是我的。&lt;/em>&lt;/p></description></item><item><title>使用 Open Policy Agent 实现可信镜像仓库检查</title><link>https://atbug.com/image-trusted-repository-with-open-policy-agent/</link><pubDate>Sat, 10 Jul 2021 07:14:47 +0800</pubDate><guid>https://atbug.com/image-trusted-repository-with-open-policy-agent/</guid><description>
 &lt;p>从互联网（或可信镜像仓库库以外的任何地方）拉取未知镜像会带来风险——例如恶意软件。但是还有其他很好的理由来维护单一的可信来源，例如在企业中实现可支持性。通过确保镜像仅来自受信任的镜像仓库，可以密切控制镜像库存，降低软件熵和蔓延的风险，并提高集群的整体安全性。除此以外，有时还会需要检查镜像的 tag，比如禁止使用 latest 镜像。&lt;/p>
 &lt;p>这今天我们尝试用“策略即代码”的实现 OPA 来实现功能。&lt;/p>
 &lt;p>还没开始之前可能有人会问：明明可以实现个 &lt;a href="https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/">Admission Webhook&lt;/a> 就行，为什么还要加上 OPA？&lt;/p>
