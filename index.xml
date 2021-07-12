@@ -1,4 +1,125 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>乱世浮生</title><link>https://atbug.com/</link><description>Recent content on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 11 Jul 2021 08:05:42 +0800</lastBuildDate><atom:link href="https://atbug.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes 的魔力在于企业标准化，而不是应用程序的可移植性</title><link>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</link><pubDate>Sun, 11 Jul 2021 08:05:42 +0800</pubDate><guid>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>乱世浮生</title><link>https://atbug.com/</link><description>Recent content on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 12 Jul 2021 08:20:40 +0800</lastBuildDate><atom:link href="https://atbug.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Open Policy Agent: Top 5 Kubernetes 准入控制策略</title><link>https://atbug.com/open-policy-agent-top-5-kubernetes-admission-control/</link><pubDate>Mon, 12 Jul 2021 08:20:40 +0800</pubDate><guid>https://atbug.com/open-policy-agent-top-5-kubernetes-admission-control/</guid><description>
+&lt;p>如何使用 Open Policy Agent 实现准入策略控制，可以参考&lt;a href="https://mp.weixin.qq.com/s/RvqCVAhClJY3o_46ALu1bQ">这里&lt;/a>&lt;/p>
+&lt;p>本文翻译自 &lt;a href="https://thenewstack.io/open-policy-agent-the-top-5-kubernetes-admission-control-policies/">Open Policy Agent: The Top 5 Kubernetes Admission Control Policies&lt;/a>&lt;/p>
+&lt;hr>
+&lt;p>Kubernetes 开发人员和平台工程师通常承受着非常大的压力，以保持应用程序部署的快速进行，并且总是为了速度和进度而做出妥协。平台团队越来越有责任确保这些妥协（例如管理 Ingress）不会导致客户数据暴露在整个互联网上等后果。&lt;/p>
+&lt;p>幸运的是，Kubernetes 提供了设置策略的能力，通过检查并防止部署错误将其投入生产，从而避免这些后果。为了确保团队的应用程序不会比信心更重要，以下是现在应该在集群中运行的前五个 Kubernetes 准入控制策略。&lt;/p>
+&lt;h2 id="1-可信镜像仓库">1. 可信镜像仓库&lt;/h2>
+&lt;p>此策略很简单，但功能强大：仅允许从受信任的镜像仓库中拉取的容器映像，并且可以选择仅拉取与允许的仓库镜像地址列表匹配的那些镜像。&lt;/p>
+&lt;p>当然，从互联网（或可信镜像仓库库以外的任何地方）拉取未知镜像会带来风险——例如恶意软件。但是还有其他很好的理由来维护单一的可信来源，例如在企业中实现可支持性。通过确保镜像仅来自受信任的镜像仓库，可以密切控制镜像库存，降低软件熵和蔓延的风险，并提高集群的整体安全性。&lt;/p>
+&lt;p>相关策略：&lt;/p>
+&lt;ul>
+&lt;li>禁止所有带有“latest” tag 的镜像&lt;/li>
+&lt;li>仅允许签名镜像或匹配特定哈希/SHA 的镜像&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>策略示例：&lt;/em>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="kn">package&lt;/span> &lt;span class="nx">kubernetes&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">validating&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">images&lt;/span>
+&lt;span class="nx">deny&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">msg&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">some&lt;/span> &lt;span class="nx">i&lt;/span>
+&lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">kind&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">kind&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s">&amp;#34;Pod&amp;#34;&lt;/span>
+&lt;span class="nx">image&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">object&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">spec&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">containers&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">i&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="nx">image&lt;/span>
+&lt;span class="nx">not&lt;/span> &lt;span class="nf">startswith&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">image&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;hooli.com/&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="nx">msg&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nf">sprintf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Image &amp;#39;%v&amp;#39; comes from untrusted registry&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="nx">image&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="2-标签安全">2. 标签安全&lt;/h2>
+&lt;p>此策略要求所有 Kubernetes 资源都包含指定的标签并使用适当的格式。由于标签决定了 Kubernetes 对象和策略的分组，包括工作负载可以运行的位置——前端、后端、数据层——以及哪些资源可以发送流量，标签错误会导致生产中无法解释的部署和可支持性问题。此外，如果没有对标签应用方式的访问控制，集群就缺乏基本的安全性。最后，手动输入标签的危险在于错误会蔓延，特别是因为标签在 Kubernetes 中既灵活又强大。应用此策略并确保标签配置正确且一致。&lt;/p>
+&lt;p>相关政策：&lt;/p>
+&lt;ul>
+&lt;li>确保每个工作负载都需要特定的注解（annotations）&lt;/li>
+&lt;li>指定污点和容忍度以限制可以部署映像的位置&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>策略示例：&lt;/em>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="kn">package&lt;/span> &lt;span class="nx">kubernetes&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">validating&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">existence&lt;/span>
+&lt;span class="nx">deny&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">msg&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">not&lt;/span> &lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">object&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">metadata&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">labels&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">costcenter&lt;/span>
+&lt;span class="nx">msg&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="s">&amp;#34;Every resource must have a costcenter label&amp;#34;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="nx">deny&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">msg&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">value&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">object&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">metadata&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">labels&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">costcenter&lt;/span>
+&lt;span class="nx">not&lt;/span> &lt;span class="nf">startswith&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">value&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;cccode-&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="nx">msg&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nf">sprintf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Costcenter code must start with `cccode-`; found `%v`&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="nx">value&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p> ## 3. 禁止（或指定）特权模式&lt;/p>
+&lt;p>此策略确保默认情况下容器不能在特权模式下运行 - 除非在允许的情况下排除特定情况（通常很少见）。&lt;/p>
+&lt;p>通常，希望避免在特权模式下运行容器，因为它提供对主机资源和内核功能的访问——包括禁用主机级保护的能力。虽然容器在某种程度上是隔离的，但它们最终共享相同的内核。这意味着如果特权容器遭到入侵，它可能会成为入侵整个系统的起点。尽管如此，在特权模式下运行还是有正当理由的——只要确保这些时间是例外，而不是规则。&lt;/p>
+&lt;p>相关政策：&lt;/p>
+&lt;ul>
+&lt;li>禁止不安全的能力（capabilities）&lt;/li>
+&lt;li>禁止容器以 root 身份运行（以非 root 身份运行）&lt;/li>
+&lt;li>设置 userID&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>策略示例：&lt;/em>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="kn">package&lt;/span> &lt;span class="nx">kubernetes&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">validating&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">privileged&lt;/span>
+&lt;span class="nx">deny&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">msg&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">some&lt;/span> &lt;span class="nx">c&lt;/span>
+&lt;span class="nx">input_container&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">c&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;span class="nx">c&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">securityContext&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">privileged&lt;/span>
+&lt;span class="nx">msg&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nf">sprintf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Container &amp;#39;%v&amp;#39; should not run in privileged mode.&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="nx">c&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">name&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="nx">input_container&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">container&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">container&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">object&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">spec&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">containers&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">_&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="nx">input_container&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">container&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">container&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">object&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">spec&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">initContainers&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">_&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="定义和控制入口">定义和控制入口&lt;/h2>
+&lt;p>Ingress 策略允许根据需要公开特定服务（允许 Ingress），或者根据需要不公开任何服务。在 Kubernetes 中，很容易意外启动与公共互联网通信的服务（Kubernetes 故障故事中有很多这样的例子）。同时，过于宽松的 Ingress 会导致启动不必要的外部 LoadBalancer，这也可能会变得非常昂贵（如每月预算支出）非常快！此外，当两个服务尝试共享同一个 Ingress 时，它可能会破坏应用程序。&lt;/p>
+&lt;p>下面的策略示例防止不同命名空间中的 Ingress 对象共享相同的主机名。这个常见问题意味着新工作负载会从现有工作负载“窃取”互联网流量，这会产生一系列负面后果——从服务中断到数据暴露等等。&lt;/p>
+&lt;p>相关政策：&lt;/p>
+&lt;ul>
+&lt;li>需要 TLS&lt;/li>
+&lt;li>禁止/允许特定端口&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>策略示例：&lt;/em>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="kn">package&lt;/span> &lt;span class="nx">kubernetes&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">validating&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ingress&lt;/span>
+&lt;span class="nx">deny&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">msg&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">is_ingress&lt;/span>
+&lt;span class="nx">input_host&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">object&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">spec&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">rules&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">_&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="nx">host&lt;/span>
+&lt;span class="nx">some&lt;/span> &lt;span class="nx">other_ns&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">other_name&lt;/span>
+&lt;span class="nx">other_host&lt;/span> &lt;span class="o">:=&lt;/span>
+&lt;span class="nx">data&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">kubernetes&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ingresses&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">other_ns&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="nx">other_name&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="nx">spec&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">rules&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">_&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="nx">host&lt;/span>
+&lt;span class="p">[&lt;/span>&lt;span class="nx">input_ns&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">input_name&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="nx">other_ns&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">other_name&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;span class="nx">input_host&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="nx">other_host&lt;/span>
+&lt;span class="nx">msg&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nf">sprintf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Ingress host conflicts with ingress %v/%v&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="nx">other_ns&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">other_name&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="nx">input_ns&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">object&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">metadata&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">namespace&lt;/span>
+&lt;span class="nx">input_name&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">object&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">metadata&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">name&lt;/span>
+&lt;span class="nx">is_ingress&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">kind&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">kind&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s">&amp;#34;Ingress&amp;#34;&lt;/span>
+&lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">kind&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">group&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s">&amp;#34;extensions&amp;#34;&lt;/span>
+&lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">kind&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">version&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s">&amp;#34;v1beta1&amp;#34;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="5-定义和控制出口">5. 定义和控制出口&lt;/h2>
+&lt;p>每个应用程序都需要防护栏来控制出口流量的流动方式，此策略允许你指定集群内和集群外的通信。与 Ingress 一样，默认情况下很容易意外地“允许 Egress”到全世界的每个 IP。有时这甚至不是意外——完全的放开通常是确保可以访问新部署的应用程序的最后努力，即使它过于宽松或引入风险。在集群内级别，还有可能无意中将数据发送到不应该拥有的服务。如果服务受到损害，这两种情况都存在数据泄露和盗窃的风险。另一方面：过于严格，使用 Egress 有时会导致配置错误，从而破坏应用程序。实现两全其美意味着使用此策略选择和指定允许 Egress 发生的时间和服务。&lt;/p>
+&lt;p>相关政策。&lt;/p>
+&lt;ul>
+&lt;li>请参阅上面的入口策略&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>策略示例：&lt;/em>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="kn">package&lt;/span> &lt;span class="nx">kubernetes&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">validating&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">egress&lt;/span>
+&lt;span class="nx">allow_list&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="s">&amp;#34;10.10.0.0/16&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="s">&amp;#34;192.168.100.1/32&amp;#34;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="nx">deny&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">reason&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">network_policy_allows_all_egress&lt;/span>
+&lt;span class="nx">reason&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="s">&amp;#34;Network policy allows access to any IP address.&amp;#34;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="nx">deny&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">reason&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nf">count&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">allow_list&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">&amp;gt;&lt;/span> &lt;span class="mi">0&lt;/span>
+&lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">kind&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">kind&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s">&amp;#34;NetworkPolicy&amp;#34;&lt;/span>
+&lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">object&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">spec&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">policyTypes&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">_&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s">&amp;#34;Egress&amp;#34;&lt;/span>
+&lt;span class="nx">ipBlock&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">object&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">spec&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">egress&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">_&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="nx">to&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">_&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="nx">ipBlock&lt;/span>
+&lt;span class="nx">not&lt;/span> &lt;span class="nf">any&lt;/span>&lt;span class="p">({&lt;/span>&lt;span class="nx">t&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nx">t&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">net&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">cidr_contains&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">allow_list&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">_&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="nx">ipBlock&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">cidr&lt;/span>&lt;span class="p">)})&lt;/span>
+&lt;span class="nx">reason&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="s">&amp;#34;Network policy allows egress traffic outside of allowed IP ranges.&amp;#34;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="nx">network_policy_allows_all_egress&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">kind&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">kind&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s">&amp;#34;NetworkPolicy&amp;#34;&lt;/span>
+&lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">object&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">spec&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">policyTypes&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">_&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s">&amp;#34;Egress&amp;#34;&lt;/span>
+&lt;span class="nx">egress&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">input&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">object&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">spec&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">egress&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">_&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;span class="nx">not&lt;/span> &lt;span class="nx">egress&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">to&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>有了这些政策，你就可以专注于构建一个世界级的平台。当然，如果你想为 Kubernetes 添加更多基本策略，请查看 &lt;a href="https://www.openpolicyagent.org/">openpolicyagent.org&lt;/a>。&lt;/p></description></item><item><title>Kubernetes 的魔力在于企业标准化，而不是应用程序的可移植性</title><link>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</link><pubDate>Sun, 11 Jul 2021 08:05:42 +0800</pubDate><guid>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</guid><description>
 &lt;p>笔者：Kubernetes 抽象了资源和工作负载的操作模式，统一了工具集，实现人机接口的标准化。正如类 Docker 工具提供了应用运行时的操作模式；Spring Framework 提供了 Java 应用的开发模式。&lt;/p>
 &lt;blockquote>
 &lt;p>Kubernetes 是关于跨云的技能、工具和实践的可移植性。不是工作负载的可移植性。 &amp;ndash; Bilgin Lbryam @bibryam&lt;/p>
