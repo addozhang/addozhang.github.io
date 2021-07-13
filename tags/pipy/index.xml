@@ -1,4 +1,305 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pipy on 乱世浮生</title><link>https://atbug.com/tags/pipy/</link><description>Recent content in Pipy on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 11 Jun 2021 08:27:36 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/pipy/index.xml" rel="self" type="application/rss+xml"/><item><title>可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读</title><link>https://atbug.com/programming-archive-metrics-with-pipy/</link><pubDate>Fri, 11 Jun 2021 08:27:36 +0800</pubDate><guid>https://atbug.com/programming-archive-metrics-with-pipy/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pipy on 乱世浮生</title><link>https://atbug.com/tags/pipy/</link><description>Recent content in Pipy on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 13 Jul 2021 08:44:56 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/pipy/index.xml" rel="self" type="application/rss+xml"/><item><title>Rego 不好用？用 Pipy 实现 OPA</title><link>https://atbug.com/pipy-implement-kubernetes-admission-control/</link><pubDate>Tue, 13 Jul 2021 08:44:56 +0800</pubDate><guid>https://atbug.com/pipy-implement-kubernetes-admission-control/</guid><description>
+&lt;p>还不知道 Pipy 是什么的同学可以看下 &lt;a href="https://github.com/flomesh-io/pipy">GitHub&lt;/a> 。&lt;/p>
+&lt;blockquote>
+&lt;p>Pipy 是一个轻量级、高性能、高稳定、可编程的网络代理。Pipy 核心框架使用 C++ 开发，网络 IO 采用 ASIO 库。 Pipy 的可执行文件仅有 5M 左右，运行期的内存占用 10M 左右，因此 Pipy 非常适合做 Sidecar proxy。&lt;/p>
+&lt;p>Pipy 内置了自研的 pjs 作为脚本扩展，使得Pipy 可以用 JS 脚本根据特定需求快速定制逻辑与功能。&lt;/p>
+&lt;p>Pipy 采用了模块化、链式的处理架构，用顺序执行的模块来对网络数据块进行处理。这种简单的架构使得 Pipy 底层简单可靠，同时具备了动态编排流量的能力，兼顾了简单和灵活。通过使用 REUSE_PORT 的机制（主流 Linux 和 BSD 版本都支持该功能），Pipy 可以以多进程模式运行，使得 Pipy 不仅适用于 Sidecar 模式，也适用于大规模的流量处理场景。 在实践中，Pipy 独立部署的时候用作“软负载”，可以在低延迟的情况下，实现媲美硬件的负载均衡吞吐能力，同时具有灵活的扩展性。&lt;/p>
+&lt;/blockquote>
+&lt;p>在玩过几次 Pipy 并探究其工作原理后，又有了更多的想法。&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://mp.weixin.qq.com/s/l8JzYRn350fjuCAOoo8pcg">初探可编程网关 Pipy&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://mp.weixin.qq.com/s/_IeRXp9EJnVsvDfg8tUr1A">可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://mp.weixin.qq.com/s/iQWunpazsw86X3kEkB1rJw">可编程网关 Pipy 第三弹：事件模型设计&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>在使用OPA的时候，一直觉得Rego不是那么顺手，使用pipy js来写规则的想法油然而生。今天就一起试试这个思路。果然，不试不知道，一试发现太多的惊喜～Pipy不止于“代理”，更有很多可以适用的场景：&lt;/p>
+&lt;ul>
+&lt;li>极小的单一可执行文件（single binary）使得 pipy 可能是最好的 “云原生 sidecar”&lt;/li>
+&lt;li>sidecar 不仅仅是代理，还可以做控制器，做运算单元&lt;/li>
+&lt;li>proxy 的串路结构适合各种管控类的操作，比如访问控制&lt;/li>
+&lt;li>Pipy js 的扩展能力和快速编程能力，很适合做 “规则引擎”，或者用最近流行的说法 “云原生的规则引擎”。对比 OPA 我认为它完全够格做一个 “羽量级规则执行引擎”&lt;/li>
+&lt;/ul>
+&lt;p>现在我更倾向于定义 pipy 是一个 “云原生的流量编程框架”，代理只是其底层的核心能力，叠加了 pipy js 以后，上层可以做的事情很多，“流量滋养万物”。&lt;/p>
+&lt;p>在 &lt;a href="https://mp.weixin.qq.com/s/RvqCVAhClJY3o_46ALu1bQ">使用 Open Policy Agent 实现可信镜像仓库检查&lt;/a> 之后，就在想 Pipy 是否一样可以做到，将内核替换成 Pipy + 规则。所以今天大部分内容和上面这篇是相似的。&lt;/p>
+&lt;p>来，一起看看这个“不务正业”的 Pipy 如何实现 Kubernetes 的准入控制器 来做镜像的检查。&lt;/p>
+&lt;h2 id="环境">环境&lt;/h2>
+&lt;p>继续使用 minikube&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">minikube start
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="创建部署-pipy-的命名空间">创建部署 Pipy 的命名空间&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl create namespace pipy
+kubens pipy
+kubectl label ns pipy pipy/webhook&lt;span class="o">=&lt;/span>ignore &lt;span class="c1">#后面解释&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="规则">规则&lt;/h2>
+&lt;p>在 OPA 中，通过 &lt;code>kube-mgmt&lt;/code> 容器监控 &lt;code>configmap&lt;/code> 的改动，将 Policy 推送到同 pod 的 opa 容器中。&lt;/p>
+&lt;p>对于 Pipy 为了渐变，直接使用挂载的方式将保存了规则的 &lt;code>configmap&lt;/code> 挂载到 Pipy
+的容器中。&lt;/p>
+&lt;p>&lt;em>实际的使用中，Pipy 支持轮训的方式检查控制平面中规则的变更，并实时加载；也可以实现与 OPA 的 kube-mgmt 同样的逻辑。&lt;/em>&lt;/p>
+&lt;p>实现了&lt;a href="https://atbug.com/image-trusted-repository-with-open-policy-agent/">上一讲功能&lt;/a>的 pipy 规则如下：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">cat &amp;gt; pipy-rule.js &lt;span class="s">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;span class="s">pipy({
+&lt;/span>&lt;span class="s"> _repoPrefix: &amp;#39;192.168.64.1&amp;#39;, //192.168.64.1:5000 是笔者本地容器运行的一个私有仓库。
+&lt;/span>&lt;span class="s"> _tagSuffix: &amp;#39;:latest&amp;#39;,
+&lt;/span>&lt;span class="s">})
+&lt;/span>&lt;span class="s">
+&lt;/span>&lt;span class="s">.listen(6443, {
+&lt;/span>&lt;span class="s"> tls: {
+&lt;/span>&lt;span class="s"> cert: os.readFile(&amp;#39;/certs/tls.crt&amp;#39;).toString(),
+&lt;/span>&lt;span class="s"> key: os.readFile(&amp;#39;/certs/tls.key&amp;#39;).toString(),
+&lt;/span>&lt;span class="s"> },
+&lt;/span>&lt;span class="s">})
+&lt;/span>&lt;span class="s"> .decodeHttpRequest()
+&lt;/span>&lt;span class="s"> .replaceMessage(
+&lt;/span>&lt;span class="s"> msg =&amp;gt; (
+&lt;/span>&lt;span class="s"> ((req, result, invalids, reason) =&amp;gt; (
+&lt;/span>&lt;span class="s"> req = JSON.decode(msg.body),
+&lt;/span>&lt;span class="s"> invalids = req.request.object.spec.containers.find(container =&amp;gt; (
+&lt;/span>&lt;span class="s"> (!container.image.startsWith(_repoPrefix) ? (
+&lt;/span>&lt;span class="s"> reason = `${container.image} repo not start with ${_repoPrefix}`,
+&lt;/span>&lt;span class="s"> console.log(reason),
+&lt;/span>&lt;span class="s"> true
+&lt;/span>&lt;span class="s"> ) : (false))
+&lt;/span>&lt;span class="s"> ||
+&lt;/span>&lt;span class="s"> (container.image.endsWith(_tagSuffix) ? (
+&lt;/span>&lt;span class="s"> reason = `${container.image} tag end with ${_tagSuffix}`,
+&lt;/span>&lt;span class="s"> console.log(reason),
+&lt;/span>&lt;span class="s"> true
+&lt;/span>&lt;span class="s"> ) : (false)
+&lt;/span>&lt;span class="s"> ))),
+&lt;/span>&lt;span class="s"> invalids != undefined ? (
+&lt;/span>&lt;span class="s"> result = {
+&lt;/span>&lt;span class="s"> &amp;#34;apiVersion&amp;#34;: &amp;#34;admission.k8s.io/v1beta1&amp;#34;,
+&lt;/span>&lt;span class="s"> &amp;#34;kind&amp;#34;: &amp;#34;AdmissionReview&amp;#34;,
+&lt;/span>&lt;span class="s"> &amp;#34;response&amp;#34;: {
+&lt;/span>&lt;span class="s"> &amp;#34;allowed&amp;#34;: false,
+&lt;/span>&lt;span class="s"> &amp;#34;uid&amp;#34;: req.request.uid,
+&lt;/span>&lt;span class="s"> &amp;#34;status&amp;#34;: {
+&lt;/span>&lt;span class="s"> &amp;#34;reason&amp;#34;: reason,
+&lt;/span>&lt;span class="s"> },
+&lt;/span>&lt;span class="s"> },
+&lt;/span>&lt;span class="s"> }
+&lt;/span>&lt;span class="s"> ) : (
+&lt;/span>&lt;span class="s"> result = {
+&lt;/span>&lt;span class="s"> &amp;#34;apiVersion&amp;#34;: &amp;#34;admission.k8s.io/v1beta1&amp;#34;,
+&lt;/span>&lt;span class="s"> &amp;#34;kind&amp;#34;: &amp;#34;AdmissionReview&amp;#34;,
+&lt;/span>&lt;span class="s"> &amp;#34;response&amp;#34;: {
+&lt;/span>&lt;span class="s"> &amp;#34;allowed&amp;#34;: true,
+&lt;/span>&lt;span class="s"> &amp;#34;uid&amp;#34;: req.request.uid
+&lt;/span>&lt;span class="s"> },
+&lt;/span>&lt;span class="s"> }
+&lt;/span>&lt;span class="s"> ),
+&lt;/span>&lt;span class="s">
+&lt;/span>&lt;span class="s"> console.log(JSON.encode(result)),
+&lt;/span>&lt;span class="s">
+&lt;/span>&lt;span class="s"> new Message({
+&lt;/span>&lt;span class="s"> &amp;#39;status&amp;#39; : 200,
+&lt;/span>&lt;span class="s"> &amp;#39;headers&amp;#39;: {
+&lt;/span>&lt;span class="s"> &amp;#39;Content-Type&amp;#39;: &amp;#39;application/json&amp;#39;
+&lt;/span>&lt;span class="s"> }
+&lt;/span>&lt;span class="s"> }, JSON.encode(result))
+&lt;/span>&lt;span class="s"> ))()
+&lt;/span>&lt;span class="s"> )
+&lt;/span>&lt;span class="s"> )
+&lt;/span>&lt;span class="s"> .encodeHttpResponse()
+&lt;/span>&lt;span class="s">EOF&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>将规则保存在 configmap 中：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl create configmap pipy-rule --from-file&lt;span class="o">=&lt;/span>pipy-rule.js
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="在-kubernetes-上部署-pipy">在 Kubernetes 上部署 Pipy&lt;/h2>
+&lt;p>Kubernetes 与准入控制器（&lt;a href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/">Admission Controller&lt;/a>）的通信需要使用 TLS。配置 TLS，使用 &lt;code>openssl&lt;/code> 创建证书颁发机构（certificate authority CA）和 OPA 的证书/秘钥对。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">openssl genrsa -out ca.key &lt;span class="m">2048&lt;/span>
+openssl req -x509 -new -nodes -key ca.key -days &lt;span class="m">100000&lt;/span> -out ca.crt -subj &lt;span class="s2">&amp;#34;/CN=admission_ca&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>为 OPA 创建 TLS 秘钥和证书：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">cat &amp;gt;server.conf &lt;span class="s">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;span class="s">[req]
+&lt;/span>&lt;span class="s">req_extensions = v3_req
+&lt;/span>&lt;span class="s">distinguished_name = req_distinguished_name
+&lt;/span>&lt;span class="s">prompt = no
+&lt;/span>&lt;span class="s">[req_distinguished_name]
+&lt;/span>&lt;span class="s">CN = pipy.pipy.svc
+&lt;/span>&lt;span class="s">[ v3_req ]
+&lt;/span>&lt;span class="s">basicConstraints = CA:FALSE
+&lt;/span>&lt;span class="s">keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+&lt;/span>&lt;span class="s">extendedKeyUsage = clientAuth, serverAuth
+&lt;/span>&lt;span class="s">subjectAltName = @alt_names
+&lt;/span>&lt;span class="s">[alt_names]
+&lt;/span>&lt;span class="s">DNS.1 = pipy.pipy.svc
+&lt;/span>&lt;span class="s">EOF&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>注意 &lt;code>CN&lt;/code> 和 &lt;code>alt_names&lt;/code> 必须与后面创建 Pipy service 的匹配。&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">openssl genrsa -out server.key &lt;span class="m">2048&lt;/span>
+openssl req -new -key server.key -out server.csr -config server.conf
+openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days &lt;span class="m">100000&lt;/span> -extensions v3_req -extfile server.conf
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>为 OPA 创建保存 TLS 凭证的 Secret：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl create secret tls pipy-server --cert&lt;span class="o">=&lt;/span>server.crt --key&lt;span class="o">=&lt;/span>server.key
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>将 Pipy 部署为准入控制器（admission controller）。为了方便调试，我们使用启动 Pipy 的时候打开了控制台。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Service&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">v1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">selector&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">ports&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">protocol&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">TCP&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">443&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">targetPort&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">6443&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">gui&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c"># 方便调试&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">protocol&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">TCP&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">6060&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">targetPort&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">6060&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">http&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">protocol&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">TCP&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">6080&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">targetPort&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">6080&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nn">---&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">apps/v1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Deployment&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">replicas&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">selector&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">matchLabels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">template&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">containers&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy:latest&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">imagePullPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">IfNotPresent&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">args&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="s2">&amp;#34;pipy&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="s2">&amp;#34;/opt/data/pipy-rule.js&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="s2">&amp;#34;--gui-port=6060&amp;#34;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c"># 方便调试&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c"># - &amp;#34;--log-level=debug&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">ports&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">gui&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">containerPort&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">6060&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">protocol&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">TCP&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">http&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">containerPort&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">6080&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">protocol&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">TCP &lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">containerPort&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">6443&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">protocol&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">TCP&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">volumeMounts&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">readOnly&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">mountPath&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">/certs&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy-server&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">readOnly&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">mountPath&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">/opt/data&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy-rule&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">volumes&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy-server&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">secret&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">secretName&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy-server&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy-rule&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">configMap&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">pipy-rule&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>暴露控制台的访问：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl expose deploy pipy --name pipy-node --type NodePort
+kubectl get svc pipy-port
+minikube service --url pipy-node -n pipy
+&lt;span class="c1"># 找到控制台端口&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>接下来，生成将用于将 Pipy 注册为准入控制器的 manifest。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">cat &amp;gt; webhook-configuration.yaml &lt;span class="s">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;span class="s">kind: ValidatingWebhookConfiguration
+&lt;/span>&lt;span class="s">apiVersion: admissionregistration.k8s.io/v1beta1
+&lt;/span>&lt;span class="s">metadata:
+&lt;/span>&lt;span class="s"> name: pipy-validating-webhook
+&lt;/span>&lt;span class="s">webhooks:
+&lt;/span>&lt;span class="s"> - name: validating-webhook.pipy.flomesh-io.cn
+&lt;/span>&lt;span class="s"> namespaceSelector:
+&lt;/span>&lt;span class="s"> matchExpressions:
+&lt;/span>&lt;span class="s"> - key: pipy/webhook
+&lt;/span>&lt;span class="s"> operator: NotIn
+&lt;/span>&lt;span class="s"> values:
+&lt;/span>&lt;span class="s"> - ignore
+&lt;/span>&lt;span class="s"> rules:
+&lt;/span>&lt;span class="s"> - operations: [&amp;#34;CREATE&amp;#34;, &amp;#34;UPDATE&amp;#34;]
+&lt;/span>&lt;span class="s"> apiGroups: [&amp;#34;*&amp;#34;]
+&lt;/span>&lt;span class="s"> apiVersions: [&amp;#34;*&amp;#34;]
+&lt;/span>&lt;span class="s"> resources: [&amp;#34;pods&amp;#34;]
+&lt;/span>&lt;span class="s"> clientConfig:
+&lt;/span>&lt;span class="s"> caBundle: $(cat ca.crt | base64 | tr -d &amp;#39;\n&amp;#39;)
+&lt;/span>&lt;span class="s"> service:
+&lt;/span>&lt;span class="s"> namespace: pipy
+&lt;/span>&lt;span class="s"> name: pipy
+&lt;/span>&lt;span class="s">EOF&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>生成的配置文件包含 CA 证书的 base64 编码，以便可以在 Kubernetes API 服务器和 OPA 之间建立 TLS 连接。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply -f webhook-configuration.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="测试">测试&lt;/h2>
+&lt;p>&lt;code>pod-bad-repo.yaml&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">v1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Pod&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">creationTimestamp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">null&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">run&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">web-server&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">web-server&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">default&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">containers&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">nginx:1.21.1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">web-server&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>{}&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">dnsPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ClusterFirst&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">restartPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Always&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">status&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>{}&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply -f pod-bad-repo.yaml
+Error from server &lt;span class="o">(&lt;/span>nginx:1.21.1 repo not start with 192.168.64.1&lt;span class="o">)&lt;/span>: error when creating &lt;span class="s2">&amp;#34;pod-bad-repo.yaml&amp;#34;&lt;/span>: admission webhook &lt;span class="s2">&amp;#34;validating-webhook.pipy.flomesh-io.cn&amp;#34;&lt;/span> denied the request: nginx:1.21.1 repo not start with 192.168.64.1
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>pod-bad-tag.yaml&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">v1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Pod&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">creationTimestamp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">null&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">run&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">web-server&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">web-server&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">default&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">containers&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">192.168.64.1&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">5000&lt;/span>&lt;span class="l">/nginx:latest&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">web-server&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>{}&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">dnsPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ClusterFirst&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">restartPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Always&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">status&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>{}&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply -f pod-bad-tag.yaml
+Error from server &lt;span class="o">(&lt;/span>192.168.64.1:5000/nginx:latest tag end with :latest&lt;span class="o">)&lt;/span>: error when creating &lt;span class="s2">&amp;#34;pod-bad-tag.yaml&amp;#34;&lt;/span>: admission webhook &lt;span class="s2">&amp;#34;validating-webhook.pipy.flomesh-io.cn&amp;#34;&lt;/span> denied the request: 192.168.64.1:5000/nginx:latest tag end with :latest
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>pod-ok.yaml&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">v1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Pod&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">creationTimestamp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">null&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">run&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">web-server&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">web-server&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">default&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">containers&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">192.168.64.1&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">5000&lt;/span>&lt;span class="l">/nginx:1.21.1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">web-server&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>{}&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">dnsPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ClusterFirst&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">restartPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Always&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">status&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>{}&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply -f pod-ok.yaml
+pod/web-server created
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>OPA 哪哪都好，唯一缺点就是其引进的 &lt;code>Rego&lt;/code> 语言抬高了使用的门槛。而 Pipy 的规则是通过 JavaScrip 来编写的，前端的同学一样可以完成规则的编写。完全替代可能夸张了一些，但确实在部分场景下可以替代 OPA。&lt;/p>
+&lt;p>玩到这里，你会发现有了规则，加上功能强大的过滤器（现在我喜欢叫他们 Hook 了），Pipy 的可玩性非常强。&lt;/p>
+&lt;p>比如&lt;a href="https://mp.weixin.qq.com/s/lfU3XKP2oAPOLNkxdR2KVg">OPA: Kubernetes 准入控制策略 Top 5&lt;/a>，比如&amp;hellip;。大胆的想象吧。&lt;/p>
+&lt;p>想写一个系列，就叫“如何把 Pipy 玩坏”？&lt;/p></description></item><item><title>可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读</title><link>https://atbug.com/programming-archive-metrics-with-pipy/</link><pubDate>Fri, 11 Jun 2021 08:27:36 +0800</pubDate><guid>https://atbug.com/programming-archive-metrics-with-pipy/</guid><description>
 &lt;p>由于要给团队做一下关于 Flomesh 的分享，准备下材料。&lt;/p>
 &lt;p>“分享是最好的学习方法。”&lt;/p>
 &lt;p>上一回&lt;a href="https://mp.weixin.qq.com/s/l8JzYRn350fjuCAOoo8pcg">初探可编程网关 Pipy&lt;/a>，领略了 Pipy 的“风骚”。从 Pipy 的 GUI 交互深入了解了 Pipy 的配置加载流程。&lt;/p>

@@ -1,13 +1,82 @@
-<!doctype html><html lang=zh-cn data-figures class=page data-mode=dim><head><title>使用 Open Policy Agent 实现可信镜像仓库检查 | 乱世浮生</title><meta charset=utf-8><meta name=generator content="Hugo 0.81.0"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta http-equiv=x-ua-compatible content="IE=edge"><script async src="https://www.googletagmanager.com/gtag/js?id=UA-47966140-1"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-47966140-1')</script><script>var _hmt=_hmt||[];(function(){var a=document.createElement("script"),b;a.src="https://hm.baidu.com/hm.js?f0888d005656102d93e6929886f2dcd3",b=document.getElementsByTagName("script")[0],b.parentNode.insertBefore(a,b)})()</script><meta property="og:locale" content="zh-cn"><meta property="og:type" content="article"><meta name=description content="从互联网（或可信镜像仓库库以外的任何地方）拉取未知镜像会带来风险——例如恶意软件。但是还有其他很好的理由来维护单一的可信来源，例如在企业中实现可支持性。通过确保镜像仅来自受信任的镜像仓库，可以密切控制镜像库存，降低软件熵和蔓延的风险，并提高集群的整体安全性。除此以外，有时还会需要检查镜像的 tag， …"><meta name=twitter:card content="summary"><meta name=twitter:creator content><meta name=twitter:title content="使用 Open Policy Agent 实现可信镜像仓库检查"><meta property="og:url" content="https://atbug.com/image-trusted-repository-with-open-policy-agent/"><meta property="og:title" content="使用 Open Policy Agent 实现可信镜像仓库检查"><meta property="og:description" content="从互联网（或可信镜像仓库库以外的任何地方）拉取未知镜像会带来风险——例如恶意软件。但是还有其他很好的理由来维护单一的可信来源，例如在企业中实现可支持性。通过确保镜像仅来自受信任的镜像仓库，可以密切控制镜像库存，降低软件熵和蔓延的风险，并提高集群的整体安全性。除此以外，有时还会需要检查镜像的 tag， …"><meta property="og:image" content="https://atbug.com/images/thumbnails/opa.png"><link rel=apple-touch-icon sizes=180x180 href=https://atbug.com/icons/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://atbug.com/icons/favicon-32x32.png><link rel=manifest href=https://atbug.com/icons/site.webmanifest><link rel=canonical href=https://atbug.com/image-trusted-repository-with-open-policy-agent/><link rel=preload href=https://atbug.com/css/styles.f447efe4c4b72136d91de28493ae7ef4ecc0c35f80359801224320ede7871c488414b1dfba5913dffd7a1ed5f70440802a87e8795f124086b949e35e6579b5d9.css integrity="sha512-9Efv5MS3ITbZHeKEk65+9OzAw1+ANZgBIkMg7eeHHEiEFLHfulkT3/16HtX3BECAKofoeV8SQIa5SeNeZXm12Q==" as=style crossorigin=anonymous><link rel=preload href=https://atbug.com/js/bundle.min.90cbe84f27859868a1c2f20af76ac2cc69c32540555dbbdae845870af41ba688e06385e7e720680cc34e65b9fdd5381585b444e33c735f35d05e6c5dc7d7bdc0.js as=script integrity="sha512-kMvoTyeFmGihwvIK92rCzGnDJUBVXbva6EWHCvQbpojgY4Xn5yBoDMNOZbn91TgVhbRE4zxzXzXQXmxdx9e9wA==" crossorigin=anonymous><link rel=stylesheet type=text/css href=https://atbug.com/css/styles.f447efe4c4b72136d91de28493ae7ef4ecc0c35f80359801224320ede7871c488414b1dfba5913dffd7a1ed5f70440802a87e8795f124086b949e35e6579b5d9.css integrity="sha512-9Efv5MS3ITbZHeKEk65+9OzAw1+ANZgBIkMg7eeHHEiEFLHfulkT3/16HtX3BECAKofoeV8SQIa5SeNeZXm12Q==" crossorigin=anonymous></head><body data-code=100 data-lines=true id=documentTop><header class=nav_header><nav class=nav><a href=https://atbug.com/ class="nav_brand nav_item" title=乱世浮生><img src=https://atbug.com/logo.png class=logo alt=乱世浮生><div class=nav_close><div><svg class="icon"><use xlink:href="#open-menu"/></svg><svg class="icon"><use xlink:href="#closeme"/></svg></div></div></a><div class="nav_body nav_body_left"><div class=nav_parent><a href=https://atbug.com/ class=nav_item title=Home>Home</a></div><div class=nav_parent><a href=https://atbug.com/post/ class=nav_item title=Archives>Archives</a></div><div class=nav_parent><a href=https://atbug.com/about/ class=nav_item title=About>About</a></div><div class=follow><a href=https://github.com/addozhang><svg class="icon"><use xlink:href="#github"/></svg></a><a href=https://twitter.com/duwasai><svg class="icon"><use xlink:href="#twitter"/></svg></a><a href=https://atbug.com/index.xml><svg class="icon"><use xlink:href="#rss"/></svg></a><div class=color_mode><input type=checkbox class=color_choice id=mode></div></div></div></nav></header><main><div class="grid-inverse wrap content"><article class=post_content><h1 class=post_title>使用 Open Policy Agent 实现可信镜像仓库检查</h1><div class=post_meta><span><svg class="icon"><use xlink:href="#calendar"/></svg></span><span class=post_date>Jul 10, 2021</span>
+<!doctype html><html lang=zh-cn data-figures class=page data-mode=dim><head><title>Rego 不好用？用 Pipy 实现 OPA | 乱世浮生</title><meta charset=utf-8><meta name=generator content="Hugo 0.81.0"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta http-equiv=x-ua-compatible content="IE=edge"><script async src="https://www.googletagmanager.com/gtag/js?id=UA-47966140-1"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-47966140-1')</script><script>var _hmt=_hmt||[];(function(){var a=document.createElement("script"),b;a.src="https://hm.baidu.com/hm.js?f0888d005656102d93e6929886f2dcd3",b=document.getElementsByTagName("script")[0],b.parentNode.insertBefore(a,b)})()</script><meta property="og:locale" content="zh-cn"><meta property="og:type" content="article"><meta name=description content="还不知道 Pipy 是什么的同学可以看下 GitHub 。 Pipy 是一个轻量级、高性能、高稳定、可编程的网络代理。Pipy 核心框架使用 C++ 开发，网络 IO 采用 ASIO 库。 Pipy 的可执行文件仅有 5M 左右，运行期的内存占用 10M 左右，因此 Pipy 非常适合做 Sidecar proxy。 …"><meta name=twitter:card content="summary"><meta name=twitter:creator content><meta name=twitter:title content="Rego 不好用？用 Pipy 实现 OPA"><meta property="og:url" content="https://atbug.com/pipy-implement-kubernetes-admission-control/"><meta property="og:title" content="Rego 不好用？用 Pipy 实现 OPA"><meta property="og:description" content="还不知道 Pipy 是什么的同学可以看下 GitHub 。 Pipy 是一个轻量级、高性能、高稳定、可编程的网络代理。Pipy 核心框架使用 C++ 开发，网络 IO 采用 ASIO 库。 Pipy 的可执行文件仅有 5M 左右，运行期的内存占用 10M 左右，因此 Pipy 非常适合做 Sidecar proxy。 …"><meta property="og:image" content="https://atbug.com/images/thumbnails/architecture.png"><link rel=apple-touch-icon sizes=180x180 href=https://atbug.com/icons/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://atbug.com/icons/favicon-32x32.png><link rel=manifest href=https://atbug.com/icons/site.webmanifest><link rel=canonical href=https://atbug.com/pipy-implement-kubernetes-admission-control/><link rel=preload href=https://atbug.com/css/styles.f447efe4c4b72136d91de28493ae7ef4ecc0c35f80359801224320ede7871c488414b1dfba5913dffd7a1ed5f70440802a87e8795f124086b949e35e6579b5d9.css integrity="sha512-9Efv5MS3ITbZHeKEk65+9OzAw1+ANZgBIkMg7eeHHEiEFLHfulkT3/16HtX3BECAKofoeV8SQIa5SeNeZXm12Q==" as=style crossorigin=anonymous><link rel=preload href=https://atbug.com/js/bundle.min.90cbe84f27859868a1c2f20af76ac2cc69c32540555dbbdae845870af41ba688e06385e7e720680cc34e65b9fdd5381585b444e33c735f35d05e6c5dc7d7bdc0.js as=script integrity="sha512-kMvoTyeFmGihwvIK92rCzGnDJUBVXbva6EWHCvQbpojgY4Xn5yBoDMNOZbn91TgVhbRE4zxzXzXQXmxdx9e9wA==" crossorigin=anonymous><link rel=stylesheet type=text/css href=https://atbug.com/css/styles.f447efe4c4b72136d91de28493ae7ef4ecc0c35f80359801224320ede7871c488414b1dfba5913dffd7a1ed5f70440802a87e8795f124086b949e35e6579b5d9.css integrity="sha512-9Efv5MS3ITbZHeKEk65+9OzAw1+ANZgBIkMg7eeHHEiEFLHfulkT3/16HtX3BECAKofoeV8SQIa5SeNeZXm12Q==" crossorigin=anonymous></head><body data-code=100 data-lines=true id=documentTop><header class=nav_header><nav class=nav><a href=https://atbug.com/ class="nav_brand nav_item" title=乱世浮生><img src=https://atbug.com/logo.png class=logo alt=乱世浮生><div class=nav_close><div><svg class="icon"><use xlink:href="#open-menu"/></svg><svg class="icon"><use xlink:href="#closeme"/></svg></div></div></a><div class="nav_body nav_body_left"><div class=nav_parent><a href=https://atbug.com/ class=nav_item title=Home>Home</a></div><div class=nav_parent><a href=https://atbug.com/post/ class=nav_item title=Archives>Archives</a></div><div class=nav_parent><a href=https://atbug.com/about/ class=nav_item title=About>About</a></div><div class=follow><a href=https://github.com/addozhang><svg class="icon"><use xlink:href="#github"/></svg></a><a href=https://twitter.com/duwasai><svg class="icon"><use xlink:href="#twitter"/></svg></a><a href=https://atbug.com/index.xml><svg class="icon"><use xlink:href="#rss"/></svg></a><div class=color_mode><input type=checkbox class=color_choice id=mode></div></div></div></nav></header><main><div class="grid-inverse wrap content"><article class=post_content><h1 class=post_title>Rego 不好用？用 Pipy 实现 OPA</h1><div class=post_meta><span><svg class="icon"><use xlink:href="#calendar"/></svg></span><span class=post_date>Jul 13, 2021</span>
 <span class=post_time>· 4 min read&nbsp;</span>
 <span>·
+<a href=https://atbug.com/tags/kubernetes title=Kubernetes class="post_tag button button_translucent">Kubernetes</a> ·
 <a href=https://atbug.com/tags/opa title=OPA class="post_tag button button_translucent">OPA</a> ·
-<a href=https://atbug.com/tags/open-policy-agent title="Open Policy Agent" class="post_tag button button_translucent">Open Policy Agent</a> ·
-<a href=https://atbug.com/tags/policy title=Policy class="post_tag button button_translucent">Policy</a></span>
-<span class=page_only>·</span></div><img src=https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/09/opa.jpg class=image_featured alt="使用 Open Policy Agent 实现可信镜像仓库检查"><p>从互联网（或可信镜像仓库库以外的任何地方）拉取未知镜像会带来风险——例如恶意软件。但是还有其他很好的理由来维护单一的可信来源，例如在企业中实现可支持性。通过确保镜像仅来自受信任的镜像仓库，可以密切控制镜像库存，降低软件熵和蔓延的风险，并提高集群的整体安全性。除此以外，有时还会需要检查镜像的 tag，比如禁止使用 latest 镜像。</p><p>这今天我们尝试用“策略即代码”的实现 OPA 来实现功能。</p><p>还没开始之前可能有人会问：明明可以实现个 <a href=https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/>Admission Webhook</a> 就行，为什么还要加上 OPA？</p><p>确实可以，但是这样策略和逻辑都会耦合在一起，当策略需要调整的时候需要修改代码重新发布。而 OPA 就是用来做解耦的，其更像是一个策略的执行引擎。</p><h2 id=什么是-opa>什么是 OPA</h2><p>Open Policy Agent（以下简称 OPA，发音 “oh-pa”）一个开源的通用策略引擎，可以统一整个堆栈的策略执行。OPA 提供了一种高级声明性语言（Rego），可让你将策略指定为代码和简单的 API，以从你的软件中卸载策略决策。你可以使用 OPA 在微服务、Kubernetes、CI/CD 管道、API 网关等中实施策略。</p><p>Rego 是一种高级的声明性语言，是专门为 OPA 建立的。更多 OPA 的介绍可以看 <a href=https://www.openpolicyagent.org/>Open Policy Agent 官网</a>，不想看英文直接看<a href=https://cloudnative.to/blog/introducing-policy-as-code-the-open-policy-agent-opa/>这里</a>。</p><p><img src=https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/09/20210709182625.png alt=2021-07-09-18-26-25></p><p>现在进入正题。</p><h2 id=启动集群>启动集群</h2><p>启动 minikube</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>minikube start
-</code></pre></div><h2 id=创建用于部署-opa-的命名空间>创建用于部署 OPA 的命名空间</h2><p>创建并切换到命名空间 <code>opa</code> （命名空间的切换使用 kubens，更多工具介绍见<a href=https://mp.weixin.qq.com/s/uU2zmT5yyVcKZ5XmLSRqtg>这里</a>）</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl create namespace opa
-kubens opa
-</code></pre></div><h2 id=在-kubernetes-上部署-opa>在 Kubernetes 上部署 OPA</h2><p>Kubernetes 和 OPA 间的通信必须使用 TLS 进行保护。配置 TLS，使用 <code>openssl</code> 创建证书颁发机构（certificate authority CA）和 OPA 的证书/秘钥对。</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>openssl genrsa -out ca.key <span class=m>2048</span>
+<a href=https://atbug.com/tags/pipy title=Pipy class="post_tag button button_translucent">Pipy</a></span>
+<span class=page_only>·</span></div><img src=https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/12/policy.png class=image_featured alt="Rego 不好用？用 Pipy 实现 OPA"><p>还不知道 Pipy 是什么的同学可以看下 <a href=https://github.com/flomesh-io/pipy>GitHub</a> 。</p><blockquote><p>Pipy 是一个轻量级、高性能、高稳定、可编程的网络代理。Pipy 核心框架使用 C++ 开发，网络 IO 采用 ASIO 库。 Pipy 的可执行文件仅有 5M 左右，运行期的内存占用 10M 左右，因此 Pipy 非常适合做 Sidecar proxy。</p><p>Pipy 内置了自研的 pjs 作为脚本扩展，使得Pipy 可以用 JS 脚本根据特定需求快速定制逻辑与功能。</p><p>Pipy 采用了模块化、链式的处理架构，用顺序执行的模块来对网络数据块进行处理。这种简单的架构使得 Pipy 底层简单可靠，同时具备了动态编排流量的能力，兼顾了简单和灵活。通过使用 REUSE_PORT 的机制（主流 Linux 和 BSD 版本都支持该功能），Pipy 可以以多进程模式运行，使得 Pipy 不仅适用于 Sidecar 模式，也适用于大规模的流量处理场景。 在实践中，Pipy 独立部署的时候用作“软负载”，可以在低延迟的情况下，实现媲美硬件的负载均衡吞吐能力，同时具有灵活的扩展性。</p></blockquote><p>在玩过几次 Pipy 并探究其工作原理后，又有了更多的想法。</p><ul><li><a href=https://mp.weixin.qq.com/s/l8JzYRn350fjuCAOoo8pcg>初探可编程网关 Pipy</a></li><li><a href=https://mp.weixin.qq.com/s/_IeRXp9EJnVsvDfg8tUr1A>可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读</a></li><li><a href=https://mp.weixin.qq.com/s/iQWunpazsw86X3kEkB1rJw>可编程网关 Pipy 第三弹：事件模型设计</a></li></ul><p>在使用OPA的时候，一直觉得Rego不是那么顺手，使用pipy js来写规则的想法油然而生。今天就一起试试这个思路。果然，不试不知道，一试发现太多的惊喜～Pipy不止于“代理”，更有很多可以适用的场景：</p><ul><li>极小的单一可执行文件（single binary）使得 pipy 可能是最好的 “云原生 sidecar”</li><li>sidecar 不仅仅是代理，还可以做控制器，做运算单元</li><li>proxy 的串路结构适合各种管控类的操作，比如访问控制</li><li>Pipy js 的扩展能力和快速编程能力，很适合做 “规则引擎”，或者用最近流行的说法 “云原生的规则引擎”。对比 OPA 我认为它完全够格做一个 “羽量级规则执行引擎”</li></ul><p>现在我更倾向于定义 pipy 是一个 “云原生的流量编程框架”，代理只是其底层的核心能力，叠加了 pipy js 以后，上层可以做的事情很多，“流量滋养万物”。</p><p>在 <a href=https://mp.weixin.qq.com/s/RvqCVAhClJY3o_46ALu1bQ>使用 Open Policy Agent 实现可信镜像仓库检查</a> 之后，就在想 Pipy 是否一样可以做到，将内核替换成 Pipy + 规则。所以今天大部分内容和上面这篇是相似的。</p><p>来，一起看看这个“不务正业”的 Pipy 如何实现 Kubernetes 的准入控制器 来做镜像的检查。</p><h2 id=环境>环境</h2><p>继续使用 minikube</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>minikube start
+</code></pre></div><h2 id=创建部署-pipy-的命名空间>创建部署 Pipy 的命名空间</h2><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl create namespace pipy 
+kubens pipy
+kubectl label ns pipy pipy/webhook<span class=o>=</span>ignore <span class=c1>#后面解释</span>
+</code></pre></div><h2 id=规则>规则</h2><p>在 OPA 中，通过 <code>kube-mgmt</code> 容器监控 <code>configmap</code> 的改动，将 Policy 推送到同 pod 的 opa 容器中。</p><p>对于 Pipy 为了渐变，直接使用挂载的方式将保存了规则的 <code>configmap</code> 挂载到 Pipy
+的容器中。</p><p><em>实际的使用中，Pipy 支持轮训的方式检查控制平面中规则的变更，并实时加载；也可以实现与 OPA 的 kube-mgmt 同样的逻辑。</em></p><p>实现了<a href=https://atbug.com/image-trusted-repository-with-open-policy-agent/>上一讲功能</a>的 pipy 规则如下：</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>cat &gt; pipy-rule.js <span class=s>&lt;&lt;EOF
+</span><span class=s>pipy({
+</span><span class=s>  _repoPrefix: &#39;192.168.64.1&#39;, //192.168.64.1:5000 是笔者本地容器运行的一个私有仓库。
+</span><span class=s>  _tagSuffix: &#39;:latest&#39;,
+</span><span class=s>})
+</span><span class=s>
+</span><span class=s>.listen(6443, {
+</span><span class=s>  tls: {
+</span><span class=s>    cert: os.readFile(&#39;/certs/tls.crt&#39;).toString(),
+</span><span class=s>    key: os.readFile(&#39;/certs/tls.key&#39;).toString(),
+</span><span class=s>  },
+</span><span class=s>})
+</span><span class=s>  .decodeHttpRequest()
+</span><span class=s>  .replaceMessage(
+</span><span class=s>    msg =&gt; (
+</span><span class=s>        ((req, result, invalids, reason) =&gt; (
+</span><span class=s>            req = JSON.decode(msg.body),
+</span><span class=s>            invalids = req.request.object.spec.containers.find(container =&gt; (
+</span><span class=s>              (!container.image.startsWith(_repoPrefix) ? (
+</span><span class=s>                reason = `${container.image} repo not start with ${_repoPrefix}`,
+</span><span class=s>                console.log(reason),
+</span><span class=s>                true
+</span><span class=s>              ) : (false))
+</span><span class=s>              ||
+</span><span class=s>              (container.image.endsWith(_tagSuffix) ? (
+</span><span class=s>                reason = `${container.image} tag end with ${_tagSuffix}`,
+</span><span class=s>                console.log(reason),
+</span><span class=s>                true
+</span><span class=s>              ) : (false)
+</span><span class=s>            ))),
+</span><span class=s>            invalids != undefined ? (
+</span><span class=s>              result = {
+</span><span class=s>                &#34;apiVersion&#34;: &#34;admission.k8s.io/v1beta1&#34;,
+</span><span class=s>                &#34;kind&#34;: &#34;AdmissionReview&#34;,
+</span><span class=s>                &#34;response&#34;: {
+</span><span class=s>                    &#34;allowed&#34;: false,
+</span><span class=s>                    &#34;uid&#34;: req.request.uid,
+</span><span class=s>                    &#34;status&#34;: {
+</span><span class=s>                        &#34;reason&#34;: reason,
+</span><span class=s>                    },
+</span><span class=s>                },
+</span><span class=s>              }
+</span><span class=s>            ) : (
+</span><span class=s>              result = {
+</span><span class=s>                &#34;apiVersion&#34;: &#34;admission.k8s.io/v1beta1&#34;,
+</span><span class=s>                &#34;kind&#34;: &#34;AdmissionReview&#34;,
+</span><span class=s>                &#34;response&#34;: {
+</span><span class=s>                    &#34;allowed&#34;: true,
+</span><span class=s>                    &#34;uid&#34;: req.request.uid
+</span><span class=s>                },
+</span><span class=s>              }
+</span><span class=s>            ),
+</span><span class=s>
+</span><span class=s>            console.log(JSON.encode(result)),
+</span><span class=s>            
+</span><span class=s>            new Message({
+</span><span class=s>              &#39;status&#39; : 200,
+</span><span class=s>              &#39;headers&#39;: {
+</span><span class=s>                &#39;Content-Type&#39;: &#39;application/json&#39;
+</span><span class=s>              }
+</span><span class=s>              }, JSON.encode(result))
+</span><span class=s>        ))()
+</span><span class=s>    )
+</span><span class=s>  )
+</span><span class=s>  .encodeHttpResponse()  
+</span><span class=s>EOF</span>
+</code></pre></div><p>将规则保存在 configmap 中：</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl create configmap pipy-rule --from-file<span class=o>=</span>pipy-rule.js
+</code></pre></div><h2 id=在-kubernetes-上部署-pipy>在 Kubernetes 上部署 Pipy</h2><p>Kubernetes 与准入控制器（<a href=https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/>Admission Controller</a>）的通信需要使用 TLS。配置 TLS，使用 <code>openssl</code> 创建证书颁发机构（certificate authority CA）和 OPA 的证书/秘钥对。</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>openssl genrsa -out ca.key <span class=m>2048</span>
 openssl req -x509 -new -nodes -key ca.key -days <span class=m>100000</span> -out ca.crt -subj <span class=s2>&#34;/CN=admission_ca&#34;</span>
 </code></pre></div><p>为 OPA 创建 TLS 秘钥和证书：</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>cat &gt;server.conf <span class=s>&lt;&lt;EOF
 </span><span class=s>[req]
@@ -15,227 +84,130 @@ openssl req -x509 -new -nodes -key ca.key -days <span class=m>100000</span> -out
 </span><span class=s>distinguished_name = req_distinguished_name
 </span><span class=s>prompt = no
 </span><span class=s>[req_distinguished_name]
-</span><span class=s>CN = opa.opa.svc
+</span><span class=s>CN = pipy.pipy.svc
 </span><span class=s>[ v3_req ]
 </span><span class=s>basicConstraints = CA:FALSE
 </span><span class=s>keyUsage = nonRepudiation, digitalSignature, keyEncipherment
 </span><span class=s>extendedKeyUsage = clientAuth, serverAuth
 </span><span class=s>subjectAltName = @alt_names
 </span><span class=s>[alt_names]
-</span><span class=s>DNS.1 = opa.opa.svc
+</span><span class=s>DNS.1 = pipy.pipy.svc
 </span><span class=s>EOF</span>
-</code></pre></div><blockquote><p>注意 <code>CN</code> 和 <code>alt_names</code> 必须与后面创建 OPA service 的匹配。</p></blockquote><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>openssl genrsa -out server.key <span class=m>2048</span>
+</code></pre></div><blockquote><p>注意 <code>CN</code> 和 <code>alt_names</code> 必须与后面创建 Pipy service 的匹配。</p></blockquote><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>openssl genrsa -out server.key <span class=m>2048</span>
 openssl req -new -key server.key -out server.csr -config server.conf
 openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days <span class=m>100000</span> -extensions v3_req -extfile server.conf
-</code></pre></div><p>为 OPA 创建保存 TLS 凭证的 Secret：</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl create secret tls opa-server --cert<span class=o>=</span>server.crt --key<span class=o>=</span>server.key
-</code></pre></div><p>将 OPA 部署为准入控制器（admission controller）。</p><p><code>admission-controller.yaml</code>：</p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=c># 授权 OPA/kube-mgmt 对资源的只读权限</span><span class=w>
-</span><span class=w></span><span class=c># kube-mgmt 会同步资源信息给 OPA，以便在策略中使用</span><span class=w>
-</span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>ClusterRoleBinding</span><span class=w>
-</span><span class=w></span><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>rbac.authorization.k8s.io/v1</span><span class=w>
-</span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>opa-viewer</span><span class=w>
-</span><span class=w></span><span class=nt>roleRef</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>ClusterRole</span><span class=w>
-</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>view</span><span class=w>
-</span><span class=w>  </span><span class=nt>apiGroup</span><span class=p>:</span><span class=w> </span><span class=l>rbac.authorization.k8s.io</span><span class=w>
-</span><span class=w></span><span class=nt>subjects</span><span class=p>:</span><span class=w>
-</span><span class=w></span>- <span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Group</span><span class=w>
-</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>system:serviceaccounts:opa</span><span class=w>
-</span><span class=w>  </span><span class=nt>apiGroup</span><span class=p>:</span><span class=w> </span><span class=l>rbac.authorization.k8s.io</span><span class=w>
-</span><span class=w></span><span class=nn>---</span><span class=w>
-</span><span class=w></span><span class=c># 为 OPA/kube-mgmt 定义角色来在 configmaps 中更新策略状态</span><span class=w>
-</span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Role</span><span class=w>
-</span><span class=w></span><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>rbac.authorization.k8s.io/v1</span><span class=w>
-</span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>namespace</span><span class=p>:</span><span class=w> </span><span class=l>opa</span><span class=w>
-</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>configmap-modifier</span><span class=w>
-</span><span class=w></span><span class=nt>rules</span><span class=p>:</span><span class=w>
-</span><span class=w></span>- <span class=nt>apiGroups</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s2>&#34;&#34;</span><span class=p>]</span><span class=w>
-</span><span class=w>  </span><span class=nt>resources</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s2>&#34;configmaps&#34;</span><span class=p>]</span><span class=w>
-</span><span class=w>  </span><span class=nt>verbs</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s2>&#34;update&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;patch&#34;</span><span class=p>]</span><span class=w>
-</span><span class=w></span><span class=nn>---</span><span class=w>
-</span><span class=w></span><span class=c># 为 OPA/kube-mgmt 授予角色</span><span class=w>
-</span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>RoleBinding</span><span class=w>
-</span><span class=w></span><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>rbac.authorization.k8s.io/v1</span><span class=w>
-</span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>namespace</span><span class=p>:</span><span class=w> </span><span class=l>opa</span><span class=w>
-</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>opa-configmap-modifier</span><span class=w>
-</span><span class=w></span><span class=nt>roleRef</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Role</span><span class=w>
-</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>configmap-modifier</span><span class=w>
-</span><span class=w>  </span><span class=nt>apiGroup</span><span class=p>:</span><span class=w> </span><span class=l>rbac.authorization.k8s.io</span><span class=w>
-</span><span class=w></span><span class=nt>subjects</span><span class=p>:</span><span class=w>
-</span><span class=w></span>- <span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Group</span><span class=w>
-</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>system:serviceaccounts:opa</span><span class=w>
-</span><span class=w>  </span><span class=nt>apiGroup</span><span class=p>:</span><span class=w> </span><span class=l>rbac.authorization.k8s.io</span><span class=w>
-</span><span class=w></span><span class=nn>---</span><span class=w>
-</span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Service</span><span class=w>
+</code></pre></div><p>为 OPA 创建保存 TLS 凭证的 Secret：</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl create secret tls pipy-server --cert<span class=o>=</span>server.crt --key<span class=o>=</span>server.key
+</code></pre></div><p>将 Pipy 部署为准入控制器（admission controller）。为了方便调试，我们使用启动 Pipy 的时候打开了控制台。</p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Service</span><span class=w>
 </span><span class=w></span><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
 </span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>opa</span><span class=w>
-</span><span class=w>  </span><span class=nt>namespace</span><span class=p>:</span><span class=w> </span><span class=l>opa</span><span class=w>
+</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>pipy</span><span class=w>
+</span><span class=w>  </span><span class=nt>namespace</span><span class=p>:</span><span class=w> </span><span class=l>pipy</span><span class=w>
 </span><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>selector</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span><span class=nt>app</span><span class=p>:</span><span class=w> </span><span class=l>opa</span><span class=w>
+</span><span class=w>    </span><span class=nt>app</span><span class=p>:</span><span class=w> </span><span class=l>pipy</span><span class=w>
 </span><span class=w>  </span><span class=nt>ports</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>https</span><span class=w>
 </span><span class=w>    </span><span class=nt>protocol</span><span class=p>:</span><span class=w> </span><span class=l>TCP</span><span class=w>
 </span><span class=w>    </span><span class=nt>port</span><span class=p>:</span><span class=w> </span><span class=m>443</span><span class=w>
-</span><span class=w>    </span><span class=nt>targetPort</span><span class=p>:</span><span class=w> </span><span class=m>8443</span><span class=w>
+</span><span class=w>    </span><span class=nt>targetPort</span><span class=p>:</span><span class=w> </span><span class=m>6443</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>gui</span><span class=w> </span><span class=c># 方便调试</span><span class=w>
+</span><span class=w>    </span><span class=nt>protocol</span><span class=p>:</span><span class=w> </span><span class=l>TCP</span><span class=w>
+</span><span class=w>    </span><span class=nt>port</span><span class=p>:</span><span class=w> </span><span class=m>6060</span><span class=w>
+</span><span class=w>    </span><span class=nt>targetPort</span><span class=p>:</span><span class=w> </span><span class=m>6060</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>http</span><span class=w>
+</span><span class=w>    </span><span class=nt>protocol</span><span class=p>:</span><span class=w> </span><span class=l>TCP</span><span class=w>
+</span><span class=w>    </span><span class=nt>port</span><span class=p>:</span><span class=w> </span><span class=m>6080</span><span class=w>
+</span><span class=w>    </span><span class=nt>targetPort</span><span class=p>:</span><span class=w> </span><span class=m>6080</span><span class=w>
 </span><span class=w></span><span class=nn>---</span><span class=w>
 </span><span class=w></span><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>apps/v1</span><span class=w>
 </span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Deployment</span><span class=w>
 </span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>labels</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span><span class=nt>app</span><span class=p>:</span><span class=w> </span><span class=l>opa</span><span class=w>
-</span><span class=w>  </span><span class=nt>namespace</span><span class=p>:</span><span class=w> </span><span class=l>opa</span><span class=w>
-</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>opa</span><span class=w>
+</span><span class=w>    </span><span class=nt>app</span><span class=p>:</span><span class=w> </span><span class=l>pipy</span><span class=w>
+</span><span class=w>  </span><span class=nt>namespace</span><span class=p>:</span><span class=w> </span><span class=l>pipy</span><span class=w>
+</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>pipy</span><span class=w>
 </span><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>replicas</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
 </span><span class=w>  </span><span class=nt>selector</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span><span class=nt>matchLabels</span><span class=p>:</span><span class=w>
-</span><span class=w>      </span><span class=nt>app</span><span class=p>:</span><span class=w> </span><span class=l>opa</span><span class=w>
+</span><span class=w>      </span><span class=nt>app</span><span class=p>:</span><span class=w> </span><span class=l>pipy</span><span class=w>
 </span><span class=w>  </span><span class=nt>template</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span><span class=nt>metadata</span><span class=p>:</span><span class=w>
 </span><span class=w>      </span><span class=nt>labels</span><span class=p>:</span><span class=w>
-</span><span class=w>        </span><span class=nt>app</span><span class=p>:</span><span class=w> </span><span class=l>opa</span><span class=w>
-</span><span class=w>      </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>opa</span><span class=w>
+</span><span class=w>        </span><span class=nt>app</span><span class=p>:</span><span class=w> </span><span class=l>pipy</span><span class=w>
+</span><span class=w>      </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>pipy</span><span class=w>
 </span><span class=w>    </span><span class=nt>spec</span><span class=p>:</span><span class=w>
-</span><span class=w>      </span><span class=nt>containers</span><span class=p>:</span><span class=w>
-</span><span class=w>        </span><span class=c># WARNING: OPA is NOT running with an authorization policy configured. This</span><span class=w>
-</span><span class=w>        </span><span class=c># means that clients can read and write policies in OPA. If you are</span><span class=w>
-</span><span class=w>        </span><span class=c># deploying OPA in an insecure environment, be sure to configure</span><span class=w>
-</span><span class=w>        </span><span class=c># authentication and authorization on the daemon. See the Security page for</span><span class=w>
-</span><span class=w>        </span><span class=c># details: https://www.openpolicyagent.org/docs/security.html.</span><span class=w>
-</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>opa</span><span class=w>
-</span><span class=w>          </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>openpolicyagent/opa:0.30.1-rootless</span><span class=w>
+</span><span class=w>      </span><span class=nt>containers</span><span class=p>:</span><span class=w> 
+</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>pipy</span><span class=w>
+</span><span class=w>          </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>pipy:latest</span><span class=w>
+</span><span class=w>          </span><span class=nt>imagePullPolicy</span><span class=p>:</span><span class=w> </span><span class=l>IfNotPresent</span><span class=w>
 </span><span class=w>          </span><span class=nt>args</span><span class=p>:</span><span class=w>
-</span><span class=w>            </span>- <span class=s2>&#34;run&#34;</span><span class=w>
-</span><span class=w>            </span>- <span class=s2>&#34;--server&#34;</span><span class=w>
-</span><span class=w>            </span>- <span class=s2>&#34;--tls-cert-file=/certs/tls.crt&#34;</span><span class=w>
-</span><span class=w>            </span>- <span class=s2>&#34;--tls-private-key-file=/certs/tls.key&#34;</span><span class=w>
-</span><span class=w>            </span>- <span class=s2>&#34;--addr=0.0.0.0:8443&#34;</span><span class=w>
-</span><span class=w>            </span>- <span class=s2>&#34;--addr=http://127.0.0.1:8181&#34;</span><span class=w>
-</span><span class=w>            </span>- <span class=s2>&#34;--log-format=json-pretty&#34;</span><span class=w>
-</span><span class=w>            </span>- <span class=s2>&#34;--set=decision_logs.console=true&#34;</span><span class=w>
+</span><span class=w>            </span>- <span class=s2>&#34;pipy&#34;</span><span class=w>
+</span><span class=w>            </span>- <span class=s2>&#34;/opt/data/pipy-rule.js&#34;</span><span class=w>
+</span><span class=w>            </span>- <span class=s2>&#34;--gui-port=6060&#34;</span><span class=w> </span><span class=c># 方便调试</span><span class=w>
+</span><span class=w>            </span><span class=c># - &#34;--log-level=debug&#34;</span><span class=w>
+</span><span class=w>          </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span><span class=w>          </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>gui</span><span class=w>
+</span><span class=w>            </span><span class=nt>containerPort</span><span class=p>:</span><span class=w> </span><span class=m>6060</span><span class=w>
+</span><span class=w>            </span><span class=nt>protocol</span><span class=p>:</span><span class=w> </span><span class=l>TCP</span><span class=w>
+</span><span class=w>          </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>http</span><span class=w>
+</span><span class=w>            </span><span class=nt>containerPort</span><span class=p>:</span><span class=w> </span><span class=m>6080</span><span class=w>
+</span><span class=w>            </span><span class=nt>protocol</span><span class=p>:</span><span class=w> </span><span class=l>TCP  </span><span class=w>
+</span><span class=w>          </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>https</span><span class=w>
+</span><span class=w>            </span><span class=nt>containerPort</span><span class=p>:</span><span class=w> </span><span class=m>6443</span><span class=w>
+</span><span class=w>            </span><span class=nt>protocol</span><span class=p>:</span><span class=w> </span><span class=l>TCP</span><span class=w>
 </span><span class=w>          </span><span class=nt>volumeMounts</span><span class=p>:</span><span class=w>
 </span><span class=w>            </span>- <span class=nt>readOnly</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
 </span><span class=w>              </span><span class=nt>mountPath</span><span class=p>:</span><span class=w> </span><span class=l>/certs</span><span class=w>
-</span><span class=w>              </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>opa-server</span><span class=w>
-</span><span class=w>          </span><span class=nt>readinessProbe</span><span class=p>:</span><span class=w>
-</span><span class=w>            </span><span class=nt>httpGet</span><span class=p>:</span><span class=w>
-</span><span class=w>              </span><span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=l>/health?plugins&amp;bundle</span><span class=w>
-</span><span class=w>              </span><span class=nt>scheme</span><span class=p>:</span><span class=w> </span><span class=l>HTTPS</span><span class=w>
-</span><span class=w>              </span><span class=nt>port</span><span class=p>:</span><span class=w> </span><span class=m>8443</span><span class=w>
-</span><span class=w>            </span><span class=nt>initialDelaySeconds</span><span class=p>:</span><span class=w> </span><span class=m>3</span><span class=w>
-</span><span class=w>            </span><span class=nt>periodSeconds</span><span class=p>:</span><span class=w> </span><span class=m>5</span><span class=w>
-</span><span class=w>          </span><span class=nt>livenessProbe</span><span class=p>:</span><span class=w>
-</span><span class=w>            </span><span class=nt>httpGet</span><span class=p>:</span><span class=w>
-</span><span class=w>              </span><span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=l>/health</span><span class=w>
-</span><span class=w>              </span><span class=nt>scheme</span><span class=p>:</span><span class=w> </span><span class=l>HTTPS</span><span class=w>
-</span><span class=w>              </span><span class=nt>port</span><span class=p>:</span><span class=w> </span><span class=m>8443</span><span class=w>
-</span><span class=w>            </span><span class=nt>initialDelaySeconds</span><span class=p>:</span><span class=w> </span><span class=m>3</span><span class=w>
-</span><span class=w>            </span><span class=nt>periodSeconds</span><span class=p>:</span><span class=w> </span><span class=m>5</span><span class=w>
-</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>kube-mgmt</span><span class=w>
-</span><span class=w>          </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>openpolicyagent/kube-mgmt:0.11</span><span class=w>
-</span><span class=w>          </span><span class=nt>args</span><span class=p>:</span><span class=w>
-</span><span class=w>            </span>- <span class=s2>&#34;--replicate=v1/pods&#34;</span><span class=w>
+</span><span class=w>              </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>pipy-server</span><span class=w>
+</span><span class=w>            </span>- <span class=nt>readOnly</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=w>
+</span><span class=w>              </span><span class=nt>mountPath</span><span class=p>:</span><span class=w> </span><span class=l>/opt/data</span><span class=w>
+</span><span class=w>              </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>pipy-rule</span><span class=w>
 </span><span class=w>      </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
-</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>opa-server</span><span class=w>
+</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>pipy-server</span><span class=w>
 </span><span class=w>          </span><span class=nt>secret</span><span class=p>:</span><span class=w>
-</span><span class=w>            </span><span class=nt>secretName</span><span class=p>:</span><span class=w> </span><span class=l>opa-server</span><span class=w>
-</span><span class=w></span><span class=nn>---</span><span class=w>
-</span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>ConfigMap</span><span class=w>
-</span><span class=w></span><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
-</span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>opa-default-system-main</span><span class=w>
-</span><span class=w>  </span><span class=nt>namespace</span><span class=p>:</span><span class=w> </span><span class=l>opa</span><span class=w>
-</span><span class=w></span><span class=nt>data</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>main</span><span class=p>:</span><span class=w> </span><span class=p>|</span><span class=sd>
-</span><span class=sd>    package system
-</span><span class=sd>
-</span><span class=sd>    import data.kubernetes.validating.images
-</span><span class=sd>
-</span><span class=sd>    main = {
-</span><span class=sd>      &#34;apiVersion&#34;: &#34;admission.k8s.io/v1beta1&#34;,
-</span><span class=sd>      &#34;kind&#34;: &#34;AdmissionReview&#34;,
-</span><span class=sd>      &#34;response&#34;: response,
-</span><span class=sd>    }
-</span><span class=sd>
-</span><span class=sd>    default uid = &#34;&#34;
-</span><span class=sd>
-</span><span class=sd>    uid = input.request.uid
-</span><span class=sd>
-</span><span class=sd>    response = {
-</span><span class=sd>        &#34;allowed&#34;: false,
-</span><span class=sd>        &#34;uid&#34;: uid,
-</span><span class=sd>        &#34;status&#34;: {
-</span><span class=sd>            &#34;reason&#34;: reason,
-</span><span class=sd>        },
-</span><span class=sd>    } {
-</span><span class=sd>        reason = concat(&#34;, &#34;, images.deny)
-</span><span class=sd>        reason != &#34;&#34;
-</span><span class=sd>    }
-</span><span class=sd>    else = {&#34;allowed&#34;: true, &#34;uid&#34;: uid}</span><span class=w>    
-</span></code></pre></div><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl apply -f admission-controller.yaml
-</code></pre></div><p>接下来，生成将用于将 OPA 注册为准入控制器的 manifest。</p><div class=highlight><pre class=chroma><code class=language-fallback data-lang=fallback>cat &gt; webhook-configuration.yaml &lt;&lt;EOF
-kind: ValidatingWebhookConfiguration
-apiVersion: admissionregistration.k8s.io/v1beta1
-metadata:
-  name: opa-validating-webhook
-webhooks:
-  - name: validating-webhook.openpolicyagent.org
-    rules:
-      - operations: [&#34;CREATE&#34;, &#34;UPDATE&#34;]
-        apiGroups: [&#34;*&#34;]
-        apiVersions: [&#34;*&#34;]
-        resources: [&#34;pods&#34;]
-    clientConfig:
-      caBundle: $(cat ca.crt | base64 | tr -d &#39;\n&#39;)
-      service:
-        namespace: opa
-        name: opa
-EOF
+</span><span class=w>            </span><span class=nt>secretName</span><span class=p>:</span><span class=w> </span><span class=l>pipy-server</span><span class=w>
+</span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>pipy-rule</span><span class=w>
+</span><span class=w>          </span><span class=nt>configMap</span><span class=p>:</span><span class=w>
+</span><span class=w>            </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>pipy-rule</span><span class=w>
+</span><span class=w>
+</span></code></pre></div><p>暴露控制台的访问：</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl expose deploy pipy --name pipy-node --type NodePort
+kubectl get svc pipy-port
+minikube service --url pipy-node -n pipy
+<span class=c1># 找到控制台端口</span>
+</code></pre></div><p>接下来，生成将用于将 Pipy 注册为准入控制器的 manifest。</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>cat &gt; webhook-configuration.yaml <span class=s>&lt;&lt;EOF
+</span><span class=s>kind: ValidatingWebhookConfiguration
+</span><span class=s>apiVersion: admissionregistration.k8s.io/v1beta1
+</span><span class=s>metadata:
+</span><span class=s>  name: pipy-validating-webhook
+</span><span class=s>webhooks:
+</span><span class=s>  - name: validating-webhook.pipy.flomesh-io.cn
+</span><span class=s>    namespaceSelector:
+</span><span class=s>      matchExpressions:
+</span><span class=s>      - key: pipy/webhook
+</span><span class=s>        operator: NotIn
+</span><span class=s>        values:
+</span><span class=s>        - ignore
+</span><span class=s>    rules:
+</span><span class=s>      - operations: [&#34;CREATE&#34;, &#34;UPDATE&#34;]
+</span><span class=s>        apiGroups: [&#34;*&#34;]
+</span><span class=s>        apiVersions: [&#34;*&#34;]
+</span><span class=s>        resources: [&#34;pods&#34;]
+</span><span class=s>    clientConfig:
+</span><span class=s>      caBundle: $(cat ca.crt | base64 | tr -d &#39;\n&#39;)
+</span><span class=s>      service:
+</span><span class=s>        namespace: pipy
+</span><span class=s>        name: pipy
+</span><span class=s>EOF</span>
 </code></pre></div><p>生成的配置文件包含 CA 证书的 base64 编码，以便可以在 Kubernetes API 服务器和 OPA 之间建立 TLS 连接。</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl apply -f webhook-configuration.yaml
-</code></pre></div><p>查看 OPA 日志：</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl logs -l <span class=nv>app</span><span class=o>=</span>opa -c opa -f
-</code></pre></div><h2 id=定义策略并通过-kubernetes-将其加载到-opa>定义策略并通过 Kubernetes 将其加载到 OPA</h2><p>这里我们定义了对容器镜像的检查：</p><ul><li>是否来自受信任的仓库</li><li>是否使用了 latest tag 的镜像</li></ul><p><code>image-policy.rego</code></p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>package kubernetes.validating.images
- 
-deny<span class=o>[</span>msg<span class=o>]</span> <span class=o>{</span>
-    some i
-    input.request.kind.kind <span class=o>==</span> <span class=s2>&#34;Pod&#34;</span>
-    image :<span class=o>=</span> input.request.object.spec.containers<span class=o>[</span>i<span class=o>]</span>.image
-    endswith<span class=o>(</span>image, <span class=s2>&#34;:latest&#34;</span><span class=o>)</span>
-    msg :<span class=o>=</span> sprintf<span class=o>(</span><span class=s2>&#34;Image &#39;%v&#39; used latest image&#34;</span>, <span class=o>[</span>image<span class=o>])</span> 
-<span class=o>}</span> <span class=o>{</span>
-    some i
-    input.request.kind.kind <span class=o>==</span> <span class=s2>&#34;Pod&#34;</span>
-    image :<span class=o>=</span> input.request.object.spec.containers<span class=o>[</span>i<span class=o>]</span>.image
-    not startswith<span class=o>(</span>image, <span class=s2>&#34;192.168.64.1:5000&#34;</span><span class=o>)</span>
-    msg :<span class=o>=</span> sprintf<span class=o>(</span><span class=s2>&#34;Image &#39;%v&#39; comes from untrusted registry&#34;</span>, <span class=o>[</span>image<span class=o>])</span>
-<span class=o>}</span>
-</code></pre></div><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl create configmap image-policy --from-file<span class=o>=</span>image-policy.rego
-</code></pre></div><p>检查 configmap 的 annotation <code>openpolicyagent.org/policy-status</code> 值是否 为 <code>'{"status":"ok"}'</code>。否则，就要根据报错信息处理问题。</p><p>注：<code>192.168.64.1:5000</code> 是笔者本地容器运行的一个私有仓库。</p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=s1>&#39;3.6&#39;</span><span class=w>
-</span><span class=w></span><span class=nt>services</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>registry</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>registry:2.7.1</span><span class=w>
-</span><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>registry</span><span class=w>
-</span><span class=w>    </span><span class=nt>restart</span><span class=p>:</span><span class=w> </span><span class=l>always</span><span class=w>
-</span><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
-</span><span class=w>      </span><span class=nt>REGISTRY_HTTP_ADDR</span><span class=p>:</span><span class=w> </span><span class=m>0.0.0.0</span><span class=p>:</span><span class=m>5000</span><span class=w>
-</span><span class=w>      </span><span class=nt>REGISTRY_STORAGE</span><span class=p>:</span><span class=w> </span><span class=l>filesystem</span><span class=w>
-</span><span class=w>      </span><span class=nt>REGISTRY_STORAGE_DELETE_ENABLED</span><span class=p>:</span><span class=w> </span><span class=s1>&#39;true&#39;</span><span class=w>
-</span><span class=w>      </span><span class=nt>REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY</span><span class=p>:</span><span class=w> </span><span class=l>/var/lib/registry</span><span class=w>
-</span><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
-</span><span class=w>      </span>- <span class=s1>&#39;5000:5000&#39;</span><span class=w>
-</span><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
-</span><span class=w>      </span>- <span class=s1>&#39;/Users/addo/Downloads/tmp/registry:/var/lib/registry&#39;</span><span class=w>
-</span></code></pre></div><h2 id=测试>测试</h2><h3 id=pod-bad-repoyaml>pod-bad-repo.yaml</h3><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
+</code></pre></div><h2 id=测试>测试</h2><p><code>pod-bad-repo.yaml</code>:</p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
 </span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Pod</span><span class=w>
 </span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>creationTimestamp</span><span class=p>:</span><span class=w> </span><span class=kc>null</span><span class=w>
 </span><span class=w>  </span><span class=nt>labels</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span><span class=nt>run</span><span class=p>:</span><span class=w> </span><span class=l>web-server</span><span class=w>
 </span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>web-server</span><span class=w>
+</span><span class=w>  </span><span class=nt>namespace</span><span class=p>:</span><span class=w> </span><span class=l>default</span><span class=w>
 </span><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>containers</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span>- <span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>nginx:1.21.1</span><span class=w>
@@ -245,14 +217,15 @@ deny<span class=o>[</span>msg<span class=o>]</span> <span class=o>{</span>
 </span><span class=w>  </span><span class=nt>restartPolicy</span><span class=p>:</span><span class=w> </span><span class=l>Always</span><span class=w>
 </span><span class=w></span><span class=nt>status</span><span class=p>:</span><span class=w> </span>{}<span class=w>
 </span></code></pre></div><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl apply -f pod-bad-repo.yaml
-Error from server <span class=o>(</span>Image <span class=s1>&#39;nginx:1.21.1&#39;</span> comes from untrusted registry<span class=o>)</span>: error when creating <span class=s2>&#34;pod-bad-repo.yaml&#34;</span>: admission webhook <span class=s2>&#34;validating-webhook.openpolicyagent.org&#34;</span> denied the request: Image <span class=s1>&#39;nginx:1.21.1&#39;</span> comes from untrusted registry
-</code></pre></div><h3 id=pod-bad-tagyaml>pod-bad-tag.yaml</h3><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
+Error from server <span class=o>(</span>nginx:1.21.1 repo not start with 192.168.64.1<span class=o>)</span>: error when creating <span class=s2>&#34;pod-bad-repo.yaml&#34;</span>: admission webhook <span class=s2>&#34;validating-webhook.pipy.flomesh-io.cn&#34;</span> denied the request: nginx:1.21.1 repo not start with 192.168.64.1
+</code></pre></div><p><code>pod-bad-tag.yaml</code></p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
 </span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Pod</span><span class=w>
 </span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>creationTimestamp</span><span class=p>:</span><span class=w> </span><span class=kc>null</span><span class=w>
 </span><span class=w>  </span><span class=nt>labels</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span><span class=nt>run</span><span class=p>:</span><span class=w> </span><span class=l>web-server</span><span class=w>
 </span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>web-server</span><span class=w>
+</span><span class=w>  </span><span class=nt>namespace</span><span class=p>:</span><span class=w> </span><span class=l>default</span><span class=w>
 </span><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>containers</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span>- <span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=m>192.168.64.1</span><span class=p>:</span><span class=m>5000</span><span class=l>/nginx:latest</span><span class=w>
@@ -262,14 +235,15 @@ Error from server <span class=o>(</span>Image <span class=s1>&#39;nginx:1.21.1&#
 </span><span class=w>  </span><span class=nt>restartPolicy</span><span class=p>:</span><span class=w> </span><span class=l>Always</span><span class=w>
 </span><span class=w></span><span class=nt>status</span><span class=p>:</span><span class=w> </span>{}<span class=w>
 </span></code></pre></div><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl apply -f pod-bad-tag.yaml
-Error from server <span class=o>(</span>Image <span class=s1>&#39;192.168.64.1:5000/nginx:latest&#39;</span> used latest image<span class=o>)</span>: error when creating <span class=s2>&#34;pod-bad-tag.yaml&#34;</span>: admission webhook <span class=s2>&#34;validating-webhook.openpolicyagent.org&#34;</span> denied the request: Image <span class=s1>&#39;192.168.64.1:5000/nginx:latest&#39;</span> used latest image
-</code></pre></div><h3 id=pod-okyaml>pod-ok.yaml</h3><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
+Error from server <span class=o>(</span>192.168.64.1:5000/nginx:latest tag end with :latest<span class=o>)</span>: error when creating <span class=s2>&#34;pod-bad-tag.yaml&#34;</span>: admission webhook <span class=s2>&#34;validating-webhook.pipy.flomesh-io.cn&#34;</span> denied the request: 192.168.64.1:5000/nginx:latest tag end with :latest
+</code></pre></div><p><code>pod-ok.yaml</code></p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
 </span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Pod</span><span class=w>
 </span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>creationTimestamp</span><span class=p>:</span><span class=w> </span><span class=kc>null</span><span class=w>
 </span><span class=w>  </span><span class=nt>labels</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span><span class=nt>run</span><span class=p>:</span><span class=w> </span><span class=l>web-server</span><span class=w>
 </span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>web-server</span><span class=w>
+</span><span class=w>  </span><span class=nt>namespace</span><span class=p>:</span><span class=w> </span><span class=l>default</span><span class=w>
 </span><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>containers</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span>- <span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=m>192.168.64.1</span><span class=p>:</span><span class=m>5000</span><span class=l>/nginx:1.21.1</span><span class=w>
@@ -280,8 +254,8 @@ Error from server <span class=o>(</span>Image <span class=s1>&#39;192.168.64.1:5
 </span><span class=w></span><span class=nt>status</span><span class=p>:</span><span class=w> </span>{}<span class=w>
 </span></code></pre></div><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl apply -f pod-ok.yaml
 pod/web-server created
-</code></pre></div><h2 id=总结>总结</h2><p>策略即代码，以代码的实现表达策略；在通过策略与执行引擎的解耦分离，让策略更加的灵活。</p><p>后面我们再探索 OPA 的更多场景。</p><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//addozhang.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></article><aside class=sidebar><section class=sidebar_inner><h2>张晓辉</h2><div class=sidebar_description><ul><li>资深码农、云原生践行者</li><li>Kubernetes、DevOps、微服务</li></ul><p>微信订阅号：云原生指北。
-<img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/pipy-implement-kubernetes-admission-control/ class=nav-link title="Rego 不好用？用 Pipy 实现 OPA">Rego 不好用？用 Pipy 实现 OPA</a></li><li><a href=https://atbug.com/open-policy-agent-top-5-kubernetes-admission-control/ class=nav-link title="Open Policy Agent: Top 5 Kubernetes 准入控制策略">Open Policy Agent: Top 5 Kubernetes 准入控制策略</a></li><li><a href=https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/ class=nav-link title="Kubernetes 的魔力在于企业标准化，而不是应用程序的可移植性">Kubernetes 的魔力在于企业标准化，而不是应用程序的可移植性</a></li><li><a href=https://atbug.com/notes-for-cka-preparation/ class=nav-link title="Kubernetes CKA 证书备考笔记">Kubernetes CKA 证书备考笔记</a></li><li><a href=https://atbug.com/pipy-event-handling-design/ class=nav-link title="可编程网关 Pipy 第三弹：事件模型设计">可编程网关 Pipy 第三弹：事件模型设计</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
+</code></pre></div><h2 id=总结>总结</h2><p>OPA 哪哪都好，唯一缺点就是其引进的 <code>Rego</code> 语言抬高了使用的门槛。而 Pipy 的规则是通过 JavaScrip 来编写的，前端的同学一样可以完成规则的编写。完全替代可能夸张了一些，但确实在部分场景下可以替代 OPA。</p><p>玩到这里，你会发现有了规则，加上功能强大的过滤器（现在我喜欢叫他们 Hook 了），Pipy 的可玩性非常强。</p><p>比如<a href=https://mp.weixin.qq.com/s/lfU3XKP2oAPOLNkxdR2KVg>OPA: Kubernetes 准入控制策略 Top 5</a>，比如&mldr;。大胆的想象吧。</p><p>想写一个系列，就叫“如何把 Pipy 玩坏”？</p><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//addozhang.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></article><aside class=sidebar><section class=sidebar_inner><h2>张晓辉</h2><div class=sidebar_description><ul><li>资深码农、云原生践行者</li><li>Kubernetes、DevOps、微服务</li></ul><p>微信订阅号：云原生指北。
+<img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/open-policy-agent-top-5-kubernetes-admission-control/ class=nav-link title="Open Policy Agent: Top 5 Kubernetes 准入控制策略">Open Policy Agent: Top 5 Kubernetes 准入控制策略</a></li><li><a href=https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/ class=nav-link title="Kubernetes 的魔力在于企业标准化，而不是应用程序的可移植性">Kubernetes 的魔力在于企业标准化，而不是应用程序的可移植性</a></li><li><a href=https://atbug.com/image-trusted-repository-with-open-policy-agent/ class=nav-link title="使用 Open Policy Agent 实现可信镜像仓库检查">使用 Open Policy Agent 实现可信镜像仓库检查</a></li><li><a href=https://atbug.com/notes-for-cka-preparation/ class=nav-link title="Kubernetes CKA 证书备考笔记">Kubernetes CKA 证书备考笔记</a></li><li><a href=https://atbug.com/pipy-event-handling-design/ class=nav-link title="可编程网关 Pipy 第三弹：事件模型设计">可编程网关 Pipy 第三弹：事件模型设计</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
 <span class=button_tally>47</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" title=学习>学习
 <span class=button_tally>40</span></a>
