@@ -1,4 +1,50 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 乱世浮生</title><link>https://atbug.com/post/</link><description>Recent content in Posts on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 15 Jul 2021 08:10:22 +0800</lastBuildDate><atom:link href="https://atbug.com/post/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes 必备工具：2021</title><link>https://atbug.com/translation-kuberletes-essential-tools-2021/</link><pubDate>Thu, 15 Jul 2021 08:10:22 +0800</pubDate><guid>https://atbug.com/translation-kuberletes-essential-tools-2021/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 乱世浮生</title><link>https://atbug.com/post/</link><description>Recent content in Posts on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 07 Aug 2021 09:51:22 +0800</lastBuildDate><atom:link href="https://atbug.com/post/index.xml" rel="self" type="application/rss+xml"/><item><title>游记 - 2021 北疆之行</title><link>https://atbug.com/2021-xinjiang-trip/</link><pubDate>Sat, 07 Aug 2021 09:51:22 +0800</pubDate><guid>https://atbug.com/2021-xinjiang-trip/</guid><description>
+&lt;blockquote>
+&lt;p>趁着换工作的间隙，来一场“蓄谋已久”、“说走就走”的旅行。&lt;/p>
+&lt;/blockquote>
+&lt;p>新疆，是一个美丽而遥远的地方。前段时间看了李娟的《冬牧场》，更是提起了我对新疆对游牧哈萨克族的兴趣。以至后来梦中见到一望无际的戈壁滩，让自己下定决心做出改变。&lt;/p>
+&lt;h2 id="背景">背景&lt;/h2>
+&lt;p>这次北疆之行准备仓促，从路线方案到寻找同伴，都是出发前一周搞定的。&lt;/p>
+&lt;p>同伴找的是云原生社区的 &lt;a href="https://jimmysong.io/">宋净超 Jimmy&lt;/a>，同样也是老乡（两人在外漂多年，沟通全是普通话。。。），他从北京出发。由于他的工作性质特别&amp;ndash;远程工作，所以当初临时找同伴的时候想到了他，而且还也在有驾照在手。也由于他需要远程工作，这次我们选择了房车自驾，正好本人也想体验一下房车。&lt;/p>
+&lt;p>路书发在了&lt;a href="https://amap.com/roadbook/60ea265bc67d500479ac5535">这里&lt;/a>，全程 2800km+。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/08/07/20210727085117.png" alt="路书">&lt;/p>
+&lt;h2 id="建议">建议&lt;/h2>
+&lt;p>先说总结，&lt;strong>假如要你跟我走同样的路线而且喜欢驾驶&lt;/strong>，不建议房车（三围太大）。理由：&lt;/p>
+&lt;ol>
+&lt;li>山路多，各种的弯路，而且路的一侧就是悬崖（我好像还拍过一段 25 分钟的视频）&lt;/li>
+&lt;li>昭苏到琼库什台一段的山路，很窄！&lt;/li>
+&lt;li>车太重，爬坡非常慢，坡太多！&lt;/li>
+&lt;li>车高重心高，戈壁上高速公路横风有时比较强，车子晃动厉害（尤其是吐鲁番至乌鲁木齐的风电区域）；即使没有横风，在超大货车的时候也会有同样的感觉&lt;/li>
+&lt;/ol>
+&lt;p>房车的居住体验还是不错的（人多不一定），随停随住。&lt;/p>
+&lt;p>我的理想方案（下次考虑这么来）：&lt;/p>
+&lt;h3 id="非房车">非房车&lt;/h3>
+&lt;p>这次的路线，商业化迹象很明显，尤其是独库公路那条线。没有房车，吃住也不需要担心。&lt;/p>
+&lt;ol>
+&lt;li>吃：首选牧民家，体验最好；再就是各种餐馆，只要是本地人开的，都不会差；自己做？（这次带了灶具，一次没做过）&lt;/li>
+&lt;li>住：酒店 &amp;gt; 牧民蒙古包（商业性的） &amp;gt; 自带帐篷（应急+体验）&lt;/li>
+&lt;/ol>
+&lt;p>不开房车，伊昭、独库公路和其他的山路都会轻松，体验更好。假如是 SUV，底盘高也方便深入草原。注意，为了保护草原牧民的操场车辆不能随便进。可以多问下牧民，付费吃住的话应该没问题。&lt;/p>
+&lt;h3 id="房车">房车&lt;/h3>
+&lt;p>房车适合宿在草原。假如，真想体验房车，我的建议就是：乌鲁木齐飞伊宁租车，直奔琼库什台村（这段山路实在避不开）。看过琼库什台的原生态草原，其他的草原也就没了兴趣。在那里安静住几天，骑骑马。&lt;/p>
+&lt;h2 id="行程">行程&lt;/h2>
+&lt;p>本来想写写的，有点多无从下手，看&lt;a href="https://amap.com/roadbook/60ea265bc67d500479ac5535">路书&lt;/a>凑合下吧。先放上列表，有时间我再完善。&lt;/p>
+&lt;ul>
+&lt;li>Day01 广州 - 乌鲁木齐&lt;/li>
+&lt;li>Day02 乌鲁木齐 - 赛里木湖&lt;/li>
+&lt;li>Day03 赛里木湖 - 昭苏草原&lt;/li>
+&lt;li>Day04 昭苏草原 - 琼库什台村&lt;/li>
+&lt;li>Day05 琼库什台村 - 那拉提景区&lt;/li>
+&lt;li>Day06 那拉提 - 独库公路南段 - 库车市&lt;/li>
+&lt;li>Day07 库车市 - 和硕县&lt;/li>
+&lt;li>Day08 和硕县 - 吐鲁番市 - 乌鲁木齐&lt;/li>
+&lt;/ul>
+&lt;h2 id="视频">视频&lt;/h2>
+&lt;ul>
+&lt;li>Jimmy 剪辑的&lt;a href="https://www.bilibili.com/video/BV1Ab4y1z7TW/">视频&lt;/a>&lt;/li>
+&lt;li>独库公路&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted --></description></item><item><title>Kubernetes 必备工具：2021</title><link>https://atbug.com/translation-kuberletes-essential-tools-2021/</link><pubDate>Thu, 15 Jul 2021 08:10:22 +0800</pubDate><guid>https://atbug.com/translation-kuberletes-essential-tools-2021/</guid><description>
 &lt;p>有别于前些天的文章 - &lt;a href="https://mp.weixin.qq.com/s/uU2zmT5yyVcKZ5XmLSRqtg">常用的几款工具让 Kubernetes 集群上的工作更容易&lt;/a> 偏重于工具类来提升工作效率，今天这篇文章更加适合用来做选型时的参考。&lt;/p>
 &lt;p>文档翻译自 &lt;a href="https://itnext.io/kubernetes-essential-tools-2021-def12e84c572">Kubernetes Essential Tools: 2021&lt;/a>，篇幅较长，做了部分增删。&lt;/p>
 &lt;hr>
