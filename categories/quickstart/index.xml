@@ -1,4 +1,374 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>quickstart on 乱世浮生</title><link>https://atbug.com/categories/quickstart/</link><description>Recent content in quickstart on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 17 Apr 2021 09:08:40 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/quickstart/index.xml" rel="self" type="application/rss+xml"/><item><title>应“云”而生的 Java 框架：构建本机可执行文件</title><link>https://atbug.com/quarkus-build-native-executable-file/</link><pubDate>Sat, 17 Apr 2021 09:08:40 +0800</pubDate><guid>https://atbug.com/quarkus-build-native-executable-file/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>quickstart on 乱世浮生</title><link>https://atbug.com/categories/quickstart/</link><description>Recent content in quickstart on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 17 Aug 2021 18:47:33 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/quickstart/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Flomesh 强化 Spring Cloud 服务治理</title><link>https://atbug.com/enhance-springcloud-service-governance-with-flomesh/</link><pubDate>Tue, 17 Aug 2021 18:47:33 +0800</pubDate><guid>https://atbug.com/enhance-springcloud-service-governance-with-flomesh/</guid><description>
+&lt;h2 id="写在最前">写在最前&lt;/h2>
+&lt;p>这篇是关于如何使用 &lt;a href="https://flomesh.cn/">Flomesh&lt;/a> 服务网格来强化 Spring Cloud 的服务治理能力，降低 Spring Cloud 微服务架构落地服务网格的门槛，实现“自主可控”。&lt;/p>
+&lt;p>文档在 &lt;a href="https://github.com/flomesh-io/flomesh-bookinfo-demo">github&lt;/a> 上持续更新，欢迎大家一起讨论：https://github.com/flomesh-io/flomesh-bookinfo-demo。&lt;/p>
+&lt;hr>
+&lt;h2 id="架构">架构&lt;/h2>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/08/17/springdemotypology.png" alt="Architect">&lt;/p>
+&lt;h2 id="环境搭建">环境搭建&lt;/h2>
+&lt;p>搭建 Kubernetes 环境，可以选择 kubeadm 进行集群搭建。也可以选择 minikube、k3s、Kind 等，本文使用 k3s。&lt;/p>
+&lt;p>使用 &lt;a href="https://k3d.io/">k3d&lt;/a> 安装 &lt;a href="https://github.com/k3s-io/k3s">k3s&lt;/a>。k3d 将在 Docker 容器中运行 k3s，因此需要保证已经安装了 Docker。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ k3d cluster create spring-demo -p &lt;span class="s2">&amp;#34;81:80@loadbalancer&amp;#34;&lt;/span> --k3s-server-arg &lt;span class="s1">&amp;#39;--no-deploy=traefik&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="安装-flomesh">安装 Flomesh&lt;/h2>
+&lt;p>从仓库 &lt;code>https://github.com/flomesh-io/flomesh-bookinfo-demo.git&lt;/code> 克隆代码。进入到 &lt;code>flomesh-bookinfo-demo/kubernetes&lt;/code>目录。&lt;/p>
+&lt;p>所有 Flomesh 组件以及用于 demo 的 yamls 文件都位于这个目录中。&lt;/p>
+&lt;h3 id="安装-cert-manager">安装 Cert Manager&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl apply -f artifacts/cert-manager-v1.3.1.yaml
+customresourcedefinition.apiextensions.k8s.io/certificaterequests.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/certificates.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/challenges.acme.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/clusterissuers.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/issuers.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/orders.acme.cert-manager.io created
+namespace/cert-manager created
+serviceaccount/cert-manager-cainjector created
+serviceaccount/cert-manager created
+serviceaccount/cert-manager-webhook created
+clusterrole.rbac.authorization.k8s.io/cert-manager-cainjector created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-issuers created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-clusterissuers created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-certificates created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-orders created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-challenges created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-ingress-shim created
+clusterrole.rbac.authorization.k8s.io/cert-manager-view created
+clusterrole.rbac.authorization.k8s.io/cert-manager-edit created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-approve:cert-manager-io created
+clusterrole.rbac.authorization.k8s.io/cert-manager-webhook:subjectaccessreviews created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-cainjector created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-issuers created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-clusterissuers created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-certificates created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-orders created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-challenges created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-ingress-shim created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-approve:cert-manager-io created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-webhook:subjectaccessreviews created
+role.rbac.authorization.k8s.io/cert-manager-cainjector:leaderelection created
+role.rbac.authorization.k8s.io/cert-manager:leaderelection created
+role.rbac.authorization.k8s.io/cert-manager-webhook:dynamic-serving created
+rolebinding.rbac.authorization.k8s.io/cert-manager-cainjector:leaderelection created
+rolebinding.rbac.authorization.k8s.io/cert-manager:leaderelection created
+rolebinding.rbac.authorization.k8s.io/cert-manager-webhook:dynamic-serving created
+service/cert-manager created
+service/cert-manager-webhook created
+deployment.apps/cert-manager-cainjector created
+deployment.apps/cert-manager created
+deployment.apps/cert-manager-webhook created
+mutatingwebhookconfiguration.admissionregistration.k8s.io/cert-manager-webhook created
+validatingwebhookconfiguration.admissionregistration.k8s.io/cert-manager-webhook created
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>注意: 要保证 &lt;code>cert-manager&lt;/code> 命名空间中所有的 pod 都正常运行：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl get pod -n cert-manager
+NAME READY STATUS RESTARTS AGE
+cert-manager-webhook-56fdcbb848-q7fn5 1/1 Running &lt;span class="m">0&lt;/span> 98s
+cert-manager-59f6c76f4b-z5lgf 1/1 Running &lt;span class="m">0&lt;/span> 98s
+cert-manager-cainjector-59f76f7fff-flrr7 1/1 Running &lt;span class="m">0&lt;/span> 98s
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装-pipy-operator">安装 Pipy Operator&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl apply -f artifacts/pipy-operator.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行完命令后会看到类似的结果：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">namespace/flomesh created
+customresourcedefinition.apiextensions.k8s.io/proxies.flomesh.io created
+customresourcedefinition.apiextensions.k8s.io/proxyprofiles.flomesh.io created
+serviceaccount/operator-manager created
+role.rbac.authorization.k8s.io/leader-election-role created
+clusterrole.rbac.authorization.k8s.io/manager-role created
+clusterrole.rbac.authorization.k8s.io/metrics-reader created
+clusterrole.rbac.authorization.k8s.io/proxy-role created
+rolebinding.rbac.authorization.k8s.io/leader-election-rolebinding created
+clusterrolebinding.rbac.authorization.k8s.io/manager-rolebinding created
+clusterrolebinding.rbac.authorization.k8s.io/proxy-rolebinding created
+configmap/manager-config created
+service/operator-manager-metrics-service created
+service/proxy-injector-svc created
+service/webhook-service created
+deployment.apps/operator-manager created
+deployment.apps/proxy-injector created
+certificate.cert-manager.io/serving-cert created
+issuer.cert-manager.io/selfsigned-issuer created
+mutatingwebhookconfiguration.admissionregistration.k8s.io/mutating-webhook-configuration created
+mutatingwebhookconfiguration.admissionregistration.k8s.io/proxy-injector-webhook-cfg created
+validatingwebhookconfiguration.admissionregistration.k8s.io/validating-webhook-configuration created
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>注意：要保证 &lt;code>flomesh&lt;/code> 命名空间中所有的 pod 都正常运行：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl get pod -n flomesh
+NAME READY STATUS RESTARTS AGE
+proxy-injector-5bccc96595-spl6h 1/1 Running &lt;span class="m">0&lt;/span> 39s
+operator-manager-c78bf8d5f-wqgb4 1/1 Running &lt;span class="m">0&lt;/span> 39s
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装-ingress-控制器ingress-pipy">安装 Ingress 控制器：ingress-pipy&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl apply -f ingress/ingress-pipy.yaml
+namespace/ingress-pipy created
+customresourcedefinition.apiextensions.k8s.io/ingressparameters.flomesh.io created
+serviceaccount/ingress-pipy created
+role.rbac.authorization.k8s.io/ingress-pipy-leader-election-role created
+clusterrole.rbac.authorization.k8s.io/ingress-pipy-role created
+rolebinding.rbac.authorization.k8s.io/ingress-pipy-leader-election-rolebinding created
+clusterrolebinding.rbac.authorization.k8s.io/ingress-pipy-rolebinding created
+configmap/ingress-config created
+service/ingress-pipy-cfg created
+service/ingress-pipy-controller created
+service/ingress-pipy-defaultbackend created
+service/webhook-service created
+deployment.apps/ingress-pipy-cfg created
+deployment.apps/ingress-pipy-controller created
+deployment.apps/ingress-pipy-manager created
+certificate.cert-manager.io/serving-cert created
+issuer.cert-manager.io/selfsigned-issuer created
+mutatingwebhookconfiguration.admissionregistration.k8s.io/mutating-webhook-configuration configured
+validatingwebhookconfiguration.admissionregistration.k8s.io/validating-webhook-configuration configured
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>检查 &lt;code>ingress-pipy&lt;/code> 命名空间下 pod 的状态：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl get pod -n ingress-pipy
+NAME READY STATUS RESTARTS AGE
+svclb-ingress-pipy-controller-8pk8k 1/1 Running &lt;span class="m">0&lt;/span> 71s
+ingress-pipy-cfg-6bc649cfc7-8njk7 1/1 Running &lt;span class="m">0&lt;/span> 71s
+ingress-pipy-controller-76cd866d78-m7gfp 1/1 Running &lt;span class="m">0&lt;/span> 71s
+ingress-pipy-manager-5f568ff988-tw5w6 0/1 Running &lt;span class="m">0&lt;/span> 70s
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>至此，你已经成功安装 Flomesh 的所有组件，包括 operator 和 ingress 控制器。&lt;/p>
+&lt;h2 id="中间件">中间件&lt;/h2>
+&lt;p>Demo 需要用到中间件完成日志和统计数据的存储，这里为了方便使用 pipy 进行 mock：直接在控制台中打印数据。&lt;/p>
+&lt;p>另外，服务治理相关的配置有 mock 的 pipy config 服务提供。&lt;/p>
+&lt;h3 id="log--metrics">log &amp;amp; metrics&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ cat &amp;gt; middleware.js &lt;span class="s">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;span class="s">pipy()
+&lt;/span>&lt;span class="s">.listen(8123)
+&lt;/span>&lt;span class="s"> .link(&amp;#39;mock&amp;#39;)
+&lt;/span>&lt;span class="s">
+&lt;/span>&lt;span class="s">.listen(9001)
+&lt;/span>&lt;span class="s"> .link(&amp;#39;mock&amp;#39;)
+&lt;/span>&lt;span class="s">.pipeline(&amp;#39;mock&amp;#39;)
+&lt;/span>&lt;span class="s"> .decodeHttpRequest()
+&lt;/span>&lt;span class="s"> .replaceMessage(
+&lt;/span>&lt;span class="s"> req =&amp;gt; (
+&lt;/span>&lt;span class="s"> console.log(req.body.toString()),
+&lt;/span>&lt;span class="s"> new Message(&amp;#39;OK&amp;#39;)
+&lt;/span>&lt;span class="s"> )
+&lt;/span>&lt;span class="s"> )
+&lt;/span>&lt;span class="s"> .encodeHttpResponse()
+&lt;/span>&lt;span class="s">EOF&lt;/span>
+$ docker run --rm --name middleware --entrypoint &lt;span class="s2">&amp;#34;pipy&amp;#34;&lt;/span> -v &lt;span class="si">${&lt;/span>&lt;span class="nv">PWD&lt;/span>&lt;span class="si">}&lt;/span>:/script -p 8123:8123 -p 9001:9001 flomesh/pipy-pjs:0.4.0-118 /script/middleware.js
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="pipy-config">pipy config&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ cat &amp;gt; mock-config.json &lt;span class="s">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;span class="s">{
+&lt;/span>&lt;span class="s"> &amp;#34;ingress&amp;#34;: {},
+&lt;/span>&lt;span class="s"> &amp;#34;inbound&amp;#34;: {
+&lt;/span>&lt;span class="s"> &amp;#34;rateLimit&amp;#34;: -1,
+&lt;/span>&lt;span class="s"> &amp;#34;dataLimit&amp;#34;: -1,
+&lt;/span>&lt;span class="s"> &amp;#34;circuitBreak&amp;#34;: false,
+&lt;/span>&lt;span class="s"> &amp;#34;blacklist&amp;#34;: []
+&lt;/span>&lt;span class="s"> },
+&lt;/span>&lt;span class="s"> &amp;#34;outbound&amp;#34;: {
+&lt;/span>&lt;span class="s"> &amp;#34;rateLimit&amp;#34;: -1,
+&lt;/span>&lt;span class="s"> &amp;#34;dataLimit&amp;#34;: -1
+&lt;/span>&lt;span class="s"> }
+&lt;/span>&lt;span class="s">}
+&lt;/span>&lt;span class="s">EOF&lt;/span>
+$ cat &amp;gt; mock.js &lt;span class="s">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;span class="s">pipy({
+&lt;/span>&lt;span class="s"> _CONFIG_FILENAME: &amp;#39;mock-config.json&amp;#39;,
+&lt;/span>&lt;span class="s">
+&lt;/span>&lt;span class="s"> _serveFile: (req, filename, type) =&amp;gt; (
+&lt;/span>&lt;span class="s"> new Message(
+&lt;/span>&lt;span class="s"> {
+&lt;/span>&lt;span class="s"> bodiless: req.head.method === &amp;#39;HEAD&amp;#39;,
+&lt;/span>&lt;span class="s"> headers: {
+&lt;/span>&lt;span class="s"> &amp;#39;etag&amp;#39;: os.stat(filename)?.mtime | 0,
+&lt;/span>&lt;span class="s"> &amp;#39;content-type&amp;#39;: type,
+&lt;/span>&lt;span class="s"> },
+&lt;/span>&lt;span class="s"> },
+&lt;/span>&lt;span class="s"> req.head.method === &amp;#39;HEAD&amp;#39; ? null : os.readFile(filename),
+&lt;/span>&lt;span class="s"> )
+&lt;/span>&lt;span class="s"> ),
+&lt;/span>&lt;span class="s">
+&lt;/span>&lt;span class="s"> _router: new algo.URLRouter({
+&lt;/span>&lt;span class="s"> &amp;#39;/config&amp;#39;: req =&amp;gt; _serveFile(req, _CONFIG_FILENAME, &amp;#39;application/json&amp;#39;),
+&lt;/span>&lt;span class="s"> &amp;#39;/*&amp;#39;: () =&amp;gt; new Message({ status: 404 }, &amp;#39;Not found&amp;#39;),
+&lt;/span>&lt;span class="s"> }),
+&lt;/span>&lt;span class="s">})
+&lt;/span>&lt;span class="s">
+&lt;/span>&lt;span class="s">// Config
+&lt;/span>&lt;span class="s">.listen(9000)
+&lt;/span>&lt;span class="s"> .decodeHttpRequest()
+&lt;/span>&lt;span class="s"> .replaceMessage(
+&lt;/span>&lt;span class="s"> req =&amp;gt; (
+&lt;/span>&lt;span class="s"> _router.find(req.head.path)(req)
+&lt;/span>&lt;span class="s"> )
+&lt;/span>&lt;span class="s"> )
+&lt;/span>&lt;span class="s"> .encodeHttpResponse()
+&lt;/span>&lt;span class="s">EOF&lt;/span>
+$ docker run --rm --name mock --entrypoint &lt;span class="s2">&amp;#34;pipy&amp;#34;&lt;/span> -v &lt;span class="si">${&lt;/span>&lt;span class="nv">PWD&lt;/span>&lt;span class="si">}&lt;/span>:/script -p 9000:9000 flomesh/pipy-pjs:0.4.0-118 /script/mock.js
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="运行-demo">运行 Demo&lt;/h2>
+&lt;p>Demo 运行在另一个独立的命名空间 &lt;code>flomesh-spring&lt;/code> 中，执行命令 &lt;code>kubectl apply -f base/namespace.yaml&lt;/code> 来创建该命名空间。如果你 &lt;code>describe&lt;/code> 该命名空间你会发现其使用了 &lt;code>flomesh.io/inject=true&lt;/code> 标签。&lt;/p>
+&lt;p>这个标签告知 operator 的 admission webHook 拦截标注的命名空间下 pod 的创建。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl describe ns flomesh-spring
+Name: flomesh-spring
+Labels: app.kubernetes.io/name&lt;span class="o">=&lt;/span>spring-mesh
+app.kubernetes.io/version&lt;span class="o">=&lt;/span>1.19.0
+flomesh.io/inject&lt;span class="o">=&lt;/span>&lt;span class="nb">true&lt;/span>
+kubernetes.io/metadata.name&lt;span class="o">=&lt;/span>flomesh-spring
+Annotations: &amp;lt;none&amp;gt;
+Status: Active
+No resource quota.
+No LimitRange resource.
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>我们首先看下 Flomesh 提供的 CRD &lt;code>ProxyProfile&lt;/code>。这个 demo 中，其定义了 sidecar 容器片段以及所使用的的脚本。检查 &lt;code>sidecar/proxy-profile.yaml&lt;/code> 获取更多信息。执行下面的命令，创建 CRD 资源。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl apply -f sidecar/proxy-profile.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>检查是否创建成功：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl get pf -o wide
+NAME NAMESPACE DISABLED SELECTOR CONFIG AGE
+proxy-profile-002-bookinfo flomesh-spring &lt;span class="nb">false&lt;/span> &lt;span class="o">{&lt;/span>&lt;span class="s2">&amp;#34;matchLabels&amp;#34;&lt;/span>:&lt;span class="o">{&lt;/span>&lt;span class="s2">&amp;#34;sys&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;bookinfo-samples&amp;#34;&lt;/span>&lt;span class="o">}}&lt;/span> &lt;span class="o">{&lt;/span>&lt;span class="s2">&amp;#34;flomesh-spring&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;proxy-profile-002-bookinfo-fsmcm-b67a9e39-0418&amp;#34;&lt;/span>&lt;span class="o">}&lt;/span> 27s
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>As the services has startup dependencies, you need to deploy it one by one following the strict order. Before starting, check the &lt;strong>Endpoints&lt;/strong> section of &lt;strong>base/clickhouse.yaml&lt;/strong>.&lt;/p>
+&lt;p>提供中间件的访问 endpoid，将 &lt;code>base/clickhouse.yaml&lt;/code>、&lt;code>base/metrics.yaml&lt;/code> 和 &lt;code>base/config.yaml&lt;/code> 中的 ip 地址改为本机的 ip 地址（不是 127.0.0.1）。&lt;/p>
+&lt;p>修改之后，执行如下命令：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl apply -f base/clickhouse.yaml
+$ kubectl apply -f base/metrics.yaml
+$ kubectl apply -f base/config.yaml
+$ kubectl get endpoints samples-clickhouse samples-metrics samples-config
+NAME ENDPOINTS AGE
+samples-clickhouse 192.168.1.101:8123 3m
+samples-metrics 192.168.1.101:9001 3s
+samples-config 192.168.1.101:9000 3m
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署注册中心">部署注册中心&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl apply -f base/discovery-server.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>检查注册中心 pod 的状态，确保 3 个容器都运行正常。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl get pod
+NAME READY STATUS RESTARTS AGE
+samples-discovery-server-v1-85798c47d4-dr72k 3/3 Running &lt;span class="m">0&lt;/span> 96s
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署配置中心">部署配置中心&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl apply -f base/config-service.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署-api-网关以及-bookinfo-相关的服务">部署 API 网关以及 bookinfo 相关的服务&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl apply -f base/bookinfo-v1.yaml
+$ kubectl apply -f base/bookinfo-v2.yaml
+$ kubectl apply -f base/productpage-v1.yaml
+$ kubectl apply -f base/productpage-v2.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>检查 pod 状态，可以看到所有 pod 都注入了容器。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl get pods
+samples-discovery-server-v1-85798c47d4-p6zpb 3/3 Running &lt;span class="m">0&lt;/span> 19h
+samples-config-service-v1-84888bfb5b-8bcw9 1/1 Running &lt;span class="m">0&lt;/span> 19h
+samples-api-gateway-v1-75bb6456d6-nt2nl 3/3 Running &lt;span class="m">0&lt;/span> 6h43m
+samples-bookinfo-ratings-v1-6d557dd894-cbrv7 3/3 Running &lt;span class="m">0&lt;/span> 6h43m
+samples-bookinfo-details-v1-756bb89448-dxk66 3/3 Running &lt;span class="m">0&lt;/span> 6h43m
+samples-bookinfo-reviews-v1-7778cdb45b-pbknp 3/3 Running &lt;span class="m">0&lt;/span> 6h43m
+samples-api-gateway-v2-7ddb5d7fd9-8jgms 3/3 Running &lt;span class="m">0&lt;/span> 6h37m
+samples-bookinfo-ratings-v2-845d95fb7-txcxs 3/3 Running &lt;span class="m">0&lt;/span> 6h37m
+samples-bookinfo-reviews-v2-79b4c67b77-ddkm2 3/3 Running &lt;span class="m">0&lt;/span> 6h37m
+samples-bookinfo-details-v2-7dfb4d7c-jfq4j 3/3 Running &lt;span class="m">0&lt;/span> 6h37m
+samples-bookinfo-productpage-v1-854675b56-8n2xd 1/1 Running &lt;span class="m">0&lt;/span> 7m1s
+samples-bookinfo-productpage-v2-669bd8d9c7-8wxsf 1/1 Running &lt;span class="m">0&lt;/span> 6m57s
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="添加-ingress-规则">添加 Ingress 规则&lt;/h3>
+&lt;p>执行如下命令添加 Ingress 规则。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl apply -f ingress/ingress.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="测试前的准备">测试前的准备&lt;/h3>
+&lt;p>访问 demo 服务都要通过 ingress 控制器。因此需要先获取 LB 的 ip 地址。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">//Obtain the controller IP
+//Here, we append port.
+&lt;span class="nv">ingressAddr&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="sb">`&lt;/span>kubectl get svc ingress-pipy-controller -n ingress-pipy -o &lt;span class="nv">jsonpath&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;{.spec.clusterIP}&amp;#39;&lt;/span>&lt;span class="sb">`&lt;/span>:81
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里我们使用了是 k3d 创建的 k3s，命令中加入了 &lt;code>-p 81:80@loadbalancer&lt;/code> 选项。我们可以使用 &lt;code>127.0.0.1:81&lt;/code> 来访问 ingress 控制器。这里执行命令 &lt;code>ingressAddr=127.0.0.1:81&lt;/code>。&lt;/p>
+&lt;p>Ingress 规则中，我们为每个规则指定了 &lt;code>host&lt;/code>，因此每个请求中需要通过 HTTP 请求头 &lt;code>Host&lt;/code> 提供对应的 &lt;code>host&lt;/code>。&lt;/p>
+&lt;p>或者在 &lt;code>/etc/hosts&lt;/code> 添加记录：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl get ing ingress-pipy-bookinfo -n flomesh-spring -o &lt;span class="nv">jsonpath&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;{range .spec.rules[*]}{.host}{&amp;#39;\n&amp;#39;}&amp;#34;&lt;/span>
+api-v1.flomesh.cn
+api-v2.flomesh.cn
+fe-v1.flomesh.cn
+fe-v2.flomesh.cn
+//添加记录到 /etc/hosts
+127.0.0.1 api-v1.flomesh.cn api-v2.flomesh.cn fe-v1.flomesh.cn fe-v2.flomesh.cn
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="验证">验证&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ curl http://127.0.0.1:81/actuator/health -H &lt;span class="s1">&amp;#39;Host: api-v1.flomesh.cn&amp;#39;&lt;/span>
+&lt;span class="o">{&lt;/span>&lt;span class="s2">&amp;#34;status&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;UP&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;groups&amp;#34;&lt;/span>:&lt;span class="o">[&lt;/span>&lt;span class="s2">&amp;#34;liveness&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;readiness&amp;#34;&lt;/span>&lt;span class="o">]}&lt;/span>
+//OR
+$ curl http://api-v1.flomesh.cn:81/actuator/health
+&lt;span class="o">{&lt;/span>&lt;span class="s2">&amp;#34;status&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;UP&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;groups&amp;#34;&lt;/span>:&lt;span class="o">[&lt;/span>&lt;span class="s2">&amp;#34;liveness&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;readiness&amp;#34;&lt;/span>&lt;span class="o">]}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="测试">测试&lt;/h2>
+&lt;h3 id="灰度">灰度&lt;/h3>
+&lt;p>在 v1 版本的服务中，我们为 book 添加 rating 和 review。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="c1"># rate a book&lt;/span>
+$ curl -X POST http://&lt;span class="nv">$ingressAddr&lt;/span>/bookinfo-ratings/ratings &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> -H &lt;span class="s2">&amp;#34;Content-Type: application/json&amp;#34;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> -H &lt;span class="s2">&amp;#34;Host: api-v1.flomesh.cn&amp;#34;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> -d &lt;span class="s1">&amp;#39;{&amp;#34;reviewerId&amp;#34;:&amp;#34;9bc908be-0717-4eab-bb51-ea14f669ef20&amp;#34;,&amp;#34;productId&amp;#34;:&amp;#34;2099a055-1e21-46ef-825e-9e0de93554ea&amp;#34;,&amp;#34;rating&amp;#34;:3}&amp;#39;&lt;/span>
+$ curl http://&lt;span class="nv">$ingressAddr&lt;/span>/bookinfo-ratings/ratings/2099a055-1e21-46ef-825e-9e0de93554ea -H &lt;span class="s2">&amp;#34;Host: api-v1.flomesh.cn&amp;#34;&lt;/span>
+&lt;span class="c1"># review a book&lt;/span>
+$ curl -X POST http://&lt;span class="nv">$ingressAddr&lt;/span>/bookinfo-reviews/reviews &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> -H &lt;span class="s2">&amp;#34;Content-Type: application/json&amp;#34;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> -H &lt;span class="s2">&amp;#34;Host: api-v1.flomesh.cn&amp;#34;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> -d &lt;span class="s1">&amp;#39;{&amp;#34;reviewerId&amp;#34;:&amp;#34;9bc908be-0717-4eab-bb51-ea14f669ef20&amp;#34;,&amp;#34;productId&amp;#34;:&amp;#34;2099a055-1e21-46ef-825e-9e0de93554ea&amp;#34;,&amp;#34;review&amp;#34;:&amp;#34;This was OK.&amp;#34;,&amp;#34;rating&amp;#34;:3}&amp;#39;&lt;/span>
+$ curl http://&lt;span class="nv">$ingressAddr&lt;/span>/bookinfo-reviews/reviews/2099a055-1e21-46ef-825e-9e0de93554ea -H &lt;span class="s2">&amp;#34;Host: api-v1.flomesh.cn&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行上面的命令之后，我们可以在浏览器中访问前端服务（&lt;code>http://fe-v1.flomesh.cn:81/productpage?u=normal&lt;/code>、 &lt;code>http://fe-v2.flomesh.cn:81/productpage?u=normal&lt;/code>），只有 v1 版本的前端中才能看到刚才添加的记录。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/08/13/20210813174155.png" alt="v1">&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/08/13/20210813174207.png" alt="v2">&lt;/p>
+&lt;h3 id="熔断">熔断&lt;/h3>
+&lt;p>这里熔断我们通过修改 &lt;code>mock-config.json&lt;/code> 中的 &lt;code>inbound.circuitBreak&lt;/code> 为 &lt;code>true&lt;/code>，来将服务强制开启熔断：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;ingress&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{},&lt;/span>
+&lt;span class="nt">&amp;#34;inbound&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;rateLimit&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">-1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nt">&amp;#34;dataLimit&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">-1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nt">&amp;#34;circuitBreak&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="err">//here&lt;/span>
+&lt;span class="nt">&amp;#34;blacklist&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[]&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="nt">&amp;#34;outbound&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;rateLimit&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">-1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nt">&amp;#34;dataLimit&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">-1&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ curl http://&lt;span class="nv">$ingressAddr&lt;/span>/actuator/health -H &lt;span class="s1">&amp;#39;Host: api-v1.flomesh.cn&amp;#39;&lt;/span>
+HTTP/1.1 &lt;span class="m">503&lt;/span> Service Unavailable
+Connection: keep-alive
+Content-Length: &lt;span class="m">27&lt;/span>
+Service Circuit Break Open
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="限流">限流&lt;/h3>
+&lt;p>修改 pipy config 的配置，将 &lt;code>inbound.rateLimit&lt;/code> 设置为 1。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;ingress&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{},&lt;/span>
+&lt;span class="nt">&amp;#34;inbound&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;rateLimit&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="err">//here&lt;/span>
+&lt;span class="nt">&amp;#34;dataLimit&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">-1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nt">&amp;#34;circuitBreak&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nt">&amp;#34;blacklist&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[]&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="nt">&amp;#34;outbound&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;rateLimit&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">-1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nt">&amp;#34;dataLimit&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">-1&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>我们使用 &lt;code>wrk&lt;/code> 模拟发送请求，20 个连接、20 个请求、持续 30s：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ wrk -t20 -c20 -d30s --latency http://&lt;span class="nv">$ingressAddr&lt;/span>/actuator/health -H &lt;span class="s1">&amp;#39;Host: api-v1.flomesh.cn&amp;#39;&lt;/span>
+Running 30s &lt;span class="nb">test&lt;/span> @ http://127.0.0.1:81/actuator/health
+&lt;span class="m">20&lt;/span> threads and &lt;span class="m">20&lt;/span> connections
+Thread Stats Avg Stdev Max +/- Stdev
+Latency 951.51ms 206.23ms 1.04s 93.55%
+Req/Sec 0.61 1.71 10.00 93.55%
+Latency Distribution
+50% 1.00s
+75% 1.01s
+90% 1.02s
+99% 1.03s
+&lt;span class="m">620&lt;/span> requests in 30.10s, 141.07KB &lt;span class="nb">read&lt;/span>
+Requests/sec: 20.60
+Transfer/sec: 4.69KB
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>从结果来看 20.60 req/s，即每个连接 1 req/s。&lt;/p>
+&lt;h3 id="黑白名单">黑白名单&lt;/h3>
+&lt;p>将 pipy config 的 &lt;code>mock-config.json&lt;/code> 做如下修改：ip 地址使用的是 ingress controller 的 pod ip。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kgpo -n ingress-pipy ingress-pipy-controller-76cd866d78-4cqqn -o &lt;span class="nv">jsonpath&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;{.status.podIP}&amp;#39;&lt;/span>
+10.42.0.78
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;ingress&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{},&lt;/span>
+&lt;span class="nt">&amp;#34;inbound&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;rateLimit&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">-1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nt">&amp;#34;dataLimit&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">-1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nt">&amp;#34;circuitBreak&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nt">&amp;#34;blacklist&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;10.42.0.78&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="err">//here&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="nt">&amp;#34;outbound&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;rateLimit&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">-1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nt">&amp;#34;dataLimit&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">-1&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>还是访问网关的接口&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">curl http://&lt;span class="nv">$ingressAddr&lt;/span>/actuator/health -H &lt;span class="s1">&amp;#39;Host: api-v1.flomesh.cn&amp;#39;&lt;/span>
+HTTP/1.1 &lt;span class="m">503&lt;/span> Service Unavailable
+content-type: text/plain
+Connection: keep-alive
+Content-Length: &lt;span class="m">20&lt;/span>
+Service Unavailable
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>应“云”而生的 Java 框架：构建本机可执行文件</title><link>https://atbug.com/quarkus-build-native-executable-file/</link><pubDate>Sat, 17 Apr 2021 09:08:40 +0800</pubDate><guid>https://atbug.com/quarkus-build-native-executable-file/</guid><description>
 &lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/17/16186233244243.jpg" alt="">&lt;/p>
 &lt;blockquote>
 &lt;p>电影《功夫》中，火云邪神有句话：“天下武功无坚不摧，唯快不破。”&lt;/p>
