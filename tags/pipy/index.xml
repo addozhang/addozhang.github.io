@@ -1,4 +1,184 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pipy on 乱世浮生</title><link>https://atbug.com/tags/pipy/</link><description>Recent content in Pipy on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 17 Aug 2021 18:47:33 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/pipy/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Flomesh 强化 Spring Cloud 服务治理</title><link>https://atbug.com/enhance-springcloud-service-governance-with-flomesh/</link><pubDate>Tue, 17 Aug 2021 18:47:33 +0800</pubDate><guid>https://atbug.com/enhance-springcloud-service-governance-with-flomesh/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pipy on 乱世浮生</title><link>https://atbug.com/tags/pipy/</link><description>Recent content in Pipy on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 18 Aug 2021 09:50:28 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/pipy/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Flomesh 进行 Dubbo 服务治理</title><link>https://atbug.com/enhance-dubbo-service-governance-with-flomesh/</link><pubDate>Wed, 18 Aug 2021 09:50:28 +0800</pubDate><guid>https://atbug.com/enhance-dubbo-service-governance-with-flomesh/</guid><description>
+&lt;h2 id="写在最前">写在最前&lt;/h2>
+&lt;p>和上一篇&lt;a href="https://mp.weixin.qq.com/s/QnKWpXwe8Ex_CrUuAEjZ1Q">《使用 Flomesh 强化 Spring Cloud 服务治理》&lt;/a>一样，这次同样是在无代码侵入的情况下对 Dubbo 服务治理的提升。&lt;/p>
+&lt;p>更多治理场景陆续添加中，有兴趣的可关注 &lt;a href="https://github.com/flomesh-io/service-mesh-dubbo-demo">https://github.com/flomesh-io/service-mesh-dubbo-demo&lt;/a>。&lt;/p>
+&lt;p>开源的 Pipy 作为 Flomesh 的核心，得益于其轻量及灵活性可以通过编程的方式轻松快速的支持多中平台的服务发现机制，比如 Eureka、Consul、Nacos 等。&lt;/p>
+&lt;h2 id="概览">概览&lt;/h2>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/08/18/16292498443406.jpg" alt="">&lt;/p>
+&lt;h2 id="细节">细节&lt;/h2>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/08/18/16292498964245.jpg" alt="">&lt;/p>
+&lt;h2 id="环境搭建">环境搭建&lt;/h2>
+&lt;p>搭建 Kubernetes 环境，可以选择 kubeadm 进行集群搭建。也可以选择 minikube、k3s、Kind 等，本文使用 k3s。&lt;/p>
+&lt;p>使用 &lt;a href="https://k3d.io/">k3d&lt;/a> 安装 &lt;a href="https://github.com/k3s-io/k3s">k3s&lt;/a>。k3d 将在 Docker 容器中运行 k3s，因此需要保证已经安装了 Docker。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ k3d cluster create dubbo-demo -p &lt;span class="s2">&amp;#34;80:80@loadbalancer&amp;#34;&lt;/span> --k3s-server-arg &lt;span class="s1">&amp;#39;--no-deploy=traefik&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="安装-flomesh">安装 Flomesh&lt;/h2>
+&lt;p>从仓库 &lt;code>https://github.com/flomesh-io/service-mesh-dubbo-demo&lt;/code> 克隆代码。进入到 &lt;code>release&lt;/code>目录。&lt;/p>
+&lt;p>所有 Flomesh 组件以及用于 demo 的 yamls 文件都位于这个目录中。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl apply -f artifacts/cert-manager-v1.3.1.yaml
+customresourcedefinition.apiextensions.k8s.io/certificaterequests.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/certificates.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/challenges.acme.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/clusterissuers.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/issuers.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/orders.acme.cert-manager.io created
+namespace/cert-manager created
+serviceaccount/cert-manager-cainjector created
+serviceaccount/cert-manager created
+serviceaccount/cert-manager-webhook created
+clusterrole.rbac.authorization.k8s.io/cert-manager-cainjector created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-issuers created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-clusterissuers created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-certificates created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-orders created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-challenges created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-ingress-shim created
+clusterrole.rbac.authorization.k8s.io/cert-manager-view created
+clusterrole.rbac.authorization.k8s.io/cert-manager-edit created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-approve:cert-manager-io created
+clusterrole.rbac.authorization.k8s.io/cert-manager-webhook:subjectaccessreviews created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-cainjector created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-issuers created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-clusterissuers created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-certificates created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-orders created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-challenges created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-ingress-shim created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-approve:cert-manager-io created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-webhook:subjectaccessreviews created
+role.rbac.authorization.k8s.io/cert-manager-cainjector:leaderelection created
+role.rbac.authorization.k8s.io/cert-manager:leaderelection created
+role.rbac.authorization.k8s.io/cert-manager-webhook:dynamic-serving created
+rolebinding.rbac.authorization.k8s.io/cert-manager-cainjector:leaderelection created
+rolebinding.rbac.authorization.k8s.io/cert-manager:leaderelection created
+rolebinding.rbac.authorization.k8s.io/cert-manager-webhook:dynamic-serving created
+service/cert-manager created
+service/cert-manager-webhook created
+deployment.apps/cert-manager-cainjector created
+deployment.apps/cert-manager created
+deployment.apps/cert-manager-webhook created
+mutatingwebhookconfiguration.admissionregistration.k8s.io/cert-manager-webhook created
+validatingwebhookconfiguration.admissionregistration.k8s.io/cert-manager-webhook created
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>注意: 要保证 &lt;code>cert-manager&lt;/code> 命名空间中所有的 pod 都正常运行：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl get pod -n cert-manager
+NAME READY STATUS RESTARTS AGE
+cert-manager-cainjector-59f76f7fff-ggmdm 1/1 Running &lt;span class="m">0&lt;/span> 32s
+cert-manager-59f6c76f4b-r2h5r 1/1 Running &lt;span class="m">0&lt;/span> 32s
+cert-manager-webhook-56fdcbb848-sdnxb 1/1 Running &lt;span class="m">0&lt;/span> 32s
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装-pipy-operator">安装 Pipy Operator&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl apply -f artifacts/pipy-operator.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行完命令后会看到类似的结果：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">namespace/flomesh created
+customresourcedefinition.apiextensions.k8s.io/proxies.flomesh.io created
+customresourcedefinition.apiextensions.k8s.io/proxyprofiles.flomesh.io created
+serviceaccount/operator-manager created
+role.rbac.authorization.k8s.io/leader-election-role created
+clusterrole.rbac.authorization.k8s.io/manager-role created
+clusterrole.rbac.authorization.k8s.io/metrics-reader created
+clusterrole.rbac.authorization.k8s.io/proxy-role created
+rolebinding.rbac.authorization.k8s.io/leader-election-rolebinding created
+clusterrolebinding.rbac.authorization.k8s.io/manager-rolebinding created
+clusterrolebinding.rbac.authorization.k8s.io/proxy-rolebinding created
+configmap/manager-config created
+service/operator-manager-metrics-service created
+service/proxy-injector-svc created
+service/webhook-service created
+deployment.apps/operator-manager created
+deployment.apps/proxy-injector created
+certificate.cert-manager.io/serving-cert created
+issuer.cert-manager.io/selfsigned-issuer created
+mutatingwebhookconfiguration.admissionregistration.k8s.io/mutating-webhook-configuration created
+mutatingwebhookconfiguration.admissionregistration.k8s.io/proxy-injector-webhook-cfg created
+validatingwebhookconfiguration.admissionregistration.k8s.io/validating-webhook-configuration created
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>注意：要保证 &lt;code>flomesh&lt;/code> 命名空间中所有的 pod 都正常运行：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl get pod -n flomesh
+NAME READY STATUS RESTARTS AGE
+proxy-injector-6d5c774bc-rspmc 1/1 Running &lt;span class="m">0&lt;/span> 21s
+operator-manager-c95cd449-xxc77 0/1 Running &lt;span class="m">0&lt;/span> 38s
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装-ingress-控制器ingress-pipy">安装 Ingress 控制器：ingress-pipy&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl apply -f artifacts/ingress-pipy.yaml
+namespace/ingress-pipy created
+customresourcedefinition.apiextensions.k8s.io/ingressglobalhooks.flomesh.io created
+customresourcedefinition.apiextensions.k8s.io/ingressrules.flomesh.io created
+serviceaccount/ingress-pipy created
+role.rbac.authorization.k8s.io/ingress-pipy-leader-election-role created
+clusterrole.rbac.authorization.k8s.io/ingress-pipy-role created
+rolebinding.rbac.authorization.k8s.io/ingress-pipy-leader-election-rolebinding created
+clusterrolebinding.rbac.authorization.k8s.io/ingress-pipy-rolebinding created
+configmap/ingress-config created
+service/ingress-pipy-cfg created
+service/ingress-pipy-controller created
+service/ingress-pipy-defaultbackend created
+service/webhook-service created
+deployment.apps/ingress-pipy-cfg created
+deployment.apps/ingress-pipy-controller created
+deployment.apps/ingress-pipy-manager created
+certificate.cert-manager.io/serving-cert created
+issuer.cert-manager.io/selfsigned-issuer created
+mutatingwebhookconfiguration.admissionregistration.k8s.io/mutating-webhook-configuration configured
+validatingwebhookconfiguration.admissionregistration.k8s.io/validating-webhook-configuration configured
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>检查 &lt;code>ingress-pipy&lt;/code> 命名空间下 pod 的状态：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl get pod -n ingress-pipy
+NAME READY STATUS RESTARTS AGE
+svclb-ingress-pipy-controller-qwbk9 1/1 Running &lt;span class="m">0&lt;/span> 90s
+ingress-pipy-cfg-6c54d5b9b6-6s7lz 1/1 Running &lt;span class="m">0&lt;/span> 90s
+ingress-pipy-manager-7988dfbf4f-lxr4b 1/1 Running &lt;span class="m">0&lt;/span> 90s
+ingress-pipy-controller-9d4698887-zrpfd 1/1 Running &lt;span class="m">0&lt;/span> 90s
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>至此，你已经成功安装 Flomesh 的所有组件，包括 operator 和 ingress 控制器。&lt;/p>
+&lt;h2 id="运行-demo">运行 Demo&lt;/h2>
+&lt;h3 id="创建命名空间">创建命名空间&lt;/h3>
+&lt;p>Demo 运行在另一个独立的命名空间 &lt;code>flomesh-dubbo&lt;/code> 中，执行命令 &lt;code>kubectl apply -f dubbo-mesh/templates/namespace.yaml&lt;/code> 来创建该命名空间。如果你 &lt;code>describe&lt;/code> 该命名空间你会发现其使用了 &lt;code>flomesh.io/inject=true&lt;/code> 标签。&lt;/p>
+&lt;p>这个标签告知 operator 的 admission webHook 拦截标注的命名空间下 pod 的创建。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl describe ns flomesh-dubbo
+Name: flomesh-dubbo
+Labels: app.kubernetes.io/managed-by&lt;span class="o">=&lt;/span>Helm
+app.kubernetes.io/name&lt;span class="o">=&lt;/span>dubbo-mesh
+app.kubernetes.io/version&lt;span class="o">=&lt;/span>1.19.0
+flomesh.io/inject&lt;span class="o">=&lt;/span>&lt;span class="nb">true&lt;/span>
+helm.sh/chart&lt;span class="o">=&lt;/span>dubbo-mesh-0.1.0
+kubernetes.io/metadata.name&lt;span class="o">=&lt;/span>flomesh-dubbo
+Annotations: &amp;lt;none&amp;gt;
+Status: Active
+No resource quota.
+No LimitRange resource.
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建-proxyprofile-资源">创建 ProxyProfile 资源&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">$ kubectl apply -f artifacts/proxy-profile.yaml
+proxyprofile.flomesh.io/poc-pf-dubbo created
+proxyprofile.flomesh.io/poc-pf-http created
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建-mock-服务">创建 mock 服务&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl apply -f dubbo-mesh/templates/configmap-mock.yaml
+$ kubectl apply -f dubbo-mesh/templates/configmap-proxychains.yaml
+$ kubectl apply -f dubbo-mesh/templates/deployment-mock.yaml
+$ kubectl apply -f dubbo-mesh/templates/service-mock.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署服务">部署服务&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl apply -f artifacts/deployment.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="测试">测试&lt;/h2>
+&lt;h3 id="准备">准备&lt;/h3>
+&lt;p>访问 demo 服务都要通过 ingress 控制器。因此需要先获取 LB 的 ip 地址。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">//Obtain the controller IP
+//Here, we append port.
+&lt;span class="nv">ingressAddr&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="sb">`&lt;/span>kubectl get svc ingress-pipy-controller -n ingress-pipy -o &lt;span class="nv">jsonpath&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;{.spec.clusterIP}&amp;#39;&lt;/span>&lt;span class="sb">`&lt;/span>:80
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里我们使用了是 k3d 创建的 k3s，命令中加入了 &lt;code>-p 80:80@loadbalancer&lt;/code> 选项。我们可以使用 &lt;code>127.0.0.1:80&lt;/code> 来访问 ingress 控制器。这里执行命令 &lt;code>ingressAddr=127.0.0.1:80&lt;/code>。&lt;/p>
+&lt;p>Ingress 规则中，我们为每个规则指定了 &lt;code>host&lt;/code>，因此每个请求中需要通过 HTTP 请求头 &lt;code>Host&lt;/code> 提供对应的 &lt;code>host&lt;/code>。&lt;/p>
+&lt;p>或者在 &lt;code>/etc/hosts&lt;/code> 添加记录：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl get ing ingress-canary-router -n flomesh-dubbo -o &lt;span class="nv">jsonpath&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;{range .spec.rules[*]}{.host}{&amp;#39;\n&amp;#39;}&amp;#34;&lt;/span>
+dubbo.demo.flomesh.cn
+//添加记录到 /etc/hosts
+127.0.0.1 dubbo.demo.flomesh.cn
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="灰度">灰度&lt;/h3>
+&lt;p>v1、v2 服务只能访问对应版本的服务。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ curl --location --request POST &lt;span class="s1">&amp;#39;http://127.0.0.1:80/hello&amp;#39;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span>--header &lt;span class="s1">&amp;#39;Host: dubbo.demo.flomesh.cn&amp;#39;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span>--header &lt;span class="s1">&amp;#39;x-canary-version: v1&amp;#39;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span>--header &lt;span class="s1">&amp;#39;Content-Type: application/json&amp;#39;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span>--data-raw &lt;span class="s1">&amp;#39;{&amp;#34;name&amp;#34;:&amp;#34;Flomesh&amp;#34;}&amp;#39;&lt;/span>
+V1-&lt;span class="o">[&lt;/span>hello-service&lt;span class="o">]&lt;/span> : Hello, Flomesh, Today is &lt;span class="o">(&lt;/span>2021-08-17&lt;span class="o">)&lt;/span>, Time is &lt;span class="o">(&lt;/span>04:06:56.823&lt;span class="o">)&lt;/span>
+$ curl --location --request POST &lt;span class="s1">&amp;#39;http://127.0.0.1:80/hello&amp;#39;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span>--header &lt;span class="s1">&amp;#39;Host: dubbo.demo.flomesh.cn&amp;#39;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span>--header &lt;span class="s1">&amp;#39;x-canary-version: v2&amp;#39;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span>--header &lt;span class="s1">&amp;#39;Content-Type: application/json&amp;#39;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span>--data-raw &lt;span class="s1">&amp;#39;{&amp;#34;name&amp;#34;:&amp;#34;Flomesh&amp;#34;}&amp;#39;&lt;/span>
+V2-&lt;span class="o">[&lt;/span>hello-service&lt;span class="o">]&lt;/span> : Hello, Flomesh, Today is &lt;span class="o">(&lt;/span>Tue, 2021-Aug-17&lt;span class="o">)&lt;/span>, Time is &lt;span class="o">(&lt;/span>04:06:37 +0000&lt;span class="o">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>使用 Flomesh 强化 Spring Cloud 服务治理</title><link>https://atbug.com/enhance-springcloud-service-governance-with-flomesh/</link><pubDate>Tue, 17 Aug 2021 18:47:33 +0800</pubDate><guid>https://atbug.com/enhance-springcloud-service-governance-with-flomesh/</guid><description>
 &lt;h2 id="写在最前">写在最前&lt;/h2>
 &lt;p>这篇是关于如何使用 &lt;a href="https://flomesh.cn/">Flomesh&lt;/a> 服务网格来强化 Spring Cloud 的服务治理能力，降低 Spring Cloud 微服务架构落地服务网格的门槛，实现“自主可控”。&lt;/p>
 &lt;p>文档在 &lt;a href="https://github.com/flomesh-io/flomesh-bookinfo-demo">github&lt;/a> 上持续更新，欢迎大家一起讨论：https://github.com/flomesh-io/flomesh-bookinfo-demo。&lt;/p>

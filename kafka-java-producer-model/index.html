@@ -4,7 +4,7 @@
 <a href=https://atbug.com/tags/java title=Java class="post_tag button button_translucent">Java</a> ·
 <a href=https://atbug.com/tags/kafka title=Kafka class="post_tag button button_translucent">Kafka</a></span>
 <span class=page_only>·</span></div><p><img src=../media/14835174309242.jpg alt></p><h3 id=producer初始化>Producer初始化</h3><p>初始化KafkaProducer实例，同时通过Config数据初始化MetaData、NetWorkClient、Accumulator和Sender线程。启动Sender线程。</p><h4 id=metadata信息>MetaData信息</h4><p>记录Cluster的相关信息，第一次链接使用Config设置，之后会从远端poll信息回来，比如host.name等信息。</p><h4 id=accumulator实例>Accumulator实例</h4><p>Accumulator持有一个Map实例，key为TopicPartition（封装了topic和partition信息）对象，Value为RecordBatch的Deque集合。</p><h4 id=networkclient实例>NetworkClient实例</h4><p>通过MetaData信息初始化NetworkClient实例，NetworkClient使用NIO模型。</p><h4 id=sender线程>Sender线程</h4><p>sender持有NetworkClient和Accumulator实例，在Producer实例初始化完成之后，持续地将Accumulator中的Batch数据drain到一个List中，调用NetworkClient进行发送。</p><h3 id=发送>发送</h3><p>调用Producer实例进行消息发送，首先将消息序列化之后追加到Accumulator的Deque的最后一个batch中，之后唤醒sender->client->Selector进行消息发送。</p><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//addozhang.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></article><aside class=sidebar><section class=sidebar_inner><h2>张晓辉</h2><div class=sidebar_description><ul><li>资深码农、云原生践行者</li><li>Kubernetes、DevOps、微服务</li></ul><p>微信订阅号：云原生指北。
-<img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/enhance-springcloud-service-governance-with-flomesh/ class=nav-link title="使用 Flomesh 强化 Spring Cloud 服务治理">使用 Flomesh 强化 Spring Cloud 服务治理</a></li><li><a href=https://atbug.com/a-framework-for-open-source-evaluation/ class=nav-link title=开源评估框架>开源评估框架</a></li><li><a href=https://atbug.com/2021-xinjiang-trip/ class=nav-link title="游记 - 2021 北疆之行">游记 - 2021 北疆之行</a></li><li><a href=https://atbug.com/translation-kuberletes-essential-tools-2021/ class=nav-link title="Kubernetes 必备工具：2021">Kubernetes 必备工具：2021</a></li><li><a href=https://atbug.com/pipy-implement-kubernetes-admission-control/ class=nav-link title="Rego 不好用？用 Pipy 实现 OPA">Rego 不好用？用 Pipy 实现 OPA</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
+<img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/enhance-dubbo-service-governance-with-flomesh/ class=nav-link title="使用 Flomesh 进行 Dubbo 服务治理">使用 Flomesh 进行 Dubbo 服务治理</a></li><li><a href=https://atbug.com/enhance-springcloud-service-governance-with-flomesh/ class=nav-link title="使用 Flomesh 强化 Spring Cloud 服务治理">使用 Flomesh 强化 Spring Cloud 服务治理</a></li><li><a href=https://atbug.com/a-framework-for-open-source-evaluation/ class=nav-link title=开源评估框架>开源评估框架</a></li><li><a href=https://atbug.com/2021-xinjiang-trip/ class=nav-link title="游记 - 2021 北疆之行">游记 - 2021 北疆之行</a></li><li><a href=https://atbug.com/translation-kuberletes-essential-tools-2021/ class=nav-link title="Kubernetes 必备工具：2021">Kubernetes 必备工具：2021</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
 <span class=button_tally>47</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" title=学习>学习
 <span class=button_tally>40</span></a>
@@ -13,7 +13,7 @@
 <a href=https://atbug.com/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/ class="post_tag button button_translucent" title=源码解析>源码解析
 <span class=button_tally>5</span></a>
 <a href=https://atbug.com/categories/quickstart/ class="post_tag button button_translucent" title=quickstart>QUICKSTART
-<span class=button_tally>3</span></a>
+<span class=button_tally>4</span></a>
 <a href=https://atbug.com/categories/devops/ class="post_tag button button_translucent" title=devops>DEVOPS
 <span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/%E5%B7%A5%E5%85%B7/ class="post_tag button button_translucent" title=工具>工具
@@ -34,7 +34,7 @@
 <span class=button_tally>1</span></a><br><div class="post_tags_toggle button">所有分类</div><div class=post_tags><div class=tags_list><a href=https://atbug.com/categories/devops/ class="post_tag button button_translucent" data-position=2 title=devops>DEVOPS<span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/envoy/ class="post_tag button button_translucent" data-position=1 title=envoy>ENVOY<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/kubernetes/ class="post_tag button button_translucent" data-position=1 title=kubernetes>KUBERNETES<span class=button_tally>1</span></a>
-<a href=https://atbug.com/categories/quickstart/ class="post_tag button button_translucent" data-position=3 title=quickstart>QUICKSTART<span class=button_tally>3</span></a>
+<a href=https://atbug.com/categories/quickstart/ class="post_tag button button_translucent" data-position=4 title=quickstart>QUICKSTART<span class=button_tally>4</span></a>
 <a href=https://atbug.com/categories/serverless/ class="post_tag button button_translucent" data-position=1 title=serverless>SERVERLESS<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" data-position=40 title=学习>学习<span class=button_tally>40</span></a>
 <a href=https://atbug.com/categories/%E5%AE%B9%E5%99%A8/ class="post_tag button button_translucent" data-position=1 title=容器>容器<span class=button_tally>1</span></a>
@@ -96,11 +96,12 @@
 <a href=https://atbug.com/tags/devops/ class="post_tag button button_translucent" data-position=1 title=devops>DEVOPS<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/docekr/ class="post_tag button button_translucent" data-position=1 title=docekr>DOCEKR<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/docker/ class="post_tag button button_translucent" data-position=6 title=docker>DOCKER<span class=button_tally>6</span></a>
+<a href=https://atbug.com/tags/dubbo/ class="post_tag button button_translucent" data-position=1 title=dubbo>DUBBO<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/elasticsearch/ class="post_tag button button_translucent" data-position=1 title=elasticsearch>ELASTICSEARCH<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/envoy/ class="post_tag button button_translucent" data-position=1 title=envoy>ENVOY<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/eureka/ class="post_tag button button_translucent" data-position=3 title=eureka>EUREKA<span class=button_tally>3</span></a>
 <a href=https://atbug.com/tags/extension/ class="post_tag button button_translucent" data-position=1 title=extension>EXTENSION<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/flomesh/ class="post_tag button button_translucent" data-position=1 title=flomesh>FLOMESH<span class=button_tally>1</span></a>
+<a href=https://atbug.com/tags/flomesh/ class="post_tag button button_translucent" data-position=2 title=flomesh>FLOMESH<span class=button_tally>2</span></a>
 <a href=https://atbug.com/tags/flume/ class="post_tag button button_translucent" data-position=1 title=flume>FLUME<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/git/ class="post_tag button button_translucent" data-position=1 title=git>GIT<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/go/ class="post_tag button button_translucent" data-position=8 title=go>GO<span class=button_tally>8</span></a>
@@ -142,7 +143,7 @@
 <a href=https://atbug.com/tags/openshift/ class="post_tag button button_translucent" data-position=3 title=openshift>OPENSHIFT<span class=button_tally>3</span></a>
 <a href=https://atbug.com/tags/opensource/ class="post_tag button button_translucent" data-position=1 title=opensource>OPENSOURCE<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/ops/ class="post_tag button button_translucent" data-position=1 title=ops>OPS<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/pipy/ class="post_tag button button_translucent" data-position=3 title=pipy>PIPY<span class=button_tally>3</span></a>
+<a href=https://atbug.com/tags/pipy/ class="post_tag button button_translucent" data-position=4 title=pipy>PIPY<span class=button_tally>4</span></a>
 <a href=https://atbug.com/tags/plugin/ class="post_tag button button_translucent" data-position=1 title=plugin>PLUGIN<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/policy/ class="post_tag button button_translucent" data-position=1 title=policy>POLICY<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/prometheus/ class="post_tag button button_translucent" data-position=1 title=prometheus>PROMETHEUS<span class=button_tally>1</span></a>
