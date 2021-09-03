@@ -1,4 +1,184 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kubernetes on 乱世浮生</title><link>https://atbug.com/tags/kubernetes/</link><description>Recent content in Kubernetes on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 15 Jul 2021 08:10:22 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/kubernetes/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes 必备工具：2021</title><link>https://atbug.com/translation-kuberletes-essential-tools-2021/</link><pubDate>Thu, 15 Jul 2021 08:10:22 +0800</pubDate><guid>https://atbug.com/translation-kuberletes-essential-tools-2021/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kubernetes on 乱世浮生</title><link>https://atbug.com/tags/kubernetes/</link><description>Recent content in Kubernetes on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 02 Sep 2021 20:41:06 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/kubernetes/index.xml" rel="self" type="application/rss+xml"/><item><title>ARM64 平台基于 openEuler + iSula 环境部署 Kubernetes</title><link>https://atbug.com/setup-kubernetes-running-with-isulad-on-openeuler/</link><pubDate>Thu, 02 Sep 2021 20:41:06 +0800</pubDate><guid>https://atbug.com/setup-kubernetes-running-with-isulad-on-openeuler/</guid><description>
+&lt;p>为什么要在 arm64 平台上部署 Kubernetes，而且还是鲲鹏 920 的架构。说来话长 。。。 此处省略5000 字。&lt;/p>
+&lt;p>介绍下系统信息；&lt;/p>
+&lt;ul>
+&lt;li>架构：鲲鹏 920(Kunpeng920)&lt;/li>
+&lt;li>OS：openEuler 20.03 (LTS-SP1)&lt;/li>
+&lt;li>CPU：4c&lt;/li>
+&lt;li>内存：16G&lt;/li>
+&lt;li>硬盘：若干&lt;/li>
+&lt;/ul>
+&lt;p>整个过程虽然参考了&lt;a href="https://bbs.huaweicloud.com/forum/thread-94271-1-1.html">鲲鹏论坛的帖子&lt;/a>，不过还是颇费周折。&lt;/p>
+&lt;h3 id="tldr">TL;DR&lt;/h3>
+&lt;p>整个过程中要注意 arm64 平台上安装 Kubernetes 及网络组件，需要使用 arm64 版本的镜像。&lt;/p>
+&lt;h3 id="环境配置">环境配置&lt;/h3>
+&lt;h4 id="1关闭-selinux">1.关闭 selinux&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="c1">#临时关闭&lt;/span>
+setenforce &lt;span class="m">0&lt;/span>
+&lt;span class="c1">#永久关闭 SELINUX=disabled&lt;/span>
+vim /etc/sysconfig/selinux
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="2-关闭swap分区">2. 关闭swap分区&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="c1">#临时关闭&lt;/span>
+swapoff -a
+&lt;span class="c1">#永久关闭 注释 swap 行&lt;/span>
+vim /etc/fstab
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="3-关闭防火墙">3. 关闭防火墙&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">systemctl stop firewalld
+ssystemctl disable firewalld
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="4-网络配置">4. 网络配置&lt;/h4>
+&lt;p>对iptables内部的nf-call需要打开的内生的桥接功能&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">vim /etc/sysctl.d/k8s.conf
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改如下内容：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">net.bridge.bridge-nf-call-iptables=1
+net.bridge.bridge-nf-call-ip6tables=1
+net.ipv4.ip_forward=1
+vm_swappiness=0
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改完成后执行：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">modprobe br_netfilter
+sysctl -p /etc/sysctl.d/k8s.conf
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="5-添加-kubernetes-源">5. 添加 Kubernetes 源&lt;/h4>
+&lt;p>在文件 &lt;code>/etc/yum.repos.d/openEuler.repo&lt;/code> 中追加如下内容：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">[kubernetes]
+name=Kubernetes
+baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-aarch64/
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg
+https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装配置-isula">安装配置 iSula&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">yum install -y iSulad
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改 iSula 配置，打开文件 &lt;code>/etc/isulad/daemon.json&lt;/code>，按照下面的部分：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;registry-mirrors&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;span class="s2">&amp;#34;docker.io&amp;#34;&lt;/span>
+&lt;span class="p">],&lt;/span>
+&lt;span class="nt">&amp;#34;insecure-registries&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;span class="s2">&amp;#34;rnd-dockerhub.huawei.com&amp;#34;&lt;/span>
+&lt;span class="p">],&lt;/span>
+&lt;span class="nt">&amp;#34;pod-sandbox-image&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;k8s.gcr.io/pause:3.2&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="err">//&lt;/span> &lt;span class="err">按照对应&lt;/span> &lt;span class="err">Kubernetes&lt;/span> &lt;span class="err">版本进行修改，后面会有说明&lt;/span>
+&lt;span class="nt">&amp;#34;network-plugin&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;cni&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nt">&amp;#34;cni-bin-dir&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nt">&amp;#34;cni-conf-dir&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nt">&amp;#34;hosts&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;span class="s2">&amp;#34;unix:///var/run/isulad.sock&amp;#34;&lt;/span>
+&lt;span class="p">]&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改之后重启 isulad&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">systemctl restart isulad
+systemctl &lt;span class="nb">enable&lt;/span> isulad
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="kubernetes-部署">Kubernetes 部署&lt;/h3>
+&lt;h4 id="1-安装-kubeletkubeadmkubectl">1. 安装 kubelet、kubeadm、kubectl&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">yum install -y kubelet-1.20.0 kubeadm-1.20.0 kubectl-1.20.0
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="2-准备镜像">2. 准备镜像&lt;/h4>
+&lt;p>由于某种未知的网络问提，会导致拉取 &lt;code>k8s.gcr.io&lt;/code> 的镜像失败。需要提前下载好。&lt;/p>
+&lt;p>通过 &lt;code>kubeadm config images list --kubernetes-version 1.20.0&lt;/code> 命令，获取初始化所需的镜像。这里需要注意通过 &lt;code>--kubernetes-version&lt;/code> 参数指定版本号，否则 &lt;code>kubeadm&lt;/code> 是打印出最高的 &lt;code>1.20.x&lt;/code> 版本的初始化镜像（比如，1.20.x 的最高版本是 1.20.4）。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">k8s.gcr.io/kube-apiserver:v1.20.0
+k8s.gcr.io/kube-controller-manager:v1.20.0
+k8s.gcr.io/kube-scheduler:v1.20.0
+k8s.gcr.io/kube-proxy:v1.20.0
+k8s.gcr.io/pause:3.2
+k8s.gcr.io/etcd:3.4.13-0
+k8s.gcr.io/coredns:1.7.
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>对应的 arm64 版本镜像为：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">k8s.gcr.io/kube-apiserver-arm64:v1.20.0
+k8s.gcr.io/kube-controller-manager-arm64:v1.20.0
+k8s.gcr.io/kube-scheduler-arm64:v1.20.0
+k8s.gcr.io/kube-proxy-arm64:v1.20.0
+k8s.gcr.io/pause-arm64:3.2
+k8s.gcr.io/etcd-arm64:3.4.2-0 #支持 arm64 的 3.4.x 的最高版本
+k8s.gcr.io/coredns:1.7.0 #无需特别的 arm64 版本
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>凭“运气”下载好镜像后，再通过 &lt;code>isula tag&lt;/code> 命令修改成我们需要的：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">isula tag k8s.gcr.io/kube-apiserver-arm64:v1.20.0 k8s.gcr.io/kube-apiserver:v1.20.0
+isula tag k8s.gcr.io/kube-controller-manager-arm64:v1.20.0 k8s.gcr.io/kube-controller-manager:v1.20.0
+isula tag k8s.gcr.io/kube-scheduler-arm64:v1.20.0 k8s.gcr.io/kube-scheduler:v1.20.0
+isula tag k8s.gcr.io/kube-proxy-arm64:v1.20.0 k8s.gcr.io/kube-proxy:v1.20.0
+isula tag k8s.gcr.io/pause-arm64:3.2 k8s.gcr.io/pause:3.2
+isula tag k8s.gcr.io/etcd-arm64:3.4.2-0 k8s.gcr.io/etcd:3.4.13-0
+isula tag k8s.gcr.io/coredns:1.7.0 k8s.gcr.io/coredns:1.7.0
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="3-初始化-master-节点">3. 初始化 master 节点&lt;/h4>
+&lt;p>注意需要指定 &lt;code>--cri-socket&lt;/code> 参数使用 &lt;code>isulad&lt;/code> 的 API。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubeadm init --kubernetes-version v1.20.0 --cri-socket&lt;span class="o">=&lt;/span>/var/run/isulad.sock --pod-network-cidr&lt;span class="o">=&lt;/span>10.244.0.0/16
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>安装成功的话，会看到如下的内容&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">Your Kubernetes control-plane has initialized successfully!
+To start using your cluster, you need to run the following as a regular user:
+mkdir -p &lt;span class="nv">$HOME&lt;/span>/.kube
+sudo cp -i /etc/kubernetes/admin.conf &lt;span class="nv">$HOME&lt;/span>/.kube/config
+sudo chown &lt;span class="k">$(&lt;/span>id -u&lt;span class="k">)&lt;/span>:&lt;span class="k">$(&lt;/span>id -g&lt;span class="k">)&lt;/span> &lt;span class="nv">$HOME&lt;/span>/.kube/config
+Alternatively, &lt;span class="k">if&lt;/span> you are the root user, you can run:
+&lt;span class="nb">export&lt;/span> &lt;span class="nv">KUBECONFIG&lt;/span>&lt;span class="o">=&lt;/span>/etc/kubernetes/admin.conf
+You should now deploy a pod network to the cluster.
+Run &lt;span class="s2">&amp;#34;kubectl apply -f [podnetwork].yaml&amp;#34;&lt;/span> with one of the options listed at:
+https://kubernetes.io/docs/concepts/cluster-administration/addons/
+Then you can join any number of worker nodes by running the following on each as root:
+kubeadm join 12.0.0.9:6443 --token 0110xl.lqzlegbduz2qkdhr &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> --discovery-token-ca-cert-hash sha256:42b13f5924a01128aac0d6e7b2487af990bc82701f233c8a6a4790187ea064af
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="4-配置集群环境">4. 配置集群环境&lt;/h4>
+&lt;p>然后根据上面的输出进行配置&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">mkdir -p &lt;span class="nv">$HOME&lt;/span>/.kube
+sudo cp -i /etc/kubernetes/admin.conf &lt;span class="nv">$HOME&lt;/span>/.kube/config
+sudo chown &lt;span class="k">$(&lt;/span>id -u&lt;span class="k">)&lt;/span>:&lt;span class="k">$(&lt;/span>id -g&lt;span class="k">)&lt;/span> &lt;span class="nv">$HOME&lt;/span>/.kube/config
+&lt;span class="nb">export&lt;/span> &lt;span class="nv">KUBECONFIG&lt;/span>&lt;span class="o">=&lt;/span>/etc/kubernetes/admin.conf
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="5-向集群添加-node-节点">5. 向集群添加 Node 节点&lt;/h4>
+&lt;p>重复前面的步骤：&lt;code>环境配置&lt;/code>、&lt;code>安装配置 iSula&lt;/code> 以及 &lt;code>Kubernetes 部署&lt;/code> 的 1 和 2。&lt;/p>
+&lt;p>同样使用上面输出的命令，再加上 &lt;code>--cri-socket&lt;/code> 参数：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubeadm join 12.0.0.9:6443 --token 0110xl.lqzlegbduz2qkdhr &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> --discovery-token-ca-cert-hash &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> --cri-socket&lt;span class="o">=&lt;/span>/var/run/isulad.sock
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="配置网络插件">配置网络插件&lt;/h3>
+&lt;p>完成 master 节点初始化并配置完集群环境后就可以执行 &lt;code>kubectl&lt;/code> 的命令了。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl get nodes
+NAME STATUS ROLES AGE VERSION
+host-12-0-0-9 NotReady control-plane,master 178m v1.20.0
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>看下节点，发现节点是 &lt;code>NotReady&lt;/code> 的状态，这是因为网络插件还没安装。如果此时通过命令 &lt;code>journalctl -uf kubelet&lt;/code> 查看 &lt;code>kubelet&lt;/code> 的日志，会看到日志提示网络插件没有 ready。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">kubelet.go:2160] Container runtime network not ready: NetworkReady=false reason:NetworkPluginNotReady message:iSulad: network plugin is not ready: cni config uninitialized
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>还记得 isulad 的配置么？&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&amp;#34;network-plugin&amp;#34;: &amp;#34;cni&amp;#34;,
+&amp;#34;cni-bin-dir&amp;#34;: &amp;#34;&amp;#34;, //使用默认 /opt/cni/bin
+&amp;#34;cni-conf-dir&amp;#34;: &amp;#34;&amp;#34;, //使用默认 /etc/cni/net.d
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>实际上两个目录都是空的内容，如果目录不存在，先创建：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">mkdir -p /opt/cni/bin
+mkdir -p /etc/cni/net.d
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里使用 &lt;code>calico&lt;/code> 做为网络插件，先下载 manifest。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">wget https://docs.projectcalico.org/v3.14/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>因为是 arm64 的硬件，同样需要使用对应 arm64 版本的镜像，先查看要用哪些镜像：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">grep &lt;span class="s1">&amp;#39;image:&amp;#39;&lt;/span> calico.yaml &lt;span class="p">|&lt;/span> uniq
+image: calico/cni:v3.14.2
+image: calico/pod2daemon-flexvol:v3.14.2
+image: calico/node:v3.14.2
+image: calico/kube-controllers:v3.14.2
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>对应的 arm64 版本，操作步骤参考上面，不再赘述。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">calico/cni:v3.14.2-arm64
+calico/pod2daemon-flexvol:v3.14.2-arm64
+calico/node:v3.14.2-arm64
+calico/kube-controllers:v3.14.2-arm64
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>搞定镜像之后执行：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply -f calico.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>之后就可以看到节点变成了 &lt;code>Ready&lt;/code> 状态。&lt;/p>
+&lt;h3 id="测试">测试&lt;/h3>
+&lt;p>通常都是用 nginx 的镜像创建 pod 进行测试，但是 nginx 并没有 arm64 的版本，这里就用 docker 官方提供的 &lt;code>hello-world&lt;/code> 镜像。没错，支持 arm64。&lt;/p>
+&lt;p>注意：容器里的进程打印出信息就会退出了，因此 pod 会不停的重启，但用来测试是足够的。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl run hello-world --image hello-world:latest
+kubectl logs hello-world --previous
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以看到&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">Hello from Docker!
+This message shows that your installation appears to be working correctly.
+To generate this message, Docker took the following steps:
+1. The Docker client contacted the Docker daemon.
+2. The Docker daemon pulled the &amp;#34;hello-world&amp;#34; image from the Docker Hub.
+(arm64v8)
+3. The Docker daemon created a new container from that image which runs the
+executable that produces the output you are currently reading.
+4. The Docker daemon streamed that output to the Docker client, which sent it
+to your terminal.
+To try something more ambitious, you can run an Ubuntu container with:
+$ docker run -it ubuntu bash
+Share images, automate workflows, and more with a free Docker ID:
+https://hub.docker.com/
+For more examples and ideas, visit:
+https://docs.docker.com/get-started/
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="总结">总结&lt;/h3>
+&lt;p>至此，我们就完成了在鲲鹏平台上基于 openEuler + iSula 部署 Kubernetes 的工作。&lt;/p></description></item><item><title>Kubernetes 必备工具：2021</title><link>https://atbug.com/translation-kuberletes-essential-tools-2021/</link><pubDate>Thu, 15 Jul 2021 08:10:22 +0800</pubDate><guid>https://atbug.com/translation-kuberletes-essential-tools-2021/</guid><description>
 &lt;p>有别于前些天的文章 - &lt;a href="https://mp.weixin.qq.com/s/uU2zmT5yyVcKZ5XmLSRqtg">常用的几款工具让 Kubernetes 集群上的工作更容易&lt;/a> 偏重于工具类来提升工作效率，今天这篇文章更加适合用来做选型时的参考。&lt;/p>
 &lt;p>文档翻译自 &lt;a href="https://itnext.io/kubernetes-essential-tools-2021-def12e84c572">Kubernetes Essential Tools: 2021&lt;/a>，篇幅较长，做了部分增删。&lt;/p>
 &lt;hr>
