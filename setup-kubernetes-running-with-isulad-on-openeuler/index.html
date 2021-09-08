@@ -123,7 +123,7 @@ calico/pod2daemon-flexvol:v3.14.2-arm64
 calico/node:v3.14.2-arm64
 calico/kube-controllers:v3.14.2-arm64
 </code></pre></div><p>搞定镜像之后执行：</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl apply -f calico.yaml
-</code></pre></div><p>之后就可以看到节点变成了 <code>Ready</code> 状态。</p><h3 id=测试>测试</h3><p>通常都是用 nginx 的镜像创建 pod 进行测试，但是 nginx 并没有 arm64 的版本，这里就用 docker 官方提供的 <code>hello-world</code> 镜像。没错，支持 arm64。</p><p>注意：容器里的进程打印出信息就会退出了，因此 pod 会不停的重启，但用来测试是足够的。</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl run hello-world --image hello-world:latest
+</code></pre></div><p>之后就可以看到节点变成了 <code>Ready</code> 状态。</p><h3 id=测试>测试</h3><p>通常都是用 nginx 的镜像创建 pod 进行测试，但是 nginx 并没有 arm64 的版本，这里就用 docker 官方提供的 <code>hello-world</code> 镜像。没错，支持 arm64。</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl run hello-world --image hello-world:latest --restart<span class=o>=</span>Never
 
 kubectl logs hello-world --previous
 </code></pre></div><p>可以看到</p><div class=highlight><pre class=chroma><code class=language-fallback data-lang=fallback>Hello from Docker!
