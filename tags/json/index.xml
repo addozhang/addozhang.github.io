@@ -15,10 +15,10 @@
 &lt;p>JSON Patch由IETF在&lt;a href="http://tools.ietf.org/html/rfc6902">RFC 6902&lt;/a>中规范.&lt;/p>
 &lt;h3 id="简单的例子">简单的例子&lt;/h3>
 &lt;h4 id="原始文档">原始文档&lt;/h4>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-json" data-lang="json">
-&lt;span class="s2">&amp;#34;baz&amp;#34;&lt;/span>&lt;span class="err">:&lt;/span> &lt;span class="s2">&amp;#34;qux&amp;#34;&lt;/span>&lt;span class="err">,&lt;/span>
-&lt;span class="s2">&amp;#34;foo&amp;#34;&lt;/span>&lt;span class="err">:&lt;/span> &lt;span class="s2">&amp;#34;bar&amp;#34;&lt;/span>
-&lt;span class="err">}&lt;/span>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;baz&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;qux&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nt">&amp;#34;foo&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;bar&amp;#34;&lt;/span>
+&lt;span class="p">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="补丁">补丁&lt;/h4>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="p">[&lt;/span>
 &lt;span class="p">{&lt;/span> &lt;span class="nt">&amp;#34;op&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;replace&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nt">&amp;#34;path&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;/baz&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nt">&amp;#34;value&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;boo&amp;#34;&lt;/span> &lt;span class="p">},&lt;/span>
