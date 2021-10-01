@@ -58,8 +58,8 @@
   <span class=o>...</span>
 <span class=o>}</span>
 </code></pre></div><h2 id=问题>问题</h2><p>一般场景下，不能使用Integer.MAX_VALUE如此大的线程数。所以需要使用构造器自己进行实例化。</p><p>如指定corePoolSize=5、maximumPoolSize=20</p><p>、keepAliveTime=60L、unit=TimeUnit.SECONDS、workQueue=new SynchronousQueue()。</p><p>但是实际执行的时候，线程数一直是5。</p><p>回头看ThreadPoolExecutor的实现，如果想要达到我们想要的效果需要程序进入最后的那个else。那重点就在第三个if里的workQueue.offer(command)。</p><p>看BlockingQueue接口中该方法的描述：将元素插入到队列中，没有超过容量限制则插入并返回true。</p><p>而使用的SynchronousQueue底层实现使用的栈没有容量限制，这就是为什么线程池中的线程数一直是corePoolSize。</p><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//addozhang.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></article><aside class=sidebar><section class=sidebar_inner><h2>张晓辉</h2><div class=sidebar_description><ul><li>资深码农、云原生践行者</li><li>Kubernetes、DevOps、微服务</li></ul><p>微信订阅号：云原生指北。
-<img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/how-docker-broke-in-half/ class=nav-link title="容器神话 Docker 是如何一分为二的">容器神话 Docker 是如何一分为二的</a></li><li><a href=https://atbug.com/setup-kubernetes-running-with-isulad-on-openeuler/ class=nav-link title="ARM64 平台基于 openEuler + iSula 环境部署 Kubernetes">ARM64 平台基于 openEuler + iSula 环境部署 Kubernetes</a></li><li><a href=https://atbug.com/enhance-dubbo-service-governance-with-flomesh/ class=nav-link title="使用 Flomesh 进行 Dubbo 服务治理">使用 Flomesh 进行 Dubbo 服务治理</a></li><li><a href=https://atbug.com/enhance-springcloud-service-governance-with-flomesh/ class=nav-link title="使用 Flomesh 强化 Spring Cloud 服务治理">使用 Flomesh 强化 Spring Cloud 服务治理</a></li><li><a href=https://atbug.com/a-framework-for-open-source-evaluation/ class=nav-link title=开源评估框架>开源评估框架</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
-<span class=button_tally>48</span></a>
+<img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/jihu-gitlab-experience/ class=nav-link title="极狐GitLab SaaS 内测轻度体验">极狐GitLab SaaS 内测轻度体验</a></li><li><a href=https://atbug.com/how-docker-broke-in-half/ class=nav-link title="容器神话 Docker 是如何一分为二的">容器神话 Docker 是如何一分为二的</a></li><li><a href=https://atbug.com/setup-kubernetes-running-with-isulad-on-openeuler/ class=nav-link title="ARM64 平台基于 openEuler + iSula 环境部署 Kubernetes">ARM64 平台基于 openEuler + iSula 环境部署 Kubernetes</a></li><li><a href=https://atbug.com/enhance-dubbo-service-governance-with-flomesh/ class=nav-link title="使用 Flomesh 进行 Dubbo 服务治理">使用 Flomesh 进行 Dubbo 服务治理</a></li><li><a href=https://atbug.com/enhance-springcloud-service-governance-with-flomesh/ class=nav-link title="使用 Flomesh 强化 Spring Cloud 服务治理">使用 Flomesh 强化 Spring Cloud 服务治理</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
+<span class=button_tally>49</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" title=学习>学习
 <span class=button_tally>40</span></a>
 <a href=https://atbug.com/categories/%E7%BF%BB%E8%AF%91/ class="post_tag button button_translucent" title=翻译>翻译
@@ -100,7 +100,7 @@
 <a href=https://atbug.com/categories/%E6%BA%90%E7%A0%81/ class="post_tag button button_translucent" data-position=1 title=源码>源码<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ class="post_tag button button_translucent" data-position=1 title=源码分析>源码分析<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/ class="post_tag button button_translucent" data-position=5 title=源码解析>源码解析<span class=button_tally>5</span></a>
-<a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" data-position=48 title=笔记>笔记<span class=button_tally>48</span></a>
+<a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" data-position=49 title=笔记>笔记<span class=button_tally>49</span></a>
 <a href=https://atbug.com/categories/%E7%BD%91%E5%85%B3/ class="post_tag button button_translucent" data-position=1 title=网关>网关<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E7%BF%BB%E8%AF%91/ class="post_tag button button_translucent" data-position=11 title=翻译>翻译<span class=button_tally>11</span></a>
 <a href=https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/ class="post_tag button button_translucent" data-position=2 title=软件>软件<span class=button_tally>2</span></a><div class=tags_sort><span title="sort alphabetically">[A~Z]</span><span title="sort by count">[0~9]</span></div><span class=tags_hide><svg class="icon"><use xlink:href="#closeme"/></svg></span></div></div></nav></div><div><h2 class="mt-4 taxonomy" id=tags-section>标签</h2><nav class=tags_nav><a href=https://atbug.com/tags/java/ class="post_tag button button_translucent" title=java>JAVA
@@ -115,10 +115,10 @@
 <span class=button_tally>8</span></a>
 <a href=https://atbug.com/tags/tekton/ class="post_tag button button_translucent" title=tekton>TEKTON
 <span class=button_tally>8</span></a>
+<a href=https://atbug.com/tags/cicd/ class="post_tag button button_translucent" title=cicd>CICD
+<span class=button_tally>7</span></a>
 <a href=https://atbug.com/tags/spring-cloud/ class="post_tag button button_translucent" title=spring-cloud>SPRING-CLOUD
 <span class=button_tally>7</span></a>
-<a href=https://atbug.com/tags/cicd/ class="post_tag button button_translucent" title=cicd>CICD
-<span class=button_tally>6</span></a>
 <a href=https://atbug.com/tags/docker/ class="post_tag button button_translucent" title=docker>DOCKER
 <span class=button_tally>6</span></a>
 <a href=https://atbug.com/tags/spring/ class="post_tag button button_translucent" title=spring>SPRING
@@ -140,7 +140,7 @@
 <a href=https://atbug.com/tags/centos/ class="post_tag button button_translucent" data-position=1 title=centos>CENTOS<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/chrome/ class="post_tag button button_translucent" data-position=1 title=chrome>CHROME<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/ci/cd/ class="post_tag button button_translucent" data-position=1 title=ci/cd>CI/CD<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/cicd/ class="post_tag button button_translucent" data-position=6 title=cicd>CICD<span class=button_tally>6</span></a>
+<a href=https://atbug.com/tags/cicd/ class="post_tag button button_translucent" data-position=7 title=cicd>CICD<span class=button_tally>7</span></a>
 <a href=https://atbug.com/tags/cka/ class="post_tag button button_translucent" data-position=1 title=cka>CKA<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/dapr/ class="post_tag button button_translucent" data-position=1 title=dapr>DAPR<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/database/ class="post_tag button button_translucent" data-position=1 title=database>DATABASE<span class=button_tally>1</span></a>
@@ -230,6 +230,7 @@
 <a href=https://atbug.com/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/ class="post_tag button button_translucent" data-position=1 title=多线程>多线程<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" data-position=1 title=学习>学习<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/%E5%AE%89%E5%85%A8/ class="post_tag button button_translucent" data-position=1 title=安全>安全<span class=button_tally>1</span></a>
+<a href=https://atbug.com/tags/%E5%AE%B9%E5%99%A8/ class="post_tag button button_translucent" data-position=1 title=容器>容器<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/%E5%B7%A5%E5%85%B7/ class="post_tag button button_translucent" data-position=1 title=工具>工具<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/%E5%BC%80%E6%BA%90/ class="post_tag button button_translucent" data-position=1 title=开源>开源<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/ class="post_tag button button_translucent" data-position=1 title=微服务>微服务<span class=button_tally>1</span></a>

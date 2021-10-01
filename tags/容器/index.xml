@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>容器 on 乱世浮生</title><link>https://atbug.com/tags/%E5%AE%B9%E5%99%A8/</link><description>Recent content in 容器 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 01 Oct 2021 08:18:09 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E5%AE%B9%E5%99%A8/index.xml" rel="self" type="application/rss+xml"/><item><title>极狐GitLab SaaS 内测轻度体验</title><link>https://atbug.com/jihu-gitlab-experience/</link><pubDate>Fri, 01 Oct 2021 08:18:09 +0800</pubDate><guid>https://atbug.com/jihu-gitlab-experience/</guid><description>
+&lt;p>感谢极狐团队为 &lt;a href="https://gitlab.cn/">GitLab（SaaS）&lt;/a>本地化的努力，同时也感谢小马哥提供的内测资格。&lt;/p>
+&lt;p>最近突然想到了个点子，需要使用一个私有的镜像仓库。极狐GitLab 有提供容器镜像库，正好和 CICD 一起做个轻度体验。&lt;/p>
+&lt;h2 id="容器镜像库-container-registry">容器镜像库 Container Registry&lt;/h2>
+&lt;p>文档介绍在&lt;a href="https://gitlab.cn/help/user/packages/container_registry/index">这里&lt;/a>，目前还是英文。（应该本地化的工作量很大，文档还没翻译。）&lt;/p>
+&lt;p>容器镜像库可以作为独立镜像仓库使用（为什么要这么用，卖个关子下篇文章见），就是使用 docker 命令将构建好的镜像推送到 容器镜像库。&lt;/p>
+&lt;p>当然也可以同 CICD 流水线结合使用，后文也会介绍。&lt;/p>
+&lt;h3 id="独立使用">独立使用&lt;/h3>
+&lt;p>本地登录 Container Registry 有两种验证方式：&lt;/p>
+&lt;ul>
+&lt;li>使用用户名和密码&lt;/li>
+&lt;li>开启了&lt;a href="https://gitlab.cn/help/user/profile/account/two_factor_authentication">双重身份验证&lt;/a>，可以使用访问&lt;a href="https://gitlab.cn/help/user/profile/personal_access_tokens">个人访问令牌&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>其实，不管是否开始双重验证，都建议使用访问令牌。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker login registry.gitlab.cn
+&lt;span class="c1">#根据提示输入用户名和密码或者令牌&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>image 的名字&lt;a href="https://docs.gitlab.com/ee/user/packages/container_registry/#image-naming-convention">最多有三层&lt;/a>，即 &lt;code>registry.example.com/[namespace]&lt;/code> 之后的内容最多有 3 层。比如下面的 image 名字 &lt;code>myproject/my/image&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">registry.example.com/mynamespace/myproject/my/image:rc1
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>其次 image 名字的第一层必须是镜像名，如上面的 &lt;code>myproject&lt;/code>。&lt;/p>
+&lt;p>尝试将 tekton 的镜像推送上去：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker tag gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/controller:v0.28.1 registry.gitlab.cn/addozhang/registry-mirror/tekton-pipeline/controller:v0.28.1
+docker push registry.gitlab.cn/addozhang/registry-mirror/tekton-pipeline/controller:v0.28.1
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/10/01/20211001070532.png" alt="">&lt;/p>
+&lt;p>&lt;strong>请忽略发布时间，原镜像的 &lt;code>Created&lt;/code> 字段就有问题。&lt;/strong>&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/10/01/20211001070622.png" alt="">&lt;/p>
+&lt;p>同样可以使用 REST API 进行访问：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">curl --location --request GET &lt;span class="s1">&amp;#39;https://gitlab.cn/api/v4/projects/addozhang%2Fregistry-mirror/registry/repositories/155/tags&amp;#39;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span>--header &lt;span class="s1">&amp;#39;PRIVATE-TOKEN: TOKEN_HERE&amp;#39;&lt;/span>
+&lt;span class="o">[{&lt;/span>&lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;v0.28.1&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;path&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;addozhang/registry-mirror/tekton-pipeline/controller:v0.28.1&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;location&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;registry.gitlab.cn/addozhang/registry-mirror/tekton-pipeline/controller:v0.28.1&amp;#34;&lt;/span>&lt;span class="o">}]&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="使用-cicd-构建和推送">使用 CICD 构建和推送&lt;/h2>
+&lt;p>见下文。&lt;/p>
+&lt;h2 id="cicd">CICD&lt;/h2>
+&lt;p>我将之前 github 的使用的测试 tekton 的项目镜像到了&lt;a href="https://gitlab.cn/addozhang/tekton-test">这里&lt;/a>，并添加了一个 &lt;code>.gitlab-ci.yml&lt;/code> 的&lt;a href="https://gitlab.cn/addozhang/tekton-test/-/blob/main/.gitlab-ci.yml">流水线定义文件&lt;/a>。&lt;/p>
+&lt;p>有了&lt;a href="https://gitlab.cn/help/ci/yaml/index.md">官方的文档&lt;/a>，以及参考&lt;a href="https://gitlab.com/gitlab-org/gitlab-foss/-/tree/master/lib/gitlab/ci/templates">官方提供各种的模板&lt;/a>，流水线的定义上手很快。&lt;/p>
+&lt;p>整个流水线包含了两个 stage：Java 代码的编译打包和镜像的构建。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/10/01/20211001063858.png" alt="2021-10-01-06-38-58">&lt;/p>
+&lt;p>如上图，最新的一次使用了 &lt;a href="https://gitlab.cn/help/ci/yaml/index.md%23cache">&lt;code>cache&lt;/code> 功能&lt;/a>将 &lt;code>.m2/repository&lt;/code> 缓存；而前两次使用了缓存（这里的构建耗时差异很大，不知道是不是因为晚上资源比较少？）。Java 项目会将依赖包保存在本地库中，使用 &lt;code>cache&lt;/code> 功能可以提升构建的效率。&lt;/p>
+&lt;h3 id="流水线-dag">流水线 DAG&lt;/h3>
+&lt;p>使用 &lt;code>needs&lt;/code> 可以控制同 stage 下作业的构建顺序，否则同 stage 下作业的执行是并行的。同时有了 &lt;code>needs&lt;/code> 还可以构建出 DAG，前提是最少需要 3 个作业，因此我又加了一个作业。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">cache&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">paths&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">.m2/repository&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">variables&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">MAVEN_OPTS&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">stages&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">build&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">image&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">post-build&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">maven-build&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">maven:3-jdk-8&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">stage&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">build&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">artifacts&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">paths&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">target/*.jar&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">mvn install -DskipTests&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">docker-build&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">docker:19.03.12&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">stage&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">image&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">needs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">maven-build&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">dependencies&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">maven-build&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">services&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">docker:19.03.12-dind&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">variables&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">IMAGE_TAG&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">$CI_REGISTRY_IMAGE:latest&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">docker build -t $IMAGE_TAG .&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">docker push $IMAGE_TAG&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">done&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">busybox:latest&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">stage&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">post-build&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">needs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">docker-build&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">echo &amp;#34;All Done!&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>感觉图有点简陋，后期应该会优化。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/10/01/20211001072045.png" alt="">&lt;/p>
+&lt;h3 id="作业依赖">作业依赖&lt;/h3>
+&lt;p>前面的流水线定义中，为了传递 maven 构建的 jar，使用了 &lt;code>artifacts&lt;/code> 和 &lt;code>dependencies&lt;/code> 进行了传递。&lt;/p>
+&lt;p>难道是我理解错了？鼠标悬停并没有显示做依赖的作业。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/10/01/20211001072018.png" alt="">&lt;/p>
+&lt;h3 id="流水线触发">流水线触发&lt;/h3>
+&lt;p>除了 push 代码触发，还可以创建触发器通过 Web API 进行触发。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">curl -X POST &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> -F &lt;span class="nv">token&lt;/span>&lt;span class="o">=&lt;/span>TOKEN_HERE &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> -F &lt;span class="nv">ref&lt;/span>&lt;span class="o">=&lt;/span>main &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> https://gitlab.cn/api/v4/projects/9766/trigger/pipeline
+&lt;span class="o">{&lt;/span>&lt;span class="s2">&amp;#34;id&amp;#34;&lt;/span>:19252,&lt;span class="s2">&amp;#34;project_id&amp;#34;&lt;/span>:9766,&lt;span class="s2">&amp;#34;sha&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;5dde144d584b76fe6d3b63a4a9beb789762d1a2d&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;ref&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;main&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;status&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;created&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;created_at&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;2021-10-01T07:37:42.806+08:00&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;updated_at&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;2021-10-01T07:37:42.806+08:00&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;web_url&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;https://gitlab.cn/addozhang/tekton-test/-/pipelines/19252&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;before_sha&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;0000000000000000000000000000000000000000&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;tag&amp;#34;&lt;/span>:false,&lt;span class="s2">&amp;#34;yaml_errors&amp;#34;&lt;/span>:null,&lt;span class="s2">&amp;#34;user&amp;#34;&lt;/span>:&lt;span class="o">{&lt;/span>&lt;span class="s2">&amp;#34;id&amp;#34;&lt;/span>:432,&lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;addozhang&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;username&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;addozhang&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;state&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;active&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;avatar_url&amp;#34;&lt;/span>:null,&lt;span class="s2">&amp;#34;web_url&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;https://gitlab.cn/addozhang&amp;#34;&lt;/span>&lt;span class="o">}&lt;/span>,&lt;span class="s2">&amp;#34;started_at&amp;#34;&lt;/span>:null,&lt;span class="s2">&amp;#34;finished_at&amp;#34;&lt;/span>:null,&lt;span class="s2">&amp;#34;committed_at&amp;#34;&lt;/span>:null,&lt;span class="s2">&amp;#34;duration&amp;#34;&lt;/span>:null,&lt;span class="s2">&amp;#34;queued_duration&amp;#34;&lt;/span>:null,&lt;span class="s2">&amp;#34;coverage&amp;#34;&lt;/span>:null,&lt;span class="s2">&amp;#34;detailed_status&amp;#34;&lt;/span>:&lt;span class="o">{&lt;/span>&lt;span class="s2">&amp;#34;icon&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;status_created&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;text&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;created&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;label&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;created&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;group&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;created&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;tooltip&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;created&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;has_details&amp;#34;&lt;/span>:true,&lt;span class="s2">&amp;#34;details_path&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;/addozhang/tekton-test/-/pipelines/19252&amp;#34;&lt;/span>,&lt;span class="s2">&amp;#34;illustration&amp;#34;&lt;/span>:null,&lt;span class="s2">&amp;#34;favicon&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;/assets/ci_favicons/favicon_status_created-4b975aa976d24e5a3ea7cd9a5713e6ce2cd9afd08b910415e96675de35f64955.png&amp;#34;&lt;/span>&lt;span class="o">}}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>由于之前任职的公司内部也有用 Gitlab，也有过 Github Action 和 Tektoncd 的使用经验，所以体验下来并还没有任何阻碍。这也得益于文档的完善，以及极狐团队的努力，希望极狐可以做得更好。&lt;/p>
+&lt;p>文中使用 &lt;code>registry-mirror&lt;/code> 做了仓库名，大家也能猜到点什么，敬请关注一下篇。&lt;/p></description></item></channel></rss>
