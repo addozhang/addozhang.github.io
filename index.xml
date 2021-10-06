@@ -1,4 +1,162 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>乱世浮生</title><link>https://atbug.com/</link><description>Recent content on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 01 Oct 2021 08:18:09 +0800</lastBuildDate><atom:link href="https://atbug.com/index.xml" rel="self" type="application/rss+xml"/><item><title>极狐GitLab SaaS 内测轻度体验</title><link>https://atbug.com/jihu-gitlab-experience/</link><pubDate>Fri, 01 Oct 2021 08:18:09 +0800</pubDate><guid>https://atbug.com/jihu-gitlab-experience/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>乱世浮生</title><link>https://atbug.com/</link><description>Recent content on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 06 Oct 2021 08:01:41 +0800</lastBuildDate><atom:link href="https://atbug.com/index.xml" rel="self" type="application/rss+xml"/><item><title>自动替换 Kubernetes 镜像</title><link>https://atbug.com/kubernetes-images-swapper/</link><pubDate>Wed, 06 Oct 2021 08:01:41 +0800</pubDate><guid>https://atbug.com/kubernetes-images-swapper/</guid><description>
+&lt;p>前几天有朋友在问如何在某云上拉取 Tekton 的镜像，这种情况其实比较普遍不只是某云。工作中经常要用到过某些靠运气才能拉取到的镜像，这对工作来说真是极度的不友好。&lt;/p>
+&lt;p>因此也萌生了个想法，维护一个后网络友好的仓库镜像，在 Pod 创建时将镜像仓库切换到自维护的仓库，从自维护的仓库拉取镜像。&lt;/p>
+&lt;p>前几天&lt;a href="https://mp.weixin.qq.com/s/SL_yBvyhb5p6Lm1HieJBbA">体验了极狐Gitlab 的容器镜像库&lt;/a>，便是为这个想法做的准备。当然其他的云厂商也有提供针对个人版的免费镜像仓库和企业版仓库。&lt;/p>
+&lt;p>正好 &lt;a href="https://mp.weixin.qq.com/s/uZ_Q5Fn3XpfUEHBOFxWdvg">Pipy 作为策略引擎&lt;/a>，非常适合实现这种策略的执行。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/10/05/20211005212733.png" alt="">&lt;/p>
+&lt;h2 id="实现思路">实现思路&lt;/h2>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/10/05/20211005210725.png" alt="">&lt;/p>
+&lt;h3 id="admission-webhook">Admission Webhook&lt;/h3>
+&lt;p>&lt;a href="https://kubernetes.io/zh/docs/reference/access-authn-authz/extensible-admission-controllers/">Kubernetes 动态准备控制&lt;/a> 的 &lt;code>MutatingWebhookConfiguration&lt;/code> 可以 hook Pod 的创建或者更新，然后调用目标服务对 Pod 资源对象进行 patch 操作。&lt;/p>
+&lt;h3 id="策略引擎">策略引擎&lt;/h3>
+&lt;p>Pipy 作为应用的核心，也就是 &lt;code>MutatingWebhookConfiguration&lt;/code> 的目标服务，以策略引擎的角色完成策略的执行。&lt;/p>
+&lt;p>Pipy 支持从文件或者 HTTP 地址加载脚本，这里为了便于策略的更新，使用了后者。&lt;/p>
+&lt;p>对于从 HTTP 地址加载脚本，HTTP 地址返回内容的第一行会作为 Pipy 的主脚本，Pipy 启动时会加载主脚本，其他的文件也会被缓存到内存中。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="c1">#地址 http://localhost:6080/repo/registry-mirror/&lt;/span>
+$ curl http://localhost:6080/repo/registry-mirror/
+/main.js
+/config.json
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Pipy 会每隔 5s 检查脚本和配置文件的 &lt;code>etag&lt;/code>（就是文件的最后更新时间），假如与当前文件的 etag 不一致，则会缓存并重新加载。&lt;/p>
+&lt;p>利用 Pipy 的这个特性，便可以策略和配置的准实时更新。&lt;/p>
+&lt;h3 id="策略">策略&lt;/h3>
+&lt;p>对于策略的部分，我们将其逻辑和配置进行了分离。配置部分，配置了需要进行替换的镜像的前缀，以及替换成的内容；而逻辑，这是对 &lt;code>MutatingWebhookConfiguration&lt;/code> 的 &lt;code>AdmissionReview&lt;/code> 的对象进行检查。&lt;/p>
+&lt;p>配置：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;registries&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;registry.gitlab.cn/flomesh/registry-mirror/tekton-pipeline&amp;#34;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>比如说，对于镜像 &lt;code>gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/controller:v0.28.1&lt;/code>，将 &lt;code>gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd&lt;/code> 替换成 &lt;code>registry.gitlab.cn/addozhang/registry-mirror/tekton-pipeline&lt;/code>。&lt;/p>
+&lt;h2 id="demo">Demo&lt;/h2>
+&lt;p>本文使用所有的&lt;a href="https://github.com/addozhang/registry-mirror">源码&lt;/a>都已上传到了 github。&lt;/p>
+&lt;h3 id="脚本服务器">脚本服务器&lt;/h3>
+&lt;p>既然选用了 HTTP 方式加载 Pipy 的脚本，那就需要实现一个脚本服务器。实现的方式有两种：使用脚本实现脚本服务器和使用 Pipy 内置的 Codebase。&lt;/p>
+&lt;h4 id="使用脚本实现脚本服务器">使用脚本实现脚本服务器&lt;/h4>
+&lt;p>根据需求定义两种路由：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>/repo/registry-mirror/&lt;/code>：返回脚本和配置的文件列表&lt;/li>
+&lt;li>&lt;code>/repo/registry-mirror/[File Name]&lt;/code>：返回对应的文件的内容，同时需要在响应头添加 &lt;code>etag&lt;/code>，值是文件的更新时间&lt;/li>
+&lt;/ul>
+&lt;p>具体脚本如下：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-js" data-lang="js">&lt;span class="err">#&lt;/span>&lt;span class="nx">repo&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">js&lt;/span>
+&lt;span class="nx">pipy&lt;/span>&lt;span class="p">({&lt;/span>
+&lt;span class="nx">_serveFile&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">req&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">type&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">filename&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="p">(&lt;/span>
+&lt;span class="nx">filename&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">req&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">head&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">path&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">substring&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">22&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;span class="nx">os&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">stat&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">filename&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">?&lt;/span> &lt;span class="p">(&lt;/span>
+&lt;span class="k">new&lt;/span> &lt;span class="nx">Message&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="p">{&lt;/span>
+&lt;span class="nx">bodiless&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">req&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">head&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">method&lt;/span> &lt;span class="o">===&lt;/span> &lt;span class="s1">&amp;#39;HEAD&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">headers&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="s1">&amp;#39;etag&amp;#39;&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">os&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">stat&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">filename&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">?&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">mtime&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="s1">&amp;#39;content-type&amp;#39;&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">type&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="nx">req&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">head&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">method&lt;/span> &lt;span class="o">===&lt;/span> &lt;span class="s1">&amp;#39;HEAD&amp;#39;&lt;/span> &lt;span class="o">?&lt;/span> &lt;span class="kc">null&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="nx">os&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">readFile&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">filename&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="p">)&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="p">(&lt;/span>
+&lt;span class="k">new&lt;/span> &lt;span class="nx">Message&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="nx">status&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">404&lt;/span> &lt;span class="p">},&lt;/span> &lt;span class="sb">`file &lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nx">filename&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="sb"> not found`&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="p">),&lt;/span>
+&lt;span class="nx">_router&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nx">algo&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">URLRouter&lt;/span>&lt;span class="p">({&lt;/span>
+&lt;span class="s1">&amp;#39;/repo/registry-mirror/&amp;#39;&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">()&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nx">Message&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/main.js\n/config.json&amp;#39;&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;span class="s1">&amp;#39;/repo/registry-mirror/*&amp;#39;&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">req&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="nx">_serveFile&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">req&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;text/plain&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}),&lt;/span>
+&lt;span class="p">})&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">listen&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">6080&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">serveHTTP&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="nx">req&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="nx">_router&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">find&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">req&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">head&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">path&lt;/span>&lt;span class="p">)(&lt;/span>&lt;span class="nx">req&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">)&lt;/span>&lt;span class="o">%&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ pipy repo.js
+2021-10-05 21:40:25 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span>
+2021-10-05 21:40:25 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> Module /repo.js
+2021-10-05 21:40:25 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> &lt;span class="o">===============&lt;/span>
+2021-10-05 21:40:25 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span>
+2021-10-05 21:40:25 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>Listen on :::6080&lt;span class="o">]&lt;/span>
+2021-10-05 21:40:25 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> -----&amp;gt;&lt;span class="p">|&lt;/span>
+2021-10-05 21:40:25 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> &lt;span class="p">|&lt;/span>
+2021-10-05 21:40:25 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> serveHTTP
+2021-10-05 21:40:25 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> &lt;span class="p">|&lt;/span>
+2021-10-05 21:40:25 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> &amp;lt;-----&lt;span class="p">|&lt;/span>
+2021-10-05 21:40:25 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span>
+2021-10-05 21:40:25 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>listener&lt;span class="o">]&lt;/span> Listening on port &lt;span class="m">6080&lt;/span> at ::
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>检查路由：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ curl http://localhost:6080/repo/registry-mirror/
+/main.js
+/config.json
+$ curl http://localhost:6080/repo/registry-mirror/main.js
+&lt;span class="c1">#省略 main.js 的内容&lt;/span>
+$ curl http://localhost:6080/repo/registry-mirror/config.json
+&lt;span class="c1">#省略 config.json 的内容&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="使用-pipy-内置的-codebase">使用 Pipy 内置的 Codebase&lt;/h4>
+&lt;p>在最新发布的 Pipy 内置了一个 Codebase，大家可以理解成脚本仓库，但是比单纯的仓库功能更加强大（后面会有文档介绍该特性）。&lt;/p>
+&lt;p>目前版本的 Codebase 还未支持持久化的存储，数据都是保存在内存中。后续会提供 KV store 或者 git 类型的持久化支持。&lt;/p>
+&lt;p>启动 Pipy 的 Codebase很简单：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ pipy
+2021-10-05 21:49:08 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>codebase&lt;span class="o">]&lt;/span> Starting codebase service...
+2021-10-05 21:49:08 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>listener&lt;span class="o">]&lt;/span> Listening on port &lt;span class="m">6060&lt;/span> at ::
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/10/05/20211005215007.png" alt="">&lt;/p>
+&lt;p>对于新的 Codebase 控制台的使用，这里不做过多的介绍，直接使用 REST API 完成脚本的写入：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="c1">#创建 registry-mirror codebase，会自动创建一个空的 main.js&lt;/span>
+$ curl -X POST http://localhost:6060/api/v1/repo/registry-mirror
+&lt;span class="c1">#更新 main.js&lt;/span>
+$ curl -X POST &lt;span class="s1">&amp;#39;http://localhost:6060/api/v1/repo/registry-mirror/main.js&amp;#39;&lt;/span> --data-binary &lt;span class="s1">&amp;#39;@scripts/main.js&amp;#39;&lt;/span>
+&lt;span class="c1">#创建 config.json&lt;/span>
+$ curl -X POST &lt;span class="s1">&amp;#39;http://localhost:6060/api/v1/repo/registry-mirror/config.json&amp;#39;&lt;/span> --data-binary &lt;span class="s1">&amp;#39;@scripts/config.json&amp;#39;&lt;/span>
+&lt;span class="c1">#检查 codebase 的版本&lt;/span>
+$ curl -s http://localhost:6060/api/v1/repo/registry-mirror &lt;span class="p">|&lt;/span> jq -r .version
+&lt;span class="c1">#更新版本&lt;/span>
+$ curl -X POST &lt;span class="s1">&amp;#39;http://localhost:6060/api/v1/repo/registry-mirror&amp;#39;&lt;/span> --data-raw &lt;span class="s1">&amp;#39;{&amp;#34;version&amp;#34;:2}&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装">安装&lt;/h3>
+&lt;p>进入到项目的根目录中，执行：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ helm install registry-mirror ./registry-mirror -n default
+NAME: registry-mirror
+LAST DEPLOYED: Tue Oct &lt;span class="m">5&lt;/span> 22:19:26 &lt;span class="m">2021&lt;/span>
+NAMESPACE: default
+STATUS: deployed
+REVISION: &lt;span class="m">1&lt;/span>
+TEST SUITE: None
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>查看 webhook：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl get mutatingwebhookconfigurations
+NAME WEBHOOKS AGE
+registry-mirror-webhook &lt;span class="m">1&lt;/span> 2m6s
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>检查 pod 的启动日志：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl logs -n pipy -l &lt;span class="nv">app&lt;/span>&lt;span class="o">=&lt;/span>pipy
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>codebase&lt;span class="o">]&lt;/span> GET http://192.168.1.101:6060/repo/registry-mirror/ -&amp;gt; &lt;span class="m">21&lt;/span> bytes
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>codebase&lt;span class="o">]&lt;/span> GET /repo/registry-mirror/main.js -&amp;gt; &lt;span class="m">2213&lt;/span> bytes
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>codebase&lt;span class="o">]&lt;/span> GET /repo/registry-mirror/config.json -&amp;gt; &lt;span class="m">149&lt;/span> bytes
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span>
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> Module /main.js
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> &lt;span class="o">===============&lt;/span>
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span>
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>Listen on :::6443&lt;span class="o">]&lt;/span>
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> -----&amp;gt;&lt;span class="p">|&lt;/span>
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> &lt;span class="p">|&lt;/span>
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> acceptTLS
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> &lt;span class="p">|&lt;/span>
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> &lt;span class="p">|&lt;/span>--&amp;gt; &lt;span class="o">[&lt;/span>tls-offloaded&lt;span class="o">]&lt;/span>
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> decodeHTTPRequest
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> replaceMessage
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> encodeHTTPResponse --&amp;gt;&lt;span class="p">|&lt;/span>
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> &lt;span class="p">|&lt;/span>
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span> &amp;lt;---------------------------------&lt;span class="p">|&lt;/span>
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>config&lt;span class="o">]&lt;/span>
+2021-10-05 14:19:28 &lt;span class="o">[&lt;/span>info&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>listener&lt;span class="o">]&lt;/span> Listening on port &lt;span class="m">6443&lt;/span> at ::
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="测试">测试&lt;/h3>
+&lt;p>在&lt;a href="https://mp.weixin.qq.com/s/SL_yBvyhb5p6Lm1HieJBbA">上一篇&lt;/a>中我已经推送了 Tekton 的两个镜像到容器镜像库中，因此这里直接安装 tekton 进行测试。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.28.1/release.yaml
+$ kubectl get pod -n tekton-pipelines
+NAME READY STATUS RESTARTS AGE
+tekton-pipelines-controller-75974fbfb8-f62dv 1/1 Running &lt;span class="m">0&lt;/span> 7m36s
+tekton-pipelines-webhook-6cc478f7ff-mm5l9 1/1 Running &lt;span class="m">0&lt;/span> 7m36s
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>检查结果：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl get pod -o json -n tekton-pipelines -l &lt;span class="nv">app&lt;/span>&lt;span class="o">=&lt;/span>tekton-pipelines-controller &lt;span class="p">|&lt;/span> jq -r &lt;span class="s1">&amp;#39;.items[].spec.containers[].image&amp;#39;&lt;/span>
+registry.gitlab.cn/flomesh/registry-mirror/tekton-pipeline/controller:v0.28.1
+$ kubectl get pod -o json -n tekton-pipelines -l &lt;span class="nv">app&lt;/span>&lt;span class="o">=&lt;/span>tekton-pipelines-webhook &lt;span class="p">|&lt;/span> jq -r &lt;span class="s1">&amp;#39;.items[].spec.containers[].image&amp;#39;&lt;/span>
+registry.gitlab.cn/flomesh/registry-mirror/tekton-pipeline/webhook:v0.28.1
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>从上面的结果可以看到结果是符合预期的。&lt;/p>
+&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>整个实现的策略部分加上配置，只有 70 多行的代码。并且实现了逻辑与配置的分离之后，后续的配置也都可以做到实时的更新而无需修改任何逻辑代码，更无需重新部署。&lt;/p>
+&lt;p>但是目前的实现，是需要手动把镜像推送的自维护的镜像仓库中。实际上理想的情况是检查自维护的仓库中是否存在镜像（比如通过 REST API），如果未发现镜像，先把镜像拉取到本地，&lt;code>tag&lt;/code> 后再推送到自维护的仓库。不过这种操作，还是需要网络的畅通。当然也尝试过通过 REST API 触发 CICD Pipeline 的执行拉取镜像并 tag，但是极狐Gitlab 是部署在某云的环境上，同样也受困于网络问题。&lt;/p></description></item><item><title>极狐GitLab SaaS 内测轻度体验</title><link>https://atbug.com/jihu-gitlab-experience/</link><pubDate>Fri, 01 Oct 2021 08:18:09 +0800</pubDate><guid>https://atbug.com/jihu-gitlab-experience/</guid><description>
 &lt;p>感谢极狐团队为 &lt;a href="https://gitlab.cn/">GitLab（SaaS）&lt;/a>本地化的努力，同时也感谢小马哥提供的内测资格。&lt;/p>
 &lt;p>最近突然想到了个点子，需要使用一个私有的镜像仓库。极狐GitLab 有提供容器镜像库，正好和 CICD 一起做个轻度体验。&lt;/p>
 &lt;h2 id="容器镜像库-container-registry">容器镜像库 Container Registry&lt;/h2>
