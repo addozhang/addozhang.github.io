@@ -5,8 +5,8 @@
 <a href=https://atbug.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F title=分布式 class="post_tag button button_translucent">分布式</a> ·
 <a href=https://atbug.com/tags/%E4%BA%91%E5%8E%9F%E7%94%9F title=云原生 class="post_tag button button_translucent">云原生</a></span>
 <span class=page_only>·</span></div></div><div class=excerpt_footer><div><p class=pale>这样文章通过Google翻译和人工逐字修改的方式完成的，某些位置也加上自己的理解。如有错误，请指出。 翻译这篇文章的目的其实是为了自己加深对微服务、分布式架构以及多运行时架构的理解。整篇文章从”战略“上分析了微服务”从古至今“解决的问题，以及带来的新问题；进而在“战术”层面，给出了解决这些新问题的手段。 个人见解：架构从来都是解决问题并带来问题， 取舍之道 。 背景知识 微服务的 12 要素： 基准代码：一份基准代码，多份部署 依赖：显式声明依赖关系 配置：在环境中存储配置 后端服务：把后端服务当做附加资源 构建、发布、运行：严格分离构建和运行 进程：以一个或多个无状态进程运行应用 端口绑定：通过端口绑定提供服务 并发：通过进</p><a href=https://atbug.com/translation-multi-runtime-microservices-architecture/ title=阅读更多 class="excerpt_more button">阅读更多</a></div></div></div></li><li></li></ul><aside class=sidebar><section class=sidebar_inner><h2>张晓辉</h2><div class=sidebar_description><ul><li>资深码农、云原生践行者</li><li>Kubernetes、DevOps、微服务</li></ul><p>微信订阅号：云原生指北。
-<img src=../../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/service-mesh-unnecessary-complexity/ class=nav-link title="低复杂度 - 服务网格的下一站">低复杂度 - 服务网格的下一站</a></li><li><a href=https://atbug.com/kubernetes-images-swapper/ class=nav-link title="自动替换 Kubernetes 镜像">自动替换 Kubernetes 镜像</a></li><li><a href=https://atbug.com/jihu-gitlab-experience/ class=nav-link title="极狐GitLab SaaS 内测轻度体验">极狐GitLab SaaS 内测轻度体验</a></li><li><a href=https://atbug.com/how-docker-broke-in-half/ class=nav-link title="容器神话 Docker 是如何一分为二的">容器神话 Docker 是如何一分为二的</a></li><li><a href=https://atbug.com/setup-kubernetes-running-with-isulad-on-openeuler/ class=nav-link title="ARM64 平台基于 openEuler + iSula 环境部署 Kubernetes">ARM64 平台基于 openEuler + iSula 环境部署 Kubernetes</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
-<span class=button_tally>50</span></a>
+<img src=../../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/build-docker-image-without-dockerfile/ class=nav-link title="无需 Dockerfile 的镜像构建：BuildPack vs Dockerfile">无需 Dockerfile 的镜像构建：BuildPack vs Dockerfile</a></li><li><a href=https://atbug.com/service-mesh-unnecessary-complexity/ class=nav-link title="低复杂度 - 服务网格的下一站">低复杂度 - 服务网格的下一站</a></li><li><a href=https://atbug.com/kubernetes-images-swapper/ class=nav-link title="自动替换 Kubernetes 镜像">自动替换 Kubernetes 镜像</a></li><li><a href=https://atbug.com/jihu-gitlab-experience/ class=nav-link title="极狐GitLab SaaS 内测轻度体验">极狐GitLab SaaS 内测轻度体验</a></li><li><a href=https://atbug.com/how-docker-broke-in-half/ class=nav-link title="容器神话 Docker 是如何一分为二的">容器神话 Docker 是如何一分为二的</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
+<span class=button_tally>51</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" title=学习>学习
 <span class=button_tally>40</span></a>
 <a href=https://atbug.com/categories/%E7%BF%BB%E8%AF%91/ class="post_tag button button_translucent" title=翻译>翻译
@@ -47,7 +47,7 @@
 <a href=https://atbug.com/categories/%E6%BA%90%E7%A0%81/ class="post_tag button button_translucent" data-position=1 title=源码>源码<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ class="post_tag button button_translucent" data-position=1 title=源码分析>源码分析<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/ class="post_tag button button_translucent" data-position=5 title=源码解析>源码解析<span class=button_tally>5</span></a>
-<a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" data-position=50 title=笔记>笔记<span class=button_tally>50</span></a>
+<a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" data-position=51 title=笔记>笔记<span class=button_tally>51</span></a>
 <a href=https://atbug.com/categories/%E7%BD%91%E5%85%B3/ class="post_tag button button_translucent" data-position=1 title=网关>网关<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E7%BF%BB%E8%AF%91/ class="post_tag button button_translucent" data-position=12 title=翻译>翻译<span class=button_tally>12</span></a>
 <a href=https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/ class="post_tag button button_translucent" data-position=2 title=软件>软件<span class=button_tally>2</span></a><div class=tags_sort><span title="sort alphabetically">[A~Z]</span><span title="sort by count">[0~9]</span></div><span class=tags_hide><svg class="icon"><use xlink:href="#closeme"/></svg></span></div></div></nav></div><div><h2 class="mt-4 taxonomy" id=tags-section>标签</h2><nav class=tags_nav><a href=https://atbug.com/tags/java/ class="post_tag button button_translucent" title=java>JAVA
@@ -64,10 +64,10 @@
 <span class=button_tally>8</span></a>
 <a href=https://atbug.com/tags/cicd/ class="post_tag button button_translucent" title=cicd>CICD
 <span class=button_tally>7</span></a>
+<a href=https://atbug.com/tags/docker/ class="post_tag button button_translucent" title=docker>DOCKER
+<span class=button_tally>7</span></a>
 <a href=https://atbug.com/tags/spring-cloud/ class="post_tag button button_translucent" title=spring-cloud>SPRING-CLOUD
 <span class=button_tally>7</span></a>
-<a href=https://atbug.com/tags/docker/ class="post_tag button button_translucent" title=docker>DOCKER
-<span class=button_tally>6</span></a>
 <a href=https://atbug.com/tags/spring/ class="post_tag button button_translucent" title=spring>SPRING
 <span class=button_tally>5</span></a>
 <a href=https://atbug.com/tags/istio/ class="post_tag button button_translucent" title=istio>ISTIO
@@ -81,6 +81,7 @@
 <a href=https://atbug.com/tags/apache-camel/ class="post_tag button button_translucent" data-position=1 title=apache-camel>APACHE-CAMEL<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/argo/ class="post_tag button button_translucent" data-position=1 title=argo>ARGO<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/benchmark/ class="post_tag button button_translucent" data-position=2 title=benchmark>BENCHMARK<span class=button_tally>2</span></a>
+<a href=https://atbug.com/tags/buildpacks/ class="post_tag button button_translucent" data-position=1 title=buildpacks>BUILDPACKS<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/c3p0/ class="post_tag button button_translucent" data-position=1 title=c3p0>C3P0<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/cas/ class="post_tag button button_translucent" data-position=1 title=cas>CAS<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/cassandra/ class="post_tag button button_translucent" data-position=1 title=cassandra>CASSANDRA<span class=button_tally>1</span></a>
@@ -96,7 +97,7 @@
 <a href=https://atbug.com/tags/develop/ class="post_tag button button_translucent" data-position=1 title=develop>DEVELOP<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/devops/ class="post_tag button button_translucent" data-position=1 title=devops>DEVOPS<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/docekr/ class="post_tag button button_translucent" data-position=1 title=docekr>DOCEKR<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/docker/ class="post_tag button button_translucent" data-position=6 title=docker>DOCKER<span class=button_tally>6</span></a>
+<a href=https://atbug.com/tags/docker/ class="post_tag button button_translucent" data-position=7 title=docker>DOCKER<span class=button_tally>7</span></a>
 <a href=https://atbug.com/tags/dubbo/ class="post_tag button button_translucent" data-position=1 title=dubbo>DUBBO<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/elasticsearch/ class="post_tag button button_translucent" data-position=1 title=elasticsearch>ELASTICSEARCH<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/envoy/ class="post_tag button button_translucent" data-position=1 title=envoy>ENVOY<span class=button_tally>1</span></a>

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>BuildPacks on 乱世浮生</title><link>https://atbug.com/tags/buildpacks/</link><description>Recent content in BuildPacks on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 29 Oct 2021 07:36:43 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/buildpacks/index.xml" rel="self" type="application/rss+xml"/><item><title>无需 Dockerfile 的镜像构建：BuildPack vs Dockerfile</title><link>https://atbug.com/build-docker-image-without-dockerfile/</link><pubDate>Fri, 29 Oct 2021 07:36:43 +0800</pubDate><guid>https://atbug.com/build-docker-image-without-dockerfile/</guid><description>
+&lt;p>过去的工作中，我们使用微服务、容器化以及服务编排构建了技术平台。为了提升开发团队的研发效率，我们同时还提供了 CICD 平台，用来将代码快速的部署到 Openshift（企业级的 Kubernetes） 集群。&lt;/p>
+&lt;p>部署的第一步就是应用程序的容器化，持续集成的交付物从以往的 jar 包、webpack 等变成了容器镜像。容器化将软件代码和所需的所有组件（库、框架、运行环境）打包到一起，进而可以在任何环境任何基础架构上一致地运行，并与其他应用“隔离”。&lt;/p>
+&lt;p>我们的代码需要从源码到编译到最终可运行的镜像，甚至部署，这一切在 CICD 的流水线中完成。最初，我们在每个代码仓库中都加入了三个文件，也通过项目生成器（类似 Spring Initializer）在新项目中注入：&lt;/p>
+&lt;ul>
+&lt;li>Jenkinsfile.groovy：用来定义 Jenkins 的 Pipeline，针对不同的语言还会有多种版本&lt;/li>
+&lt;li>Manifest YAML：用于定义 Kubernetes 资源，也就是工作负载及其运行的相关描述&lt;/li>
+&lt;li>Dockerfile：用于构建对象&lt;/li>
+&lt;/ul>
+&lt;p>这个三个文件也需要在工作中不断的演进，起初项目较少（十几个）的时候我们基础团队还可以去各个代码仓库去维护升级。随着项目爆发式的增长，维护的成本越来越高。我们对 CICD 平台进行了迭代，将“Jenkinsfile.groovy”和 “manifest YAML”从项目中移出，变更较少的 Dockerfile 就保留了下来。&lt;/p>
+&lt;p>随着平台的演进，我们需要考虑将这唯一的“钉子户” Dockerfile 与代码解耦，必要的时候也需要对 Dockerfile 进行升级。因此调研了一下 buildpacks，就有了今天的这篇文章。&lt;/p>
+&lt;h2 id="什么是-dockerfile">什么是 Dockerfile&lt;/h2>
+&lt;p>Docker 通过读取 Dockerfile 中的说明自动构建镜像。Dockerfile 是一个文本文件，包含了由 Docker 可以执行用于构建镜像的指令。我们拿之前用于&lt;a href="https://github.com/addozhang/tekton-test">测试 Tekton 的 Java 项目&lt;/a>的 Dockerfile 为例：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-dockerfile" data-lang="dockerfile">&lt;span class="k">FROM&lt;/span>&lt;span class="s"> openjdk:8-jdk-alpine&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">RUN&lt;/span> mkdir /app&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">WORKDIR&lt;/span>&lt;span class="s"> /app&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">COPY&lt;/span> target/*.jar /app/app.jar&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">ENTRYPOINT&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;sh&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;-c&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;java -Xmx128m -Xms64m -jar app.jar&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="镜像分层">镜像分层&lt;/h3>
+&lt;p>你可能会听过 Docker 镜像包含了多个层。每个层与 Dockerfile 中的每个命令对应，比如 &lt;code>RUN&lt;/code>、&lt;code>COPY&lt;/code>、&lt;code>ADD&lt;/code>。某些特定的指令会创建一个新的层，在镜像构建过程中，假如某些层没有发生变化，就会从缓存中获取。&lt;/p>
+&lt;p>在下面的 Buildpack 中也同样通过镜像分层和 cache 来加速镜像的构建。&lt;/p>
+&lt;h2 id="什么是-buildpack">什么是 Buildpack&lt;/h2>
+&lt;p>&lt;a href="https://buildpacks.io/">BuildPack&lt;/a> 是一个程序，它能将源代码转换成容器镜像的并可以在任意云环境中运行。通常 buildpack 封装了单一语言的生态工具链。适用于 Java、Ruby、Go、NodeJs、Python 等。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/10/29/cleanshot-20211028-at-0830172x.png" alt="buildpacks.io">&lt;/p>
+&lt;h3 id="builder-是什么">Builder 是什么？&lt;/h3>
+&lt;p>一些 buildpacks 按顺序组合之后就是 &lt;strong>builder&lt;/strong>，除了 buildpacks， builder 中还加入了 &lt;a href="https://buildpacks.io/docs/concepts/components/lifecycle/">生命周期&lt;/a> 和 stack 容器镜像。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/10/29/cleanshot-20211028-at-1659142x.png" alt="">&lt;/p>
+&lt;p>stack 容器镜像由两个镜像组成：用于运行 buildpack 的镜像 build image，以及构建应用镜像的基础镜像 run image。如上图，就是 builder 中的运行环境。&lt;/p>
+&lt;h3 id="buildpack-的工作方式">Buildpack 的工作方式&lt;/h3>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/10/29/cleanshot-20211028-at-0832072x.png" alt="how buildpack works">&lt;/p>
+&lt;p>每个 buildpack 运行时都包含了两个阶段：&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/10/29/cleanshot-20211028-at-0906532x.png" alt="phases">&lt;/p>
+&lt;h4 id="1-检测阶段">1. 检测阶段&lt;/h4>
+&lt;p>通过检查源代码中的某些特定文件/数据，来判断当前 buildpack 是否适用。如果适用，就会进入构建阶段；否则就会退出。比如：&lt;/p>
+&lt;ul>
+&lt;li>Java maven 的 buildpack 会检查源码中是否有 &lt;code>pom.xml&lt;/code>&lt;/li>
+&lt;li>Python 的 buildpack 会检查源码中是否有 &lt;code>requirements.txt&lt;/code> 或者 &lt;code>setup.py&lt;/code> 文件&lt;/li>
+&lt;li>Node buildpack 会查找 &lt;code>package-lock.json&lt;/code> 文件。&lt;/li>
+&lt;/ul>
+&lt;h4 id="2-构建阶段">2. 构建阶段&lt;/h4>
+&lt;p>在构建阶段会进行如下操作：&lt;/p>
+&lt;ol>
+&lt;li>设置构建环境和运行时环境&lt;/li>
+&lt;li>下载依赖并编译源码（假如需要的话）&lt;/li>
+&lt;li>设置正确的 entrypoint 和启动脚本。&lt;/li>
+&lt;/ol>
+&lt;p>比如：&lt;/p>
+&lt;ul>
+&lt;li>Java maven buildpack 在检查到有 &lt;code>pom.xml&lt;/code> 文件之后，会执行 &lt;code>mvn clean install -DskipTests&lt;/code>&lt;/li>
+&lt;li>Python buildpack 检查到有 &lt;code>requrements.txt&lt;/code> 之后，会执行 &lt;code>pip install -r requrements.txt&lt;/code>&lt;/li>
+&lt;li>Node build pack 检查到有 &lt;code>package-lock.json&lt;/code> 后执行 &lt;code>npm install&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h2 id="buildpack-上手">BuildPack 上手&lt;/h2>
+&lt;p>那到底如何在没有 Dockerfile 的情况下使用 builderpack 构建镜像的。看了上面这些，大家基本上也都能了解到这个核心就在 buildpack 的编写和使用的。&lt;/p>
+&lt;p>其实现在有很多开源的 buildpack 可以用，没有特定定制的情况下无需自己手动编写。比如下面的几个大厂开源并维护的 Buildpacks：&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/heroku/">Heroku Buildpacks&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/GoogleCloudPlatform/buildpacks">Google Buildpacks&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/paketo-buildpacks">Paketo&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>但是正式详细介绍开源的 buildpacks 之前，我们还是通过自己创建 buildpack 的方式来深入了解 Buildpacks 的工作方式。测试项目呢，我们还是用&lt;a href="https://github.com/addozhang/tekton-test">测试 Tekton 的 Java 项目&lt;/a>。&lt;/p>
+&lt;p>下面所有的内容都提交到了 &lt;a href="https://github.com/addozhang/buildpacks-sample">Github&lt;/a> 上，可以访问：https://github.com/addozhang/buildpacks-sample 获取相关代码。&lt;/p>
+&lt;p>最终的目录&lt;code>buildpacks-sample &lt;/code>结构如下：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">├── builders
+│   └── builder.toml
+├── buildpacks
+│   └── buildpack-maven
+│   ├── bin
+│   │   ├── build
+│   │   └── detect
+│   └── buildpack.toml
+└── stacks
+├── build
+│   └── Dockerfile
+├── build.sh
+└── run
+└── Dockerfile
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建-buildpack">创建 buildpack&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">pack buildpack new examples/maven &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> --api 0.5 &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> --path buildpack-maven &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> --version 0.0.1 &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> --stacks io.buildpacks.samples.stacks.bionic
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>看下生成的 &lt;code>buildpack-maven&lt;/code> 目录：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">buildpack-maven
+├── bin
+│   ├── build
+│   └── detect
+└── buildpack.toml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>各个文件中都是默认的初试数据，并没有什么用处。需要添加些内容：&lt;/p>
+&lt;p>&lt;strong>&lt;code>bin/detect&lt;/code>：&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="cp">#!/usr/bin/env bash
+&lt;/span>&lt;span class="cp">&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">[[&lt;/span> ! -f pom.xml &lt;span class="o">]]&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">then&lt;/span>
+&lt;span class="nb">exit&lt;/span> &lt;span class="m">100&lt;/span>
+&lt;span class="k">fi&lt;/span>
+&lt;span class="nv">plan_path&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$2&lt;/span>
+cat &amp;gt;&amp;gt; &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nv">plan_path&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span> &lt;span class="s">&amp;lt;&amp;lt;EOL
+&lt;/span>&lt;span class="s">[[provides]]
+&lt;/span>&lt;span class="s">name = &amp;#34;jdk&amp;#34;
+&lt;/span>&lt;span class="s">[[requires]]
+&lt;/span>&lt;span class="s">name = &amp;#34;jdk&amp;#34;
+&lt;/span>&lt;span class="s">EOL&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>&lt;code>bin/build&lt;/code>：&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="cp">#!/usr/bin/env bash
+&lt;/span>&lt;span class="cp">&lt;/span>
+&lt;span class="nb">set&lt;/span> -euo pipefail
+&lt;span class="nv">layers_dir&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$1&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;span class="nv">env_dir&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$2&lt;/span>&lt;span class="s2">/env&amp;#34;&lt;/span>
+&lt;span class="nv">plan_path&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$3&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;span class="nv">m2_layer_dir&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nv">layers_dir&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">/maven_m2&amp;#34;&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">[[&lt;/span> ! -d &lt;span class="si">${&lt;/span>&lt;span class="nv">m2_layer_dir&lt;/span>&lt;span class="si">}&lt;/span> &lt;span class="o">]]&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">then&lt;/span>
+mkdir -p &lt;span class="si">${&lt;/span>&lt;span class="nv">m2_layer_dir&lt;/span>&lt;span class="si">}&lt;/span>
+&lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;cache = true&amp;#34;&lt;/span> &amp;gt; &lt;span class="si">${&lt;/span>&lt;span class="nv">m2_layer_dir&lt;/span>&lt;span class="si">}&lt;/span>.toml
+&lt;span class="k">fi&lt;/span>
+ln -s &lt;span class="si">${&lt;/span>&lt;span class="nv">m2_layer_dir&lt;/span>&lt;span class="si">}&lt;/span> &lt;span class="nv">$HOME&lt;/span>/.m2
+&lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;---&amp;gt; Running Maven&amp;#34;&lt;/span>
+mvn clean install -B -DskipTests
+&lt;span class="nv">target_dir&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;target&amp;#34;&lt;/span>
+&lt;span class="k">for&lt;/span> jar_file in &lt;span class="k">$(&lt;/span>find &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$target_dir&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span> -maxdepth &lt;span class="m">1&lt;/span> -name &lt;span class="s2">&amp;#34;*.jar&amp;#34;&lt;/span> -type f&lt;span class="k">)&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">do&lt;/span>
+cat &amp;gt;&amp;gt; &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nv">layers_dir&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">/launch.toml&amp;#34;&lt;/span> &lt;span class="s">&amp;lt;&amp;lt;EOL
+&lt;/span>&lt;span class="s">[[processes]]
+&lt;/span>&lt;span class="s">type = &amp;#34;web&amp;#34;
+&lt;/span>&lt;span class="s">command = &amp;#34;java -jar ${jar_file}&amp;#34;
+&lt;/span>&lt;span class="s">EOL&lt;/span>
+break&lt;span class="p">;&lt;/span>
+&lt;span class="k">done&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>&lt;code>buildpack.toml&lt;/code>：&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="nv">api&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;0.5&amp;#34;&lt;/span>
+&lt;span class="o">[&lt;/span>buildpack&lt;span class="o">]&lt;/span>
+&lt;span class="nv">id&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;examples/maven&amp;#34;&lt;/span>
+&lt;span class="nv">version&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;0.0.1&amp;#34;&lt;/span>
+&lt;span class="o">[[&lt;/span>stacks&lt;span class="o">]]&lt;/span>
+&lt;span class="nv">id&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;com.atbug.buildpacks.example.stacks.maven&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建-stack">创建 stack&lt;/h3>
+&lt;p>构建 Maven 项目，首选需要 Java 和 Maven 的环境，我们使用 &lt;code>maven:3.5.4-jdk-8-slim&lt;/code> 作为 build image 的 base 镜像。应用的运行时需要 Java 环境即可，因此使用 &lt;code>openjdk:8-jdk-slim&lt;/code>作为 run image 的 base 镜像。&lt;/p>
+&lt;p>在 &lt;code>stacks&lt;/code> 目录中分别创建 &lt;code>build&lt;/code> 和 &lt;code>run&lt;/code> 两个目录：&lt;/p>
+&lt;p>&lt;strong>&lt;code>build/Dockerfile&lt;/code>&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-dockerfile" data-lang="dockerfile">&lt;span class="k">FROM&lt;/span>&lt;span class="s"> maven:3.5.4-jdk-8-slim&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">ARG&lt;/span> &lt;span class="nv">cnb_uid&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">1000&lt;/span>
+&lt;span class="k">ARG&lt;/span> &lt;span class="nv">cnb_gid&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">1000&lt;/span>
+&lt;span class="k">ARG&lt;/span> stack_id&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">ENV&lt;/span> &lt;span class="nv">CNB_STACK_ID&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nv">stack_id&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">LABEL&lt;/span> io.buildpacks.stack.id&lt;span class="o">=&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nv">stack_id&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">ENV&lt;/span> &lt;span class="nv">CNB_USER_ID&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nv">cnb_uid&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">ENV&lt;/span> &lt;span class="nv">CNB_GROUP_ID&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nv">cnb_gid&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="c"># Install packages that we want to make available at both build and run time&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">RUN&lt;/span> apt-get update &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> apt-get install -y xz-utils ca-certificates &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> rm -rf /var/lib/apt/lists/*&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="c"># Create user and group&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">RUN&lt;/span> groupadd cnb --gid &lt;span class="si">${&lt;/span>&lt;span class="nv">cnb_gid&lt;/span>&lt;span class="si">}&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> useradd --uid &lt;span class="si">${&lt;/span>&lt;span class="nv">cnb_uid&lt;/span>&lt;span class="si">}&lt;/span> --gid &lt;span class="si">${&lt;/span>&lt;span class="nv">cnb_gid&lt;/span>&lt;span class="si">}&lt;/span> -m -s /bin/bash cnb&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">USER&lt;/span>&lt;span class="s"> ${CNB_USER_ID}:${CNB_GROUP_ID}&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>&lt;code>run/Dockerfile&lt;/code>&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-dockerfile" data-lang="dockerfile">&lt;span class="k">FROM&lt;/span>&lt;span class="s"> openjdk:8-jdk-slim&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">ARG&lt;/span> stack_id&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">ARG&lt;/span> &lt;span class="nv">cnb_uid&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">1000&lt;/span>
+&lt;span class="k">ARG&lt;/span> &lt;span class="nv">cnb_gid&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">1000&lt;/span>
+&lt;span class="k">LABEL&lt;/span> io.buildpacks.stack.id&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nv">stack_id&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">USER&lt;/span>&lt;span class="s"> ${cnb_uid}:${cnb_gid}&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后使用如下命令构建出两个镜像：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="nb">export&lt;/span> &lt;span class="nv">STACK_ID&lt;/span>&lt;span class="o">=&lt;/span>com.atbug.buildpacks.example.stacks.maven
+docker build --build-arg &lt;span class="nv">stack_id&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nv">STACK_ID&lt;/span>&lt;span class="si">}&lt;/span> -t addozhang/samples-buildpacks-stack-build:latest ./build
+docker build --build-arg &lt;span class="nv">stack_id&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nv">STACK_ID&lt;/span>&lt;span class="si">}&lt;/span> -t addozhang/samples-buildpacks-stack-run:latest ./run
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建-builder">创建 Builder&lt;/h3>
+&lt;p>有了 buildpack 和 stack 之后就是创建 Builder 了，首先创建 &lt;code>builder.toml&lt;/code> 文件，并添加如下内容：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-toml" data-lang="toml">&lt;span class="p">[[&lt;/span>&lt;span class="nx">buildpacks&lt;/span>&lt;span class="p">]]&lt;/span>
+&lt;span class="nx">id&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;examples/maven&amp;#34;&lt;/span>
+&lt;span class="nx">version&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;0.0.1&amp;#34;&lt;/span>
+&lt;span class="nx">uri&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;../buildpacks/buildpack-maven&amp;#34;&lt;/span>
+&lt;span class="p">[[&lt;/span>&lt;span class="nx">order&lt;/span>&lt;span class="p">]]&lt;/span>
+&lt;span class="p">[[&lt;/span>&lt;span class="nx">order&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">group&lt;/span>&lt;span class="p">]]&lt;/span>
+&lt;span class="nx">id&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;examples/maven&amp;#34;&lt;/span>
+&lt;span class="nx">version&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;0.0.1&amp;#34;&lt;/span>
+&lt;span class="p">[&lt;/span>&lt;span class="nx">stack&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;span class="nx">id&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;com.atbug.buildpacks.example.stacks.maven&amp;#34;&lt;/span>
+&lt;span class="nx">run&lt;/span>&lt;span class="err">-&lt;/span>&lt;span class="nx">image&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;addozhang/samples-buildpacks-stack-run:latest&amp;#34;&lt;/span>
+&lt;span class="nx">build&lt;/span>&lt;span class="err">-&lt;/span>&lt;span class="nx">image&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;addozhang/samples-buildpacks-stack-build:latest&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后执行命令，&lt;strong>注意这里我们使用了 &lt;code>--pull-policy if-not-present&lt;/code> 参数，就不需要将 stack 的两个镜像推送到镜像仓库了&lt;/strong>：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">pack builder create example-builder:latest --config ./builder.toml --pull-policy &lt;span class="k">if&lt;/span>-not-present
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="测试">测试&lt;/h3>
+&lt;p>有了 builder 之后，我们就可以使用创建好的 builder 来构建镜像了。&lt;/p>
+&lt;p>这里同样加上了 &lt;code>--pull-policy if-not-present &lt;/code> 参数来使用本地的 builder 镜像：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="c1"># 目录 buildpacks-sample 与 tekton-test 同级，并在 buildpacks-sample 中执行如下命令&lt;/span>
+pack build addozhang/tekton-test --builder example-builder:latest --pull-policy &lt;span class="k">if&lt;/span>-not-present --path ../tekton-test
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果看到类似如下内容，就说明镜像构建成功了（第一次构建镜像由于需要下载 maven 依赖耗时可能会比较久，后续就会很快，可以执行两次验证下）：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">...
+&lt;span class="o">===&lt;/span>&amp;gt; EXPORTING
+&lt;span class="o">[&lt;/span>exporter&lt;span class="o">]&lt;/span> Adding 1/1 app layer&lt;span class="o">(&lt;/span>s&lt;span class="o">)&lt;/span>
+&lt;span class="o">[&lt;/span>exporter&lt;span class="o">]&lt;/span> Reusing layer &lt;span class="s1">&amp;#39;launcher&amp;#39;&lt;/span>
+&lt;span class="o">[&lt;/span>exporter&lt;span class="o">]&lt;/span> Reusing layer &lt;span class="s1">&amp;#39;config&amp;#39;&lt;/span>
+&lt;span class="o">[&lt;/span>exporter&lt;span class="o">]&lt;/span> Reusing layer &lt;span class="s1">&amp;#39;process-types&amp;#39;&lt;/span>
+&lt;span class="o">[&lt;/span>exporter&lt;span class="o">]&lt;/span> Adding label &lt;span class="s1">&amp;#39;io.buildpacks.lifecycle.metadata&amp;#39;&lt;/span>
+&lt;span class="o">[&lt;/span>exporter&lt;span class="o">]&lt;/span> Adding label &lt;span class="s1">&amp;#39;io.buildpacks.build.metadata&amp;#39;&lt;/span>
+&lt;span class="o">[&lt;/span>exporter&lt;span class="o">]&lt;/span> Adding label &lt;span class="s1">&amp;#39;io.buildpacks.project.metadata&amp;#39;&lt;/span>
+&lt;span class="o">[&lt;/span>exporter&lt;span class="o">]&lt;/span> Setting default process &lt;span class="nb">type&lt;/span> &lt;span class="s1">&amp;#39;web&amp;#39;&lt;/span>
+&lt;span class="o">[&lt;/span>exporter&lt;span class="o">]&lt;/span> Saving addozhang/tekton-test...
+&lt;span class="o">[&lt;/span>exporter&lt;span class="o">]&lt;/span> *** Images &lt;span class="o">(&lt;/span>0d5ac1158bc0&lt;span class="o">)&lt;/span>:
+&lt;span class="o">[&lt;/span>exporter&lt;span class="o">]&lt;/span> addozhang/tekton-test
+&lt;span class="o">[&lt;/span>exporter&lt;span class="o">]&lt;/span> Adding cache layer &lt;span class="s1">&amp;#39;examples/maven:maven_m2&amp;#39;&lt;/span>
+Successfully built image addozhang/tekton-test
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>启动容器，会看到 spring boot 应用正常启动：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker run --rm addozhang/tekton-test:latest
+. ____ _ __ _ _
+/&lt;span class="se">\\&lt;/span> / ___&lt;span class="s1">&amp;#39;_ __ _ _(_)_ __ __ _ \ \ \ \
+&lt;/span>&lt;span class="s1">( ( )\___ | &amp;#39;&lt;/span>_ &lt;span class="p">|&lt;/span> &lt;span class="s1">&amp;#39;_| | &amp;#39;&lt;/span>_ &lt;span class="se">\/&lt;/span> _&lt;span class="sb">`&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="se">\ \ \ \
+&lt;/span>&lt;span class="se">&lt;/span> &lt;span class="se">\\&lt;/span>/ ___&lt;span class="o">)&lt;/span>&lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span>_&lt;span class="o">)&lt;/span>&lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="o">(&lt;/span>_&lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="o">)&lt;/span> &lt;span class="o">)&lt;/span> &lt;span class="o">)&lt;/span> &lt;span class="o">)&lt;/span>
+&lt;span class="err">&amp;#39;&lt;/span> &lt;span class="p">|&lt;/span>____&lt;span class="p">|&lt;/span> .__&lt;span class="p">|&lt;/span>_&lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span>_&lt;span class="p">|&lt;/span>_&lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span>_&lt;span class="se">\_&lt;/span>_, &lt;span class="p">|&lt;/span> / / / /
+&lt;span class="o">=========&lt;/span>&lt;span class="p">|&lt;/span>_&lt;span class="p">|&lt;/span>&lt;span class="o">==============&lt;/span>&lt;span class="p">|&lt;/span>___/&lt;span class="o">=&lt;/span>/_/_/_/
+:: Spring Boot :: &lt;span class="o">(&lt;/span>v2.2.3.RELEASE&lt;span class="o">)&lt;/span>
+...
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>其实现在有很多开源的 buildpack 可以用，没有特定定制的情况下无需自己手动编写。比如下面的几个大厂开源并维护的 Buildpacks：&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/heroku/">Heroku Buildpacks&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/GoogleCloudPlatform/buildpacks">Google Buildpacks&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/paketo-buildpacks">Paketo&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>上面几个 buildpacks 库内容比较全面，实现上会有些许不同。比如 Heroku 的执行阶段使用 Shell 脚本，而 Paketo 使用 Golang。后者的扩展性较强，由 Cloud Foundry 基金会支持，并拥有由 VMware 赞助的全职核心开发团队。这些小型模块化的 buildpack，可以通过组合扩展使用不同的场景。&lt;/p>
+&lt;p>当然还是那句话，自己上手写一个会更容易理解 Buildpack 的工作方式。&lt;/p></description></item></channel></rss>
