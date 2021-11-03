@@ -1,4 +1,199 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>笔记 on 乱世浮生</title><link>https://atbug.com/categories/%E7%AC%94%E8%AE%B0/</link><description>Recent content in 笔记 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 29 Oct 2021 07:36:43 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml"/><item><title>无需 Dockerfile 的镜像构建：BuildPack vs Dockerfile</title><link>https://atbug.com/build-docker-image-without-dockerfile/</link><pubDate>Fri, 29 Oct 2021 07:36:43 +0800</pubDate><guid>https://atbug.com/build-docker-image-without-dockerfile/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>笔记 on 乱世浮生</title><link>https://atbug.com/categories/%E7%AC%94%E8%AE%B0/</link><description>Recent content in 笔记 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 03 Nov 2021 07:40:40 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes 上调试 distroless 容器</title><link>https://atbug.com/debug-distroless-container-on-kubernetes/</link><pubDate>Wed, 03 Nov 2021 07:40:40 +0800</pubDate><guid>https://atbug.com/debug-distroless-container-on-kubernetes/</guid><description>
+&lt;h2 id="tldr">TL;DR&lt;/h2>
+&lt;p>本文内容：&lt;/p>
+&lt;ul>
+&lt;li>介绍 distroless 镜像、作用以及简单的使用&lt;/li>
+&lt;li>如何针对 distroless 容器的进行调试&lt;/li>
+&lt;li>临时容器(v.1.18+)的使用&lt;/li>
+&lt;/ul>
+&lt;h2 id="distroless-镜像">Distroless 镜像&lt;/h2>
+&lt;p>Distroless 容器，顾名思义使用 &lt;a href="https://github.com/GoogleContainerTools/distroless">Distroless 镜像&lt;/a>作为基础镜像运行的容器。&lt;/p>
+&lt;blockquote>
+&lt;p>&amp;ldquo;Distroless&amp;rdquo; 镜像只包含了你的应用程序以及其运行时所需要的依赖。不包含你能在标准 Linxu 发行版里的可以找到的包管理器、shells 或者其他程序。&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;a href="https://github.com/GoogleContainerTools/distroless">GoogleContainerTools/distroless&lt;/a> 针对不同语言提供了 distroless 镜像：&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/GoogleContainerTools/distroless/blob/main/base/README.md">gcr.io/distroless/static-debian11&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/GoogleContainerTools/distroless/blob/main/base/README.md">gcr.io/distroless/base-debian11&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/GoogleContainerTools/distroless/blob/main/java/README.md">gcr.io/distroless/java-debian11&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/GoogleContainerTools/distroless/blob/main/cc/README.md">gcr.io/distroless/cc-debian11&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/GoogleContainerTools/distroless/blob/main/nodejs/README.md">gcr.io/distroless/nodejs-debian11&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/GoogleContainerTools/distroless/blob/main/experimental/python3/README.md">gcr.io/distroless/python3-debian11&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="distroless-镜像有什么用">Distroless 镜像有什么用？&lt;/h2>
+&lt;p>那些可能是构建镜像时需要的，但大部分并不是运行时需要的。这也是为什么&lt;a href="https://mp.weixin.qq.com/s/Y3GQI3hg5I8MHOV4iwVqiQ">上篇文章介绍 Buildpacks&lt;/a> 时说的一个 builder 的 stack 镜像包含构建时基础镜像和运行时基础镜像，这样可以做到镜像的最小化。&lt;/p>
+&lt;p>其实控制体积并不是 distroless 镜像的主要作用。将运行时容器中的内容限制为应用程序所需的依赖，此外不应该安装任何东西。这种方式可能极大的提升容器的安全性，也是 distroless 镜像的最重要作用。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/11/02/16357706125816.jpg" alt="">&lt;/p>
+&lt;p>&lt;strong>这里并不会再深入探究 distroless 镜像，而是如何调试 distroless 容器&lt;/strong>&lt;/p>
+&lt;p>没有了包管理器，镜像构建完成后就不能再使用类似 &lt;code>apt&lt;/code>、&lt;code>yum&lt;/code> 的包管理工具；没有了 &lt;code>shell&lt;/code>，容器运行后无法再进入容器。&lt;/p>
+&lt;p>&lt;em>“就像一个没有任何门的房间，也无法安装门。”&lt;/em> Distroless 镜像在提升容器安全性的同时，也为调试增加了难度。&lt;/p>
+&lt;h2 id="使用-distroless-镜像">使用 distroless 镜像&lt;/h2>
+&lt;p>写个很简单的 golang 应用：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-golang" data-lang="golang">&lt;span class="kn">package&lt;/span> &lt;span class="nx">main&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="p">(&lt;/span>
+&lt;span class="s">&amp;#34;fmt&amp;#34;&lt;/span>
+&lt;span class="s">&amp;#34;net/http&amp;#34;&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="kd">func&lt;/span> &lt;span class="nf">defaultHandler&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">w&lt;/span> &lt;span class="nx">http&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ResponseWriter&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">r&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">http&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">fmt&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Fprintf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">w&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;Hello world!&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">func&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">http&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">HandleFunc&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;/&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">defaultHandler&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="nx">http&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">ListenAndServe&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;:8080&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">nil&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>比如使用 &lt;code>gcr.io/distroless/base-debian11&lt;/code> 作为 golang 应用的基础镜像：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-dockerfile" data-lang="dockerfile">&lt;span class="k">FROM&lt;/span>&lt;span class="s"> golang:1.12 as build-env&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">WORKDIR&lt;/span>&lt;span class="s"> /go/src/app&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">COPY&lt;/span> . /go/src/app&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">RUN&lt;/span> go get -d -v ./...&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">RUN&lt;/span> go build -o /go/bin/app&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="s"> gcr.io/distroless/base-debian11&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">COPY&lt;/span> --from&lt;span class="o">=&lt;/span>build-env /go/bin/app /&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">CMD&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;/app&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用镜像创建 deployment&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl create deploy golang-distroless --image addozhang/golang-distroless-example:latest
+$ kubectl get po
+NAME READY STATUS RESTARTS AGE
+golang-distroless-784bb4875-srmmr 1/1 Running &lt;span class="m">0&lt;/span> 3m2s
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>尝试进入容器：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl &lt;span class="nb">exec&lt;/span> -it golang-distroless-784bb4875-srmmr -- sh
+error: Internal error occurred: error executing &lt;span class="nb">command&lt;/span> in container: failed to &lt;span class="nb">exec&lt;/span> in container: failed to start &lt;span class="nb">exec&lt;/span> &lt;span class="s2">&amp;#34;b76e800eafa85d39f909f39fcee4a4ba9fc2f37d5f674aa6620690b8e2939203&amp;#34;&lt;/span>: OCI runtime &lt;span class="nb">exec&lt;/span> failed: &lt;span class="nb">exec&lt;/span> failed: container_linux.go:380: starting container process caused: exec: &lt;span class="s2">&amp;#34;sh&amp;#34;&lt;/span>: executable file not found in &lt;span class="nv">$PATH&lt;/span>: unknown
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="如何调试-distroless-容器">如何调试 Distroless 容器&lt;/h2>
+&lt;h3 id="1-使用-distroless-debug-镜像">1. 使用 distroless debug 镜像&lt;/h3>
+&lt;p>GoogleContainerTools 为每个 distroless 镜像都提供了 &lt;code>debug&lt;/code> tag，&lt;strong>适合在开发阶段进行调试&lt;/strong>。如何使用？替换容器的 base 镜像：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-dockerfile" data-lang="dockerfile">&lt;span class="k">FROM&lt;/span>&lt;span class="s"> golang:1.12 as build-env&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">WORKDIR&lt;/span>&lt;span class="s"> /go/src/app&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">COPY&lt;/span> . /go/src/app&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">RUN&lt;/span> go get -d -v ./...&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">RUN&lt;/span> go build -o /go/bin/app&lt;span class="err">
+&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="s"> gcr.io/distroless/base-debian11:debug # use debug tag here&lt;/span>&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">COPY&lt;/span> --from&lt;span class="o">=&lt;/span>build-env /go/bin/app /&lt;span class="err">
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="k">CMD&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;/app&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>重新构建镜像并部署，得益于&lt;code>debug&lt;/code>镜像中提供了 busybox shell 让我们可以 exec 到容器中。&lt;/p>
+&lt;h3 id="2-debug-容器与共享进程命名空间">2. debug 容器与共享进程命名空间&lt;/h3>
+&lt;p>同一个 pod 中可以运行多个容器，通过设置 &lt;code>pod.spec.shareProcessNamespace&lt;/code> 为 &lt;code>true&lt;/code>，来让同一个 Pod 中的&lt;a href="https://kubernetes.io/docs/tasks/configure-pod-container/share-process-namespace/">多容器共享同一个进程命名空间&lt;/a>。&lt;/p>
+&lt;blockquote>
+&lt;p>Share a single process namespace between all of the containers in a pod.
+When this is set containers will be able to view and signal processes from
+other containers in the same pod, and the first process in each container
+will not be assigned PID 1. HostPID and ShareProcessNamespace cannot both
+be set. Optional: Default to false.&lt;/p>
+&lt;/blockquote>
+&lt;p>添加一个使用 &lt;code>ubuntu&lt;/code> 镜像的 &lt;code>debug&lt;/code> 容器，这里为了测试（后面解释）我们为原容器添加 &lt;code>securityContext.runAsUser: 1000&lt;/code>，模拟两个容器使用不同的 UID 运行：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">apps/v1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Deployment&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">creationTimestamp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">null&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">golang-distroless&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">golang-distroless&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">replicas&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">selector&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">matchLabels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">golang-distroless&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">strategy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>{}&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">template&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">creationTimestamp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">null&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">golang-distroless&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">shareProcessNamespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">containers&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">addozhang/golang-distroless-example:latest&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">golang-distroless-example&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">securityContext&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">runAsUser&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1000&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>{}&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ubuntu&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">debug&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">args&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;sleep&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;1d&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">securityContext&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">capabilities&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">add&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">SYS_PTRACE&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>{}&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">status&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>{}&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>更新 deployment 之后：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl get po
+NAME READY STATUS RESTARTS AGE
+golang-distroless-85c4896c45-rkjwn 2/2 Running &lt;span class="m">0&lt;/span> 3m12s
+$ kubectl get po -o json &lt;span class="p">|&lt;/span> jq -r &lt;span class="s1">&amp;#39;.items[].spec.containers[].name&amp;#39;&lt;/span>
+golang-distroless-example
+debug
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后通过 debug 容器来进入到 pod 中：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl &lt;span class="nb">exec&lt;/span> -it golang-distroless-85c4896c45-rkjwn -c debug -- sh
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后在容器中执行：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ ps -ef
+UID PID PPID C STIME TTY TIME CMD
+root &lt;span class="m">1&lt;/span> &lt;span class="m">0&lt;/span> &lt;span class="m">0&lt;/span> 14:54 ? 00:00:00 /pause &lt;span class="c1"># infra 容器&lt;/span>
+&lt;span class="m">1000&lt;/span> &lt;span class="m">7&lt;/span> &lt;span class="m">0&lt;/span> &lt;span class="m">0&lt;/span> 14:54 ? 00:00:00 /app &lt;span class="c1"># 原容器，UID 为 1000&lt;/span>
+root &lt;span class="m">19&lt;/span> &lt;span class="m">0&lt;/span> &lt;span class="m">0&lt;/span> 14:55 ? 00:00:00 sleep 1d &lt;span class="c1"># debug 容器&lt;/span>
+root &lt;span class="m">25&lt;/span> &lt;span class="m">0&lt;/span> &lt;span class="m">0&lt;/span> 14:55 pts/0 00:00:00 sh
+root &lt;span class="m">32&lt;/span> &lt;span class="m">25&lt;/span> &lt;span class="m">0&lt;/span> 14:55 pts/0 00:00:00 ps -ef
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>尝试访问 进程 &lt;code>7&lt;/code> 的进程空间：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ cat /proc/7/environ
+$ cat: /proc/7/environ: Permission denied
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>我们需要为 &lt;code>debug&lt;/code> 容器加上：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">securityContext&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">capabilities&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">add&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">SYS_PTRACE&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>之后再访问就正常了：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ cat /proc/7/environ
+&lt;span class="nv">PATH&lt;/span>&lt;span class="o">=&lt;/span>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/binHOSTNAME&lt;span class="o">=&lt;/span>golang-distroless-58b6c5f455-v9zkvSSL_CERT_FILE&lt;span class="o">=&lt;/span>/etc/ssl/certs/ca-certificates.crtKUBERNETES_PORT_443_TCP&lt;span class="o">=&lt;/span>tcp://10.43.0.1:443KUBERNETES_PORT_443_TCP_PROTO&lt;span class="o">=&lt;/span>&lt;span class="nv">tcpKUBERNETES_PORT_443_TCP_PORT&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">443KUBERNETES_PORT_443_TCP_ADDR&lt;/span>&lt;span class="o">=&lt;/span>10.43.0.1KUBERNETES_SERVICE_HOST&lt;span class="o">=&lt;/span>10.43.0.1KUBERNETES_SERVICE_PORT&lt;span class="o">=&lt;/span>&lt;span class="nv">443KUBERNETES_SERVICE_PORT_HTTPS&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">443KUBERNETES_PORT&lt;/span>&lt;span class="o">=&lt;/span>tcp://10.43.0.1:443HOME&lt;span class="o">=&lt;/span>/root
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>同样我们也可以访问进程的文件系统：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">$ &lt;span class="nb">cd&lt;/span> /proc/7/root
+$ ls
+app bin boot dev etc home lib lib64 proc root run sbin sys tmp usr var
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>无需修改容器的基础镜像，使用 &lt;code>pod.spec.shareProcessNamespace: true&lt;/code> 配合安全配置中增加 &lt;code>SYS_PTRACE&lt;/code> 特性，为 debug 容器赋予完整的 shell 访问来调试应用。但是修改 YAML 和安全配置只适合在测试环境使用，到了生产环境这些都是不允许的。&lt;/p>
+&lt;p>我们就需要用到 &lt;code>kubectl debug&lt;/code> 了。&lt;/p>
+&lt;h3 id="3-kubectl-debug">3. Kubectl debug&lt;/h3>
+&lt;p>针对不同的资源 &lt;code>kubectl debug&lt;/code> 可以进行不同操作：&lt;/p>
+&lt;ul>
+&lt;li>负载：创建一个正在运行的 Pod 的拷贝，并可以修改部分属性。比如在拷贝中使用新版本的tag。&lt;/li>
+&lt;li>负载：为运行中的 Pod 增加一个临时容器（下面介绍），使用临时容器中的工具调试，无需重启 Pod。&lt;/li>
+&lt;li>节点：在节点上创建一个 Pod 运行在&lt;strong>节点的 host 命名空间&lt;/strong>，可以访问节点的文件系统。&lt;/li>
+&lt;/ul>
+&lt;h4 id="31-临时容器">3.1 临时容器&lt;/h4>
+&lt;p>从 Kubernetes 1.18 之后开始，可以使用 &lt;code>kubectl&lt;/code> 为运行的 pod 添加一个临时容器。这个命令还处于 &lt;code>alpha&lt;/code> 阶段，因此需要在&lt;a href="k3d%20cluster%20create%20test%20--k3s-arg%20%22--kube-apiserver-arg=feature-gates=EphemeralContainers=true%22@">“feature gate”&lt;/a>中打开。&lt;/p>
+&lt;p>在使用 k3d 创建 k3s 集群时，打开 &lt;code>EphemeralContainers&lt;/code> feature：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ k3d cluster create &lt;span class="nb">test&lt;/span> --k3s-arg &lt;span class="s2">&amp;#34;--kube-apiserver-arg=feature-gates=EphemeralContainers=true&amp;#34;&lt;/span>@
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后创建临时容器，创建完成后会直接进入容器：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl debug golang-distroless-85c4896c45-rkjwn -it --image&lt;span class="o">=&lt;/span>ubuntu --image-pull-policy&lt;span class="o">=&lt;/span>IfNotPresent
+&lt;span class="c1">#临时容器 shell&lt;/span>
+$ apt update &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> apt install -y curl
+$ curl localhost:8080
+Hello world!
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/11/02/20211102110330.png" alt="临时容器">&lt;/p>
+&lt;p>值得注意的是，临时容器无法与原容器共享进程命名空间：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ ps -ef
+UID PID PPID C STIME TTY TIME CMD
+root &lt;span class="m">1&lt;/span> &lt;span class="m">0&lt;/span> &lt;span class="m">0&lt;/span> 02:59 pts/0 00:00:00 bash
+root &lt;span class="m">3042&lt;/span> &lt;span class="m">1&lt;/span> &lt;span class="m">0&lt;/span> 03:02 pts/0 00:00:00 ps -ef
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以通过添加参数 &lt;code>--target=[container]&lt;/code> 来将临时容器挂接到目标容器。这里与 &lt;code>pod.spec.shareProcessNamespace&lt;/code> 并不同，&lt;strong>进程号为 1 的进程是目标容器的进程&lt;/strong>，而后者的进程是 infra 容器的进程 &lt;code>/pause&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl debug golang-distroless-85c4896c45-rkjwn -it --image&lt;span class="o">=&lt;/span>ubuntu --image-pull-policy&lt;span class="o">=&lt;/span>IfNotPresent --target&lt;span class="o">=&lt;/span>golang-distroless-example
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>注意：目前的版本还不支持删除临时容器，参考 &lt;a href="https://github.com/kubernetes/kubernetes/issues/84764#issuecomment-872839644">issue&lt;/a>，支持的版本：&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/11/02/20211102111319.png" alt="">&lt;/p>
+&lt;h4 id="32-拷贝-pod-并添加容器">3.2 拷贝 Pod 并添加容器&lt;/h4>
+&lt;p>除了添加临时容器以外，另一种方式就是创建一个 Pod 的拷贝，并添加一个容器。&lt;strong>注意这里的是普通容器，不是临时容器。&lt;/strong> 注意这里加上了 &lt;code>--share-processes&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl debug golang-distroless-85c4896c45-rkjwn -it --image&lt;span class="o">=&lt;/span>ubuntu --image-pull-policy&lt;span class="o">=&lt;/span>IfNotPresent --share-processes --copy-to&lt;span class="o">=&lt;/span>golang-distroless-debug
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>注意这里加上了 &lt;code>--share-processes&lt;/code>，会自动加上 &lt;code>pod.spec.shareProcessNamespace=true&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl get po golang-distroless-debug -o &lt;span class="nv">jsonpath&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;{.spec.shareProcessNamespace}&amp;#39;&lt;/span>
+&lt;span class="nb">true&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>注意：使用 &lt;code>kubectl debug&lt;/code> 调试，并不能为 pod 自动加上 &lt;code>SYS_PTRACE&lt;/code> 安全特性，这就意味着如果容器使用的 UID 不一致，就无法访问进程空间。&lt;/strong> 截止发文，&lt;a href="https://github.com/kubernetes/kubernetes/issues/97103#issuecomment-899382147">计划在 &lt;code>1.23&lt;/code> 中支持&lt;/a>。&lt;/p>
+&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>目前上面所有的都不适合在生产环境使用，无法在不修改 Pod 定义的情况下进行调试。&lt;/p>
+&lt;p>期望 Kubernetes 1.23 版本之后 &lt;code>debug&lt;/code> 功能添加 &lt;code>SYS_PTRACE&lt;/code> 的支持。到时候，再尝试一下。&lt;/p></description></item><item><title>无需 Dockerfile 的镜像构建：BuildPack vs Dockerfile</title><link>https://atbug.com/build-docker-image-without-dockerfile/</link><pubDate>Fri, 29 Oct 2021 07:36:43 +0800</pubDate><guid>https://atbug.com/build-docker-image-without-dockerfile/</guid><description>
 &lt;p>过去的工作中，我们使用微服务、容器化以及服务编排构建了技术平台。为了提升开发团队的研发效率，我们同时还提供了 CICD 平台，用来将代码快速的部署到 Openshift（企业级的 Kubernetes） 集群。&lt;/p>
 &lt;p>部署的第一步就是应用程序的容器化，持续集成的交付物从以往的 jar 包、webpack 等变成了容器镜像。容器化将软件代码和所需的所有组件（库、框架、运行环境）打包到一起，进而可以在任何环境任何基础架构上一致地运行，并与其他应用“隔离”。&lt;/p>
 &lt;p>我们的代码需要从源码到编译到最终可运行的镜像，甚至部署，这一切在 CICD 的流水线中完成。最初，我们在每个代码仓库中都加入了三个文件，也通过项目生成器（类似 Spring Initializer）在新项目中注入：&lt;/p>
