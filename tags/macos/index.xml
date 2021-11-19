@@ -15,6 +15,7 @@
 &lt;p>By deleting the existing binaries, rebooting the Mac to clear the kernel cache, and then recopying the new binaries into place, I sorted the issue.&lt;/p>
 &lt;/blockquote>
 &lt;p>但是每次都要重启有点麻烦，通过与旧电脑中目录对比，最后&lt;strong>将二进制文件直接复制到 &lt;code>/opt/homebrew/bin&lt;/code> 解决&lt;/strong>，这个目录的 ownership 不是 root 的。&lt;/p>
+&lt;p>如果问题还会出现，可以做一个软链接将二进制文件链接到 &lt;code>/opt/homebrew/bin&lt;/code> 下。&lt;/p>
 &lt;h3 id="2-clang-版本">2. Clang 版本&lt;/h3>
 &lt;p>这个问题也是排查了版本，还是使用公司产品的时候遇到的。当处理的 JSON 中包含数组，比如 &lt;code>{&amp;quot;a&amp;quot;: []}&lt;/code>，应用启动失败。从控制台来看，错误码是 &lt;code>EXC_BAD_ACCESS (SIGSEGV)&lt;/code>，报错的堆栈正好是在处理 JSON array。&lt;/p>
 &lt;p>有问题的版本：&lt;/p>
@@ -27,7 +28,7 @@ InstalledDir: /Library/Developer/CommandLineTools/usr/bin
 Target: arm64-apple-darwin20.1.0
 Thread model: posix
 InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>最后在构建的时候，将 &lt;code>CMAKE_BUILD_TYPE&lt;/code> 设置为 &lt;code>Debug&lt;/code> 临时解决。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>最后在构建的时候，将 &lt;code>CMAKE_BUILD_TYPE&lt;/code> 设置为 &lt;code>Debug&lt;/code> 临时解决。Debug 模式下编译器不做任何优化。&lt;/p>
 &lt;p>期待系统升级能够修复。&lt;/p></description></item><item><title>Kubernetes学习 — Macos安装Kubernetes</title><link>https://atbug.com/install-kubernetes-on-macos/</link><pubDate>Thu, 17 Aug 2017 09:44:17 +0000</pubDate><guid>https://atbug.com/install-kubernetes-on-macos/</guid><description>
 &lt;h1 id="kubernetes">Kubernetes&lt;/h1>
 &lt;h2 id="安装">安装&lt;/h2>
