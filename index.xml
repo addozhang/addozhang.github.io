@@ -1,4 +1,88 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>乱世浮生</title><link>https://atbug.com/</link><description>Recent content on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 20 Nov 2021 18:29:19 +0800</lastBuildDate><atom:link href="https://atbug.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes Deployment 的故障排查可视化指南（2021 中文版）</title><link>https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/</link><pubDate>Sat, 20 Nov 2021 18:29:19 +0800</pubDate><guid>https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>乱世浮生</title><link>https://atbug.com/</link><description>Recent content on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 29 Nov 2021 07:30:43 +0800</lastBuildDate><atom:link href="https://atbug.com/index.xml" rel="self" type="application/rss+xml"/><item><title>从 Docker 的信号机制看容器的优雅停止</title><link>https://atbug.com/gracefully-stopping-docker-containers-with-correct-command/</link><pubDate>Mon, 29 Nov 2021 07:30:43 +0800</pubDate><guid>https://atbug.com/gracefully-stopping-docker-containers-with-correct-command/</guid><description>
+&lt;p>此文是前段时间笔记的整理，之前自己对这方面的关注不够，因此做下记录。&lt;/p>
+&lt;hr>
+&lt;p>有太多的文章介绍如何&lt;strong>运行&lt;/strong>容器，然而如何&lt;strong>停止&lt;/strong>容器的文章相对少很多。&lt;/p>
+&lt;p>根据运行的应用类型，应用的停止过程非常重要。如果应用要写文件，停止前要保证正确刷新数据并关闭文件；如果是 HTTP 服务，要确保停止前处理所有未完成的请求。&lt;/p>
+&lt;h2 id="信号">信号&lt;/h2>
+&lt;p>信号是 Linux 内核与进程以及进程间通信的一种方式。针对每个信号进程都有个默认的动作，不过进程可以通过定义信号处理程序来覆盖默认的动作，除了 &lt;code>SIGSTOP&lt;/code> 和 &lt;code>SIGKILL&lt;/code>。二者都不能被捕获或重写，前者用来将进程暂停在当前状态，而后者则是从内核层面立即杀掉进程。&lt;/p>
+&lt;p>有两个比较重要的进程 &lt;code>SIGTERM&lt;/code> 和 &lt;code>SIGKILL&lt;/code>。&lt;code>SIGTERM&lt;/code> 是优雅地关闭命令，&lt;code>SIGKILL&lt;/code> 则是暴力的关闭命令。比如 Docker，容器会先收到 &lt;code>SIGTERM&lt;/code> 信号，10s 后会收到 &lt;code>SIGKILL&lt;/code> 信号。&lt;/p>
+&lt;p>还有很多其他的信号，只是限定于特定的上下文。&lt;/p>
+&lt;h2 id="中断">中断&lt;/h2>
+&lt;p>硬件的中断就像操作系统的信号。通常发生在硬件想要向操作系统注册事件时。操作系统必须立即停止运行，并处理中断。&lt;/p>
+&lt;p>比较常见的中断例子就是键盘中断，比如按下 &lt;code>ctrl+z&lt;/code> 或者 &lt;code>ctrl+c&lt;/code>。Linux 将其分别转换成 &lt;code>SIGTSTP&lt;/code> 和 &lt;code>SIGINT&lt;/code>。硬件中断过去通常用来处理键盘和鼠标输入，但如今被用作操作系统软件驱动层面的信号轮训。&lt;/p>
+&lt;h2 id="docker">Docker&lt;/h2>
+&lt;p>前面说了这么多终于来到 Docker，容器的独特之处在于通常只运行一个进程。即使是单进程，容器内 PID 为 1 的进程也具有 init 系统的特殊规则和职责。&lt;/p>
+&lt;p>PID 1 在 Linux 中非常重要，通常是 init 进程。通常进程在收到 &lt;code>SIGTERM&lt;/code> 信号后，假如不对信号进程处理，会快速退出。但 PID 1 的进程收到 &lt;code>SIGTERM&lt;/code> 之后假如不对信号进行处理则&lt;strong>什么都不会做&lt;/strong>。&lt;/p>
+&lt;p>容器内 PID 1 通常有两种情况： shell 进程 PID 为 1 和你的进程 PID 为 1。分别对应着 shell 和 exec 格式的命令。&lt;/p>
+&lt;h3 id="shell-格式">shell 格式&lt;/h3>
+&lt;p>Dockerfile 有个特点，就是如果不使用 &lt;a href="https://docs.docker.com/engine/reference/builder/#run">JSON 格式&lt;/a> 来指定容器命令，会通过 shell 以 &lt;code>fork&lt;/code> 的形式来执行命令，也就是 &lt;code>/bin/sh -c&lt;/code>。&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>docker run&lt;/code>（宿主机上）
+&lt;ul>
+&lt;li>&lt;code>/bin/sh -c&lt;/code>（PID 1，容器内）
+&lt;ul>
+&lt;li>&lt;code>/loop.sh&lt;/code> （PID 2，容器内）&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>这种格式的命令特点是不会向业务进程发送信号。比如发送给 shell 的 &lt;code>SIGTERM&lt;/code> 信号不会转发给子进程，而是等待子进程的退出。唯一杀死容器的方式就是发送 &lt;code>SIGKILL&lt;/code> 信号，或者碰巧子进程自己崩溃。&lt;/p>
+&lt;p>所以应该尽量避免使用这种方式，&lt;/p>
+&lt;h3 id="exec-格式">exec 格式&lt;/h3>
+&lt;p>这个就是 Dockerfile 的推荐语法了，你的进程会立即启动并作为容器的初始化进程，然后就有了下面的进程树：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>docker run&lt;/code>（宿主机上）
+&lt;ul>
+&lt;li>&lt;code>/loop.sh&lt;/code>（PID 1，容器内）&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>说了这么多，很多人觉得不够直观。我们会用示例应用来进行说明，但在这之前简单说下如何发送信号来停止容器。&lt;/p>
+&lt;h2 id="发送信号">发送信号&lt;/h2>
+&lt;p>有几种方式来停止容器。&lt;/p>
+&lt;h3 id="docker-stop">docker stop&lt;/h3>
+&lt;p>默认情况下 &lt;code>docker stop&lt;/code> 命令会向容器发送 &lt;code>SIGTERM&lt;/code> 信号，然后等待 &lt;code>10s&lt;/code>，如果容器没停止再发送 &lt;code>SIGKILL&lt;/code> 信号。&lt;/p>
+&lt;p>在 Dockerfile 中，可以通过 &lt;code>STOPSIGNAL&lt;/code> 指令来设置默认的退出信号，比如 &lt;code>STOPSIGNAL SIGKILL&lt;/code> 将退出信号设置为 &lt;code>SIGKILL&lt;/code>。或者在 &lt;code>docker run&lt;/code> 是通过 &lt;code>--stop-signal&lt;/code> 参数来覆盖镜像中的 &lt;code>STOPSIGNAL&lt;/code> 设置。&lt;/p>
+&lt;h3 id="docker-kill">docker kill&lt;/h3>
+&lt;p>默认情况下 &lt;code>docker kill&lt;/code> 会直接杀死容器，不给容器任何机会进行优雅停止，这里发出的就是 &lt;code>SIGKILL&lt;/code> 信号。&lt;/p>
+&lt;p>当然 &lt;code>docker kill&lt;/code> 可以通过 &lt;code>--signal&lt;/code> 来指定要发送的信号，类似 Linux 的 &lt;code>kill&lt;/code> 命令：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker &lt;span class="nb">kill&lt;/span> ----signal&lt;span class="o">=&lt;/span>SIGTERM foo
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="docker-rm--f">docker rm -f&lt;/h3>
+&lt;p>通常情况下 &lt;code>docker rm&lt;/code> 用来删除已经停止的容器，但是加上 &lt;code>--force&lt;/code>（简写 &lt;code>-f&lt;/code>）会强制删除正在运行的容器。同样，也不会给容器任何优化停止的机会。&lt;/p>
+&lt;h2 id="信号处理">信号处理&lt;/h2>
+&lt;p>我们使用一个简单的应用对 shell 和 exec 两种格式做下对比。在这个应用中，对 &lt;code>SIGTERM&lt;/code> 进行处理：收到信号后退出。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="cp">#!/usr/bin/env sh
+&lt;/span>&lt;span class="cp">&lt;/span>&lt;span class="nb">trap&lt;/span> &lt;span class="s1">&amp;#39;exit 0&amp;#39;&lt;/span> SIGTERM
+&lt;span class="k">while&lt;/span> true&lt;span class="p">;&lt;/span> &lt;span class="k">do&lt;/span> :&lt;span class="p">;&lt;/span> &lt;span class="k">done&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>接下来我们使用两种不同格式的 &lt;code>CMD&lt;/code> 来构建镜像。&lt;/p>
+&lt;h3 id="shell-格式-1">shell 格式&lt;/h3>
+&lt;p>使用下面的 Dockerfile 来构建镜像 &lt;em>term&lt;/em>。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">FROM alpine:3.15.0
+COPY loop.sh /
+CMD /loop.sh
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行下面的命令构建镜像、启动容器、停止容器。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker build -t term .
+docker run --name term -d term
+docker stop term
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>此时你会发现容器并没有立刻停止，而是大约 10s 之后才被停止。可以通过命令查看容器的退出状态：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker inspect -f &lt;span class="s1">&amp;#39;{{.State.ExitCode}}&amp;#39;&lt;/span> term
+&lt;span class="m">137&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>137 = 128 + 9&lt;/code> 说明容器的退出信号是 &lt;code>SIGKILL&lt;/code>。&lt;/p>
+&lt;h3 id="exec-格式-1">exec 格式&lt;/h3>
+&lt;p>调整下 Dockerfile，将 &lt;code>CMD&lt;/code> 修改为推荐的 JSON 格式：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">FROM ubuntu:trusty
+COPY loop.sh /
+CMD [&amp;#34;/loop.sh&amp;#34;]
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行下面的命令构建镜像、启动容器、停止容器。（需要先执行 &lt;code>docker rm term&lt;/code> 删除之前停止的容器）&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker build -t term .
+docker run --name term -d term
+docker stop term
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>此时容器会立刻退出。查看容器的退出状态：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker inspect -f &lt;span class="s1">&amp;#39;{{.State.ExitCode}}&amp;#39;&lt;/span> term
+&lt;span class="m">0&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>&lt;code>docker rm -f&lt;/code> 和 &lt;code>docker kill&lt;/code> 干掉容器很容器，但是为了实现容器的优雅退出，应该使用 &lt;code>docker stop&lt;/code> 命令，同时 Dockerfile 中应尽量避免使用 shell 格式设置 &lt;code>ENTRYPONT&lt;/code> 或者 &lt;code>CMD&lt;/code>。&lt;/p></description></item><item><title>Kubernetes Deployment 的故障排查可视化指南（2021 中文版）</title><link>https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/</link><pubDate>Sat, 20 Nov 2021 18:29:19 +0800</pubDate><guid>https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/</guid><description>
 &lt;p>将应用部署到 Kubernetes 时通常会使用 Deployment、Service、Ingress，整个应用从部署到正常运行，经历的流程很长。从 kubectl apply YAML 文件，经过 apiserver、controller manager、scheduler、kubelet、以及 CRI、CNI 等众多组件的协同工作。&lt;/p>
 &lt;p>漫长的“行程”，Pod 也经历各种正常和不正常的状态变化，即使正常运行也会出现服务无法访问的问题。对于刚开始在 Kubernetes 平台开展工作的同学来说，故障的排查确实棘手。之前工作的时候，经常要协助排查各种问题。去年在 Learnk8s 上看到了关于 Deployment 故障排查的视图，我还参考做了当时整个平台的故障排查视图，包括了从项目源码、CICD 流水线、部署整个流程的故障排查参考。&lt;/p>
 &lt;p>现在 Learnk8s 的 Deployment 排查指南更新了，也有了中文版本。&lt;/p>
