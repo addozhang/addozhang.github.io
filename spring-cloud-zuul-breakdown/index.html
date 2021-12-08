@@ -416,8 +416,8 @@ public class ZuulProxyAutoConfiguration extends ZuulServerAutoConfiguration {
 执行时将上下文中的<code>debugRouting</code>和<code>debugRequest</code>设置为<code>true</code></p><h4 id=servlet30wrapperfilter>Servlet30WrapperFilter</h4><p>使用<code>Servlet30RequestWrapper</code>封装请求, 强制启用.</p><h4 id=sendresponsefilter>SendResponseFilter</h4><p>后执行的过滤器, 负责将代理请求的响应写入当前的请求的响应中.</p><h3 id=zuulproxyautoconfiguration>ZuulProxyAutoConfiguration</h3><h4 id=predecorationfilter>PreDecorationFilter</h4><p>Pre类型的过滤器, 通过提供的RouteLocator决定将如何请求路由到哪里和如何路由. 同时为下游请求添加多个与代理相关的头信息. 当<code>RequestContext</code>中不存在<code>FORWARD_TO_KEY</code>和<code>SERVICE_ID_KEY</code>信息时生效.</p><p>将路由判断结果写入<code>routeHost</code>, <code>FORWARD_TO_KEY</code>或者<code>SERVICE_ID_KEY</code>.</p><h4 id=ribbonroutingfilter>RibbonRoutingFilter</h4><p>Route类型的过滤器, 当<code>RequestContext</code>中<code>routeHost</code>为空, 且有<code>serviceId</code>值时生效.</p><p>使用<code>RequestContext</code>构建<code>RibbonCommandContext</code>, 通过<code>RibbonCommandFactory</code>进而创建<code>RibbonCommand</code>并执行. 最后通过<code>ProxyRequestHelper</code>将响应结果记录到<code>RequestContext</code>中.</p><h4 id=simplehostroutingfilter>SimpleHostRoutingFilter</h4><p>Route类型的过滤器, 当<code>RequestContext</code>中的<code>routeHost</code>不为空时生效. 使用Apache的HttpClient发送请求</p><h2 id=监听器>监听器</h2><h4 id=zuulrefreshlistener>ZuulRefreshListener</h4><p>通过监听应用程序事件(<code>ContextRefreshedEvent</code>, <code>RefreshScopeRefreshedEvent</code>, <code>RoutesRefreshedEvent</code>和<code>RoutesRefreshedEvent</code>)更新handler mapping的注册信息. 前两个事件在<code>ContextRefresh</code>时发出; 第三个是通过JMX重置路由时发出(参考<code>RoutesMvcEndpoint</code>); 最后一个是<code>DiscoveryClient</code>每次拉取服务注册信息后发出.</p><p>收到事件后, 将<code>ZuulHandlerMapping</code>的<code>dirty</code>变量置为<code>true</code>, 当下次请求进来时, 检查到<code>dirty</code>为<code>true</code>, 就会重新注册url mapping.</p><h4 id=zuuldiscoveryrefreshlistener>ZuulDiscoveryRefreshListener</h4><p>监听应用程序事件(<code>InstanceRegisteredEvent</code>, <code>ParentHeartbeatEvent</code>和<code>HeartbeatEvent</code>)更新handler mapping的注册信息.</p><p><code>InstanceRegisteredEvent</code>当前路由服务实例完成服务注册后发出的事件.
 <code>ParentHeartbeatEvent</code>当<code>DiscoveryClient</code>定位到<em>Config Server</em>服务的时候有<code>bootstrapContext</code>发给应用程序上下文的事件.
 <code>HeartbeatEvent</code>由<code>DiscoveryClient</code>每次拉取服务注册信息后发出.</p><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//addozhang.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></article><aside class=sidebar><section class=sidebar_inner><h2>张晓辉</h2><div class=sidebar_description><ul><li>资深码农、云原生践行者</li><li>Kubernetes、DevOps、微服务</li></ul><p>微信订阅号：云原生指北。
-<img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/sandboxed-container/ class=nav-link title=沙盒化容器：是容器还是虚拟机>沙盒化容器：是容器还是虚拟机</a></li><li><a href=https://atbug.com/gracefully-stopping-docker-containers-with-correct-command/ class=nav-link title="从 Docker 的信号机制看容器的优雅停止">从 Docker 的信号机制看容器的优雅停止</a></li><li><a href=https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/ class=nav-link title="Kubernetes Deployment 的故障排查可视化指南（2021 中文版）">Kubernetes Deployment 的故障排查可视化指南（2021 中文版）</a></li><li><a href=https://atbug.com/bug-with-m1-pro-and-monterey/ class=nav-link title="Monterey 12.0.1 上的 bug">Monterey 12.0.1 上的 bug</a></li><li><a href=https://atbug.com/debug-distroless-container-on-kubernetes/ class=nav-link title="Kubernetes 上调试 distroless 容器">Kubernetes 上调试 distroless 容器</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
-<span class=button_tally>55</span></a>
+<img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/policy-as-code-with-pipy/ class=nav-link title="策略即代码：为了 OpenPolicyAgent 学 Rego？试试 Javascript">策略即代码：为了 OpenPolicyAgent 学 Rego？试试 Javascript</a></li><li><a href=https://atbug.com/sandboxed-container/ class=nav-link title=沙盒化容器：是容器还是虚拟机>沙盒化容器：是容器还是虚拟机</a></li><li><a href=https://atbug.com/gracefully-stopping-docker-containers-with-correct-command/ class=nav-link title="从 Docker 的信号机制看容器的优雅停止">从 Docker 的信号机制看容器的优雅停止</a></li><li><a href=https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/ class=nav-link title="Kubernetes Deployment 的故障排查可视化指南（2021 中文版）">Kubernetes Deployment 的故障排查可视化指南（2021 中文版）</a></li><li><a href=https://atbug.com/bug-with-m1-pro-and-monterey/ class=nav-link title="Monterey 12.0.1 上的 bug">Monterey 12.0.1 上的 bug</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
+<span class=button_tally>56</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" title=学习>学习
 <span class=button_tally>40</span></a>
 <a href=https://atbug.com/categories/%E7%BF%BB%E8%AF%91/ class="post_tag button button_translucent" title=翻译>翻译
@@ -458,11 +458,11 @@ public class ZuulProxyAutoConfiguration extends ZuulServerAutoConfiguration {
 <a href=https://atbug.com/categories/%E6%BA%90%E7%A0%81/ class="post_tag button button_translucent" data-position=1 title=源码>源码<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ class="post_tag button button_translucent" data-position=1 title=源码分析>源码分析<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/ class="post_tag button button_translucent" data-position=5 title=源码解析>源码解析<span class=button_tally>5</span></a>
-<a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" data-position=55 title=笔记>笔记<span class=button_tally>55</span></a>
+<a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" data-position=56 title=笔记>笔记<span class=button_tally>56</span></a>
 <a href=https://atbug.com/categories/%E7%BD%91%E5%85%B3/ class="post_tag button button_translucent" data-position=1 title=网关>网关<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E7%BF%BB%E8%AF%91/ class="post_tag button button_translucent" data-position=12 title=翻译>翻译<span class=button_tally>12</span></a>
 <a href=https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/ class="post_tag button button_translucent" data-position=2 title=软件>软件<span class=button_tally>2</span></a><div class=tags_sort><span title="sort alphabetically">[A~Z]</span><span title="sort by count">[0~9]</span></div><span class=tags_hide><svg class="icon"><use xlink:href="#closeme"/></svg></span></div></div></nav></div><div><h2 class="mt-4 taxonomy" id=tags-section>标签</h2><nav class=tags_nav><a href=https://atbug.com/tags/kubernetes/ class="post_tag button button_translucent" title=kubernetes>KUBERNETES
-<span class=button_tally>27</span></a>
+<span class=button_tally>28</span></a>
 <a href=https://atbug.com/tags/java/ class="post_tag button button_translucent" title=java>JAVA
 <span class=button_tally>25</span></a>
 <a href=https://atbug.com/tags/kafka/ class="post_tag button button_translucent" title=kafka>KAFKA
@@ -479,15 +479,15 @@ public class ZuulProxyAutoConfiguration extends ZuulServerAutoConfiguration {
 <span class=button_tally>7</span></a>
 <a href=https://atbug.com/tags/spring-cloud/ class="post_tag button button_translucent" title=spring-cloud>SPRING-CLOUD
 <span class=button_tally>7</span></a>
+<a href=https://atbug.com/tags/opa/ class="post_tag button button_translucent" title=opa>OPA
+<span class=button_tally>5</span></a>
+<a href=https://atbug.com/tags/pipy/ class="post_tag button button_translucent" title=pipy>PIPY
+<span class=button_tally>5</span></a>
 <a href=https://atbug.com/tags/spring/ class="post_tag button button_translucent" title=spring>SPRING
 <span class=button_tally>5</span></a>
 <a href=https://atbug.com/tags/istio/ class="post_tag button button_translucent" title=istio>ISTIO
 <span class=button_tally>4</span></a>
 <a href=https://atbug.com/tags/jenkins/ class="post_tag button button_translucent" title=jenkins>JENKINS
-<span class=button_tally>4</span></a>
-<a href=https://atbug.com/tags/netflix/ class="post_tag button button_translucent" title=netflix>NETFLIX
-<span class=button_tally>4</span></a>
-<a href=https://atbug.com/tags/opa/ class="post_tag button button_translucent" title=opa>OPA
 <span class=button_tally>4</span></a><br><div class="post_tags_toggle button">所有标签</div><div class=post_tags><div class=tags_list><a href=https://atbug.com/tags/alpine/ class="post_tag button button_translucent" data-position=1 title=alpine>ALPINE<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/apache-camel/ class="post_tag button button_translucent" data-position=1 title=apache-camel>APACHE-CAMEL<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/argo/ class="post_tag button button_translucent" data-position=1 title=argo>ARGO<span class=button_tally>1</span></a>
@@ -537,7 +537,7 @@ public class ZuulProxyAutoConfiguration extends ZuulServerAutoConfiguration {
 <a href=https://atbug.com/tags/knative/ class="post_tag button button_translucent" data-position=2 title=knative>KNATIVE<span class=button_tally>2</span></a>
 <a href=https://atbug.com/tags/kubelet/ class="post_tag button button_translucent" data-position=1 title=kubelet>KUBELET<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/kubenetes/ class="post_tag button button_translucent" data-position=1 title=kubenetes>KUBENETES<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/kubernetes/ class="post_tag button button_translucent" data-position=27 title=kubernetes>KUBERNETES<span class=button_tally>27</span></a>
+<a href=https://atbug.com/tags/kubernetes/ class="post_tag button button_translucent" data-position=28 title=kubernetes>KUBERNETES<span class=button_tally>28</span></a>
 <a href=https://atbug.com/tags/kuernetes/ class="post_tag button button_translucent" data-position=1 title=kuernetes>KUERNETES<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/kvm/ class="post_tag button button_translucent" data-position=1 title=kvm>KVM<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/linux/ class="post_tag button button_translucent" data-position=3 title=linux>LINUX<span class=button_tally>3</span></a>
@@ -551,12 +551,12 @@ public class ZuulProxyAutoConfiguration extends ZuulServerAutoConfiguration {
 <a href=https://atbug.com/tags/netflix/ class="post_tag button button_translucent" data-position=4 title=netflix>NETFLIX<span class=button_tally>4</span></a>
 <a href=https://atbug.com/tags/nginx/ class="post_tag button button_translucent" data-position=2 title=nginx>NGINX<span class=button_tally>2</span></a>
 <a href=https://atbug.com/tags/oci/ class="post_tag button button_translucent" data-position=1 title=oci>OCI<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/opa/ class="post_tag button button_translucent" data-position=4 title=opa>OPA<span class=button_tally>4</span></a>
+<a href=https://atbug.com/tags/opa/ class="post_tag button button_translucent" data-position=5 title=opa>OPA<span class=button_tally>5</span></a>
 <a href=https://atbug.com/tags/open-policy-agent/ class="post_tag button button_translucent" data-position=1 title=open-policy-agent>OPEN-POLICY-AGENT<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/openshift/ class="post_tag button button_translucent" data-position=3 title=openshift>OPENSHIFT<span class=button_tally>3</span></a>
 <a href=https://atbug.com/tags/opensource/ class="post_tag button button_translucent" data-position=1 title=opensource>OPENSOURCE<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/ops/ class="post_tag button button_translucent" data-position=1 title=ops>OPS<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/pipy/ class="post_tag button button_translucent" data-position=4 title=pipy>PIPY<span class=button_tally>4</span></a>
+<a href=https://atbug.com/tags/pipy/ class="post_tag button button_translucent" data-position=5 title=pipy>PIPY<span class=button_tally>5</span></a>
 <a href=https://atbug.com/tags/plugin/ class="post_tag button button_translucent" data-position=1 title=plugin>PLUGIN<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/policy/ class="post_tag button button_translucent" data-position=1 title=policy>POLICY<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/prometheus/ class="post_tag button button_translucent" data-position=1 title=prometheus>PROMETHEUS<span class=button_tally>1</span></a>

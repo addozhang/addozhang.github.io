@@ -26,8 +26,8 @@
 </span><span class=w>          </span><span class=nt>serviceName</span><span class=p>:</span><span class=w> </span><span class=l>tekton-dashboard</span><span class=w>
 </span><span class=w>          </span><span class=nt>servicePort</span><span class=p>:</span><span class=w> </span><span class=m>9097</span><span class=w>
 </span></code></pre></div><p>执行<code>kubectl apply -f basic-dashboard-ingress.yaml</code>.</p><p>还有最后一步, 在<code>/etc/hosts</code>中添加一条解析<code>x.x.x.x tekton-dashboard.nip.io</code>, ip地址通过<code>minikube ip</code>来获取</p><p>浏览器中打开<code> tekton-dashboard.nip.io</code></p><p><img src=https://raw.githubusercontent.com/addozhang/oss/master/uPic/6weoXL.jpg alt></p><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//addozhang.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></article><aside class=sidebar><section class=sidebar_inner><h2>张晓辉</h2><div class=sidebar_description><ul><li>资深码农、云原生践行者</li><li>Kubernetes、DevOps、微服务</li></ul><p>微信订阅号：云原生指北。
-<img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/sandboxed-container/ class=nav-link title=沙盒化容器：是容器还是虚拟机>沙盒化容器：是容器还是虚拟机</a></li><li><a href=https://atbug.com/gracefully-stopping-docker-containers-with-correct-command/ class=nav-link title="从 Docker 的信号机制看容器的优雅停止">从 Docker 的信号机制看容器的优雅停止</a></li><li><a href=https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/ class=nav-link title="Kubernetes Deployment 的故障排查可视化指南（2021 中文版）">Kubernetes Deployment 的故障排查可视化指南（2021 中文版）</a></li><li><a href=https://atbug.com/bug-with-m1-pro-and-monterey/ class=nav-link title="Monterey 12.0.1 上的 bug">Monterey 12.0.1 上的 bug</a></li><li><a href=https://atbug.com/debug-distroless-container-on-kubernetes/ class=nav-link title="Kubernetes 上调试 distroless 容器">Kubernetes 上调试 distroless 容器</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
-<span class=button_tally>55</span></a>
+<img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/policy-as-code-with-pipy/ class=nav-link title="策略即代码：为了 OpenPolicyAgent 学 Rego？试试 Javascript">策略即代码：为了 OpenPolicyAgent 学 Rego？试试 Javascript</a></li><li><a href=https://atbug.com/sandboxed-container/ class=nav-link title=沙盒化容器：是容器还是虚拟机>沙盒化容器：是容器还是虚拟机</a></li><li><a href=https://atbug.com/gracefully-stopping-docker-containers-with-correct-command/ class=nav-link title="从 Docker 的信号机制看容器的优雅停止">从 Docker 的信号机制看容器的优雅停止</a></li><li><a href=https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/ class=nav-link title="Kubernetes Deployment 的故障排查可视化指南（2021 中文版）">Kubernetes Deployment 的故障排查可视化指南（2021 中文版）</a></li><li><a href=https://atbug.com/bug-with-m1-pro-and-monterey/ class=nav-link title="Monterey 12.0.1 上的 bug">Monterey 12.0.1 上的 bug</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
+<span class=button_tally>56</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" title=学习>学习
 <span class=button_tally>40</span></a>
 <a href=https://atbug.com/categories/%E7%BF%BB%E8%AF%91/ class="post_tag button button_translucent" title=翻译>翻译
@@ -68,11 +68,11 @@
 <a href=https://atbug.com/categories/%E6%BA%90%E7%A0%81/ class="post_tag button button_translucent" data-position=1 title=源码>源码<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ class="post_tag button button_translucent" data-position=1 title=源码分析>源码分析<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/ class="post_tag button button_translucent" data-position=5 title=源码解析>源码解析<span class=button_tally>5</span></a>
-<a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" data-position=55 title=笔记>笔记<span class=button_tally>55</span></a>
+<a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" data-position=56 title=笔记>笔记<span class=button_tally>56</span></a>
 <a href=https://atbug.com/categories/%E7%BD%91%E5%85%B3/ class="post_tag button button_translucent" data-position=1 title=网关>网关<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E7%BF%BB%E8%AF%91/ class="post_tag button button_translucent" data-position=12 title=翻译>翻译<span class=button_tally>12</span></a>
 <a href=https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/ class="post_tag button button_translucent" data-position=2 title=软件>软件<span class=button_tally>2</span></a><div class=tags_sort><span title="sort alphabetically">[A~Z]</span><span title="sort by count">[0~9]</span></div><span class=tags_hide><svg class="icon"><use xlink:href="#closeme"/></svg></span></div></div></nav></div><div><h2 class="mt-4 taxonomy" id=tags-section>标签</h2><nav class=tags_nav><a href=https://atbug.com/tags/kubernetes/ class="post_tag button button_translucent" title=kubernetes>KUBERNETES
-<span class=button_tally>27</span></a>
+<span class=button_tally>28</span></a>
 <a href=https://atbug.com/tags/java/ class="post_tag button button_translucent" title=java>JAVA
 <span class=button_tally>25</span></a>
 <a href=https://atbug.com/tags/kafka/ class="post_tag button button_translucent" title=kafka>KAFKA
@@ -89,15 +89,15 @@
 <span class=button_tally>7</span></a>
 <a href=https://atbug.com/tags/spring-cloud/ class="post_tag button button_translucent" title=spring-cloud>SPRING-CLOUD
 <span class=button_tally>7</span></a>
+<a href=https://atbug.com/tags/opa/ class="post_tag button button_translucent" title=opa>OPA
+<span class=button_tally>5</span></a>
+<a href=https://atbug.com/tags/pipy/ class="post_tag button button_translucent" title=pipy>PIPY
+<span class=button_tally>5</span></a>
 <a href=https://atbug.com/tags/spring/ class="post_tag button button_translucent" title=spring>SPRING
 <span class=button_tally>5</span></a>
 <a href=https://atbug.com/tags/istio/ class="post_tag button button_translucent" title=istio>ISTIO
 <span class=button_tally>4</span></a>
 <a href=https://atbug.com/tags/jenkins/ class="post_tag button button_translucent" title=jenkins>JENKINS
-<span class=button_tally>4</span></a>
-<a href=https://atbug.com/tags/netflix/ class="post_tag button button_translucent" title=netflix>NETFLIX
-<span class=button_tally>4</span></a>
-<a href=https://atbug.com/tags/opa/ class="post_tag button button_translucent" title=opa>OPA
 <span class=button_tally>4</span></a><br><div class="post_tags_toggle button">所有标签</div><div class=post_tags><div class=tags_list><a href=https://atbug.com/tags/alpine/ class="post_tag button button_translucent" data-position=1 title=alpine>ALPINE<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/apache-camel/ class="post_tag button button_translucent" data-position=1 title=apache-camel>APACHE-CAMEL<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/argo/ class="post_tag button button_translucent" data-position=1 title=argo>ARGO<span class=button_tally>1</span></a>
@@ -147,7 +147,7 @@
 <a href=https://atbug.com/tags/knative/ class="post_tag button button_translucent" data-position=2 title=knative>KNATIVE<span class=button_tally>2</span></a>
 <a href=https://atbug.com/tags/kubelet/ class="post_tag button button_translucent" data-position=1 title=kubelet>KUBELET<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/kubenetes/ class="post_tag button button_translucent" data-position=1 title=kubenetes>KUBENETES<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/kubernetes/ class="post_tag button button_translucent" data-position=27 title=kubernetes>KUBERNETES<span class=button_tally>27</span></a>
+<a href=https://atbug.com/tags/kubernetes/ class="post_tag button button_translucent" data-position=28 title=kubernetes>KUBERNETES<span class=button_tally>28</span></a>
 <a href=https://atbug.com/tags/kuernetes/ class="post_tag button button_translucent" data-position=1 title=kuernetes>KUERNETES<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/kvm/ class="post_tag button button_translucent" data-position=1 title=kvm>KVM<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/linux/ class="post_tag button button_translucent" data-position=3 title=linux>LINUX<span class=button_tally>3</span></a>
@@ -161,12 +161,12 @@
 <a href=https://atbug.com/tags/netflix/ class="post_tag button button_translucent" data-position=4 title=netflix>NETFLIX<span class=button_tally>4</span></a>
 <a href=https://atbug.com/tags/nginx/ class="post_tag button button_translucent" data-position=2 title=nginx>NGINX<span class=button_tally>2</span></a>
 <a href=https://atbug.com/tags/oci/ class="post_tag button button_translucent" data-position=1 title=oci>OCI<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/opa/ class="post_tag button button_translucent" data-position=4 title=opa>OPA<span class=button_tally>4</span></a>
+<a href=https://atbug.com/tags/opa/ class="post_tag button button_translucent" data-position=5 title=opa>OPA<span class=button_tally>5</span></a>
 <a href=https://atbug.com/tags/open-policy-agent/ class="post_tag button button_translucent" data-position=1 title=open-policy-agent>OPEN-POLICY-AGENT<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/openshift/ class="post_tag button button_translucent" data-position=3 title=openshift>OPENSHIFT<span class=button_tally>3</span></a>
 <a href=https://atbug.com/tags/opensource/ class="post_tag button button_translucent" data-position=1 title=opensource>OPENSOURCE<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/ops/ class="post_tag button button_translucent" data-position=1 title=ops>OPS<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/pipy/ class="post_tag button button_translucent" data-position=4 title=pipy>PIPY<span class=button_tally>4</span></a>
+<a href=https://atbug.com/tags/pipy/ class="post_tag button button_translucent" data-position=5 title=pipy>PIPY<span class=button_tally>5</span></a>
 <a href=https://atbug.com/tags/plugin/ class="post_tag button button_translucent" data-position=1 title=plugin>PLUGIN<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/policy/ class="post_tag button button_translucent" data-position=1 title=policy>POLICY<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/prometheus/ class="post_tag button button_translucent" data-position=1 title=prometheus>PROMETHEUS<span class=button_tally>1</span></a>

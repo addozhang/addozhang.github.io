@@ -1,4 +1,91 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 乱世浮生</title><link>https://atbug.com/post/</link><description>Recent content in Posts on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 07 Dec 2021 07:55:16 +0800</lastBuildDate><atom:link href="https://atbug.com/post/index.xml" rel="self" type="application/rss+xml"/><item><title>沙盒化容器：是容器还是虚拟机</title><link>https://atbug.com/sandboxed-container/</link><pubDate>Tue, 07 Dec 2021 07:55:16 +0800</pubDate><guid>https://atbug.com/sandboxed-container/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 乱世浮生</title><link>https://atbug.com/post/</link><description>Recent content in Posts on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 08 Dec 2021 07:49:37 +0800</lastBuildDate><atom:link href="https://atbug.com/post/index.xml" rel="self" type="application/rss+xml"/><item><title>策略即代码：为了 OpenPolicyAgent 学 Rego？试试 Javascript</title><link>https://atbug.com/policy-as-code-with-pipy/</link><pubDate>Wed, 08 Dec 2021 07:49:37 +0800</pubDate><guid>https://atbug.com/policy-as-code-with-pipy/</guid><description>
+&lt;p>距离上个版本 &lt;a href="https://mp.weixin.qq.com/s/uZ_Q5Fn3XpfUEHBOFxWdvg">用 Pipy 实现 OPA&lt;/a>，已经过去快半年了。当初使用Pipy 实现了可信镜像仓库的检查，那时的版本实现起来会稍微复杂，从策略仓库到证书创建到Admission Webhook 的创建都需要大量的人工操作，配置和逻辑也还是耦合在一起。&lt;/p>
+&lt;p>这个版本安装和使用起来会更加简单。&lt;/p>
+&lt;p>当初我用“不务正业”来形容 Pipy 实现准入控制，等看完这篇文章，欢迎留言说说你的看法。&lt;/p>
+&lt;h2 id="架构">架构&lt;/h2>
+&lt;p>还是继续上次的场景，在 Pod 创建时对 Pod 使用的镜像所在仓库进行检查，以及检查镜像的 tag 是否&lt;em>合法&lt;/em>。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/12/08/untitled.jpg" alt="Untitled">&lt;/p>
+&lt;p>这里借助 Pipy Repo 的能力，将&lt;strong>代表策略的脚本和配置&lt;/strong>交由 Repo 进行管理；Pipy 实例实时从 Pipy Repo 同步&lt;strong>策略&lt;/strong>，并进行&lt;strong>动态加载&lt;/strong>。&lt;/p>
+&lt;p>同时 Pipy Repo 对外提供 REST API 来管理策略，对策略的修改更容易。也方便与企业现有管理后台进行对接。&lt;/p>
+&lt;p>下面就开始部署验证，这里所使用的所有代码都已提交到&lt;a href="https://github.com/flomesh-io/demo-policy-as-code"> GitHub 仓库&lt;/a>：https://github.com/flomesh-io/demo-policy-as-code。&lt;/p>
+&lt;h2 id="运行">运行&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">git clone https://github.com/flomesh-io/demo-policy-as-code.git
+&lt;span class="nb">cd&lt;/span> demo-policy-as-code
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="准备">准备&lt;/h3>
+&lt;h4 id="环境">环境&lt;/h4>
+&lt;p>使用 Kubernetes 发行版 K3s 作为集群环境，集群的搭建不做过多说明。我用 &lt;a href="https://k3d.io%0A">k3d&lt;/a>：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">k3d cluster create policy-as-code -p &lt;span class="s2">&amp;#34;6060:30060@server:0&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>注：K3d 是在容器中运行 K3s，这里做了将容器的 &lt;code>30060&lt;/code> 端口映射到本地的 &lt;code>6060&lt;/code> 端口，后面会详细解释。&lt;/p>
+&lt;h4 id="部署策略服务器">部署策略服务器&lt;/h4>
+&lt;p>执行下面的命令部署策略服务器 Repo：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply -f repo/pipy-repo.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>确保 Pod 正常运行：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl get po -n pipy
+NAME READY STATUS RESTARTS AGE
+pipy-repo-697bbd9f4b-94pld 1/1 Running &lt;span class="m">0&lt;/span> 10s
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="发布策略">发布策略&lt;/h4>
+&lt;p>要使用的策略（脚本和配置）位于 &lt;code>./repo/scripts&lt;/code> 目录中。前面提到 Repo 提供了 REST API 来管理 codebase（策略）。&lt;/p>
+&lt;p>这里提供了脚本 &lt;code>init-codebase.sh&lt;/code>，通过 &lt;code>curl&lt;/code> 命令将策略发布到策略服务器。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">./init-codebase.sh
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="部署策略引擎">部署策略引擎&lt;/h3>
+&lt;p>这个版本中，使用 helm chart 完成证书的创建、服务的部署以及 Admission WebHook 的注册。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">helm install policy-as-code ./policy-as-code -n default
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>确保 Pod 正常运行：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl get po -n pipy
+kubectl get po -n pipy
+NAME READY STATUS RESTARTS AGE
+pipy-repo-697bbd9f4b-94pld 1/1 Running &lt;span class="m">0&lt;/span> 2m
+policy-as-code-5867f9cdb9-9vwks 1/1 Running &lt;span class="m">0&lt;/span> 8s
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="测试">测试&lt;/h3>
+&lt;p>在 &lt;code>./test&lt;/code> 目录中有三个 yaml 文件用于测试。&lt;/p>
+&lt;p>&lt;strong>非法的镜像仓库：&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply -f test/bad.yaml
+Error from server &lt;span class="o">(&lt;/span>192.168.64.1:5000/hello-world:linux repo not start with any repo &lt;span class="o">[&lt;/span>docker.io, k8s.gcr.io&lt;span class="o">])&lt;/span>: error when creating &lt;span class="s2">&amp;#34;test/bad.yaml&amp;#34;&lt;/span>: admission webhook &lt;span class="s2">&amp;#34;validating-webhook.pipy.flomesh-io.cn&amp;#34;&lt;/span> denied the request: 192.168.64.1:5000/hello-world:linux repo not start with any repo &lt;span class="o">[&lt;/span>docker.io, k8s.gcr.io&lt;span class="o">]&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>非法的镜像 tag：&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply -f test/bad2.yaml
+Error from server &lt;span class="o">(&lt;/span>docker.io/library/hello-world:latest tag end with :latest&lt;span class="o">)&lt;/span>: error when creating &lt;span class="s2">&amp;#34;test/bad2.yaml&amp;#34;&lt;/span>: admission webhook &lt;span class="s2">&amp;#34;validating-webhook.pipy.flomesh-io.cn&amp;#34;&lt;/span> denied the request: docker.io/library/hello-world:latest tag end with :latest
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>合法的镜像&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply -f test/ok.yaml
+pod/hello-world-success created
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>就这么结束了？当然没有，我们还要对策略进行动态的调整。&lt;/p>
+&lt;p>继续下面的测试之前，执行 &lt;code>kubectl delete -f test/ok.yaml&lt;/code> 清理刚才创建的 Pod。&lt;/p>
+&lt;h3 id="修改策略">修改策略&lt;/h3>
+&lt;p>修改 &lt;code>./repo/scripts/config.json&lt;/code>文件，清空 &lt;code>invalidTagSuffixes&lt;/code> 数组中的内容。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;validRepoPrefixes&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;span class="s2">&amp;#34;docker.io&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="s2">&amp;#34;k8s.gcr.io&amp;#34;&lt;/span>
+&lt;span class="p">],&lt;/span>
+&lt;span class="nt">&amp;#34;invalidTagSuffixes&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[]&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>**注意：**这里需要执行脚本 &lt;code>./init-codebase.sh&lt;/code> 更新策略。&lt;/p>
+&lt;p>此时，再次尝试 apply &lt;code>test/bad2.yaml&lt;/code>。你会发现，这次 Pod 创建成功了。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl apply -f test/bad2.yaml
+pod/hello-world-bad-tag created
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>我们没有修改任何逻辑代码，仅仅修改了配置就完成了对 Pod 镜像检查逻辑的调整。可能有人会问，命令行太麻烦调试不方便，有没有更直观的方式？&lt;/p>
+&lt;p>答案是：有！&lt;/p>
+&lt;h3 id="图形用户界面">图形用户界面&lt;/h3>
+&lt;p>Pipy Repo 提供了图形用户界面，方便脚本的开发和调试。详细信息可以参考&lt;a href="https://mp.weixin.qq.com/s/cDhPtNdng8_YZQpyFo5czw">快速入门 Pipy Repo&lt;/a>，了解图形用户界面的使用。&lt;/p>
+&lt;p>还记得开头的地方我们为 K3d 容器做了端口映射：&lt;code>6060=&amp;gt;30060&lt;/code>，细心的你也可能发现我们为 Pipy Repo 创建了 NodePort Servce，node port 端口为 &lt;code>30060&lt;/code>。&lt;/p>
+&lt;p>此时，本地启动一个 Pipy：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="c1">#k3d&lt;/span>
+pipy http://localhost:6060 --admin-port&lt;span class="o">=&lt;/span>&lt;span class="m">6061&lt;/span>
+&lt;span class="c1">#主机直接部署 k3s 请使用这条命令&lt;/span>
+pipy http://localhost:30060 --admin-port&lt;span class="o">=&lt;/span>&lt;span class="m">6061&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>在浏览器中打开 &lt;code>http://localhost:6060&lt;/code>，你会看到：&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/12/08/20211208-at-003435.png" alt="">&lt;/p>
+&lt;p>点击下面我们创建的 codebase &lt;code>/image-verify&lt;/code>，在左侧文件目录中可以找到我们修改后的 &lt;code>config.json&lt;/code>:&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/12/08/20211208-at-003512.png" alt="">&lt;/p>
+&lt;p>在编辑器中编辑，改回原来的配置，然后点击 2 和 3 两个按钮&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/12/08/20211208-at-003659.png" alt="2021-12-08 at 00.36.59">&lt;/p>
+&lt;h3 id="再次测试">再次测试&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="c1">#清理&lt;/span>
+kubectl delete -f test/bad2.yaml
+kubectl apply -f test/bad2.yaml
+Error from server &lt;span class="o">(&lt;/span>docker.io/library/hello-world:latest tag end with :latest&lt;span class="o">)&lt;/span>: error when creating &lt;span class="s2">&amp;#34;test/bad2.yaml&amp;#34;&lt;/span>: admission webhook &lt;span class="s2">&amp;#34;validating-webhook.pipy.flomesh-io.cn&amp;#34;&lt;/span> denied the request: docker.io/library/hello-world:latest tag end with :latest
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以看到，修改的结果体现在错误信息里了。&lt;/p>
+&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>Open Policy Agent (OPA) 为策略引擎带来了新的天地，但是使用 Rego 语言编写策略为使用带来了门槛。Pipy 以其流量编程、易扩展的特性结合 Repo 的 codebase 管理，可以轻松实现策略即代码。同时，资源消耗更少，性能更高（代理场景的特点）。&lt;/p></description></item><item><title>沙盒化容器：是容器还是虚拟机</title><link>https://atbug.com/sandboxed-container/</link><pubDate>Tue, 07 Dec 2021 07:55:16 +0800</pubDate><guid>https://atbug.com/sandboxed-container/</guid><description>
 &lt;p>随着 IT 技术的发展，AI、区块链和大数据等技术提升了对应用毫秒级扩展的需求，开发人员也面临着的功能快速推出的压力。混合云是新常态，数字化转型是保持竞争力的必要条件，虚拟化成为这些挑战的基本技术。&lt;/p>
 &lt;p>在虚拟化的世界，有两个词耳熟能详：虚拟机和容器。前者是对硬件的虚拟化，后者则更像是操作系统的虚拟化。两者都提供了沙箱的能力：虚拟机通过硬件级抽象提供，而容器则使用公共内核提供进程级的隔离。有很多人将容器看成是“轻量化的虚拟机”，通常情况下我们认为容器是安全的，那到底是不是跟我们想象的一样？&lt;/p>
 &lt;h2 id="容器轻量化的虚拟机">容器：轻量化的虚拟机？&lt;/h2>
