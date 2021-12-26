@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on 乱世浮生</title><link>https://atbug.com/tags/docker/</link><description>Recent content in Docker on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 26 Dec 2021 12:31:16 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>Colima：MacOS 上的极简容器运行时和 Kubernetes（支持 m1）</title><link>https://atbug.com/containers-runtime-on-macos-with-colima/</link><pubDate>Sun, 26 Dec 2021 12:31:16 +0800</pubDate><guid>https://atbug.com/containers-runtime-on-macos-with-colima/</guid><description>
-&lt;p>&lt;a href="https://github.com/abiosoft/colima">Colima&lt;/a> 是一个以最小化设置来在MacOS上运行容器运行时，以及 Kubernetes。支持 m1（文末讨论），同样也支持 Linux。&lt;/p>
+&lt;p>&lt;a href="https://github.com/abiosoft/colima">Colima&lt;/a> 是一个以最小化设置来在MacOS上运行容器运行时和 Kubernetes 的工具。支持 m1（文末讨论），同样也支持 Linux。&lt;/p>
 &lt;p>Colima 的名字取自 Container on Lima。&lt;a href="https://github.com/lima-vm/lima">Lima&lt;/a> 是一个虚拟机工具，可以实现自动的文件共享、端口转发以及 containerd。&lt;/p>
 &lt;p>Colima 实际上是通过 Lima 启动了名为 &lt;code>colima&lt;/code> 的虚拟机，使用虚拟机中的 containerd 作为容器运行时。&lt;/p>
 &lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/12/26/colima.gif" alt="colima">&lt;/p>
