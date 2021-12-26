@@ -108,7 +108,7 @@ __  ____  __  _____   ___  __ ____  ______
 REPOSITORY                                    TAG           IMAGE ID       CREATED          SIZE
 quarkus/quarkus-getting-started               distroless2   fe973c5ac172   <span class=m>3</span> seconds ago    49MB
 </code></pre></div><p>前面对比，用来构建 Spring 应用的 base 镜像 <code>openjdk:11.0-jre-slim</code> 已经有 220MB，这还没算上应用的大小。即使是 <code>openjdk:17-alpine3.13</code> 也有 182 MB。</p><h2 id=next>NEXT</h2><p>下一回，我们试试 Quarkus 在 ArgoCD 中的应用，看下 Serverless 上的使用体验如何。</p><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//addozhang.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></article><aside class=sidebar><section class=sidebar_inner><h2>张晓辉</h2><div class=sidebar_description><ul><li>资深码农、云原生践行者</li><li>Kubernetes、DevOps、微服务</li></ul><p>微信订阅号：云原生指北。
-<img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/openfaas-case-study-zh/ class=nav-link title="OpenFaaS - 以自己的方式运行容器化函数">OpenFaaS - 以自己的方式运行容器化函数</a></li><li><a href=https://atbug.com/policy-as-code-with-pipy/ class=nav-link title="策略即代码：为了 OpenPolicyAgent 学 Rego？试试 Javascript">策略即代码：为了 OpenPolicyAgent 学 Rego？试试 Javascript</a></li><li><a href=https://atbug.com/sandboxed-container/ class=nav-link title=沙盒化容器：是容器还是虚拟机>沙盒化容器：是容器还是虚拟机</a></li><li><a href=https://atbug.com/gracefully-stopping-docker-containers-with-correct-command/ class=nav-link title="从 Docker 的信号机制看容器的优雅停止">从 Docker 的信号机制看容器的优雅停止</a></li><li><a href=https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/ class=nav-link title="Kubernetes Deployment 的故障排查可视化指南（2021 中文版）">Kubernetes Deployment 的故障排查可视化指南（2021 中文版）</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
+<img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/containers-runtime-on-macos-with-colima/ class=nav-link title="Colima：MacOS 上的极简容器运行时和 Kubernetes（支持 m1）">Colima：MacOS 上的极简容器运行时和 Kubernetes（支持 m1）</a></li><li><a href=https://atbug.com/openfaas-case-study-zh/ class=nav-link title="OpenFaaS - 以自己的方式运行容器化函数">OpenFaaS - 以自己的方式运行容器化函数</a></li><li><a href=https://atbug.com/policy-as-code-with-pipy/ class=nav-link title="策略即代码：为了 OpenPolicyAgent 学 Rego？试试 Javascript">策略即代码：为了 OpenPolicyAgent 学 Rego？试试 Javascript</a></li><li><a href=https://atbug.com/sandboxed-container/ class=nav-link title=沙盒化容器：是容器还是虚拟机>沙盒化容器：是容器还是虚拟机</a></li><li><a href=https://atbug.com/gracefully-stopping-docker-containers-with-correct-command/ class=nav-link title="从 Docker 的信号机制看容器的优雅停止">从 Docker 的信号机制看容器的优雅停止</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
 <span class=button_tally>56</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" title=学习>学习
 <span class=button_tally>40</span></a>
@@ -118,11 +118,11 @@ quarkus/quarkus-getting-started               distroless2   fe973c5ac172   <span
 <span class=button_tally>5</span></a>
 <a href=https://atbug.com/categories/quickstart/ class="post_tag button button_translucent" title=quickstart>QUICKSTART
 <span class=button_tally>4</span></a>
+<a href=https://atbug.com/categories/%E5%B7%A5%E5%85%B7/ class="post_tag button button_translucent" title=工具>工具
+<span class=button_tally>3</span></a>
 <a href=https://atbug.com/categories/devops/ class="post_tag button button_translucent" title=devops>DEVOPS
 <span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/%E5%AE%B9%E5%99%A8/ class="post_tag button button_translucent" title=容器>容器
-<span class=button_tally>2</span></a>
-<a href=https://atbug.com/categories/%E5%B7%A5%E5%85%B7/ class="post_tag button button_translucent" title=工具>工具
 <span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/ class="post_tag button button_translucent" title=软件>软件
 <span class=button_tally>2</span></a>
@@ -142,7 +142,7 @@ quarkus/quarkus-getting-started               distroless2   fe973c5ac172   <span
 <a href=https://atbug.com/categories/serverless/ class="post_tag button button_translucent" data-position=1 title=serverless>SERVERLESS<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" data-position=40 title=学习>学习<span class=button_tally>40</span></a>
 <a href=https://atbug.com/categories/%E5%AE%B9%E5%99%A8/ class="post_tag button button_translucent" data-position=2 title=容器>容器<span class=button_tally>2</span></a>
-<a href=https://atbug.com/categories/%E5%B7%A5%E5%85%B7/ class="post_tag button button_translucent" data-position=2 title=工具>工具<span class=button_tally>2</span></a>
+<a href=https://atbug.com/categories/%E5%B7%A5%E5%85%B7/ class="post_tag button button_translucent" data-position=3 title=工具>工具<span class=button_tally>3</span></a>
 <a href=https://atbug.com/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/ class="post_tag button button_translucent" data-position=1 title=微服务>微服务<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E6%8A%98%E8%85%BE/ class="post_tag button button_translucent" data-position=1 title=折腾>折腾<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E6%97%85%E8%A1%8C/ class="post_tag button button_translucent" data-position=1 title=旅行>旅行<span class=button_tally>1</span></a>
@@ -154,15 +154,15 @@ quarkus/quarkus-getting-started               distroless2   fe973c5ac172   <span
 <a href=https://atbug.com/categories/%E7%BD%91%E5%85%B3/ class="post_tag button button_translucent" data-position=1 title=网关>网关<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E7%BF%BB%E8%AF%91/ class="post_tag button button_translucent" data-position=13 title=翻译>翻译<span class=button_tally>13</span></a>
 <a href=https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/ class="post_tag button button_translucent" data-position=2 title=软件>软件<span class=button_tally>2</span></a><div class=tags_sort><span title="sort alphabetically">[A~Z]</span><span title="sort by count">[0~9]</span></div><span class=tags_hide><svg class="icon"><use xlink:href="#closeme"/></svg></span></div></div></nav></div><div><h2 class="mt-4 taxonomy" id=tags-section>标签</h2><nav class=tags_nav><a href=https://atbug.com/tags/kubernetes/ class="post_tag button button_translucent" title=kubernetes>KUBERNETES
-<span class=button_tally>29</span></a>
+<span class=button_tally>30</span></a>
 <a href=https://atbug.com/tags/java/ class="post_tag button button_translucent" title=java>JAVA
 <span class=button_tally>25</span></a>
+<a href=https://atbug.com/tags/docker/ class="post_tag button button_translucent" title=docker>DOCKER
+<span class=button_tally>9</span></a>
 <a href=https://atbug.com/tags/kafka/ class="post_tag button button_translucent" title=kafka>KAFKA
 <span class=button_tally>9</span></a>
 <a href=https://atbug.com/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/ class="post_tag button button_translucent" title=云原生>云原生
 <span class=button_tally>9</span></a>
-<a href=https://atbug.com/tags/docker/ class="post_tag button button_translucent" title=docker>DOCKER
-<span class=button_tally>8</span></a>
 <a href=https://atbug.com/tags/go/ class="post_tag button button_translucent" title=go>GO
 <span class=button_tally>8</span></a>
 <a href=https://atbug.com/tags/tekton/ class="post_tag button button_translucent" title=tekton>TEKTON
@@ -201,7 +201,7 @@ quarkus/quarkus-getting-started               distroless2   fe973c5ac172   <span
 <a href=https://atbug.com/tags/develop/ class="post_tag button button_translucent" data-position=1 title=develop>DEVELOP<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/devops/ class="post_tag button button_translucent" data-position=1 title=devops>DEVOPS<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/docekr/ class="post_tag button button_translucent" data-position=1 title=docekr>DOCEKR<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/docker/ class="post_tag button button_translucent" data-position=8 title=docker>DOCKER<span class=button_tally>8</span></a>
+<a href=https://atbug.com/tags/docker/ class="post_tag button button_translucent" data-position=9 title=docker>DOCKER<span class=button_tally>9</span></a>
 <a href=https://atbug.com/tags/dubbo/ class="post_tag button button_translucent" data-position=1 title=dubbo>DUBBO<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/elasticsearch/ class="post_tag button button_translucent" data-position=1 title=elasticsearch>ELASTICSEARCH<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/envoy/ class="post_tag button button_translucent" data-position=1 title=envoy>ENVOY<span class=button_tally>1</span></a>
@@ -230,12 +230,12 @@ quarkus/quarkus-getting-started               distroless2   fe973c5ac172   <span
 <a href=https://atbug.com/tags/knative/ class="post_tag button button_translucent" data-position=2 title=knative>KNATIVE<span class=button_tally>2</span></a>
 <a href=https://atbug.com/tags/kubelet/ class="post_tag button button_translucent" data-position=1 title=kubelet>KUBELET<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/kubenetes/ class="post_tag button button_translucent" data-position=1 title=kubenetes>KUBENETES<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/kubernetes/ class="post_tag button button_translucent" data-position=29 title=kubernetes>KUBERNETES<span class=button_tally>29</span></a>
+<a href=https://atbug.com/tags/kubernetes/ class="post_tag button button_translucent" data-position=30 title=kubernetes>KUBERNETES<span class=button_tally>30</span></a>
 <a href=https://atbug.com/tags/kuernetes/ class="post_tag button button_translucent" data-position=1 title=kuernetes>KUERNETES<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/kvm/ class="post_tag button button_translucent" data-position=1 title=kvm>KVM<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/linux/ class="post_tag button button_translucent" data-position=3 title=linux>LINUX<span class=button_tally>3</span></a>
 <a href=https://atbug.com/tags/log4j/ class="post_tag button button_translucent" data-position=1 title=log4j>LOG4J<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/macos/ class="post_tag button button_translucent" data-position=2 title=macos>MACOS<span class=button_tally>2</span></a>
+<a href=https://atbug.com/tags/macos/ class="post_tag button button_translucent" data-position=3 title=macos>MACOS<span class=button_tally>3</span></a>
 <a href=https://atbug.com/tags/mesh/ class="post_tag button button_translucent" data-position=1 title=mesh>MESH<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/metaspace/ class="post_tag button button_translucent" data-position=1 title=metaspace>METASPACE<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/minishift/ class="post_tag button button_translucent" data-position=1 title=minishift>MINISHIFT<span class=button_tally>1</span></a>

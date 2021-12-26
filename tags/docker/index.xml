@@ -1,4 +1,82 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on 乱世浮生</title><link>https://atbug.com/tags/docker/</link><description>Recent content in Docker on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 29 Nov 2021 07:30:43 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>从 Docker 的信号机制看容器的优雅停止</title><link>https://atbug.com/gracefully-stopping-docker-containers-with-correct-command/</link><pubDate>Mon, 29 Nov 2021 07:30:43 +0800</pubDate><guid>https://atbug.com/gracefully-stopping-docker-containers-with-correct-command/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on 乱世浮生</title><link>https://atbug.com/tags/docker/</link><description>Recent content in Docker on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 26 Dec 2021 12:31:16 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>Colima：MacOS 上的极简容器运行时和 Kubernetes（支持 m1）</title><link>https://atbug.com/containers-runtime-on-macos-with-colima/</link><pubDate>Sun, 26 Dec 2021 12:31:16 +0800</pubDate><guid>https://atbug.com/containers-runtime-on-macos-with-colima/</guid><description>
+&lt;p>&lt;a href="https://github.com/abiosoft/colima">Colima&lt;/a> 是一个以最小化设置来在MacOS上运行容器运行时，以及 Kubernetes。支持 m1（文末讨论），同样也支持 Linux。&lt;/p>
+&lt;p>Colima 的名字取自 Container on Lima。&lt;a href="https://github.com/lima-vm/lima">Lima&lt;/a> 是一个虚拟机工具，可以实现自动的文件共享、端口转发以及 containerd。&lt;/p>
+&lt;p>Colima 实际上是通过 Lima 启动了名为 &lt;code>colima&lt;/code> 的虚拟机，使用虚拟机中的 containerd 作为容器运行时。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/12/26/colima.gif" alt="colima">&lt;/p>
+&lt;h2 id="使用">使用&lt;/h2>
+&lt;p>Colima 的使用很简单，执行下面的命令就可以创建虚拟机，默认是 Docker 的运行时。&lt;/p>
+&lt;p>初次运行需要下载虚拟机镜像创建虚拟机，耗时因网络情况有所差异。之后，启动虚拟机就只需要 30s 左右的时间。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">colima start
+INFO&lt;span class="o">[&lt;/span>0000&lt;span class="o">]&lt;/span> starting colima
+INFO&lt;span class="o">[&lt;/span>0000&lt;span class="o">]&lt;/span> creating and starting ... &lt;span class="nv">context&lt;/span>&lt;span class="o">=&lt;/span>vm
+INFO&lt;span class="o">[&lt;/span>0119&lt;span class="o">]&lt;/span> provisioning ... &lt;span class="nv">context&lt;/span>&lt;span class="o">=&lt;/span>docker
+INFO&lt;span class="o">[&lt;/span>0119&lt;span class="o">]&lt;/span> provisioning in VM ... &lt;span class="nv">context&lt;/span>&lt;span class="o">=&lt;/span>docker
+INFO&lt;span class="o">[&lt;/span>0133&lt;span class="o">]&lt;/span> restarting VM to &lt;span class="nb">complete&lt;/span> setup ... &lt;span class="nv">context&lt;/span>&lt;span class="o">=&lt;/span>docker
+INFO&lt;span class="o">[&lt;/span>0133&lt;span class="o">]&lt;/span> stopping ... &lt;span class="nv">context&lt;/span>&lt;span class="o">=&lt;/span>vm
+INFO&lt;span class="o">[&lt;/span>0136&lt;span class="o">]&lt;/span> starting ... &lt;span class="nv">context&lt;/span>&lt;span class="o">=&lt;/span>vm
+INFO&lt;span class="o">[&lt;/span>0158&lt;span class="o">]&lt;/span> starting ... &lt;span class="nv">context&lt;/span>&lt;span class="o">=&lt;/span>docker
+INFO&lt;span class="o">[&lt;/span>0159&lt;span class="o">]&lt;/span> &lt;span class="k">done&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>此时，在宿主机上就可以使用 Docker 相关的命令了：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker ps
+CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES
+docker pull busybox
+docker images
+REPOSITORY TAG IMAGE ID CREATED SIZE
+busybox latest b34806a1af7a &lt;span class="m">2&lt;/span> weeks ago 1.41MB
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>也可以使用 Lima 的命令行 &lt;code>limact&lt;/code>工具查看虚拟机的情况：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">limactl list
+NAME STATUS SSH ARCH CPUS MEMORY DISK DIR
+colima Running 127.0.0.1:64505 aarch64 &lt;span class="m">2&lt;/span> 2GiB 60GiB /Users/addo/.lima/colima
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>查看操作系统信息：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">uname -a
+Darwin Addos-Macbook-Pro.local 21.2.0 Darwin Kernel Version 21.2.0: Sun Nov &lt;span class="m">28&lt;/span> 20:28:41 PST 2021&lt;span class="p">;&lt;/span> root:xnu-8019.61.5~1/RELEASE_ARM64_T6000 arm64
+limactl shell colima uname -a
+Linux lima-colima 5.13.0-22-generic &lt;span class="c1">#22-Ubuntu SMP Fri Nov 5 13:22:27 UTC 2021 aarch64 aarch64 aarch64 GNU/Linux&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>或者使用 Colima 的 &lt;code>ssh&lt;/code> 命令进入虚拟机：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="c1"># on host&lt;/span>
+colima ssh
+&lt;span class="c1"># in vm&lt;/span>
+uname -a
+Linux lima-colima 5.13.0-22-generic &lt;span class="c1">#22-Ubuntu SMP Fri Nov 5 13:22:27 UTC 2021 aarch64 aarch64 aarch64 GNU/Linux&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="其他运行时">其他运行时&lt;/h3>
+&lt;p>也可以在创建的时候通过 &lt;code>--runtime containerd&lt;/code> 参数指定使用 Containerd 作为运行时。此时就需要使用 &lt;code>colima nerdctl&lt;/code> 来使用 &lt;code>nerdctl&lt;/code> 与 Containerd 进行交互。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">colima start --runtime containerd
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>同样，还可以创建一个 k3s 作为 Kubernetes 运行时：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">colima start --with-kubernetes
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="demo">Demo&lt;/h2>
+&lt;p>我们尝试启动一个 nginx 容器：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker run --rm -d --name nginx -p 8080:80 nginx:latest
+docker ps
+CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES
+20d6c56e038b nginx:latest &lt;span class="s2">&amp;#34;/docker-entrypoint.…&amp;#34;&lt;/span> &lt;span class="m">9&lt;/span> seconds ago Up &lt;span class="m">8&lt;/span> seconds 0.0.0.0:8080-&amp;gt;80/tcp, :::8080-&amp;gt;80/tcp nginx
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Colima 会自动配置端口转发：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">curl -I http://localhost:8080
+HTTP/1.1 &lt;span class="m">200&lt;/span> OK
+Server: nginx/1.21.4
+Date: Sun, &lt;span class="m">26&lt;/span> Dec &lt;span class="m">2021&lt;/span> 04:17:22 GMT
+Content-Type: text/html
+Content-Length: &lt;span class="m">615&lt;/span>
+Last-Modified: Tue, &lt;span class="m">02&lt;/span> Nov &lt;span class="m">2021&lt;/span> 14:49:22 GMT
+Connection: keep-alive
+ETag: &lt;span class="s2">&amp;#34;61814ff2-267&amp;#34;&lt;/span>
+Accept-Ranges: bytes
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="虚拟机配置">虚拟机配置&lt;/h2>
+&lt;p>Colima 启动的虚拟机默认是 2CPU、2GiB 内存 和 60GiB 存储。可以在创建时通过 &lt;code>--cpu&lt;/code> 、&lt;code>--memory&lt;/code> 和 &lt;code>--disk&lt;/code> 来分配更多资源。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">colima start --cpu &lt;span class="m">4&lt;/span> --memory &lt;span class="m">16&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>也可以修改当前虚拟机的配置：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">colima stop
+colima start --cpu &lt;span class="m">4&lt;/span> --memory &lt;span class="m">16&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="同类工具比较">同类工具比较&lt;/h2>
+&lt;p>其实有不少类似的工具，比如 kind、k3d 和 minikube 三种都是用来创建 Kubernetes 环境。我个人此前用的 k3d 就比较多。&lt;/p>
+&lt;p>对于 Docker 容器环境，这三个其实都没有提供。minikube 的虚拟机中也有容器运行时，但是无法单纯安装 Docker 环境。&lt;/p>
+&lt;p>对于 Kubernetes 环境来说，这几种都适合，相比 Colima 来说还支持创建多个集群（当前 Colima 最新版本是 0.2.2，多集群的支持也在开发中。估计 0.3.0 会提供，毕竟创建多个虚拟机就能实现）。但使用 Colima 的话，Kubernetes 和 Docker 可以共享镜像（本地镜像）和运行时。&lt;/p>
+&lt;h2 id="不足">不足&lt;/h2>
+&lt;h3 id="多集群的支持">多集群的支持&lt;/h3>
+&lt;p>前面提到，目前还不支持创建多个 Kubernetes 集群，估计 0.3.0 会提供。&lt;/p>
+&lt;h3 id="m1-的支持">m1 的支持&lt;/h3>
+&lt;p>这里还是要说下 m1，我现在主要用 m1 的电脑，本地的容器运行时用的 Docker Desktop。&lt;/p>
+&lt;p>前面我们有留意到虚拟机使用的是 &lt;code>aarch64&lt;/code> 架构系统，&lt;strong>对于某些不支持 arm64 的镜像还是无法运行&lt;/strong>。毕竟 Lima 是原生支持 m1，而不是使用 Rosetta 转译的 Docker Desktop。&lt;/p>
+&lt;p>有兴趣的同学可以尝试用 Rosetta 转译 Lima。&lt;/p></description></item><item><title>从 Docker 的信号机制看容器的优雅停止</title><link>https://atbug.com/gracefully-stopping-docker-containers-with-correct-command/</link><pubDate>Mon, 29 Nov 2021 07:30:43 +0800</pubDate><guid>https://atbug.com/gracefully-stopping-docker-containers-with-correct-command/</guid><description>
 &lt;p>此文是前段时间笔记的整理，之前自己对这方面的关注不够，因此做下记录。&lt;/p>
 &lt;hr>
 &lt;p>有太多的文章介绍如何&lt;strong>运行&lt;/strong>容器，然而如何&lt;strong>停止&lt;/strong>容器的文章相对少很多。&lt;/p>
