@@ -2,8 +2,7 @@
 &lt;p>译者注：&lt;/p>
 &lt;p>这篇文章很全面的罗列出了 Kubernetes 中涉及的网络知识，从 Linux 内核的网络内容，到容器、Kubernetes，一一进行了详细的说明。&lt;/p>
 &lt;p>​文章篇幅有点长，不得不说，网络是很复杂很麻烦的一层，但恰恰这层多年来变化不大。希望翻译的内容对大家能有所帮助，有误的地方，也欢迎大家指正。&lt;/p>
-&lt;p>原文：&lt;a href="https://learnk8s.io/kubernetes-network-packets">Tracing the path of network traffic in Kubernetes&lt;/a>&lt;/p>
-&lt;p>作者：Kristijan Mitevski&lt;/p>
+&lt;p>本文翻译获得 Learnk8s 的授权，原文 &lt;a href="https://learnk8s.io/kubernetes-network-packets">Tracing the path of network traffic in Kubernetes&lt;/a> 作者 Kristijan Mitevski。&lt;/p>
 &lt;hr>
 &lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/01/22/16427680911539.jpg" alt="">&lt;/p>
 &lt;p>&lt;strong>TL;DR：&lt;/strong> &lt;em>本文将代理了解 Kubernetes 集群内外的数据流转。从最初的 Web 请求开始，一直到托管应用程序的容器。&lt;/em>&lt;/p>
