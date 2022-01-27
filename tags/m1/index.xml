@@ -2,7 +2,7 @@
 &lt;p>SDKMAN 是一款管理多版本 SDK 的工具，可以实现在多个版本间的快速切换。安装和使用非常简单：&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">curl -s &lt;span class="s2">&amp;#34;https://get.sdkman.io&amp;#34;&lt;/span> &lt;span class="p">|&lt;/span> bash
 sdk install java x.y.z
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>在 m1（Apple Silicon）的 mac 上，不知道注意到没，列出的可选 Java SDK 少了很多。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>但在 m1（Apple Silicon）的 mac 上，不知道注意到没，列出的可选 Java SDK 少了很多。&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">sdk list &lt;span class="nv">java&lt;/span>
 &lt;span class="o">================================================================================&lt;/span>
 Available Java Versions &lt;span class="k">for&lt;/span> macOS ARM &lt;span class="nv">64bit&lt;/span>
