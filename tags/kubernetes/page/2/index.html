@@ -56,7 +56,7 @@
 <a href=https://atbug.com/tags/apache-camel title="Apache Camel" class="post_tag button button_translucent">Apache Camel</a> ·
 <a href=https://atbug.com/tags/dapr title=Dapr class="post_tag button button_translucent">Dapr</a></span>
 <span class=page_only>·</span></div></div><div class="excerpt_footer partition"><div class=excerpt_thumbnail><img src=https://atbug.com/images/kubernetes.png alt="分布式系统在 Kubernetes 上的进化"></div><div><p class=pale>本文译自 The Evolution of Distributed Systems on Kubernetes 在 3 月份的 QCon 上，我做了一个关于 Kubernetes 的分布式系统进化的演讲。首先，我想先问一个问题，微服务之后是什么？我相信大家都有各自的答案，我也有我的答案。你会在最后发现我的想法是什么。为了达到这个目的，我建议大家看看分布式系统的需求是什么？以及这些需求在过去是如何发展的，从单体应用开始到 Kubernetes，再到最近的 Dapr、Istio、Knative 等项目，它们是如何改变我们做分布式系统的方式。我们将尝试对未来做一些预测。 现代分布式应用 为了给这个话题提供更多的背景信息，我认为的分布式系统 …</p><a href=https://atbug.com/translation-distributed-systems-kubernetes/ title=阅读更多 class="excerpt_more button">阅读更多</a></div></div></div></li><li><ul class=pagination><li class=page-item><a href=../../../../tags/kubernetes/ class=page-link aria-label=First><span aria-hidden=true>&#171;&#171;</span></a></li><li class=page-item><a href=../../../../tags/kubernetes/ class=page-link aria-label=Previous><span aria-hidden=true>&#171;</span></a></li><li class=page-item><a class=page-link href=../../../../tags/kubernetes/>1</a></li><li class="page-item active"><a class=page-link href=../../../../tags/kubernetes/page/2/>2</a></li><li class=page-item><a class=page-link href=../../../../tags/kubernetes/page/3/>3</a></li><li class=page-item><a class=page-link href=../../../../tags/kubernetes/page/4/>4</a></li><li class=page-item><a href=../../../../tags/kubernetes/page/3/ class=page-link aria-label=Next><span aria-hidden=true>&#187;</span></a></li><li class=page-item><a href=../../../../tags/kubernetes/page/4/ class=page-link aria-label=Last><span aria-hidden=true>&#187;&#187;</span></a></li></ul></li></ul><aside class=sidebar><section class=sidebar_inner><h2>张晓辉</h2><div class=sidebar_description><ul><li>资深码农、云原生践行者</li><li>Kubernetes、DevOps、微服务</li></ul><p>微信订阅号：云原生指北。
-<img src=../../../../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/tracing-path-of-kubernetes-network-packets/ class=nav-link title="追踪 Kubernetes 中的网络流量">追踪 Kubernetes 中的网络流量</a></li><li><a href=https://atbug.com/kubernetes-pod-autoscale-on-prometheus-metrics/ class=nav-link title="Kubernetes HPA 基于 Prometheus 自定义指标的可控弹性伸缩">Kubernetes HPA 基于 Prometheus 自定义指标的可控弹性伸缩</a></li><li><a href=https://atbug.com/ebpf-wasm-service-mesh/ class=nav-link title="eBPF 和 Wasm：探索服务网格数据平面的未来">eBPF 和 Wasm：探索服务网格数据平面的未来</a></li><li><a href=https://atbug.com/deploy-vm-on-proxmox-with-terraform/ class=nav-link title="快速搭建实验环境：使用 Terraform 部署 Proxmox 虚拟机">快速搭建实验环境：使用 Terraform 部署 Proxmox 虚拟机</a></li><li><a href=https://atbug.com/farewell-2021/ class=nav-link title=再见，2021>再见，2021</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
+<img src=../../../../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/install-graalvm-on-m1-mac-with-sdkman/ class=nav-link title="使用 sdkman 在 M1 Mac 上 安装 graalvm sdk">使用 sdkman 在 M1 Mac 上 安装 graalvm sdk</a></li><li><a href=https://atbug.com/tracing-path-of-kubernetes-network-packets/ class=nav-link title="追踪 Kubernetes 中的网络流量">追踪 Kubernetes 中的网络流量</a></li><li><a href=https://atbug.com/kubernetes-pod-autoscale-on-prometheus-metrics/ class=nav-link title="Kubernetes HPA 基于 Prometheus 自定义指标的可控弹性伸缩">Kubernetes HPA 基于 Prometheus 自定义指标的可控弹性伸缩</a></li><li><a href=https://atbug.com/ebpf-wasm-service-mesh/ class=nav-link title="eBPF 和 Wasm：探索服务网格数据平面的未来">eBPF 和 Wasm：探索服务网格数据平面的未来</a></li><li><a href=https://atbug.com/deploy-vm-on-proxmox-with-terraform/ class=nav-link title="快速搭建实验环境：使用 Terraform 部署 Proxmox 虚拟机">快速搭建实验环境：使用 Terraform 部署 Proxmox 虚拟机</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
 <span class=button_tally>57</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" title=学习>学习
 <span class=button_tally>40</span></a>
@@ -67,7 +67,7 @@
 <a href=https://atbug.com/categories/quickstart/ class="post_tag button button_translucent" title=quickstart>QUICKSTART
 <span class=button_tally>4</span></a>
 <a href=https://atbug.com/categories/%E5%B7%A5%E5%85%B7/ class="post_tag button button_translucent" title=工具>工具
-<span class=button_tally>3</span></a>
+<span class=button_tally>4</span></a>
 <a href=https://atbug.com/categories/devops/ class="post_tag button button_translucent" title=devops>DEVOPS
 <span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/%E5%AE%B9%E5%99%A8/ class="post_tag button button_translucent" title=容器>容器
@@ -90,7 +90,7 @@
 <a href=https://atbug.com/categories/serverless/ class="post_tag button button_translucent" data-position=1 title=serverless>SERVERLESS<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" data-position=40 title=学习>学习<span class=button_tally>40</span></a>
 <a href=https://atbug.com/categories/%E5%AE%B9%E5%99%A8/ class="post_tag button button_translucent" data-position=2 title=容器>容器<span class=button_tally>2</span></a>
-<a href=https://atbug.com/categories/%E5%B7%A5%E5%85%B7/ class="post_tag button button_translucent" data-position=3 title=工具>工具<span class=button_tally>3</span></a>
+<a href=https://atbug.com/categories/%E5%B7%A5%E5%85%B7/ class="post_tag button button_translucent" data-position=4 title=工具>工具<span class=button_tally>4</span></a>
 <a href=https://atbug.com/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/ class="post_tag button button_translucent" data-position=1 title=微服务>微服务<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E6%8A%98%E8%85%BE/ class="post_tag button button_translucent" data-position=1 title=折腾>折腾<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E6%97%85%E8%A1%8C/ class="post_tag button button_translucent" data-position=1 title=旅行>旅行<span class=button_tally>1</span></a>
@@ -106,7 +106,7 @@
 <a href=https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/ class="post_tag button button_translucent" data-position=2 title=软件>软件<span class=button_tally>2</span></a><div class=tags_sort><span title="sort alphabetically">[A~Z]</span><span title="sort by count">[0~9]</span></div><span class=tags_hide><svg class="icon"><use xlink:href="#closeme"/></svg></span></div></div></nav></div><div><h2 class="mt-4 taxonomy" id=tags-section>标签</h2><nav class=tags_nav><a href=https://atbug.com/tags/kubernetes/ class="post_tag button button_translucent" title=kubernetes>KUBERNETES
 <span class=button_tally>32</span></a>
 <a href=https://atbug.com/tags/java/ class="post_tag button button_translucent" title=java>JAVA
-<span class=button_tally>25</span></a>
+<span class=button_tally>26</span></a>
 <a href=https://atbug.com/tags/docker/ class="post_tag button button_translucent" title=docker>DOCKER
 <span class=button_tally>9</span></a>
 <a href=https://atbug.com/tags/kafka/ class="post_tag button button_translucent" title=kafka>KAFKA
@@ -164,6 +164,7 @@
 <a href=https://atbug.com/tags/go/ class="post_tag button button_translucent" data-position=8 title=go>GO<span class=button_tally>8</span></a>
 <a href=https://atbug.com/tags/golang/ class="post_tag button button_translucent" data-position=1 title=golang>GOLANG<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/google/ class="post_tag button button_translucent" data-position=1 title=google>GOOGLE<span class=button_tally>1</span></a>
+<a href=https://atbug.com/tags/graalvm/ class="post_tag button button_translucent" data-position=1 title=graalvm>GRAALVM<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/greenplum/ class="post_tag button button_translucent" data-position=1 title=greenplum>GREENPLUM<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/groovy/ class="post_tag button button_translucent" data-position=1 title=groovy>GROOVY<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/haproxy/ class="post_tag button button_translucent" data-position=1 title=haproxy>HAPROXY<span class=button_tally>1</span></a>
@@ -172,7 +173,7 @@
 <a href=https://atbug.com/tags/hystrix/ class="post_tag button button_translucent" data-position=3 title=hystrix>HYSTRIX<span class=button_tally>3</span></a>
 <a href=https://atbug.com/tags/iaas/ class="post_tag button button_translucent" data-position=1 title=iaas>IAAS<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/istio/ class="post_tag button button_translucent" data-position=4 title=istio>ISTIO<span class=button_tally>4</span></a>
-<a href=https://atbug.com/tags/java/ class="post_tag button button_translucent" data-position=25 title=java>JAVA<span class=button_tally>25</span></a>
+<a href=https://atbug.com/tags/java/ class="post_tag button button_translucent" data-position=26 title=java>JAVA<span class=button_tally>26</span></a>
 <a href=https://atbug.com/tags/java8/ class="post_tag button button_translucent" data-position=1 title=java8>JAVA8<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/jenkins/ class="post_tag button button_translucent" data-position=4 title=jenkins>JENKINS<span class=button_tally>4</span></a>
 <a href=https://atbug.com/tags/jib/ class="post_tag button button_translucent" data-position=2 title=jib>JIB<span class=button_tally>2</span></a>
@@ -187,6 +188,7 @@
 <a href=https://atbug.com/tags/kvm/ class="post_tag button button_translucent" data-position=1 title=kvm>KVM<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/linux/ class="post_tag button button_translucent" data-position=3 title=linux>LINUX<span class=button_tally>3</span></a>
 <a href=https://atbug.com/tags/log4j/ class="post_tag button button_translucent" data-position=1 title=log4j>LOG4J<span class=button_tally>1</span></a>
+<a href=https://atbug.com/tags/m1/ class="post_tag button button_translucent" data-position=1 title=m1>M1<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/macos/ class="post_tag button button_translucent" data-position=3 title=macos>MACOS<span class=button_tally>3</span></a>
 <a href=https://atbug.com/tags/mesh/ class="post_tag button button_translucent" data-position=1 title=mesh>MESH<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/metaspace/ class="post_tag button button_translucent" data-position=1 title=metaspace>METASPACE<span class=button_tally>1</span></a>
