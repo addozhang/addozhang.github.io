@@ -6,7 +6,7 @@
 同时<code>retries</code>有可能导致消息重复, 这就是Kafka消息的<code>at least once</code>保证. 在0.11.0.0之后, 提供了幂等的特性, 保证消息的<code>exactly one</code>. 对于跨数据中心的复制(比如MirrorMaker), 默认设置为<code>Integer.MAX_VALUE</code></p><h3 id=额外的错误处理>额外的错误处理</h3><p>使用生产者内置的重试是一个正确处理多种错误而不丢失消息的简单途径. 但是开发者还需要处理其他的错误, 比如:</p><ul><li>不可重试错误</li><li>发送之前的错误</li><li>场试完所有的重试次数后还是未成功发送.</li></ul><h2 id=可靠系统中使用消费者>可靠系统中使用消费者</h2><p><strong>已提交消息</strong>和<strong>已提交偏移量</strong>
 完全不同的两个概念, 前者是对生产者有效, 后者是对消费者有效.</p><h3 id=重要设置>重要设置</h3><ul><li><code>group.id</code> 两个有相同<code>group.id</code>并且订阅同一个topic的消费者, 会分配到topic下分区的一个子集, 并且是独立的子集.</li><li><code>auto.offset.reset</code> 这个参数控制当broker端没有发现任何提交的偏移量的时候, 消费者应该从什么位置开始读取消息. 接受<code>earliest</code>和<code>latest</code>两种设置. <code>earliest</code>意思是会从0开始读取, 而<code>latest</code>意思是从最末尾开始.</li><li><code>enable.auto.commit</code> 按照时间计划提交偏移量或者代码中手动提交. 对consumer来说这是一个<strong>重大</strong>的决定. 自动提交会保证只提交循环中已经处理的数据, 但是有可能会在下次提交始前系统崩溃. 这就导致已经被处理的消息的偏移量没有提交到broker. 下次拉取的时候(consumer重新上线或者rebalance时候由其他消费者处理该分区)会重新拉取已经处理过的消息, <strong>重复消费</strong>. 假如你是将拉取的消息交由其他的线程处理, 那自动提交可能会到时消息被拉取, 却没有被处理. 自动提交的好处是吞吐量大.</li><li><code>auto.commit.interval.ms</code> 当<code>enable.auto.commit</code>设置为<strong>true</strong>的时候, 通过这个配置控制自动提交的时间间隔. 越大吞吐就越大, 一致性就越低. 越小, 则会增加提交的次数, 影响吞吐, 但是会提高一致性.</li></ul><h3 id=准确提交偏移量>准确提交偏移量</h3><h4 id=总是提交已经处理过得消息>总是提交已经处理过得消息</h4><p>假如你是在循环中处理所有的消息, 并且不需要维护跨多次轮询的状态, 会比较容易实现. 可以使用自动提交, 或者在轮询循环的末尾进行偏移量提交.</p><h4 id=提交频率是性能和系统崩溃时重复的消息数量间的取舍>提交频率是性能和系统崩溃时重复的消息数量间的取舍</h4><p>一次轮询循环中可以进行多次偏移量提交, 甚至每处理一条提交一次. 或者几个轮询提交一次. 提交会有性能上的开销, 类似生产者的<code>acks=all</code></p><h4 id=保证你清楚的了解将要提交什么偏移量>保证你清楚的了解将要提交什么偏移量</h4><p>常见的一个陷阱就是一次轮询循环中的偏移量提交了读到的最大偏移量, 而不是已经处理过得最大偏移量. 会导致消息丢失.</p><h3 id=再平衡>再平衡</h3><p>准确处理consumer的再平衡(consumer上线或者下线). 再平衡会引起先从消费者上摘取某些分区, 然后在分配某些分区. 通过实现RebalanceListener接口来实现控制.</p><h3 id=消费者可能需要重试>消费者可能需要重试</h3><p>某些场景下, 暂时不提交偏移量, 下次轮询的时候会重复拉取消息. 比如数据库连接暂时不可用的情况下.</p><h3 id=消费者可能需要维护状态>消费者可能需要维护状态</h3><p>某些场景下, 需要在多个轮询间存在聚合运算.</p><h3 id=处理长时间的处理>处理长时间的处理</h3><p>有些时候, 消息的处理耗时较长, 比如与其他系统交互或者进行比较复杂的运算.
 某些Kafka版本的消费者, 两次轮询的间隔不能太长 (0.10.0.0之前版本的消费者没有单独的心跳进程, 是通过轮询同时达到心跳目的). 太长, 消费者则会被认为是下线, 会发生再平衡.</p><h3 id=有且只有一次的消息投递>有且只有一次的消息投递</h3><p>有些场景需要至少一次的语义(没有消息丢失); 而某些场景则需要有些只有一次的语义. 但是当前Kafka没有提供完美的有且只有一次的支持. 需要与其他系统结合一起实现, 比如使用唯一的key写入数据库或者redis等存储中.</p><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//addozhang.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></article><aside class=sidebar><section class=sidebar_inner><h2>张晓辉</h2><div class=sidebar_description><ul><li>资深码农、云原生践行者</li><li>Kubernetes、DevOps、微服务</li></ul><p>微信订阅号：云原生指北。
-<img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/install-graalvm-on-m1-mac-with-sdkman/ class=nav-link title="使用 sdkman 在 M1 Mac 上 安装 graalvm sdk">使用 sdkman 在 M1 Mac 上 安装 graalvm sdk</a></li><li><a href=https://atbug.com/tracing-path-of-kubernetes-network-packets/ class=nav-link title="追踪 Kubernetes 中的网络流量">追踪 Kubernetes 中的网络流量</a></li><li><a href=https://atbug.com/kubernetes-pod-autoscale-on-prometheus-metrics/ class=nav-link title="Kubernetes HPA 基于 Prometheus 自定义指标的可控弹性伸缩">Kubernetes HPA 基于 Prometheus 自定义指标的可控弹性伸缩</a></li><li><a href=https://atbug.com/ebpf-wasm-service-mesh/ class=nav-link title="eBPF 和 Wasm：探索服务网格数据平面的未来">eBPF 和 Wasm：探索服务网格数据平面的未来</a></li><li><a href=https://atbug.com/deploy-vm-on-proxmox-with-terraform/ class=nav-link title="快速搭建实验环境：使用 Terraform 部署 Proxmox 虚拟机">快速搭建实验环境：使用 Terraform 部署 Proxmox 虚拟机</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
+<img src=../images/wechat_qr.jpg alt></div><a href=https://atbug.com/about/ class="button mt-1" role=button title=阅读更多>阅读更多</a><h2 class=mt-4>最新文章</h2><ul class=flex-column><li><a href=https://atbug.com/explore-simple-kubernetes-distribution/ class=nav-link title="探秘 k8e：极简 Kubernetes 发行版">探秘 k8e：极简 Kubernetes 发行版</a></li><li><a href=https://atbug.com/install-graalvm-on-m1-mac-with-sdkman/ class=nav-link title="使用 sdkman 在 M1 Mac 上 安装 graalvm sdk">使用 sdkman 在 M1 Mac 上 安装 graalvm sdk</a></li><li><a href=https://atbug.com/tracing-path-of-kubernetes-network-packets/ class=nav-link title="追踪 Kubernetes 中的网络流量">追踪 Kubernetes 中的网络流量</a></li><li><a href=https://atbug.com/kubernetes-pod-autoscale-on-prometheus-metrics/ class=nav-link title="Kubernetes HPA 基于 Prometheus 自定义指标的可控弹性伸缩">Kubernetes HPA 基于 Prometheus 自定义指标的可控弹性伸缩</a></li><li><a href=https://atbug.com/ebpf-wasm-service-mesh/ class=nav-link title="eBPF 和 Wasm：探索服务网格数据平面的未来">eBPF 和 Wasm：探索服务网格数据平面的未来</a></li></ul><div><h2 class="mt-4 taxonomy" id=categories-section>分类</h2><nav class=tags_nav><a href=https://atbug.com/categories/%E7%AC%94%E8%AE%B0/ class="post_tag button button_translucent" title=笔记>笔记
 <span class=button_tally>57</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" title=学习>学习
 <span class=button_tally>40</span></a>
@@ -20,13 +20,13 @@
 <span class=button_tally>4</span></a>
 <a href=https://atbug.com/categories/devops/ class="post_tag button button_translucent" title=devops>DEVOPS
 <span class=button_tally>2</span></a>
+<a href=https://atbug.com/categories/kubernetes/ class="post_tag button button_translucent" title=kubernetes>KUBERNETES
+<span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/%E5%AE%B9%E5%99%A8/ class="post_tag button button_translucent" title=容器>容器
 <span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/ class="post_tag button button_translucent" title=软件>软件
 <span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/envoy/ class="post_tag button button_translucent" title=envoy>ENVOY
-<span class=button_tally>1</span></a>
-<a href=https://atbug.com/categories/kubernetes/ class="post_tag button button_translucent" title=kubernetes>KUBERNETES
 <span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/serverless/ class="post_tag button button_translucent" title=serverless>SERVERLESS
 <span class=button_tally>1</span></a>
@@ -35,7 +35,7 @@
 <a href=https://atbug.com/categories/%E6%8A%98%E8%85%BE/ class="post_tag button button_translucent" title=折腾>折腾
 <span class=button_tally>1</span></a><br><div class="post_tags_toggle button">所有分类</div><div class=post_tags><div class=tags_list><a href=https://atbug.com/categories/devops/ class="post_tag button button_translucent" data-position=2 title=devops>DEVOPS<span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/envoy/ class="post_tag button button_translucent" data-position=1 title=envoy>ENVOY<span class=button_tally>1</span></a>
-<a href=https://atbug.com/categories/kubernetes/ class="post_tag button button_translucent" data-position=1 title=kubernetes>KUBERNETES<span class=button_tally>1</span></a>
+<a href=https://atbug.com/categories/kubernetes/ class="post_tag button button_translucent" data-position=2 title=kubernetes>KUBERNETES<span class=button_tally>2</span></a>
 <a href=https://atbug.com/categories/quickstart/ class="post_tag button button_translucent" data-position=4 title=quickstart>QUICKSTART<span class=button_tally>4</span></a>
 <a href=https://atbug.com/categories/serverless/ class="post_tag button button_translucent" data-position=1 title=serverless>SERVERLESS<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E5%AD%A6%E4%B9%A0/ class="post_tag button button_translucent" data-position=40 title=学习>学习<span class=button_tally>40</span></a>
@@ -54,11 +54,11 @@
 <a href=https://atbug.com/categories/%E7%BD%91%E5%85%B3/ class="post_tag button button_translucent" data-position=1 title=网关>网关<span class=button_tally>1</span></a>
 <a href=https://atbug.com/categories/%E7%BF%BB%E8%AF%91/ class="post_tag button button_translucent" data-position=15 title=翻译>翻译<span class=button_tally>15</span></a>
 <a href=https://atbug.com/categories/%E8%BD%AF%E4%BB%B6/ class="post_tag button button_translucent" data-position=2 title=软件>软件<span class=button_tally>2</span></a><div class=tags_sort><span title="sort alphabetically">[A~Z]</span><span title="sort by count">[0~9]</span></div><span class=tags_hide><svg class="icon"><use xlink:href="#closeme"/></svg></span></div></div></nav></div><div><h2 class="mt-4 taxonomy" id=tags-section>标签</h2><nav class=tags_nav><a href=https://atbug.com/tags/kubernetes/ class="post_tag button button_translucent" title=kubernetes>KUBERNETES
-<span class=button_tally>32</span></a>
+<span class=button_tally>33</span></a>
 <a href=https://atbug.com/tags/java/ class="post_tag button button_translucent" title=java>JAVA
 <span class=button_tally>26</span></a>
 <a href=https://atbug.com/tags/docker/ class="post_tag button button_translucent" title=docker>DOCKER
-<span class=button_tally>9</span></a>
+<span class=button_tally>10</span></a>
 <a href=https://atbug.com/tags/kafka/ class="post_tag button button_translucent" title=kafka>KAFKA
 <span class=button_tally>9</span></a>
 <a href=https://atbug.com/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/ class="post_tag button button_translucent" title=云原生>云原生
@@ -101,7 +101,7 @@
 <a href=https://atbug.com/tags/develop/ class="post_tag button button_translucent" data-position=1 title=develop>DEVELOP<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/devops/ class="post_tag button button_translucent" data-position=1 title=devops>DEVOPS<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/docekr/ class="post_tag button button_translucent" data-position=1 title=docekr>DOCEKR<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/docker/ class="post_tag button button_translucent" data-position=9 title=docker>DOCKER<span class=button_tally>9</span></a>
+<a href=https://atbug.com/tags/docker/ class="post_tag button button_translucent" data-position=10 title=docker>DOCKER<span class=button_tally>10</span></a>
 <a href=https://atbug.com/tags/dubbo/ class="post_tag button button_translucent" data-position=1 title=dubbo>DUBBO<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/ebpf/ class="post_tag button button_translucent" data-position=1 title=ebpf>EBPF<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/elasticsearch/ class="post_tag button button_translucent" data-position=1 title=elasticsearch>ELASTICSEARCH<span class=button_tally>1</span></a>
@@ -133,7 +133,7 @@
 <a href=https://atbug.com/tags/knative/ class="post_tag button button_translucent" data-position=2 title=knative>KNATIVE<span class=button_tally>2</span></a>
 <a href=https://atbug.com/tags/kubelet/ class="post_tag button button_translucent" data-position=1 title=kubelet>KUBELET<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/kubenetes/ class="post_tag button button_translucent" data-position=1 title=kubenetes>KUBENETES<span class=button_tally>1</span></a>
-<a href=https://atbug.com/tags/kubernetes/ class="post_tag button button_translucent" data-position=32 title=kubernetes>KUBERNETES<span class=button_tally>32</span></a>
+<a href=https://atbug.com/tags/kubernetes/ class="post_tag button button_translucent" data-position=33 title=kubernetes>KUBERNETES<span class=button_tally>33</span></a>
 <a href=https://atbug.com/tags/kuernetes/ class="post_tag button button_translucent" data-position=1 title=kuernetes>KUERNETES<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/kvm/ class="post_tag button button_translucent" data-position=1 title=kvm>KVM<span class=button_tally>1</span></a>
 <a href=https://atbug.com/tags/linux/ class="post_tag button button_translucent" data-position=3 title=linux>LINUX<span class=button_tally>3</span></a>

@@ -1,4 +1,80 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 乱世浮生</title><link>https://atbug.com/post/</link><description>Recent content in Posts on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 27 Jan 2022 11:07:34 +0800</lastBuildDate><atom:link href="https://atbug.com/post/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 sdkman 在 M1 Mac 上 安装 graalvm sdk</title><link>https://atbug.com/install-graalvm-on-m1-mac-with-sdkman/</link><pubDate>Thu, 27 Jan 2022 11:07:34 +0800</pubDate><guid>https://atbug.com/install-graalvm-on-m1-mac-with-sdkman/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 乱世浮生</title><link>https://atbug.com/post/</link><description>Recent content in Posts on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 07 Feb 2022 01:00:29 +0800</lastBuildDate><atom:link href="https://atbug.com/post/index.xml" rel="self" type="application/rss+xml"/><item><title>探秘 k8e：极简 Kubernetes 发行版</title><link>https://atbug.com/explore-simple-kubernetes-distribution/</link><pubDate>Mon, 07 Feb 2022 01:00:29 +0800</pubDate><guid>https://atbug.com/explore-simple-kubernetes-distribution/</guid><description>
+&lt;h2 id="tldr">TL;DR&lt;/h2>
+&lt;p>本文介绍并安装体验了极简 Kubernetes 发行版，也顺便分析学习下编译的流程。&lt;/p>
+&lt;h2 id="背景">背景&lt;/h2>
+&lt;p>&lt;a href="https://github.com/xiaods/k8e">k8e&lt;/a> 本意为 &lt;em>kuber easy&lt;/em>，是一个 Kubernetes 的极简发行版，意图让云原生落地部署 Kubernetes 更轻松。k8e 是基于另一个发行版 &lt;a href="https://github.com/rancher/k3s">k3s&lt;/a> ，经过裁剪（去掉了 Edge/IoT 相关功能、traefix等）、扩展（加入 ingress、sidecar 实现、cilium等）而来。&lt;/p>
+&lt;p>k8e 具有以下特性：&lt;/p>
+&lt;ul>
+&lt;li>单二进制文件，集成了 k8s 的各种组件、containerd、runc、kubectl、nerdctl 等&lt;/li>
+&lt;li>使用 cilium 作为 cni 的实现，方便 eBPF 的快速落地&lt;/li>
+&lt;li>支持基于 pipy 的 ingress、sidecar proxy，实现应用流量一站式管理&lt;/li>
+&lt;li>只维护一个 k8s 版本，目前是 1.21&lt;/li>
+&lt;li>按照私有云的经验增加、优化代码&lt;/li>
+&lt;/ul>
+&lt;p>得益于这些特性，k8e 非常适合CI、开发和企业级部署，单机版的集群适合技术验证环境。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/02/07/16441611053071.png" alt="组件架构图">&lt;/p>
+&lt;h2 id="安装测试">安装测试&lt;/h2>
+&lt;p>可以从 GitHub 上下载对应版本的&lt;a href="https://github.com/xiaods/k8e/releases">二进制文件&lt;/a>，也可以自己手动编译（后面对编译的流程进行了简单的分析）。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">sudo k8e check-config
+sudo k8e server &lt;span class="p">&amp;amp;&lt;/span>
+&lt;span class="c1"># Kubeconfig is written to /etc/k8e/k8e.yaml&lt;/span>
+&lt;span class="nb">export&lt;/span> &lt;span class="nv">KUBECONFIG&lt;/span>&lt;span class="o">=&lt;/span>/etc/k8e/k8e.yaml
+&lt;span class="c1"># On a different node run the below. NODE_TOKEN comes from&lt;/span>
+&lt;span class="c1"># /var/lib/k8e/server/node-token on your server&lt;/span>
+sudo k8e agent --server https://myserver:6443 --token &lt;span class="si">${&lt;/span>&lt;span class="nv">NODE_TOKEN&lt;/span>&lt;span class="si">}&lt;/span>
+&lt;span class="c1"># query all node from k8s cluster&lt;/span>
+sudo k8e kubectl get nodes
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>因为没有提供默认的 cni 实现，此时 pod 都处于 &lt;code>Pending&lt;/code> 状态。需要手动安装 cilium：&lt;/p>
+&lt;p>通过 &lt;code>k8e check-config&lt;/code> 可以找到 builddata 目录：&lt;code>/var/lib/k8e/data/5a7ced03412504a18bf3f49cbee5dafca7187d86ef8fdaa789448d53d7fbb823&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">/var/lib/k8e/data/5a7ced03412504a18bf3f49cbee5dafca7187d86ef8fdaa789448d53d7fbb823/bin/cilium install
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>cilium 安装成功后 Pod 成功运行，可以查看 cilium 状态：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">/var/lib/k8e/data/5a7ced03412504a18bf3f49cbee5dafca7187d86ef8fdaa789448d53d7fbb823/bin/cilium status
+/¯¯&lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span> /¯¯&lt;span class="se">\_&lt;/span>_/¯¯&lt;span class="se">\ &lt;/span> Cilium: OK
+&lt;span class="se">\_&lt;/span>_/¯¯&lt;span class="se">\_&lt;/span>_/ Operator: OK
+/¯¯&lt;span class="se">\_&lt;/span>_/¯¯&lt;span class="se">\ &lt;/span> Hubble: disabled
+&lt;span class="se">\_&lt;/span>_/¯¯&lt;span class="se">\_&lt;/span>_/ ClusterMesh: disabled
+&lt;span class="se">\_&lt;/span>_/
+DaemonSet cilium Desired: 1, Ready: 1/1, Available: 1/1
+Deployment cilium-operator Desired: 1, Ready: 1/1, Available: 1/1
+Containers: cilium Running: &lt;span class="m">1&lt;/span>
+cilium-operator Running: &lt;span class="m">1&lt;/span>
+Cluster Pods: 3/3 managed by Cilium
+Image versions cilium quay.io/cilium/cilium:v1.10.5: &lt;span class="m">1&lt;/span>
+cilium-operator quay.io/cilium/operator-generic:v1.10.5: &lt;span class="m">1&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>或者执行 &lt;code>cilium connectivity test&lt;/code> 进行检查网络。&lt;/p>
+&lt;p>&lt;strong>上面是作为开发验证环境的部署，若要部署标准 Kubernetes，可以参考&lt;a href="https://getk8e.com/docs/install/quick-start/">官方文档&lt;/a>。&lt;/strong>&lt;/p>
+&lt;h2 id="编译流程分析">编译流程分析&lt;/h2>
+&lt;p>k8e 的编译部署简单的两条命令就能完成：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">make generate
+make
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行 &lt;code>make generate&lt;/code> 下载内置的几个工具：&lt;code>runc&lt;/code>、&lt;code>nerdctl&lt;/code>、&lt;code>cilium&lt;/code>，保存在 &lt;code>bin&lt;/code> 目录中。&lt;/p>
+&lt;p>&lt;code>.DEFAULT_GOAL&lt;/code> 是 &lt;code>ci&lt;/code>，执行 &lt;code>make&lt;/code> 则会执行 target &lt;code>ci&lt;/code> 。&lt;/p>
+&lt;h3 id="dapper">Dapper&lt;/h3>
+&lt;p>在 &lt;em>makefile&lt;/em> 的第一行是 &lt;code>TARGETS := $(shell ls hack | grep -v \\.sh | grep -v package-airgap| grep -v clean)&lt;/code> 定义了变量 &lt;code>TARGETS&lt;/code>，然后 &lt;code>$(TARGETS): .dapper&lt;/code> 为几个 target 指定前置条件。其中就有 &lt;code>ci&lt;/code>，因此在执行 &lt;code>ci&lt;/code> 之前会先执行 target &lt;code>.dapper&lt;/code>。&lt;/p>
+&lt;p>target &lt;code>.dapper&lt;/code> 用于下载 &lt;a href="https://github.com/rancher/dapper">rancher dapper&lt;/a>。dapper 是 Docker 的构建封装器，执行时会使用位于源码根目录 &lt;code>Dockerfile.dapper&lt;/code> 构建镜像，并以此作为代码构建环境。&lt;/p>
+&lt;p>在 &lt;code>Dockerfile.dapper&lt;/code> 中，会准备构建环境，以及几个需要关注的设置：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>WORKDIR&lt;/code>：&lt;code>/go/src/github.com/xiaods/k8e/&lt;/code>，也就是容器的工作目录。&lt;code>dapper&lt;/code> 启动时会将源码内容拷贝到容器中&lt;/li>
+&lt;li>&lt;code>ENTRYPOINT&lt;/code>：&lt;code>[&amp;quot;./hack/entry.sh&amp;quot;]&lt;/code>，容器启动的 entrypoint。&lt;/li>
+&lt;li>&lt;code>CMD&lt;/code>：&lt;code>[&amp;quot;ci&amp;quot;]&lt;/code>，容器运行时的默认 CMD&lt;/li>
+&lt;li>&lt;code>ENV&lt;/code>
+&lt;ul>
+&lt;li>&lt;code>DAPPER_SOURCE&lt;/code>：&lt;code>/go/src/github.com/xiaods/k8e/&lt;/code>&lt;/li>
+&lt;li>&lt;code>DAPPER_OUTPUT&lt;/code>：&lt;code>./bin ./dist ./build/out&lt;/code>，构建完成后，会执行 &lt;code>docker cp ${DAPPER_SOURCE}/${DAPPER_OUTPUT} .&lt;/code> 将容器中的内容拷贝到容器外。&lt;/li>
+&lt;li>&amp;hellip;&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>dapper&lt;/em> 下载完成后会执行 &lt;code>ci&lt;/code> 的命令：&lt;code>./.dapper ci&lt;/code>，根据 &lt;code>Dockerfile.dapper&lt;/code> 的配置，启动后会执行 &lt;code>./hack/entry.sh ci&lt;/code>。&lt;/p>
+&lt;h3 id="ci">CI&lt;/h3>
+&lt;p>CI 的流程与 k3s 的流程相比精简了很多。在 &lt;code>./hack/ci&lt;/code> 中，会依次执行：&lt;/p>
+&lt;ul>
+&lt;li>./hack/validate：代码格式化、校验&lt;/li>
+&lt;li>./hack/build：代码编译&lt;/li>
+&lt;li>./hack/package：将前面下载、编译的 &lt;code>bin/&lt;/code> 目录下的二进制一同打包到同一个二进制文件中（使用 &lt;a href="https://github.com/go-bindata/go-bindata">go-bindata&lt;/a>）。&lt;/li>
+&lt;li>./hack/binary_size_check.sh：二进制文件大小的检查，是否超过 81 M（k3s 的是64M，由于加入了 cilium 等 cli，体积会有增加）。&lt;/li>
+&lt;/ul></description></item><item><title>使用 sdkman 在 M1 Mac 上 安装 graalvm sdk</title><link>https://atbug.com/install-graalvm-on-m1-mac-with-sdkman/</link><pubDate>Thu, 27 Jan 2022 11:07:34 +0800</pubDate><guid>https://atbug.com/install-graalvm-on-m1-mac-with-sdkman/</guid><description>
 &lt;p>SDKMAN 是一款管理多版本 SDK 的工具，可以实现在多个版本间的快速切换。安装和使用非常简单：&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">curl -s &lt;span class="s2">&amp;#34;https://get.sdkman.io&amp;#34;&lt;/span> &lt;span class="p">|&lt;/span> bash
 sdk install java x.y.z
