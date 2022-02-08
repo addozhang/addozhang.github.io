@@ -74,7 +74,7 @@ make
 &lt;li>./hack/build：代码编译&lt;/li>
 &lt;li>./hack/package：将前面下载、编译的 &lt;code>bin/&lt;/code> 目录下的二进制一同打包到同一个二进制文件中（使用 &lt;a href="https://github.com/go-bindata/go-bindata">go-bindata&lt;/a>）。&lt;/li>
 &lt;li>./hack/binary_size_check.sh：二进制文件大小的检查，是否超过 81 M（k3s 的是64M，由于加入了 cilium 等 cli，体积会有增加）。&lt;/li>
-&lt;/ul></description></item><item><title>使用 sdkman 在 M1 Mac 上 安装 graalvm sdk</title><link>https://atbug.com/install-graalvm-on-m1-mac-with-sdkman/</link><pubDate>Thu, 27 Jan 2022 11:07:34 +0800</pubDate><guid>https://atbug.com/install-graalvm-on-m1-mac-with-sdkman/</guid><description>
+&lt;/ul></description></item><item><title>使用 sdkman 在 M1 Mac 上 安装 graalvm jdk</title><link>https://atbug.com/install-graalvm-on-m1-mac-with-sdkman/</link><pubDate>Thu, 27 Jan 2022 11:07:34 +0800</pubDate><guid>https://atbug.com/install-graalvm-on-m1-mac-with-sdkman/</guid><description>
 &lt;p>SDKMAN 是一款管理多版本 SDK 的工具，可以实现在多个版本间的快速切换。安装和使用非常简单：&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">curl -s &lt;span class="s2">&amp;#34;https://get.sdkman.io&amp;#34;&lt;/span> &lt;span class="p">|&lt;/span> bash
 sdk install java x.y.z
