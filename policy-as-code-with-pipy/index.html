@@ -14,7 +14,6 @@ pipy-repo-697bbd9f4b-94pld        1/1     Running       <span class=m>0</span>  
 </code></pre></div><h4 id=发布策略>发布策略</h4><p>要使用的策略（脚本和配置）位于 <code>./repo/scripts</code> 目录中。前面提到 Repo 提供了 REST API 来管理 codebase（策略）。</p><p>这里提供了脚本 <code>init-codebase.sh</code>，通过 <code>curl</code> 命令将策略发布到策略服务器。</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>./init-codebase.sh
 </code></pre></div><h3 id=部署策略引擎>部署策略引擎</h3><p>这个版本中，使用 helm chart 完成证书的创建、服务的部署以及 Admission WebHook 的注册。</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>helm install policy-as-code ./policy-as-code -n default
 </code></pre></div><p>确保 Pod 正常运行：</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>kubectl get po -n pipy
-kubectl get po -n pipy
 NAME                              READY   STATUS    RESTARTS   AGE
 pipy-repo-697bbd9f4b-94pld        1/1     Running   <span class=m>0</span>          2m
 policy-as-code-5867f9cdb9-9vwks   1/1     Running   <span class=m>0</span>          8s

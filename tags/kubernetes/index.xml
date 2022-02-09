@@ -1284,7 +1284,6 @@ pipy-repo-697bbd9f4b-94pld 1/1 Running &lt;span class="m">0&lt;/span> 10s
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">helm install policy-as-code ./policy-as-code -n default
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>确保 Pod 正常运行：&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl get po -n pipy
-kubectl get po -n pipy
 NAME READY STATUS RESTARTS AGE
 pipy-repo-697bbd9f4b-94pld 1/1 Running &lt;span class="m">0&lt;/span> 2m
 policy-as-code-5867f9cdb9-9vwks 1/1 Running &lt;span class="m">0&lt;/span> 8s
