@@ -7,7 +7,7 @@
 &lt;ul>
 &lt;li>单二进制文件，集成了 k8s 的各种组件、containerd、runc、kubectl、nerdctl 等&lt;/li>
 &lt;li>使用 cilium 作为 cni 的实现，方便 eBPF 的快速落地&lt;/li>
-&lt;li>支持基于 pipy 的 ingress、sidecar proxy，实现应用流量一站式管理&lt;/li>
+&lt;li>支持基于 &lt;a href="https://github.com/flomesh-io/pipy">Pipy&lt;/a> 的 ingress、sidecar proxy，实现应用流量一站式管理&lt;/li>
 &lt;li>只维护一个 k8s 版本，目前是 1.21&lt;/li>
 &lt;li>按照私有云的经验增加、优化代码&lt;/li>
 &lt;/ul>
