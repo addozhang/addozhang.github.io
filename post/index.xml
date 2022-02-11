@@ -9959,7 +9959,7 @@ mysql &amp;ldquo;5.7&amp;rdquo; 时区 TZ=Europe/London
 &lt;/ul></description></item><item><title>控制 Pod 内容器的启动顺序</title><link>https://atbug.com/control-process-order-of-pod-containers/</link><pubDate>Thu, 12 Mar 2020 22:05:16 +0800</pubDate><guid>https://atbug.com/control-process-order-of-pod-containers/</guid><description>
 &lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/30/screenshot-20210430-at-092623.png" alt="">&lt;/p>
 &lt;p>2021.4.30 更新：&lt;/p>
-&lt;p>最新的方案，请跳转新篇 &lt;a href="https://mp.weixin.qq.com/s/8DqF_N_fjiM9AOouvddvgA">Kubernetes 上如何控制容器的启动顺序&lt;/a>。&lt;/p>
+&lt;p>最新的方案，请跳转新篇 &lt;a href="https://atbug.com/k8s-1.18-container-start-sequence-control/">Kubernetes 上如何控制容器的启动顺序&lt;/a>。&lt;/p>
 &lt;hr>
 &lt;h2 id="背景">背景&lt;/h2>
 &lt;p>众所周知, Kubernetes Pod 内有两种容器: 初始化容器(init container)和应用容器(app container). 其中初始化容器的执行先于应用容器, 并且初始化容器和应用容器的个数分别为 &lt;code>0~n&lt;/code> 和 &lt;code>1~n&lt;/code>.&lt;/p>
