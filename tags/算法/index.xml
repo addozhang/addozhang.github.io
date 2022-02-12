@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>算法 on 乱世浮生</title><link>https://atbug.com/tags/%E7%AE%97%E6%B3%95/</link><description>Recent content in 算法 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 14 Oct 2017 05:57:34 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/%E7%AE%97%E6%B3%95/index.xml" rel="self" type="application/rss+xml"/><item><title>Raft算法学习</title><link>https://atbug.com/articles/learning-raft/</link><pubDate>Sat, 14 Oct 2017 05:57:34 +0000</pubDate><guid>https://atbug.com/articles/learning-raft/</guid><description>Raft 强一致性算法
-名词 复制状态机 复制状态机是通过复制日志来实现的, 按照日志中的命令的顺序来执行这些命令. 相同的状态机执行相同的日志命令, 获得相同的执行结果.
-任期号 (currentTerm) 每个成员都会保存一个任期号, 称为服务器最后知道的任期号.
-投票的候选人id (votedFor) 当前任期内, 投票的候选人id, 即响应投票请求(见下文)返回true时的候选人id.
-已被提交的最大日志条目的索引值 (commitIndex) 每个成员都会持有已被提交的最大日志条目的索引值
-被状态机执行的最⼤日志条⽬的索引值 (lastApplied) 每个成员都会持有被状态机执行的最⼤日志条⽬的索引值
-请求 日志复制请求 (AppendEntries RPC) 由领导人发送给其他服务器, 也用作heartbeat
-请求内容
-term 领导人的任期号 leaderId 领导人的id prevLogIndex 已经被状态机执行的最大索引值, 即最新日志之前的日志的索引值. preLogTerm 最新日志之前的日志的领导人的任期号 entries[] 需要被复制的日志条目 leaderCommit 领导人提交的日志条目索引值 响应内容</description></item></channel></rss>

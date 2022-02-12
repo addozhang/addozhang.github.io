@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>云原生 on 乱世浮生</title><link>https://atbug.com/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/</link><description>Recent content in 云原生 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 07 Feb 2022 01:00:29 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/index.xml" rel="self" type="application/rss+xml"/><item><title>探秘 k8e：极简 Kubernetes 发行版</title><link>https://atbug.com/articles/explore-simple-kubernetes-distribution/</link><pubDate>Mon, 07 Feb 2022 01:00:29 +0800</pubDate><guid>https://atbug.com/articles/explore-simple-kubernetes-distribution/</guid><description>TL;DR 本文介绍并安装体验了极简 Kubernetes 发行版，也顺便分析学习下编译的流程。
+背景 k8e 本意为 kuber easy，是一个 Kubernetes 的极简发行版，意图让云原生落地部署 Kubernetes 更轻松。k8e 是基于另一个发行版 k3s ，经过裁剪（去掉了 Edge/IoT 相关功能、traefix等）、扩展（加入 ingress、sidecar 实现、cilium等）而来。
+k8e 具有以下特性：
+单二进制文件，集成了 k8s 的各种组件、containerd、runc、kubectl、nerdctl 等 使用 cilium 作为 cni 的实现，方便 eBPF 的快速落地 支持基于 Pipy 的 ingress、sidecar proxy，实现应用流量一站式管理 只维护一个 k8s 版本，目前是 1.</description></item><item><title>追踪 Kubernetes 中的网络流量</title><link>https://atbug.com/articles/tracing-path-of-kubernetes-network-packets/</link><pubDate>Sat, 22 Jan 2022 10:15:31 +0800</pubDate><guid>https://atbug.com/articles/tracing-path-of-kubernetes-network-packets/</guid><description>译者注：
+这篇文章很全面的罗列出了 Kubernetes 中涉及的网络知识，从 Linux 内核的网络内容，到容器、Kubernetes，一一进行了详细的说明。
+​文章篇幅有点长，不得不说，网络是很复杂很麻烦的一层，但恰恰这层多年来变化不大。希望翻译的内容对大家能有所帮助，有误的地方，也欢迎大家指正。
+本文翻译获得 Learnk8s 的授权，原文 Tracing the path of network traffic in Kubernetes 作者 Kristijan Mitevski。
+TL;DR： 本文将代理了解 Kubernetes 集群内外的数据流转。从最初的 Web 请求开始，一直到托管应用程序的容器。
+目录 目录 Kubernetes 网络要求 Linux 网络命名空间如果在 pod 中工作 Pause 容器创建 Pod 中的网络命名空间 为 Pod 分配了 IP 地址 检查集群中 pod 到 pod 的流量 Pod 命名空间连接到以太网桥接器 跟踪同一节点上 pod 间的流量 跟踪不同节点上 pod 间的通信 位运算的工作原理 容器网络接口 - CNI 检查 pod 到服务的流量 使用 Netfilter 和 Iptables 拦截和重写流量 检查服务的响应 回顾 Kubernetes 网络要求 在深入了解 Kubernetes 中的数据流转之前，让我们先澄清下 Kubernetes 网络的要求。</description></item><item><title>Kubernetes HPA 基于 Prometheus 自定义指标的可控弹性伸缩</title><link>https://atbug.com/articles/kubernetes-pod-autoscale-on-prometheus-metrics/</link><pubDate>Tue, 18 Jan 2022 12:03:59 +0800</pubDate><guid>https://atbug.com/articles/kubernetes-pod-autoscale-on-prometheus-metrics/</guid><description>在《Kubernetes 的自动伸缩你用对了吗？》 一文中详细说明了如何使用 Kubernetes 的自动伸缩。在 Kubernetes 中弹性伸缩主要有三种：HPA、VPA、CA。本文不再详细说明，有兴趣的可以看那篇文章。这里主要来说下 Pod 水平缩放 HPA。
+随着 Kubernetes v1.23 的发布，HPA 的 API 来到了稳定版 autoscaling/v2：
+基于自定义指标的伸缩 基于多项指标的伸缩 可配置的伸缩行为 从最初的 v1 版本 HPA 只支持 CPU、内存利用率的伸缩，到后来的自定义指标、聚合层 API 的支持，到了 v1.18 版本又加入了配置伸缩行为的支持，HPA 也越来越好用、可靠。
+依靠 CPU 或者内存指标的扩容并非使用所有系统，看起来也没那么可靠。对大部分的 web 后端系统来说，基于 RPS（每秒请求数）的弹性伸缩来处理突发的流量则会更加靠谱。</description></item><item><title>策略即代码：为了 OpenPolicyAgent 学 Rego？试试 Javascript</title><link>https://atbug.com/articles/policy-as-code-with-pipy/</link><pubDate>Wed, 08 Dec 2021 07:49:37 +0800</pubDate><guid>https://atbug.com/articles/policy-as-code-with-pipy/</guid><description>距离上个版本 用 Pipy 实现 OPA，已经过去快半年了。当初使用Pipy 实现了可信镜像仓库的检查，那时的版本实现起来会稍微复杂，从策略仓库到证书创建到Admission Webhook 的创建都需要大量的人工操作，配置和逻辑也还是耦合在一起。
+这个版本安装和使用起来会更加简单。
+当初我用“不务正业”来形容 Pipy 实现准入控制，等看完这篇文章，欢迎留言说说你的看法。
+架构 还是继续上次的场景，在 Pod 创建时对 Pod 使用的镜像所在仓库进行检查，以及检查镜像的 tag 是否合法。
+这里借助 Pipy Repo 的能力，将代表策略的脚本和配置交由 Repo 进行管理；Pipy 实例实时从 Pipy Repo 同步策略，并进行动态加载。
+同时 Pipy Repo 对外提供 REST API 来管理策略，对策略的修改更容易。也方便与企业现有管理后台进行对接。
+下面就开始部署验证，这里所使用的所有代码都已提交到GitHub 仓库：https://github.com/flomesh-io/demo-policy-as-code。
+运行 git clone https://github.</description></item><item><title>沙盒化容器：是容器还是虚拟机</title><link>https://atbug.com/articles/sandboxed-container/</link><pubDate>Tue, 07 Dec 2021 07:55:16 +0800</pubDate><guid>https://atbug.com/articles/sandboxed-container/</guid><description>随着 IT 技术的发展，AI、区块链和大数据等技术提升了对应用毫秒级扩展的需求，开发人员也面临着的功能快速推出的压力。混合云是新常态，数字化转型是保持竞争力的必要条件，虚拟化成为这些挑战的基本技术。
+在虚拟化的世界，有两个词耳熟能详：虚拟机和容器。前者是对硬件的虚拟化，后者则更像是操作系统的虚拟化。两者都提供了沙箱的能力：虚拟机通过硬件级抽象提供，而容器则使用公共内核提供进程级的隔离。有很多人将容器看成是“轻量化的虚拟机”，通常情况下我们认为容器是安全的，那到底是不是跟我们想象的一样？
+容器：轻量化的虚拟机？ 容器是打包、共享和部署应用的现代化方式，帮助企业实现快速、标准、灵活地完成服务交互。容器化是建立在 Linux 的命名空间（namespace）和控制组（cgroup） 的设计之上。
+命名空间创建一个几乎隔离的用户空间，并为应用提供专用的系统资源，如文件系统、网络堆栈、进程ID和用户ID。随着用户命名空间的引入，内核版本 3.8 提供了对容器功能的支持：Mount（mnt）、进程 ID（pid）、Network（net）、进程间通信（ipc）、UTS、用户 ID（user）6 个命名空间（如今已达 8 个，后续加入了 cgroup 和 time 命名空间）。
+cgroup 则实施对应用的资源限制、优先级、记账和控制。cgroup可以控制 CPU、内存、设备和网络等资源。
+同时使用 namespace 和 cgroup 使得我们可以在一台主机上安全地运行多个应用，并且每个应用都位于隔离的环境中。
+虚拟机提供更强大的隔离 虽然容器很棒，足够轻量级。但通过上面的描述，同一个主机上的多个容器其实是共享同一个操作系统内核，只是做到了操作系统级的虚拟化。虽然命名空间提供了高度的隔离，但仍然有容器可以访问的资源，这些资源并没有提供命名空间。这些资源是主机上所有容器共有的，比如内核 Keyring、/proc、系统时间、内核模块、硬件。
+我们都知道没有 100% 安全的软件，容器化的应用也一样，从应用源码到依赖库到容器 base 镜像，甚至容器引擎本身都可能存在安全漏洞。发生容器逃逸的风险远高于虚拟机，黑客可以利用这些逃逸漏洞，操作容器的外部资源也就是宿主机上的资源。除了漏洞，有时使用的不当也会带来安全风险，比如为容器分配了过高的权限（CAP_SYS_ADMIN 功能、特权权限），都可能导致容器逃逸。
+而虚拟机依靠硬件级的虚拟化，实现的硬件隔离比命名空间隔离提供了更强大的安全边界。与容器相比，虚拟机提供了更高程度的隔离，只因其有自己的内核。
+由此可见，容器并不是真正的“沙盒”，也并不是轻量化的虚拟机。有没有可能为容器增加一个更安全的边界，尽可能的与主机操作系统隔离，做到类似虚拟机的强隔离，使其成为真正的“沙盒”？</description></item><item><title>低复杂度 - 服务网格的下一站</title><link>https://atbug.com/articles/service-mesh-unnecessary-complexity/</link><pubDate>Fri, 15 Oct 2021 07:58:25 +0800</pubDate><guid>https://atbug.com/articles/service-mesh-unnecessary-complexity/</guid><description>译者：
+作为一个曾经在制造业企业的基础架构团队任职，为支持公司的“互联网基因”和“数字化转型”落地了云原生基础设施平台，并在尝试采用服务网格未成的我来说，看到这篇文章深有感触。尤其是文中所说的“人少，问题多，需要快速输出价值”，直戳到了痛处。有限的人手有限的时间，我们需要将大部分精力集中在解决成熟度曲线较低的基本问题上，要想很好的运行复杂的系统是非常困难的。
+服务网格是一个新的基础设施层，可以承载很多的功能，未来还会有更大的想象空间和光明的未来。
+以上的种种原因，也促使我后来选择进入一家提供服务网格的产品企业，也希望服务网格可以被更简单的使用。
+“道阻且长，行则将至！”
+本文翻译自 Chris Campbell 的 How Unnecessary Complexity Gave the Service Mesh a Bad Name
+关键要点 采用服务网格有巨大的价值，但必须以轻量级的方式进行，以避免不必要的复杂性。 在实施服务网时，要采取务实的方法，与技术的核心功能保持一致，并小心干扰（译者：注意力的分散）。 服务网格的一些核心特性包括标准化监控、自动加密和身份识别、智能路由、可靠的重试和网络可扩展性。 服务网格可以提供强大的功能，但这些功能会分散本应对核心优势的关注，并且这些功能也不是实施服务网格的主要原因。 在初始实施服务网格时没有必要去关注那些明显会分散注意力的功能，比如复杂的控制平面、多集群支持、Envoy、WASM 和 A/B 测试。 服务网格是 Kubernetes 世界中的一个热门话题，但许多潜在的采用者已经有些失望了。服务网格的落地受到压倒性的复杂性和看似无穷无尽的供应商解决方案的限制。在我亲自浏览了这个领域之后，我发现采用服务网格具有巨大的价值，但它必须以轻量级的方式完成，以避免不必要的复杂性。尽管普遍存在幻灭感，但服务网格的未来依然光明。
+在工作中学习 我进入服务网格的世界始于我在一家老牌的财富 500 强技术公司担任云计算架构师的角色。在开始我们的服务网格之旅时，我身边有许多强大的工程师，但大多数人几乎没有云计算开发经验。我们的组织诞生于云计算之前，完全实现云计算的价值需要时间。我们的传统业务线主要集中在技术栈的硬件元素上，云计算的决策最初是由为运送硬件或为该硬件提供固件和驱动程序而开发的流程驱动的。
+随着该组织经历其“数字化转型”，它越来越依赖于提供高质量的软件服务，并逐渐开发出更好的方法。但作为云计算架构师，我仍在为优先考虑硬件的业务流程，以及具有不同技能、流程和信念的工程团队导航。随着时间的推移，我和我的团队在将 .</description></item><item><title>使用 Flomesh 进行 Dubbo 服务治理</title><link>https://atbug.com/articles/enhance-dubbo-service-governance-with-flomesh/</link><pubDate>Wed, 18 Aug 2021 09:50:28 +0800</pubDate><guid>https://atbug.com/articles/enhance-dubbo-service-governance-with-flomesh/</guid><description>写在最前 和上一篇《使用 Flomesh 强化 Spring Cloud 服务治理》一样，这次同样是在无代码侵入的情况下对 Dubbo 服务治理的提升。
+更多治理场景陆续添加中，有兴趣的可关注 https://github.com/flomesh-io/service-mesh-dubbo-demo。
+开源的 Pipy 作为 Flomesh 的核心，得益于其轻量及灵活性可以通过编程的方式轻松快速的支持多中平台的服务发现机制，比如 Eureka、Consul、Nacos 等。
+概览 细节 环境搭建 搭建 Kubernetes 环境，可以选择 kubeadm 进行集群搭建。也可以选择 minikube、k3s、Kind 等，本文使用 k3s。
+使用 k3d 安装 k3s。k3d 将在 Docker 容器中运行 k3s，因此需要保证已经安装了 Docker。
+$ k3d cluster create dubbo-demo -p &amp;#34;80:80@loadbalancer&amp;#34; --k3s-server-arg &amp;#39;--no-deploy=traefik&amp;#39; 安装 Flomesh 从仓库 https://github.</description></item><item><title>使用 Flomesh 强化 Spring Cloud 服务治理</title><link>https://atbug.com/articles/enhance-springcloud-service-governance-with-flomesh/</link><pubDate>Tue, 17 Aug 2021 18:47:33 +0800</pubDate><guid>https://atbug.com/articles/enhance-springcloud-service-governance-with-flomesh/</guid><description>写在最前 这篇是关于如何使用 Flomesh 服务网格来强化 Spring Cloud 的服务治理能力，降低 Spring Cloud 微服务架构落地服务网格的门槛，实现“自主可控”。
+文档在 github 上持续更新，欢迎大家一起讨论：https://github.com/flomesh-io/flomesh-bookinfo-demo。
+架构 环境搭建 搭建 Kubernetes 环境，可以选择 kubeadm 进行集群搭建。也可以选择 minikube、k3s、Kind 等，本文使用 k3s。
+使用 k3d 安装 k3s。k3d 将在 Docker 容器中运行 k3s，因此需要保证已经安装了 Docker。
+$ k3d cluster create spring-demo -p &amp;#34;81:80@loadbalancer&amp;#34; --k3s-server-arg &amp;#39;--no-deploy=traefik&amp;#39; 安装 Flomesh 从仓库 https://github.</description></item><item><title>Open Policy Agent: Top 5 Kubernetes 准入控制策略</title><link>https://atbug.com/articles/open-policy-agent-top-5-kubernetes-admission-control/</link><pubDate>Mon, 12 Jul 2021 08:20:40 +0800</pubDate><guid>https://atbug.com/articles/open-policy-agent-top-5-kubernetes-admission-control/</guid><description>如何使用 Open Policy Agent 实现准入策略控制，可以参考这里
+本文翻译自 Open Policy Agent: The Top 5 Kubernetes Admission Control Policies
+Kubernetes 开发人员和平台工程师通常承受着非常大的压力，以保持应用程序部署的快速进行，并且总是为了速度和进度而做出妥协。平台团队越来越有责任确保这些妥协（例如管理 Ingress）不会导致客户数据暴露在整个互联网上等后果。
+幸运的是，Kubernetes 提供了设置策略的能力，通过检查并防止部署错误将其投入生产，从而避免这些后果。为了确保团队的应用程序不会比信心更重要，以下是现在应该在集群中运行的前五个 Kubernetes 准入控制策略。
+1. 可信镜像仓库 此策略很简单，但功能强大：仅允许从受信任的镜像仓库中拉取的容器映像，并且可以选择仅拉取与允许的仓库镜像地址列表匹配的那些镜像。
+当然，从互联网（或可信镜像仓库库以外的任何地方）拉取未知镜像会带来风险——例如恶意软件。但是还有其他很好的理由来维护单一的可信来源，例如在企业中实现可支持性。通过确保镜像仅来自受信任的镜像仓库，可以密切控制镜像库存，降低软件熵和蔓延的风险，并提高集群的整体安全性。
+相关策略：
+禁止所有带有“latest” tag 的镜像 仅允许签名镜像或匹配特定哈希/SHA 的镜像 策略示例：
+package kubernetes.validating.images deny[msg] { some i input.</description></item><item><title>Kubernetes 的魔力在于企业标准化，而不是应用程序的可移植性</title><link>https://atbug.com/articles/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</link><pubDate>Sun, 11 Jul 2021 08:05:42 +0800</pubDate><guid>https://atbug.com/articles/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</guid><description>笔者：Kubernetes 抽象了资源和工作负载的操作模式，统一了工具集，实现人机接口的标准化。正如类 Docker 工具提供了应用运行时的操作模式；Spring Framework 提供了 Java 应用的开发模式。
+Kubernetes 是关于跨云的技能、工具和实践的可移植性。不是工作负载的可移植性。 &amp;ndash; Bilgin Lbryam @bibryam
+本文翻译自 Kubernetes magic is in enterprise standardization, not app portability
+Kubernetes 不会神奇地使你的应用程序具有可移植性，但它可能会给你带来更好的东西。
+云为企业提供了看似无限的选择。然而，根据 Canonical-sponsored 的一项调查，这并不是大多数企业采用 Kubernetes 等云友好技术的原因。相反，Kubernetes 的主要目标是标准化——外观和操作与其他人一样。
+可移植性不是目标 我之前已经讨论过这个问题，参考了 Gartner 关于 Kubernetes 和可移植性的指南。许多人认为 Kubernetes（和容器）可以让他们在云之间轻松移植，但事实证明并不是这样的。正如 Gartner 分析师 Marco Meinardi 所写，当被问及公司是否应该采用“Kubernetes 使他们的应用程序可移植&amp;hellip;&amp;hellip;答案是：不。” 再说一次？</description></item><item><title>使用 Open Policy Agent 实现可信镜像仓库检查</title><link>https://atbug.com/articles/image-trusted-repository-with-open-policy-agent/</link><pubDate>Sat, 10 Jul 2021 07:14:47 +0800</pubDate><guid>https://atbug.com/articles/image-trusted-repository-with-open-policy-agent/</guid><description>从互联网（或可信镜像仓库库以外的任何地方）拉取未知镜像会带来风险——例如恶意软件。但是还有其他很好的理由来维护单一的可信来源，例如在企业中实现可支持性。通过确保镜像仅来自受信任的镜像仓库，可以密切控制镜像库存，降低软件熵和蔓延的风险，并提高集群的整体安全性。除此以外，有时还会需要检查镜像的 tag，比如禁止使用 latest 镜像。
+这今天我们尝试用“策略即代码”的实现 OPA 来实现功能。
+还没开始之前可能有人会问：明明可以实现个 Admission Webhook 就行，为什么还要加上 OPA？
+确实可以，但是这样策略和逻辑都会耦合在一起，当策略需要调整的时候需要修改代码重新发布。而 OPA 就是用来做解耦的，其更像是一个策略的执行引擎。
+什么是 OPA Open Policy Agent（以下简称 OPA，发音 “oh-pa”）一个开源的通用策略引擎，可以统一整个堆栈的策略执行。OPA 提供了一种高级声明性语言（Rego），可让你将策略指定为代码和简单的 API，以从你的软件中卸载策略决策。你可以使用 OPA 在微服务、Kubernetes、CI/CD 管道、API 网关等中实施策略。
+Rego 是一种高级的声明性语言，是专门为 OPA 建立的。更多 OPA 的介绍可以看 Open Policy Agent 官网，不想看英文直接看这里。
+现在进入正题。
+启动集群 启动 minikube</description></item><item><title>常用的几款工具让 Kubernetes 集群上的工作更容易</title><link>https://atbug.com/articles/tools-accelerate-work-on-kubernetes-cluster/</link><pubDate>Sat, 26 Jun 2021 12:16:28 +0800</pubDate><guid>https://atbug.com/articles/tools-accelerate-work-on-kubernetes-cluster/</guid><description>之前写过一篇 介绍了工具加速云原生 Java 开发。
+其实日常工作中在集群上的操作也非常多，今天就来介绍我所使用的工具。
+kubectl-alias 使用频率最高的工具，我自己稍微修改了一下，加入了 StatefulSet 的支持。
+这个是我的 https://github.com/addozhang/kubectl-aliases，基于 https://github.com/ahmetb/kubectl-aliases。
+比如输出某个 pod 的 json，kgpoojson xxx 等同于 kubectl get pod xxx -o json。
+结合 jq 使用效果更好 😂。
+语法解读 k=kubectl sys=--namespace kube-system commands: g=get d=describe rm=delete a:apply -f ak:apply -k k:kustomize ex: exec -i -t lo: logs -f resources: po=pod, dep=deployment, ing=ingress, svc=service, cm=configmap, sec=secret,ns=namespace, no=node flags: output format: oyaml, ojson, owide all: --all or --all-namespaces depending on the command sl: --show-labels w=-w/--watch value flags (should be at the end): n=-n/--namespace f=-f/--filename l=-l/--selector kubectx + kubens 安装看这里</description></item><item><title>Jenkins 如何与 Kubernetes 集群的 Tekton Pipeline 交互？</title><link>https://atbug.com/articles/jenkins-interact-with-tekton-pipelines-via-plugin/</link><pubDate>Wed, 23 Jun 2021 07:58:45 +0800</pubDate><guid>https://atbug.com/articles/jenkins-interact-with-tekton-pipelines-via-plugin/</guid><description>本文详细介绍了 Jenkins 如何通过 tekton-client-plugin 实现与 Kubernetes 上的 Tekton Pipeline 交互，包括 Kubernetes 上安装 Jenkins、Tekton Pipelines 等。
+关于如何使用 Tekton Pipeline 实现 CICD 可以看这篇文章 云原生 CICD: Tekton Pipeline 实战
+本文用于构建的项目以及所有 manifest yaml 都在可以在这里下载。
+TL;DR 惯例，先上总结。tekton-client-plugin 虽然还是处于初期阶段，但是 其价值非常明显，尤其是对先用使用 Jenkins 作为 CICD 实现的用户来说。从 Jenkins 迁移到云原生的 Tekton 时，可以省掉用户界面的开发成本，而且尽可能少的改变用户习惯 ，依靠版本管理可以控制迁移的节奏。</description></item><item><title>云原生 CICD: Tekton Pipeline 实战</title><link>https://atbug.com/articles/tekton-pipeline-practice/</link><pubDate>Tue, 22 Jun 2021 07:19:33 +0800</pubDate><guid>https://atbug.com/articles/tekton-pipeline-practice/</guid><description>更新历史：
+v1：2020.1.21 基于 Tekton Pipline v0.9.0 v2（当前）：2021.6.22 基于 Tekton Pipeline v0.25.0 Tekton 是 Google 开源的 Kubernetes 原生CI/CD 系统, 功能强大扩展性强. 前身是 Knavite 里的 build-pipeline 项目, 后期孵化成独立的项目. 并成为 CDF 下的四个项目之一, 其他三个分别是 Jenkins, Jenkins X, Spinnaker.
+为什么说 Tekton 是 Kubernetes 原生的, 以内其基于 Kubernetes 的 CRD 定义了 Pipeline 流水线.</description></item><item><title>初探可编程网关 Pipy</title><link>https://atbug.com/articles/glance-at-programmable-gateway-pipy/</link><pubDate>Mon, 31 May 2021 00:45:08 +0800</pubDate><guid>https://atbug.com/articles/glance-at-programmable-gateway-pipy/</guid><description>有幸参加了 Flomesh 组织的workshop，了解了他们的 Pipy 网络代理，以及围绕 Pipy 构建起来的生态。Pipy 在生态中，不止是代理的角色，还是 Flomesh 服务网格​中的数据平面。
+整理一下，做个记录，顺便瞄一下 Pipy 的部分源码。
+介绍 下面是摘自 Github 上关于 Pipy 的介绍：
+Pipy 是一个轻量级、高性能、高稳定、可编程的网络代理。Pipy 核心框架使用 C++ 开发，网络 IO 采用 ASIO 库。 Pipy 的可执行文件仅有 5M 左右，运行期的内存占用 10M 左右，因此 Pipy 非常适合做 Sidecar proxy。
+Pipy 内置了自研的 pjs 作为脚本扩展，使得Pipy 可以用 JS 脚本根据特定需求快速定制逻辑与功能。</description></item><item><title>开箱即用的 Prometheus 告警规则集</title><link>https://atbug.com/articles/introduction-awesome-prometheus-alerts/</link><pubDate>Thu, 13 May 2021 08:01:00 +0800</pubDate><guid>https://atbug.com/articles/introduction-awesome-prometheus-alerts/</guid><description>在配置系统监控的时候，是不是即使绞尽脑汁监控的也还是不够全面，或者不知如何获取想要的指标。
+Awesome Prometheus alerts 维护了一套开箱即用的 Prometheus 告警规则集合，有 300 多个告警规则。同时，还是说明如何获取对应的指标。这些规则，对每个 Prometheus 都是通用的。
+涉及如主机、硬件、容器等基础资源，到数据库、消息代理、运行时、反向代理、负责均衡器，运行时、服务编排，甚至是网络层面和 Prometheus 自身和集群。
+Prometheus 的安装和配置不做赘述，配置可以看这里。下面简单看下几个常用规则
+主机和硬件资源 主机和硬件资源的告警依赖 node-exporter 输出的指标。例如：
+内存不足 可用内存低于阈值 10% 就会触发告警。
+- alert: HostOutOfMemory expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 &amp;lt; 10 for: 2m labels: severity: warning annotations: summary: Host out of memory (instance {{ $labels.</description></item><item><title>Quarkus：谁说 Java 不能用来跑 Serverless？</title><link>https://atbug.com/articles/quarkus-enable-java-running-in-serverless/</link><pubDate>Sat, 24 Apr 2021 09:16:05 +0800</pubDate><guid>https://atbug.com/articles/quarkus-enable-java-running-in-serverless/</guid><description>想到这个标题的时候，我第一时间想到的就是星爷的《唐伯虎点秋香》的这一幕。
+当讨论起世界上最好的开发语言是什么的时候，Java 的粉丝们总会遇到这种场景：
+吹：“Java 语法简单，容易上手！” 黑：“Java 启动慢，性能差，耗资源！” 吹：“Java 有世界上最多的程序员！” 黑：“Java 启动慢，性能差，耗资源！” 吹：“Java 生态好！” 黑：“Java 启动慢，性能差，耗资源！” 吹：“滚！”
+今天我们继续说说 Quarkus，应“云”而生的 Java 框架。今天算是第三篇了，没看过的同学可以回顾一下：
+Hello, Quarkus 应&amp;quot;云&amp;quot;而生的 Java 框架 Quarkus：构建本机可执行文件 上一篇的结尾预告：试试 Quarkus 在 ArgoCD 中的应用，看下 Serverless 上的使用体验。不过不想用 ArgoCD 了，因为这 workflow 这种场景实在体现不出 Quarkus 到底有多快。但又想做 Serverless，那就想到了 Knative Serving 了。</description></item><item><title>Tekton 0.9.0 更新</title><link>https://atbug.com/articles/tekton-0.9.0-release/</link><pubDate>Sun, 19 Jan 2020 14:33:17 +0800</pubDate><guid>https://atbug.com/articles/tekton-0.9.0-release/</guid><description>翻译整理自 What’s New in Tekton 0.9
+功能及Bug修复 脚本模式 以前如果要在容器里运行个简单的 bash 脚本, 需要这么写:
+- name: hello image: ubuntu command: [&amp;#39;bash&amp;#39;] args: - -c - |set -ex echo &amp;#34;hello&amp;#34; 在 0.9 之后, 可以更加简单, 不需要再写command 和讨厌的-c.
+- name: hello image: ubuntu script: |#!/bin/bash echo &amp;#34;hello&amp;#34; 性能 通过一系列的工作, 每个 PipelineRun 的运行时间缩短了 5-20 秒</description></item><item><title>Minikube安装istio</title><link>https://atbug.com/articles/install-istio-on-minikube/</link><pubDate>Fri, 17 Jan 2020 08:02:42 +0800</pubDate><guid>https://atbug.com/articles/install-istio-on-minikube/</guid><description>准备 注意: istioctl的安装要使用安装里的, 不要是用homebrew里的. github issue
+curl -L https://istio.io/downloadIstio | sh - cd istio-1.4.2 cp bin/istioctl /usr/local/bin/istioctl 安装前检查 istioctl verify-install 如果检查没问题, 会看到Install Pre-Check passed! The cluster is ready for Istio installation.
+安装 istio有5种内建的安装配置1: remote, sds, default, demo, minimal
+istioctl profile list minimal: 使用istio的流量管理所需组件的最小化安装 default: 根据IstioControlPlane API的默认设置(建议用于生产部署)启用组件.</description></item><item><title>加速云原生的 Java 开发</title><link>https://atbug.com/articles/speed-up-java-development-on-kubernetes/</link><pubDate>Sat, 21 Dec 2019 20:45:22 +0800</pubDate><guid>https://atbug.com/articles/speed-up-java-development-on-kubernetes/</guid><description>今天来说说日常在Kubernetes开发Java项目遇到的问题.
+当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是copy+paste+modify. 能否以变成的方式来生成?
+开发时的步骤也比较繁琐: docker build, docker push, kubectl apple, kubectl delete pod. 对于一个Java应用来说还多了一步编译. 操作一次还ok, 但是一天十几次总会有想吐的感觉. 这些步骤能否简化成一个命令, 甚至修改了代码自动就完成上面一系列的操作?
+实现这些我们需要几个工具: dekorate, Jib, Skaffold. 其中Jib也在上一篇文章使用Jib为Java应用构建镜像中介绍过.
+dekorate Dekorate is a collection of Java compile-time generators and decorators for Kubernetes/OpenShift manifests. Dekorate是Java编译时生成和装饰Kubernetes/OpenShift的manifests的工具</description></item><item><title>macOS 安装 minishift</title><link>https://atbug.com/articles/install-minishift-on-mac/</link><pubDate>Fri, 23 Feb 2018 15:32:26 +0000</pubDate><guid>https://atbug.com/articles/install-minishift-on-mac/</guid><description>MacOS环境安装minishift
+安装minishift cli brew cask install minishift 使用virtualbox安装 安装的时候可以指定HTTP代理, 拉取墙外镜像时需要; 还可以指定insecure的镜像库.
+minishift start --docker-env HTTP_PROXY=&amp;#34;192.168.99.1:1087&amp;#34; --docker-env HTTPS_PROXY=&amp;#34;192.168.99.1:1087&amp;#34; --docker-env NO_PROXY=&amp;#34;192.168.0.0/16,172.30.0.0/16&amp;#34; --insecure-registry=&amp;#34;192.168.1.34&amp;#34; --vm-driver=virtualbox 启动 minishift start --vm-driver=virtualbox 删除 minishift delete 打开Openshift控制面板 minishift dashboard 获取集群ip地址 minishift ip 安装Openshift Cli brew install openshift-cli 可以使用openshift cli进行操作.</description></item><item><title>Kubernetes — 持久卷</title><link>https://atbug.com/articles/kubernetes-persistent-volumes/</link><pubDate>Sun, 20 Aug 2017 22:25:40 +0000</pubDate><guid>https://atbug.com/articles/kubernetes-persistent-volumes/</guid><description>Persistent Volume 译自Persistent Volumes
+介绍 管理存储是管理计算的独特问题。 PersistentVolume子系统为用户和管理员提供了一个API，其中提供了如何从如何使用存储提供存储的详细信息。为此，我们介绍两种新的API资源：PersistentVolume和PersistentVolumeClaim。
+PersistentVolume（PV）是由管理员配置的集群中的一段存储。它是集群中的一种资源就像一个节点是一个集群的资源。 PV是类似Volumes的卷插件，但是具有独立于使用PV的任何单个pod的生命周期。该API对象捕获存储的实现细节，即NFS，iSCSI或云提供商特定的存储系统。
+PersistentVolumeClaim（PVC）是用户存储的请求。它类似于pod。 Pod消耗节点资源，PVC消耗PV资源。Pods可以请求特定级别的资源（CPU和内存）。声明可以请求特定的大小和访问模式（例如，一次读写或者多次只读）。
+虽然PersistentVolumeClaims允许用户使用抽象存储资源，但是常见的是，用户需要具有不同属性（如性能）的PersistentVolumes，用于不同的问题。 集群管理员需要能够提供多种彼此不同的PersistentVolumes，而不仅仅是大小和访问模式，而不会使用户了解这些卷的实现细节。 对于这些需求，有一个StorageClass资源。
+StorageClass为管理员提供了一种描述他们提供的存储的“类”的方法。 不同的类可能映射到服务质量级别，或备份策略，或者由群集管理员确定的任意策略。 Kubernetes本身对于什么类别代表是不言而喻的。 这个概念有时在其他存储系统中称为“配置文件”。
+请参阅详细演练与工作示例。
+存储和声明的生命周期 PVs是集群中的资源；PVCs是对这种资源的声明，同时也扮演者对资源声明的检查。PVs和PVCs之前的交互遵循生命周期：供应、绑定、使用中、重新申请。
+集群管理员创建多个PV。它们携带可供集群用户使用的真实存储的详细信息。它们存在于Kubernetes API中，可用于消费。
+供应(Provisioning) PVs会以两种方式供应：静态和动态。
+静态 集群管理员创建多个PV。 它们携带可供集群用户使用的真实存储的详细信息。 它们存在于Kubernetes API中，可被使用。
+动态 当管理员创建的静态PV都不匹配用户的PersistentVolumeClaim时，集群可能会尝试为PVC指定动态配置卷。 此配置基于StorageClasses：PVC必须指定一个类，并且管理员必须已创建并配置该类才能进行动态配置。 要求该类的声明有效地为自己禁用动态配置。
+绑定(Binding) 当用户创建、或已经创建了一个PersistenVolumenClaim并指定大小和访问类型。Master中的控制循环会检测新的PVC，找到一个匹配的PV（如果可能的话），并将它们绑定在一起。如果一个PV被动态地供应某个PVC，循环将总是把这个PV和该PVC绑定。否则，用户总是至少得到他们要求的内容，但是卷可能超出了要求。一旦绑定，PersistentVolumeClaim绑定是排他的，不管用于绑定它们的模式。
+如果匹配的卷不存在，请求将无限期地保持。 随着匹配卷变得可用，请求将被绑定。 例如，提供许多50Gi PV的集群将不匹配要求100Gi的PVC。 当集群中添加100Gi PV时，可以绑定PVC。</description></item><item><title>Kubernetes学习 — Macos安装Kubernetes</title><link>https://atbug.com/articles/install-kubernetes-on-macos/</link><pubDate>Thu, 17 Aug 2017 09:44:17 +0000</pubDate><guid>https://atbug.com/articles/install-kubernetes-on-macos/</guid><description>Kubernetes 安装 macos 检查环境 sysctl -a | grep machdep.cpu.features | grep VMX 安装VirtualBox http://download.virtualbox.org/virtualbox/5.1.26/Oracle_VM_VirtualBox_Extension_Pack-5.1.26-117224.vbox-extpack 安装minikube curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.21.0/minikube-darwin-amd64 &amp;amp;&amp;amp; chmod +x minikube &amp;amp;&amp;amp; sudo mv minikube /usr/local/bin/ 创建集群 默认使用virtualbox。
+主机的ip是192.168.31.186， 1087是proxy的端口。需要将ss的http代理监听地址从127.0.0.1改为主机的ip。
+#启动 minikube start #使用私有库 minikube start --insecure-registry=&amp;#34;192.168.31.34&amp;#34; #使用proxy，用于获取镜像 minikube start --docker-env HTTP_PROXY=&amp;#34;192.</description></item></channel></rss>

@@ -42,7 +42,16 @@ TL;DR: 在默认设置下，扩展 Kubernetes 集群中的 pod 和节点可能�
 自动扩展器 在 Kubernetes 中，常说的“自用扩展”有：
 HPA：Pod 水平缩放器 VPA：Pod 垂直缩放器 CA：集群自动缩放器 不同类型的自动缩放器，使用的场景不一样。
 HPA HPA 定期检查内存和 CPU 等指标，自动调整 Deployment 中的副本数，比如流量变化：
-VPA 有些时候无法通过增加 Pod 数来扩容，比如数据库。这时候可以通过 VPA 增加 Pod 的大小，比如调整 Pod 的 CPU 和内存：</description></item><item><title>云上细粒度访问管理的参考架构</title><link>https://atbug.com/articles/translation-access-management-reference-architecture/</link><pubDate>Wed, 28 Apr 2021 08:02:11 +0800</pubDate><guid>https://atbug.com/articles/translation-access-management-reference-architecture/</guid><description>本文由 Addo Zhang 翻译自 A Reference Architecture for Fine-Grained Access Management on the Cloud
+VPA 有些时候无法通过增加 Pod 数来扩容，比如数据库。这时候可以通过 VPA 增加 Pod 的大小，比如调整 Pod 的 CPU 和内存：</description></item><item><title>使用 Quarkus 和 MicroProfile 实现微服务特性</title><link>https://atbug.com/articles/microservicilities-quarkus/</link><pubDate>Wed, 26 May 2021 07:37:04 +0800</pubDate><guid>https://atbug.com/articles/microservicilities-quarkus/</guid><description>Quarkus 的文章之前写过三篇了，讲过了 Quarkus 的小而快。
+Hello, Quarkus 应&amp;quot;云&amp;quot;而生的 Java 框架 Quarkus：构建本机可执行文件 谁说 Java 不能用来跑 Serverless？ 一直在酝酿写一篇 Quarkus 生态相关的，因为最近一直在忙 Meetup 的事情而搁浅。正好看到了这篇文章，就拿来翻译一下，补全云原生中的“微服务”这一块。
+本文译自《Implementing Microservicilities with Quarkus and MicroProfile》 。
+为什么要使用微服务特性？ 在微服务架构中，一个应用程序是由几个相互连接的服务组成的，这些服务一起工作来实现所需的业务功能。
+因此，典型的企业微服务架构如下所示：
+刚开始，使用微服务架构实现应用程序看起来很容易。
+但是，因为有了单体架构没有一些新的挑战，因此做起来并不容器
+举几个例子，比如容错、服务发现、扩展性、日志记录和跟踪。
+为了解决这些挑战，每个微服务都应实现我们在 Red Hat 所说的“微服务特性”。
+该术语是指除业务逻辑以外，服务还必须实现来解决的跨领域关注点清单，如下图所示： 可以用任何语言（Java、Go、JavaScript）或任何框架（Spring Boot、Quarkus）实现业务逻辑，但是围绕业务逻辑，应实现以下关注点：</description></item><item><title>云上细粒度访问管理的参考架构</title><link>https://atbug.com/articles/translation-access-management-reference-architecture/</link><pubDate>Wed, 28 Apr 2021 08:02:11 +0800</pubDate><guid>https://atbug.com/articles/translation-access-management-reference-architecture/</guid><description>本文由 Addo Zhang 翻译自 A Reference Architecture for Fine-Grained Access Management on the Cloud
 什么是访问管理？ 访问管理是识别用户或一组用户是否应该能够访问给定资源（例如主机、服务或数据库）的过程。例如，对于开发人员来说是否可以使用 SSH 登录生产应用程序服务器，如果可以，那么可以登录多长时间？如果 SRE 在非支持时间尝试访问数据库，他们这样做？如果数据工程师已转移到其他团队，他们是否应该继续访问 ETL 管道的 S3 存储桶？
 现在如何进行访问管理？ 在云上各种基础设施和数据服务激增之前，访问管理是 DevOps 和 Security 团队要解决的相对简单的问题。VPN 和堡垒主机是（现在仍然是）在网络级别封锁所有关键资源的首选机制。用户必须先通过 VPN 服务器进行身份验证，或者登录到堡垒主机，然后才能访问专用网络上的所有资源。
 当资源是静态的并且它们的数量相对较小时，此方法效果很好。但是，随着越来越多的资源动态地涌入专用网络的各处，VPN / 堡垒主机解决方案变得站不住脚。
@@ -70,10 +79,7 @@ VPA 有些时候无法通过增加 Pod 数来扩容，比如数据库。这时�
 随着业务发展的应用架构的优势 基于微服务的应用架构在开发和部署方面具有更大的自治权。如我们所见，微服务可以在其他应用程序中单独实现、“分解”、更新和重用。因此，通过产品或客户需求的演变，它有降低减少市场所需的每个新产品的设计/开发时间和成本。
 此外，通过使用容器化实践，可以简化在本地、云、多云或混合环境的任何环境中应用程序的部署，从而优化成本。
 在微服务架构风格的优点中，我们还发现有可能在各种服务之间的对话及其健康状况上获得更大的透明度：更好的可观察性意味着可以轻松解决复杂应用的问题。实际上，管理员可以更快地定位和解决性能和安全性问题，在运维和代码层面实施措施，从而使响应速度与变更的长期有效性保持一致。
-通过采用微服务以及新的开发和部署方法，可以创建能够随时间发展的应用架构。除了 IT 团队必须掌握的新技能外，还必须对公司的未来有一个清晰的愿景，以确保所提供的服务对业务发展有用。</description></item><item><title>Tekton 0.9.0 更新</title><link>https://atbug.com/articles/tekton-0.9.0-release/</link><pubDate>Sun, 19 Jan 2020 14:33:17 +0800</pubDate><guid>https://atbug.com/articles/tekton-0.9.0-release/</guid><description>翻译整理自 What’s New in Tekton 0.9
-功能及Bug修复 脚本模式 以前如果要在容器里运行个简单的 bash 脚本, 需要这么写:
-- name: hello image: ubuntu command: [&amp;#39;bash&amp;#39;] args: - -c - |set -ex echo &amp;#34;hello&amp;#34; 在 0.9 之后, 可以更加简单, 不需要再写command 和讨厌的-c.
-- name: hello image: ubuntu script: |#!/bin/bash echo &amp;#34;hello&amp;#34; 性能 通过一系列的工作, 每个 PipelineRun 的运行时间缩短了 5-20 秒</description></item><item><title>神秘的Eureka自我保护</title><link>https://atbug.com/articles/translation-the-mystery-of-eurekas-self-preservation/</link><pubDate>Sun, 05 Jan 2020 14:14:03 +0800</pubDate><guid>https://atbug.com/articles/translation-the-mystery-of-eurekas-self-preservation/</guid><description>本文翻译自The Mystery of Eureka Self-Preservation
+通过采用微服务以及新的开发和部署方法，可以创建能够随时间发展的应用架构。除了 IT 团队必须掌握的新技能外，还必须对公司的未来有一个清晰的愿景，以确保所提供的服务对业务发展有用。</description></item><item><title>神秘的 Eureka 自我保护</title><link>https://atbug.com/articles/translation-the-mystery-of-eurekas-self-preservation/</link><pubDate>Sun, 05 Jan 2020 14:14:03 +0800</pubDate><guid>https://atbug.com/articles/translation-the-mystery-of-eurekas-self-preservation/</guid><description>本文翻译自The Mystery of Eureka Self-Preservation
 根据CAP定理, Eureka是一个AP系统, 这就导致了在网络分区期间多个注册表中的信息不一致. 自我保护功能则是为了尽可能降低这种不一致.
 自我保护的定义 自我保护(self preservation)是Eureka的一项功能, Eureka注册表在未收到实例的心跳情况超过一定阈值时停止驱逐过期的实例.
 从一个健康的系统开始 把下面看成一个健康的系统

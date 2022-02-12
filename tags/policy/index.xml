@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Policy on 乱世浮生</title><link>https://atbug.com/tags/policy/</link><description>Recent content in Policy on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 10 Jul 2021 07:14:47 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/policy/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Open Policy Agent 实现可信镜像仓库检查</title><link>https://atbug.com/articles/image-trusted-repository-with-open-policy-agent/</link><pubDate>Sat, 10 Jul 2021 07:14:47 +0800</pubDate><guid>https://atbug.com/articles/image-trusted-repository-with-open-policy-agent/</guid><description>从互联网（或可信镜像仓库库以外的任何地方）拉取未知镜像会带来风险——例如恶意软件。但是还有其他很好的理由来维护单一的可信来源，例如在企业中实现可支持性。通过确保镜像仅来自受信任的镜像仓库，可以密切控制镜像库存，降低软件熵和蔓延的风险，并提高集群的整体安全性。除此以外，有时还会需要检查镜像的 tag，比如禁止使用 latest 镜像。
-这今天我们尝试用“策略即代码”的实现 OPA 来实现功能。
-还没开始之前可能有人会问：明明可以实现个 Admission Webhook 就行，为什么还要加上 OPA？
-确实可以，但是这样策略和逻辑都会耦合在一起，当策略需要调整的时候需要修改代码重新发布。而 OPA 就是用来做解耦的，其更像是一个策略的执行引擎。
-什么是 OPA Open Policy Agent（以下简称 OPA，发音 “oh-pa”）一个开源的通用策略引擎，可以统一整个堆栈的策略执行。OPA 提供了一种高级声明性语言（Rego），可让你将策略指定为代码和简单的 API，以从你的软件中卸载策略决策。你可以使用 OPA 在微服务、Kubernetes、CI/CD 管道、API 网关等中实施策略。
-Rego 是一种高级的声明性语言，是专门为 OPA 建立的。更多 OPA 的介绍可以看 Open Policy Agent 官网，不想看英文直接看这里。
-现在进入正题。
-启动集群 启动 minikube</description></item></channel></rss>

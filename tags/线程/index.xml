@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>线程 on 乱世浮生</title><link>https://atbug.com/tags/%E7%BA%BF%E7%A8%8B/</link><description>Recent content in 线程 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 19 Jul 2017 22:25:19 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/%E7%BA%BF%E7%A8%8B/index.xml" rel="self" type="application/rss+xml"/><item><title>暴力停止ExecutorService的线程</title><link>https://atbug.com/articles/stop-a-thread-of-executor-service/</link><pubDate>Wed, 19 Jul 2017 22:25:19 +0000</pubDate><guid>https://atbug.com/articles/stop-a-thread-of-executor-service/</guid><description>停止，stop，这里说的是真的停止。如何优雅的结束，这里就不提了。
-这里要用Thread.stop()。众所周知，stop()方法在JDK中是废弃的。
-该方法天生是不安全的。使用thread.stop()停止一个线程，导致释放（解锁）所有该线程已经锁定的监视器（因沿堆栈向上传播的未检查异常ThreadDeath而解锁）。如果之前受这些监视器保护的任何对象处于不一致状态，则不一致状态的对象（受损对象）将对其他线程可见，这可能导致任意的行为。
-有时候我们会有这种需求，不需要考虑线程执行到哪一步。一般这种情况是外部执行stop，比如执行业务的线程因为各种原因假死或者耗时较长，由于设计问题又无法响应优雅的停止指令。
-现在大家在项目中都很少直接使用线程，而是通过concurrent包中的类来实现多线程，例如ExecutorService的各种实现类。
-一个简单的停止线程的例子：
-public class ExecutorServiceTest { public static void main(String[] args) throws InterruptedException { ExecutorService executor = Executors.newSingleThreadExecutor(); final AtomicReference&amp;lt;Thread&amp;gt; t = new AtomicReference&amp;lt;&amp;gt;(); Future&amp;lt;?&amp;gt; firstFuture = executor.submit(new Runnable() { public void run() { Thread currentThread = Thread.</description></item></channel></rss>

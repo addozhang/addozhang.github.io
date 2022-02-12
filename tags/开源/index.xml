@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>开源 on 乱世浮生</title><link>https://atbug.com/tags/%E5%BC%80%E6%BA%90/</link><description>Recent content in 开源 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 20 Sep 2021 08:01:30 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E5%BC%80%E6%BA%90/index.xml" rel="self" type="application/rss+xml"/><item><title>容器神话 Docker 是如何一分为二的</title><link>https://atbug.com/articles/how-docker-broke-in-half/</link><pubDate>Mon, 20 Sep 2021 08:01:30 +0800</pubDate><guid>https://atbug.com/articles/how-docker-broke-in-half/</guid><description>译者点评：
-最近听了很多资深的人士关于开源，以及商业化的分析。开源与商业化，听起来就是一对矛盾的所在，似乎大家都在尝试做其二者的平衡。是先有开源，还是先有商业化？俗话说“谈钱不伤感情”，近几年背靠开源的创业公司如雨后春笋般涌现，即使是开发人员也是需要生活的。
-容器神话 Docker 曾经无比风光，盛极一时。即使这样一个备受瞩目，大获风投的热捧的独角兽也未能免俗，并付出了不小的代价。
-今天这篇文章讲述了 Docker 这家公司从诞生到巅峰到没落，这一路上所做的抉择，并最终做了开源与商业的分离，再一次从开源踏上找寻商业化之路。这些都是值得我们参考和思考的，不管是已经开源或者准备从事开源的。
-这篇文章翻译自How Docker broke in half 这家改变游戏规则的容器公司是其昔日的外衣。作为云时代最热门的企业技术业务之一的它到底发生了什么？
-Docker 并没有发明容器——将计算机代码打包成紧凑单元的方法，可以轻松地从笔记本电脑移植到服务器——但它确实通过创建一套通用的开源工具和可重用的镜像使其成为主流，这使所有开发人员只需构建一次软件即可在任何地方运行。
-Docker 使开发人员能够轻松地将他们的代码“容器化”并将其从一个系统移动到另一个系统，迅速将其确立为行业标准，颠覆了在虚拟机 (VM) 上部署应用程序的主要方式，并使 Docker 成为新一代最快被采用的企业技术之一。
-今天，Docker 仍然活着，但它只是它可能成为的公司的一小部分，从未成功地将这种技术创新转化为可持续的商业模式，最终导致其企业业务于 2019 年 11 月出售给 Mirantis。InfoWorld 采访了十几位前任和现任 Docker 员工、开源贡献者、客户和行业分析师，了解 Docker 如何分崩离析的故事。
-Docker 诞生了 2008 年由 Solomon Hykes 在巴黎创立的 DotCloud，这个后来成为 Docker 的公司最初被设计为供开发人员轻松构建和发布他们的应用程序的平台即服务 (PaaS)。</description></item></channel></rss>

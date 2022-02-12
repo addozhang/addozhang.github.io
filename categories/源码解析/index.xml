@@ -11,7 +11,12 @@ kubelet 简介 从官方的架构图中很容易就能找到 kubelet
 kubelet 是每个 Node 节点上都运行的主要“节点代理”。使用如下的一个向 apiserver 注册 Node 节点：主机的 hostname；覆盖 host 的参数；或者云提供商指定的逻辑。 kubelet 基于 PodSpec 工作。PodSpec 是用 YAML 或者 JSON 对象来描述 Pod。Kubelet 接受通过各种机制（主要是 apiserver）提供的一组 PodSpec，并确保里面描述的容器良好运行。 除了由 apiserver 提供 PodSpec，还可以通过以下方式提供：</description></item><item><title>Kubernetes 上如何控制容器的启动顺序？</title><link>https://atbug.com/articles/k8s-1.18-container-start-sequence-control/</link><pubDate>Fri, 30 Apr 2021 07:43:54 +0800</pubDate><guid>https://atbug.com/articles/k8s-1.18-container-start-sequence-control/</guid><description>去年写过一篇博客：控制 Pod 内容器的启动顺序，分析了 TektonCD 的容器启动控制的原理。
 为什么要做容器启动顺序控制？我们都知道 Pod 中除了 init-container 之外，是允许添加多个容器的。类似 TektonCD 中 task 和 step 的概念就分别与 pod 和 container 对应，而 step 是按照顺序执行的。此外还有服务网格的场景，sidecar 容器需要在服务容器启动之前完成配置的加载，也需要对容器的启动顺序加以控制。否则，服务容器先启动，而 sidecar 还无法提供网络上的支持。
 现实 期望 到了这里肯定有同学会问，spec.containers[] 是一个数组，数组是有顺序的。Kubernetes 也确实是按照顺序来创建和启动容器，但是 容器启动成功，并不表示容器可以对外提供服务。
-在 Kubernetes 1.18 非正式版中曾在 Lifecycle 层面提供了对 sidecar 类型容器的 支持，但是最终该功能并没有落地。</description></item><item><title>Kubernetes 源码解析 - Informer</title><link>https://atbug.com/articles/kubernetes-source-code-how-informer-work/</link><pubDate>Sun, 16 Aug 2020 23:32:38 +0800</pubDate><guid>https://atbug.com/articles/kubernetes-source-code-how-informer-work/</guid><description>上篇扒了 HPA 的源码，但是没深入细节，今天往细节深入。
+在 Kubernetes 1.18 非正式版中曾在 Lifecycle 层面提供了对 sidecar 类型容器的 支持，但是最终该功能并没有落地。</description></item><item><title>使用 cLion 阅读 envoy 源码</title><link>https://atbug.com/articles/read-envoy-source-code-in-clion/</link><pubDate>Tue, 08 Dec 2020 20:53:39 +0800</pubDate><guid>https://atbug.com/articles/read-envoy-source-code-in-clion/</guid><description>虽然不写 C++，但是看点代码还是能看懂。Envoy 的功能配置复杂，有时候处理问题还是需要看下源码的。
+Vim 或者 Code 就算了，我只是阅读源码需要关联跳转就行。在 Clion 中，代码的关联跳转需要一个CMakeLists.txt 文件。
+我将生成的内容挂在了 gist 上了，不想花费时间生成的可以直接复制。
+准备环境 1. 安装依赖的工具 brew install coreutils wget cmake libtool go automake ninja clang-format 2. bazel 使用 homebrew 进行安装： brew install bazel 即可
+安装问运行编译测试下：bazel build //source/exe:envoy-static，提示版本太高。
+现在 homebrew 安装的版本是3.</description></item><item><title>Kubernetes 源码解析 - Informer</title><link>https://atbug.com/articles/kubernetes-source-code-how-informer-work/</link><pubDate>Sun, 16 Aug 2020 23:32:38 +0800</pubDate><guid>https://atbug.com/articles/kubernetes-source-code-how-informer-work/</guid><description>上篇扒了 HPA 的源码，但是没深入细节，今天往细节深入。
 开局先祭出一张图：
 为什么要有 Informer？ Kubernetes 中的持久化数据保存在 etcd中，各个组件并不会直接访问 etcd，而是通过 api-server暴露的 RESTful 接口对集群进行访问和控制。
 资源的控制器（图中右侧灰色的部分）读取数据也并不会直接从 api-server 中获取资源信息（这样会增加 api-server 的压力），而是从其“本地缓存”中读取。这个“本地缓存”只是表象的存在，加上缓存的同步逻辑就是今天要是说的Informer（灰色区域中的第一个蓝色块）所提供的功能。
@@ -21,4 +26,97 @@ Reflector：与 api-server交互，监听资源的变更。 Delta FIFO Queue：�
 监控 Pod 的负载 控制 Pod 的副本数量 那具体是如何实现的呢？以下基于1.17 源码，来分析下 HPA 如何工作。
 注意：文章中的代码在源码的基础上进行了精简：删掉了注释、序列化等信息，或保留了部分核心代码，加上新的注释。
 资源 HPA 的资源是HorizontalPodAutoscaler，在v1版本中，只支持基于 CPU 指标的计算；在v2beta2版本中加入了基于内存和自定义指标的计算。
-v1 //staging/src/k8s.io/api/autoscaling/v1/types.go type HorizontalPodAutoscaler struct { metav1.TypeMeta metav1.ObjectMeta Spec HorizontalPodAutoscalerSpec Status HorizontalPodAutoscalerStatus } type HorizontalPodAutoscalerSpec struct { ScaleTargetRef CrossVersionObjectReference //监控的目标资源 MinReplicas *int32 //最小副本数 MaxReplicas int32 //最大副本数 TargetCPUUtilizationPercentage *int32 //触发调整的CPU 使用率 } v2 //staging/src/k8s.</description></item></channel></rss>
+v1 //staging/src/k8s.io/api/autoscaling/v1/types.go type HorizontalPodAutoscaler struct { metav1.TypeMeta metav1.ObjectMeta Spec HorizontalPodAutoscalerSpec Status HorizontalPodAutoscalerStatus } type HorizontalPodAutoscalerSpec struct { ScaleTargetRef CrossVersionObjectReference //监控的目标资源 MinReplicas *int32 //最小副本数 MaxReplicas int32 //最大副本数 TargetCPUUtilizationPercentage *int32 //触发调整的CPU 使用率 } v2 //staging/src/k8s.</description></item><item><title>Spring Boot源码分析 - Configuration注解</title><link>https://atbug.com/articles/spring-boot-configuration-annotation/</link><pubDate>Mon, 10 Dec 2018 16:24:33 +0000</pubDate><guid>https://atbug.com/articles/spring-boot-configuration-annotation/</guid><description>@Configuration注解 @Configuration注解指示一个类声明一个或多个@Bean方法, 并且可以由Spring容器处理, 以在运行时为这些bean生成bean定义和服务请求.
+使用ConfigurationClassParser来对@Configuration标注的类进行解析, 封装成ConfigurationClass实例. 具体的实现通过ConfigurationClassPostProcessor来实现的.
+ConfigurationClassPostProcessor 实现了BeanDefinitionRegistryPostProcessor接口, 间接实现了BeanFactorPostProcessor接口.
+#postProcessBeanDefinitionRegistry(): 注册所有ConfigurationClass中的BeanDefinition, 包括@Bean注解的方法, @ImporResource引入的资源中定义的bean, 和@Import注解引入的ImportBeanDefinitionRegistrar中注册的BeanDefinition #postProcessBeanFactory(): 在运行时以通过cglig增强的类来替换ConfigurationClass, 为服务bean请求做准备. 增强的实现是通过ConfigurationClassEnhancer完成的. 插入一点, ConfigurationClassEnhancer实现了直接使用bean注册方法来获取bean的操作, 提供了一个BeanMethodInterceptor的内部类来实行.
+@Configuration public class Config { @Bean public A a() { ... return a; } @Bean public B b() { b.</description></item><item><title>Spring Cloud Ribbon 详解</title><link>https://atbug.com/articles/spring-cloud-ribbon-breakdown-1/</link><pubDate>Sat, 05 May 2018 11:18:05 +0000</pubDate><guid>https://atbug.com/articles/spring-cloud-ribbon-breakdown-1/</guid><description>&lt;p>客户端负载均衡, Ribbon的核心概念是命名的客户端.&lt;/p>
+&lt;h2 id="使用">使用&lt;/h2>
+&lt;h3 id="引入ribbon依赖和配置">引入Ribbon依赖和配置&lt;/h3>
+&lt;p>加入&lt;code>spring-cloud-starter-netflix-ribbon&lt;/code>依赖&lt;/p>
+&lt;h3 id="代码中使用ribbonclient注解">代码中使用RibbonClient注解&lt;/h3>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#a6e22e">@Configuration&lt;/span>
+&lt;span style="color:#a6e22e">@RibbonClient&lt;/span>&lt;span style="color:#f92672">(&lt;/span>name &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;foo&amp;#34;&lt;/span>&lt;span style="color:#f92672">,&lt;/span> configuration &lt;span style="color:#f92672">=&lt;/span> FooConfiguration&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">)&lt;/span> &lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">TestConfiguration&lt;/span> &lt;span style="color:#f92672">{}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#a6e22e">@Configuration&lt;/span> &lt;span style="color:#66d9ef">protected&lt;/span> &lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">FooConfiguration&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;span style="color:#a6e22e">@Bean&lt;/span>
+&lt;span style="color:#66d9ef">public&lt;/span> ZonePreferenceServerListFilter &lt;span style="color:#a6e22e">serverListFilter&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+ZonePreferenceServerListFilter filter &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> ZonePreferenceServerListFilter&lt;span style="color:#f92672">();&lt;/span>
+filter&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#a6e22e">setZone&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#e6db74">&amp;#34;myTestZone&amp;#34;&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
+&lt;span style="color:#66d9ef">return&lt;/span> filter&lt;span style="color:#f92672">;&lt;/span>
+&lt;span style="color:#f92672">}&lt;/span>
+&lt;span style="color:#a6e22e">@Bean&lt;/span>
+&lt;span style="color:#66d9ef">public&lt;/span> IPing &lt;span style="color:#a6e22e">ribbonPing&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> PingUrl&lt;span style="color:#f92672">();&lt;/span>
+&lt;span style="color:#f92672">}&lt;/span>
+&lt;span style="color:#f92672">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Ribbon客户端的配置, 如果不指定会使用默认的实现:&lt;/p>
+&lt;ul>
+&lt;li>IClientConfig 客户端相关配置&lt;/li>
+&lt;li>IRule 定义负载均衡策略&lt;/li>
+&lt;li>IPing 定义如何ping目标服务实例来判断是否存活, ribbon使用单独的线程每隔一段时间(默认10s)对本地缓存的ServerList做一次检查&lt;/li>
+&lt;li>ServerList&lt;Server> 定义如何获取服务实例列表. 两种实现基于配置的&lt;code>ConfigurationBasedServerList&lt;/code>和基于Eureka服务发现的&lt;code>DiscoveryEnabledNIWSServerList&lt;/code>&lt;/li>
+&lt;li>ServerListFilter&lt;Server> 用来使用期望的特征过滤静态配置动态获得的候选服务实例列表. 若未提供, 默认使用&lt;code>ZoneAffinityServerListFilter&lt;/code>&lt;/li>
+&lt;li>ILoadBalancer 定义了软负载均衡器的操作的接口. 一个典型的负载均衡器至少需要一组用来做负载均衡的服务实例, 一个标记某个服务实例不在旋转中的方法, 和对应的方法调用从实例列表中选出某一个服务实例.&lt;/li>
+&lt;li>ServerListUpdater DynamicServerListLoadBalancer用来更新实例列表的策略(推&lt;code>EurekaNotificationServerListUpdater&lt;/code>/拉&lt;code>PollingServerListUpdater&lt;/code>, 默认是拉)&lt;/li>
+&lt;/ul></description></item><item><title>Spring Cloud Zuul详解</title><link>https://atbug.com/articles/spring-cloud-zuul-breakdown/</link><pubDate>Thu, 22 Feb 2018 17:02:26 +0000</pubDate><guid>https://atbug.com/articles/spring-cloud-zuul-breakdown/</guid><description>&lt;p>Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看&lt;a href="http://atbug.com/learn-netflix-zuul/">上一篇&lt;/a>.&lt;/p>
+&lt;h2 id="实现">实现&lt;/h2>
+&lt;p>@EnableZuulProxy 与 @EnableZuulServer
+二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用.
+Zuul server的路由都通过&lt;code>ZuulProperties&lt;/code>进行配置.&lt;/p>
+&lt;h3 id="具体实现">具体实现:&lt;/h3>
+&lt;ol>
+&lt;li>使用&lt;code>ZuulController&lt;/code>(&lt;code>ServletWrappingController&lt;/code>的子类)封装&lt;code>ZuulServlet&lt;/code>实例, 处理从&lt;code>DispatcherServlet&lt;/code>进来的请求.&lt;/li>
+&lt;li>&lt;code>ZuulHandlerMapping&lt;/code>负责注册handler mapping, 将&lt;code>Route&lt;/code>的&lt;code>fullPath&lt;/code>的请求交由&lt;code>ZuulController&lt;/code>处理.&lt;/li>
+&lt;li>同时使用&lt;code>ServletRegistrationBean&lt;/code>注册&lt;code>ZuulServlet&lt;/code>, 默认使用&lt;code>/zuul&lt;/code>作为urlMapping. 所有来自以&lt;code>/zuul&lt;/code>开头的path的请求都会直接进入&lt;code>ZuulServlet&lt;/code>, 不会进入&lt;code>DispatcherServlet&lt;/code>.&lt;/li>
+&lt;/ol>
+&lt;h4 id="使用注解">使用注解&lt;/h4>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>@EnableZuulProxy&lt;/code>引入了&lt;code>ZuulProxyMarkerConfiguration&lt;/code>, &lt;code>ZuulProxyMarkerConfiguration&lt;/code>只做了一件事, 实例化了内部类&lt;code>Marker&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#a6e22e">@Configuration&lt;/span>
+&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">ZuulProxyMarkerConfiguration&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;span style="color:#a6e22e">@Bean&lt;/span>
+&lt;span style="color:#66d9ef">public&lt;/span> Marker &lt;span style="color:#a6e22e">zuulProxyMarkerBean&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Marker&lt;span style="color:#f92672">();&lt;/span>
+&lt;span style="color:#f92672">}&lt;/span>
+&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Marker&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;span style="color:#f92672">}&lt;/span>
+&lt;span style="color:#f92672">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>&lt;code>@EnableZuulServer&lt;/code>引入了&lt;code>ZuulServerMarkerConfiguration&lt;/code>, &lt;code>ZuulServerMarkerConfiguration&lt;/code>也只做了一件事: 实例化了内部类&lt;code>Marker&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#a6e22e">@Configuration&lt;/span>
+&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">ZuulServerMarkerConfiguration&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;span style="color:#a6e22e">@Bean&lt;/span>
+&lt;span style="color:#66d9ef">public&lt;/span> Marker &lt;span style="color:#a6e22e">zuulServerMarkerBean&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Marker&lt;span style="color:#f92672">();&lt;/span>
+&lt;span style="color:#f92672">}&lt;/span>
+&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Marker&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;span style="color:#f92672">}&lt;/span>
+&lt;span style="color:#f92672">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul></description></item><item><title>Spring Cloud - Eureka服务注册</title><link>https://atbug.com/articles/spring-cloud-service-registry-via-eureka/</link><pubDate>Wed, 14 Feb 2018 07:32:43 +0000</pubDate><guid>https://atbug.com/articles/spring-cloud-service-registry-via-eureka/</guid><description>&lt;p>之前分析过&lt;a href="http://atbug.com/spring-cloud-eureka-client-source-code-analysis/">Spring Cloud的Eureka服务发现&lt;/a>, 今天分析一下服务注册.&lt;/p>
+&lt;h2 id="配置">配置&lt;/h2>
+&lt;h3 id="bootstrapconfiguration">BootstrapConfiguration&lt;/h3>
+&lt;h4 id="eurekadiscoveryclientconfigservicebootstrapconfiguration">EurekaDiscoveryClientConfigServiceBootstrapConfiguration&lt;/h4>
+&lt;p>spring-cloud-config环境中使用的配置&lt;/p>
+&lt;p>引入&lt;code>EurekaDiscoveryClientConfiguration&lt;/code>和&lt;code>EurekaClientAutoConfiguration&lt;/code>&lt;/p>
+&lt;h5 id="eurekadiscoveryclientconfiguration">EurekaDiscoveryClientConfiguration&lt;/h5>
+&lt;ol>
+&lt;li>在spring-cloud中(通过是否存在RefreshScopeRefreshedEvent.class判断), 添加&lt;code>RefreshScopeRefreshedEvent&lt;/code>的listener. 收到事件后重新注册实例.&lt;/li>
+&lt;li>在&lt;code>eureka.client.healthcheck.enabled&lt;/code>设置为true时, 注册&lt;code>EurekaHealthCheckHandler&lt;/code>bean. &lt;code>EurekaHealthCheckHandler&lt;/code>负责将应用状态映射为实例状态&lt;code>InstanceStatus&lt;/code>.&lt;/li>
+&lt;/ol>
+&lt;h5 id="eurekaclientautoconfiguration">EurekaClientAutoConfiguration&lt;/h5>
+&lt;p>支持spring-cloud和非spring-cloud环境, 在spring-cloud环境中, 下面两个bean要使用&lt;code>@RefreshScope&lt;/code>标注&lt;/p>
+&lt;ol>
+&lt;li>实例化&lt;code>EurekaClient&lt;/code>bean, 在spring-cloud中使用实现类&lt;code>CloudEurekaClient&lt;/code>.&lt;/li>
+&lt;li>使用&lt;code>EurekaInstanceConfig&lt;/code>实例, 实例化&lt;code>ApplicationInfoManager&lt;/code>bean&lt;/li>
+&lt;/ol></description></item><item><title>Spring Cloud - Eureka Client源码分析</title><link>https://atbug.com/articles/spring-cloud-eureka-client-source-code-analysis/</link><pubDate>Sat, 14 Oct 2017 22:04:59 +0000</pubDate><guid>https://atbug.com/articles/spring-cloud-eureka-client-source-code-analysis/</guid><description>准备做个Spring Cloud源码分析系列, 作为Spring Cloud的源码分析笔记.
+这一篇是Eureka的客户端.
+客户端 两种方式, 最终的实现基本一样.
+显示指定服务发现的实现类型 使用@EnableEurekaClient注解显示的指定使用Eureka作为服务发现的实现, 并实例化EurekaClient实例. 实际上使用的是@EnableDiscoveryClient注解.
+@Target(ElementType.TYPE) @Retention(RetentionPolicy.RUNTIME) @Documented @Inherited @EnableDiscoveryClient public @interface EnableEurekaClient { } 动态配置实现 使用@EnableDiscoveryClient注解来配置服务发现的实现.
+源码分析 EnableDiscoveryClient
+@Target(ElementType.TYPE) @Retention(RetentionPolicy.RUNTIME) @Documented @Inherited @Import(EnableDiscoveryClientImportSelector.class) public @interface EnableDiscoveryClient { } EnableDiscoveryClient注解的作用主要是用来引入EnableDiscoveryClientImportSelector
+EnableDiscoveryClientImportSelector
+@Order(Ordered.LOWEST_PRECEDENCE - 100) public class EnableDiscoveryClientImportSelector extends SpringFactoryImportSelector&amp;lt;EnableDiscoveryClient&amp;gt; { @Override protected boolean isEnabled() { return new RelaxedPropertyResolver(getEnvironment()).</description></item></channel></rss>

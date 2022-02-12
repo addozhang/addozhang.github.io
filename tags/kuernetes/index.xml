@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kuernetes on 乱世浮生</title><link>https://atbug.com/tags/kuernetes/</link><description>Recent content in Kuernetes on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 09 Jun 2021 00:34:25 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/kuernetes/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes 的自动伸缩你用对了吗？</title><link>https://atbug.com/articles/auto-scaling-best-practice-in-kubernetes/</link><pubDate>Wed, 09 Jun 2021 00:34:25 +0800</pubDate><guid>https://atbug.com/articles/auto-scaling-best-practice-in-kubernetes/</guid><description>本文翻译自 learnk8s 的 Architecting Kubernetes clusters — choosing the best autoscaling strategy，有增删部分内容。
-TL;DR: 在默认设置下，扩展 Kubernetes 集群中的 pod 和节点可能需要几分钟时间。了解如何调整集群节点的大小、配置水平和集群自动缩放器以及过度配置集群以加快扩展速度。
-自动扩展器 在 Kubernetes 中，常说的“自用扩展”有：
-HPA：Pod 水平缩放器 VPA：Pod 垂直缩放器 CA：集群自动缩放器 不同类型的自动缩放器，使用的场景不一样。
-HPA HPA 定期检查内存和 CPU 等指标，自动调整 Deployment 中的副本数，比如流量变化：
-VPA 有些时候无法通过增加 Pod 数来扩容，比如数据库。这时候可以通过 VPA 增加 Pod 的大小，比如调整 Pod 的 CPU 和内存：</description></item></channel></rss>
