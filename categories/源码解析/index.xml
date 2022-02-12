@@ -1,122 +1,797 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>源码解析 on 乱世浮生</title><link>https://atbug.com/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</link><description>Recent content in 源码解析 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 27 Jun 2021 09:38:18 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/index.xml" rel="self" type="application/rss+xml"/><item><title>可编程网关 Pipy 第三弹：事件模型设计</title><link>https://atbug.com/articles/pipy-event-handling-design/</link><pubDate>Sun, 27 Jun 2021 09:38:18 +0800</pubDate><guid>https://atbug.com/articles/pipy-event-handling-design/</guid><description>自从参加了 Flomesh 的 workshop，了解了可编程网关 Pipy。对这个“小东西”充满了好奇，前后写了两篇文章，看了部分源码解开了其部分面纱。但始终未见其全貌，没有触及其核心设计。
-不是有句话，“好奇害死猫”。其实应该还有后半句，“满足了就没事”（见维基百科）。
-所有就有了今天的这一篇，对前两篇感兴趣的可以跳转翻看。
-初探可编程网关 Pipy 可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读 言归正传。
-事件模型 上篇写了 Pipy 基于事件的信息流转，其实还未深入触及其核心的事件模型。既然是事件模型，先看事件。
-src/event.hpp:41 中定义了 Pipy 的四种事件：
-Data MessageStart MessageEnd SessionEnd 翻看源码可知（必须吐槽文档太少）这几种事件其实是有顺序的：MessageStart -&amp;gt; Data -&amp;gt; MessageEnd -&amp;gt; SessionEnd。
-这种面向事件模型，必然有生产者和消费者。又是翻看源码可知，生产者和消费者都是 pipy::Filter。我们在上篇文章中讲过：每个 Pipeline 都有一个过滤器链，类似单向链表的数据结构。</description></item><item><title>源码解析：一文读懂 Kubelet</title><link>https://atbug.com/articles/kubelet-source-code-analysis/</link><pubDate>Tue, 15 Jun 2021 08:25:25 +0800</pubDate><guid>https://atbug.com/articles/kubelet-source-code-analysis/</guid><description>本文主要介绍 kubelet 功能、核心组件，以及启动流程的源码分析，总结了 kubelet 的工作原理。
-kubelet 简介 从官方的架构图中很容易就能找到 kubelet
-执行 kubelet -h 看到 kubelet 的功能介绍：
-kubelet 是每个 Node 节点上都运行的主要“节点代理”。使用如下的一个向 apiserver 注册 Node 节点：主机的 hostname；覆盖 host 的参数；或者云提供商指定的逻辑。 kubelet 基于 PodSpec 工作。PodSpec 是用 YAML 或者 JSON 对象来描述 Pod。Kubelet 接受通过各种机制（主要是 apiserver）提供的一组 PodSpec，并确保里面描述的容器良好运行。 除了由 apiserver 提供 PodSpec，还可以通过以下方式提供：</description></item><item><title>Kubernetes 上如何控制容器的启动顺序？</title><link>https://atbug.com/articles/k8s-1.18-container-start-sequence-control/</link><pubDate>Fri, 30 Apr 2021 07:43:54 +0800</pubDate><guid>https://atbug.com/articles/k8s-1.18-container-start-sequence-control/</guid><description>去年写过一篇博客：控制 Pod 内容器的启动顺序，分析了 TektonCD 的容器启动控制的原理。
-为什么要做容器启动顺序控制？我们都知道 Pod 中除了 init-container 之外，是允许添加多个容器的。类似 TektonCD 中 task 和 step 的概念就分别与 pod 和 container 对应，而 step 是按照顺序执行的。此外还有服务网格的场景，sidecar 容器需要在服务容器启动之前完成配置的加载，也需要对容器的启动顺序加以控制。否则，服务容器先启动，而 sidecar 还无法提供网络上的支持。
-现实 期望 到了这里肯定有同学会问，spec.containers[] 是一个数组，数组是有顺序的。Kubernetes 也确实是按照顺序来创建和启动容器，但是 容器启动成功，并不表示容器可以对外提供服务。
-在 Kubernetes 1.18 非正式版中曾在 Lifecycle 层面提供了对 sidecar 类型容器的 支持，但是最终该功能并没有落地。</description></item><item><title>使用 cLion 阅读 envoy 源码</title><link>https://atbug.com/articles/read-envoy-source-code-in-clion/</link><pubDate>Tue, 08 Dec 2020 20:53:39 +0800</pubDate><guid>https://atbug.com/articles/read-envoy-source-code-in-clion/</guid><description>虽然不写 C++，但是看点代码还是能看懂。Envoy 的功能配置复杂，有时候处理问题还是需要看下源码的。
-Vim 或者 Code 就算了，我只是阅读源码需要关联跳转就行。在 Clion 中，代码的关联跳转需要一个CMakeLists.txt 文件。
-我将生成的内容挂在了 gist 上了，不想花费时间生成的可以直接复制。
-准备环境 1. 安装依赖的工具 brew install coreutils wget cmake libtool go automake ninja clang-format 2. bazel 使用 homebrew 进行安装： brew install bazel 即可
-安装问运行编译测试下：bazel build //source/exe:envoy-static，提示版本太高。
-现在 homebrew 安装的版本是3.</description></item><item><title>Kubernetes 源码解析 - Informer</title><link>https://atbug.com/articles/kubernetes-source-code-how-informer-work/</link><pubDate>Sun, 16 Aug 2020 23:32:38 +0800</pubDate><guid>https://atbug.com/articles/kubernetes-source-code-how-informer-work/</guid><description>上篇扒了 HPA 的源码，但是没深入细节，今天往细节深入。
-开局先祭出一张图：
-为什么要有 Informer？ Kubernetes 中的持久化数据保存在 etcd中，各个组件并不会直接访问 etcd，而是通过 api-server暴露的 RESTful 接口对集群进行访问和控制。
-资源的控制器（图中右侧灰色的部分）读取数据也并不会直接从 api-server 中获取资源信息（这样会增加 api-server 的压力），而是从其“本地缓存”中读取。这个“本地缓存”只是表象的存在，加上缓存的同步逻辑就是今天要是说的Informer（灰色区域中的第一个蓝色块）所提供的功能。
-从图中可以看到 Informer 的几个组件：
-Reflector：与 api-server交互，监听资源的变更。 Delta FIFO Queue：增量的 FIFO 队列，保存 Reflector 监听到的资源变更（简单的封装）。 Indexer：Informer 的本地缓存，FIFO 队列中的数据根据不同的变更类型，在该缓存中进行操作。 Local Store： 上篇 提到了水平自动伸缩的控制器HorizontalController，其构造方法就需要提供 Informer。</description></item><item><title>Kubernetes 源码解析 - HPA 水平自动伸缩如何工作</title><link>https://atbug.com/articles/kubernetes-source-code-how-hpa-work/</link><pubDate>Sat, 15 Aug 2020 02:09:37 +0800</pubDate><guid>https://atbug.com/articles/kubernetes-source-code-how-hpa-work/</guid><description>HPA - Horizontal Pod Autoscaler 的缩写，Pod 水平自动伸缩。通过对 Pod 负载的监控，来自动增加或者减少 Pod 的副本数量。
-从字面意思来看，其主要包含了两部分：
-监控 Pod 的负载 控制 Pod 的副本数量 那具体是如何实现的呢？以下基于1.17 源码，来分析下 HPA 如何工作。
-注意：文章中的代码在源码的基础上进行了精简：删掉了注释、序列化等信息，或保留了部分核心代码，加上新的注释。
-资源 HPA 的资源是HorizontalPodAutoscaler，在v1版本中，只支持基于 CPU 指标的计算；在v2beta2版本中加入了基于内存和自定义指标的计算。
-v1 //staging/src/k8s.io/api/autoscaling/v1/types.go type HorizontalPodAutoscaler struct { metav1.TypeMeta metav1.ObjectMeta Spec HorizontalPodAutoscalerSpec Status HorizontalPodAutoscalerStatus } type HorizontalPodAutoscalerSpec struct { ScaleTargetRef CrossVersionObjectReference //监控的目标资源 MinReplicas *int32 //最小副本数 MaxReplicas int32 //最大副本数 TargetCPUUtilizationPercentage *int32 //触发调整的CPU 使用率 } v2 //staging/src/k8s.</description></item><item><title>Spring Boot源码分析 - Configuration注解</title><link>https://atbug.com/articles/spring-boot-configuration-annotation/</link><pubDate>Mon, 10 Dec 2018 16:24:33 +0000</pubDate><guid>https://atbug.com/articles/spring-boot-configuration-annotation/</guid><description>@Configuration注解 @Configuration注解指示一个类声明一个或多个@Bean方法, 并且可以由Spring容器处理, 以在运行时为这些bean生成bean定义和服务请求.
-使用ConfigurationClassParser来对@Configuration标注的类进行解析, 封装成ConfigurationClass实例. 具体的实现通过ConfigurationClassPostProcessor来实现的.
-ConfigurationClassPostProcessor 实现了BeanDefinitionRegistryPostProcessor接口, 间接实现了BeanFactorPostProcessor接口.
-#postProcessBeanDefinitionRegistry(): 注册所有ConfigurationClass中的BeanDefinition, 包括@Bean注解的方法, @ImporResource引入的资源中定义的bean, 和@Import注解引入的ImportBeanDefinitionRegistrar中注册的BeanDefinition #postProcessBeanFactory(): 在运行时以通过cglig增强的类来替换ConfigurationClass, 为服务bean请求做准备. 增强的实现是通过ConfigurationClassEnhancer完成的. 插入一点, ConfigurationClassEnhancer实现了直接使用bean注册方法来获取bean的操作, 提供了一个BeanMethodInterceptor的内部类来实行.
-@Configuration public class Config { @Bean public A a() { ... return a; } @Bean public B b() { b.</description></item><item><title>Spring Cloud Ribbon 详解</title><link>https://atbug.com/articles/spring-cloud-ribbon-breakdown-1/</link><pubDate>Sat, 05 May 2018 11:18:05 +0000</pubDate><guid>https://atbug.com/articles/spring-cloud-ribbon-breakdown-1/</guid><description>&lt;p>客户端负载均衡, Ribbon的核心概念是命名的客户端.&lt;/p>
-&lt;h2 id="使用">使用&lt;/h2>
-&lt;h3 id="引入ribbon依赖和配置">引入Ribbon依赖和配置&lt;/h3>
-&lt;p>加入&lt;code>spring-cloud-starter-netflix-ribbon&lt;/code>依赖&lt;/p>
-&lt;h3 id="代码中使用ribbonclient注解">代码中使用RibbonClient注解&lt;/h3>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#a6e22e">@Configuration&lt;/span>
-&lt;span style="color:#a6e22e">@RibbonClient&lt;/span>&lt;span style="color:#f92672">(&lt;/span>name &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;foo&amp;#34;&lt;/span>&lt;span style="color:#f92672">,&lt;/span> configuration &lt;span style="color:#f92672">=&lt;/span> FooConfiguration&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">)&lt;/span> &lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">TestConfiguration&lt;/span> &lt;span style="color:#f92672">{}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#a6e22e">@Configuration&lt;/span> &lt;span style="color:#66d9ef">protected&lt;/span> &lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">FooConfiguration&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#a6e22e">@Bean&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> ZonePreferenceServerListFilter &lt;span style="color:#a6e22e">serverListFilter&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-ZonePreferenceServerListFilter filter &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> ZonePreferenceServerListFilter&lt;span style="color:#f92672">();&lt;/span>
-filter&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#a6e22e">setZone&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#e6db74">&amp;#34;myTestZone&amp;#34;&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
-&lt;span style="color:#66d9ef">return&lt;/span> filter&lt;span style="color:#f92672">;&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#a6e22e">@Bean&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> IPing &lt;span style="color:#a6e22e">ribbonPing&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> PingUrl&lt;span style="color:#f92672">();&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Ribbon客户端的配置, 如果不指定会使用默认的实现:&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>源码解析 on 乱世浮生</title><link>https://atbug.com/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</link><description>Recent content in 源码解析 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 27 Jun 2021 09:38:18 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/index.xml" rel="self" type="application/rss+xml"/><item><title>可编程网关 Pipy 第三弹：事件模型设计</title><link>https://atbug.com/pipy-event-handling-design/</link><pubDate>Sun, 27 Jun 2021 09:38:18 +0800</pubDate><guid>https://atbug.com/pipy-event-handling-design/</guid><description>
+&lt;p>自从参加了 &lt;a href="https://flomesh.cn/">Flomesh&lt;/a> 的 workshop，了解了可编程网关 &lt;a href="https://github.com/flomesh-io/pipy">Pipy&lt;/a>。对这个“小东西”充满了好奇，前后写了两篇文章，看了部分源码解开了其部分面纱。但始终未见其全貌，没有触及其核心设计。&lt;/p>
+&lt;p>不是有句话，“好奇害死猫”。其实应该还有后半句，“满足了就没事”（见&lt;a href="https://zh.wikipedia.org/wiki/%E5%A5%BD%E5%A5%87%E5%AE%B3%E6%AD%BB%E7%8C%AB">维基百科&lt;/a>）。&lt;/p>
+&lt;p>所有就有了今天的这一篇，对前两篇感兴趣的可以跳转翻看。&lt;/p>
 &lt;ul>
-&lt;li>IClientConfig 客户端相关配置&lt;/li>
-&lt;li>IRule 定义负载均衡策略&lt;/li>
-&lt;li>IPing 定义如何ping目标服务实例来判断是否存活, ribbon使用单独的线程每隔一段时间(默认10s)对本地缓存的ServerList做一次检查&lt;/li>
-&lt;li>ServerList&lt;Server> 定义如何获取服务实例列表. 两种实现基于配置的&lt;code>ConfigurationBasedServerList&lt;/code>和基于Eureka服务发现的&lt;code>DiscoveryEnabledNIWSServerList&lt;/code>&lt;/li>
-&lt;li>ServerListFilter&lt;Server> 用来使用期望的特征过滤静态配置动态获得的候选服务实例列表. 若未提供, 默认使用&lt;code>ZoneAffinityServerListFilter&lt;/code>&lt;/li>
-&lt;li>ILoadBalancer 定义了软负载均衡器的操作的接口. 一个典型的负载均衡器至少需要一组用来做负载均衡的服务实例, 一个标记某个服务实例不在旋转中的方法, 和对应的方法调用从实例列表中选出某一个服务实例.&lt;/li>
-&lt;li>ServerListUpdater DynamicServerListLoadBalancer用来更新实例列表的策略(推&lt;code>EurekaNotificationServerListUpdater&lt;/code>/拉&lt;code>PollingServerListUpdater&lt;/code>, 默认是拉)&lt;/li>
-&lt;/ul></description></item><item><title>Spring Cloud Zuul详解</title><link>https://atbug.com/articles/spring-cloud-zuul-breakdown/</link><pubDate>Thu, 22 Feb 2018 17:02:26 +0000</pubDate><guid>https://atbug.com/articles/spring-cloud-zuul-breakdown/</guid><description>&lt;p>Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看&lt;a href="http://atbug.com/learn-netflix-zuul/">上一篇&lt;/a>.&lt;/p>
-&lt;h2 id="实现">实现&lt;/h2>
-&lt;p>@EnableZuulProxy 与 @EnableZuulServer
-二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用.
-Zuul server的路由都通过&lt;code>ZuulProperties&lt;/code>进行配置.&lt;/p>
-&lt;h3 id="具体实现">具体实现:&lt;/h3>
-&lt;ol>
-&lt;li>使用&lt;code>ZuulController&lt;/code>(&lt;code>ServletWrappingController&lt;/code>的子类)封装&lt;code>ZuulServlet&lt;/code>实例, 处理从&lt;code>DispatcherServlet&lt;/code>进来的请求.&lt;/li>
-&lt;li>&lt;code>ZuulHandlerMapping&lt;/code>负责注册handler mapping, 将&lt;code>Route&lt;/code>的&lt;code>fullPath&lt;/code>的请求交由&lt;code>ZuulController&lt;/code>处理.&lt;/li>
-&lt;li>同时使用&lt;code>ServletRegistrationBean&lt;/code>注册&lt;code>ZuulServlet&lt;/code>, 默认使用&lt;code>/zuul&lt;/code>作为urlMapping. 所有来自以&lt;code>/zuul&lt;/code>开头的path的请求都会直接进入&lt;code>ZuulServlet&lt;/code>, 不会进入&lt;code>DispatcherServlet&lt;/code>.&lt;/li>
-&lt;/ol>
-&lt;h4 id="使用注解">使用注解&lt;/h4>
+&lt;li>&lt;a href="https://mp.weixin.qq.com/s/l8JzYRn350fjuCAOoo8pcg">初探可编程网关 Pipy&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://mp.weixin.qq.com/s/_IeRXp9EJnVsvDfg8tUr1A">可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>言归正传。&lt;/p>
+&lt;h2 id="事件模型">事件模型&lt;/h2>
+&lt;p>上篇写了 Pipy 基于事件的信息流转，其实还未深入触及其核心的事件模型。既然是事件模型，先看事件。&lt;/p>
+&lt;p>&lt;code>src/event.hpp:41&lt;/code> 中定义了 Pipy 的四种事件：&lt;/p>
 &lt;ul>
-&lt;li>
-&lt;p>&lt;code>@EnableZuulProxy&lt;/code>引入了&lt;code>ZuulProxyMarkerConfiguration&lt;/code>, &lt;code>ZuulProxyMarkerConfiguration&lt;/code>只做了一件事, 实例化了内部类&lt;code>Marker&lt;/code>.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#a6e22e">@Configuration&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">ZuulProxyMarkerConfiguration&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#a6e22e">@Bean&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> Marker &lt;span style="color:#a6e22e">zuulProxyMarkerBean&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Marker&lt;span style="color:#f92672">();&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Marker&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;li>
-&lt;p>&lt;code>@EnableZuulServer&lt;/code>引入了&lt;code>ZuulServerMarkerConfiguration&lt;/code>, &lt;code>ZuulServerMarkerConfiguration&lt;/code>也只做了一件事: 实例化了内部类&lt;code>Marker&lt;/code>&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#a6e22e">@Configuration&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">ZuulServerMarkerConfiguration&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#a6e22e">@Bean&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> Marker &lt;span style="color:#a6e22e">zuulServerMarkerBean&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Marker&lt;span style="color:#f92672">();&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Marker&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul></description></item><item><title>Spring Cloud - Eureka服务注册</title><link>https://atbug.com/articles/spring-cloud-service-registry-via-eureka/</link><pubDate>Wed, 14 Feb 2018 07:32:43 +0000</pubDate><guid>https://atbug.com/articles/spring-cloud-service-registry-via-eureka/</guid><description>&lt;p>之前分析过&lt;a href="http://atbug.com/spring-cloud-eureka-client-source-code-analysis/">Spring Cloud的Eureka服务发现&lt;/a>, 今天分析一下服务注册.&lt;/p>
-&lt;h2 id="配置">配置&lt;/h2>
-&lt;h3 id="bootstrapconfiguration">BootstrapConfiguration&lt;/h3>
-&lt;h4 id="eurekadiscoveryclientconfigservicebootstrapconfiguration">EurekaDiscoveryClientConfigServiceBootstrapConfiguration&lt;/h4>
-&lt;p>spring-cloud-config环境中使用的配置&lt;/p>
-&lt;p>引入&lt;code>EurekaDiscoveryClientConfiguration&lt;/code>和&lt;code>EurekaClientAutoConfiguration&lt;/code>&lt;/p>
-&lt;h5 id="eurekadiscoveryclientconfiguration">EurekaDiscoveryClientConfiguration&lt;/h5>
+&lt;li>&lt;code>Data&lt;/code>&lt;/li>
+&lt;li>&lt;code>MessageStart&lt;/code>&lt;/li>
+&lt;li>&lt;code>MessageEnd&lt;/code>&lt;/li>
+&lt;li>&lt;code>SessionEnd&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>翻看源码可知（必须吐槽文档太少）这几种事件其实是有顺序的：&lt;code>MessageStart&lt;/code> -&amp;gt; &lt;code>Data&lt;/code> -&amp;gt; &lt;code>MessageEnd&lt;/code> -&amp;gt; &lt;code>SessionEnd&lt;/code>。&lt;/p>
+&lt;p>这种面向事件模型，必然有生产者和消费者。又是翻看源码可知，生产者和消费者都是 &lt;code>pipy::Filter&lt;/code>。我们在上篇文章中讲过：每个 &lt;code>Pipeline&lt;/code> 都有一个过滤器链，类似&lt;strong>单向链表的数据结构&lt;/strong>。&lt;/p>
+&lt;p>那是不是按照上面说的，事件是从一个 &lt;code>Filter&lt;/code> 流向下一个 &lt;code>Filter&lt;/code>？也对，也不对。&lt;/p>
+&lt;h2 id="矛盾">矛盾？&lt;/h2>
+&lt;p>先看 &lt;code>Filter&lt;/code> 如何向下传递事件，&lt;code>src/session.cpp:55&lt;/code> 处，&lt;code>Filter&lt;/code> 持有 &lt;code>output&lt;/code> 变量，类似为 &lt;code>Event::Receiver&lt;/code>（参数为 &lt;code>Event&lt;/code> 的 &lt;code>std::function&lt;/code> 的别名，作为外行的笔者并不懂 c++，但不妨碍了解程序设计）。通过 &lt;code>Receiver&lt;/code> 调用下一个 &lt;code>Filter&lt;/code> 的 &lt;code>#process&lt;/code> 方法。&lt;/p>
+&lt;p>这里的 &lt;code>Receiver&lt;/code> 就可以理解为事件发送的窗口，而 &lt;code>#process(Context *ctx, Event *inp)&lt;/code> 就是事件的接收窗口。&lt;/p>
+&lt;p>这就是前面为什么说 “事件是从一个 &lt;code>Filter&lt;/code> 流向下一个 &lt;code>Filter&lt;/code>” 是正确的。&lt;/p>
+&lt;p>为什么不对？首先，一个 &lt;code>Filter&lt;/code> 会产生多个事件，比如 &lt;code>decodeHttpRequest&lt;/code> 可能会产生 &lt;code>MessageStart&lt;/code>、&lt;code>Data&lt;/code> 和 &lt;code>MessageEnd&lt;/code> 事件，&lt;strong>并且每产生一个事件都会通过&lt;code>Receiver&lt;/code> 向下传递，不会等 &lt;code>#process&lt;/code> 流程结束才传递事件&lt;/strong>；再就是下一个 &lt;code>Filter&lt;/code> 可能并不会对某个事件感兴趣（下一个 &lt;code>Filter&lt;/code> 的 &lt;code>#process&lt;/code> 方法不做任何处理就返回了）。&lt;/p>
+&lt;p>可能看下图会更容易理解（图中 &lt;code>no output&lt;/code> 表明事件不会向下传递）：&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/27/20210627073856.png" alt="event-handling-flow">&lt;/p>
+&lt;h2 id="最简单的示例">最简单的示例&lt;/h2>
+&lt;p>在 &lt;code>test/001-echo/pipy.js&lt;/code> 提供了的示例：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-js" data-lang="js">&lt;span class="nx">pipy&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">listen&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">6080&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">decodeHttpRequest&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">encodeHttpResponse&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>发起请求&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ curl -X POST localhost:6080 -d &lt;span class="s1">&amp;#39;{}&amp;#39;&lt;/span>
+&lt;span class="o">{}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>HTTP 消息体&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-http" data-lang="http">&lt;span class="err">#request
+&lt;/span>&lt;span class="err">&lt;/span>&lt;span class="nf">POST&lt;/span> &lt;span class="nn">/&lt;/span> &lt;span class="kr">HTTP&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="m">1.1&lt;/span>
+&lt;span class="n">Content-Type&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="l">application/javascript&lt;/span>
+&lt;span class="n">User-Agent&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="l">PostmanRuntime/7.28.1&lt;/span>
+&lt;span class="n">Accept&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="l">*/*&lt;/span>
+&lt;span class="n">Postman-Token&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="l">fc84b575-7fea-487b-a55d-f6085bc62cf7&lt;/span>
+&lt;span class="n">Host&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="l">localhost:6080&lt;/span>
+&lt;span class="n">Accept-Encoding&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="l">gzip, deflate, br&lt;/span>
+&lt;span class="n">Connection&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="l">keep-alive&lt;/span>
+&lt;span class="n">Content-Length&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="l">2&lt;/span>
+&lt;span class="err"> &lt;/span>
+&lt;span class="p">{}&lt;/span>
+&lt;span class="err">#&lt;/span>&lt;span class="nx">response&lt;/span>
+&lt;span class="nx">HTTP&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mf">1.1&lt;/span> &lt;span class="mi">200&lt;/span> &lt;span class="nx">OK&lt;/span>
+&lt;span class="nx">postman&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">token&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">fc84b575&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">7&lt;/span>&lt;span class="nx">fea&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">487&lt;/span>&lt;span class="nx">b&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">a55d&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">f6085bc62cf7&lt;/span>
+&lt;span class="nx">accept&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">encoding&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">gzip&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">deflate&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">br&lt;/span>
+&lt;span class="nx">host&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">localhost&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mi">6080&lt;/span>
+&lt;span class="nx">accept&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="err">/*&lt;/span>
+&lt;span class="nx">user&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">agent&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">PostmanRuntime&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mf">7.28.1&lt;/span>
+&lt;span class="nx">content&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">type&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">application&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nx">javascript&lt;/span>
+&lt;span class="nx">Connection&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">keep&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">alive&lt;/span>
+&lt;span class="nx">Content&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">Length&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">2&lt;/span>
+&lt;span class="p">{}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里我们以过滤器 &lt;code>decodeHttpRequest&lt;/code> 为例，官方的说明是 &lt;code>Deframes an HTTP request message&lt;/code>。前面提到它会产生 3 个事件，都是在 &lt;code>deframe&lt;/code> 的过程中发出的。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/27/20210627080912.png" alt="decodeHttpRequest">&lt;/p>
+&lt;p>&lt;code>Session&lt;/code> 调用第一个 &lt;code>Filter&lt;/code> 时，传入的事件类型是 &lt;code>event::Data&lt;/code>。&lt;code>decodeHttpRequest&lt;/code> 关注该事件，并按照 HTTP 协议开始解析。&lt;/p>
+&lt;p>在上图可以看到解析的不同阶段，会发出不同的事件。调用 &lt;code>Receiver&lt;/code> 传输事件，调用 &lt;code>encodeHttpResponse&lt;/code> 的 &lt;code>#process()&lt;/code> 方法。&lt;/p>
+&lt;p>这里又会好奇，假如上面的示例中去掉两个过滤器中的任何一个，或者都去掉，能不能正常工作？&lt;/p>
+&lt;p>答案是都不能！响应状态码都是 &lt;code>502 Bad Gateway&lt;/code>（curl/httpie）。&lt;/p>
+&lt;h2 id="分析">分析&lt;/h2>
+&lt;p>这里需要结合本文的第一张图 event-handling-flow。&lt;/p>
+&lt;h3 id="去掉两个过滤器">去掉两个过滤器&lt;/h3>
+&lt;p>假如两个都去掉了，HTTP Request 请求消息会被直接回传给客户端，协议错误。&lt;/p>
+&lt;h3 id="去掉-decodehttprequest">去掉 decodeHttpRequest&lt;/h3>
+&lt;p>前面提到 &lt;code>Session&lt;/code> 传给第一个 &lt;code>Filter&lt;/code> 的事件是 &lt;code>event::Data&lt;/code>。而 &lt;code>encodeHttpResponse&lt;/code> 针对该事件只会将其保存到 buffer 中。&lt;/p>
+&lt;p>然后整个链路在此结束，没有回传任何数据。客户端会等待响应，超时退出（curl）。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/27/20210627084340.png" alt="2021-06-27-08-43-40">&lt;/p>
+&lt;h3 id="去掉-encodehttpresponse">去掉 encodeHttpResponse&lt;/h3>
+&lt;p>先说结果，与前面一样超时退出。&lt;/p>
+&lt;p>为什么会这样，明明 &lt;code>decodeHttpRequest&lt;/code> 产生了 3 个时间，&lt;code>Session&lt;/code> 里的 &lt;code>Receiver&lt;/code> 也有收到，也确实写回了请求 body 里的 &lt;code>{}&lt;/code>。&lt;/p>
+&lt;p>&lt;code>encodeHttpResponse&lt;/code> 过滤器有写回响应头，缺少了这些信息，响应就不并不是合法的 HTTP 协议，只是普通的 TCP 协议。&lt;/p>
+&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>Pipy 基于事件模型的设计，提供了强大的灵活性。允许我们在“规则”中使用不同过滤器针对不同的事件，对请求和响应的信息进行处理。&lt;/p>
+&lt;p>“规则” 就是业务逻辑的核心，而 Pipy 就是这逻辑的&lt;strong>执行引擎&lt;/strong>。&lt;/p>
+&lt;p>最后，“好奇心是成长的驱动力，永远保持好奇心。”&lt;/p></description></item><item><title>源码解析：一文读懂 Kubelet</title><link>https://atbug.com/kubelet-source-code-analysis/</link><pubDate>Tue, 15 Jun 2021 08:25:25 +0800</pubDate><guid>https://atbug.com/kubelet-source-code-analysis/</guid><description>
+&lt;p>本文主要介绍 kubelet 功能、核心组件，以及启动流程的源码分析，总结了 kubelet 的工作原理。&lt;/p>
+&lt;h2 id="kubelet-简介">kubelet 简介&lt;/h2>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/15/20210613091144.png" alt="Kubernetes 的架构图">&lt;/p>
+&lt;p>从官方的架构图中很容易就能找到 &lt;code>kubelet&lt;/code>&lt;/p>
+&lt;p>执行 &lt;code>kubelet -h&lt;/code> 看到 kubelet 的功能介绍：&lt;/p>
+&lt;ul>
+&lt;li>kubelet 是每个 Node 节点上都运行的主要“节点代理”。使用如下的一个向 apiserver 注册 Node 节点：主机的 &lt;code>hostname&lt;/code>；覆盖 &lt;code>host&lt;/code> 的参数；或者云提供商指定的逻辑。&lt;/li>
+&lt;li>kubelet 基于 &lt;code>PodSpec&lt;/code> 工作。&lt;code>PodSpec&lt;/code> 是用 &lt;code>YAML&lt;/code> 或者 &lt;code>JSON&lt;/code> 对象来描述 Pod。Kubelet 接受通过各种机制（主要是 apiserver）提供的一组 &lt;code>PodSpec&lt;/code>，并确保里面描述的容器良好运行。&lt;/li>
+&lt;/ul>
+&lt;p>除了由 apiserver 提供 &lt;code>PodSpec&lt;/code>，还可以通过以下方式提供：&lt;/p>
+&lt;ul>
+&lt;li>文件&lt;/li>
+&lt;li>HTTP 端点&lt;/li>
+&lt;li>HTTP 服务器&lt;/li>
+&lt;/ul>
+&lt;p>kubelet 功能归纳一下就是上报 Node 节点信息，和管理（创建、销毁）Pod。 功能看似简单，实际不然。每一个点拿出来都需要很大的篇幅来讲，比如 Node 节点的计算资源，除了传统的 CPU、内存、硬盘，还提供扩展来支持类似 GPU 等资源；Pod 不仅仅有容器，还有相关的网络、安全策略等。&lt;/p>
+&lt;h2 id="kubelet-架构">kubelet 架构&lt;/h2>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/15/20210614215508.png" alt="2021-06-14-21-55-08">&lt;/p>
+&lt;h3 id="重要组件">重要组件&lt;/h3>
+&lt;p>kubelet 的架构由 N 多的组件组成，下面简单介绍下比较重要的几个：&lt;/p>
+&lt;h4 id="pleg">PLEG&lt;/h4>
+&lt;p>即 &lt;strong>Pod Lifecycle Event Generator&lt;/strong>，字面意思 Pod 生命周期事件（&lt;code>ContainerStarted&lt;/code>、&lt;code>ContainerDied&lt;/code>、&lt;code>ContainerRemoved&lt;/code>、&lt;code>ContainerChanged&lt;/code>）生成器。&lt;/p>
+&lt;p>其维护着 Pod 缓存；定期通过 &lt;code>ContainerRuntime&lt;/code> 获取 Pod 的信息，与缓存中的信息比较，生成如上的事件；将事件写入其维护的通道（channel）中。&lt;/p>
+&lt;h4 id="podworkers">PodWorkers&lt;/h4>
+&lt;p>处理事件中 Pod 的同步。核心方法 &lt;code>managePodLoop()&lt;/code> 间接调用 &lt;code>kubelet.syncPod()&lt;/code> 完成 Pod 的同步：&lt;/p>
+&lt;ul>
+&lt;li>如果 Pod 正在被创建，记录其延迟&lt;/li>
+&lt;li>生成 Pod 的 API Status，即 &lt;code>v1.PodStatus&lt;/code>：从运行时的 status 转换成 api status&lt;/li>
+&lt;li>记录 Pod 从 &lt;code>pending&lt;/code> 到 &lt;code>running&lt;/code> 的耗时&lt;/li>
+&lt;li>在 &lt;code>StatusManager&lt;/code> 中更新 pod 的状态&lt;/li>
+&lt;li>杀掉不应该运行的 Pod&lt;/li>
+&lt;li>如果网络插件未就绪，只启动使用了主机网络（host network）的 Pod&lt;/li>
+&lt;li>如果 static pod 不存在，为其创建镜像（Mirror）Pod&lt;/li>
+&lt;li>为 Pod 创建文件系统目录：Pod 目录、卷目录、插件目录&lt;/li>
+&lt;li>使用 &lt;code>VolumeManager&lt;/code> 为 Pod 挂载卷&lt;/li>
+&lt;li>获取 image pull secrets&lt;/li>
+&lt;li>调用容器运行时（container runtime）的 &lt;code>#SyncPod()&lt;/code> 方法&lt;/li>
+&lt;/ul>
+&lt;h4 id="podmanager">PodManager&lt;/h4>
+&lt;p>存储 Pod 的期望状态，kubelet 服务的不同渠道的 Pod&lt;/p>
+&lt;h4 id="statsprovider">StatsProvider&lt;/h4>
+&lt;p>提供节点和容器的统计信息，有 &lt;code>cAdvisor&lt;/code> 和 &lt;code>CRI&lt;/code> 两种实现。&lt;/p>
+&lt;h4 id="containerruntime">ContainerRuntime&lt;/h4>
+&lt;p>顾名思义，容器运行时。与遵循 CRI 规范的高级容器运行时进行交互。&lt;/p>
+&lt;h4 id="depspodconfig">Deps.PodConfig&lt;/h4>
+&lt;p>PodConfig 是一个配置多路复用器，它将许多 Pod 配置源合并成一个单一的一致结构，然后按顺序向监听器传递增量变更通知。&lt;/p>
+&lt;p>配置源有：文件、apiserver、HTTP&lt;/p>
+&lt;h4 id="syncloop">&lt;code>#syncLoop&lt;/code>&lt;/h4>
+&lt;p>接收来自 &lt;code>PodConfig&lt;/code> 的 Pod 变更通知、定时任务、&lt;code>PLEG&lt;/code> 的事件，以及 &lt;code>ProbeManager&lt;/code> 的事件，将 Pod 同步到&lt;strong>期望状态&lt;/strong>。&lt;/p>
+&lt;h4 id="podadmithandlers">PodAdmitHandlers&lt;/h4>
+&lt;p>Pod admission 过程中调用的一系列处理器，比如 eviction handler（节点内存有压力时，不会驱逐 QoS 设置为 &lt;code>BestEffort&lt;/code> 的 Pod）、shutdown admit handler（当节点关闭时，不处理 pod 的同步操作）等。&lt;/p>
+&lt;h4 id="oomwatcher">OOMWatcher&lt;/h4>
+&lt;p>从系统日志中获取容器的 OOM 日志，将其封装成事件并记录。&lt;/p>
+&lt;h4 id="volumemanger">VolumeManger&lt;/h4>
+&lt;p>VolumeManager 运行一组异步循环，根据在此节点上调度的 pod 确定需要附加/挂载/卸载/分离哪些卷并执行操作。&lt;/p>
+&lt;h4 id="certificatemanager">CertificateManager&lt;/h4>
+&lt;p>处理证书轮换。&lt;/p>
+&lt;h4 id="probemanager">ProbeManager&lt;/h4>
+&lt;p>实际上包含了三种 Probe，提供 probe 结果缓存和通道。&lt;/p>
+&lt;ul>
+&lt;li>LivenessManager&lt;/li>
+&lt;li>ReadinessManager&lt;/li>
+&lt;li>StartupManager&lt;/li>
+&lt;/ul>
+&lt;h4 id="evictionmanager">EvictionManager&lt;/h4>
+&lt;p>监控 Node 节点的资源占用情况，根据驱逐规则驱逐 Pod 释放资源，缓解节点的压力。&lt;/p>
+&lt;h4 id="pluginmanager">PluginManager&lt;/h4>
+&lt;p>PluginManager 运行一组异步循环，根据此节点确定哪些插件需要注册/取消注册并执行。如 CSI 驱动和设备管理器插件（Device Plugin）。&lt;/p>
+&lt;h5 id="csi">CSI&lt;/h5>
+&lt;p>Container Storage Interface，由存储厂商实现的存储驱动。&lt;/p>
+&lt;h5 id="设备管理器插件device-plugin">设备管理器插件（Device Plugin）&lt;/h5>
+&lt;p>Kubernetes 提供了一个 设备插件框架，你可以用它来将系统硬件资源发布到 Kubelet。&lt;/p>
+&lt;p>供应商可以实现设备插件，由你手动部署或作为 DaemonSet 来部署，而不必定制 Kubernetes 本身的代码。目标设备包括 GPU、高性能 NIC、FPGA、 InfiniBand 适配器以及其他类似的、可能需要特定于供应商的初始化和设置的计算资源。&lt;/p>
+&lt;h2 id="kubelet-的启动流程">kubelet 的启动流程&lt;/h2>
+&lt;p>要分析 kubelet 的启动流程，可以从 kubelet 运行方式着手。找一个 Node 节点，很容易就能找到 kubelet 的进程。由于其是以 &lt;code>systemd&lt;/code> 的方式启动，也可以通过 &lt;code>systemctl&lt;/code> 查看其状态。&lt;/p>
+&lt;h3 id="kubelet-启动命令">kubelet 启动命令&lt;/h3>
+&lt;p>kubelet 的启动命令（minikube 环境）&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ ps -aux &lt;span class="p">|&lt;/span> grep &lt;span class="s1">&amp;#39;/kubelet&amp;#39;&lt;/span> &lt;span class="p">|&lt;/span> grep -v grep
+root &lt;span class="m">4917&lt;/span> 2.6 0.3 &lt;span class="m">1857652&lt;/span> &lt;span class="m">106152&lt;/span> ? Ssl 01:34 13:05 /var/lib/minikube/binaries/v1.21.0/kubelet --bootstrap-kubeconfig&lt;span class="o">=&lt;/span>/etc/kubernetes/bootstrap-kubelet.conf --config&lt;span class="o">=&lt;/span>/var/lib/kubelet/config.yaml --container-runtime&lt;span class="o">=&lt;/span>docker --hostname-override&lt;span class="o">=&lt;/span>1.21.0 --kubeconfig&lt;span class="o">=&lt;/span>/etc/kubernetes/kubelet.conf --node-ip&lt;span class="o">=&lt;/span>192.168.64.5
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>或者&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ systemctl status kubelet.service
+● kubelet.service - kubelet: The Kubernetes Node Agent
+Loaded: loaded &lt;span class="o">(&lt;/span>/usr/lib/systemd/system/kubelet.service&lt;span class="p">;&lt;/span> disabled&lt;span class="p">;&lt;/span> vendor preset: enabled&lt;span class="o">)&lt;/span>
+Drop-In: /etc/systemd/system/kubelet.service.d
+└─10-kubeadm.conf
+Active: active &lt;span class="o">(&lt;/span>running&lt;span class="o">)&lt;/span> since Sun 2021-06-13 01:34:42 UTC&lt;span class="p">;&lt;/span> 11h ago
+Docs: http://kubernetes.io/docs/
+Main PID: &lt;span class="m">4917&lt;/span> &lt;span class="o">(&lt;/span>kubelet&lt;span class="o">)&lt;/span>
+Tasks: &lt;span class="m">15&lt;/span> &lt;span class="o">(&lt;/span>limit: 38314&lt;span class="o">)&lt;/span>
+Memory: 39.4M
+CGroup: /system.slice/kubelet.service
+└─4917 /var/lib/minikube/binaries/v1.21.0/kubelet --bootstrap-kubeconfig&lt;span class="o">=&lt;/span>/etc/kubernetes/bootstrap-kubelet.conf --config&lt;span class="o">=&lt;/span>/var/lib/kubelet/config.yaml --container-runtime&lt;span class="o">=&lt;/span>docker --hostname-override&lt;span class="o">=&lt;/span>1.21.0 --kubeconfig&lt;span class="o">=&lt;/span>/etc/kubernetes/kubelet.conf --node-ip&lt;span class="o">=&lt;/span>192.168.64
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="源码分析">源码分析&lt;/h3>
+&lt;p>从 &lt;code>git@github.com:kubernetes/kubernetes.git&lt;/code> 仓库获取代码，使用最新的 &lt;code>release-1.21&lt;/code> 分支。&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>cmd/kubelet/kubelet.go:35&lt;/code> 的 &lt;code>main&lt;/code> 方法为程序入口。
+&lt;ul>
+&lt;li>调用 &lt;code>NewKubeletCommand&lt;/code> 方法，创建 command&lt;/li>
+&lt;li>执行 command
+&lt;ul>
+&lt;li>&lt;code>cmd/kubelet/app/server.go:434&lt;/code> 的 &lt;code>Run&lt;/code> 方法。
+&lt;ul>
+&lt;li>调用 &lt;code>RunKubelet&lt;/code> 方法。
+&lt;ul>
+&lt;li>调用 &lt;code>createAndInitKubelet&lt;/code> 方法，创建并初始化 kubelet
+&lt;ul>
+&lt;li>&lt;code>pkg/kubelet/kubelet.go&lt;/code> 的 &lt;code>NewMainKubelet&lt;/code> 方法，创建 kubelet的 各种组件。共十几个组件，见 &lt;a href="#kubelet-%E6%9E%B6%E6%9E%84">kubelet 的构架&lt;/a>。&lt;/li>
+&lt;li>调用 &lt;code>BirtyCry&lt;/code> 方法：放出 &lt;code>Starting&lt;/code> 事件&lt;/li>
+&lt;li>调用 &lt;code>StartGarbageCollection&lt;/code> 方法，开启 &lt;code>ContainerGC&lt;/code> 和 &lt;code>ImageGC&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>调用 &lt;code>startKubelet&lt;/code> 方法（大量使用 goroutine 和通道）
+&lt;ul>
+&lt;li>goroutine：&lt;code>kubelet.Run()&lt;/code>
+&lt;ul>
+&lt;li>初始化模块
+&lt;ul>
+&lt;li>metrics 相关&lt;/li>
+&lt;li>创建文件系统目录目录&lt;/li>
+&lt;li>创建容器日志目录&lt;/li>
+&lt;li>启动 &lt;code>ImageGCManager&lt;/code>&lt;/li>
+&lt;li>启动 &lt;code>ServerCertificateManager&lt;/code>&lt;/li>
+&lt;li>启动 &lt;code>OOMWatcher&lt;/code>&lt;/li>
+&lt;li>启动 &lt;code>ResourceAnalyzer&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>goroutine：&lt;code>VolumeManager.Run()&lt;/code> 开始处理 Pod Volume 的卸载和挂载&lt;/li>
+&lt;li>goroutine：状态更新 &lt;code>fastStatusUpdateOnce()&lt;/code> （更新 Pod CIDR -&amp;gt; 更新 &lt;code>ContainerRuntime&lt;/code> 状态 -&amp;gt; 更新 Node 节点状态）&lt;/li>
+&lt;li>goroutine： &lt;code>NodeLeaseController.Run()&lt;/code> 更新节点租约&lt;/li>
+&lt;li>goroutine：&lt;code>podKiller.PerformPodKillingWork&lt;/code> 杀掉未被正确处理的 pod&lt;/li>
+&lt;li>&lt;code>StatusManager.Start()&lt;/code> 开始向 apiserver 更新 Pod 状态&lt;/li>
+&lt;li>&lt;code>RuntimeClassManager.Start()&lt;/code>&lt;/li>
+&lt;li>&lt;code>PLEG.Start()&lt;/code>：持续从 &lt;code>ContainerRuntime&lt;/code> 获取 Pod/容器的状态，并与 kubelet 本地 cache 中的比较，生成对应的 &lt;code>Event&lt;/code>&lt;/li>
+&lt;li>&lt;code>syncLoop()&lt;/code> 重点，&lt;strong>&lt;em>持续监控并处理来自文件、apiserver、http 的变更&lt;/em>&lt;/strong>。包括 Pod 的增加、更新、优雅删除、非优雅删除、调和。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>启动 server，暴露 &lt;code>/healthz&lt;/code> 端点&lt;/li>
+&lt;li>通知 &lt;code>systemd&lt;/code> &lt;code>kuberlet&lt;/code> 服务已经启动&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="kubelet-的工作原理">kubelet 的工作原理&lt;/h2>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/15/20210615000611.png" alt="">&lt;/p>
 &lt;ol>
-&lt;li>在spring-cloud中(通过是否存在RefreshScopeRefreshedEvent.class判断), 添加&lt;code>RefreshScopeRefreshedEvent&lt;/code>的listener. 收到事件后重新注册实例.&lt;/li>
-&lt;li>在&lt;code>eureka.client.healthcheck.enabled&lt;/code>设置为true时, 注册&lt;code>EurekaHealthCheckHandler&lt;/code>bean. &lt;code>EurekaHealthCheckHandler&lt;/code>负责将应用状态映射为实例状态&lt;code>InstanceStatus&lt;/code>.&lt;/li>
+&lt;li>来静态文件、apiserver 以及 HTTP 请求的 Pod 配置变更，被发送到 &lt;code>kubelet.syncLoop&lt;/code>&lt;/li>
+&lt;li>PLEG 会定期通过容器运行时获取节点上 Pod 的状态，与其缓存中的 Pod 信息进行比较，封装成事件，进入 PLEG 的通道&lt;/li>
+&lt;li>定期检查工作队列中的 Pod&lt;/li>
+&lt;li>ProbeManager 的通道中的 Pod&lt;/li>
+&lt;li>以上 1~4，都会进入 &lt;code>syncLoopIteration&lt;/code>，并从对应的通道中获取到对应 Pod，将 Pod 的信息保存到 &lt;code>PodManager&lt;/code>；然后分发给 &lt;code>PodWorker&lt;/code>，&lt;a href="#PodWorkers">完成一些列的同步工作&lt;/a>。&lt;/li>
 &lt;/ol>
-&lt;h5 id="eurekaclientautoconfiguration">EurekaClientAutoConfiguration&lt;/h5>
-&lt;p>支持spring-cloud和非spring-cloud环境, 在spring-cloud环境中, 下面两个bean要使用&lt;code>@RefreshScope&lt;/code>标注&lt;/p>
-&lt;ol>
-&lt;li>实例化&lt;code>EurekaClient&lt;/code>bean, 在spring-cloud中使用实现类&lt;code>CloudEurekaClient&lt;/code>.&lt;/li>
-&lt;li>使用&lt;code>EurekaInstanceConfig&lt;/code>实例, 实例化&lt;code>ApplicationInfoManager&lt;/code>bean&lt;/li>
-&lt;/ol></description></item><item><title>Spring Cloud - Eureka Client源码分析</title><link>https://atbug.com/articles/spring-cloud-eureka-client-source-code-analysis/</link><pubDate>Sat, 14 Oct 2017 22:04:59 +0000</pubDate><guid>https://atbug.com/articles/spring-cloud-eureka-client-source-code-analysis/</guid><description>准备做个Spring Cloud源码分析系列, 作为Spring Cloud的源码分析笔记.
-这一篇是Eureka的客户端.
-客户端 两种方式, 最终的实现基本一样.
-显示指定服务发现的实现类型 使用@EnableEurekaClient注解显示的指定使用Eureka作为服务发现的实现, 并实例化EurekaClient实例. 实际上使用的是@EnableDiscoveryClient注解.
-@Target(ElementType.TYPE) @Retention(RetentionPolicy.RUNTIME) @Documented @Inherited @EnableDiscoveryClient public @interface EnableEurekaClient { } 动态配置实现 使用@EnableDiscoveryClient注解来配置服务发现的实现.
-源码分析 EnableDiscoveryClient
-@Target(ElementType.TYPE) @Retention(RetentionPolicy.RUNTIME) @Documented @Inherited @Import(EnableDiscoveryClientImportSelector.class) public @interface EnableDiscoveryClient { } EnableDiscoveryClient注解的作用主要是用来引入EnableDiscoveryClientImportSelector
-EnableDiscoveryClientImportSelector
-@Order(Ordered.LOWEST_PRECEDENCE - 100) public class EnableDiscoveryClientImportSelector extends SpringFactoryImportSelector&amp;lt;EnableDiscoveryClient&amp;gt; { @Override protected boolean isEnabled() { return new RelaxedPropertyResolver(getEnvironment()).</description></item></channel></rss>
+&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>kubelet 启动流量就讲到这里，虽然复杂，还是有迹可循。只要了解了 kubelet 在 Kubernetes 中的定位及角色，就很容易理解其工作流量。&lt;/p>
+&lt;p>后面会再深入分析 Pod 创建及启动流程。&lt;/p></description></item><item><title>Kubernetes 上如何控制容器的启动顺序？</title><link>https://atbug.com/k8s-1.18-container-start-sequence-control/</link><pubDate>Fri, 30 Apr 2021 07:43:54 +0800</pubDate><guid>https://atbug.com/k8s-1.18-container-start-sequence-control/</guid><description>
+&lt;p>去年写过一篇博客：&lt;a href="https://mp.weixin.qq.com/s/5UXhXpwPDBh2xuGKq9Nqig">控制 Pod 内容器的启动顺序&lt;/a>，分析了 &lt;a href="https://github.com/tektoncd">TektonCD&lt;/a> 的容器启动控制的原理。&lt;/p>
+&lt;p>为什么要做容器启动顺序控制？我们都知道 Pod 中除了 &lt;code>init-container&lt;/code> 之外，是允许添加多个容器的。类似 TektonCD 中 &lt;code>task&lt;/code> 和 &lt;code>step&lt;/code> 的概念就分别与 &lt;code>pod&lt;/code> 和 &lt;code>container&lt;/code> 对应，而 &lt;code>step&lt;/code> 是按照顺序执行的。此外还有服务网格的场景，sidecar 容器需要在服务容器启动之前完成配置的加载，也需要对容器的启动顺序加以控制。否则，服务容器先启动，而 sidecar 还无法提供网络上的支持。&lt;/p>
+&lt;h3 id="现实">现实&lt;/h3>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/30/sidecarlifecycle1.gif" alt="sidecar-lifecycle-1">&lt;/p>
+&lt;h3 id="期望">期望&lt;/h3>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/30/sidecarlifecycle2.gif" alt="sidecar-lifecycle-2">&lt;/p>
+&lt;p>到了这里肯定有同学会问，&lt;code>spec.containers[]&lt;/code> 是一个数组，数组是有顺序的。Kubernetes 也确实是按照顺序来创建和启动容器，但是 &lt;strong>容器启动成功，并不表示容器可以对外提供服务&lt;/strong>。&lt;/p>
+&lt;p>在 Kubernetes 1.18 非正式版中曾在 Lifecycle 层面提供了对 &lt;code>sidecar 类型容器的&lt;/code> 支持，但是最终该功能并&lt;a href="https://github.com/kubernetes/enhancements/issues/753#issuecomment-713471597">没有落地&lt;/a>。&lt;/p>
+&lt;p>那到底该怎么做？&lt;/p>
+&lt;h2 id="tldr">TL;DR&lt;/h2>
+&lt;p>笔者准备了一个简单的 &lt;a href="https://github.com/addozhang/k8s-container-sequence-sample">go 项目&lt;/a>，用于模拟 sidecar 的启动及配置加载。&lt;/p>
+&lt;p>克隆代码后可以通过 &lt;code>make build&lt;/code> 构建出镜像，假如你是用的 minikube 进行的实验，可以通过命令 &lt;code>make load-2-minikube&lt;/code> 将镜像加载到 minikube 节点中。&lt;/p>
+&lt;p>使用 Deployment 的方式进行部署，直接用 Pod 也可以。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">apps/v1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Deployment&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">creationTimestamp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">null&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">sample&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">sample&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">replicas&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">selector&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">matchLabels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">sample&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">strategy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>{}&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">template&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">creationTimestamp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">null&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">sample&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">containers&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">addozhang/k8s-container-sequence-sidecar:latest&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">sidecar&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">imagePullPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">IfNotPresent&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">lifecycle&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">postStart&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">exec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">command&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">/entrypoint&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">wait&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">busybox:latest&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">app&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">imagePullPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">IfNotPresent&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">command&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;/bin/sh&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s2">&amp;#34;-c&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">args&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;date; echo &amp;#39;app container started&amp;#39;; tail -f /dev/null&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>下面的截图中，演示了在 &lt;code>sample&lt;/code> 命名空间中，pod 内两个容器的执行顺序。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/30/20210430-062819.gif" alt="2021-04-30 06.28.19">&lt;/p>
+&lt;h2 id="kubernetes-源码">Kubernetes 源码&lt;/h2>
+&lt;p>在 kubelet 的源码 &lt;code>pkg/kubelet/kuberuntime/kuberuntime_manager.go&lt;/code> 中，&lt;code>#SyncPod&lt;/code> 方法用于创建 Pod，步骤比较繁琐，直接看第 7 步：创建普通容器。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">// SyncPod syncs the running pod into the desired pod by executing following steps:
+&lt;/span>&lt;span class="c1">//
+&lt;/span>&lt;span class="c1">// 1. Compute sandbox and container changes.
+&lt;/span>&lt;span class="c1">// 2. Kill pod sandbox if necessary.
+&lt;/span>&lt;span class="c1">// 3. Kill any containers that should not be running.
+&lt;/span>&lt;span class="c1">// 4. Create sandbox if necessary.
+&lt;/span>&lt;span class="c1">// 5. Create ephemeral containers.
+&lt;/span>&lt;span class="c1">// 6. Create init containers.
+&lt;/span>&lt;span class="c1">// 7. Create normal containers.
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">m&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">kubeGenericRuntimeManager&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">SyncPod&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">pod&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">v1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Pod&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">podStatus&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">kubecontainer&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">PodStatus&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">pullSecrets&lt;/span> &lt;span class="p">[]&lt;/span>&lt;span class="nx">v1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Secret&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">backOff&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">flowcontrol&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Backoff&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">result&lt;/span> &lt;span class="nx">kubecontainer&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">PodSyncResult&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="c1">// Step 7: start containers in podContainerChanges.ContainersToStart.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="nx">_&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">idx&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="k">range&lt;/span> &lt;span class="nx">podContainerChanges&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ContainersToStart&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nf">start&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;container&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nf">containerStartSpec&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nx">pod&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Spec&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Containers&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">idx&lt;/span>&lt;span class="p">]))&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">return&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>在 &lt;code>#start&lt;/code> 方法中调用了 &lt;code>#startContainer&lt;/code> 方法，该方法会启动容器，并返回容器启动的结果。注意，这里的结果还 &lt;strong>包含了容器的 Lifecycle hooks 调用&lt;/strong>。&lt;/p>
+&lt;p>也就是说，假如容器的 &lt;code>PostStart&lt;/code> hook 没有正确的返回，kubelet 便不会去创建下一个容器。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">// startContainer starts a container and returns a message indicates why it is failed on error.
+&lt;/span>&lt;span class="c1">// It starts the container through the following steps:
+&lt;/span>&lt;span class="c1">// * pull the image
+&lt;/span>&lt;span class="c1">// * create the container
+&lt;/span>&lt;span class="c1">// * start the container
+&lt;/span>&lt;span class="c1">// * run the post start lifecycle hooks (if applicable)
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">m&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">kubeGenericRuntimeManager&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">startContainer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">podSandboxID&lt;/span> &lt;span class="kt">string&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">podSandboxConfig&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">runtimeapi&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">PodSandboxConfig&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">spec&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">startSpec&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">pod&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">v1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Pod&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">podStatus&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">kubecontainer&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">PodStatus&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">pullSecrets&lt;/span> &lt;span class="p">[]&lt;/span>&lt;span class="nx">v1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Secret&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">podIP&lt;/span> &lt;span class="kt">string&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">podIPs&lt;/span> &lt;span class="p">[]&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">error&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="c1">// Step 4: execute the post start hook.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="nx">container&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Lifecycle&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nx">container&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Lifecycle&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">PostStart&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">kubeContainerID&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">kubecontainer&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ContainerID&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;span class="nx">Type&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">m&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">runtimeName&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">ID&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">containerID&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="nx">msg&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">handlerErr&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">m&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">runner&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Run&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">kubeContainerID&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">pod&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">container&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">container&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Lifecycle&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">PostStart&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">handlerErr&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">m&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">recordContainerEvent&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">pod&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">container&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">kubeContainerID&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ID&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">v1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">EventTypeWarning&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">events&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">FailedPostStartHook&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">msg&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">m&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">killContainer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">pod&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">kubeContainerID&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">container&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Name&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;FailedPostStartHook&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">reasonFailedPostStartHook&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">nil&lt;/span>&lt;span class="p">);&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">klog&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">ErrorS&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">fmt&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Errorf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%s: %v&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">ErrPostStartHook&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">handlerErr&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="s">&amp;#34;Failed to kill container&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;pod&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">klog&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">KObj&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">pod&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;span class="s">&amp;#34;podUID&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">pod&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">UID&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;containerName&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">container&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Name&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;containerID&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">kubeContainerID&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">String&lt;/span>&lt;span class="p">())&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="nx">msg&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">fmt&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Errorf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%s: %v&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">ErrPostStartHook&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">handlerErr&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="s">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">nil&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="实现方案">实现方案&lt;/h2>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/30/16197365667225.jpg" alt="">&lt;/p>
+&lt;p>&lt;a href="https://github.com/addozhang/k8s-container-sequence-sample/blob/main/cmd/entrypoint/wait.go#L26">cmd/entrypoint/wait.go#L26&lt;/a> （这里参考了 Istio 的 pilot-agent 实现 ）&lt;/p>
+&lt;p>在 &lt;code>PostStart&lt;/code> 中持续的去检查 &lt;code>/ready&lt;/code> 断点，可以 hold 住当前容器的创建流程。保证 &lt;code>/ready&lt;/code> 返回 &lt;code>200&lt;/code> 后，kubelet 才会去创建下一个容器。&lt;/p>
+&lt;p>这样就达到了前面截图中演示的效果。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="k">for&lt;/span> &lt;span class="nx">time&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Now&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="nf">Before&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">timeoutAt&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">err&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nf">checkIfReady&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">client&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">url&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;sidecar is ready&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="kc">nil&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="nx">log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;sidecar is not ready&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="nx">time&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Sleep&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">time&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Duration&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">periodMillis&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="nx">time&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Millisecond&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="nx">fmt&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Errorf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;sidecar is not ready in %d second(s)&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">timeoutSeconds&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="参考">参考&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://banzaicloud.com/blog/k8s-sidecars/">Sidecar container lifecycle changes in Kubernetes 1.18&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://medium.com/@marko.luksa/delaying-application-start-until-sidecar-is-ready-2ec2d21a7b74">Delaying application start until sidecar is ready&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Kubernetes 源码解析 - Informer</title><link>https://atbug.com/kubernetes-source-code-how-informer-work/</link><pubDate>Sun, 16 Aug 2020 23:32:38 +0800</pubDate><guid>https://atbug.com/kubernetes-source-code-how-informer-work/</guid><description>
+&lt;p>&lt;a href="https://mp.weixin.qq.com/s/wY8ZevIHIH7CD-fWGZecPQ">上篇&lt;/a>扒了 HPA 的源码，但是没深入细节，今天往细节深入。&lt;/p>
+&lt;p>开局先祭出一张图：&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/08/16/15975802542217.png" alt="">&lt;/p>
+&lt;h2 id="为什么要有-informer">为什么要有 Informer？&lt;/h2>
+&lt;p>Kubernetes 中的持久化数据保存在 etcd中，各个组件并不会直接访问 etcd，而是通过 api-server暴露的 RESTful 接口对集群进行访问和控制。&lt;/p>
+&lt;p>资源的控制器（图中右侧灰色的部分）读取数据也并不会直接从 api-server 中获取资源信息（这样会增加 api-server 的压力），而是从其“本地缓存”中读取。这个“本地缓存”只是表象的存在，加上缓存的同步逻辑就是今天要是说的&lt;code>Informer&lt;/code>（灰色区域中的第一个蓝色块）所提供的功能。&lt;/p>
+&lt;p>从图中可以看到 Informer 的几个组件：&lt;/p>
+&lt;ul>
+&lt;li>Reflector：与 &lt;code>api-server&lt;/code>交互，监听资源的变更。&lt;/li>
+&lt;li>Delta FIFO Queue：增量的 FIFO 队列，保存 Reflector 监听到的资源变更（简单的封装）。&lt;/li>
+&lt;li>Indexer：Informer 的本地缓存，FIFO 队列中的数据根据不同的变更类型，在该缓存中进行操作。
+&lt;ul>
+&lt;li>Local Store：&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;a href="https://mp.weixin.qq.com/s/wY8ZevIHIH7CD-fWGZecPQ">上篇&lt;/a> 提到了水平自动伸缩的控制器&lt;code>HorizontalController&lt;/code>，其构造方法就需要提供 &lt;code>Informer&lt;/code>。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">//pkg/controller/podautoscaler/horizontal.go
+&lt;/span>&lt;span class="c1">&lt;/span>
+&lt;span class="kd">type&lt;/span> &lt;span class="nx">HorizontalController&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">scaleNamespacer&lt;/span> &lt;span class="nx">scaleclient&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ScalesGetter&lt;/span>
+&lt;span class="nx">hpaNamespacer&lt;/span> &lt;span class="nx">autoscalingclient&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">HorizontalPodAutoscalersGetter&lt;/span>
+&lt;span class="nx">mapper&lt;/span> &lt;span class="nx">apimeta&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">RESTMapper&lt;/span>
+&lt;span class="nx">replicaCalc&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">ReplicaCalculator&lt;/span>
+&lt;span class="nx">eventRecorder&lt;/span> &lt;span class="nx">record&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">EventRecorder&lt;/span>
+&lt;span class="nx">downscaleStabilisationWindow&lt;/span> &lt;span class="nx">time&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Duration&lt;/span>
+&lt;span class="nx">hpaLister&lt;/span> &lt;span class="nx">autoscalinglisters&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">HorizontalPodAutoscalerLister&lt;/span>
+&lt;span class="nx">hpaListerSynced&lt;/span> &lt;span class="nx">cache&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">InformerSynced&lt;/span>
+&lt;span class="nx">podLister&lt;/span> &lt;span class="nx">corelisters&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">PodLister&lt;/span>
+&lt;span class="nx">podListerSynced&lt;/span> &lt;span class="nx">cache&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">InformerSynced&lt;/span>
+&lt;span class="nx">queue&lt;/span> &lt;span class="nx">workqueue&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">RateLimitingInterface&lt;/span>
+&lt;span class="nx">recommendations&lt;/span> &lt;span class="kd">map&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">][]&lt;/span>&lt;span class="nx">timestampedRecommendation&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">func&lt;/span> &lt;span class="nf">NewHorizontalController&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="nx">evtNamespacer&lt;/span> &lt;span class="nx">v1core&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">EventsGetter&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">scaleNamespacer&lt;/span> &lt;span class="nx">scaleclient&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ScalesGetter&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">hpaNamespacer&lt;/span> &lt;span class="nx">autoscalingclient&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">HorizontalPodAutoscalersGetter&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">mapper&lt;/span> &lt;span class="nx">apimeta&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">RESTMapper&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">metricsClient&lt;/span> &lt;span class="nx">metricsclient&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">MetricsClient&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="c1">//从HorizontalPodAutoscalerInformer 获取hpa 实例信息
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">hpaInformer&lt;/span> &lt;span class="nx">autoscalinginformers&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">HorizontalPodAutoscalerInformer&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="c1">//从PodInformer 中获取 pod 信息
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">podInformer&lt;/span> &lt;span class="nx">coreinformers&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">PodInformer&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">resyncPeriod&lt;/span> &lt;span class="nx">time&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Duration&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">downscaleStabilisationWindow&lt;/span> &lt;span class="nx">time&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Duration&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">tolerance&lt;/span> &lt;span class="kt">float64&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">cpuInitializationPeriod&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">delayOfInitialReadinessStatus&lt;/span> &lt;span class="nx">time&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Duration&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">)&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">HorizontalController&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="o">......&lt;/span>
+&lt;span class="nx">hpaInformer&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Informer&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="nf">AddEventHandlerWithResyncPeriod&lt;/span>&lt;span class="p">(&lt;/span> &lt;span class="c1">//添加事件处理器
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">cache&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ResourceEventHandlerFuncs&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;span class="nx">AddFunc&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">hpaController&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">enqueueHPA&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">UpdateFunc&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">hpaController&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">updateHPA&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">DeleteFunc&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">hpaController&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">deleteHPA&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="nx">resyncPeriod&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="o">......&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">type&lt;/span> &lt;span class="nx">HorizontalPodAutoscalerInformer&lt;/span> &lt;span class="kd">interface&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nf">Informer&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="nx">cache&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">SharedIndexInformer&lt;/span>
+&lt;span class="nf">Lister&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="nx">v1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">HorizontalPodAutoscalerLister&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>HorizontalPodAutoscalerInformer&lt;/code>的实例化方法中就出现了今天的正主&lt;code>cache.NewSharedIndexInformer()&lt;/code>。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">//staging/src/k8s.io/client-go/informers/autoscaling/v1/horizontalpodautoscaler.go
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="nf">NewFilteredHorizontalPodAutoscalerInformer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">client&lt;/span> &lt;span class="nx">kubernetes&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Interface&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">namespace&lt;/span> &lt;span class="kt">string&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">resyncPeriod&lt;/span> &lt;span class="nx">time&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Duration&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">indexers&lt;/span> &lt;span class="nx">cache&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Indexers&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">tweakListOptions&lt;/span> &lt;span class="nx">internalinterfaces&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">TweakListOptionsFunc&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nx">cache&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">SharedIndexInformer&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="nx">cache&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">NewSharedIndexInformer&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="c1">//用于 list 和 watch api-server 中的资源。比如用来创建 Reflector
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nx">cache&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ListWatch&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;span class="nx">ListFunc&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kd">func&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">options&lt;/span> &lt;span class="nx">metav1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ListOptions&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">runtime&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Object&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">error&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">tweakListOptions&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nf">tweakListOptions&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nx">options&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="c1">//使用 HPA API 获取 HPA资源
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="nx">client&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">AutoscalingV1&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="nf">HorizontalPodAutoscalers&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">namespace&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nf">List&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">options&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="nx">WatchFunc&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kd">func&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">options&lt;/span> &lt;span class="nx">metav1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ListOptions&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">watch&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Interface&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">error&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">tweakListOptions&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nf">tweakListOptions&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nx">options&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="c1">//使用 HPA API 监控 HPA资源
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="nx">client&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">AutoscalingV1&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="nf">HorizontalPodAutoscalers&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">namespace&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nf">Watch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">options&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nx">autoscalingv1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">HorizontalPodAutoscaler&lt;/span>&lt;span class="p">{},&lt;/span>
+&lt;span class="nx">resyncPeriod&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">indexers&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="初始化">初始化&lt;/h2>
+&lt;h3 id="informer">Informer&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">//staging/src/k8s.io/client-go/tools/cache/index.go
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">type&lt;/span> &lt;span class="nx">Indexers&lt;/span> &lt;span class="kd">map&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="nx">IndexFunc&lt;/span>
+&lt;span class="kd">type&lt;/span> &lt;span class="nx">IndexFunc&lt;/span> &lt;span class="kd">func&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">obj&lt;/span> &lt;span class="kd">interface&lt;/span>&lt;span class="p">{})&lt;/span> &lt;span class="p">([]&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">error&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>实例化 Indexers &lt;code>cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">//staging/src/k8s.io/client-go/tools/cache/shared_informer.go
+&lt;/span>&lt;span class="c1">// ListerWatcher 用于 list 和watch api-server 上的资源
+&lt;/span>&lt;span class="c1">//runtime.Object要监控的资源的运行时对象
+&lt;/span>&lt;span class="c1">//time.Duration同步的间隔时间
+&lt;/span>&lt;span class="c1">//Indexers 提供不同资源的索引数据的信息查询方法，如 namespace =&amp;gt; MetaNamespaceIndexFunc
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="nf">NewSharedIndexInformer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">lw&lt;/span> &lt;span class="nx">ListerWatcher&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">objType&lt;/span> &lt;span class="nx">runtime&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Object&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">defaultEventHandlerResyncPeriod&lt;/span> &lt;span class="nx">time&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Duration&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">indexers&lt;/span> &lt;span class="nx">Indexers&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nx">SharedIndexInformer&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">realClock&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nx">clock&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">RealClock&lt;/span>&lt;span class="p">{}&lt;/span>
+&lt;span class="nx">sharedIndexInformer&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nx">sharedIndexInformer&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;span class="nx">processor&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nx">sharedProcessor&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="nx">clock&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">realClock&lt;/span>&lt;span class="p">},&lt;/span>
+&lt;span class="nx">indexer&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nf">NewIndexer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">DeletionHandlingMetaNamespaceKeyFunc&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">indexers&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="c1">//初始化 Indexer
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">listerWatcher&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">lw&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">objectType&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">objType&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">resyncCheckPeriod&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">defaultEventHandlerResyncPeriod&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">defaultEventHandlerResyncPeriod&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">defaultEventHandlerResyncPeriod&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">cacheMutationDetector&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nf">NewCacheMutationDetector&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">fmt&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Sprintf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%T&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">objType&lt;/span>&lt;span class="p">)),&lt;/span>
+&lt;span class="nx">clock&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">realClock&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="nx">sharedIndexInformer&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="indexer">Indexer&lt;/h3>
+&lt;p>&lt;code>Indexer&lt;/code>提供了本地缓存的实现：计算 key 和对数据进行控制（通过调用&lt;code>ThreadSafeStore&lt;/code>的接口）&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="kd">type&lt;/span> &lt;span class="nx">Indexer&lt;/span> &lt;span class="kd">interface&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">Store&lt;/span>
+&lt;span class="nf">Index&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">indexName&lt;/span> &lt;span class="kt">string&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">obj&lt;/span> &lt;span class="kd">interface&lt;/span>&lt;span class="p">{})&lt;/span> &lt;span class="p">([]&lt;/span>&lt;span class="kd">interface&lt;/span>&lt;span class="p">{},&lt;/span> &lt;span class="kt">error&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="nf">IndexKeys&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">indexName&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">indexedValue&lt;/span> &lt;span class="kt">string&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">([]&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">error&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="nf">ListIndexFuncValues&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">indexName&lt;/span> &lt;span class="kt">string&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">[]&lt;/span>&lt;span class="kt">string&lt;/span>
+&lt;span class="nf">ByIndex&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">indexName&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">indexedValue&lt;/span> &lt;span class="kt">string&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">([]&lt;/span>&lt;span class="kd">interface&lt;/span>&lt;span class="p">{},&lt;/span> &lt;span class="kt">error&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="nf">GetIndexers&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="nx">Indexers&lt;/span>
+&lt;span class="nf">AddIndexers&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">newIndexers&lt;/span> &lt;span class="nx">Indexers&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kt">error&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>Indexer&lt;/code> 的创建&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">//staging/src/k8s.io/client-go/tools/cache/store.go
+&lt;/span>&lt;span class="c1">//keyFunc：key 的生成规则
+&lt;/span>&lt;span class="c1">//indexers：提供了索引资源的不同信息的访问方法，如用于查询命名空间的 namespace =&amp;gt; MetaNamespaceIndexFunc
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="nf">NewIndexer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">keyFunc&lt;/span> &lt;span class="nx">KeyFunc&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">indexers&lt;/span> &lt;span class="nx">Indexers&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nx">Indexer&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nx">cache&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;span class="nx">cacheStorage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nf">NewThreadSafeStore&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">indexers&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">Indices&lt;/span>&lt;span class="p">{}),&lt;/span>
+&lt;span class="nx">keyFunc&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">keyFunc&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="threadsafestore">&lt;code>ThreadSafeStore&lt;/code>&lt;/h4>
+&lt;p>ThreadSafeStore提供了对存储的并发访问接口&lt;/p>
+&lt;p>注意事项：不能修改Get或List返回的任何内容，因为它不仅会破坏线程安全，还会破坏索引功能。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">//staging/src/k8s.io/client-go/tools/cache/thread_safe_store.go
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="nf">NewThreadSafeStore&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">indexers&lt;/span> &lt;span class="nx">Indexers&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">indices&lt;/span> &lt;span class="nx">Indices&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nx">ThreadSafeStore&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nx">threadSafeMap&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;span class="nx">items&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kd">map&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="kd">interface&lt;/span>&lt;span class="p">{}{},&lt;/span>
+&lt;span class="nx">indexers&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">indexers&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">indices&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">indices&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">type&lt;/span> &lt;span class="nx">threadSafeMap&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">lock&lt;/span> &lt;span class="nx">sync&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">RWMutex&lt;/span>
+&lt;span class="nx">items&lt;/span> &lt;span class="kd">map&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="kd">interface&lt;/span>&lt;span class="p">{}&lt;/span> &lt;span class="c1">//key =&amp;gt; value
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">indexers&lt;/span> &lt;span class="nx">Indexers&lt;/span> &lt;span class="c1">//value 的信息的访问方法
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">indices&lt;/span> &lt;span class="nx">Indices&lt;/span> &lt;span class="c1">//索引
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="reflector">Reflector&lt;/h3>
+&lt;p>&lt;code>Reflector&lt;/code>通过&lt;code> ListerWatcher&lt;/code>（API）与&lt;code>api-server&lt;/code>交互，对资源进行监控。将资源实例的创建、更新、删除等时间封装后保存在&lt;code>Informer&lt;/code>的FIFO 队列中。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">//staging/src/k8s.io/client-go/tools/cache/reflector.go
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="nf">NewReflector&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">lw&lt;/span> &lt;span class="nx">ListerWatcher&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">expectedType&lt;/span> &lt;span class="kd">interface&lt;/span>&lt;span class="p">{},&lt;/span> &lt;span class="nx">store&lt;/span> &lt;span class="nx">Store&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">resyncPeriod&lt;/span> &lt;span class="nx">time&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Duration&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">Reflector&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="nf">NewNamedReflector&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">naming&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">GetNameFromCallsite&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">internalPackages&lt;/span>&lt;span class="o">...&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="nx">lw&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">expectedType&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">store&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">resyncPeriod&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="c1">// NewNamedReflector same as NewReflector, but with a specified name for logging
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="nf">NewNamedReflector&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">name&lt;/span> &lt;span class="kt">string&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">lw&lt;/span> &lt;span class="nx">ListerWatcher&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">expectedType&lt;/span> &lt;span class="kd">interface&lt;/span>&lt;span class="p">{},&lt;/span> &lt;span class="nx">store&lt;/span> &lt;span class="nx">Store&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">resyncPeriod&lt;/span> &lt;span class="nx">time&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Duration&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">Reflector&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">r&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nx">Reflector&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;span class="nx">name&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">name&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">listerWatcher&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">lw&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">store&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">store&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">//FIFO队列
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">period&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">time&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Second&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">resyncPeriod&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">resyncPeriod&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">clock&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nx">clock&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">RealClock&lt;/span>&lt;span class="p">{},&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="nx">r&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">setExpectedType&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">expectedType&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="nx">r&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="添加同步事件监听器">添加同步事件监听器&lt;/h3>
+&lt;p>通过&lt;code>sharedIndexInformer#AddEventHandlerWithResyncPeriod()&lt;/code>注册事件监听器。&lt;/p>
+&lt;p>以前面的 HorizontalController为例，创建 informer 的时候添加了三个处理方法：&lt;code>AddFunc&lt;/code>、&lt;code>UpdateFunc&lt;/code>、&lt;code>DeleteFunc&lt;/code>。这三个方法的实现是将对应的元素的 key（固定格式 &lt;code>namespace/name&lt;/code>）从&lt;code> workequeue&lt;/code>中进行入队、出队的操作。（资源控制器监听了该 &lt;code>workqueue&lt;/code>）&lt;/p>
+&lt;h2 id="运行">运行&lt;/h2>
+&lt;h3 id="controller-manager">&lt;code>controller-manager&lt;/code>&lt;/h3>
+&lt;p>在通过&lt;code>InformerFactory&lt;/code>创建&lt;code>Informer&lt;/code>完成后，都会将新建的&lt;code> Informer&lt;/code>加入到&lt;code>InformerFactory&lt;/code>的一个&lt;code>map&lt;/code>中。&lt;/p>
+&lt;p>在&lt;code>controller-manager&lt;/code>在完成所有的控制器（各种&lt;code>Controller&lt;/code>，包括 CRD）后，会调用&lt;code>InformerFactory#Start()&lt;/code>来启动&lt;code>InformerFactory&lt;/code>的&lt;code>map&lt;/code>中的所有&lt;code> Informer&lt;/code>（调用&lt;code>Informer#Run()&lt;/code>方法）&lt;/p>
+&lt;h3 id="sharedindexinformerrun">&lt;code>sharedIndexInformer#Run()&lt;/code>&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">//staging/src/k8s.io/client-go/tools/cache/shared_informer.go
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">s&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">sharedIndexInformer&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">Run&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">stopCh&lt;/span> &lt;span class="o">&amp;lt;-&lt;/span>&lt;span class="kd">chan&lt;/span> &lt;span class="kd">struct&lt;/span>&lt;span class="p">{})&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">defer&lt;/span> &lt;span class="nx">utilruntime&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">HandleCrash&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="c1">//创建一个增量的 FIFO队列：DeltaFIFO
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">fifo&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nf">NewDeltaFIFO&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">MetaNamespaceKeyFunc&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">indexer&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="nx">cfg&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nx">Config&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;span class="nx">Queue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">fifo&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">ListerWatcher&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">listerWatcher&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">ObjectType&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">objectType&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">FullResyncPeriod&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">resyncCheckPeriod&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">RetryOnError&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">ShouldResync&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">processor&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">shouldResync&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">Process&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">HandleDeltas&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="c1">//启动前的初始化，创建 Controller
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">func&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">startedLock&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Lock&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="k">defer&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">startedLock&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Unlock&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">controller&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nf">New&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">cfg&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">controller&lt;/span>&lt;span class="p">.(&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="nx">controller&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nx">clock&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">clock&lt;/span>
+&lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">started&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">true&lt;/span>
+&lt;span class="p">}()&lt;/span>
+&lt;span class="nx">processorStopCh&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nb">make&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kd">chan&lt;/span> &lt;span class="kd">struct&lt;/span>&lt;span class="p">{})&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nx">wg&lt;/span> &lt;span class="nx">wait&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Group&lt;/span>
+&lt;span class="k">defer&lt;/span> &lt;span class="nx">wg&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Wait&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="c1">// Wait for Processor to stop
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">defer&lt;/span> &lt;span class="nb">close&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">processorStopCh&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1">// Tell Processor to stop
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">wg&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">StartWithChannel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">processorStopCh&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">cacheMutationDetector&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Run&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="nx">wg&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">StartWithChannel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">processorStopCh&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">processor&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">run&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="c1">//退出时的状态清理
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">defer&lt;/span> &lt;span class="kd">func&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">startedLock&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Lock&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="k">defer&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">startedLock&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Unlock&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">stopped&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">true&lt;/span> &lt;span class="c1">// Don&amp;#39;t want any new listeners
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="p">}()&lt;/span>
+&lt;span class="c1">//实行控制逻辑
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">controller&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Run&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">stopCh&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="controllerrun">&lt;code>controller#Run()&lt;/code>&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">//staging/src/k8s.io/client-go/tools/cache/controller.go
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">c&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">controller&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">Run&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">stopCh&lt;/span> &lt;span class="o">&amp;lt;-&lt;/span>&lt;span class="kd">chan&lt;/span> &lt;span class="kd">struct&lt;/span>&lt;span class="p">{})&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">defer&lt;/span> &lt;span class="nx">utilruntime&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">HandleCrash&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="k">go&lt;/span> &lt;span class="kd">func&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="o">&amp;lt;-&lt;/span>&lt;span class="nx">stopCh&lt;/span>
+&lt;span class="nx">c&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">config&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Queue&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Close&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="p">}()&lt;/span>
+&lt;span class="c1">//创建一个 Reflector，用于从 api-server list 和 watch 资源
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">r&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nf">NewReflector&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="nx">c&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">config&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ListerWatcher&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">c&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">config&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ObjectType&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">c&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">config&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Queue&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">c&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">config&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">FullResyncPeriod&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="nx">r&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ShouldResync&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">c&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">config&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ShouldResync&lt;/span>
+&lt;span class="nx">r&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">clock&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">c&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">clock&lt;/span>
+&lt;span class="c1">//为 controller 指定 Reflector
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">c&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">reflectorMutex&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Lock&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="nx">c&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">reflector&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">r&lt;/span>
+&lt;span class="nx">c&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">reflectorMutex&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Unlock&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nx">wg&lt;/span> &lt;span class="nx">wait&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Group&lt;/span>
+&lt;span class="k">defer&lt;/span> &lt;span class="nx">wg&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Wait&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="c1">//执行Reflector#Run()：会启动一个goroutine开始监控资源，将 watch 到的数据写入到queue（FIFO 队列）中
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">wg&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">StartWithChannel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">stopCh&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">r&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Run&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="c1">//持续从 queue（FIFO 队列） 获取数据并进行处理，处理的逻辑在sharedIndexInformer#HandleDeltas()
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">wait&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Until&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">c&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">processLoop&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">time&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Second&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">stopCh&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sharedindexinformerhandledeltas">&lt;code>sharedIndexInformer#HandleDeltas()&lt;/code>&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">//staging/src/k8s.io/client-go/tools/cache/shared_informer.go
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">s&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">sharedIndexInformer&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">HandleDeltas&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">obj&lt;/span> &lt;span class="kd">interface&lt;/span>&lt;span class="p">{})&lt;/span> &lt;span class="kt">error&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">blockDeltas&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Lock&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="k">defer&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">blockDeltas&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Unlock&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="c1">// from oldest to newest
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="nx">_&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">d&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="k">range&lt;/span> &lt;span class="nx">obj&lt;/span>&lt;span class="p">.(&lt;/span>&lt;span class="nx">Deltas&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="c1">//循环处理 FIFO 队列中取出的资源实例
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">switch&lt;/span> &lt;span class="nx">d&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Type&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="nx">Sync&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">Added&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">Updated&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="c1">//同步（后面详细解读）、新增、更新事件
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">isSync&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">d&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Type&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="nx">Sync&lt;/span>
+&lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">cacheMutationDetector&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">AddObject&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">d&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Object&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">old&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">exists&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">indexer&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">d&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Object&lt;/span>&lt;span class="p">);&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nx">exists&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">indexer&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Update&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">d&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Object&lt;/span>&lt;span class="p">);&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="c1">//如果 indexer 中已经存在，更掉用 update 方法进行更新
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="nx">err&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="c1">//更新成功后发送“更新”通知：包含了新、旧资源实例
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">processor&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">distribute&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">updateNotification&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="nx">oldObj&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">old&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">newObj&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">d&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Object&lt;/span>&lt;span class="p">},&lt;/span> &lt;span class="nx">isSync&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="c1">//如果 indexer 中没有该资源实例，则放入 indexer 中
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">indexer&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Add&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">d&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Object&lt;/span>&lt;span class="p">);&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="nx">err&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="c1">//添加成功后，发送“新增”通知：包含了新加的资源实例
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">processor&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">distribute&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">addNotification&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="nx">newObj&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">d&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Object&lt;/span>&lt;span class="p">},&lt;/span> &lt;span class="nx">isSync&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="nx">Deleted&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="c1">//删除事件
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">indexer&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Delete&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">d&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Object&lt;/span>&lt;span class="p">);&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="c1">//从 indexer 中删除
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="nx">err&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="c1">//删除成功后，发送“删除通知”：包含了删除的资源实例
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">processor&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">distribute&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">deleteNotification&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="nx">oldObj&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">d&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Object&lt;/span>&lt;span class="p">},&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="kc">nil&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>Informer 的实现不算复杂，却在 Kubernetes 中很常见，每种资源的控制也都通过 Informer 来获取&lt;code>api-server&lt;/code>的资源实例的变更。&lt;/p></description></item><item><title>Kubernetes 源码解析 - HPA 水平自动伸缩如何工作</title><link>https://atbug.com/kubernetes-source-code-how-hpa-work/</link><pubDate>Sat, 15 Aug 2020 02:09:37 +0800</pubDate><guid>https://atbug.com/kubernetes-source-code-how-hpa-work/</guid><description>
+&lt;p>HPA - Horizontal Pod Autoscaler 的缩写，Pod 水平自动伸缩。通过对 Pod 负载的监控，来自动增加或者减少 Pod 的副本数量。&lt;/p>
+&lt;p>从字面意思来看，其主要包含了两部分：&lt;/p>
+&lt;ul>
+&lt;li>监控 Pod 的负载&lt;/li>
+&lt;li>控制 Pod 的副本数量&lt;/li>
+&lt;/ul>
+&lt;p>那具体是如何实现的呢？以下基于1.17 源码，来分析下 HPA 如何工作。&lt;/p>
+&lt;p>&lt;strong>注意：文章中的代码在源码的基础上进行了精简：删掉了注释、序列化等信息，或保留了部分核心代码，加上新的注释。&lt;/strong>&lt;/p>
+&lt;h2 id="资源">资源&lt;/h2>
+&lt;p>HPA 的资源是&lt;code>HorizontalPodAutoscaler&lt;/code>，在&lt;code>v1&lt;/code>版本中，只支持基于 CPU 指标的计算；在&lt;code>v2beta2&lt;/code>版本中加入了基于内存和自定义指标的计算。&lt;/p>
+&lt;h3 id="v1">v1&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">//staging/src/k8s.io/api/autoscaling/v1/types.go
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">type&lt;/span> &lt;span class="nx">HorizontalPodAutoscaler&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">metav1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">TypeMeta&lt;/span>
+&lt;span class="nx">metav1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ObjectMeta&lt;/span>
+&lt;span class="nx">Spec&lt;/span> &lt;span class="nx">HorizontalPodAutoscalerSpec&lt;/span>
+&lt;span class="nx">Status&lt;/span> &lt;span class="nx">HorizontalPodAutoscalerStatus&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">type&lt;/span> &lt;span class="nx">HorizontalPodAutoscalerSpec&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">ScaleTargetRef&lt;/span> &lt;span class="nx">CrossVersionObjectReference&lt;/span> &lt;span class="c1">//监控的目标资源
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">MinReplicas&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="kt">int32&lt;/span> &lt;span class="c1">//最小副本数
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">MaxReplicas&lt;/span> &lt;span class="kt">int32&lt;/span> &lt;span class="c1">//最大副本数
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">TargetCPUUtilizationPercentage&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="kt">int32&lt;/span> &lt;span class="c1">//触发调整的CPU 使用率
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="v2">v2&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">//staging/src/k8s.io/api/autoscaling/v2beta2/types.go
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">type&lt;/span> &lt;span class="nx">HorizontalPodAutoscaler&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">metav1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">TypeMeta&lt;/span>
+&lt;span class="nx">metav1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ObjectMeta&lt;/span>
+&lt;span class="nx">Spec&lt;/span> &lt;span class="nx">HorizontalPodAutoscalerSpec&lt;/span>
+&lt;span class="nx">Status&lt;/span> &lt;span class="nx">HorizontalPodAutoscalerStatus&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">type&lt;/span> &lt;span class="nx">HorizontalPodAutoscalerSpec&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">ScaleTargetRef&lt;/span> &lt;span class="nx">CrossVersionObjectReference&lt;/span> &lt;span class="c1">//监控的目标资源
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">MinReplicas&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="kt">int32&lt;/span>
+&lt;span class="nx">MaxReplicas&lt;/span> &lt;span class="kt">int32&lt;/span>
+&lt;span class="nx">Metrics&lt;/span> &lt;span class="p">[]&lt;/span>&lt;span class="nx">MetricSpec&lt;/span> &lt;span class="c1">//新加入的自定义指标
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;span class="kd">type&lt;/span> &lt;span class="nx">MetricSpec&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">Type&lt;/span> &lt;span class="nx">MetricSourceType&lt;/span> &lt;span class="c1">//指标源的类型：Object（基于某个对象）、Pods（基于pod 数）、Resource（基于资源使用计算，比如v1 版本中cpu）、External（基于外部的指标）。对应 MetricsClient 接口的四个方法
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">Object&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">ObjectMetricSource&lt;/span> &lt;span class="c1">//对应 Object 类型的指标源
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">Pods&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">PodsMetricSource&lt;/span> &lt;span class="c1">//对应 Pod 类型的指标源
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">Resource&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">ResourceMetricSource&lt;/span> &lt;span class="c1">//对应 Resource 类型的指标源
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">External&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">ExternalMetricSource&lt;/span> &lt;span class="c1">//对应 External 类型的指标源
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;span class="kd">type&lt;/span> &lt;span class="nx">ObjectMetricSource&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">DescribedObject&lt;/span> &lt;span class="nx">CrossVersionObjectReference&lt;/span> &lt;span class="c1">//目标对象
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">Target&lt;/span> &lt;span class="nx">MetricTarget&lt;/span> &lt;span class="c1">//指定指标的目标值、平均值或者平均使用率
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">Metric&lt;/span> &lt;span class="nx">MetricIdentifier&lt;/span> &lt;span class="c1">//指标标识：名字、label选择器
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;span class="kd">type&lt;/span> &lt;span class="nx">PodsMetricSource&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">Metric&lt;/span> &lt;span class="nx">MetricIdentifier&lt;/span>
+&lt;span class="nx">Target&lt;/span> &lt;span class="nx">MetricTarget&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">type&lt;/span> &lt;span class="nx">ResourceMetricSource&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">Name&lt;/span> &lt;span class="nx">v1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ResourceName&lt;/span>
+&lt;span class="nx">Target&lt;/span> &lt;span class="nx">MetricTarget&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">type&lt;/span> &lt;span class="nx">ExternalMetricSource&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">Metric&lt;/span> &lt;span class="nx">MetricIdentifier&lt;/span>
+&lt;span class="nx">Target&lt;/span> &lt;span class="nx">MetricTarget&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">type&lt;/span> &lt;span class="nx">MetricTarget&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">Type&lt;/span> &lt;span class="nx">MetricTargetType&lt;/span> &lt;span class="c1">//类型：Utilization、Value、AverageValue
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">Value&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">resource&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Quantity&lt;/span>
+&lt;span class="nx">AverageValue&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">resource&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Quantity&lt;/span>
+&lt;span class="nx">AverageUtilization&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="kt">int32&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="控制器-horizontalcontroller">控制器 &lt;code>HorizontalController&lt;/code>&lt;/h2>
+&lt;p>&lt;code>HorizontalController&lt;/code>被通过 key &lt;code>horizontalpodautoscaling&lt;/code> 加入到 controller manager 中。用来控制&lt;code>HorizontalPodAutoscaler&lt;/code>实例。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">///cmd/kube-controller-manager/app/controllermanager.go
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="nf">NewControllerInitializers&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">loopMode&lt;/span> &lt;span class="nx">ControllerLoopMode&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kd">map&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="nx">InitFunc&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="nx">controllers&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s">&amp;#34;horizontalpodautoscaling&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">startHPAController&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="获取负载指标">获取负载指标&lt;/h3>
+&lt;p>既然 Pod 副本数量的计算是基于 Pod 的负载情况，那边需要途径获取负载数据，这个途径就是&lt;code>MetricsClient&lt;/code>。&lt;/p>
+&lt;p>&lt;code>MetricsClient&lt;/code>有两种实现：REST 方式和传统（Legacy）方式，分别是&lt;code>restMetricsClient&lt;/code>和&lt;code>HeapsterMetricsClient&lt;/code>。一个是REST 实现以支持自定义的指标；一个是传统的 Heapster 指标（heapster 已经从 1.13 版本开始被废弃了）。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">//cmd/kube-controller-manager/app/autoscaling.go
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="nf">startHPAController&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">ctx&lt;/span> &lt;span class="nx">ControllerContext&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">http&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Handler&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">bool&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">error&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="p">!&lt;/span>&lt;span class="nx">ctx&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">AvailableResources&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">schema&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">GroupVersionResource&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="nx">Group&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s">&amp;#34;autoscaling&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">Version&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s">&amp;#34;v1&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">Resource&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s">&amp;#34;horizontalpodautoscalers&amp;#34;&lt;/span>&lt;span class="p">}]&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="kc">nil&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">nil&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">ctx&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">ComponentConfig&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">HPAController&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">HorizontalPodAutoscalerUseRESTClients&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="c1">// use the new-style clients if support for custom metrics is enabled
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="nf">startHPAControllerWithRESTClient&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">ctx&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="nf">startHPAControllerWithLegacyClient&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">ctx&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="控制器逻辑horizontalcontrollerrun">控制器逻辑&lt;code>HorizontalController#Run()&lt;/code>&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">//pkg/controller/podautoscaler/horizontal.go
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">a&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">HorizontalController&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">Run&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">stopCh&lt;/span> &lt;span class="o">&amp;lt;-&lt;/span>&lt;span class="kd">chan&lt;/span> &lt;span class="kd">struct&lt;/span>&lt;span class="p">{})&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">defer&lt;/span> &lt;span class="nx">utilruntime&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">HandleCrash&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="k">defer&lt;/span> &lt;span class="nx">a&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">queue&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">ShutDown&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="nx">klog&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Infof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Starting HPA controller&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">defer&lt;/span> &lt;span class="nx">klog&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Infof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Shutting down HPA controller&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="c1">// 等待 informer 完成HorizontalPodAutoscaler相关事件的同步
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">!&lt;/span>&lt;span class="nx">cache&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">WaitForNamedCacheSync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;HPA&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">stopCh&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">a&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">hpaListerSynced&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">a&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">podListerSynced&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="c1">// start a single worker (we may wish to start more in the future)
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//执行 worker 逻辑，直到收到退出指令
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">go&lt;/span> &lt;span class="nx">wait&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Until&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">a&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">worker&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">time&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Second&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">stopCh&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="o">&amp;lt;-&lt;/span>&lt;span class="nx">stopCh&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>worker&lt;/code>的核心是从工作队列中获取一个 key（格式为：namespace/name），然后对 key 进行 reconcile（这个词是Kubernetes 的核心，翻译为“调和”、“和解”。个人更喜欢“调整”，即&lt;strong>将实例的状态调整为期望的状态&lt;/strong>。此处，对于 hpa 的实例的每个事件，都会按照特定的逻辑调整目标实例的 Pod 的副本数量。）。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">//pkg/controller/podautoscaler/horizontal.go
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">a&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">HorizontalController&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">worker&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">for&lt;/span> &lt;span class="nx">a&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">processNextWorkItem&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="nx">klog&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Infof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;horizontal pod autoscaler controller worker shutting down&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">a&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">HorizontalController&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">processNextWorkItem&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="kt">bool&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">quit&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">a&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">queue&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Get&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">quit&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="kc">false&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">defer&lt;/span> &lt;span class="nx">a&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">queue&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Done&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">key&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="nx">deleted&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">a&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">reconcileKey&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">key&lt;/span>&lt;span class="p">.(&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">utilruntime&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">HandleError&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">err&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="p">!&lt;/span>&lt;span class="nx">deleted&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">a&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">queue&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">AddRateLimited&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">key&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="kc">true&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>对 key 进行 reconcile 的调用栈：&lt;code>HorizontalController#reconcileKey -&amp;gt; HorizontalController#reconcileAutoscaler -&amp;gt; HorizontalController#computeReplicasForMetrics -&amp;gt; ScaleInterface#Update&lt;/code>&lt;/p>
+&lt;p>简单来说就是先从&lt;code>Informer&lt;/code>中拿到 key 对应的&lt;code>HorizontalPodAutoscaler&lt;/code>资源实例；然后通过&lt;code>HorizontalPodAutoscaler&lt;/code>实例中的信息，检查目标资源的Pod 负载以及当前的副本数，得到期望的 Pod 副本数；最终通过 Scale API 来调整 Pod 的副本数。最后会将调整的原因、计算的结果等信息写入&lt;code>HorizontalPodAutoscaler&lt;/code>实例的 condition 中。&lt;/p>
+&lt;h3 id="计算期望的副本数">计算期望的副本数&lt;/h3>
+&lt;p>对每个指标进行计算，都会得到建议的副本数，然后最大的那个就是最终的期望副本数。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="c1">//pkg/controller/podautoscaler/horizontal.go
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">a&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">HorizontalController&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">computeReplicasForMetrics&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">hpa&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">autoscalingv2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">HorizontalPodAutoscaler&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">scale&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">autoscalingv1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Scale&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">metricSpecs&lt;/span> &lt;span class="p">[]&lt;/span>&lt;span class="nx">autoscalingv2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">MetricSpec&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">replicas&lt;/span> &lt;span class="kt">int32&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">metric&lt;/span> &lt;span class="kt">string&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">statuses&lt;/span> &lt;span class="p">[]&lt;/span>&lt;span class="nx">autoscalingv2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">MetricStatus&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">timestamp&lt;/span> &lt;span class="nx">time&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Time&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="kt">error&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="o">......&lt;/span>
+&lt;span class="k">for&lt;/span> &lt;span class="nx">i&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">metricSpec&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="k">range&lt;/span> &lt;span class="nx">metricSpecs&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">replicaCountProposal&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">metricNameProposal&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">timestampProposal&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">condition&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">a&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">computeReplicasForMetric&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">hpa&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">metricSpec&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">specReplicas&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">statusReplicas&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">selector&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nx">statuses&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">i&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">invalidMetricsCount&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">invalidMetricCondition&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">condition&lt;/span>
+&lt;span class="nx">invalidMetricError&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">err&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="nx">invalidMetricsCount&lt;/span>&lt;span class="o">++&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">replicas&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="nx">replicaCountProposal&lt;/span> &lt;span class="p">&amp;gt;&lt;/span> &lt;span class="nx">replicas&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">timestamp&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">timestampProposal&lt;/span>
+&lt;span class="nx">replicas&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">replicaCountProposal&lt;/span>
+&lt;span class="nx">metric&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">metricNameProposal&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="o">......&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>#computeStatusForObjectMetric&lt;/code>（注意这个方法名少了个 &amp;ldquo;s&amp;rdquo;）使用&lt;code>MetricsClient&lt;/code>得到指定指标的值。&lt;/p>
+&lt;p>这个流程的细节还可以继续深挖，但到此已够我们理解 HPA​ 的实现方式了。​&lt;/p></description></item></channel></rss>

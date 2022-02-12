@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>一致性 on 乱世浮生</title><link>https://atbug.com/tags/%E4%B8%80%E8%87%B4%E6%80%A7/</link><description>Recent content in 一致性 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 26 Sep 2017 19:13:48 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/%E4%B8%80%E8%87%B4%E6%80%A7/index.xml" rel="self" type="application/rss+xml"/><item><title>Kafka消息消费一致性</title><link>https://atbug.com/kafka-consumer-consistency/</link><pubDate>Tue, 26 Sep 2017 19:13:48 +0000</pubDate><guid>https://atbug.com/kafka-consumer-consistency/</guid><description>
+&lt;p>Kafka消费端的offset主要由consumer来控制, Kafka降每个consumer所监听的tocpic的partition的offset保存在__consumer_offsets主题中. consumer需要将处理完成的消息的offset提交到服务端, 主要有ConsumerCoordinator完成的.&lt;/p>
+&lt;p>每次从kafka拉取数据之前, 假如是异步提交offset, 会先调用已经完成的offset commit的callBack, 然后检查ConsumerCoordinator的连接状态. 如果设置了&lt;strong>自动&lt;/strong>提交offset, 会继续上次从服务端获取的数据的offset&lt;strong>异步&lt;/strong>提交到服务端. 这里需要注意的是会有几种情况出现:&lt;/p>
+&lt;ul>
+&lt;li>消息处理耗时较多, 假如处理单条消息的耗时为t, 拉取的消息个数为n. t * n &amp;gt; auto_commit_interval_ms, 会导致没有处理完的消息的offset被commit到服务端. 假如此时消费端挂掉, 没有处理完的数据将会丢失.&lt;/li>
+&lt;li>假如消息处理完成, offset还未commit到服务端的时候消费端挂掉, 已经处理完的消息会被再次消费.&lt;/li>
+&lt;/ul>
+&lt;p>下面配置影响着数据一致性和性能, 因此需要结合业务场景合理配置一下参数, 进行取舍.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>enable.auto.commit&lt;/code> 默认为true&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>auto.commit.interval.ms&lt;/code> 默认为5000 ms (5s)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>max.poll.records&lt;/code> 默认为500&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>fetch.max.bytes&lt;/code> 默认为52428800 bytes (50Mib).&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="一致性">一致性&lt;/h3>
+&lt;p>这里我们针对前面出现的两个问题给出解决方案.&lt;/p>
+&lt;h4 id="kafka-java-client">Kafka Java Client&lt;/h4>
+&lt;p>把&lt;code>enable.auto.commit&lt;/code>设置为&lt;code>false&lt;/code>, 并在每处理完一条数据后手动提交offset.&lt;/p>
+&lt;p>&lt;strong>这里需要主意的时, 提交的offset是对当前消息的offset基础上进行加1.&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">ConsumerTest&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">InterruptedException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Properties&lt;/span> &lt;span class="n">props&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Properties&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">BOOTSTRAP_SERVERS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;192.168.31.186:9092&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">GROUP_ID_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;test&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">AUTO_OFFSET_RESET_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">OffsetResetStrategy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">NONE&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">toString&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">toLowerCase&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Locale&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">ROOT&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">ENABLE_AUTO_COMMIT_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;false&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">KEY_DESERIALIZER_CLASS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;org.apache.kafka.common.serialization.StringDeserializer&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">VALUE_DESERIALIZER_CLASS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;org.apache.kafka.common.serialization.StringDeserializer&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">KafkaConsumer&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">consumer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">KafkaConsumer&lt;/span>&lt;span class="o">&amp;lt;&amp;gt;(&lt;/span>&lt;span class="n">props&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">subscribe&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Arrays&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">asList&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;my-topic&amp;#34;&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">ConsumerRecords&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">records&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">consumer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">poll&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">100&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(!&lt;/span>&lt;span class="n">records&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isEmpty&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">for&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerRecord&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">record&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="n">records&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">printf&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;offset = %d, key = %s, value = %s%n&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">offset&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">key&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">value&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="c1">//Manually commit each record
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">consumer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">commitSync&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Collections&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">singletonMap&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="n">TopicPartition&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">topic&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">partition&lt;/span>&lt;span class="o">()),&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">OffsetAndMetadata&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">offset&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">1&lt;/span>&lt;span class="o">)));&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="spring-kafka">Spring Kafka&lt;/h4>
+&lt;ul>
+&lt;li>
+&lt;p>把&lt;code>enable.auto.commit&lt;/code>设置为&lt;code>false&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>设置&lt;code>ContainerProperties&lt;/code>的&lt;code>ackMode&lt;/code>为&lt;code>MANUAL_IMMEDIATE&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>使用AcknowledgingMessageListener作为listener, 并在消息处理完成后调用acknowledgment.acknowledge().&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">SpringConsumerTest&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">String&lt;/span> &lt;span class="n">bootstrapServer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;192.168.31.186:9092&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="n">String&lt;/span> &lt;span class="n">groupId&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;spring-consumer-group&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="n">ContainerProperties&lt;/span> &lt;span class="n">containerProperties&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ContainerProperties&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;my-topic&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">containerProperties&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setAckMode&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">AbstractMessageListenerContainer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">AckMode&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">MANUAL_IMMEDIATE&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">containerProperties&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setMessageListener&lt;/span>&lt;span class="o">(&lt;/span>
+&lt;span class="o">(&lt;/span>&lt;span class="n">AcknowledgingMessageListener&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;)&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">consumerRecord&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">acknowledgment&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">consumerRecord&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">acknowledgment&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">acknowledge&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">});&lt;/span>
+&lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">Object&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">consumerConfigs&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">HashMap&lt;/span>&lt;span class="o">&amp;lt;&amp;gt;();&lt;/span>
+&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">BOOTSTRAP_SERVERS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">bootstrapServer&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">GROUP_ID_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">groupId&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">ENABLE_AUTO_COMMIT_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;false&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">SESSION_TIMEOUT_MS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">10&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">1000&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">AUTO_OFFSET_RESET_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;earliest&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">METADATA_MAX_AGE_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">10&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">1000&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">KEY_DESERIALIZER_CLASS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">StringDeserializer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">class&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">VALUE_DESERIALIZER_CLASS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">StringDeserializer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">class&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">KafkaMessageListenerContainer&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">listenerContainer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">KafkaMessageListenerContainer&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;(&lt;/span>
+&lt;span class="k">new&lt;/span> &lt;span class="n">DefaultKafkaConsumerFactory&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">),&lt;/span>
+&lt;span class="n">containerProperties&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">listenerContainer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">start&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

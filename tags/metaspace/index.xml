@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Metaspace on 乱世浮生</title><link>https://atbug.com/tags/metaspace/</link><description>Recent content in Metaspace on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 13 Apr 2017 11:55:14 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/metaspace/index.xml" rel="self" type="application/rss+xml"/><item><title>MetaspaceSize的坑</title><link>https://atbug.com/java8-metaspace-size-issue/</link><pubDate>Thu, 13 Apr 2017 11:55:14 +0000</pubDate><guid>https://atbug.com/java8-metaspace-size-issue/</guid><description>
+&lt;p>这几天生产上有台机器的Metaspace一直在告警，Metaspace使用达到了97%。使用&lt;code>-XX:MetaspaceSize=512m&lt;/code>，告警也还在在持续，查看MC只有81536.0，显然这个参数没起作用。&lt;/p>
+&lt;p>也有人遇到类似的问题，并在openjdk上提过类似的bug，其实是一个注释的bug，最终在&lt;a href="https://bugs.openjdk.java.net/browse/JDK-8151845">JDK-8151845&lt;/a>中修复了。&lt;/p>
+&lt;blockquote>
+&lt;p>Class metadata is deallocated when the corresponding Java class is unloaded. Java classes are unloaded as a result of garbage collection, and garbage collections may be induced in order to unload classes and deallocate class metadata. When the space committed for class metadata reaches a certain level (a high-water mark), a garbage collection is induced. After the garbage collection, the high-water mark may be raised or lowered depending on the amount of space freed from class metadata. The high-water mark would be raised so as not to induce another garbage collection too soon. The high-water mark is initially set to the value of the command-line option MetaspaceSize. It is raised or lowered based on the options MaxMetaspaceFreeRatio and MinMetaspaceFreeRatio. If the committed space available for class metadata as a percentage of the total committed space for class metadata is greater than MaxMetaspaceFreeRatio, then the high-water mark will be lowered. If it is less than MinMetaspaceFreeRatio, then the high-water mark will be raised.&lt;/p>
+&lt;/blockquote>
+&lt;p>查看了Oracle的手册，Metaspace的GC会在committed size达到high-water mark之后发生。并且GC之后high-water mark会变化：变大或者变小，变大的话会防止下次GC发生得太早。high-water mark的默认初始大小20.8M，通过&lt;strong>MetaspaceSize&lt;/strong>来设置，可见MetaspaceSize是控制Metaspace发生GC的阈值。GC后high-water mark的变化，通过MaxMetaspaceFreeRatio和MinMetaspaceFreeRatio控制。&lt;/p>
+&lt;p>MaxMetaspaceSize默认为-1，无限大。不过如果没有限制的话，一直增大会被系统干掉进程。最好还是设置一下，比如1G。&lt;/p>
+&lt;p>下面是我测试了分别设置MetaspaceSize、MaxMetaspaceSize、InitialBootClassLoaderMetaspaceSize为1G，Metaspace的变化。&lt;/p>
+&lt;p>&lt;code>-XX:MetaspaceSize=1024m&lt;/code>&lt;/p>
+&lt;blockquote>
+&lt;p>committed: 29360128
+init: 0
+max: -1
+used: 28440648&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;code>-XX:MaxMetaspaceSize=1024m&lt;/code>&lt;/p>
+&lt;blockquote>
+&lt;p>committed: 29360128
+init: 0
+max: 1073741824
+used: 28503552&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;code>-XX:InitialBootClassLoaderMetaspaceSize=1024m&lt;/code>&lt;/p>
+&lt;blockquote>
+&lt;p>committed: 1087635456
+init: 0
+max: -1
+used: 28500344&lt;/p>
+&lt;/blockquote>
+&lt;p>三个参数都是没有改变init的大小，但是InitialBootClassLoaderMetaspaceSize改变了committed的大小，其实也是最终我们要的设置。&lt;/p>
+&lt;p>关于这个参数，可以看你假笨的关于&lt;a href="http://lovestblog.cn/blog/2016/10/29/metaspace/">Metaspace的源码解读&lt;/a>，发现的有点晚了。&lt;/p>
+&lt;p>最后的解决方案是使用这个配置：&lt;code>-XX:MaxMetaspaceSize=1024m -XX:InitialBootClassLoaderMetaspaceSize=256m&lt;/code>。&lt;/p></description></item></channel></rss>

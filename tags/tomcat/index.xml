@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tomcat on 乱世浮生</title><link>https://atbug.com/tags/tomcat/</link><description>Recent content in Tomcat on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 12 Apr 2017 10:40:01 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/tomcat/index.xml" rel="self" type="application/rss+xml"/><item><title>一个Tomcat类加载问题</title><link>https://atbug.com/one-tomcat-class-load-issue/</link><pubDate>Wed, 12 Apr 2017 10:40:01 +0000</pubDate><guid>https://atbug.com/one-tomcat-class-load-issue/</guid><description>
+&lt;h2 id="背景">背景&lt;/h2>
+&lt;p>一个Tomcat实例中运行了三个应用，其中一个对接了Apereo的CAS系统。现在要求另外两个系统也对接CAS系统，问题就出现了：&lt;/p>
+&lt;blockquote>
+&lt;p>应用启动后打开其中两个应用的任何一个，登录完成后系统都没有问题。唯独首选打开第三个，其他两个报错ClassNotFoundException: org.apache.xerces.parsers.SAXParser。&lt;/p>
+&lt;/blockquote>
+&lt;p>发现这个类来自&lt;code>xerces:xercesImpl:jar:2.6.2&lt;/code>，使用&lt;code>mvn dependency:tree&lt;/code>发现是被xom:xom:1.1简洁引用。&lt;/p>
+&lt;h2 id="分析">分析&lt;/h2>
+&lt;p>CAS client jar中使用XMLReaderFactory创建XMLReader，首次创建会从classpath中查找&lt;code>META-INF/services/org.xml.sax.driver&lt;/code>文件，这个文件里的内容是一个类的全名。比如xercesImpl中该文件的内容是&lt;code>org.apache.xerces.parsers.SAXParser&lt;/code>。&lt;/p>
+&lt;p>找到之后会将类名保存在XMLReaderFactory的静态变量_clsFromJar，并标记不会再查找org.xml.sax.driver文件。找不到的话则使用&lt;code>com.sun.org.apache.xerces.internal.parsers.SAXParser&lt;/code>类。&lt;/p>
+&lt;p>然后再使用当前线程的ContextClassLoader对类进行加载，这里的的ContextClassLoader是一个WebAppClassLoader的实例。&lt;/p>
+&lt;p>同时XMLReaderFactory类是被BootStrapClassLoader加载的，为三个应用共享。&lt;/p>
+&lt;h2 id="tomcat类记载机制">Tomcat类记载机制&lt;/h2>
+&lt;p>Tomcat中有四个位置可以存放Java类库：/commons、/server、/shared和各Web应用的WEB-INF/lib目录。&lt;/p>
+&lt;blockquote>
+&lt;p>/commons目录中的类库可以被Tomcat和所有Web应用使用
+/server目录中的类库只能被Tomcat使用
+/shared目录中的可以被所有Web应用的使用，但是对Tomcat不可见
+各Web应用的WEB-INF/lib目录中的类库则只能被该的应用使用&lt;/p>
+&lt;/blockquote>
+&lt;p>Tomcat的使用CommonClassLoader、CatalinaClassLoader、SharedClassLoader、WebAPPClassLoader加载对应目录中的类库。&lt;/p>
+&lt;p>Bootstrap、Extension、Application是虚拟机使用的系统类加载器。&lt;/p>
+&lt;p>类的加载使用双亲委派机制(Parent-Delegation)。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback"> Bootstrap
+|
+Extension
+|
+Application
+|
+System
+|
+Common
+/ \
+Catalina Shared
+/ \
+WebApp1 ... WebApp2
+| |
+Jasper Jasper
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="解决方案">解决方案&lt;/h2>
+&lt;p>在另外两个应用中添加&lt;code>xerces:xercesImpl:jar:2.6.2&lt;/code>依赖。&lt;/p></description></item></channel></rss>

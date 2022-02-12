@@ -1,8 +1,293 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Troubleshooting on 乱世浮生</title><link>https://atbug.com/tags/troubleshooting/</link><description>Recent content in Troubleshooting on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 28 May 2020 22:04:02 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/troubleshooting/index.xml" rel="self" type="application/rss+xml"/><item><title>Eureka 实例注册状态保持 STARTING 的问题排查</title><link>https://atbug.com/articles/troubleshooting-on-eureka-instance-keep-starting/</link><pubDate>Thu, 28 May 2020 22:04:02 +0800</pubDate><guid>https://atbug.com/articles/troubleshooting-on-eureka-instance-keep-starting/</guid><description>这是真实发生在生产环境的 case，实例启动后正常运行，而在注册中心的状态一直保持STARTING，而本地的状态为UP。导致服务的消费方无法发现可用实例。
-这种情况的出现概率非常低，运行一年多未发现两个实例同时出现问题的情况，因此多实例运行可以避免。文末有问题的解决方案，不想花时间看分析过程可直接跳到最后。
-环境说明：
-eureka-client: 1.7.2 spring-boot: 1.5.12.RELEASE spring-cloud: Edgware.SR3
-问题重现 借助Btrace重现, java -noverify -cp .:btrace-boot.jar -javaagent:btrace-agent.jar=script=&amp;lt;pre-compiled-btrace-script&amp;gt; &amp;lt;MainClass&amp;gt; &amp;lt;AppArguments&amp;gt;
-思路 主线程更新实例本地状态(STARTING-&amp;gt;UP)前, 等待心跳线程完成第一次心跳并尝试注册实例, 获取到当前的状态STARTING. 主线程更新状态后触发
-Btrace 脚本
-import com.sun.btrace.annotations.BTrace; import com.sun.btrace.annotations.Kind; import com.sun.btrace.annotations.Location; import com.sun.btrace.annotations.OnMethod; import java.util.concurrent.atomic.AtomicBoolean; import static com.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>troubleshooting on 乱世浮生</title><link>https://atbug.com/tags/troubleshooting/</link><description>Recent content in troubleshooting on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 28 May 2020 22:04:02 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/troubleshooting/index.xml" rel="self" type="application/rss+xml"/><item><title>Eureka 实例注册状态保持 STARTING 的问题排查</title><link>https://atbug.com/troubleshooting-on-eureka-instance-keep-starting/</link><pubDate>Thu, 28 May 2020 22:04:02 +0800</pubDate><guid>https://atbug.com/troubleshooting-on-eureka-instance-keep-starting/</guid><description>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/28/maninblackshirtandgraydenimpantssittingongray11342.jpg" alt="">&lt;/p>
+&lt;p>这是真实发生在生产环境的 case，实例启动后正常运行，而在注册中心的状态一直保持&lt;code>STARTING&lt;/code>，而本地的状态为&lt;code>UP&lt;/code>。导致服务的消费方无法发现可用实例。&lt;/p>
+&lt;p>这种情况的出现概率非常低，运行一年多未发现两个实例同时出现问题的情况，因此多实例运行可以避免。文末有问题的解决方案，不想花时间看分析过程可直接跳到最后。&lt;/p>
+&lt;p>环境说明：&lt;/p>
+&lt;blockquote>
+&lt;p>eureka-client: 1.7.2
+spring-boot: 1.5.12.RELEASE
+spring-cloud: Edgware.SR3&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="问题重现">问题重现&lt;/h2>
+&lt;p>借助&lt;code>Btrace&lt;/code>重现, &lt;code>java -noverify -cp .:btrace-boot.jar -javaagent:btrace-agent.jar=script=&amp;lt;pre-compiled-btrace-script&amp;gt; &amp;lt;MainClass&amp;gt; &amp;lt;AppArguments&amp;gt;&lt;/code>&lt;/p>
+&lt;h3 id="思路">思路&lt;/h3>
+&lt;p>主线程更新实例本地状态(STARTING-&amp;gt;UP)前, 等待心跳线程完成第一次心跳并尝试注册实例, 获取到当前的状态&lt;code>STARTING&lt;/code>. 主线程更新状态后触发&lt;/p>
+&lt;p>&lt;a href="https://gist.github.com/addozhang/9b584470558beb862abeb93e74c1a9b4">Btrace 脚本&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kn">import&lt;/span> &lt;span class="nn">com.sun.btrace.annotations.BTrace&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">com.sun.btrace.annotations.Kind&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">com.sun.btrace.annotations.Location&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">com.sun.btrace.annotations.OnMethod&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">java.util.concurrent.atomic.AtomicBoolean&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import static&lt;/span> &lt;span class="nn">com.sun.btrace.BTraceUtils.currentThread&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import static&lt;/span> &lt;span class="nn">com.sun.btrace.BTraceUtils.println&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * @author Addo.Zhang
+&lt;/span>&lt;span class="cm"> * @date 2019-07-31
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="nd">@BTrace&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">unsafe&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">EurekaRequest&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">AtomicBoolean&lt;/span> &lt;span class="n">heartbeatThreadRegistrationStarted&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AtomicBoolean&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">AtomicBoolean&lt;/span> &lt;span class="n">replicatorThreadRegistrationCompleted&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AtomicBoolean&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">AtomicBoolean&lt;/span> &lt;span class="n">statusUP&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AtomicBoolean&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="nd">@OnMethod&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">clazz&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;org.springframework.cloud.netflix.eureka.serviceregistry.EurekaServiceRegistry&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">location&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nd">@Location&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Kind&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">LINE&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">line&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">45&lt;/span>&lt;span class="o">))&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">waitHeartbeatExecution&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">currentThread&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34; is waiting heartbeatThreadRegistrationStarted thread executing first&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(!&lt;/span>&lt;span class="n">heartbeatThreadRegistrationStarted&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="nd">@OnMethod&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">clazz&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;org.springframework.cloud.netflix.eureka.serviceregistry.EurekaServiceRegistry&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">location&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nd">@Location&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Kind&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">LINE&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">line&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">46&lt;/span>&lt;span class="o">))&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">markStatusUp&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">statusUP&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">set&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;Heartbeat thread executed and &amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">currentThread&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34; continues procedure to change status to [UP]&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="nd">@OnMethod&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">clazz&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;com.netflix.discovery.converters.EurekaJacksonCodec$InstanceInfoSerializer&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">location&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nd">@Location&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Kind&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">LINE&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">line&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">369&lt;/span>&lt;span class="o">))&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">continueRegistrationExecution&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">doExecution&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="nd">@OnMethod&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">clazz&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;com.logancloud.forge.discovery.converters.LoganEurekaJacksonCodec$LoganInstanceInfoSerializer&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">location&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nd">@Location&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Kind&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">LINE&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">line&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">117&lt;/span>&lt;span class="o">))&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">continueRegistrationExecution2&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">doExecution&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">doExecution&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">currentThread&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34; started to proceed registration&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">Thread&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">currentThread&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getName&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">contains&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;HeartbeatExecutor&amp;#34;&lt;/span>&lt;span class="o">))&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">heartbeatThreadRegistrationStarted&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">set&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(!&lt;/span>&lt;span class="n">statusUP&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="n">replicatorThreadRegistrationCompleted&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">try&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Thread&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">sleep&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">500&lt;/span>&lt;span class="o">);&lt;/span> &lt;span class="c1">//interval for replicator registration request completed.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="o">}&lt;/span> &lt;span class="k">catch&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">InterruptedException&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Thread&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">currentThread&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">interrupt&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">Thread&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">currentThread&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getName&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">contains&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;InstanceInfoReplicator&amp;#34;&lt;/span>&lt;span class="o">))&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">replicatorThreadRegistrationCompleted&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">set&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="n">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">currentThread&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34; thread registration completed&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/28/15652581664364.jpg" alt="">&lt;/p>
+&lt;ol>
+&lt;li>心跳线程&lt;code>HeartbeatThread&lt;/code>发送心跳请求(&lt;code>PUT&lt;/code>), 注册中心返回404.&lt;/li>
+&lt;li>实例信息同步线程&lt;code>InstanceInfoReplicator&lt;/code>发送注册请求(&lt;code>POST&lt;/code>): 状态为&lt;code>UP&lt;/code>, &lt;code>lastDirtyTimestamp&lt;/code>为&lt;code>a&lt;/code>&lt;/li>
+&lt;li>心跳线程发送实例注册请求(&lt;code>POST&lt;/code>): 状态为&lt;code>STARTING&lt;/code>, &lt;code>lastDirtyTimestamp&lt;/code>为&lt;code>a&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;h2 id="服务注册">服务注册&lt;/h2>
+&lt;p>先分析服务实例的注册逻辑.&lt;/p>
+&lt;h3 id="instanceinfo初始化">InstanceInfo初始化&lt;/h3>
+&lt;p>通过&lt;code>InstanceInfoFactory#create()&lt;/code>方法来初始化&lt;code>ApplicationInfoManager.instanceInfo&lt;/code>实例时, 实例状态被设置为&lt;code>STARTING&lt;/code>&lt;/p>
+&lt;h3 id="服务实例注册">服务实例注册&lt;/h3>
+&lt;p>服务实例注册的真正逻辑是在&lt;code>DiscoveryClient#register()&lt;/code>中完成的. 但是这个方法的调用却有两个入口, 在整个过程中可解释为主动注册和被动注册.&lt;/p>
+&lt;h4 id="一-主动注册">一. 主动注册&lt;/h4>
+&lt;p>&lt;code>EurekaAutoServiceRegistration&lt;/code>实现了&lt;code>SmartLifecycle&lt;/code>接口, 在&lt;code>EurekaClientAutoConfiguration#eurekaAutoServiceRegistration()&lt;/code>被实例化.&lt;/p>
+&lt;p>&lt;code>EurekaAutoServiceRegistration#start()&lt;/code>方法将&lt;code>EurekaRegistration&lt;/code>注册给&lt;code>EurekaServiceRegistry&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">start&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(!&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">running&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">registration&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getNonSecurePort&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">0&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">//调用EurekaServiceRegistry进行注册
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">serviceRegistry&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">register&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">registration&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//发布实例注册的事件
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">context&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">publishEvent&lt;/span>&lt;span class="o">(&lt;/span>
+&lt;span class="k">new&lt;/span> &lt;span class="n">InstanceRegisteredEvent&lt;/span>&lt;span class="o">&amp;lt;&amp;gt;(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">registration&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getInstanceConfig&lt;/span>&lt;span class="o">()));&lt;/span>
+&lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">running&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">set&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
+&lt;p>&lt;code>EurekaServiceRegistry#register()&lt;/code>:
+先将实例状态设置为初始状态&lt;strong>UP&lt;/strong>(可通过&lt;code>eureka.instance.initial-status&lt;/code>修改, 默认为&lt;code>UP&lt;/code>). 这里会触发&lt;code>StatusChangeListener#notify()&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">
+&lt;span class="kd">public&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">register&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">EurekaRegistration&lt;/span> &lt;span class="n">reg&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">maybeInitializeClient&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">reg&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">log&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isInfoEnabled&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">log&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">info&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;Registering application &amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">reg&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getInstanceConfig&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getAppname&lt;/span>&lt;span class="o">()&lt;/span>
+&lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34; with eureka with status &amp;#34;&lt;/span>
+&lt;span class="o">+&lt;/span> &lt;span class="n">reg&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getInstanceConfig&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getInitialStatus&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="c1">//1
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">reg&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getApplicationInfoManager&lt;/span>&lt;span class="o">()&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="na">setInstanceStatus&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">reg&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getInstanceConfig&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getInitialStatus&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">reg&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getHealthCheckHandler&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">//2
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">reg&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getEurekaClient&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">registerHealthCheck&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">reg&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getHealthCheckHandler&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>DiscoveryClient&lt;/code>内部匿名类提供了&lt;code>StatusChangeListener&lt;/code>的实现, 调用&lt;code>InstanceInfoReplicator#onDemandUpdate()&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="n">statusChangeListener&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ApplicationInfoManager&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">StatusChangeListener&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="nf">getId&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="s">&amp;#34;statusChangeListener&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">notify&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">StatusChangeEvent&lt;/span> &lt;span class="n">statusChangeEvent&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">InstanceStatus&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">DOWN&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">statusChangeEvent&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getStatus&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">||&lt;/span>
+&lt;span class="n">InstanceStatus&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">DOWN&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">statusChangeEvent&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getPreviousStatus&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// log at warn level if DOWN was involved
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">logger&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">warn&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;Saw local status change event {}&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">statusChangeEvent&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">logger&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">info&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;Saw local status change event {}&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">statusChangeEvent&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="n">instanceInfoReplicator&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">onDemandUpdate&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">};&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>InstanceInfoReplicator&lt;/code>是在&lt;code>DiscoveryClient#initScheduledTasks()&lt;/code>中实例化的&lt;code>Runnable&lt;/code>的实现, 实例化之后, 使用其内部的调度线程池调度一个线程. 而&lt;code>onDemandUpdate()&lt;/code>也同样会使用调度线程池调度一个线程.&lt;/p>
+&lt;p>其&lt;code>#run()&lt;/code>方法会调用&lt;code>DiscoveryClient#refreshInstanceInfo()&lt;/code>来更新状态. 状态的更新是通过&lt;code>HealthCheckHandler&lt;/code>来实现的, 具体请看&lt;a href="#%E7%8A%B6%E6%80%81%E6%A3%80%E6%9F%A5">状态检查&lt;/a>. 然后调用&lt;code>DiscoveryClient#register()&lt;/code>方法进行注册.&lt;/p>
+&lt;h4 id="二-被动注册">二. 被动注册&lt;/h4>
+&lt;p>上面提到了&lt;code>DiscoveryClient#initScheduledTasks()&lt;/code>, 这里的task除了&lt;code>InstanceInfoReplicator&lt;/code>之外还有其他的线程. 其中一个是线条线程&lt;code>HeartbeatThread&lt;/code>. 这个线程会每隔一段时间向注册中心发送一个&lt;code>PUT&lt;/code>类型的HTTP请求: 上报实例的状态(状态(status), 以及状态修改的时间(lastDirtyTimestamp)).&lt;/p>
+&lt;p>这个请求可能会有两种结果: &lt;code>404&lt;/code>和&lt;code>200&lt;/code>. 前者说明注册中心中还没有这个实例的注册信息; 后者说明状态上报成功.&lt;/p>
+&lt;p>假如是&lt;code>404&lt;/code>, 便直接发起注册的动作, 即调用&lt;code>DiscoveryClient#register()&lt;/code>方法进行注册.&lt;/p>
+&lt;h4 id="状态检查">状态检查&lt;/h4>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/28/15459820056548.jpg" alt="">&lt;/p>
+&lt;p>&lt;code>CloudEurekaClient&lt;/code>通过&lt;code>HealthCheckHandler&lt;/code>来检查实例的健康状态, 看下&lt;code>HealthCheckCallbackToHandlerBridge&lt;/code>实现: callback为空, 或者当前状态为&lt;code>STARTING&lt;/code>或者&lt;code>OUT_OF_SERVICE&lt;/code>时, 返回当前的状态. 我们没有设置callback, 故而总是会返回当前的状态. 比如应用启动的初始状态为&lt;code>STARTING&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="n">InstanceInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">InstanceStatus&lt;/span> &lt;span class="nf">getStatus&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">InstanceInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">InstanceStatus&lt;/span> &lt;span class="n">currentStatus&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="kc">null&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">callback&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="n">InstanceInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">InstanceStatus&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">STARTING&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">currentStatus&lt;/span>
+&lt;span class="o">||&lt;/span> &lt;span class="n">InstanceInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">InstanceStatus&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">OUT_OF_SERVICE&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">currentStatus&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span> &lt;span class="c1">// Do not go to healthcheck handler if the status is starting or OOS.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="n">currentStatus&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">callback&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isHealthy&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">?&lt;/span> &lt;span class="n">InstanceInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">InstanceStatus&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">UP&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="n">InstanceInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">InstanceStatus&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">DOWN&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="问题分析">问题分析&lt;/h2>
+&lt;h3 id="现象">现象&lt;/h3>
+&lt;h4 id="tcp抓包">TCP抓包&lt;/h4>
+&lt;p>HeartBeat请求和Fetch请求正常. &lt;code>status=UP&amp;amp;lastDirtyTimestamp=1545039481813&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/28/15459763724617.jpg" alt="">&lt;/p>
+&lt;h4 id="堆信息">堆信息&lt;/h4>
+&lt;p>本地状态为UP, &lt;code>lastDirtyTimestamp&lt;/code>为1545039481813, &lt;code>lastUpdatedTimestamp&lt;/code>为1545039472888&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/28/15459778021925.jpg" alt="">&lt;/p>
+&lt;h4 id="注册中心里的实例信息">注册中心里的实例信息&lt;/h4>
+&lt;p>状态为STARTING, &lt;code>lastDirtyTimestamp&lt;/code>为1545039481813, &lt;code>registrationTimestamp&lt;/code>为1545039481898, &lt;code>lastUpdatedTimestamp&lt;/code>为1545039481899&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-xml" data-lang="xml"> &lt;span class="nt">&amp;lt;instance&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;instanceId&amp;gt;&lt;/span>xp-xtower-webapp-boot-6-txcxb:xp-xtower-webapp-boot:10100&lt;span class="nt">&amp;lt;/instanceId&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;hostName&amp;gt;&lt;/span>10.128.41.74&lt;span class="nt">&amp;lt;/hostName&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;app&amp;gt;&lt;/span>XP-XTOWER-WEBAPP-BOOT&lt;span class="nt">&amp;lt;/app&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;ipAddr&amp;gt;&lt;/span>10.128.41.74&lt;span class="nt">&amp;lt;/ipAddr&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;status&amp;gt;&lt;/span>STARTING&lt;span class="nt">&amp;lt;/status&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;overriddenstatus&amp;gt;&lt;/span>UNKNOWN&lt;span class="nt">&amp;lt;/overriddenstatus&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;port&lt;/span> &lt;span class="na">enabled=&lt;/span>&lt;span class="s">&amp;#34;true&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>10100&lt;span class="nt">&amp;lt;/port&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;securePort&lt;/span> &lt;span class="na">enabled=&lt;/span>&lt;span class="s">&amp;#34;false&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>443&lt;span class="nt">&amp;lt;/securePort&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;countryId&amp;gt;&lt;/span>1&lt;span class="nt">&amp;lt;/countryId&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;dataCenterInfo&lt;/span> &lt;span class="na">class=&lt;/span>&lt;span class="s">&amp;#34;com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;name&amp;gt;&lt;/span>MyOwn&lt;span class="nt">&amp;lt;/name&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/dataCenterInfo&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;leaseInfo&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;renewalIntervalInSecs&amp;gt;&lt;/span>5&lt;span class="nt">&amp;lt;/renewalIntervalInSecs&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;durationInSecs&amp;gt;&lt;/span>20&lt;span class="nt">&amp;lt;/durationInSecs&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;registrationTimestamp&amp;gt;&lt;/span>1545039481898&lt;span class="nt">&amp;lt;/registrationTimestamp&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;lastRenewalTimestamp&amp;gt;&lt;/span>1545950719063&lt;span class="nt">&amp;lt;/lastRenewalTimestamp&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;evictionTimestamp&amp;gt;&lt;/span>0&lt;span class="nt">&amp;lt;/evictionTimestamp&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;serviceUpTimestamp&amp;gt;&lt;/span>0&lt;span class="nt">&amp;lt;/serviceUpTimestamp&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/leaseInfo&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;metadata&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;forge&amp;gt;&lt;/span>1.0.0&lt;span class="nt">&amp;lt;/forge&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;management.port&amp;gt;&lt;/span>10100&lt;span class="nt">&amp;lt;/management.port&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;jmx.port&amp;gt;&lt;/span>1099&lt;span class="nt">&amp;lt;/jmx.port&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;group&amp;gt;&lt;/span>innovation&lt;span class="nt">&amp;lt;/group&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/metadata&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;homePageUrl&amp;gt;&lt;/span>http://10.128.41.74:10100/&lt;span class="nt">&amp;lt;/homePageUrl&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;statusPageUrl&amp;gt;&amp;lt;/statusPageUrl&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;healthCheckUrl&amp;gt;&lt;/span>http://10.128.41.74:10100/health&lt;span class="nt">&amp;lt;/healthCheckUrl&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;vipAddress&amp;gt;&lt;/span>xp-xtower-webapp-boot&lt;span class="nt">&amp;lt;/vipAddress&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;secureVipAddress&amp;gt;&lt;/span>xp-xtower-webapp-boot&lt;span class="nt">&amp;lt;/secureVipAddress&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;isCoordinatingDiscoveryServer&amp;gt;&lt;/span>false&lt;span class="nt">&amp;lt;/isCoordinatingDiscoveryServer&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;lastUpdatedTimestamp&amp;gt;&lt;/span>1545039481899&lt;span class="nt">&amp;lt;/lastUpdatedTimestamp&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;lastDirtyTimestamp&amp;gt;&lt;/span>1545039481813&lt;span class="nt">&amp;lt;/lastDirtyTimestamp&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;actionType&amp;gt;&lt;/span>ADDED&lt;span class="nt">&amp;lt;/actionType&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/instance&amp;gt;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Scope&lt;/th>
+&lt;th>Status&lt;/th>
+&lt;th>lastDirtyTimestamp&lt;/th>
+&lt;th>lastUpdatedTimestamp&lt;/th>
+&lt;th>registrationTimestamp&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Request&lt;/td>
+&lt;td>UP&lt;/td>
+&lt;td>1545039481813&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Local&lt;/td>
+&lt;td>UP&lt;/td>
+&lt;td>1545039481813&lt;/td>
+&lt;td>1545039472888&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Remote&lt;/td>
+&lt;td>STARTING&lt;/td>
+&lt;td>1545039481813&lt;/td>
+&lt;td>1545039481899&lt;/td>
+&lt;td>1545039481898&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>结合起来看, 问题出在&lt;code>lastDirtyTimestamp&lt;/code>未更新, 导致注册中心的状态未更新. 而&lt;code>lastUpdatedTimestamp&lt;/code>的时间为1545039481899, 与&lt;code>lastDirtyTimestamp&lt;/code>相差&lt;code>86毫秒&lt;/code>.&lt;/p>
+&lt;p>服务端&lt;code>InstanceResource#validateDirtyTimestamp()&lt;/code>根据本地保存的实例的信息, 和心跳请求发送过来的请求做比较, 决定响应的状态码&lt;code>200&lt;/code>, &lt;code>404&lt;/code>或者&lt;code>409&lt;/code>&lt;/p>
+&lt;h3 id="推理">推理&lt;/h3>
+&lt;p>注册中心里实例的状态为&lt;code>STARTING&lt;/code>, 可以确定实例是[被动注册](#二. 被动注册)的.&lt;/p>
+&lt;p>这里有几个时间点:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>1545039472888&lt;/code>: &lt;code>InstanceInfo&lt;/code>对象实例化的时间, 因为本地对象的&lt;code>#lastUpdatedTimestamp&lt;/code>字段只有在实例化才会赋值, 此后不会被修改. 见&lt;a href="#%E5%A0%86%E4%BF%A1%E6%81%AF">堆信息&lt;/a>&lt;/li>
+&lt;li>&lt;code>1545039481813&lt;/code>: 状态从&lt;code>STARTING&lt;/code>变为&lt;code>UP&lt;/code>的时间, 也是实例状态的最后一次更新时间. 此后的心跳请求都会带上实例的最新状态(&lt;code>UP&lt;/code>)和状态的最后一次更新时间(&lt;code>1545039481813&lt;/code>), 见&lt;a href="#TCP%E6%8A%93%E5%8C%85">TCP抓包&lt;/a>.&lt;/li>
+&lt;li>&lt;code>1545039481898&lt;/code>: 注册中心收到实例的注册请求的时间. 见&lt;a href="#%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E9%87%8C%E7%9A%84%E5%AE%9E%E4%BE%8B%E4%BF%A1%E6%81%AF">注册中心里的实例信息&lt;/a>&lt;/li>
+&lt;li>&lt;code>1545039481899&lt;/code>: 注册中心中的实例信息被更新的时间. 这个时间只比注册的时间晚了&lt;em>1毫秒&lt;/em>. 见&lt;a href="#%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E9%87%8C%E7%9A%84%E5%AE%9E%E4%BE%8B%E4%BF%A1%E6%81%AF">注册中心里的实例信息&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>综上可见, 被动注册时发送请求, 拿到的实例的旧的状态&lt;code>STARTING&lt;/code>, 修改时间确实最新的&lt;code>1545039481813&lt;/code>. 后续的心跳上报实例状态为最新的&lt;code>UP&lt;/code>, 修改时间也是最新的&lt;code>1545039481813&lt;/code>. 但是由于最后修改时间与注册时的最后修改时间相同, 即使状态已经变为&lt;code>UP&lt;/code>, 注册中心在收到心跳请求之后也不会将状态更新为&lt;code>UP&lt;/code>.&lt;/p>
+&lt;p>服务端&lt;code>InstanceResource#renewLease()&lt;/code> -&amp;gt; &lt;code>InstanceResource#validateDirtyTimestamp()&lt;/code>: 如果请求中的&lt;code>lastDirtyTimestamp&lt;/code>与当前保存的实例的相同, 则直接返回OK, 不会更新注册中心中保存的实例的状态.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">private&lt;/span> &lt;span class="n">Response&lt;/span> &lt;span class="nf">validateDirtyTimestamp&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Long&lt;/span> &lt;span class="n">lastDirtyTimestamp&lt;/span>&lt;span class="o">,&lt;/span>
+&lt;span class="kt">boolean&lt;/span> &lt;span class="n">isReplication&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">InstanceInfo&lt;/span> &lt;span class="n">appInfo&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">registry&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getInstanceByAppAndId&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">app&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getName&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">id&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">appInfo&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">((&lt;/span>&lt;span class="n">lastDirtyTimestamp&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="o">(!&lt;/span>&lt;span class="n">lastDirtyTimestamp&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">equals&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">appInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getLastDirtyTimestamp&lt;/span>&lt;span class="o">())))&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Object&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">args&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">{&lt;/span>&lt;span class="n">id&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">appInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getLastDirtyTimestamp&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">lastDirtyTimestamp&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">isReplication&lt;/span>&lt;span class="o">};&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">lastDirtyTimestamp&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">appInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getLastDirtyTimestamp&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">logger&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">debug&lt;/span>&lt;span class="o">(&lt;/span>
+&lt;span class="s">&amp;#34;Time to sync, since the last dirty timestamp differs -&amp;#34;&lt;/span>
+&lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34; ReplicationInstance id : {},Registry : {} Incoming: {} Replication: {}&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span>
+&lt;span class="n">args&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">Response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">status&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Status&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">NOT_FOUND&lt;/span>&lt;span class="o">).&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">appInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getLastDirtyTimestamp&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">lastDirtyTimestamp&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// In the case of replication, send the current instance info in the registry for the
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// replicating node to sync itself with this one.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">isReplication&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">logger&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">debug&lt;/span>&lt;span class="o">(&lt;/span>
+&lt;span class="s">&amp;#34;Time to sync, since the last dirty timestamp differs -&amp;#34;&lt;/span>
+&lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34; ReplicationInstance id : {},Registry : {} Incoming: {} Replication: {}&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span>
+&lt;span class="n">args&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">Response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">status&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Status&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">CONFLICT&lt;/span>&lt;span class="o">).&lt;/span>&lt;span class="na">entity&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">appInfo&lt;/span>&lt;span class="o">).&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">Response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">ok&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">Response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">ok&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="为什么会出现这种情况">为什么会出现这种情况?&lt;/h4>
+&lt;p>应用启动过程中会有两个线程会触发&lt;strong>注册&lt;/strong>的动作&lt;/p>
+&lt;ol>
+&lt;li>&lt;code>InstanceInfoReplicator&lt;/code>线程: &lt;code>DiscoveryClient&lt;/code>中的&lt;code>ApplicationInfoManager.StatusChangeListener&lt;/code>监听到实例状态发生变化, 会新建一个线程将实例注册到注册中心&lt;/li>
+&lt;li>&lt;code>DiscoveryClient$HeartbeatThread&lt;/code>线程: 这个线程在&lt;code>DiscoveryClient&lt;/code>实例初始化后延迟(与心跳间隔时间相同, 默认是&lt;code>30s&lt;/code>, 中台为提高实例发现效率将其改为了&lt;code>5s&lt;/code>)启动运行. 第一次发送心跳请求是如果注册中心返回&lt;strong>404&lt;/strong>(说明心跳线程提实例状态更新线程先启动), 则会先将实例注册到注册中心.&lt;/li>
+&lt;/ol>
+&lt;p>上面两个线程都通过调用&lt;code>AbstractJerseyEurekaHttpClient$register()&lt;/code>方法并使用&lt;code>EurekaJacksonCodec$InstanceInfoSerializer&lt;/code>将实例信息序列化. 序列化的过程中&lt;strong>先记录实例的状态后记录实例状态的最后修改时间(lastDirtyTimestamp)&lt;/strong>, 这两个操作不是一个原子操作.&lt;/p>
+&lt;p>非常极端的情况下(&lt;strong>缩小心跳间隔增加了出现的概率, 但依然极地&lt;/strong>), 两个操作之间(心跳线程先拿到实例状态&lt;code>STARTING&lt;/code>)主线程修改了实例状态为&lt;code>UP&lt;/code>, 同时修改了&lt;code>lastDirtyTimestamp&lt;/code>, 并触发了&lt;code>InstanceInfoReplicator&lt;/code>线程的注册操作, 此时心跳线程获取到的实例的最后修改时间与&lt;code>STARTING&lt;/code>状态并不一致. 之后同样注册动作覆盖了实例在注册中心的状态: &lt;code>UP -&amp;gt; STARTING&lt;/code>.&lt;/p>
+&lt;p>后续的心跳请求带去的最新状态&lt;code>UP&lt;/code>和&lt;code>lastDirtyTimestamp&lt;/code>, 并不会更新在注册中心的状态.&lt;/p>
+&lt;h2 id="解决方案">解决方案&lt;/h2>
+&lt;p>在&lt;code>EurekaJacksonCodec$InstanceInfoSerializer#serialize()&lt;/code>方法中, 将&lt;code>#autoMarshalEligible()&lt;/code> 的调用移到&lt;code>jgen.writeStartObject()&lt;/code>后面. 这样就使得&lt;code>lastDirtyTimestamp&lt;/code>的获取比&lt;code>status&lt;/code>早, 就能保证即使注册时的&lt;code>lastDirtyTimestamp&lt;/code>小于真正的, 但是状态是与实际相符. &lt;code>lastDirtyTimestamp&lt;/code>会在后续的心跳请求中更新.
+&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/28/15476421041186.jpg" alt="">&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">addInstance-info.getStatus(): UP
+addInstance-info.getLastDirtyTimestamp(): 1565164484429
+addInstance-info.getStatus(): STARTING
+addInstance-info.getLastDirtyTimestamp(): 1565164484415
+renew-status-in-registry: UP
+renew-lastDirtyTimestamp: 1565164484429
+renew-appInfo.getLastDirtyTimestamp(): 1565164484429
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;a href="https://github.com/Netflix/eureka/pull/1229">PR&lt;/a> 已经提交并合并完成，然而 1.7.x 的版本不知何时会发布修复版本&lt;/p>
+&lt;p>参考:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/Netflix/eureka/issues/1174">GitHub issue&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/Netflix/eureka/pull/1229">PR&lt;/a>&lt;/li>
+&lt;/ul></description></item></channel></rss>

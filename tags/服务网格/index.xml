@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>服务网格 on 乱世浮生</title><link>https://atbug.com/tags/%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC/</link><description>Recent content in 服务网格 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 11 Jan 2022 10:40:56 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC/index.xml" rel="self" type="application/rss+xml"/><item><title>eBPF 和 Wasm：探索服务网格数据平面的未来</title><link>https://atbug.com/ebpf-wasm-service-mesh/</link><pubDate>Tue, 11 Jan 2022 10:40:56 +0800</pubDate><guid>https://atbug.com/ebpf-wasm-service-mesh/</guid><description>
+&lt;p>本文翻译自 Vivian Hu 的 &lt;a href="https://www.infoq.com/news/2022/01/ebpf-wasm-service-mesh">《eBPF and Wasm: Exploring the Future of the Service Mesh Data Plane》&lt;/a>。&lt;/p>
+&lt;hr>
+&lt;p>在 2021 年 12 月 2 日，Cilium 项目宣布了 &lt;a href="https://cilium.io/blog/2021/12/01/cilium-service-mesh-beta">Cilium Service Mesh&lt;/a> 项目的测试版。在 2020 年 8 月 Google Cloud 宣布基于 eBPF 的 Google Kubernetes 服务（GKS）的数据平面 V2 的一年后，Cilium Service Mesh 带来了 “无边车服务网格”（sidecarless service mesh）的想法。它扩展了 Cilium eBPF 产品来处理服务网格中的大部分边车代理功能，包括 7 层路由和负载均衡、TLS 终止、访问策略、健康检查、日志和跟踪，以及内置的 Kubernetes Ingress。&lt;/p>
+&lt;p>Cilium 的创始人 Isovalent 在一篇名为 “&lt;a href="https://isovalent.com/blog/post/2021-12-08-ebpf-servicemesh">How eBPF will solve Service Mesh - Goodbye Sidecars&lt;/a>” 的文章中解释了 eBPF 如何替代边车代理。&lt;/p>
+&lt;blockquote>
+&lt;p>它将我们从边车模型中解放处理，并允许我们将现有的代理技术集成到现有的内核命名空间概念中，使其成为日常使用的优雅容器抽象的一部分。&lt;/p>
+&lt;/blockquote>
+&lt;p>简而言之，eBPF 承诺会解决服务网格中的重要痛点 &amp;ndash; 当有许多细粒度微服务时的性能损耗。然而，使用 eBPF 替换边车代理这种新颖的想法，也存在着争议。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/01/11/16418644881451.jpg" alt="图片来自 How eBPF will solve Service Mesh - Goodbye Sidecars">&lt;/p>
+&lt;p>服务网格中的数据平面是指管理数据流量如何路由和服务之间的流转的基础设施服务。目前，这是通过使用服务代理实现的。这种设计模式也通常被称为边车模式。边车允许其附加的微服务透明地向服务网格中的其他组件发送和接收请求。&lt;/p>
+&lt;p>边车通常包含了 7 层代理，比如 &lt;a href="https://envoyproxy.io/">Envoy&lt;/a>、&lt;a href="https://linkerd.io/">Linkerd&lt;/a> 或者 &lt;a href="https://mosn.io/en/">MOSN&lt;/a>。该代理处理流量的路由、负载均衡、健康检查、身份验证、授权、加密、日志、跟踪和统计数据收集。边车还可以包含一个基于 SDK 的应用程序框架（比如 &lt;a href="https://dapr.io/">Dapr&lt;/a>）以提供网络代理以外的应用程序服务。此类服务的示例还包含了服务注册、服务发现、资源绑定、基于名称的服务调用、状态管理、actor 框架 和密钥存储。&lt;/p>
+&lt;p>边车代理通常在 Kubernetes Pod 或者容器中运行。微服务应用也同样运行在容器内，并通过网络接口连接到边车。然而，这些容器化应用程序的一个重要问题就是资源消耗。边车服务随着微服务的数量几何级增长。当应用程序有数百个互联和负载均衡的微服务时，开销变得难以接受。服务网格代理商开始了性能上的竞争。正如 &lt;a href="https://www.infoq.com/news/2021/08/linkerd-rust-cloud-native/">Infoq 之前报道的那样&lt;/a>，Linkerd 将其 Go 写的代理用 Rust 重写了，并获得了显著的性能提升。&lt;/p>
+&lt;p>并不奇怪，现有的服务网格提供商不相信 eBPF 是解决所有问题的圣杯。Solo.io 的 Idit Levine 等人针对 Cilium 的这篇公告撰写了一篇文章 “&lt;a href="https://www.solo.io/blog/ebpf-for-service-mesh/">eBPF for Service Mesh? Yes, But Envoy Proxy is Here to Stay&lt;/a>”。&lt;/p>
+&lt;blockquote>
+&lt;p>在 Solo.io，我们认为 eBPF 是优化服务网格的很好的方式，并将 Envoy 代理视为数据平面的基石。&lt;/p>
+&lt;/blockquote>
+&lt;p>Solo.io 作者提出的观点是：边车代理现在所做的不仅仅是简单的网络流量管理。当今的服务网格部署中有着复杂的需求，远超过 eBPF 支持的有限编程模型，其不符合图灵完备性且受到内核安全的诸多限制。Cilium eBPF 产品可以处理边车代理许多但并不是全部的任务。此外，Solo.io 的作者还指出，eBPF 的节点级代理与传统的 Pod 级边车代理相比缺乏灵活性，反而增加了整体开销。eBPF 缺陷在开发人员必须编写并部署到服务网格代理中的流量路由、负载均衡和授权的特定应用程序逻辑中体现得尤为明显。&lt;/p>
+&lt;p>Terate.io 的开发人员在回应名为 &lt;a href="">The Debate in the Community about Istio and Service Mesh&lt;/a> 的 Cilium 公告中也提出了类似的观点。他们指出，当前边车代理的性能是合理的，开源社区也已经有了进一步提高性能的方法。与此同时，开发人员很难在 eBPF 等新颖但图灵不完整的技术中构建应用程序特定的数据平面逻辑。&lt;/p>
+&lt;blockquote>
+&lt;p>Istio 架构稳定且生产就绪，生态系统正在发展期。&lt;/p>
+&lt;/blockquote>
+&lt;p>eBPF 的许多问题与其是一种内核技术分不开，必定收到安全限制。有没有一种方法可以在不使用空间技术降低性能的情况下将复杂的应用程序特定的代理逻辑集成到数据平面中？事实证明，WebAssembly（Wasm）可能会是个选择。Wasm 运行时可以以近似原生性能安全地隔离和执行用户空间代码。&lt;/p>
+&lt;p>Envoy Proxy 率先使用 Wasm 作为扩展机制对数据平面的编程。开发人员可以用C、C++、Rust、AssemblyScript、Swift 和 TinyGO 等语言编写应用程序特定的代理逻辑，并将模块编译为 Wasm。通过proxy-Wasm 标准，代理可以在例如 &lt;a href="https://github.com/bytecodealliance/wasmtime">Wasmtime&lt;/a> 和 &lt;a href="https://github.com/WasmEdge/WasmEdge">WasmEdge&lt;/a> 的高性能运行时执行这些 Wasm 插件。目前，&lt;a href="https://envoyproxy.io/">Envoy 代理&lt;/a>、&lt;a href="https://github.com/istio/proxy">Istio 代理&lt;/a>、MOSN 和 &lt;a href="http://openresty.org/">OpenResty&lt;/a> 支持 &lt;a href="https://github.com/proxy-wasm">proxy-Wasm&lt;/a>。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/01/11/16418673669621.jpg" alt="容器生态 来自 WasmEdge Book">&lt;/p>
+&lt;p>此外，Wasm 可以充当通用应用程序容器。它在服务网格数据平面上的应用不仅限于边车代理。附加到边车的微服务也可以运行在轻量级 Wasm 运行时中。WasmEdge WebAssembly 运行时是一个安全、轻量级、快速、便携式和多语言运行时，Kubernetes 可以直接&lt;a href="https://wasmedge.org/book/en/kubernetes.html">将其作为容器进行管理&lt;/a>。到 2012 年 12 月，WasmEdge 贡献者社区验证了基于 WasEdge 的微服务可以与 &lt;a href="https://github.com/second-state/dapr-wasm">Dapr&lt;/a> 和 &lt;a href="https://github.com/Liquid-Reply/kind-crun-wasm">Linkerd&lt;/a> 边车一同工作，作为带有 guest 操作系统和完整软件对战的重量级 Linux 容器的替代品。与 Linux 容器应用程序相比，WebAssembly 微服务消耗了 1% 的资源，冷启动时间也只用了 1%。&lt;/p>
+&lt;p>eBPF 和 Wasm 是服务网格应用的新方向，以便在数据平面上实现高性能。他们仍然是新兴技术，但可能会成为微服务生态系统 Linux 容器的替代品或者补充。&lt;/p>
+&lt;p>&lt;strong>关于作者：&lt;/strong>&lt;/p>
+&lt;p>Vivian Hu：Vivian 是亚洲的开源爱好者和开发人员倡导者，Second State 的产品经理。她非常关心通过更好的工具、文档和教程来改善开发人员体验和生产力。Vivian 在 WebAssembly.today 上为 WebAssembly、Rust 和无服务器编写每周时事通讯。&lt;/p></description></item><item><title>低复杂度 - 服务网格的下一站</title><link>https://atbug.com/service-mesh-unnecessary-complexity/</link><pubDate>Fri, 15 Oct 2021 07:58:25 +0800</pubDate><guid>https://atbug.com/service-mesh-unnecessary-complexity/</guid><description>
+&lt;p>&lt;strong>译者：&lt;/strong>&lt;/p>
+&lt;p>作为一个曾经在制造业企业的基础架构团队任职，为支持公司的“互联网基因”和“数字化转型”落地了云原生基础设施平台，并在尝试采用服务网格未成的我来说，看到这篇文章深有感触。尤其是文中所说的“人少，问题多，需要快速输出价值”，直戳到了痛处。有限的人手有限的时间，我们需要将大部分精力集中在解决成熟度曲线较低的基本问题上，要想很好的运行复杂的系统是非常困难的。&lt;/p>
+&lt;p>服务网格是一个新的基础设施层，可以承载很多的功能，未来还会有更大的想象空间和光明的未来。&lt;/p>
+&lt;p>以上的种种原因，也促使我后来选择进入一家提供服务网格的产品企业，也希望服务网格可以被更简单的使用。&lt;/p>
+&lt;p>“道阻且长，行则将至！”&lt;/p>
+&lt;p>本文翻译自 Chris Campbell 的 &lt;a href="https://www.infoq.com/articles/service-mesh-unnecessary-complexity">How Unnecessary Complexity Gave the Service Mesh a Bad Name&lt;/a>&lt;/p>
+&lt;hr>
+&lt;h3 id="关键要点">关键要点&lt;/h3>
+&lt;ul>
+&lt;li>采用服务网格有巨大的价值，但必须以轻量级的方式进行，以避免不必要的复杂性。&lt;/li>
+&lt;li>在实施服务网时，要采取务实的方法，与技术的核心功能保持一致，并小心干扰（译者：注意力的分散）。&lt;/li>
+&lt;li>服务网格的一些核心特性包括标准化监控、自动加密和身份识别、智能路由、可靠的重试和网络可扩展性。&lt;/li>
+&lt;li>服务网格可以提供强大的功能，但这些功能会分散本应对核心优势的关注，并且这些功能也不是实施服务网格的主要原因。&lt;/li>
+&lt;li>在初始实施服务网格时没有必要去关注那些明显会分散注意力的功能，比如复杂的控制平面、多集群支持、Envoy、WASM 和 A/B 测试。&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;p>服务网格是 Kubernetes 世界中的一个热门话题，但许多潜在的采用者已经有些失望了。服务网格的落地受到压倒性的复杂性和看似无穷无尽的供应商解决方案的限制。在我亲自浏览了这个领域之后，我发现采用服务网格具有巨大的价值，但它必须以轻量级的方式完成，以避免不必要的复杂性。尽管普遍存在幻灭感，但服务网格的未来依然光明。&lt;/p>
+&lt;h2 id="在工作中学习">在工作中学习&lt;/h2>
+&lt;p>我进入服务网格的世界始于我在一家老牌的财富 500 强技术公司担任云计算架构师的角色。在开始我们的服务网格之旅时，我身边有许多强大的工程师，但大多数人几乎没有云计算开发经验。我们的组织诞生于云计算之前，完全实现云计算的价值需要时间。我们的传统业务线主要集中在技术栈的硬件元素上，云计算的决策最初是由为运送硬件或为该硬件提供固件和驱动程序而开发的流程驱动的。&lt;/p>
+&lt;p>随着该组织经历其“数字化转型”，它越来越依赖于提供高质量的软件服务，并逐渐开发出更好的方法。但作为云计算架构师，我仍在为优先考虑硬件的业务流程，以及具有不同技能、流程和信念的工程团队导航。随着时间的推移，我和我的团队在将 .NET 应用程序迁移到 Linux、采用 Docker、迁移到 AWS 以及与之相关的最佳实践（如持续集成、自动化部署、不可变基础设施、基础设施即代码、监控等）方面变得熟练并成功。但挑战依然存在。&lt;/p>
+&lt;p>在此期间，我们开始将我们的应用程序拆分为一组微服务。起初，这是一个缓慢的转变，但最终这种方法流行起来，开发人员开始更喜欢构建新的服务而不是添加到现有服务。我们这些基础设施团队的人把这看作是一种成功。唯一的问题是与网络相关的问题数量激增，开发人员正在向我们寻求答案，而我们还没有准备好有效地应对这种冲击。&lt;/p>
+&lt;h2 id="服务网格的援救">服务网格的援救&lt;/h2>
+&lt;p>我第一次听说服务网格是在 2015 年，当时我正在研究服务发现工具并寻找与 Consul 集成的简单方法。我喜欢将应用程序职责卸载到“sidecar”容器的想法，并找到了一些可以帮助做到这一点的工具。大约在这个时候，Docker 有一个叫做“链接”的功能，让你可以将两个应用程序放在一个共享的网络空间中，这样它们就可以通过 localhost 进行通信。此功能提供了类似于我们现在在 Kubernetes pod 中所拥有的体验：两个独立构建的服务可以在部署时进行组合以实现一些附加功能。&lt;/p>
+&lt;p>我总是抓住机会用简单的方案来解决大问题，因此这些新功能的力量立即打动了我。虽然这个工具是为了与 Consul 集成而构建的，但实际上，它可以做任何你想做的事情。这是我们拥有的基础设施层，可以用来一次为所有人解决问题。&lt;/p>
+&lt;p>这方面的一个具体例子出现在我们采用过程的早期。当时，我们正致力于跨不同服务的日志标准化输出。通过采用服务网格和这种新的设计模式，我们能够将我们的人的问题——让开发人员标准化他们的日志——换成技术问题——将所有流量传递给可以为他们记录日志的代理。这是我们团队向前迈出的重要一步。&lt;/p>
+&lt;p>我们对服务网格的实现非常务实，并且与该技术的核心功能非常吻合。然而，大部分营销炒作都集中在不太需要的边缘案例上，在评估服务网格是否适合你时，能够识别这些干扰是很重要的。&lt;/p>
+&lt;h1 id="核心功能">核心功能&lt;/h1>
+&lt;p>服务网格可以提供的核心功能分为四个关键责任领域：可观察性、安全性、连接性和可靠性。这些功能包括：&lt;/p>
+&lt;h2 id="标准化监控">标准化监控&lt;/h2>
+&lt;p>我们取得的最大胜利之一，也是最容易采用的，是标准化监控。它的运营成本非常低，可以适应你使用的任何监控系统。它使组织能够捕获所有 HTTP 或 gRPC 指标，并以标准方式在整个系统中存储它们。这控制了复杂性并减轻了应用程序团队的负担，他们不再需要实现 Prometheus 指标端点或标准化日志格式。它还使用户能够公正地了解其应用程序的&lt;a href="https://sre.google/sre-book/monitoring-distributed-systems/#xref_monitoring_golden-signals">黄金信号&lt;/a>。&lt;/p>
+&lt;h2 id="自动加密和身份识别">自动加密和身份识别&lt;/h2>
+&lt;p>证书管理很难做好。如果一个组织还没有在这方面进行投入，他们应该找到一个网格来为他们做这件事。证书管理需要维护具有巨大安全隐患的复杂基础设施代码。相比之下，网格将能够与编排系统集成，以了解工作负载的身份，在需要时可以用来执行策略。这允许提供与 Calico 或 Cilium 等功能强大的 CNI 提供的安全态势相当或更好的安全态势。&lt;/p>
+&lt;h2 id="智能路由">智能路由&lt;/h2>
+&lt;p>智能路由是另一个特性，它使网格能够在发送请求时“做正确的事”。场景包括：&lt;/p>
+&lt;ol>
+&lt;li>使用延迟加权算法优化流量&lt;/li>
+&lt;li>拓扑感知路由以提高性能并降低成本&lt;/li>
+&lt;li>根据请求成功的可能性使请求超时&lt;/li>
+&lt;li>与编排系统集成以进行 IP 解析，而不是依赖 DNS&lt;/li>
+&lt;li>传输升级，例如 HTTP 到 HTTP/2&lt;/li>
+&lt;/ol>
+&lt;p>这些功能可能不会让普通人感到兴奋，但随着时间的推移，它们从根本上增加了价值&lt;/p>
+&lt;h2 id="可靠的重试">可靠的重试&lt;/h2>
+&lt;p>在分布式系统中重试请求可能很麻烦，但是它几乎总是需要实现的。分布式系统通常会将一个客户端请求转换为更多下游请求，这意味着“尾巴”场景的可能性会大大增加，例如发生异常失败的请求。对此最简单的缓解措施是重试失败的请求。&lt;/p>
+&lt;p>困难来自于避免“重试风暴”或“重试 DDoS”，即当处于降级状态的系统触发重试、随着重试增加而增加负载并进一步降低性能时。天真的实现不会考虑这种情况，因为它可能需要与缓存或其他通信系统集成以了解是否值得执行重试。服务网格可以通过对整个系统允许的重试总数进行限制来实现这一点。网格还可以在这些重试发生时报告这些重试，可能会在你的用户注意到系统降级之前提醒你。&lt;/p>
+&lt;h2 id="网络可扩展性">网络可扩展性&lt;/h2>
+&lt;p>也许服务网格的最佳属性是它的可扩展性。它提供了额外的适应性层，以应对 IT 下一步投入的任何事情。Sidecar 代理的设计模式是另一个令人兴奋和强大的功能，即使它有时会被过度宣传和过度设计来做用户和技术人员还没有准备好的事情。虽然社区在等着看哪个服务网格“生出”，这反映了之前过度炒作的编排战争，但未来我们将不可避免地看到更多专门构建的网格，并且可能会有更多的最终用户构建自己的控制平面和代理以满足他们的场景。&lt;/p>
+&lt;h1 id="服务网格干扰">服务网格干扰&lt;/h1>
+&lt;p>平台或基础设施控制层的价值怎么强调都不为过。然而，在服务网格世界中，我了解到入门的一个主要的挑战是，服务网格解决的核心问题通常甚至不是大多数服务网格项目交流的焦点！&lt;/p>
+&lt;p>相反，来自服务网格项目的大部分交流都围绕着听起来很强大或令人兴奋但最终会让人分心的功能。这包括：&lt;/p>
+&lt;h2 id="强复大杂的控制平面">强（复）大（杂）的控制平面&lt;/h2>
+&lt;p>要很好地运行复杂的软件是非常困难的。这就是为什么如此多的组织使用云计算来使用完全托管的服务来减轻这一点的原因。那么为什么服务网格项目会让我们负责操作如此复杂的系统呢？系统的复杂性不是资产，而是负债，但大多数项目都在吹捧它们的功能集和可配置性。&lt;/p>
+&lt;h2 id="多集群支持">多集群支持&lt;/h2>
+&lt;p>多集群现在是一个热门话题。最终，大多数团队将运行多个 Kubernetes 集群。但是多集群的主要痛点是你的 Kubernetes 管理的网络被切分。服务网格有助于解决这个 Kubernetes 横向扩展问题，但它最终并没有带来任何新的东西。是的，多集群支持是必要的，但它对服务网格的承诺被过度宣传了。&lt;/p>
+&lt;h2 id="envoy">Envoy&lt;/h2>
+&lt;p>Envoy 是一个很棒的工具，但它被作为某种标准介绍，这是有问题的。Envoy 是众多开箱即用的代理之一，你可以将其作为服务网格平台的基础。但是 Envoy 并没有什么内在的特别之处，使其成为正确的选择。采用 Envoy 会给你的组织带来一系列重要问题，包括：&lt;/p>
+&lt;ul>
+&lt;li>运行时成本和性能（所有这些过滤器加起来！）&lt;/li>
+&lt;li>计算资源需求以及如何随负载扩展&lt;/li>
+&lt;li>如何调试错误或意外行为&lt;/li>
+&lt;li>你的网格如何与 Envoy 交互以及配置生命周期是什么&lt;/li>
+&lt;li>运作成熟的时间（这可能比你预期的要长）&lt;/li>
+&lt;/ul>
+&lt;p>服务网格中代理的选择应该是一个实现细节，而不是产品要求。&lt;/p>
+&lt;h2 id="wasm">WASM&lt;/h2>
+&lt;p>我是 Web Assembly (WASM) 的忠实拥趸，已经成功地使用它在 &lt;a href="https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor">Blazor&lt;/a> 中构建前端应用程序。然而，WASM 作为定制服务网格代理行为的工具，让你处于获得一个全新的软件生命周期开销的境地，这与你现有的软件生命周期完全正交！如果你的组织还没有准备好构建、测试、部署、维护、监控、回滚和版本代码（影响通过其系统运行的每个请求），那么你还没有准备好使用 WASM。&lt;/p>
+&lt;h2 id="ab-测试">A/B 测试&lt;/h2>
+&lt;p>直到为时已晚，我才意识到 A/B 测试实际上是一个应用程序级别的问题。在基础设施层提供原语来实现它是很好的，但是没有简单的方法来完全自动化大多数组织需要的 A/B 测试水平。通常，应用程序需要定义独特的指标来定义测试的积极信号。如果组织想要在服务网格级别投入 A/B 测试，那么解决方案需要支持以下内容：&lt;/p>
+&lt;ol>
+&lt;li>对部署和回滚的精细控制，因为它可能同时进行多个不同的“测试”&lt;/li>
+&lt;li>能够捕获系统知道的自定义指标并可以根据这些指标做出决策&lt;/li>
+&lt;li>根据请求的特征暴露对流量方向的控制，其中可能包括解析整个请求正文&lt;/li>
+&lt;/ol>
+&lt;p>这需要实现很多，没有哪个服务网格是开箱即用的。最终，我们的组织选择了网格之外的特征标记解决方案，其以最小的努力取得了巨大的成功。&lt;/p>
+&lt;h2 id="我们在哪里结束">我们在哪里结束&lt;/h2>
+&lt;p>最终，我们面临的挑战并不是服务网格独有的。我们工作的组织有一系列限制条件，要求我们对解决的问题以及如何解决问题采取务实的态度。我们面临的问题包括：&lt;/p>
+&lt;ul>
+&lt;li>一个拥有大量不同技能的开发人员的大型组织&lt;/li>
+&lt;li>云计算和 SaaS 能力普遍不成熟&lt;/li>
+&lt;li>为非云计算软件优化的流程&lt;/li>
+&lt;li>碎片化的软件工程方法和信念&lt;/li>
+&lt;li>有限的资源&lt;/li>
+&lt;li>激进的截止日期&lt;/li>
+&lt;/ul>
+&lt;p>简而言之，我们人少，问题多，需要快速输出价值。我们必须支持主要不是 Web 或云计算的开发者，我们需要扩大规模以支持有不同方法和流程的大型工程组织来做云计算。我们需要将大部分精力集中在解决成熟度曲线较低的基本问题上。&lt;/p>
+&lt;p>最后，当面对我们自己的服务网格决策时，我们决定建立在 &lt;a href="https://linkerd.io/">Linkerd 服务网格&lt;/a>上，因为它最符合我们的优先事项：低运营成本（计算和人力）、低认知开销、支持性社区以及透明的管理——同时满足我们的功能要求和预算。在 Linkerd 指导委员会工作了一段时间后（他们喜欢诚实的反馈和社区参与），我了解到它与我自己的工程原则有多么的契合。Linkerd 最近&lt;a href="https://www.cncf.io/announcements/2021/07/28/cloud-native-computing-foundation-announces-linkerd-graduation/">在 CNCF 达到毕业状态&lt;/a>，这是一个漫长的过程，强调了该项目的成熟及其广泛采用。&lt;/p>
+&lt;h2 id="关于作者">关于作者&lt;/h2>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/10/15/16342274995874.jpg" alt="">&lt;/p>
+&lt;p>&lt;strong>Chris Campbell&lt;/strong> 担任软件工程师和架构师已有十多年，与多个团队和组织合作落地云原生技术和最佳实践。他在与业务领导者合作采用加速业务的软件交付策略和与工程团队合作交付可扩展的云基础架构之间分配时间。他对提高开发人员生产力和体验的技术最感兴趣。&lt;/p></description></item><item><title>Kubernetes 必备工具：2021</title><link>https://atbug.com/translation-kuberletes-essential-tools-2021/</link><pubDate>Thu, 15 Jul 2021 08:10:22 +0800</pubDate><guid>https://atbug.com/translation-kuberletes-essential-tools-2021/</guid><description>
+&lt;p>有别于前些天的文章 - &lt;a href="https://mp.weixin.qq.com/s/uU2zmT5yyVcKZ5XmLSRqtg">常用的几款工具让 Kubernetes 集群上的工作更容易&lt;/a> 偏重于工具类来提升工作效率，今天这篇文章更加适合用来做选型时的参考。&lt;/p>
+&lt;p>文档翻译自 &lt;a href="https://itnext.io/kubernetes-essential-tools-2021-def12e84c572">Kubernetes Essential Tools: 2021&lt;/a>，篇幅较长，做了部分增删。&lt;/p>
+&lt;hr>
+&lt;h2 id="介绍">介绍&lt;/h2>
+&lt;p>在本文中，我将尝试总结我最喜欢的 &lt;a href="https://kubernetes.io/">Kubernetes&lt;/a> 工具，并特别强调最新的和鲜为人知但我认为会非常流行的工具。&lt;/p>
+&lt;p>这只是我根据我的经验得出的个人清单，但为了避免偏见，我还将尝试提及每种工具的替代方案，以便你可以根据自己的需要进行比较和决定。我将尽可能缩短这篇文章并提供链接，以便你可以自行探索更多内容。我的目标是回答这个问题：“我如何在 Kubernetes 中做 X？” 通过描述不同软件开发任务的工具。&lt;/p>
+&lt;h2 id="k3d">K3D&lt;/h2>
+&lt;p>&lt;a href="https://k3d.io/">K3D&lt;/a> 是我最喜欢的在笔记本电脑上运行 Kubernetes (K8s) 集群的方式。它非常&lt;strong>轻巧且&lt;/strong>速度非常快。它是使用 &lt;strong>Docker&lt;/strong> 围绕 &lt;a href="https://k3s.io/">K3S&lt;/a> 的包装器。所以，你只需要 Docker 来运行它并且资源使用率非常低。唯一的问题是&lt;strong>它不完全符合 K8s 标准&lt;/strong>，但这不应该是本地开发的问题。对于测试环境，你可以使用其他解决方案。K3D 比 Kind 快，但 Kind 完全兼容。&lt;/p>
+&lt;h3 id="备选">备选&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://k3s.io/">&lt;strong>K3S&lt;/strong>&lt;/a> 物联网或者边缘计算&lt;/li>
+&lt;li>&lt;a href="https://kind.sigs.k8s.io/">&lt;strong>Kind&lt;/strong>&lt;/a> 完全兼容 Kubernetes 的备选&lt;/li>
+&lt;li>&lt;a href="https://microk8s.io/">&lt;strong>MicroK8s&lt;/strong>&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://minikube.sigs.k8s.io/docs/">&lt;strong>MiniKube&lt;/strong>&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="krew">Krew&lt;/h2>
+&lt;p>&lt;a href="https://krew.sigs.k8s.io/">Krew&lt;/a> 是管理的必备工具 &lt;strong>Kubectl 插件&lt;/strong>，这是一个必须有任何 K8S 用户。我不会详细介绍超过 145 个可用&lt;a href="https://krew.sigs.k8s.io/plugins/">插件&lt;/a>，但至少安装 &lt;a href="https://github.com/ahmetb/kubectx">&lt;strong>kubens&lt;/strong>&lt;/a> 和 &lt;a href="https://github.com/ahmetb/kubectx">&lt;strong>kubectx&lt;/strong>&lt;/a>。&lt;/p>
+&lt;h2 id="lens">Lens&lt;/h2>
+&lt;p>&lt;a href="https://k8slens.dev/">Lens&lt;/a> 是适用于 SRE、Ops 和开发人员的 K8s &lt;strong>IDE&lt;/strong>。它适用于任何 Kubernetes 发行版：本地或云端。它快速、易于使用并提供实时可观察性。使用 Lens 可以非常轻松地管理多个集群。如果你是集群操作员，这是必须的。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/15/16263041512885.jpg" alt="">&lt;/p>
+&lt;h3 id="备选-1">备选&lt;/h3>
+&lt;ul>
+&lt;li>对于那些喜欢轻量级终端替代品的人来说，&lt;a href="https://k9scli.io/">K9s&lt;/a> 是一个很好的选择。K9s 会持续观察 Kubernetes 的变化，并提供后续命令来与你观察到的资源进行交互。&lt;/li>
+&lt;/ul>
+&lt;h2 id="helm">Helm&lt;/h2>
+&lt;p>&lt;a href="https://helm.sh/">Helm&lt;/a> 不需要介绍，它是 Kubernetes 最著名的包管理器。你应该在 K8s 中使用包管理器，就像在编程语言中使用它一样。Helm 允许你将应用程序打包到 &lt;a href="https://artifacthub.io/">Charts&lt;/a> 中，将复杂的应用程序抽象为易于定义、安装和更新的可重用简单组件。&lt;/p>
+&lt;p>它还提供了强大的模板引擎。Helm 很成熟，有很多预定义的 charts，很好的支持，而且很容易使用。&lt;/p>
+&lt;h3 id="备选-2">备选&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://kustomize.io/">&lt;strong>Kustomize&lt;/strong>&lt;/a> 是 helm 的一个更新和伟大的替代品，它不使用模板引擎，而是一个覆盖引擎，在其中你有基本的定义和覆盖在它们之上。&lt;/li>
+&lt;/ul>
+&lt;h2 id="argocd">ArgoCD&lt;/h2>
+&lt;p>我相信 &lt;a href="https://www.gitops.tech/">GitOps&lt;/a> 是过去十年中最好的想法之一。在软件开发中，我们应该使用单一的事实来源来跟踪构建软件所需的所有移动部分，而 &lt;strong>Git&lt;/strong> 是做到这一点的完美工具。我们的想法是拥有一个 Git 存储库，其中包含应用程序代码以及表示所需生产环境状态的基础设施 (&lt;a href="https://en.wikipedia.org/wiki/Infrastructure_as_Code">IaC&lt;/a>) 的声明性描述；以及使所需环境与存储库中描述的状态相匹配的自动化过程。&lt;/p>
+&lt;blockquote>
+&lt;p>GitOps: versioned CI/CD on top of declarative infrastructure. Stop scripting and start shipping.&lt;/p>
+&lt;p>— Kelsey Hightower&lt;/p>
+&lt;/blockquote>
+&lt;p>尽管使用 &lt;a href="https://www.terraform.io/">Terraform&lt;/a> 或类似工具，你可以实现基础设施即代码（&lt;a href="https://en.wikipedia.org/wiki/Infrastructure_as_code">IaC&lt;/a>），但这还不足以将你在 Git 中的所需状态与生产同步。我们需要一种方法来持续监控环境并确保没有配置漂移。使用 Terraform，你将不得不编写脚本来运行&lt;code>terraform apply&lt;/code>并检查状态是否与 Terraform 状态匹配，但这既乏味又难以维护。&lt;/p>
+&lt;p>Kubernetes 从头开始​​构建控制循环的思想，这意味着 Kubernetes 一直在监视集群的状态以确保它与所需的状态匹配，例如，运行的副本数量与所需的数量相匹配复制品。GitOps 的想法是将其扩展到应用程序，因此你可以将你的服务定义为代码，例如，通过定义 Helm Charts，并使用利用 K8s 功能的工具来监控你的应用程序的状态并相应地调整集群。也就是说，如果更新你的代码存储库或Helm Chart，生产集群也会更新。这是真正的&lt;a href="https://en.wikipedia.org/wiki/Continuous_deployment">持续部署&lt;/a>。核心原则是应用程序部署和生命周期管理应该自动化、可审计且易于理解。&lt;/p>
+&lt;p>对我来说，这个想法是革命性的，如果做得好，将使组织能够更多地关注功能，而不是编写自动化脚本。这个概念可以扩展到软件开发的其他领域，例如，你可以将文档存储在代码中以跟踪更改的历史并确保文档是最新的；或使用&lt;a href="https://github.com/jamesmh/architecture_decision_record">ADR&lt;/a>跟踪架构决策。&lt;/p>
+&lt;p>在我看来，在最好的 GitOps 工具 &lt;strong>Kubernetes&lt;/strong> 是 &lt;a href="https://argoproj.github.io/argo-cd/">ArgoCD&lt;/a>。你可以在&lt;a href="https://argoproj.github.io/argo-cd/core_concepts/">此处&lt;/a>阅读更多信息。ArgoCD 是 &lt;strong>Argo&lt;/strong> 生态系统的一部分，其中包括一些其他很棒的工具，其中一些我们将在稍后讨论。&lt;/p>
+&lt;p>使用 &lt;strong>ArgoCD&lt;/strong>，你可以在代码存储库中拥有每个环境，你可以在其中定义该环境的所有配置。Argo CD 在指定的目标环境中自动部署所需的应用程序状态。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/15/16263046811430.jpg" alt="">&lt;/p>
+&lt;p>ArgoCD 被实现为一个 kubernetes 控制器，它持续监控正在运行的应用程序并将当前的实时状态与所需的目标状态（如 Git 存储库中指定的）进行比较。ArgoCD 报告并可视化差异，并且可以自动或手动将实时状态同步回所需的目标状态。&lt;/p>
+&lt;h3 id="备选-3">备选&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://fluxcd.io/">Flux&lt;/a> 刚刚发布了一个具有许多改进的新版本。它提供了非常相似的功能。&lt;/li>
+&lt;/ul>
+&lt;h2 id="argo-工作流workflows和-argo-事件events">Argo 工作流（Workflows）和 Argo 事件（Events）&lt;/h2>
+&lt;p>在 Kubernetes 中，你可能还需要运行批处理作业或复杂的工作流。这可能是你的数据管道、异步流程甚至 CI/CD 的一部分。最重要的是，你甚至可能需要运行对某些事件做出反应的驱动微服务，例如文件上传或消息发送到队列。对于所有这些，我们有 &lt;a href="https://argoproj.github.io/argo-workflows/">Argo Workflows&lt;/a> 和 &lt;a href="https://argoproj.github.io/argo-events/">Argo Events&lt;/a>。&lt;/p>
+&lt;p>尽管它们是独立的项目，但它们往往会被部署在一起。&lt;/p>
+&lt;p>Argo Workflows 是一个类似于 &lt;a href="https://airflow.apache.org/">Apache Airflow&lt;/a> 的编排引擎，但它是 Kubernetes 原生的。它使用自定义 CRD 来定义复杂的工作流程，使用 YAML 的步骤或 &lt;strong>DAG&lt;/strong>，这在 K8s 中感觉更自然。它有一个漂亮的 UI、重试机制、基于 cron 的作业、输入和输出跟踪等等。你可以使用它来编排数据管道、批处理作业等等。&lt;/p>
+&lt;p>有时，你可能希望将管道与异步服务（如 &lt;strong>Kafka&lt;/strong> 等流引擎、队列、webhooks 或深度存储服务）集成。例如，你可能想要对上传到 S3 的文件等事件做出反应。为此，你将使用 &lt;a href="https://argoproj.github.io/argo-events/">Argo 事件（Event）&lt;/a>。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/15/16263049343226.jpg" alt="">&lt;/p>
+&lt;p>这两个工具组合为你的所有管道需求提供了一个简单而强大的解决方案，包括 CI/CD 管道，它允许你在 Kubernetes 中本地运行 CI/CD 管道。&lt;/p>
+&lt;h3 id="备选-4">备选&lt;/h3>
+&lt;ul>
+&lt;li>对于 ML 管道，你可以使用 &lt;a href="https://www.kubeflow.org/">Kubeflow&lt;/a>。&lt;/li>
+&lt;li>对于 CI/CD 管道，你可以使用 &lt;a href="https://tekton.dev/docs/pipelines/pipelines/">Tekton&lt;/a>。&lt;/li>
+&lt;/ul>
+&lt;h2 id="kaniko">Kaniko&lt;/h2>
+&lt;p>我们刚刚看到了如何使用 Argo Workflows 运行 Kubernetes 原生 &lt;strong>CI/CD&lt;/strong> 管道。一个常见的任务是构建 &lt;strong>Docker 镜像&lt;/strong>，这在 Kubernetes 中通常是乏味的，因为构建过程实际上是在容器本身上运行的，你需要使用变通方法来使用主机的 Docker 引擎。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/15/16263050297533.jpg" alt="">&lt;/p>
+&lt;p>底线是你不应该使用 &lt;strong>Docker&lt;/strong> 来构建你的镜像：改用 &lt;a href="https://github.com/GoogleContainerTools/kaniko">&lt;strong>Kanico&lt;/strong>&lt;/a>。Kaniko 不依赖于 Docker 守护进程，而是完全在用户空间中执行 Dockerfile 中的每个命令。这使得在无法轻松或安全地运行 Docker 守护程序的环境中构建容器镜像成为可能，例如标准的 Kubernetes 集群。这消除了在 K8s 集群中构建镜像的所有问题。&lt;/p>
+&lt;h2 id="istio">Istio&lt;/h2>
+&lt;p>&lt;a href="https://istio.io/">Istio&lt;/a> 是市场上最著名的&lt;a href="https://en.wikipedia.org/wiki/Service_mesh">服务网格&lt;/a>，它是开源的并且非常受欢迎。我不会详细介绍什么是服务网格，因为它是一个巨大的话题，但是如果你正在构建&lt;a href="https://microservices.io/">微服务&lt;/a>，并且可能应该这样做，那么你将需要一个服务网格来管理通信、可观察性、错误处理、安全性。与其用重复的逻辑污染每个微服务的代码（译者：SDK 侵入），不如利用服务网格为你做这件事。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/15/16263052962147.jpg" alt="">&lt;/p>
+&lt;p>简而言之，服务网格是一个专用的基础设施层，你可以将其添加到你的应用程序中。它允许你透明地添加可观察性、流量管理和安全性等功能，而无需将它们添加到你自己的代码中。&lt;/p>
+&lt;p>如果 &lt;strong>Istio&lt;/strong> 用于运行微服务，尽管你可以在任何地方运行 Istio 并使用微服务，但 Kubernetes 已被一次又一次地证明是运行它们的最佳平台。&lt;strong>Istio&lt;/strong> 还可以将你的 K8s 集群扩展到其他服务，例如 VM，允许你拥有在迁移到 Kubernetes 时非常有用的混合环境。&lt;/p>
+&lt;h3 id="备选-5">备选&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://linkerd.io/">&lt;strong>Linkerd&lt;/strong>&lt;/a> 是一种更轻巧且可能更快的服务网格。Linkerd 从头开始​​为安全性而构建，包括&lt;a href="https://linkerd.io/2.10/features/automatic-mtls/">默认 mTLS&lt;/a>、&lt;a href="https://github.com/linkerd/linkerd2-proxy">使用 Rust 构建的数据平面&lt;/a>、&lt;a href="https://github.com/linkerd/linkerd2-proxy">内存安全语言&lt;/a>和&lt;a href="https://github.com/linkerd/linkerd2/blob/main/SECURITY_AUDIT.pdf">定期安全审计&lt;/a>等功能&lt;/li>
+&lt;li>&lt;a href="https://www.consul.io/">&lt;strong>Consul&lt;/strong>&lt;/a> 是为任何运行时和云提供商构建的服务网格，因此它非常适合跨 K8s 和云提供商的混合部署。如果不是所有的工作负载都在 Kubernetes 上运行，这是一个不错的选择。&lt;/li>
+&lt;/ul>
+&lt;h2 id="argo-rollouts">Argo Rollouts&lt;/h2>
+&lt;p>我们已经提到，你可以使用 Kubernetes 使用 Argo Workflows 或使用 Kanico 构建图像的类似工具来运行 CI/CD 管道。下一个合乎逻辑的步骤是继续并进行持续部署。由于涉及高风险，这在真实场景中是极具挑战性的，这就是为什么大多数公司只做持续交付，这意味着他们已经实现了自动化，但他们仍然需要手动批准和验证，这个手动步骤是这是因为团队&lt;strong>不能完全信任他们的自动化&lt;/strong>。&lt;/p>
+&lt;p>那么，你如何建立这种信任以摆脱所有脚本并完全自动化从源代码到生产的所有内容？答案是：可观察性。你需要将资源更多地集中在指标上，并收集准确表示应用程序状态所需的所有数据。目标是使用一组指标来建立这种信任。如果你在 &lt;a href="https://prometheus.io/">Prometheus&lt;/a> 中拥有所有数据，那么你可以自动部署，因为你可以根据这些指标自动逐步推出应用程序。&lt;/p>
+&lt;p>简而言之，你需要比 K8s 开箱即用的&lt;a href="https://www.educative.io/blog/kubernetes-deployments-strategies">&lt;strong>滚动更新&lt;/strong>&lt;/a>更高级的部署技术。我们需要使用&lt;a href="https://semaphoreci.com/blog/what-is-canary-deployment">金丝雀部署&lt;/a>进行渐进式交付。目标是逐步将流量路由到应用程序的新版本，等待收集指标，分析它们并将它们与预定义的规则进行匹配。如果一切正常，我们增加流量；如果有任何问题，我们会回滚部署。
+要在 Kubernetes 中执行此操作，你可以使用提供 Canary 发布等的 Argo Rollouts 。&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;a href="https://kubernetes.io/docs/concepts/architecture/controller/">Argo Rollouts&lt;/a> 是一个 &lt;a href="https://kubernetes.io/docs/concepts/architecture/controller/">Kubernetes 控制器&lt;/a>和一组 &lt;a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/">CRD&lt;/a>，可提供高级部署功能，例如蓝绿、金丝雀、金丝雀分析、实验和向 Kubernetes 的渐进式交付功能。&lt;/p>
+&lt;/blockquote>
+&lt;p>尽管像 &lt;a href="https://istio.io/">Istio&lt;/a> 这样的服务网格提供 Canary 发布，但 Argo Rollouts 使这个过程变得更加容易并且以开发人员为中心，因为它是专门为此目的而构建的。除此之外，Argo Rollouts 可以与任何服务网格集成。&lt;/p>
+&lt;p>Argo Rollouts 功能：&lt;/p>
+&lt;ul>
+&lt;li>蓝绿更新策略&lt;/li>
+&lt;li>金丝雀更新策略&lt;/li>
+&lt;li>细粒度、加权的流量转移&lt;/li>
+&lt;li>自动回滚和促销或人工判断&lt;/li>
+&lt;li>可定制的指标查询和业务 KPI 分析&lt;/li>
+&lt;li>入口控制器集成：NGINX、ALB&lt;/li>
+&lt;li>服务网格集成：Istio、Linkerd、SMI&lt;/li>
+&lt;li>指标提供者集成：Prometheus、Wavefront、Kayenta、Web、Kubernetes Jobs&lt;/li>
+&lt;/ul>
+&lt;h3 id="备选-6">备选&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://istio.io/">Istio&lt;/a> 作为 Canary 版本的服务网格。Istio 不仅仅是一个渐进式交付工具，它还是一个完整的服务网格。Istio 不会自动部署，Argo Rollouts 可以与 Istio 集成来实现这一点。&lt;/li>
+&lt;li>&lt;a href="https://flagger.app/">Flagger&lt;/a> 与 Argo Rollouts 非常相似，并且与 &lt;a href="https://fluxcd.io/">Flux&lt;/a> 很好地集成在一起，因此如果你使用 Flux，请考虑使用 Flagger。&lt;/li>
+&lt;li>&lt;a href="https://spinnaker.io/">Spinnaker&lt;/a> 是 Kubernetes 的第一个持续交付工具，它具有许多功能，但使用和设置起来有点复杂。&lt;/li>
+&lt;/ul>
+&lt;h2 id="crossplane">Crossplane&lt;/h2>
+&lt;p>&lt;a href="https://crossplane.io/">&lt;strong>Crossplane&lt;/strong>&lt;/a> 是我最喜欢的 K8s 工具，我对这个项目感到非常兴奋，因为它给 Kubernetes 带来了一个关键的缺失部分：像管理 K8s 资源一样管理第三方服务。这意味着，你可以使用 &lt;strong>YAML&lt;/strong> 中定义的 K8s 资源来配置云提供商数据库，例如 &lt;a href="https://aws.amazon.com/rds/">&lt;strong>AWS RDS&lt;/strong>&lt;/a> 或 &lt;strong>GCP Cloud SQL&lt;/strong>，就像你在 K8s 中配置数据库一样。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/15/16263059248680.jpg" alt="">&lt;/p>
+&lt;p>使用 Crossplane，无需使用不同的工具和方法分离基础设施和代码。&lt;strong>你可以使用 K8s 资源定义一切&lt;/strong>。这样，你就无需学习 &lt;a href="https://www.terraform.io/">Terraform&lt;/a> 等新工具并将它们分开保存。&lt;/p>
+&lt;blockquote>
+&lt;p>Crossplane 是一个开源 Kubernetes 附加组件，它使平台团队能够组装来自多个供应商的基础设施，并公开更高级别的自助 API 供应用程序团队使用，而无需编写任何代码。&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;strong>Crossplane&lt;/strong> 扩展了你的 Kubernetes 集群，为你提供适用于任何基础架构或托管云服务的 &lt;strong>CRD&lt;/strong>。此外，它允许你完全实现持续部署，因为与 Terraform 等其他工具相反，Crossplane 使用现有的 K8s 功能（例如控制循环）来持续观察你的集群并自动检测任何对其起作用的配置漂移。例如，如果你定义了一个托管数据库实例并且有人手动更改它，Crossplane 将自动检测问题并将其设置回以前的值。这将实施基础设施即代码和 GitOps 原则。Crossplane 与 ArgoCD 配合使用效果很好，它可以查看源代码并确保你的代码存储库是唯一的真实来源，并且代码中的任何更改都会传播到集群以及外部云服务。如果没有 Crossplane，你只能在 K8s 服务中实现 GitOps，而不能在不使用单独进程的情况下在云服务中实现，现在你可以做到这一点，这太棒了。&lt;/p>
+&lt;h3 id="备选-7">备选&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://www.terraform.io/">Terraform&lt;/a> 是最著名的 IaC 工具，但它不是 K8s 原生的，需要新技能并且不会自动监视配置漂移。&lt;/li>
+&lt;li>&lt;a href="https://www.pulumi.com/">Pulumi&lt;/a> 是一种 Terraform 替代品，它使用开发人员可以测试和理解的编程语言工作。&lt;/li>
+&lt;/ul>
+&lt;h2 id="knative">Knative&lt;/h2>
+&lt;p>如果你在云中开发应用程序，你可能已经使用了一些无服务器技术，例如 &lt;a href="https://aws.amazon.com/lambda/">AWS Lambda &lt;/a>，它是一种称为 &lt;a href="https://en.wikipedia.org/wiki/Function_as_a_service">FaaS&lt;/a> 的事件驱动范例。&lt;/p>
+&lt;p>我过去已经讨论过 &lt;a href="https://en.wikipedia.org/wiki/Serverless_computing">Serverless&lt;/a>，因此请查看我&lt;a href="https://itnext.io/scaling-my-app-serverless-vs-kubernetes-cdb8adf446e1">之前的文章&lt;/a>以了解更多信息。Serverless 的问题在于它与云提供商紧密耦合，因为提供商可以为事件驱动的应用程序创建一个很好的生态系统。&lt;/p>
+&lt;p>对于 Kubernetes，如果你希望将函数作为代码运行并使用事件驱动架构，那么你最好的选择是 &lt;a href="https://itnext.io/scaling-my-app-serverless-vs-kubernetes-cdb8adf446e1">Knative&lt;/a>。Knative 旨在在 Kubernetes 上运行函数，在 Pod 之上创建一个抽象。&lt;/p>
+&lt;p>特点：&lt;/p>
+&lt;ul>
+&lt;li>针对常见应用程序用例的具有更高级别抽象的重点 API。&lt;/li>
+&lt;li>在几秒钟内建立一个可扩展、安全、无状态的服务。&lt;/li>
+&lt;li>松散耦合的功能让你可以使用所需的部分。&lt;/li>
+&lt;li>可插拔组件让你可以使用自己的日志记录和监控、网络和服务网格。&lt;/li>
+&lt;li>Knative 是可移植的：在 Kubernetes 运行的任何地方运行它，不用担心供应商锁定。&lt;/li>
+&lt;li>惯用的开发者体验，支持 GitOps、DockerOps、ManualOps 等常用模式。&lt;/li>
+&lt;li>Knative 可以与常见的工具和框架一起使用，例如 Django、Ruby on Rails、Spring 等等。&lt;/li>
+&lt;/ul>
+&lt;h3 id="备选-8">备选&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://argoproj.github.io/argo-events/">Argo Events&lt;/a> 为 Kubernetes 提供了一个事件驱动的工作流引擎，可以与 AWS Lambda 等云引擎集成。它不是 FaaS，而是为 Kubernetes 提供了一个事件驱动的架构。&lt;/li>
+&lt;li>&lt;a href="https://www.openfaas.com/">OpenFaas&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="kyverno">Kyverno&lt;/h2>
+&lt;p>Kubernetes 提供了极大的灵活性，以赋予敏捷的自治团队权力，但能力越大，责任越大。必须有一组&lt;strong>最佳实践和规则&lt;/strong>，以确保以一致且有凝聚力的方式来部署和管理符合公司政策和安全要求的工作负载。&lt;/p>
+&lt;p>有几种工具可以实现这一点，但没有一个是 Kubernetes 原生的…… 直到现在。&lt;a href="https://kyverno.io/">Kyverno&lt;/a> 是为 Kubernetes 设计的策略引擎，策略作为 Kubernetes 资源进行管理，并且不需要新的语言来编写策略。Kyverno 策略可以验证、改变和生成 Kubernetes 资源。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/15/16263062593080.jpg" alt="">&lt;/p>
+&lt;p>你可以应用有关最佳实践、网络或安全性的任何类型的策略。例如，你可以强制所有服务都有标签或所有容器都以非 root 身份运行。你可以在&lt;a href="https://github.com/kyverno/policies/">此处&lt;/a>查看一些政策示例。策略可以应用于整个集群或给定的命名空间。你还可以选择是只想审核策略还是强制执行它们以阻止用户部署资源。&lt;/p>
+&lt;h3 id="备选-9">备选&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://www.openpolicyagent.org/">Open Policy Agent&lt;/a> 是著名的云原生基于策略的控制引擎。它使用自己的声明性语言，并且可以在许多环境中运行，而不仅仅是在 Kubernetes 上。它比 &lt;a href="https://kyverno.io/">Kyverno&lt;/a> 更难管理，但更强大。&lt;/li>
+&lt;/ul>
+&lt;h2 id="kubevela">Kubevela&lt;/h2>
+&lt;p>Kubernetes 的一个问题是开发人员需要非常了解和理解平台和集群配置。许多人会争辩说 &lt;strong>K8s 的抽象级别太低&lt;/strong>，这会给只想专注于编写和交付应用程序的开发人员带来很多摩擦。&lt;/p>
+&lt;p>在开放式应用程序模型（&lt;a href="https://oam.dev/">OAM&lt;/a>）的设立是为了克服这个问题。这个想法是围绕应用程序创建更高级别的抽象，它独立于底层运行时。你可以在此处阅读规范。&lt;/p>
+&lt;blockquote>
+&lt;p>专注于应用程序而不是容器或协调器，开放应用程序模型 [OAM] 带来了模块化、可扩展和可移植的设计，用于使用更高级别但一致的 API 对应用程序部署进行建模。&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;a href="https://kubevela.io/">Kubevela&lt;/a> 是 OAM 模型的一个实现。KubeVela 与运行时无关，可本地扩展，但最重要的是，以应用程序为中心 。在 Kubevela 中，应用程序是作为 Kubernetes 资源实现的一等公民。**集群运营商（Platform Team）和开发者（Application Team）**是有区别的。集群操作员通过定义组件（组成应用程序的可部署/可配置实体，如 Helm Chart）和特征来管理集群和不同的环境。开发人员通过组装组件和特征来定义应用程序。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/15/16263064905339.jpg" alt="">&lt;/p>
+&lt;p>KubeVela 是一个&lt;a href="https://cncf.io/">云原生计算基金会&lt;/a>沙箱项目，虽然它仍处于起步阶段，但它可以在不久的将来改变我们使用 Kubernetes 的方式，让开发人员无需成为 Kubernetes 专家即可专注于应用程序。但是，我确实对 &lt;strong>OAM&lt;/strong> 在现实世界中的适用性有一些担忧，因为系统应用程序、ML 或大数据过程等一些服务在很大程度上依赖于低级细节，这些细节可能很难融入 OAM 模型中。&lt;/p>
+&lt;h3 id="备选-10">备选&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://www.shipa.io/getting-started/">Shipa&lt;/a> 遵循类似的方法，使平台和开发团队能够协同工作，轻松将应用程序部署到 Kubernetes。&lt;/li>
+&lt;/ul>
+&lt;h2 id="snyk">Snyk&lt;/h2>
+&lt;p>任何开发过程中一个非常重要的方面是安全性，这一直是 Kubernetes 的一个问题，因为想要迁移到 Kubernetes 的公司无法轻松实现其当前的安全原则。&lt;/p>
+&lt;p>&lt;a href="https://snyk.io/">Snyk&lt;/a> 试图通过提供一个可以轻松与 Kubernetes 集成的安全框架来缓解这种情况。它可以检测容器映像、你的代码、开源项目等中的漏洞。&lt;/p>
+&lt;h3 id="备选-11">备选&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://falco.org/">Falco&lt;/a> 是 Kubernetes 的运行时安全线程检测工具。&lt;/li>
+&lt;/ul>
+&lt;h2 id="velero">Velero&lt;/h2>
+&lt;p>如果你在 Kubernetes 中运行工作负载并使用卷来存储数据，则需要创建和管理备份。&lt;a href="https://velero.io/">Velero&lt;/a> 提供简单的备份/恢复过程、灾难恢复机制和数据迁移。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/15/16263066379840.jpg" alt="">&lt;/p>
+&lt;p>与其他直接访问 Kubernetes etcd 数据库执行备份和恢复的工具不同，Velero 使用 Kubernetes API 来捕获集群资源的状态并在必要时恢复它们。此外，Velero 使你能够在配置的同时备份和恢复你的应用程序持久数据。&lt;/p>
+&lt;h2 id="schema-hero">Schema Hero&lt;/h2>
+&lt;p>软件开发中的另一个常见过程是在使用关系数据库时管理&lt;strong>模式演变&lt;/strong>。&lt;/p>
+&lt;p>&lt;a href="https://schemahero.io/">SchemaHero&lt;/a> 是一种开源数据库架构迁移工具，可将架构定义转换为可应用于任何环境的迁移脚本。它使用 Kubernetes 声明性来管理数据库模式迁移。你只需指定所需的状态，然后 &lt;strong>SchemaHero&lt;/strong> 管理其余的。&lt;/p>
+&lt;h3 id="备选-12">备选&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://www.liquibase.org/">LiquidBase&lt;/a> 是最著名的替代品。它更难使用，且不是 Kubernetes 原生的，但它具有更多功能。&lt;/li>
+&lt;/ul>
+&lt;h2 id="bitnami-sealed-secrets">Bitnami Sealed Secrets&lt;/h2>
+&lt;p>我们已经介绍了许多 &lt;strong>GitOps&lt;/strong> 工具，例如 &lt;a href="https://argoproj.github.io/argo-cd/">ArgoCD&lt;/a>。我们的目标是将所有内容保留在 Git 中，并使用 Kubernetes 声明性来保持环境同步。我们刚刚看到我们如何（并且应该）在 Git 中保留真实来源，并让自动化流程处理配置更改。&lt;/p>
+&lt;p>在 Git 中通常很难保留的一件事是诸如数据库密码或 API 密钥之类的秘密，这是因为你永远不应该在代码存储库中存储秘密。一种常见的解决方案是使用外部保管库（例如 &lt;a href="https://aws.amazon.com/secrets-manager/">AWS Secret Manager&lt;/a> 或 &lt;a href="https://www.vaultproject.io/">HashiCorp Vault&lt;/a>）来存储机密，但这会产生很多摩擦，因为你需要有一个单独的流程来处理机密。理想情况下，我们希望有一种方法可以像任何其他资源一样安全地在 Git 中存储机密。&lt;/p>
+&lt;p>&lt;a href="https://github.com/bitnami-labs/sealed-secrets">&lt;strong>Sealed Secrets&lt;/strong>&lt;/a> 旨在克服这个问题，允许你使用强加密将敏感数据存储在 Git 中。Bitnami &lt;strong>Sealed Secrets&lt;/strong> 本地集成在 Kubernetes 中，允许你仅通过在 Kubernetes 中运行的 Kubernetes 控制器而不是其他任何人来解密密钥。控制器将解密数据并创建安全存储的原生 K8s 机密。这使我们能够将所有内容作为代码存储在我们的 repo 中，从而允许我们安全地执行持续部署，而无需任何外部依赖。&lt;/p>
+&lt;p>Sealed Secrets 由两部分组成：&lt;/p>
+&lt;ul>
+&lt;li>集群端控制器&lt;/li>
+&lt;li>客户端实用程序：&lt;code>kubeseal&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>该 &lt;code>kubeseal&lt;/code> 实用程序使用非对称加密来加密只有控制器才能解密的机密。这些加密的秘密被编码在一个 &lt;code>SealedSecret&lt;/code> K8s 资源中，你可以将其存储在 Git 中。&lt;/p>
+&lt;h3 id="备选-13">备选&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://aws.amazon.com/secrets-manager/">AWS Secret Manager&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.vaultproject.io/">HashiCorp Vault&lt;/a>）&lt;/li>
+&lt;/ul>
+&lt;h2 id="capsule">Capsule&lt;/h2>
+&lt;p>许多公司使用&lt;strong>多租户&lt;/strong>来管理不同的客户。这在软件开发中很常见，但在 Kubernetes 中很难实现。&lt;strong>命名空间&lt;/strong>是将集群的逻辑分区创建为隔离切片的好方法，但这不足以安全地隔离客户，我们需要强制执行网络策略、配额等。你可以为每个名称空间创建网络策略和规则，但这是一个难以扩展的乏味过程。此外，租户将不能使用多个命名空间，这是一个很大的限制。&lt;/p>
+&lt;p>创建&lt;strong>分层命名空间&lt;/strong>是为了克服其中一些问题。这个想法是为每个租户拥有一个父命名空间，为租户提供公共网络策略和配额，并允许创建子命名空间。这是一个很大的改进，但它在安全和治理方面没有对租户的本地支持。此外，它还没有达到生产状态，但 1.0 版预计将在未来几个月内发布。&lt;/p>
+&lt;p>当前解决此问题的常用方法是为每个客户创建一个集群，这是安全的并提供租户所需的一切，但这很难管理且非常昂贵。&lt;/p>
+&lt;p>&lt;a href="https://github.com/clastix/capsule">&lt;strong>Capsule&lt;/strong>&lt;/a> 是一种为单个集群中的多个租户提供原生 Kubernetes 支持的工具。使用 Capsule，你可以为所有租户拥有一个集群。Capsule 将为租户提供 “几乎” 原生体验（有一些小限制），他们将能够创建多个命名空间并使用集群，因为它们完全可用，隐藏了集群实际上是共享的事实。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/15/16263070902872.jpg" alt="Capsule 架构">&lt;/p>
+&lt;p>在单个集群中，Capsule Controller 在称为 &lt;strong>Tenant&lt;/strong> 的轻量级 Kubernetes 抽象中聚合多个命名空间，这是一组 Kubernetes 命名空间。在每个租户内，用户可以自由创建他们的命名空间并共享所有分配的资源，而策略引擎则使不同的租户彼此隔离。&lt;/p>
+&lt;p>租户级别定义的网络和安全策略、资源配额、限制范围、RBAC 和其他策略由租户中的所有命名空间自动继承，类似于分层命名空间。然后用户可以自由地自治操作他们的租户，而无需集群管理员的干预。
+Capsule 是 GitOps 就绪的，因为它是声明性的，并且所有配置都可以存储在 Git 中。&lt;/p>
+&lt;h2 id="vcluster">vCluster&lt;/h2>
+&lt;p>&lt;a href="https://www.vcluster.com/">vCluster&lt;/a> 在多租户方面更进了一步，它在 Kubernetes 集群内提供了虚拟集群。每个集群都在一个常规命名空间上运行，并且是完全隔离的。虚拟集群有自己的 API 服务器和独立的数据存储，所以你在 vCluster 中创建的每个 Kubernetes 对象都只存在于 vcluster 内部。此外，您可以将 kube 上下文与虚拟集群一起使用，以像使用常规集群一样使用它们。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/15/16263071651487.jpg" alt="">&lt;/p>
+&lt;p>只要您可以在单个命名空间内创建部署，您就可以创建虚拟集群并成为该虚拟集群的管理员，租户可以创建命名空间、安装 CRD、配置权限等等。&lt;/p>
+&lt;p>&lt;strong>vCluster&lt;/strong> 使用 &lt;a href="https://k3s.io/">&lt;strong>k3s&lt;/strong>&lt;/a> 作为其 API 服务器，使虚拟集群超轻量级且经济高效；由于 k3s 集群 100% 合规，虚拟集群也 100% 合规。&lt;strong>vClusters&lt;/strong> 是超轻量级的（1 个 pod），消耗很少的资源并且可以在任何 Kubernetes 集群上运行，而无需对底层集群进行特权访问。与 &lt;strong>Capsule&lt;/strong> 相比，它确实使用了更多的资源，但它提供了更多的灵活性，因为多租户只是用例之一。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/15/16263072079021.jpg" alt="">&lt;/p>
+&lt;h2 id="其他工具">其他工具&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/cloud-bulldozer/kube-burner">kube-burner&lt;/a> 用于&lt;strong>压力测试&lt;/strong>。它提供指标和警报。&lt;/li>
+&lt;li>混沌工程的 &lt;a href="https://github.com/litmuschaos/litmus">Litmus&lt;/a>。&lt;/li>
+&lt;li>&lt;a href="https://github.com/bitnami-labs/kubewatch">kubewatch&lt;/a> 用于监控，但主要关注基于 Kubernetes 事件（如资源创建或删除）的推送通知。它可以与 Slack 等许多工具集成。&lt;/li>
+&lt;li>&lt;a href="https://www.botkube.io/">BotKube&lt;/a> 是一个消息机器人，用于监控和调试 Kubernetes 集群。与 kubewatch 类似，但更新并具有更多功能。&lt;/li>
+&lt;li>&lt;a href="https://getmizu.io/">Mizu&lt;/a> 是一个 API 流量查看器和调试器。&lt;/li>
+&lt;li>&lt;a href="https://github.com/senthilrch/kube-fledged">kube-fledged&lt;/a> 是一个 Kubernetes 插件，用于直接在 Kubernetes 集群的工作节点上创建和管理容器镜像的缓存。因此，&lt;strong>应用程序 pod 几乎立即启动&lt;/strong>，因为不需要从注册表中提取图像。&lt;/li>
+&lt;/ul>
+&lt;h2 id="结论">结论&lt;/h2>
+&lt;p>在本文中，我们回顾了我最喜欢的 Kubernetes 工具。我专注于可以合并到任何 Kubernetes 发行版中的开源项目。我没有涵盖诸如 &lt;a href="https://www.openshift.com/">OpenShift&lt;/a> 或 Cloud Providers Add-Ons 之类的商业解决方案，因为我想让它保持通用性，但我鼓励您探索如果您在云上运行 Kubernetes 或使用商业工具，您的云提供商可以为您提供什么。&lt;/p>
+&lt;p>我的目标是向您展示您可以在 &lt;strong>Kubernetes&lt;/strong> 中完成您在本地所做的一切。我还更多地关注鲜为人知的工具，我认为这些工具可能具有很大的潜力，例如 &lt;a href="https://crossplane.io/">Crossplane&lt;/a>、&lt;a href="https://kubevela.io/">Argo Rollouts&lt;/a>或 &lt;a href="https://kubevela.io/">Kubevela&lt;/a>。我更感兴趣的工具是 &lt;a href="https://www.vcluster.com/">vCluster&lt;/a>、&lt;a href="https://crossplane.io/">Crossplane&lt;/a> 和 ArgoCD/Workflows。&lt;/p></description></item></channel></rss>

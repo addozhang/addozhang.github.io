@@ -1,7 +1,169 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jenkins on 乱世浮生</title><link>https://atbug.com/tags/jenkins/</link><description>Recent content in Jenkins on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 23 Jun 2021 07:58:45 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/jenkins/index.xml" rel="self" type="application/rss+xml"/><item><title>Jenkins 如何与 Kubernetes 集群的 Tekton Pipeline 交互？</title><link>https://atbug.com/articles/jenkins-interact-with-tekton-pipelines-via-plugin/</link><pubDate>Wed, 23 Jun 2021 07:58:45 +0800</pubDate><guid>https://atbug.com/articles/jenkins-interact-with-tekton-pipelines-via-plugin/</guid><description>本文详细介绍了 Jenkins 如何通过 tekton-client-plugin 实现与 Kubernetes 上的 Tekton Pipeline 交互，包括 Kubernetes 上安装 Jenkins、Tekton Pipelines 等。
-关于如何使用 Tekton Pipeline 实现 CICD 可以看这篇文章 云原生 CICD: Tekton Pipeline 实战
-本文用于构建的项目以及所有 manifest yaml 都在可以在这里下载。
-TL;DR 惯例，先上总结。tekton-client-plugin 虽然还是处于初期阶段，但是 其价值非常明显，尤其是对先用使用 Jenkins 作为 CICD 实现的用户来说。从 Jenkins 迁移到云原生的 Tekton 时，可以省掉用户界面的开发成本，而且尽可能少的改变用户习惯 ，依靠版本管理可以控制迁移的节奏。</description></item><item><title>Jenkins CI/CD (一) 基于角色的授权策略</title><link>https://atbug.com/articles/using-role-based-authorization-strategy-in-jenkins/</link><pubDate>Fri, 20 Apr 2018 12:18:46 +0000</pubDate><guid>https://atbug.com/articles/using-role-based-authorization-strategy-in-jenkins/</guid><description>&lt;p>最近开始客串运维做CI/CD的规划设计, 主要是基于&amp;rsquo;Pipeline as Code in Jenkins'. 整理了下思路和技术点, 慢慢的写.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jenkins on 乱世浮生</title><link>https://atbug.com/tags/jenkins/</link><description>Recent content in Jenkins on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 23 Jun 2021 07:58:45 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/jenkins/index.xml" rel="self" type="application/rss+xml"/><item><title>Jenkins 如何与 Kubernetes 集群的 Tekton Pipeline 交互？</title><link>https://atbug.com/jenkins-interact-with-tekton-pipelines-via-plugin/</link><pubDate>Wed, 23 Jun 2021 07:58:45 +0800</pubDate><guid>https://atbug.com/jenkins-interact-with-tekton-pipelines-via-plugin/</guid><description>
+&lt;p>本文详细介绍了 Jenkins 如何通过 &lt;a href="https://github.com/jenkinsci/tekton-client-plugin">tekton-client-plugin&lt;/a> 实现与 Kubernetes 上的 Tekton Pipeline 交互，包括 Kubernetes 上安装 Jenkins、Tekton Pipelines 等。&lt;/p>
+&lt;p>关于如何使用 Tekton Pipeline 实现 CICD 可以看这篇文章 &lt;a href="https://atbug.com/tekton-pipeline-practice/">云原生 CICD: Tekton Pipeline 实战&lt;/a>&lt;/p>
+&lt;p>本文用于构建的项目以及所有 manifest yaml 都在可以在&lt;a href="https://github.com/addozhang/tekton-test">这里&lt;/a>下载。&lt;/p>
+&lt;h2 id="tldr">TL;DR&lt;/h2>
+&lt;p>惯例，先上总结。&lt;code>tekton-client-plugin&lt;/code> 虽然还是处于初期阶段，但是 &lt;em>其价值非常明显，尤其是对先用使用 Jenkins 作为 CICD 实现的用户来说。从 Jenkins 迁移到云原生的 Tekton 时，可以省掉用户界面的开发成本，而且尽可能少的改变用户习惯&lt;/em> ，依靠版本管理可以控制迁移的节奏。&lt;/p>
+&lt;p>&lt;code>tekton-client-plugin&lt;/code> 在今年 5 月 7 日发布的 &lt;code>1.0.0&lt;/code> 版本，目前为 &lt;code>1.0.02&lt;/code>。目前还处于初期阶段，我个人感觉目前仅仅算是打通 Jenkins 与 Tekton 交互这条路，扩展性还不够好。&lt;/p>
+&lt;p>比如目前仅仅支持如下几个参数注入到 &lt;code>PipelineRun&lt;/code> 中，难以支撑复杂的流程控制，&lt;a href="https://github.com/jenkinsci/tekton-client-plugin/blob/1.0.2/src/main/java/org/waveywaves/jenkins/plugins/tekton/client/build/create/CreateRaw.java#L292">支持的 Pipeline 参数 hardcode 在代码中&lt;/a>。&lt;/p>
+&lt;blockquote>
+&lt;ul>
+&lt;li>BUILD_ID - the build id/number of the Jenkins job&lt;/li>
+&lt;li>JOB_NAME - the name of the jenkins job that triggered this pipeline&lt;/li>
+&lt;li>PULL_BASE_REF - name of the base branch&lt;/li>
+&lt;li>PULL_PULL_SHA - the commit sha of the pull request or branch&lt;/li>
+&lt;li>REPO_NAME - name of the repository&lt;/li>
+&lt;li>REPO_OWNER - owner of the repository&lt;/li>
+&lt;li>REPO_URL - the URL of the repository&lt;/li>
+&lt;/ul>
+&lt;/blockquote>
+&lt;p>希望后面会支持自定义参数，比如将更多的项目元数据信息注册到 &lt;code>Pipeline&lt;/code> 中。&lt;/p>
+&lt;p>值得一提的是，&lt;code>tekton-client-plugin&lt;/code> 提供了对 Job DSL 的支持，本文后面没有用这种方式，而是用的 FreeStyle Project。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">pipeline {
+agent any
+stages {
+stage(&amp;#39;Stage&amp;#39;) {
+steps {
+checkout scm
+tektonCreateRaw(inputType: &amp;#39;FILE&amp;#39;, input: &amp;#39;.tekton/pipeline.yaml&amp;#39;)
+}
+}
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="前置条件">前置条件&lt;/h2>
+&lt;h3 id="环境">环境&lt;/h3>
+&lt;ul>
+&lt;li>Kubernetes：推荐 minikube&lt;/li>
+&lt;li>Jenkins：建议在 Kubernetes 上安装&lt;/li>
+&lt;li>Tekton&lt;/li>
+&lt;li>用于构建的项目&lt;/li>
+&lt;/ul>
+&lt;h3 id="工具">工具&lt;/h3>
+&lt;ul>
+&lt;li>kubectl&lt;/li>
+&lt;li>tektoncd-cli&lt;/li>
+&lt;li>&lt;a href="https://github.com/ahmetb/kubectx">kubectx、kubens&lt;/a>&lt;/li>
+&lt;li>helm&lt;/li>
+&lt;/ul>
+&lt;h2 id="kubernetes-上安装-jenkinshelm">Kubernetes 上安装 Jenkins（Helm）&lt;/h2>
+&lt;p>Jenkins 这里使用 Helm 安装到 Kubernetes 上。&lt;/p>
+&lt;p>初始化命名空间、持久化卷、ServiceAccount 等。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl create namespace jenkins
+kubens jenkins
+&lt;span class="c1"># 持久化存储，笔者将容量修改为 5G&lt;/span>
+http https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-volume.yaml --body &amp;gt; jenkins-volume.yaml
+&lt;span class="c1"># 创建 PV&lt;/span>
+kubectl apply -f jenkins-volume.yaml
+&lt;span class="c1"># 创建 service account&lt;/span>
+kubectl apply -f https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-sa.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="准备-helm-环境并添加-jenkins-chartrepo">准备 helm 环境并添加 Jenkins ChartRepo&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="c1"># homebrew 安装 helm&lt;/span>
+brew install helm
+&lt;span class="c1"># 添加 jenkins chart repo&lt;/span>
+helm repo add jenkinsci https://charts.jenkins.io
+helm repo update
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="配置-jenkins-chart">配置 Jenkins Chart&lt;/h3>
+&lt;ol>
+&lt;li>下载官方的 values yaml进行修改：&lt;code>http https://raw.githubusercontent.com/jenkinsci/helm-charts/main/charts/jenkins/values.yaml &amp;gt; jenkins-values.yaml&lt;/code>&lt;/li>
+&lt;li>修改 &lt;code>serviceType&lt;/code> 为 &lt;code>NodePort&lt;/code>，并增加 &lt;code>nodePort: 32000&lt;/code>。用于从 minikube 外访问 Jenkins&lt;/li>
+&lt;li>修改 &lt;code>storageClass&lt;/code> 为 &lt;code>jenkins-pv&lt;/code>。前面创建 PV 的时候使用了 &lt;code>jenkins-pv&lt;/code> 作为 &lt;a href="https://kubernetes.io/docs/concepts/storage/dynamic-provisioning/">Dynamic Volume Provisioning&lt;/a> 的 &lt;code>storageClass&lt;/code>&lt;/li>
+&lt;li>修改 &lt;code>serviceAccount&lt;/code> 部分，将 &lt;code>create&lt;/code> 设置为 &lt;code>false&lt;/code>（上面已经创建了 &lt;code>serviceAccount&lt;/code>），同时将 &lt;code>name&lt;/code> 指定为前面的 sa 名字 &lt;code>jenkins&lt;/code>&lt;/li>
+&lt;li>&lt;code>installPlugins&lt;/code> 下增加 &lt;code>tekton-client:1.0.2&lt;/code>&lt;/li>
+&lt;li>修改 &lt;code>adminPassword&lt;/code> 为 &lt;code>admin&lt;/code>。指定初始密码（不指定也可以通过安装输出的说明获取初始密码）&lt;/li>
+&lt;li>修改 &lt;code>persistence&lt;/code> 的 &lt;code>size&lt;/code> 为 &lt;code>5Gi&lt;/code> （我的 minikube 的虚拟机只有 20Gi 大小）&lt;/li>
+&lt;/ol>
+&lt;p>修改后的文件在&lt;a href="https://github.com/addozhang/tekton-test/blob/main/tekton-client-sample/jenkins-values.yaml">这里 jenkins-values.yaml&lt;/a>。&lt;/p>
+&lt;h3 id="执行安装">执行安装&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="nv">chart&lt;/span>&lt;span class="o">=&lt;/span>jenkinsci/jenkins
+helm install jenkins -n jenkins -f jenkins-values.yaml &lt;span class="nv">$chart&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>输出结果：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">NAME: jenkins
+LAST DEPLOYED: Sun Jun 20 22:05:53 2021
+NAMESPACE: jenkins
+STATUS: deployed
+REVISION: 1
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>获取 Jenkins 的访问地址 &lt;code>echo $(minikube ip):$(kubectl get svc jenkins -o jsonpath=&amp;quot;{.spec.ports[0].nodePort}&amp;quot;)&lt;/code>，然后使用前面设置的账号登录。&lt;/p>
+&lt;h2 id="tekton-安装">Tekton 安装&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">kubectl create ns tekton-pipelines
+kubens tekton-pipelines
+kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装-cli">安装 CLI&lt;/h3>
+&lt;p>&lt;code>brew install tektoncd-cli&lt;/code>&lt;/p>
+&lt;h3 id="rbac">RBAC&lt;/h3>
+&lt;p>Tekton Pipeline 安装完成后，需要给前面创建的 ServiceAccount &lt;code>jenkins&lt;/code> 增加 tekon 资源的操作权限。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="l">//tekton-role.yaml&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Role&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">rbac.authorization.k8s.io/v1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-role&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-pipelines&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">rules&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">apiGroups&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">pods&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">pods/log&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">verbs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">get&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">list&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">watch&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">apiGroups&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">tekton.dev&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">tasks&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">taskruns&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">pipelines&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">pipelineruns&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">verbs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">create&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">delete&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">deletecollection&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">get&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">list&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">patch&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">update&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">watch&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nn">---&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">rbac.authorization.k8s.io/v1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">RoleBinding&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-role-binding&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-pipelines&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">roleRef&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">apiGroup&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">rbac.authorization.k8s.io&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Role&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tekton-role&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">subjects&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ServiceAccount&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">jenkins&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">jenkins&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="jenkins-与-tekton-交互">Jenkins 与 Tekton 交互&lt;/h2>
+&lt;p>前面大篇幅的都只是准备工作，Jenkins 安装时我们已经添加了 &lt;code>tekton-client-plugin&lt;/code> 插件。&lt;/p>
+&lt;p>添加一个名为 &lt;code>tekton-client-sample&lt;/code> 的 &lt;code>FreeStyle project&lt;/code>。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/22/20210622-151450.png" alt="创建作业">&lt;/p>
+&lt;p>SCM 这里填入用于构建的项目仓库地址以及分支。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/22/20210622-151523.png" alt="配置代码仓库">&lt;/p>
+&lt;p>Build 模块中选择 &lt;code>Tekton: Create Resource (RAW)&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/22/20210622-151544.png" alt="增加 Tekton step">&lt;/p>
+&lt;p>这里选择 &lt;code>FILE&lt;/code> 类型，因为我已经将 &lt;code>PipelineRun&lt;/code> 的 yaml 放进了代码仓库中了。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/22/20210622151734.png" alt="配置 Resource">&lt;/p>
+&lt;p>执行一次构建&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/22/20210622153535.png" alt="构建结束">&lt;/p>
+&lt;p>检查下应用&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ kubectl get pod &lt;span class="p">|&lt;/span> grep tekton-test
+tekton-test-75975dcc88-xkzb6 1/1 Running &lt;span class="m">0&lt;/span> 3m13s
+tekton-test-c26lw-deploy-to-k8s-28trp-pod-w8tgc 0/1 Completed &lt;span class="m">0&lt;/span> 3m18s
+tekton-test-c26lw-fetch-from-git-pv66g-pod-nm5qh 0/1 Completed &lt;span class="m">0&lt;/span> 6m30s
+tekton-test-c26lw-source-to-image-k8mpg-pod-qh7g4 0/2 Completed &lt;span class="m">0&lt;/span> 6m15s
+$ curl &lt;span class="k">$(&lt;/span>minikube ip&lt;span class="k">)&lt;/span>:&lt;span class="k">$(&lt;/span>kubectl get svc tekton-test -o &lt;span class="nv">jsonpath&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;{.spec.ports[0].nodePort}&amp;#34;&lt;/span>&lt;span class="k">)&lt;/span>/hi
+hello world
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="参考">参考&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://www.jenkins.io/doc/book/installing/kubernetes/">Jenkins on Kubernetes&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/jenkinsci/tekton-client-plugin/blob/master/docs/tutorial.md">Tekton Client Plugin Tutorial&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.jenkins.io/blog/2021/04/21/tekton-plugin/#easily-reuse-tekton-and-jenkins-x-from-jenkins">Easily reuse Tekton and Jenkins X from Jenkins&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Jenkins CI/CD (一) 基于角色的授权策略</title><link>https://atbug.com/using-role-based-authorization-strategy-in-jenkins/</link><pubDate>Fri, 20 Apr 2018 12:18:46 +0000</pubDate><guid>https://atbug.com/using-role-based-authorization-strategy-in-jenkins/</guid><description>
+&lt;p>最近开始客串运维做CI/CD的规划设计, 主要是基于&amp;rsquo;Pipeline as Code in Jenkins'. 整理了下思路和技术点, 慢慢的写.&lt;/p>
 &lt;p>这一篇是关于基于角色的授权策略, 用的是&lt;code>Role-Based Authorization Strategy Plugin&lt;/code>.&lt;/p>
 &lt;p>授权在CI/CD流程中比较常见, 比如我们只让某些特定用户才可以构建Pre-Release的Job. 而更高级的Release发布, 又会需要某些用户的审批才可以进行. 需要授权时, 可能还需要发邮件提醒用户.&lt;/p>
 &lt;p>UI上如何使用就不提了, 这里只说Pipeline as Code. 后面的几篇也会是这个背景.&lt;/p>
@@ -10,12 +172,149 @@ TL;DR 惯例，先上总结。tekton-client-plugin 虽然还是处于初期阶�
 &lt;p>安装完插件, 需要开始&lt;code>基于角色的授权策略&lt;/code>. 同时添加角色和为用户分配角色.&lt;/p>
 &lt;h3 id="使用role-based-strategy作为验证方式">使用&lt;code>Role-Based Strategy&lt;/code>作为验证方式&lt;/h3>
 &lt;p>&lt;code>Manage Jenkins / Configure Global Security / Configure Global Security&lt;/code>&lt;/p>
-&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15241955282214.jpg" alt="">&lt;/p></description></item><item><title>启用Jenkins CLI</title><link>https://atbug.com/articles/jenkins-cli-enable/</link><pubDate>Mon, 09 Apr 2018 11:16:38 +0000</pubDate><guid>https://atbug.com/articles/jenkins-cli-enable/</guid><description>Jenkins CLI提供了SSH和Client模式.
-Docker运行Jenkins
-version: &amp;#39;3&amp;#39; services: jenkins: image: jenkins/jenkins:alpine ports: - 8080:8080 - 50000:50000 - 46059:46059 volumes: - &amp;#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&amp;#34; note: 以为是docker运行, ssh端口设置选用了固定端口.
-Client 从http://JENKINS_URL/cli页面下载client jar
-使用方法:
-java -jar jenkins-cli.jar -s http://localhost:8080/ help 构建:
-java -jar jenkins-cli.jar -s http://localhost:8080/ build JOB [-c] [-f] [-p] [-r N] [-s] [-v] [-w] Starts a build, and optionally waits for a completion.</description></item><item><title>Jenkins - 解决execute shell中启动的进程被在Job退出时被杀死问题</title><link>https://atbug.com/articles/resolve-process-be-killed-after-jenkins-job-done/</link><pubDate>Thu, 15 Mar 2018 17:00:25 +0000</pubDate><guid>https://atbug.com/articles/resolve-process-be-killed-after-jenkins-job-done/</guid><description>因为ProcessTreeKiller的存在, 构建过程中使用shell启动的进程在Job完成时都会被kill掉.
-各种搜索以及ProcessTreeKiller提供的解决方式是修改BUILD_ID和添加 -Dhudson.util.ProcessTree.disable=true都无法解决.
-最后参考StackOverflow和Jenkins JIRA, 修改JENKINS_NODE_COOKIE为任何值, 如dontKillMe. 这种方法可以解决, 记录一下. (搜索排名靠前的结果都不对).</description></item></channel></rss>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15241955282214.jpg" alt="">&lt;/p>
+&lt;h3 id="添加角色">添加角色&lt;/h3>
+&lt;p>&lt;code>Manage Jenkins / Manage and Assign Roles / Manage Roles / Global roles &lt;/code>&lt;/p>
+&lt;p>输入要添加的角色名&lt;/p>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15241956860233.jpg" alt="">&lt;/p>
+&lt;h4 id="为新加的角色配置权限">为新加的角色配置权限&lt;/h4>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15241957585851.jpg" alt="">&lt;/p>
+&lt;h3 id="为用户指定角色">为用户指定角色&lt;/h3>
+&lt;p>`Manage Jenkins / Manage and Assign Roles / Assign Roles / Global roles'&lt;/p>
+&lt;p>输入已有的用户名&lt;/p>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15241960130076.jpg" alt="">&lt;/p>
+&lt;p>分配角色&lt;/p>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15241960527215.jpg" alt="">&lt;/p>
+&lt;h2 id="编码">编码&lt;/h2>
+&lt;p>授权会在很多job里使用, 所以我们使用&lt;code>shared library&lt;/code>来定义.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-groovy" data-lang="groovy">&lt;span class="n">timeout&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="nl">time:&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="nl">unit:&lt;/span> &lt;span class="s1">&amp;#39;MINUTES&amp;#39;&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">notifyAwaitApproval&lt;/span> &lt;span class="nl">approvers:&lt;/span> &lt;span class="n">getApprovers&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s1">&amp;#39;pre-release&amp;#39;&lt;/span>&lt;span class="o">),&lt;/span>
+&lt;span class="nl">emailPrompt:&lt;/span> &lt;span class="s1">&amp;#39;Build is ready to prepare release&amp;#39;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>给用户发送待审批邮件, 使用&lt;code>input&lt;/code>等待用户的交互, 同时使用&lt;code>milestone&lt;/code>阻塞后续的构建请求.
+&lt;code>notifyAwaitApproval.groovy&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-groovy" data-lang="groovy">&lt;span class="kt">def&lt;/span> &lt;span class="nf">call&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">options&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kt">def&lt;/span> &lt;span class="n">jobName&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">env&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">JOB_NAME&lt;/span>
+&lt;span class="k">if&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">message&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">message&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;Action Required For Build $jobName&amp;#34;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="kt">def&lt;/span> &lt;span class="n">csvApproverUsernames&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">switch&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">approvers&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="nl">String:&lt;/span>
+&lt;span class="c1">// already csv
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">approvers&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="nl">Map:&lt;/span>
+&lt;span class="c1">// keys are usernames and values are names
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">approvers&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">keySet&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">join&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s1">&amp;#39;,&amp;#39;&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="nl">ArrayList:&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="nl">HashSet:&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">approvers&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">join&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s1">&amp;#39;,&amp;#39;&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="k">default&lt;/span>&lt;span class="o">:&lt;/span>
+&lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nf">Exception&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;Unexpeced approver type ${options.approvers.class}!&amp;#34;&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}()&lt;/span>
+&lt;span class="n">echo&lt;/span> &lt;span class="s2">&amp;#34;Notify approvers: $csvApproverUsernames for approval&amp;#34;&lt;/span>
+&lt;span class="c1">// emailext needs to be inside a node block but don&amp;#39;t want to take up a node while waiting for approval
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">emailext&lt;/span> &lt;span class="nl">body:&lt;/span> &lt;span class="s2">&amp;#34;Action Required For Build \${jobName} (#\${env.BUILD_NUMBER})&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span>
+&lt;span class="nl">to:&lt;/span> &lt;span class="n">csvApproverUsernames&lt;/span>&lt;span class="o">,&lt;/span>
+&lt;span class="nl">subject:&lt;/span> &lt;span class="s2">&amp;#34;Action Required For Build \${jobName} (#\${env.BUILD_NUMBER})&amp;#34;&lt;/span>
+&lt;span class="n">milestone&lt;/span>&lt;span class="o">()&lt;/span>
+&lt;span class="n">input&lt;/span> &lt;span class="nl">id:&lt;/span> &lt;span class="s1">&amp;#39;Approval&amp;#39;&lt;/span>&lt;span class="o">,&lt;/span>
+&lt;span class="nl">message:&lt;/span> &lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">message&lt;/span>&lt;span class="o">,&lt;/span>
+&lt;span class="nl">submitter:&lt;/span> &lt;span class="n">csvApproverUsernames&lt;/span>&lt;span class="o">,&lt;/span>
+&lt;span class="nl">submitterParameter:&lt;/span> &lt;span class="s1">&amp;#39;submitter&amp;#39;&lt;/span>
+&lt;span class="n">milestone&lt;/span>&lt;span class="o">()&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>检查并获取Jenkins当前配置的授权策略, 如果是&lt;code>Role-Based Authorization&lt;/code>, 返回拥有指定角色的用户列表.
+&lt;code>getApprovers.groovy&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-groovy" data-lang="groovy">&lt;span class="kn">import&lt;/span> &lt;span class="nn">com.cloudbees.groovy.cps.NonCPS&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">com.michelin.cio.hudson.plugins.rolestrategy.RoleBasedAuthorizationStrategy&lt;/span>
+&lt;span class="nd">@NonCPS&lt;/span>
+&lt;span class="kt">def&lt;/span> &lt;span class="nf">call&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">role&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">echo&lt;/span> &lt;span class="s2">&amp;#34;Retrieving users for $role&amp;#34;&lt;/span>
+&lt;span class="kt">def&lt;/span> &lt;span class="n">strategy&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">RoleBasedAuthorizationStrategy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">instance&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">strategy&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">strategy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getGrantedRoles&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">RoleBasedAuthorizationStrategy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">GLOBAL&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="na">entrySet&lt;/span>&lt;span class="o">()&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="na">find&lt;/span> &lt;span class="o">{&lt;/span> &lt;span class="n">entry&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">entry&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getName&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">equals&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">role&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">}.&lt;/span>&lt;span class="na">getValue&lt;/span>&lt;span class="o">()&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nf">Exception&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;Role Strategy Plugin not in use. Please enable to retrieve users for a role&amp;#34;&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>启用Jenkins CLI</title><link>https://atbug.com/jenkins-cli-enable/</link><pubDate>Mon, 09 Apr 2018 11:16:38 +0000</pubDate><guid>https://atbug.com/jenkins-cli-enable/</guid><description>
+&lt;p>Jenkins CLI提供了SSH和Client模式.&lt;/p>
+&lt;p>Docker运行Jenkins&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;3&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">services&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">jenkins&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">jenkins/jenkins:alpine&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">ports&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="m">8080&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">8080&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="m">50000&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">50000&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="m">46059&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">46059&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">volumes&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="s2">&amp;#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>note: 以为是docker运行, ssh端口设置选用了固定端口.&lt;/p>
+&lt;h3 id="client">Client&lt;/h3>
+&lt;p>从&lt;code>http://JENKINS_URL/cli&lt;/code>页面下载client jar&lt;/p>
+&lt;p>使用方法:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">java -jar jenkins-cli.jar -s http://localhost:8080/ &lt;span class="nb">help&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>构建:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">java -jar jenkins-cli.jar -s http://localhost:8080/ build JOB &lt;span class="o">[&lt;/span>-c&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>-f&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>-p&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>-r N&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>-s&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>-v&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>-w&lt;span class="o">]&lt;/span>
+Starts a build, and optionally waits &lt;span class="k">for&lt;/span> a completion.
+Aside from general scripting use, this &lt;span class="nb">command&lt;/span> can be
+used to invoke another job from within a build of one job.
+With the -s option, this &lt;span class="nb">command&lt;/span> changes the &lt;span class="nb">exit&lt;/span> code based on
+the outcome of the build &lt;span class="o">(&lt;/span>&lt;span class="nb">exit&lt;/span> code &lt;span class="m">0&lt;/span> indicates a success&lt;span class="o">)&lt;/span>
+and interrupting the &lt;span class="nb">command&lt;/span> will interrupt the job.
+With the -f option, this &lt;span class="nb">command&lt;/span> changes the &lt;span class="nb">exit&lt;/span> code based on
+the outcome of the build &lt;span class="o">(&lt;/span>&lt;span class="nb">exit&lt;/span> code &lt;span class="m">0&lt;/span> indicates a success&lt;span class="o">)&lt;/span>
+however, unlike -s, interrupting the &lt;span class="nb">command&lt;/span> will not interrupt
+the job &lt;span class="o">(&lt;/span>&lt;span class="nb">exit&lt;/span> code &lt;span class="m">125&lt;/span> indicates the &lt;span class="nb">command&lt;/span> was interrupted&lt;span class="o">)&lt;/span>.
+With the -c option, a build will only run &lt;span class="k">if&lt;/span> there has been
+an SCM change.
+JOB : Name of the job to build
+-c : Check &lt;span class="k">for&lt;/span> SCM changes before starting the build, and &lt;span class="k">if&lt;/span> there&lt;span class="err">&amp;#39;&lt;/span>s no
+change, &lt;span class="nb">exit&lt;/span> without doing a build
+-f : Follow the build progress. Like -s only interrupts are not passed
+through to the build.
+-p : Specify the build parameters in the &lt;span class="nv">key&lt;/span>&lt;span class="o">=&lt;/span>value format.
+-s : Wait &lt;span class="k">until&lt;/span> the completion/abortion of the command. Interrupts are passed
+through to the build.
+-v : Prints out the console output of the build. Use with -s
+-w : Wait &lt;span class="k">until&lt;/span> the start of the &lt;span class="nb">command&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="ssh">SSH&lt;/h3>
+&lt;p>启用SSH, 使用随机端口. 也可以使用固定端口:&lt;/p>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15232377732862.jpg" alt="">&lt;/p>
+&lt;p>获取SSH端口号:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">curl -Lv http://localhost:8080/login 2&amp;gt;&lt;span class="p">&amp;amp;&lt;/span>&lt;span class="m">1&lt;/span> &lt;span class="p">|&lt;/span> grep &lt;span class="s1">&amp;#39;X-SSH-Endpoint&amp;#39;&lt;/span>
+&lt;span class="c1">#&amp;lt; X-SSH-Endpoint: localhost:46059&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>生成ssh key:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">ssh-keygen -t rsa -b &lt;span class="m">4096&lt;/span> -C &lt;span class="s2">&amp;#34;admin&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>添加ssh公钥:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">http://localhost:8080/user/admin/configure
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改ssh config, 添加如下配置:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">Host localhost
+IdentityFile ~/.ssh/id_rsa_jenkins_cli
+Port &lt;span class="m">46059&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>验证:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">ssh admin@localhost &lt;span class="nb">help&lt;/span>
+add-job-to-view
+Adds &lt;span class="nb">jobs&lt;/span> to view.
+build
+Builds a job, and optionally waits &lt;span class="k">until&lt;/span> its completion.
+cancel-quiet-down
+Cancel the effect of the &lt;span class="s2">&amp;#34;quiet-down&amp;#34;&lt;/span> command.
+clear-queue
+Clears the build queue.
+connect-node
+Reconnect to a node&lt;span class="o">(&lt;/span>s&lt;span class="o">)&lt;/span>
+console
+Retrieves console output of a build.
+copy-job
+Copies a job.
+...
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15232435960672.jpg" alt="">&lt;/p></description></item><item><title>Jenkins - 解决execute shell中启动的进程被在Job退出时被杀死问题</title><link>https://atbug.com/resolve-process-be-killed-after-jenkins-job-done/</link><pubDate>Thu, 15 Mar 2018 17:00:25 +0000</pubDate><guid>https://atbug.com/resolve-process-be-killed-after-jenkins-job-done/</guid><description>
+&lt;p>因为&lt;a href="https://wiki.jenkins.io/display/JENKINS/ProcessTreeKiller">ProcessTreeKiller&lt;/a>的存在, 构建过程中使用shell启动的进程在Job完成时都会被kill掉.&lt;/p>
+&lt;p>各种搜索以及&lt;a href="https://wiki.jenkins.io/display/JENKINS/ProcessTreeKiller">ProcessTreeKiller&lt;/a>提供的解决方式是修改&lt;code>BUILD_ID&lt;/code>和添加&lt;code> -Dhudson.util.ProcessTree.disable=true&lt;/code>都无法解决.&lt;/p>
+&lt;p>最后参考&lt;a href="https://issues.jenkins-ci.org/browse/JENKINS-28182">StackOverflow&lt;/a>和&lt;a href="https://issues.jenkins-ci.org/browse/JENKINS-28182">Jenkins JIRA&lt;/a>, 修改&lt;code>JENKINS_NODE_COOKIE&lt;/code>为任何值, 如&lt;code>dontKillMe&lt;/code>. 这种方法可以解决, 记录一下. (搜索排名靠前的结果都不对).&lt;/p></description></item></channel></rss>

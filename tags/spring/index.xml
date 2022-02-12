@@ -1,122 +1,297 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Spring on 乱世浮生</title><link>https://atbug.com/tags/spring/</link><description>Recent content in Spring on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 17 Aug 2021 18:47:33 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/spring/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Flomesh 强化 Spring Cloud 服务治理</title><link>https://atbug.com/articles/enhance-springcloud-service-governance-with-flomesh/</link><pubDate>Tue, 17 Aug 2021 18:47:33 +0800</pubDate><guid>https://atbug.com/articles/enhance-springcloud-service-governance-with-flomesh/</guid><description>写在最前 这篇是关于如何使用 Flomesh 服务网格来强化 Spring Cloud 的服务治理能力，降低 Spring Cloud 微服务架构落地服务网格的门槛，实现“自主可控”。
-文档在 github 上持续更新，欢迎大家一起讨论：https://github.com/flomesh-io/flomesh-bookinfo-demo。
-架构 环境搭建 搭建 Kubernetes 环境，可以选择 kubeadm 进行集群搭建。也可以选择 minikube、k3s、Kind 等，本文使用 k3s。
-使用 k3d 安装 k3s。k3d 将在 Docker 容器中运行 k3s，因此需要保证已经安装了 Docker。
-$ k3d cluster create spring-demo -p &amp;#34;81:80@loadbalancer&amp;#34; --k3s-server-arg &amp;#39;--no-deploy=traefik&amp;#39; 安装 Flomesh 从仓库 https://github.</description></item><item><title>带你了解 Ribbon 负载均衡器的实现</title><link>https://atbug.com/articles/how-loadbalancer-works-in-ribbon/</link><pubDate>Tue, 09 Jun 2020 19:35:53 +0800</pubDate><guid>https://atbug.com/articles/how-loadbalancer-works-in-ribbon/</guid><description>Spring Cloud 中 Ribbon有在 Zuul 和 Feign 中使用，当然也可以通过在RestTemplate的 bean 定义上添加@LoadBalanced注解方式获得一个带有负载均衡更能的RestTemplate。
-不过实现的方法都大同小异：对HttpClient进行封装，加上实例的”选择“（这个选择的逻辑就是我们所说的负载均衡）。
-要学习某个框架的时候，最简单的方案就是：Running+Debugging。
-跑就是了。
-debug 不一定是为了 bug
-debug 出真知
-Debugging = Learning
-选用 Ali Spittel 的一条推文：
-以 Zuul 路由的线程栈为例 调整下顺序：
-RetryableRibbonLoadBalancingHttpClient#execute(RibbonApacheHttpRequest, IClientConfig) RetryableRibbonLoadBalancingHttpClient#executeWithRetry(...) RetryTemplate#execute(RetryCallback&amp;lt;T, E&amp;gt;, RecoveryCallback&amp;lt;T&amp;gt;) RetryTemplate#doExecute(RetryCallback&amp;lt;T, E&amp;gt;, RecoveryCallback&amp;lt;T&amp;gt;, RetryState) RetryTemplate#canRetry(RetryPolicy, RetryContext) InterceptorRetryPolicy#canRetry(RetryContext) AbstractLoadBalancingClient#choose(String serviceId) ZoneAwareLoadBalancer#chooseServer(Object key) //key as serviceId BaseLoadBalancer#chooseServer(Object key) PredicateBasedRule#choose(Object key) AbstractServerPredicate#chooseRoundRobinAfterFiltering(List&amp;lt;Server&amp;gt; servers, Object loadBalancerKey) AbstractServerPredicate#apply(Predicate) 分析 Zuul 收到请求经过一系列 Filter 的处理，来到 RibbonRoutingFilter；将请求封装成 RibbonCommandContext，然后使用 context 构建 RibbonCommand。最终调用RibbonCommand#execute()方法，将请求路由到下游。</description></item><item><title>Eureka 实例注册状态保持 STARTING 的问题排查</title><link>https://atbug.com/articles/troubleshooting-on-eureka-instance-keep-starting/</link><pubDate>Thu, 28 May 2020 22:04:02 +0800</pubDate><guid>https://atbug.com/articles/troubleshooting-on-eureka-instance-keep-starting/</guid><description>这是真实发生在生产环境的 case，实例启动后正常运行，而在注册中心的状态一直保持STARTING，而本地的状态为UP。导致服务的消费方无法发现可用实例。
-这种情况的出现概率非常低，运行一年多未发现两个实例同时出现问题的情况，因此多实例运行可以避免。文末有问题的解决方案，不想花时间看分析过程可直接跳到最后。
-环境说明：
-eureka-client: 1.7.2 spring-boot: 1.5.12.RELEASE spring-cloud: Edgware.SR3
-问题重现 借助Btrace重现, java -noverify -cp .:btrace-boot.jar -javaagent:btrace-agent.jar=script=&amp;lt;pre-compiled-btrace-script&amp;gt; &amp;lt;MainClass&amp;gt; &amp;lt;AppArguments&amp;gt;
-思路 主线程更新实例本地状态(STARTING-&amp;gt;UP)前, 等待心跳线程完成第一次心跳并尝试注册实例, 获取到当前的状态STARTING. 主线程更新状态后触发
-Btrace 脚本
-import com.sun.btrace.annotations.BTrace; import com.sun.btrace.annotations.Kind; import com.sun.btrace.annotations.Location; import com.sun.btrace.annotations.OnMethod; import java.util.concurrent.atomic.AtomicBoolean; import static com.</description></item><item><title>神秘的 Eureka 自我保护</title><link>https://atbug.com/articles/translation-the-mystery-of-eurekas-self-preservation/</link><pubDate>Sun, 05 Jan 2020 14:14:03 +0800</pubDate><guid>https://atbug.com/articles/translation-the-mystery-of-eurekas-self-preservation/</guid><description>本文翻译自The Mystery of Eureka Self-Preservation
-根据CAP定理, Eureka是一个AP系统, 这就导致了在网络分区期间多个注册表中的信息不一致. 自我保护功能则是为了尽可能降低这种不一致.
-自我保护的定义 自我保护(self preservation)是Eureka的一项功能, Eureka注册表在未收到实例的心跳情况超过一定阈值时停止驱逐过期的实例.
-从一个健康的系统开始 把下面看成一个健康的系统
-假设所有的微服务都处于健康的状态并成功注册到Eureka注册表中.
-多个注册表间会同步注册表记录, 所有的微服务实例都处于UP状态. 假设实例2从注册中心发现里实例4, 并调用实例4上的服务.
-突发网络分区 假设出现了网络分区, 系统变成下面的状态.
-由于网络分区, 实例4和5丢失了注册中心的连接, 但是实例2仍然可以连接到实例4. Eureka服务端因为没有收到实例4和5的心跳(超过一定时间后), 将他们驱逐. 然后Eureka服务端意识到突然丢失了超过15%(2/5)的心跳, 因此其进入自我保护模式
-从此时开始, Eureka服务端不在驱逐任何实例, 即使实例真正的下线了.
-实例3下线, 但其始终存在注册表中.
-但此时注册表还会接受新实例的注册.
-自我保护的基本原理 自我保护功能在下面两种情况下是合理的:
-Eureka服务端因为弱网分区问题没有收到心跳(这并不意味着客户端下线), 但是这种问题可能会很快被修复.</description></item><item><title>Spring Cloud Hoxton发布</title><link>https://atbug.com/articles/spring-cloud-hoxton-release/</link><pubDate>Wed, 04 Dec 2019 11:09:07 +0800</pubDate><guid>https://atbug.com/articles/spring-cloud-hoxton-release/</guid><description>原文
-Spring Cloud Hoxton.RELEASE基于Spring Boot 2.2.1.RELEASE
-文档变化 Hoxton.RELEASE使用了新的首页, 新的样式以及单页面, 多页面和PDF版本.
-新的负载均衡器实现 Hoxton.RELEASE是第一个包含阻塞和非阻塞客户端负载均衡器实现的版本, 替代进入维护状态的Netflix Ribbon.
-搭配BlockingLoadBalancerClient使用RestTemplate, 需要在classpath中引入org.springframework.cloud:spring-cloud-loadbalancer. 这个依赖同样用于使用了@LoadBalanced WebClient.Builder的响应式应用中. 唯一的区别是Spring Cloud会自动配置ReactorLoadBalancerExchangeFilterFunction实例. 更多内容查看文档. 新的ReactorLoadBalancerExchangeFilterFunction可用于自动装配并自动传递给WebClient.Builder(文档).
-Spring Cloud Netflix 增加了新的ReactiveDiscoveryClient, 同时增加了新的Spring Cloud Circuit Breaker API的Hystrix实现. 增加配置项spring.cloud.circuitbreaker.hystrix.enabled来禁用Spring Cloud CircuitBreaker Hystrix的自动配置. Spring Cloud Cloudfoundry 支持新的ReactiveDiscoveryClient</description></item><item><title>Spring Boot 2.2.0 发布</title><link>https://atbug.com/articles/spring-boot-2-2-0-release/</link><pubDate>Tue, 22 Oct 2019 09:27:03 +0800</pubDate><guid>https://atbug.com/articles/spring-boot-2-2-0-release/</guid><description>译自: https://spring.io/blog/2019/10/16/spring-boot-2-2-0
-组件升级 Spring AMQP 2.2 Spring Batch 4.2 Spring Data Moore Spring Framework 5.2 Spring HATEOAS 1.0 Spring Integration 5.2 Spring Kafka 2.3 Spring Security 5.2 Spring Session Corn 第三方库升级 Elasticsearch 6.7 Flyway 6.0 Jackson 2.10 JUnit 5.</description></item><item><title>Spring Boot源码分析 - Configuration注解</title><link>https://atbug.com/articles/spring-boot-configuration-annotation/</link><pubDate>Mon, 10 Dec 2018 16:24:33 +0000</pubDate><guid>https://atbug.com/articles/spring-boot-configuration-annotation/</guid><description>@Configuration注解 @Configuration注解指示一个类声明一个或多个@Bean方法, 并且可以由Spring容器处理, 以在运行时为这些bean生成bean定义和服务请求.
-使用ConfigurationClassParser来对@Configuration标注的类进行解析, 封装成ConfigurationClass实例. 具体的实现通过ConfigurationClassPostProcessor来实现的.
-ConfigurationClassPostProcessor 实现了BeanDefinitionRegistryPostProcessor接口, 间接实现了BeanFactorPostProcessor接口.
-#postProcessBeanDefinitionRegistry(): 注册所有ConfigurationClass中的BeanDefinition, 包括@Bean注解的方法, @ImporResource引入的资源中定义的bean, 和@Import注解引入的ImportBeanDefinitionRegistrar中注册的BeanDefinition #postProcessBeanFactory(): 在运行时以通过cglig增强的类来替换ConfigurationClass, 为服务bean请求做准备. 增强的实现是通过ConfigurationClassEnhancer完成的. 插入一点, ConfigurationClassEnhancer实现了直接使用bean注册方法来获取bean的操作, 提供了一个BeanMethodInterceptor的内部类来实行.
-@Configuration public class Config { @Bean public A a() { ... return a; } @Bean public B b() { b.</description></item><item><title>Zuul网关Ribbon重试</title><link>https://atbug.com/articles/ribbon-retry-in-zuul/</link><pubDate>Thu, 02 Aug 2018 08:55:43 +0000</pubDate><guid>https://atbug.com/articles/ribbon-retry-in-zuul/</guid><description>相关配置 #如果路由转发请求发生超时(连接超时或处理超时), 只要超时时间的设置小于Hystrix的命令超时时间,那么它就会自动发起重试. 默认为false. 或者对指定响应状态码进行重试 zuul.retryable = true zuul.routes.&amp;lt;route&amp;gt;.retryable = false #同一实例上的最大重试次数, 默认值为0. 不包括首次调用 ribbon.MaxAutoRetries=0 #重试其他实例的最大重试次数, 不包括第一次选的实例. 默认为1 ribbon.MaxAutoRetriesNextServer=1 #是否所有操作执行重试, 默认值为false, 只重试`GET`请求 ribbon.OkToRetryOnAllOperations=false #连接超时, 默认2000 ribbon.ConnectTimeout=15000 #响应超时, 默认5000 ribbon.ReadTimeout=15000 #每个host的最大连接数 ribbon.MaxHttpConnectionsPerHost=50 #最大连接数 ribbon.MaxTotalHttpConnections=200 #何种响应状态码才进行重试 ribbon.retryableStatusCodes=404,502 实现 SimpleRouteLocator#getRoute返回的route对象中会带上retryable的设置. PreDecorationFilter在对RequestContext进行装饰的时候会将retryable的设置通过keyFilterConstants.RETRYABLE_KEY注入RequestContext中. RibbonRoutingFilter#buildCommandContext会使用RequestContext的retryable设置构造RibbonCommandContext对象. RibbonCommandFactory使用RibbonCommandContext构建出RibbonCommand对象.</description></item><item><title>Hystrix工作原理三</title><link>https://atbug.com/articles/hystrix-exception-handling/</link><pubDate>Sun, 24 Jun 2018 16:20:16 +0000</pubDate><guid>https://atbug.com/articles/hystrix-exception-handling/</guid><description>异常处理 Hystrix异常类型 HystrixRuntimeException HystrixBadRequestException HystrixTimeoutException RejectedExecutionException HystrixRuntimeException HystrixCommand失败时抛出, 不会触发fallback.
-HystrixBadRequestException 用提供的参数或状态表示错误的异常, 而不是执行失败. 与其他HystrixCommand抛出的异常不同, 这个异常不会触发fallback, 也不会记录进failure的指标, 因而也不会触发断路器,
-应该在用户输入引起的错误是抛出, 否则会它与容错和后退行为的目的相悖.
-不会触发fallback, 也不会记录到错误的指标中, 也不会触发断路器.
-RejectedExecutionException 线程池发生reject时抛出
-HystrixTimeoutException 在HystrixCommand.run()或者HystrixObservableCommand.construct()时抛出, 会记录timeout的次数. 如果希望某些类型的失败被记录为timeout, 应该将这些类型的失败包装为HystrixTimeoutException
-异常处理 ignoreExceptions
-final Func1&amp;lt;Throwable, Observable&amp;lt;R&amp;gt;&amp;gt; handleFallback = new Func1&amp;lt;Throwable, Observable&amp;lt;R&amp;gt;&amp;gt;() { @Override public Observable&amp;lt;R&amp;gt; call(Throwable t) { circuitBreaker.</description></item><item><title>Hystrix工作原理二</title><link>https://atbug.com/articles/hystrix-isolation/</link><pubDate>Sun, 24 Jun 2018 16:18:52 +0000</pubDate><guid>https://atbug.com/articles/hystrix-isolation/</guid><description>隔离策略 线程和线程池 客户端(库, 网络调用等)在各自的线程上运行. 这种做法将他们与调用线程隔开, 因此调用者可以从一个耗时的依赖调用&amp;quot;离开(walk away)&amp;quot;
-Hystrix使用单独的, 每个依赖的线程池作为约束任何给定依赖的一种方式, 因此潜在执行的延迟将仅在该池中使可用线程饱和.
-如果不试用线程池可以保护你免受故障的影响, 但是这需要客户端可信任地快速失败(网络连接/读取超时, 重试的配置)并始终表现良好.
-在Hystrix的设计中, Netflix选择试用线程和线程池来达到隔离的目的, 原因有:
-很多应用程序调用了由很多不同的团队开发的许多(有时超过1000)不同的后端服务 每个服务都各自提供了其客户端库 客户端库不断地在更新 客户端库可能被添加使用新的网络调用 客户端库的逻辑中可能包含重试, 数据解析, 缓存(内存或者跨网络)和其他类似的行为 客户端库更类似于一个黑盒, 其实现细节, 网络访问模式, 默认配置等是对使用者不透明的 在实际的生产问题中, 根源经常是 &amp;ldquo;有些东西改变了, 配置应该被修改&amp;rdquo; 或者 &amp;ldquo;客户端库修改了逻辑&amp;rdquo; 即使客户端没有改变, 服务端自身发生了变会员. 这种变化会是客户端设置无效而影响性能特性 传递依赖会引入其他客户端, 这些客户端不是可预期的, 也可能没有被正确地配置 大多数网络访问是同步的 失败和延迟也可能发生在客户端, 不只是网络调用 线程池的优势 该应用程序完全免受失控客户端库的保护.</description></item><item><title>Spring Cloud Ribbon 详解</title><link>https://atbug.com/articles/spring-cloud-ribbon-breakdown-1/</link><pubDate>Sat, 05 May 2018 11:18:05 +0000</pubDate><guid>https://atbug.com/articles/spring-cloud-ribbon-breakdown-1/</guid><description>&lt;p>客户端负载均衡, Ribbon的核心概念是命名的客户端.&lt;/p>
-&lt;h2 id="使用">使用&lt;/h2>
-&lt;h3 id="引入ribbon依赖和配置">引入Ribbon依赖和配置&lt;/h3>
-&lt;p>加入&lt;code>spring-cloud-starter-netflix-ribbon&lt;/code>依赖&lt;/p>
-&lt;h3 id="代码中使用ribbonclient注解">代码中使用RibbonClient注解&lt;/h3>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#a6e22e">@Configuration&lt;/span>
-&lt;span style="color:#a6e22e">@RibbonClient&lt;/span>&lt;span style="color:#f92672">(&lt;/span>name &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;foo&amp;#34;&lt;/span>&lt;span style="color:#f92672">,&lt;/span> configuration &lt;span style="color:#f92672">=&lt;/span> FooConfiguration&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">)&lt;/span> &lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">TestConfiguration&lt;/span> &lt;span style="color:#f92672">{}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#a6e22e">@Configuration&lt;/span> &lt;span style="color:#66d9ef">protected&lt;/span> &lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">FooConfiguration&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#a6e22e">@Bean&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> ZonePreferenceServerListFilter &lt;span style="color:#a6e22e">serverListFilter&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-ZonePreferenceServerListFilter filter &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> ZonePreferenceServerListFilter&lt;span style="color:#f92672">();&lt;/span>
-filter&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#a6e22e">setZone&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#e6db74">&amp;#34;myTestZone&amp;#34;&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
-&lt;span style="color:#66d9ef">return&lt;/span> filter&lt;span style="color:#f92672">;&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#a6e22e">@Bean&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> IPing &lt;span style="color:#a6e22e">ribbonPing&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> PingUrl&lt;span style="color:#f92672">();&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Ribbon客户端的配置, 如果不指定会使用默认的实现:&lt;/p>
-&lt;ul>
-&lt;li>IClientConfig 客户端相关配置&lt;/li>
-&lt;li>IRule 定义负载均衡策略&lt;/li>
-&lt;li>IPing 定义如何ping目标服务实例来判断是否存活, ribbon使用单独的线程每隔一段时间(默认10s)对本地缓存的ServerList做一次检查&lt;/li>
-&lt;li>ServerList&lt;Server> 定义如何获取服务实例列表. 两种实现基于配置的&lt;code>ConfigurationBasedServerList&lt;/code>和基于Eureka服务发现的&lt;code>DiscoveryEnabledNIWSServerList&lt;/code>&lt;/li>
-&lt;li>ServerListFilter&lt;Server> 用来使用期望的特征过滤静态配置动态获得的候选服务实例列表. 若未提供, 默认使用&lt;code>ZoneAffinityServerListFilter&lt;/code>&lt;/li>
-&lt;li>ILoadBalancer 定义了软负载均衡器的操作的接口. 一个典型的负载均衡器至少需要一组用来做负载均衡的服务实例, 一个标记某个服务实例不在旋转中的方法, 和对应的方法调用从实例列表中选出某一个服务实例.&lt;/li>
-&lt;li>ServerListUpdater DynamicServerListLoadBalancer用来更新实例列表的策略(推&lt;code>EurekaNotificationServerListUpdater&lt;/code>/拉&lt;code>PollingServerListUpdater&lt;/code>, 默认是拉)&lt;/li>
-&lt;/ul></description></item><item><title>Spring Cloud Zuul详解</title><link>https://atbug.com/articles/spring-cloud-zuul-breakdown/</link><pubDate>Thu, 22 Feb 2018 17:02:26 +0000</pubDate><guid>https://atbug.com/articles/spring-cloud-zuul-breakdown/</guid><description>&lt;p>Spring Cloud对Netflix Zuul做了封装集成, 使得在Spring Cloud环境中使用Zuul更方便. Netflix Zuul相关分析请看&lt;a href="http://atbug.com/learn-netflix-zuul/">上一篇&lt;/a>.&lt;/p>
-&lt;h2 id="实现">实现&lt;/h2>
-&lt;p>@EnableZuulProxy 与 @EnableZuulServer
-二者的区别在于前者使用了服务发现作为路由寻址, 并使用Ribbon做客户端的负载均衡; 后者没有使用.
-Zuul server的路由都通过&lt;code>ZuulProperties&lt;/code>进行配置.&lt;/p>
-&lt;h3 id="具体实现">具体实现:&lt;/h3>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Spring on 乱世浮生</title><link>https://atbug.com/tags/spring/</link><description>Recent content in Spring on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 28 May 2020 22:04:02 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/spring/index.xml" rel="self" type="application/rss+xml"/><item><title>Eureka 实例注册状态保持 STARTING 的问题排查</title><link>https://atbug.com/troubleshooting-on-eureka-instance-keep-starting/</link><pubDate>Thu, 28 May 2020 22:04:02 +0800</pubDate><guid>https://atbug.com/troubleshooting-on-eureka-instance-keep-starting/</guid><description>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/28/maninblackshirtandgraydenimpantssittingongray11342.jpg" alt="">&lt;/p>
+&lt;p>这是真实发生在生产环境的 case，实例启动后正常运行，而在注册中心的状态一直保持&lt;code>STARTING&lt;/code>，而本地的状态为&lt;code>UP&lt;/code>。导致服务的消费方无法发现可用实例。&lt;/p>
+&lt;p>这种情况的出现概率非常低，运行一年多未发现两个实例同时出现问题的情况，因此多实例运行可以避免。文末有问题的解决方案，不想花时间看分析过程可直接跳到最后。&lt;/p>
+&lt;p>环境说明：&lt;/p>
+&lt;blockquote>
+&lt;p>eureka-client: 1.7.2
+spring-boot: 1.5.12.RELEASE
+spring-cloud: Edgware.SR3&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="问题重现">问题重现&lt;/h2>
+&lt;p>借助&lt;code>Btrace&lt;/code>重现, &lt;code>java -noverify -cp .:btrace-boot.jar -javaagent:btrace-agent.jar=script=&amp;lt;pre-compiled-btrace-script&amp;gt; &amp;lt;MainClass&amp;gt; &amp;lt;AppArguments&amp;gt;&lt;/code>&lt;/p>
+&lt;h3 id="思路">思路&lt;/h3>
+&lt;p>主线程更新实例本地状态(STARTING-&amp;gt;UP)前, 等待心跳线程完成第一次心跳并尝试注册实例, 获取到当前的状态&lt;code>STARTING&lt;/code>. 主线程更新状态后触发&lt;/p>
+&lt;p>&lt;a href="https://gist.github.com/addozhang/9b584470558beb862abeb93e74c1a9b4">Btrace 脚本&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kn">import&lt;/span> &lt;span class="nn">com.sun.btrace.annotations.BTrace&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">com.sun.btrace.annotations.Kind&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">com.sun.btrace.annotations.Location&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">com.sun.btrace.annotations.OnMethod&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import&lt;/span> &lt;span class="nn">java.util.concurrent.atomic.AtomicBoolean&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import static&lt;/span> &lt;span class="nn">com.sun.btrace.BTraceUtils.currentThread&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kn">import static&lt;/span> &lt;span class="nn">com.sun.btrace.BTraceUtils.println&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * @author Addo.Zhang
+&lt;/span>&lt;span class="cm"> * @date 2019-07-31
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="nd">@BTrace&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">unsafe&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">EurekaRequest&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">AtomicBoolean&lt;/span> &lt;span class="n">heartbeatThreadRegistrationStarted&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AtomicBoolean&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">AtomicBoolean&lt;/span> &lt;span class="n">replicatorThreadRegistrationCompleted&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AtomicBoolean&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">AtomicBoolean&lt;/span> &lt;span class="n">statusUP&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AtomicBoolean&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="nd">@OnMethod&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">clazz&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;org.springframework.cloud.netflix.eureka.serviceregistry.EurekaServiceRegistry&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">location&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nd">@Location&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Kind&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">LINE&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">line&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">45&lt;/span>&lt;span class="o">))&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">waitHeartbeatExecution&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">currentThread&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34; is waiting heartbeatThreadRegistrationStarted thread executing first&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(!&lt;/span>&lt;span class="n">heartbeatThreadRegistrationStarted&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="nd">@OnMethod&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">clazz&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;org.springframework.cloud.netflix.eureka.serviceregistry.EurekaServiceRegistry&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">location&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nd">@Location&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Kind&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">LINE&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">line&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">46&lt;/span>&lt;span class="o">))&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">markStatusUp&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">statusUP&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">set&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;Heartbeat thread executed and &amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">currentThread&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34; continues procedure to change status to [UP]&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="nd">@OnMethod&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">clazz&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;com.netflix.discovery.converters.EurekaJacksonCodec$InstanceInfoSerializer&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">location&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nd">@Location&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Kind&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">LINE&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">line&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">369&lt;/span>&lt;span class="o">))&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">continueRegistrationExecution&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">doExecution&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="nd">@OnMethod&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">clazz&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;com.logancloud.forge.discovery.converters.LoganEurekaJacksonCodec$LoganInstanceInfoSerializer&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">location&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nd">@Location&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Kind&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">LINE&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">line&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">117&lt;/span>&lt;span class="o">))&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">continueRegistrationExecution2&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">doExecution&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">doExecution&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">currentThread&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34; started to proceed registration&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">Thread&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">currentThread&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getName&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">contains&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;HeartbeatExecutor&amp;#34;&lt;/span>&lt;span class="o">))&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">heartbeatThreadRegistrationStarted&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">set&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(!&lt;/span>&lt;span class="n">statusUP&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="n">replicatorThreadRegistrationCompleted&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">try&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Thread&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">sleep&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">500&lt;/span>&lt;span class="o">);&lt;/span> &lt;span class="c1">//interval for replicator registration request completed.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="o">}&lt;/span> &lt;span class="k">catch&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">InterruptedException&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Thread&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">currentThread&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">interrupt&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">Thread&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">currentThread&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getName&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">contains&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;InstanceInfoReplicator&amp;#34;&lt;/span>&lt;span class="o">))&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">replicatorThreadRegistrationCompleted&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">set&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="n">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">currentThread&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34; thread registration completed&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/28/15652581664364.jpg" alt="">&lt;/p>
 &lt;ol>
-&lt;li>使用&lt;code>ZuulController&lt;/code>(&lt;code>ServletWrappingController&lt;/code>的子类)封装&lt;code>ZuulServlet&lt;/code>实例, 处理从&lt;code>DispatcherServlet&lt;/code>进来的请求.&lt;/li>
-&lt;li>&lt;code>ZuulHandlerMapping&lt;/code>负责注册handler mapping, 将&lt;code>Route&lt;/code>的&lt;code>fullPath&lt;/code>的请求交由&lt;code>ZuulController&lt;/code>处理.&lt;/li>
-&lt;li>同时使用&lt;code>ServletRegistrationBean&lt;/code>注册&lt;code>ZuulServlet&lt;/code>, 默认使用&lt;code>/zuul&lt;/code>作为urlMapping. 所有来自以&lt;code>/zuul&lt;/code>开头的path的请求都会直接进入&lt;code>ZuulServlet&lt;/code>, 不会进入&lt;code>DispatcherServlet&lt;/code>.&lt;/li>
+&lt;li>心跳线程&lt;code>HeartbeatThread&lt;/code>发送心跳请求(&lt;code>PUT&lt;/code>), 注册中心返回404.&lt;/li>
+&lt;li>实例信息同步线程&lt;code>InstanceInfoReplicator&lt;/code>发送注册请求(&lt;code>POST&lt;/code>): 状态为&lt;code>UP&lt;/code>, &lt;code>lastDirtyTimestamp&lt;/code>为&lt;code>a&lt;/code>&lt;/li>
+&lt;li>心跳线程发送实例注册请求(&lt;code>POST&lt;/code>): 状态为&lt;code>STARTING&lt;/code>, &lt;code>lastDirtyTimestamp&lt;/code>为&lt;code>a&lt;/code>&lt;/li>
 &lt;/ol>
-&lt;h4 id="使用注解">使用注解&lt;/h4>
+&lt;h2 id="服务注册">服务注册&lt;/h2>
+&lt;p>先分析服务实例的注册逻辑.&lt;/p>
+&lt;h3 id="instanceinfo初始化">InstanceInfo初始化&lt;/h3>
+&lt;p>通过&lt;code>InstanceInfoFactory#create()&lt;/code>方法来初始化&lt;code>ApplicationInfoManager.instanceInfo&lt;/code>实例时, 实例状态被设置为&lt;code>STARTING&lt;/code>&lt;/p>
+&lt;h3 id="服务实例注册">服务实例注册&lt;/h3>
+&lt;p>服务实例注册的真正逻辑是在&lt;code>DiscoveryClient#register()&lt;/code>中完成的. 但是这个方法的调用却有两个入口, 在整个过程中可解释为主动注册和被动注册.&lt;/p>
+&lt;h4 id="一-主动注册">一. 主动注册&lt;/h4>
+&lt;p>&lt;code>EurekaAutoServiceRegistration&lt;/code>实现了&lt;code>SmartLifecycle&lt;/code>接口, 在&lt;code>EurekaClientAutoConfiguration#eurekaAutoServiceRegistration()&lt;/code>被实例化.&lt;/p>
+&lt;p>&lt;code>EurekaAutoServiceRegistration#start()&lt;/code>方法将&lt;code>EurekaRegistration&lt;/code>注册给&lt;code>EurekaServiceRegistry&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">start&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(!&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">running&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">registration&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getNonSecurePort&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">0&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">//调用EurekaServiceRegistry进行注册
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">serviceRegistry&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">register&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">registration&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//发布实例注册的事件
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">context&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">publishEvent&lt;/span>&lt;span class="o">(&lt;/span>
+&lt;span class="k">new&lt;/span> &lt;span class="n">InstanceRegisteredEvent&lt;/span>&lt;span class="o">&amp;lt;&amp;gt;(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">registration&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getInstanceConfig&lt;/span>&lt;span class="o">()));&lt;/span>
+&lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">running&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">set&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
+&lt;p>&lt;code>EurekaServiceRegistry#register()&lt;/code>:
+先将实例状态设置为初始状态&lt;strong>UP&lt;/strong>(可通过&lt;code>eureka.instance.initial-status&lt;/code>修改, 默认为&lt;code>UP&lt;/code>). 这里会触发&lt;code>StatusChangeListener#notify()&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">
+&lt;span class="kd">public&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">register&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">EurekaRegistration&lt;/span> &lt;span class="n">reg&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">maybeInitializeClient&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">reg&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">log&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isInfoEnabled&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">log&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">info&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;Registering application &amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">reg&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getInstanceConfig&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getAppname&lt;/span>&lt;span class="o">()&lt;/span>
+&lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34; with eureka with status &amp;#34;&lt;/span>
+&lt;span class="o">+&lt;/span> &lt;span class="n">reg&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getInstanceConfig&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getInitialStatus&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="c1">//1
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">reg&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getApplicationInfoManager&lt;/span>&lt;span class="o">()&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="na">setInstanceStatus&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">reg&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getInstanceConfig&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getInitialStatus&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">reg&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getHealthCheckHandler&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">//2
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">reg&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getEurekaClient&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">registerHealthCheck&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">reg&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getHealthCheckHandler&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>DiscoveryClient&lt;/code>内部匿名类提供了&lt;code>StatusChangeListener&lt;/code>的实现, 调用&lt;code>InstanceInfoReplicator#onDemandUpdate()&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="n">statusChangeListener&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ApplicationInfoManager&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">StatusChangeListener&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="nf">getId&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="s">&amp;#34;statusChangeListener&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">notify&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">StatusChangeEvent&lt;/span> &lt;span class="n">statusChangeEvent&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">InstanceStatus&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">DOWN&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">statusChangeEvent&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getStatus&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">||&lt;/span>
+&lt;span class="n">InstanceStatus&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">DOWN&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">statusChangeEvent&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getPreviousStatus&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// log at warn level if DOWN was involved
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">logger&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">warn&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;Saw local status change event {}&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">statusChangeEvent&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">logger&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">info&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;Saw local status change event {}&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">statusChangeEvent&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="n">instanceInfoReplicator&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">onDemandUpdate&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">};&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>InstanceInfoReplicator&lt;/code>是在&lt;code>DiscoveryClient#initScheduledTasks()&lt;/code>中实例化的&lt;code>Runnable&lt;/code>的实现, 实例化之后, 使用其内部的调度线程池调度一个线程. 而&lt;code>onDemandUpdate()&lt;/code>也同样会使用调度线程池调度一个线程.&lt;/p>
+&lt;p>其&lt;code>#run()&lt;/code>方法会调用&lt;code>DiscoveryClient#refreshInstanceInfo()&lt;/code>来更新状态. 状态的更新是通过&lt;code>HealthCheckHandler&lt;/code>来实现的, 具体请看&lt;a href="#%E7%8A%B6%E6%80%81%E6%A3%80%E6%9F%A5">状态检查&lt;/a>. 然后调用&lt;code>DiscoveryClient#register()&lt;/code>方法进行注册.&lt;/p>
+&lt;h4 id="二-被动注册">二. 被动注册&lt;/h4>
+&lt;p>上面提到了&lt;code>DiscoveryClient#initScheduledTasks()&lt;/code>, 这里的task除了&lt;code>InstanceInfoReplicator&lt;/code>之外还有其他的线程. 其中一个是线条线程&lt;code>HeartbeatThread&lt;/code>. 这个线程会每隔一段时间向注册中心发送一个&lt;code>PUT&lt;/code>类型的HTTP请求: 上报实例的状态(状态(status), 以及状态修改的时间(lastDirtyTimestamp)).&lt;/p>
+&lt;p>这个请求可能会有两种结果: &lt;code>404&lt;/code>和&lt;code>200&lt;/code>. 前者说明注册中心中还没有这个实例的注册信息; 后者说明状态上报成功.&lt;/p>
+&lt;p>假如是&lt;code>404&lt;/code>, 便直接发起注册的动作, 即调用&lt;code>DiscoveryClient#register()&lt;/code>方法进行注册.&lt;/p>
+&lt;h4 id="状态检查">状态检查&lt;/h4>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/28/15459820056548.jpg" alt="">&lt;/p>
+&lt;p>&lt;code>CloudEurekaClient&lt;/code>通过&lt;code>HealthCheckHandler&lt;/code>来检查实例的健康状态, 看下&lt;code>HealthCheckCallbackToHandlerBridge&lt;/code>实现: callback为空, 或者当前状态为&lt;code>STARTING&lt;/code>或者&lt;code>OUT_OF_SERVICE&lt;/code>时, 返回当前的状态. 我们没有设置callback, 故而总是会返回当前的状态. 比如应用启动的初始状态为&lt;code>STARTING&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="n">InstanceInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">InstanceStatus&lt;/span> &lt;span class="nf">getStatus&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">InstanceInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">InstanceStatus&lt;/span> &lt;span class="n">currentStatus&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="kc">null&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">callback&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="n">InstanceInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">InstanceStatus&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">STARTING&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">currentStatus&lt;/span>
+&lt;span class="o">||&lt;/span> &lt;span class="n">InstanceInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">InstanceStatus&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">OUT_OF_SERVICE&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">currentStatus&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span> &lt;span class="c1">// Do not go to healthcheck handler if the status is starting or OOS.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="n">currentStatus&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">callback&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isHealthy&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">?&lt;/span> &lt;span class="n">InstanceInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">InstanceStatus&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">UP&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="n">InstanceInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">InstanceStatus&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">DOWN&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="问题分析">问题分析&lt;/h2>
+&lt;h3 id="现象">现象&lt;/h3>
+&lt;h4 id="tcp抓包">TCP抓包&lt;/h4>
+&lt;p>HeartBeat请求和Fetch请求正常. &lt;code>status=UP&amp;amp;lastDirtyTimestamp=1545039481813&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/28/15459763724617.jpg" alt="">&lt;/p>
+&lt;h4 id="堆信息">堆信息&lt;/h4>
+&lt;p>本地状态为UP, &lt;code>lastDirtyTimestamp&lt;/code>为1545039481813, &lt;code>lastUpdatedTimestamp&lt;/code>为1545039472888&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/28/15459778021925.jpg" alt="">&lt;/p>
+&lt;h4 id="注册中心里的实例信息">注册中心里的实例信息&lt;/h4>
+&lt;p>状态为STARTING, &lt;code>lastDirtyTimestamp&lt;/code>为1545039481813, &lt;code>registrationTimestamp&lt;/code>为1545039481898, &lt;code>lastUpdatedTimestamp&lt;/code>为1545039481899&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-xml" data-lang="xml"> &lt;span class="nt">&amp;lt;instance&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;instanceId&amp;gt;&lt;/span>xp-xtower-webapp-boot-6-txcxb:xp-xtower-webapp-boot:10100&lt;span class="nt">&amp;lt;/instanceId&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;hostName&amp;gt;&lt;/span>10.128.41.74&lt;span class="nt">&amp;lt;/hostName&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;app&amp;gt;&lt;/span>XP-XTOWER-WEBAPP-BOOT&lt;span class="nt">&amp;lt;/app&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;ipAddr&amp;gt;&lt;/span>10.128.41.74&lt;span class="nt">&amp;lt;/ipAddr&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;status&amp;gt;&lt;/span>STARTING&lt;span class="nt">&amp;lt;/status&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;overriddenstatus&amp;gt;&lt;/span>UNKNOWN&lt;span class="nt">&amp;lt;/overriddenstatus&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;port&lt;/span> &lt;span class="na">enabled=&lt;/span>&lt;span class="s">&amp;#34;true&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>10100&lt;span class="nt">&amp;lt;/port&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;securePort&lt;/span> &lt;span class="na">enabled=&lt;/span>&lt;span class="s">&amp;#34;false&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>443&lt;span class="nt">&amp;lt;/securePort&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;countryId&amp;gt;&lt;/span>1&lt;span class="nt">&amp;lt;/countryId&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;dataCenterInfo&lt;/span> &lt;span class="na">class=&lt;/span>&lt;span class="s">&amp;#34;com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;name&amp;gt;&lt;/span>MyOwn&lt;span class="nt">&amp;lt;/name&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/dataCenterInfo&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;leaseInfo&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;renewalIntervalInSecs&amp;gt;&lt;/span>5&lt;span class="nt">&amp;lt;/renewalIntervalInSecs&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;durationInSecs&amp;gt;&lt;/span>20&lt;span class="nt">&amp;lt;/durationInSecs&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;registrationTimestamp&amp;gt;&lt;/span>1545039481898&lt;span class="nt">&amp;lt;/registrationTimestamp&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;lastRenewalTimestamp&amp;gt;&lt;/span>1545950719063&lt;span class="nt">&amp;lt;/lastRenewalTimestamp&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;evictionTimestamp&amp;gt;&lt;/span>0&lt;span class="nt">&amp;lt;/evictionTimestamp&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;serviceUpTimestamp&amp;gt;&lt;/span>0&lt;span class="nt">&amp;lt;/serviceUpTimestamp&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/leaseInfo&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;metadata&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;forge&amp;gt;&lt;/span>1.0.0&lt;span class="nt">&amp;lt;/forge&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;management.port&amp;gt;&lt;/span>10100&lt;span class="nt">&amp;lt;/management.port&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;jmx.port&amp;gt;&lt;/span>1099&lt;span class="nt">&amp;lt;/jmx.port&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;group&amp;gt;&lt;/span>innovation&lt;span class="nt">&amp;lt;/group&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/metadata&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;homePageUrl&amp;gt;&lt;/span>http://10.128.41.74:10100/&lt;span class="nt">&amp;lt;/homePageUrl&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;statusPageUrl&amp;gt;&amp;lt;/statusPageUrl&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;healthCheckUrl&amp;gt;&lt;/span>http://10.128.41.74:10100/health&lt;span class="nt">&amp;lt;/healthCheckUrl&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;vipAddress&amp;gt;&lt;/span>xp-xtower-webapp-boot&lt;span class="nt">&amp;lt;/vipAddress&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;secureVipAddress&amp;gt;&lt;/span>xp-xtower-webapp-boot&lt;span class="nt">&amp;lt;/secureVipAddress&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;isCoordinatingDiscoveryServer&amp;gt;&lt;/span>false&lt;span class="nt">&amp;lt;/isCoordinatingDiscoveryServer&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;lastUpdatedTimestamp&amp;gt;&lt;/span>1545039481899&lt;span class="nt">&amp;lt;/lastUpdatedTimestamp&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;lastDirtyTimestamp&amp;gt;&lt;/span>1545039481813&lt;span class="nt">&amp;lt;/lastDirtyTimestamp&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;actionType&amp;gt;&lt;/span>ADDED&lt;span class="nt">&amp;lt;/actionType&amp;gt;&lt;/span>
+&lt;span class="nt">&amp;lt;/instance&amp;gt;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Scope&lt;/th>
+&lt;th>Status&lt;/th>
+&lt;th>lastDirtyTimestamp&lt;/th>
+&lt;th>lastUpdatedTimestamp&lt;/th>
+&lt;th>registrationTimestamp&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Request&lt;/td>
+&lt;td>UP&lt;/td>
+&lt;td>1545039481813&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Local&lt;/td>
+&lt;td>UP&lt;/td>
+&lt;td>1545039481813&lt;/td>
+&lt;td>1545039472888&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Remote&lt;/td>
+&lt;td>STARTING&lt;/td>
+&lt;td>1545039481813&lt;/td>
+&lt;td>1545039481899&lt;/td>
+&lt;td>1545039481898&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>结合起来看, 问题出在&lt;code>lastDirtyTimestamp&lt;/code>未更新, 导致注册中心的状态未更新. 而&lt;code>lastUpdatedTimestamp&lt;/code>的时间为1545039481899, 与&lt;code>lastDirtyTimestamp&lt;/code>相差&lt;code>86毫秒&lt;/code>.&lt;/p>
+&lt;p>服务端&lt;code>InstanceResource#validateDirtyTimestamp()&lt;/code>根据本地保存的实例的信息, 和心跳请求发送过来的请求做比较, 决定响应的状态码&lt;code>200&lt;/code>, &lt;code>404&lt;/code>或者&lt;code>409&lt;/code>&lt;/p>
+&lt;h3 id="推理">推理&lt;/h3>
+&lt;p>注册中心里实例的状态为&lt;code>STARTING&lt;/code>, 可以确定实例是[被动注册](#二. 被动注册)的.&lt;/p>
+&lt;p>这里有几个时间点:&lt;/p>
 &lt;ul>
-&lt;li>
-&lt;p>&lt;code>@EnableZuulProxy&lt;/code>引入了&lt;code>ZuulProxyMarkerConfiguration&lt;/code>, &lt;code>ZuulProxyMarkerConfiguration&lt;/code>只做了一件事, 实例化了内部类&lt;code>Marker&lt;/code>.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#a6e22e">@Configuration&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">ZuulProxyMarkerConfiguration&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#a6e22e">@Bean&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> Marker &lt;span style="color:#a6e22e">zuulProxyMarkerBean&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Marker&lt;span style="color:#f92672">();&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Marker&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;li>
-&lt;p>&lt;code>@EnableZuulServer&lt;/code>引入了&lt;code>ZuulServerMarkerConfiguration&lt;/code>, &lt;code>ZuulServerMarkerConfiguration&lt;/code>也只做了一件事: 实例化了内部类&lt;code>Marker&lt;/code>&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#a6e22e">@Configuration&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">ZuulServerMarkerConfiguration&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#a6e22e">@Bean&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> Marker &lt;span style="color:#a6e22e">zuulServerMarkerBean&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Marker&lt;span style="color:#f92672">();&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Marker&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul></description></item><item><title>Spring Cloud - Eureka服务注册</title><link>https://atbug.com/articles/spring-cloud-service-registry-via-eureka/</link><pubDate>Wed, 14 Feb 2018 07:32:43 +0000</pubDate><guid>https://atbug.com/articles/spring-cloud-service-registry-via-eureka/</guid><description>&lt;p>之前分析过&lt;a href="http://atbug.com/spring-cloud-eureka-client-source-code-analysis/">Spring Cloud的Eureka服务发现&lt;/a>, 今天分析一下服务注册.&lt;/p>
+&lt;li>&lt;code>1545039472888&lt;/code>: &lt;code>InstanceInfo&lt;/code>对象实例化的时间, 因为本地对象的&lt;code>#lastUpdatedTimestamp&lt;/code>字段只有在实例化才会赋值, 此后不会被修改. 见&lt;a href="#%E5%A0%86%E4%BF%A1%E6%81%AF">堆信息&lt;/a>&lt;/li>
+&lt;li>&lt;code>1545039481813&lt;/code>: 状态从&lt;code>STARTING&lt;/code>变为&lt;code>UP&lt;/code>的时间, 也是实例状态的最后一次更新时间. 此后的心跳请求都会带上实例的最新状态(&lt;code>UP&lt;/code>)和状态的最后一次更新时间(&lt;code>1545039481813&lt;/code>), 见&lt;a href="#TCP%E6%8A%93%E5%8C%85">TCP抓包&lt;/a>.&lt;/li>
+&lt;li>&lt;code>1545039481898&lt;/code>: 注册中心收到实例的注册请求的时间. 见&lt;a href="#%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E9%87%8C%E7%9A%84%E5%AE%9E%E4%BE%8B%E4%BF%A1%E6%81%AF">注册中心里的实例信息&lt;/a>&lt;/li>
+&lt;li>&lt;code>1545039481899&lt;/code>: 注册中心中的实例信息被更新的时间. 这个时间只比注册的时间晚了&lt;em>1毫秒&lt;/em>. 见&lt;a href="#%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E9%87%8C%E7%9A%84%E5%AE%9E%E4%BE%8B%E4%BF%A1%E6%81%AF">注册中心里的实例信息&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>综上可见, 被动注册时发送请求, 拿到的实例的旧的状态&lt;code>STARTING&lt;/code>, 修改时间确实最新的&lt;code>1545039481813&lt;/code>. 后续的心跳上报实例状态为最新的&lt;code>UP&lt;/code>, 修改时间也是最新的&lt;code>1545039481813&lt;/code>. 但是由于最后修改时间与注册时的最后修改时间相同, 即使状态已经变为&lt;code>UP&lt;/code>, 注册中心在收到心跳请求之后也不会将状态更新为&lt;code>UP&lt;/code>.&lt;/p>
+&lt;p>服务端&lt;code>InstanceResource#renewLease()&lt;/code> -&amp;gt; &lt;code>InstanceResource#validateDirtyTimestamp()&lt;/code>: 如果请求中的&lt;code>lastDirtyTimestamp&lt;/code>与当前保存的实例的相同, 则直接返回OK, 不会更新注册中心中保存的实例的状态.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">private&lt;/span> &lt;span class="n">Response&lt;/span> &lt;span class="nf">validateDirtyTimestamp&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Long&lt;/span> &lt;span class="n">lastDirtyTimestamp&lt;/span>&lt;span class="o">,&lt;/span>
+&lt;span class="kt">boolean&lt;/span> &lt;span class="n">isReplication&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">InstanceInfo&lt;/span> &lt;span class="n">appInfo&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">registry&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getInstanceByAppAndId&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">app&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getName&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">id&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">appInfo&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">((&lt;/span>&lt;span class="n">lastDirtyTimestamp&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="o">(!&lt;/span>&lt;span class="n">lastDirtyTimestamp&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">equals&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">appInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getLastDirtyTimestamp&lt;/span>&lt;span class="o">())))&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Object&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">args&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">{&lt;/span>&lt;span class="n">id&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">appInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getLastDirtyTimestamp&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">lastDirtyTimestamp&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">isReplication&lt;/span>&lt;span class="o">};&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">lastDirtyTimestamp&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">appInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getLastDirtyTimestamp&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">logger&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">debug&lt;/span>&lt;span class="o">(&lt;/span>
+&lt;span class="s">&amp;#34;Time to sync, since the last dirty timestamp differs -&amp;#34;&lt;/span>
+&lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34; ReplicationInstance id : {},Registry : {} Incoming: {} Replication: {}&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span>
+&lt;span class="n">args&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">Response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">status&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Status&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">NOT_FOUND&lt;/span>&lt;span class="o">).&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">appInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getLastDirtyTimestamp&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">lastDirtyTimestamp&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// In the case of replication, send the current instance info in the registry for the
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// replicating node to sync itself with this one.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">isReplication&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">logger&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">debug&lt;/span>&lt;span class="o">(&lt;/span>
+&lt;span class="s">&amp;#34;Time to sync, since the last dirty timestamp differs -&amp;#34;&lt;/span>
+&lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34; ReplicationInstance id : {},Registry : {} Incoming: {} Replication: {}&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span>
+&lt;span class="n">args&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">Response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">status&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Status&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">CONFLICT&lt;/span>&lt;span class="o">).&lt;/span>&lt;span class="na">entity&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">appInfo&lt;/span>&lt;span class="o">).&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">Response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">ok&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">Response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">ok&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="为什么会出现这种情况">为什么会出现这种情况?&lt;/h4>
+&lt;p>应用启动过程中会有两个线程会触发&lt;strong>注册&lt;/strong>的动作&lt;/p>
+&lt;ol>
+&lt;li>&lt;code>InstanceInfoReplicator&lt;/code>线程: &lt;code>DiscoveryClient&lt;/code>中的&lt;code>ApplicationInfoManager.StatusChangeListener&lt;/code>监听到实例状态发生变化, 会新建一个线程将实例注册到注册中心&lt;/li>
+&lt;li>&lt;code>DiscoveryClient$HeartbeatThread&lt;/code>线程: 这个线程在&lt;code>DiscoveryClient&lt;/code>实例初始化后延迟(与心跳间隔时间相同, 默认是&lt;code>30s&lt;/code>, 中台为提高实例发现效率将其改为了&lt;code>5s&lt;/code>)启动运行. 第一次发送心跳请求是如果注册中心返回&lt;strong>404&lt;/strong>(说明心跳线程提实例状态更新线程先启动), 则会先将实例注册到注册中心.&lt;/li>
+&lt;/ol>
+&lt;p>上面两个线程都通过调用&lt;code>AbstractJerseyEurekaHttpClient$register()&lt;/code>方法并使用&lt;code>EurekaJacksonCodec$InstanceInfoSerializer&lt;/code>将实例信息序列化. 序列化的过程中&lt;strong>先记录实例的状态后记录实例状态的最后修改时间(lastDirtyTimestamp)&lt;/strong>, 这两个操作不是一个原子操作.&lt;/p>
+&lt;p>非常极端的情况下(&lt;strong>缩小心跳间隔增加了出现的概率, 但依然极地&lt;/strong>), 两个操作之间(心跳线程先拿到实例状态&lt;code>STARTING&lt;/code>)主线程修改了实例状态为&lt;code>UP&lt;/code>, 同时修改了&lt;code>lastDirtyTimestamp&lt;/code>, 并触发了&lt;code>InstanceInfoReplicator&lt;/code>线程的注册操作, 此时心跳线程获取到的实例的最后修改时间与&lt;code>STARTING&lt;/code>状态并不一致. 之后同样注册动作覆盖了实例在注册中心的状态: &lt;code>UP -&amp;gt; STARTING&lt;/code>.&lt;/p>
+&lt;p>后续的心跳请求带去的最新状态&lt;code>UP&lt;/code>和&lt;code>lastDirtyTimestamp&lt;/code>, 并不会更新在注册中心的状态.&lt;/p>
+&lt;h2 id="解决方案">解决方案&lt;/h2>
+&lt;p>在&lt;code>EurekaJacksonCodec$InstanceInfoSerializer#serialize()&lt;/code>方法中, 将&lt;code>#autoMarshalEligible()&lt;/code> 的调用移到&lt;code>jgen.writeStartObject()&lt;/code>后面. 这样就使得&lt;code>lastDirtyTimestamp&lt;/code>的获取比&lt;code>status&lt;/code>早, 就能保证即使注册时的&lt;code>lastDirtyTimestamp&lt;/code>小于真正的, 但是状态是与实际相符. &lt;code>lastDirtyTimestamp&lt;/code>会在后续的心跳请求中更新.
+&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/28/15476421041186.jpg" alt="">&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">addInstance-info.getStatus(): UP
+addInstance-info.getLastDirtyTimestamp(): 1565164484429
+addInstance-info.getStatus(): STARTING
+addInstance-info.getLastDirtyTimestamp(): 1565164484415
+renew-status-in-registry: UP
+renew-lastDirtyTimestamp: 1565164484429
+renew-appInfo.getLastDirtyTimestamp(): 1565164484429
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;a href="https://github.com/Netflix/eureka/pull/1229">PR&lt;/a> 已经提交并合并完成，然而 1.7.x 的版本不知何时会发布修复版本&lt;/p>
+&lt;p>参考:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/Netflix/eureka/issues/1174">GitHub issue&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/Netflix/eureka/pull/1229">PR&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Spring Cloud - Eureka服务注册</title><link>https://atbug.com/spring-cloud-service-registry-via-eureka/</link><pubDate>Wed, 14 Feb 2018 07:32:43 +0000</pubDate><guid>https://atbug.com/spring-cloud-service-registry-via-eureka/</guid><description>
+&lt;p>之前分析过&lt;a href="http://atbug.com/spring-cloud-eureka-client-source-code-analysis/">Spring Cloud的Eureka服务发现&lt;/a>, 今天分析一下服务注册.&lt;/p>
 &lt;h2 id="配置">配置&lt;/h2>
 &lt;h3 id="bootstrapconfiguration">BootstrapConfiguration&lt;/h3>
 &lt;h4 id="eurekadiscoveryclientconfigservicebootstrapconfiguration">EurekaDiscoveryClientConfigServiceBootstrapConfiguration&lt;/h4>
@@ -132,47 +307,344 @@ Zuul server的路由都通过&lt;code>ZuulProperties&lt;/code>进行配置.&lt;/
 &lt;ol>
 &lt;li>实例化&lt;code>EurekaClient&lt;/code>bean, 在spring-cloud中使用实现类&lt;code>CloudEurekaClient&lt;/code>.&lt;/li>
 &lt;li>使用&lt;code>EurekaInstanceConfig&lt;/code>实例, 实例化&lt;code>ApplicationInfoManager&lt;/code>bean&lt;/li>
-&lt;/ol></description></item><item><title>初识 Netflix Zuul</title><link>https://atbug.com/articles/learn-netflix-zuul/</link><pubDate>Sun, 11 Feb 2018 10:07:18 +0000</pubDate><guid>https://atbug.com/articles/learn-netflix-zuul/</guid><description>&lt;p>嵌入式的zuul代理&lt;/p>
-&lt;p>使用了Netfilx OSS的其他组件:&lt;/p>
+&lt;/ol>
+&lt;h3 id="enableautoconfiguration">EnableAutoConfiguration&lt;/h3>
+&lt;h4 id="eurekaclientconfigserverautoconfiguration">EurekaClientConfigServerAutoConfiguration&lt;/h4>
+&lt;p>在spring-cloud-config的环境中, 将&lt;code>configPath&lt;/code>加入到实例的metadata map中.&lt;/p>
+&lt;h4 id="eurekadiscoveryclientconfigserviceautoconfiguration">EurekaDiscoveryClientConfigServiceAutoConfiguration&lt;/h4>
+&lt;p>当config客户端希望通过服务发现寻找config服务的时候使用的引导配置&lt;/p>
+&lt;p>在&lt;code>spring.cloud.config.discovery.enabled&lt;/code>为&lt;code>true&lt;/code>时, 关闭父application context里实例化的&lt;code>EurekaClient&lt;/code>实例. 只使用当前上下文里的实例.&lt;/p>
+&lt;h4 id="eurekaclientautoconfiguration-1">EurekaClientAutoConfiguration&lt;/h4>
+&lt;p>&lt;strong>核心配置&lt;/strong>
+支持spring-cloud(支持动态配置)和非spring-cloud环境, &lt;code>EurekaClient&lt;/code>和&lt;code>EurekaInstanceConfig&lt;/code>两个bean要使用&lt;code>@RefreshScope&lt;/code>标注&lt;/p>
+&lt;ol>
+&lt;li>实例化当前服务实例信息&lt;code>EurekaInstanceConfigBean&lt;/code>的实例&lt;/li>
+&lt;li>实例化&lt;code>DiscoveryClient&lt;/code>的实现, 在这里是&lt;code>EurekaDiscoveryClient&lt;/code>&lt;/li>
+&lt;li>实例化&lt;code>EurekaServiceRegistry&lt;/code>&lt;/li>
+&lt;li>实例化&lt;code>EurekaRegistration&lt;/code>&lt;/li>
+&lt;li>实例化&lt;code>EurekaAutoServiceRegistration&lt;/code>, 这个类实现了StartLifecycle接口. 在ApplicationContext refresh或者shutdown之后注册或者注销当前实例&lt;/li>
+&lt;li>实例化&lt;code>EurekaClient&lt;/code>bean, 在spring-cloud中使用实现类&lt;code>CloudEurekaClient&lt;/code>&lt;/li>
+&lt;li>使用&lt;code>EurekaInstanceConfig&lt;/code>实例, 实例化&lt;code>ApplicationInfoManager&lt;/code>bean&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15185619590053.jpg" alt="EurekaClientAutoConfiguration">&lt;/p>
+&lt;h4 id="ribboneurekaautoconfiguration">RibbonEurekaAutoConfiguration&lt;/h4>
+&lt;p>当启用Eureka client(eureka.client.enable为true和ribbon.eureka.enabled为true时, 默认为true)时配置默认基于eureka的ribbon.
+使用&lt;code>EurekaRibbonClientConfiguration&lt;/code>提供的配置: RibbonPing, ServerList, ServerIntrospector.&lt;/p>
+&lt;h4 id="eurekadiscoveryclientconfiguration-1">EurekaDiscoveryClientConfiguration&lt;/h4>
+&lt;p>提供监听&lt;code>RefreshScopeRefreshedEvent&lt;/code>的监听器, 当事件发生时注销并重新注册(防止metadata发生改变)
+提供一个默认的EurekaHealthCheckHandler实例, 当bean不存在的且&lt;code>eureka.client.healthcheck.enabled&lt;/code>为true时.&lt;/p>
+&lt;h2 id="主要类">主要类&lt;/h2>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15185644052296.jpg" alt="">&lt;/p>
+&lt;h3 id="serviceregistry">ServiceRegistry&lt;/h3>
+&lt;p>spring提供的服务实例注册和注销的接口.&lt;/p>
+&lt;h3 id="eurekaserviceregistry">EurekaServiceRegistry&lt;/h3>
+&lt;p>ServiceRegistry的Eureka实现. 注册和注销的实现是通过&lt;code>EurekaRegistration&lt;/code>的&lt;code>ApplicationInfoManager&lt;/code>修改实例状态实现的.&lt;/p>
+&lt;h3 id="eurekaregistration">EurekaRegistration&lt;/h3>
+&lt;p>通过实现&lt;code>ServiceInstance&lt;/code>提供访问实例信息的接口,&lt;/p>
+&lt;h3 id="applicationinfomanager">ApplicationInfoManager&lt;/h3>
+&lt;p>提供修改实例状态的接口, 并通知状态变化的监听器.
+提供内部类&lt;code>StatusChangeListener&lt;/code>.
+提供注册和注销状态变化监听器的接口, Eureka的&lt;code>DiscoveryClient&lt;/code>中通过匿名类的方式实现了该接口, 当实例状态发生变化时, 刷新实例状态.&lt;/p></description></item><item><title>ConfigurationProperties到底需不需要getter</title><link>https://atbug.com/configurationproperties-requires-getter-or-not/</link><pubDate>Wed, 07 Feb 2018 15:53:21 +0000</pubDate><guid>https://atbug.com/configurationproperties-requires-getter-or-not/</guid><description>
+&lt;p>为什么要讨论这个问题, 工作中一个同事写的类使用了&lt;code>ConfigurationProperties&lt;/code>, 只提供了标准的setter方法. 属性的访问, 提供了定制的方法. 可以参考&lt;code>EurekaClientConfigBean&lt;/code>.&lt;/p>
+&lt;p>他使用的是spring boot 2.0.0.M5版本, 可以正常获取配置文件中的属性值, 但是在1.5.8.RELEASE获取不到.&lt;/p>
+&lt;p>看下文档和源码:&lt;/p>
+&lt;blockquote>
+&lt;p>Annotation for externalized configuration. Add this to a class definition or a @Bean method in a @Configuration class if you want to bind and validate some external Properties (e.g. from a .properties file).&lt;/p>
+&lt;/blockquote>
+&lt;p>外置配置的注解. 当需要绑定外置配置(如properties或者yaml配置)的时候, 将其加到使用了&lt;code>@Configuration&lt;/code>注解的类声明处或者&lt;code>@Bean&lt;/code>标注的方法上.&lt;/p>
+&lt;p>值的绑定是通过&lt;code>ConfigurationPropertiesBindingPostProcessor&lt;/code>在bean实例创建后, 初始化回调(如&lt;code>InitializingBean&lt;/code>的&lt;code>afterPropertiesSet&lt;/code>方法)或者&lt;code>init-method&lt;/code>之前之前完成的.&lt;/p>
+&lt;h3 id="15x">1.5.x&lt;/h3>
+&lt;p>执行绑定的时候如果找不到getter方法, 会抛出&lt;code>RelaxedBindingNotWritablePropertyException&lt;/code>异常. debug模式下, 会打印&lt;strong>Ignoring benign property binding failure&lt;/strong>.&lt;/p>
+&lt;h3 id="2x">2.x&lt;/h3>
+&lt;p>2.x版本中, 如果找不到getter方法, 会将原值默认为null, 并继续执行绑定.&lt;/p></description></item><item><title>SpringBoot源码 - 启动</title><link>https://atbug.com/glance-over-spring-boot-source/</link><pubDate>Fri, 08 Dec 2017 17:48:43 +0000</pubDate><guid>https://atbug.com/glance-over-spring-boot-source/</guid><description>
+&lt;p>SpringBoot Application启动部分的源码阅读.&lt;/p>
+&lt;h2 id="springapplication">SpringApplication&lt;/h2>
+&lt;p>常用的&lt;code>SpringApplication.run(Class, Args)&lt;/code>启动Spring应用, 创建或者更新&lt;code>ApplicationContext&lt;/code>&lt;/p>
+&lt;h3 id="静态方法run">静态方法run&lt;/h3>
+&lt;p>使用source类实例化一个&lt;code>SpringApplication&lt;/code>实例, 并调用实例方法&lt;code>run&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">ConfigurableApplicationContext&lt;/span> &lt;span class="nf">run&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Object&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">sources&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">SpringApplication&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">sources&lt;/span>&lt;span class="o">).&lt;/span>&lt;span class="na">run&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="初始化initialize">初始化initialize&lt;/h4>
+&lt;ol>
+&lt;li>
+&lt;p>实例化的时候首先通过尝试加载&lt;code>javax.servlet.Servlet&lt;/code>和&lt;code>org.springframework.web.context.ConfigurableWebApplicationContext&lt;/code>推断当前是否是&lt;strong>web&lt;/strong>环境.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>然后从&lt;code>spring.factories&lt;/code>获取&lt;code>ApplicationContextInitializer&lt;/code>的实现类.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>从&lt;code>spring.factories&lt;/code>获取&lt;code>ApplicationListener&lt;/code>的实现类&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>推断出应用的启动类(包含main方法的类): 检查线程栈中元素的方法名是否是&lt;code>main&lt;/code>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">private&lt;/span> &lt;span class="n">Class&lt;/span>&lt;span class="o">&amp;lt;?&amp;gt;&lt;/span> &lt;span class="n">deduceMainApplicationClass&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">try&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">//获取线程栈数据
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">StackTraceElement&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">stackTrace&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">RuntimeException&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getStackTrace&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">for&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">StackTraceElement&lt;/span> &lt;span class="n">stackTraceElement&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="n">stackTrace&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;main&amp;#34;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">equals&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">stackTraceElement&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getMethodName&lt;/span>&lt;span class="o">()))&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">Class&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">forName&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">stackTraceElement&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getClassName&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">catch&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">ClassNotFoundException&lt;/span> &lt;span class="n">ex&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// Swallow and continue
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="o">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>到此实例化就完成了.&lt;/p>
+&lt;h3 id="实例方法run">实例方法run&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="n">ConfigurableApplicationContext&lt;/span> &lt;span class="nf">run&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">StopWatch&lt;/span> &lt;span class="n">stopWatch&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">StopWatch&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">stopWatch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">start&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">ConfigurableApplicationContext&lt;/span> &lt;span class="n">context&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="c1">//默认设置java.awt.headless为true
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">configureHeadlessProperty&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="c1">//从spring.factories中获取org.springframework.boot.SpringApplicationRunListener的实现类
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">SpringApplicationRunListeners&lt;/span> &lt;span class="n">listeners&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">getRunListeners&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//通过EventPublishingRunListener发布started事件
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">listeners&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">started&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">try&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">ApplicationArguments&lt;/span> &lt;span class="n">applicationArguments&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">DefaultApplicationArguments&lt;/span>&lt;span class="o">(&lt;/span>
+&lt;span class="n">args&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//重点: 创建更新上下文对象
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">context&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">createAndRefreshContext&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">listeners&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">applicationArguments&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//上下文对象更新完调用
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">afterRefresh&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">context&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">applicationArguments&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//通过EventPublishingRunListener发布finished事件
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">listeners&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">finished&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">context&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">stopWatch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">stop&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">logStartupInfo&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">new&lt;/span> &lt;span class="n">StartupInfoLogger&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">mainApplicationClass&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="na">logStarted&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">getApplicationLog&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">stopWatch&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">context&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">catch&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">Throwable&lt;/span> &lt;span class="n">ex&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">handleRunFailure&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">context&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">listeners&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">ex&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">IllegalStateException&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ex&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="springapplicationrunlistener">SpringApplicationRunListener&lt;/h3>
+&lt;p>监听&lt;code>SpringApplication&lt;/code>的&lt;code>run&lt;/code>方法. 通过&lt;code>SpringFactoriesLoader&lt;/code>加载, 实现时需要提供public的构造方法接受&lt;code>SpringApplication&lt;/code>和&lt;code>String[]&lt;/code>为参数.
+事件的发生顺序为&lt;code>started -&amp;gt; environmentPrepared -&amp;gt; contextPrepared -&amp;gt; contextLoaded -&amp;gt; finished&lt;/code>.&lt;/p>
+&lt;p>SpringBoot默认使用&lt;code>EventPublishingRunListener&lt;/code>这个实现类, 将各个事件封装并发布出去, 最终被&lt;code>ApplicationListener&lt;/code>捕获.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">interface&lt;/span> &lt;span class="nc">SpringApplicationRunListener&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kt">void&lt;/span> &lt;span class="nf">started&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="kt">void&lt;/span> &lt;span class="nf">environmentPrepared&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConfigurableEnvironment&lt;/span> &lt;span class="n">environment&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="kt">void&lt;/span> &lt;span class="nf">contextPrepared&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConfigurableApplicationContext&lt;/span> &lt;span class="n">context&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="kt">void&lt;/span> &lt;span class="nf">contextLoaded&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConfigurableApplicationContext&lt;/span> &lt;span class="n">context&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="kt">void&lt;/span> &lt;span class="nf">finished&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConfigurableApplicationContext&lt;/span> &lt;span class="n">context&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">Throwable&lt;/span> &lt;span class="n">exception&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建并更新上下文对象createandrefreshcontext">创建并更新上下文对象createAndRefreshContext&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">private&lt;/span> &lt;span class="n">ConfigurableApplicationContext&lt;/span> &lt;span class="nf">createAndRefreshContext&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">SpringApplicationRunListeners&lt;/span> &lt;span class="n">listeners&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">ApplicationArguments&lt;/span> &lt;span class="n">applicationArguments&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">ConfigurableApplicationContext&lt;/span> &lt;span class="n">context&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="c1">// Create and configure the environment
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//获取或创建环境实例, web环境使用StandardServletEnvironment, 非web环境使用StandardEnvironment
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">ConfigurableEnvironment&lt;/span> &lt;span class="n">environment&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">getOrCreateEnvironment&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="c1">//配置环境数据
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//1. **commandLineArgs**属性从启动参数中解析, 格式&amp;#34;--name=value&amp;#34;
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//2. 配置profiles. 有效的profile(通过**spring.profiles.active**配置) 和 通过SpringApplication.profiles()指定的额外profile
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">configureEnvironment&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">environment&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">applicationArguments&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getSourceArgs&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="c1">//通过EventPublishingRunListener发布environmentPrepared事件
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">listeners&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">environmentPrepared&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">environment&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//如果是web环境, 将非web环境实例转换成web环境实例:
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//使用有效的profile配置和jndiProperties, servletConfigInitParams, servletContextInitParams的配置.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">isWebEnvironment&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">environment&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">webEnvironment&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">environment&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">convertToStandardEnvironment&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">environment&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="c1">//输出banner
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">bannerMode&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">Banner&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">Mode&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">OFF&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">printBanner&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">environment&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="c1">//创建上下文对象, 没有指定实现类的话(使用SpringApplicationBuilder.contextClass), 使用默认context类. 然后通过反射实例化上下文对象.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//1. web环境使用org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//2. org.springframework.context.annotation.AnnotationConfigApplicationContext
+&lt;/span>&lt;span class="c1">&lt;/span>
+&lt;span class="c1">//初始化实例的时候会做很多事,
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//1. 创建AnnotatedBeanDefinitionReader. 注册相关的Annotation Post Processor, 包括: ConfigurationClassPostProcessor(处理@Configuration标注的类), AutowiredAnnotationBeanPostProcessor, RequiredAnnotationBeanPostProcessor, CommonAnnotationBeanPostProcessor, PersistenceAnnotationBeanPostProcessor, EventListenerMethodProcessor, DefaultEventListenerFactory
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//2. 创建ClassPathBeanDefinitionScanner. 扫描器, 扫描默认的过滤器@Service, @Component, @Registry, @Controller. 同时支持J2EE6的@ManagedBean和@Named
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// Create, load, refresh and run the ApplicationContext
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">context&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">createApplicationContext&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="c1">//设置环境
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">context&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setEnvironment&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">environment&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//后续的处理
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">postProcessApplicationContext&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">context&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//应用初始化器(ApplicationContextInitializer的实现类), 对上下文对象做更多初始化的操作, 比如:
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//1. 添加BeanFactoryPostProcessor
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//2 .设置上下文对象id
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//3 .代理配置中context.initializer.classes指定的初始化类
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//4. 添加listener, 在web容器启动后更新环境变量中的端口号(server.ports中的local.server.port)
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">applyInitializers&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">context&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//通过EventPublishingRunListener发布contextPrepared事件
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">listeners&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">contextPrepared&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">context&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//打印启动信息和有效的profile信息
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">logStartupInfo&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">logStartupInfo&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">context&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getParent&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">logStartupProfileInfo&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">context&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="c1">//将ApplicationArguments实例注册到BeanFactory中, 名字为springApplicationArguments
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// Add boot specific singleton beans
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">context&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getBeanFactory&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">registerSingleton&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;springApplicationArguments&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span>
+&lt;span class="n">applicationArguments&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//从source(可以是Resource, Package, CharSequence或者Class. 从run方法进来的为Class)类加载Bean到上下文对象中
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// Load the sources
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">Set&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">Object&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">sources&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">getSources&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">Assert&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">notEmpty&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">sources&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;Sources must not be empty&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">load&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">context&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">sources&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">toArray&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="n">Object&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="n">sources&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">size&lt;/span>&lt;span class="o">()]));&lt;/span>
+&lt;span class="c1">//通过EventPublishingRunListener发布contextLoaded事件
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">listeners&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">contextLoaded&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">context&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//更新上下文对象, 调用ApplicationContext.refresh()方法
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// Refresh the context
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">refresh&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">context&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">registerShutdownHook&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">try&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">context&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">registerShutdownHook&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">catch&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">AccessControlException&lt;/span> &lt;span class="n">ex&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// Not allowed in some environments.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">context&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="更新上下文-applicationcontextrefresh">更新上下文 ApplicationContext.refresh()&lt;/h3>
+&lt;ol>
+&lt;li>prepareRefresh
+记录启动时间, 初始化上下文环境信息中的占位符, 检查必须的属性&lt;/li>
+&lt;li>obtainFreshBeanFactory
+重建内置的BeanFactory, 并加载bean定义&lt;/li>
+&lt;li>prepareBeanFactory
+初始化BeanFactory的标准上下文属性, 如BeanClassLoader, ExpressionResolver, PropertyEditorRegistrar, BeanPostProcessor, LoadTimeWeaverAwarePostProcessor等等.&lt;/li>
+&lt;li>postProcessBeanFactory
+标准初始化后修改上下文内置的BeanFactory&lt;/li>
+&lt;li>invokeBeanFactoryPostProcessors
+实例化并调用注册的&lt;code>BeanFactoryPostProcessor&lt;/code>, 基于精确的顺序如果指定了顺序的话.
+有些processor是操作Bean定义注册表的(如&lt;code>@Configuration&lt;/code>标注的类bean包含其他的bean定义), 会在常规的&lt;code>BeanFactoryPostProcessor&lt;/code>的检查发生之前.
+在上下文对象的bean定义注册器进行了标准初始化之后进, 所有的常规bean定义都已经被加载了, 但是还没有bean被实例化. 在post-processiong之前可以添加更多的bean定义. &lt;strong>&lt;code>@Configuration&lt;/code>标注的类中的bean定义会在此时假如到注册器中&lt;/strong>.&lt;/li>
+&lt;li>registerBeanPostProcessors
+实例化并调用注册的&lt;code>BeanPostProcessor&lt;/code>, 如果有顺序的话, 按照顺序来调用.&lt;/li>
+&lt;li>initMessageSource
+初始化名为&lt;strong>messageSource&lt;/strong>的&lt;code>MessageSource&lt;/code>实例.&lt;/li>
+&lt;li>initApplicationEventMulticaster
+初始化名为&lt;strong>applicationEventMulticaster&lt;/strong>的&lt;code>ApplicationEventMulticaster&lt;/code>实例, 应用可以用来注册应用事件的监听.&lt;/li>
+&lt;li>onRefresh
+供子类实现添加更多的更新操作.&lt;/li>
+&lt;li>registerListeners
+通过&lt;strong>applicationEventMulticaster&lt;/strong>注册&lt;code>ApplicationListener&lt;/code>实现类的监听器.&lt;/li>
+&lt;li>finishBeanFactoryInitialization
+进行上下文的BeanFactory初始化的收尾. 如提前初始化&lt;code>LoadTimeWeaverAware&lt;/code>的bean, 冻结配置禁止修改bean定义, 实例化non-lazy-init的bean.&lt;/li>
+&lt;li>finishRefresh
+完成更新, 调用&lt;code>LifecycleProcessor.onRefresh()&lt;/code>, 发布&lt;code>ContextRefreshedEvent&lt;/code>事件, 将上下文实例暴露在MBean中.&lt;/li>
+&lt;/ol>
+&lt;h4 id="configurationclasspostprocessor">ConfigurationClassPostProcessor&lt;/h4>
+&lt;p>&lt;code>BeanFactoryPostProcessor&lt;/code>的实现类, 用于引导&lt;code>@Configuration&lt;/code>类.
+默认情况下通过使用&lt;code>&amp;lt;context:annotation-config/&amp;gt;&lt;/code>或者&lt;code>&amp;lt;context:component-scan/&amp;gt;&lt;/code>注册.&lt;/p>
+&lt;h2 id="注解">注解&lt;/h2>
+&lt;h2 id="springbootapplication">@SpringBootApplication&lt;/h2>
+&lt;p>集合了&lt;code>@Configuration&lt;/code>, &lt;code>@EnableAutoConfiguration&lt;/code>和&lt;code>@ComponentScan&lt;/code>
+属性: &lt;code>exclude&lt;/code>, &lt;code>excludeName&lt;/code>, &lt;code>scanBasePackage&lt;/code> , &lt;code>scanBasePackageClass&lt;/code>&lt;/p>
+&lt;h3 id="configuration">@Configuration&lt;/h3>
+&lt;p>类似旧版配置中的xml配置文件, 提供Bean的定义和引入其他xml配置. 分别通过&lt;code>@Bean&lt;/code>和&lt;code>@Import&lt;/code>实现.
+在ApplicationContext.refresh()时是用&lt;code>ConfigurationClassPostProcessor&lt;/code>进行bean的实例化.&lt;/p>
+&lt;p>可以与&lt;code>@PropertySource&lt;/code>, &lt;code>@Autowired&lt;/code>, &lt;code> @Value&lt;/code>, &lt;code>@Profile&lt;/code>搭配使用.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="nd">@Configuration&lt;/span>
+&lt;span class="nd">@PropertySource&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;classpath:/com/acme/app.properties&amp;#34;&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">AppConfig&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="nd">@Value&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;${bean.name}&amp;#34;&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">beanName&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="nd">@Autowired&lt;/span> &lt;span class="n">DataSource&lt;/span> &lt;span class="n">dataSource&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="nd">@Bean&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">MyBean&lt;/span> &lt;span class="nf">myBean&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">MyBean&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">beanName&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="nd">@Configuration&lt;/span>
+&lt;span class="nd">@Profile&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;test&amp;#34;&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="kd">static&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">DatabaseConfigTest&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="nd">@Bean&lt;/span>
+&lt;span class="n">DataSource&lt;/span> &lt;span class="nf">dataSource&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">EmbeddedDatabaseBuilder&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="nd">@Configuration&lt;/span>
+&lt;span class="nd">@Profile&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;production&amp;#34;&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="kd">static&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">DatabaseConfigProduction&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="nd">@Bean&lt;/span>
+&lt;span class="n">DataSource&lt;/span> &lt;span class="nf">dataSource&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">EmbeddedDatabaseBuilder&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="enableautoconfiguration">@EnableAutoConfiguration&lt;/h3>
+&lt;p>开启Spring上下文对象的自动配置功能, 尝试去猜测和实例化你&lt;strong>可能需要的&lt;/strong>bean.
+这个功能是基于classPath来完成的. 比如: 项目中引用了&lt;code>tomcat-embedded.jar&lt;/code>, 你可能需要一个&lt;code>TomcatEmbeddedServletContainerFactory&lt;/code>实例, 除非定义了自己的&lt;code>EmbeddedServletContainerFactory&lt;/code>实例.&lt;/p>
+&lt;h3 id="componentscan">@ComponentScan&lt;/h3>
+&lt;p>扫描使用&lt;code>@Configuration&lt;/code>标注的类, 类似于Spring XML的&lt;code>&amp;lt;context:component-scan&amp;gt;&lt;/code>元素.
+使用&lt;code>basePackages&lt;/code>和&lt;code>basePackageClasses&lt;/code>属性来指定要扫描的包, 如果没有指定, 则默认从使用了该注解的类的包开始扫描.&lt;/p>
+&lt;h3 id="import">@Import&lt;/h3>
+&lt;p>提示&lt;code>@Configuration&lt;/code>有更多的类需要引入, 类似xml中的&lt;code>&amp;lt;import&amp;gt;&lt;/code>标签.
+可以引入&lt;code>@Configuration&lt;/code>类, &lt;code>ImportSelector&lt;/code>的实现类和&lt;code>ImportBeanDefinitionRegistrar&lt;/code>的实现类, 还有常规的&lt;code>Component&lt;/code>类.&lt;/p>
+&lt;p>三者的处理方式不一样:&lt;/p>
 &lt;ul>
-&lt;li>Hystrix 熔断&lt;/li>
-&lt;li>Ribbon 负责发送外出请求的客户端, 提供软件负载均衡功能&lt;/li>
-&lt;li>Trubine 实时地聚合细粒度的metrics数据&lt;/li>
-&lt;li>Archaius 动态配置&lt;/li>
+&lt;li>&lt;code>@Configuration&lt;/code>常规方式&lt;/li>
+&lt;li>&lt;code>ImportSelector&lt;/code>会根据泛型类型从&lt;strong>spring.factories&lt;/strong>找到对应的配置类.&lt;/li>
+&lt;li>&lt;code>ImportBeanDefinitionRegistrar&lt;/code> 可以实现在bean definition级别的处理 (&lt;code>@Bean&lt;/code>实例级别)&lt;/li>
 &lt;/ul>
-&lt;h2 id="介绍">介绍&lt;/h2>
-&lt;p>由于2.0停止开发且会有bug, 故下面的分析基于1.x版本.&lt;/p>
-&lt;h3 id="特性">特性&lt;/h3>
-&lt;ul>
-&lt;li>Authentication 认证&lt;/li>
-&lt;li>Insights 洞察&lt;/li>
-&lt;li>Stress Testing 压力测试&lt;/li>
-&lt;li>Canary Testing 金丝雀测试&lt;/li>
-&lt;li>Dynamic Routing 动态路由&lt;/li>
-&lt;li>Multi-Region Resiliency 多区域弹性&lt;/li>
-&lt;li>Load Shedding 负载脱落&lt;/li>
-&lt;li>Security 安全&lt;/li>
-&lt;li>Static Response handling 静态响应处理&lt;/li>
-&lt;li>Multi-Region Resiliency 主动/主动流量管理&lt;/li>
-&lt;/ul></description></item><item><title>ConfigurationProperties到底需不需要getter</title><link>https://atbug.com/articles/configurationproperties-requires-getter-or-not/</link><pubDate>Wed, 07 Feb 2018 15:53:21 +0000</pubDate><guid>https://atbug.com/articles/configurationproperties-requires-getter-or-not/</guid><description>为什么要讨论这个问题, 工作中一个同事写的类使用了ConfigurationProperties, 只提供了标准的setter方法. 属性的访问, 提供了定制的方法. 可以参考EurekaClientConfigBean.
-他使用的是spring boot 2.0.0.M5版本, 可以正常获取配置文件中的属性值, 但是在1.5.8.RELEASE获取不到.
-看下文档和源码:
-Annotation for externalized configuration. Add this to a class definition or a @Bean method in a @Configuration class if you want to bind and validate some external Properties (e.</description></item><item><title>SpringBoot源码 - 启动</title><link>https://atbug.com/articles/glance-over-spring-boot-source/</link><pubDate>Fri, 08 Dec 2017 17:48:43 +0000</pubDate><guid>https://atbug.com/articles/glance-over-spring-boot-source/</guid><description>SpringBoot Application启动部分的源码阅读.
-SpringApplication 常用的SpringApplication.run(Class, Args)启动Spring应用, 创建或者更新ApplicationContext
-静态方法run 使用source类实例化一个SpringApplication实例, 并调用实例方法run.
-public static ConfigurableApplicationContext run(Object[] sources, String[] args) { return new SpringApplication(sources).run(args); } 初始化initialize 实例化的时候首先通过尝试加载javax.servlet.Servlet和org.springframework.web.context.ConfigurableWebApplicationContext推断当前是否是web环境.
-然后从spring.factories获取ApplicationContextInitializer的实现类.
-从spring.factories获取ApplicationListener的实现类
-推断出应用的启动类(包含main方法的类): 检查线程栈中元素的方法名是否是main
-private Class&amp;lt;?&amp;gt; deduceMainApplicationClass() { try { //获取线程栈数据 StackTraceElement[] stackTrace = new RuntimeException().</description></item><item><title>Spring Cloud - Eureka Client源码分析</title><link>https://atbug.com/articles/spring-cloud-eureka-client-source-code-analysis/</link><pubDate>Sat, 14 Oct 2017 22:04:59 +0000</pubDate><guid>https://atbug.com/articles/spring-cloud-eureka-client-source-code-analysis/</guid><description>准备做个Spring Cloud源码分析系列, 作为Spring Cloud的源码分析笔记.
-这一篇是Eureka的客户端.
-客户端 两种方式, 最终的实现基本一样.
-显示指定服务发现的实现类型 使用@EnableEurekaClient注解显示的指定使用Eureka作为服务发现的实现, 并实例化EurekaClient实例. 实际上使用的是@EnableDiscoveryClient注解.
-@Target(ElementType.TYPE) @Retention(RetentionPolicy.RUNTIME) @Documented @Inherited @EnableDiscoveryClient public @interface EnableEurekaClient { } 动态配置实现 使用@EnableDiscoveryClient注解来配置服务发现的实现.
-源码分析 EnableDiscoveryClient
-@Target(ElementType.TYPE) @Retention(RetentionPolicy.RUNTIME) @Documented @Inherited @Import(EnableDiscoveryClientImportSelector.class) public @interface EnableDiscoveryClient { } EnableDiscoveryClient注解的作用主要是用来引入EnableDiscoveryClientImportSelector
-EnableDiscoveryClientImportSelector
-@Order(Ordered.LOWEST_PRECEDENCE - 100) public class EnableDiscoveryClientImportSelector extends SpringFactoryImportSelector&amp;lt;EnableDiscoveryClient&amp;gt; { @Override protected boolean isEnabled() { return new RelaxedPropertyResolver(getEnvironment()).</description></item><item><title>从零开始用 docker 运行 spring boot 应用</title><link>https://atbug.com/articles/run-spring-boot-app-in-docker/</link><pubDate>Thu, 20 Apr 2017 21:58:42 +0000</pubDate><guid>https://atbug.com/articles/run-spring-boot-app-in-docker/</guid><description>假设已经安装好Docker
-Springboot应用 pom添加依赖和构建插件 &amp;lt;parent&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-starter-parent&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.5.3.RELEASE&amp;lt;/version&amp;gt; &amp;lt;/parent&amp;gt; &amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-starter-web&amp;lt;/artifactId&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt; &amp;lt;build&amp;gt; &amp;lt;plugins&amp;gt; &amp;lt;plugin&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-maven-plugin&amp;lt;/artifactId&amp;gt; &amp;lt;/plugin&amp;gt; &amp;lt;/plugins&amp;gt; &amp;lt;/build&amp;gt; 应用代码 package com.atbug.spring.boot.test; import org.springframework.boot.SpringApplication; import org.springframework.boot.autoconfigure.SpringBootApplication; import org.springframework.boot.web.servlet.FilterRegistrationBean; import org.springframework.context.annotation.Bean; import org.springframework.web.bind.annotation.RequestMapping; import org.springframework.web.bind.annotation.RestController; /** * Created by addo on 2017/5/15.</description></item><item><title>使用Kryo替换spring amqp的Java序列化</title><link>https://atbug.com/articles/use-kryo-in-spring-amqp-serialization/</link><pubDate>Wed, 29 Jun 2016 05:29:14 +0000</pubDate><guid>https://atbug.com/articles/use-kryo-in-spring-amqp-serialization/</guid><description>spring amqp的原生并没有对Kryo加以支持，Kryo的优点就不多说了。
-git地址：https://github.com/addozhang/spring-kryo-messaeg-converter
-public class KryoMessageConverter extends AbstractMessageConverter { public static final String CONTENT_TYPE = &amp;#34;application/x-kryo&amp;#34;; public static final String DEFAULT_CHARSET = &amp;#34;UTF-8&amp;#34;; private String defaultCharset = DEFAULT_CHARSET; private KryoFactory kryoFactory = new DefaultKryoFactory(); /** * Crate a message from the payload object and message properties provided.</description></item></channel></rss>
+&lt;p>在&lt;strong>引入&lt;/strong>&lt;code>@Configuration&lt;/code>类中使用&lt;code>@Bean&lt;/code>标注的实例, 可以通过&lt;code>@Autowired&lt;/code>注入. Bean和声明Bean的Configuration类本身都可以通过&lt;code>@Autowired&lt;/code>注入.&lt;/p>
+&lt;p>引入XML或者非Configuration, 使用&lt;code>@ImportResource&lt;/code>.&lt;/p></description></item><item><title>使用Kryo替换spring amqp的Java序列化</title><link>https://atbug.com/use-kryo-in-spring-amqp-serialization/</link><pubDate>Wed, 29 Jun 2016 05:29:14 +0000</pubDate><guid>https://atbug.com/use-kryo-in-spring-amqp-serialization/</guid><description>
+&lt;p>spring amqp的原生并没有对Kryo加以支持，Kryo的优点就不多说了。&lt;/p>
+&lt;p>git地址：&lt;a href="https://github.com/addozhang/spring-kryo-messaeg-converter">https://github.com/addozhang/spring-kryo-messaeg-converter&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">KryoMessageConverter&lt;/span> &lt;span class="kd">extends&lt;/span> &lt;span class="n">AbstractMessageConverter&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">CONTENT_TYPE&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;application/x-kryo&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">DEFAULT_CHARSET&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;UTF-8&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">defaultCharset&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">DEFAULT_CHARSET&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="n">KryoFactory&lt;/span> &lt;span class="n">kryoFactory&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">DefaultKryoFactory&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Crate a message from the payload object and message properties provided. The message id will be added to the
+&lt;/span>&lt;span class="cm"> * properties if necessary later.
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> * @param object the payload
+&lt;/span>&lt;span class="cm"> * @param messageProperties the message properties (headers)
+&lt;/span>&lt;span class="cm"> * @return a message
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">protected&lt;/span> &lt;span class="n">Message&lt;/span> &lt;span class="nf">createMessage&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Object&lt;/span> &lt;span class="n">object&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">MessageProperties&lt;/span> &lt;span class="n">messageProperties&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kt">byte&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">bytes&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="n">Kryo&lt;/span> &lt;span class="n">kryo&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">kryoFactory&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">create&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">Output&lt;/span> &lt;span class="n">output&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ByteBufferOutput&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">4096&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">1024&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">1024&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">try&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">kryo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">writeClassAndObject&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">output&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">object&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">bytes&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">output&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">toBytes&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">finally&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">output&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">close&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="n">messageProperties&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setContentType&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">CONTENT_TYPE&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">messageProperties&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getContentEncoding&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">messageProperties&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setContentEncoding&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">defaultCharset&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Message&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">bytes&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">messageProperties&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">Object&lt;/span> &lt;span class="nf">fromMessage&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Message&lt;/span> &lt;span class="n">message&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">MessageConversionException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Object&lt;/span> &lt;span class="n">content&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="n">MessageProperties&lt;/span> &lt;span class="n">properties&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">message&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getMessageProperties&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">properties&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">properties&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getContentType&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">null&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">amp&lt;/span>&lt;span class="o">;&amp;amp;&lt;/span>&lt;span class="n">amp&lt;/span>&lt;span class="o">;&lt;/span> &lt;span class="n">properties&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getContentType&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">contains&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;x-kryo&amp;#34;&lt;/span>&lt;span class="o">))&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Kryo&lt;/span> &lt;span class="n">kryo&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">kryoFactory&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">create&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">content&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">kryo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">readClassAndObject&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="n">ByteBufferInput&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">message&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getBody&lt;/span>&lt;span class="o">()));&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">MessageConversionException&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;Converter not applicable to this message&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">content&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">DefaultKryoFactory&lt;/span> &lt;span class="kd">implements&lt;/span> &lt;span class="n">KryoFactory&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">Kryo&lt;/span> &lt;span class="nf">create&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Kryo&lt;/span> &lt;span class="n">kryo&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Kryo&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">kryo&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

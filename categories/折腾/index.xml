@@ -1,3 +1,27 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>折腾 on 乱世浮生</title><link>https://atbug.com/categories/%E6%8A%98%E8%85%BE/</link><description>Recent content in 折腾 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 10 Nov 2019 19:50:27 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E6%8A%98%E8%85%BE/index.xml" rel="self" type="application/rss+xml"/><item><title>Bose QC35 固件降级</title><link>https://atbug.com/articles/bose-qc35-downgrade/</link><pubDate>Sun, 10 Nov 2019 19:50:27 +0800</pubDate><guid>https://atbug.com/articles/bose-qc35-downgrade/</guid><description>为什么要降级? 既然已经搜到了这里, 相信个中原因也都清楚.
-我的QC35一代, 之前升级到了3.0.3固件. 目前已成功降级到了1.0.6, 下面的操作步骤Mac OSX的, 作者也提供了Windows上的操作步骤.
-操作步骤 确认已经卸载Bose Updater GitHub上下载作者已经改好的6.0.0.4388版本的Bose Updater 解压后复制到/Applications下 运行Bose Updater确认能否正常运行 退出 (右键&amp;gt;Exit) 检查是否还有Bose Updater的进程 打开https://btu.bose.com/ 页面上选择Launch Bose Updater 看到下面界面(借用作者的图)时, 键盘上依次按: a, d, v, 方向上, 方向下 接下来会看到下面界面(借用作者的图) 可以从下拉列表中选择版本进行升/降级 等待升/降级完成 卸载手机app (我是卸载了, 防止再次手贱) 参考 Reddit GitHub</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>折腾 on 乱世浮生</title><link>https://atbug.com/categories/%E6%8A%98%E8%85%BE/</link><description>Recent content in 折腾 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 10 Nov 2019 19:50:27 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E6%8A%98%E8%85%BE/index.xml" rel="self" type="application/rss+xml"/><item><title>Bose QC35 固件降级</title><link>https://atbug.com/bose-qc35-downgrade/</link><pubDate>Sun, 10 Nov 2019 19:50:27 +0800</pubDate><guid>https://atbug.com/bose-qc35-downgrade/</guid><description>
+&lt;p>为什么要降级? 既然已经搜到了这里, 相信个中原因也都清楚.&lt;/p>
+&lt;p>我的QC35一代, 之前升级到了3.0.3固件. 目前已成功降级到了1.0.6, 下面的操作步骤Mac OSX的, 作者也提供了&lt;a href="https://github.com/bosefirmware/ced/blob/master/README.md">Windows上的操作步骤&lt;/a>.&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/LaTKaT.jpg" alt="">&lt;/p>
+&lt;h3 id="操作步骤">操作步骤&lt;/h3>
+&lt;ol>
+&lt;li>确认已经卸载Bose Updater&lt;/li>
+&lt;li>GitHub上下载作者已经改好的&lt;a href="https://github.com/bosefirmware/ced/raw/master/BOSEUPDATER.EXE">6.0.0.4388&lt;/a>版本的Bose Updater&lt;/li>
+&lt;li>解压后复制到&lt;code>/Applications&lt;/code>下&lt;/li>
+&lt;li>运行Bose Updater确认能否正常运行&lt;/li>
+&lt;li>退出 (右键&amp;gt;Exit)&lt;/li>
+&lt;li>检查是否还有Bose Updater的进程&lt;/li>
+&lt;li>打开&lt;code>https://btu.bose.com/&lt;/code>&lt;/li>
+&lt;li>页面上选择&lt;code>Launch&lt;/code> Bose Updater&lt;/li>
+&lt;li>看到下面界面(借用作者的图)时, 键盘上依次按: a, d, v, 方向上, 方向下
+&lt;img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/QqtGw0.jpg" alt="">&lt;/li>
+&lt;li>接下来会看到下面界面(借用作者的图)
+&lt;img src="https://raw.githubusercontent.com/addozhang/oss/master/blog/upload/GUHIVT.jpg" alt="">&lt;/li>
+&lt;li>可以从下拉列表中选择版本进行升/降级&lt;/li>
+&lt;li>等待升/降级完成&lt;/li>
+&lt;li>卸载手机app (我是卸载了, 防止再次手贱)&lt;/li>
+&lt;/ol>
+&lt;h3 id="参考">参考&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://www.reddit.com/r/bose/comments/cw47fx/githubcombosefirmware/">Reddit&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/bosefirmware/ced">GitHub&lt;/a>&lt;/li>
+&lt;/ul></description></item></channel></rss>

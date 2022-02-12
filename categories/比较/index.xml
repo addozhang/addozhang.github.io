@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>比较 on 乱世浮生</title><link>https://atbug.com/categories/%E6%AF%94%E8%BE%83/</link><description>Recent content in 比较 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 03 Jan 2022 12:07:35 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E6%AF%94%E8%BE%83/index.xml" rel="self" type="application/rss+xml"/><item><title>快速搭建实验环境：使用 Terraform 部署 Proxmox 虚拟机</title><link>https://atbug.com/deploy-vm-on-proxmox-with-terraform/</link><pubDate>Mon, 03 Jan 2022 12:07:35 +0800</pubDate><guid>https://atbug.com/deploy-vm-on-proxmox-with-terraform/</guid><description>
+&lt;p>自从用上 m1 的电脑，本地开发环境偶尔会遇到兼容性的问题。比如之前尝试&lt;a href="https://mp.weixin.qq.com/s/V9dTD3R6ApnW3b1DebzdEg">用 Colima 在虚拟机中运行容器运行时和 Kubernetes&lt;/a>，其实际使用的还是 aarch64 虚拟机，实际使用还是会有些差异。&lt;/p>
+&lt;p>手上有台之前用的黑苹果小主机，吃灰几个月了，实属浪费。正好元旦假期，有时间折腾一下。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">CPU: Intel 8700 6C12T
+MEM: 64G DDR4
+DISK: 1T SSD
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>折腾的目的：&lt;/p>
+&lt;ul>
+&lt;li>将平台虚拟化&lt;/li>
+&lt;li>提供多套实验环境&lt;/li>
+&lt;li>快速创建销毁实验环境&lt;/li>
+&lt;li>体验基础设施即代码 IaaS&lt;/li>
+&lt;/ul>
+&lt;p>主要用到的工具：&lt;/p>
+&lt;ul>
+&lt;li>虚拟化工具 &lt;a href="https://www.proxmox.com/en/proxmox-ve">Proxmox VE&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.terraform.io">Terraform&lt;/a>：开源的基础设施即代码工具&lt;/li>
+&lt;li>&lt;a href="https://github.com/Telmate/terraform-provider-proxmox">terraform-provider-proxmox&lt;/a>：Terraform Proxmox Provider，通过 Proxmox VE 的 REST API 在创建虚拟机。&lt;/li>
+&lt;/ul>
+&lt;h2 id="安装-proxmox-虚拟化工具">安装 Proxmox 虚拟化工具&lt;/h2>
+&lt;p>从&lt;a href="https://www.proxmox.com/en/downloads/category/proxmox-virtual-environment">官网&lt;/a> 下载 ISO 镜像，写入到 U 盘中。macOS上推荐使用 balenaEtcher 写盘。&lt;/p>
+&lt;p>电脑上插入 U 盘并从 U 盘启动，按照步骤一步步完成设置。&lt;/p>
+&lt;p>官方的 wiki &lt;a href="https://pve.proxmox.com/wiki/Installation">安装步骤&lt;/a>很详细。&lt;/p>
+&lt;p>安装完成之后就可以创建虚拟机了，可以用命令行 &lt;code>qm create&lt;/code> 或者 &lt;code>https://localhost:8006&lt;/code> Web UI来创建。&lt;/p>
+&lt;p>这样毕竟还是有点麻烦，每次都要执行很多操作。虽说可以编写脚本，但是通用型不够好。因此我们选择 Terraform，实现基础设施即代码。&lt;/p>
+&lt;h2 id="创建-ubuntu-cloud-init-template">创建 Ubuntu Cloud-Init Template&lt;/h2>
+&lt;p>这里选用 Cloud-Init 的方式，从 cloud-init template 来克隆虚拟机。cloud-init 的虚拟机可以完成一些高级定制的初始化工作，有兴趣的参考 &lt;a href="https://cloudinit.readthedocs.io/en/latest/topics/examples.html">Cloud Init 文档&lt;/a>。&lt;/p>
+&lt;p>&lt;strong>登陆到 Proxmox VE 宿主机&lt;/strong>，使用 Ubuntu 20.04 cloud init image 来创建模板，从官网下载：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">wget https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64.img
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行下面的命令创建一个虚拟机：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">qm create &lt;span class="m">9000&lt;/span> --name &lt;span class="s2">&amp;#34;ubuntu-2004-cloudinit-template&amp;#34;&lt;/span> --memory &lt;span class="m">1024&lt;/span> --cores &lt;span class="m">1&lt;/span> --net0 virtio,bridge&lt;span class="o">=&lt;/span>vmbr0
+qm importdisk &lt;span class="m">9000&lt;/span> ubuntu-20.04-server-cloudimg-amd64.img local-lvm
+qm &lt;span class="nb">set&lt;/span> &lt;span class="m">9000&lt;/span> --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-9000-disk-0
+qm &lt;span class="nb">set&lt;/span> &lt;span class="m">9000&lt;/span> --boot c --bootdisk scsi0
+qm &lt;span class="nb">set&lt;/span> &lt;span class="m">9000&lt;/span> --ide2 local-lvm:cloudinit
+qm &lt;span class="nb">set&lt;/span> &lt;span class="m">9000&lt;/span> --serial0 socket --vga serial0
+qm &lt;span class="nb">set&lt;/span> &lt;span class="m">9000&lt;/span> --agent &lt;span class="nv">enabled&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">1&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>将刚创建好的虚拟机转换成模板：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">qm template &lt;span class="m">9000&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>模板与普通的虚拟机会有些许的不同，使用模板我们可以快速创建虚拟机。这里我们不会用 UI来创建。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/01/03/20220102-at-104523.png" alt="Ubuntu Cloud-Init">&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/01/03/20220102-at-104604.png" alt="Clone from template">&lt;/p>
+&lt;h2 id="创建-proxmox-用户及-api-token">创建 Proxmox 用户及 API Token&lt;/h2>
+&lt;p>使用 Proxmox VE 的 REST API 需要权限校验，有用户名密码或者 API Token 两种方式。我们选用后者，登陆到 Proxmox 宿主机，执行如下命令创建角色、用户以及 API Token：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">pveum role add TerraformProv -privs &lt;span class="s2">&amp;#34;VM.Allocate VM.Clone VM.Config.CDROM VM.Config.CPU VM.Config.Cloudinit VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Monitor VM.Audit VM.PowerMgmt Datastore.AllocateSpace Datastore.Audit&amp;#34;&lt;/span>
+pveum user add terraform-prov@pve
+pveum aclmod / -user terraform-prov@pve -role TerraformProv
+pveum user token add terraform-prov@pve terraform-token --privsep&lt;span class="o">=&lt;/span>&lt;span class="m">0&lt;/span>
+┌──────────────┬──────────────────────────────────────┐
+│ key │ value │
+╞══════════════╪══════════════════════════════════════╡
+│ full-tokenid │ terraform-prov@pve!terraform-token │
+├──────────────┼──────────────────────────────────────┤
+│ info │ &lt;span class="o">{&lt;/span>&lt;span class="s2">&amp;#34;privsep&amp;#34;&lt;/span>:&lt;span class="s2">&amp;#34;0&amp;#34;&lt;/span>&lt;span class="o">}&lt;/span> │
+├──────────────┼──────────────────────────────────────┤
+│ value │ 9748c040-a283-4c72-a48b-9ce784778eed │
+└──────────────┴──────────────────────────────────────┘
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里我们会用到 token 的&lt;em>full-tokenid&lt;/em> 和 &lt;em>value&lt;/em>。&lt;/p>
+&lt;h2 id="terraform">Terraform&lt;/h2>
+&lt;p>有了 token 和 cloud-init 模板后，就是定义虚拟机了。&lt;/p>
+&lt;p>安装最新版本的 terraform。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">brew install terraform
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>在空目录中创建 &lt;code>ubuntu.tf&lt;/code> 文件，并按步骤进行配置：&lt;/p>
+&lt;h3 id="配置要使用的-provider">配置要使用的 provider：&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">terraform&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">required_providers&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">proxmox&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">source&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;telmate/proxmox&amp;#34;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="配置-provider">配置 provider&lt;/h3>
+&lt;p>需要提供 &lt;code>pm_api_url&lt;/code>、&lt;code>pm_api_token_id&lt;/code> 和 &lt;code>pm_api_token_secret&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">provider&lt;/span> &lt;span class="s2">&amp;#34;proxmox&amp;#34;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">pm_tls_insecure&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kp">true&lt;/span>
+&lt;span class="n">pm_api_url&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;https://192.168.1.4:8006/api2/json&amp;#34;&lt;/span>
+&lt;span class="n">pm_api_token_id&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;terraform-prov@pve!terraform-token&amp;#34;&lt;/span>
+&lt;span class="n">pm_api_token_secret&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;9748c040-a283-4c72-a48b-9ce784778eed&amp;#34;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="配置虚拟机资源">配置虚拟机资源&lt;/h3>
+&lt;p>可以参考&lt;a href="https://github.com/Telmate/terraform-provider-proxmox/blob/master/docs/resources/vm_qemu.md#provision-through-cloud-init">provider 的配置说明&lt;/a>：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">resource&lt;/span> &lt;span class="s2">&amp;#34;proxmox_vm_qemu&amp;#34;&lt;/span> &lt;span class="s2">&amp;#34;proxmox-ubuntu&amp;#34;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">count&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;span class="nb">name&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;ubuntu-${count.index + 1}&amp;#34;&lt;/span>
+&lt;span class="n">desc&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;Ubuntu develop environment&amp;#34;&lt;/span>
+&lt;span class="c1"># 节点名&lt;/span>
+&lt;span class="n">target_node&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;pve&amp;#34;&lt;/span>
+&lt;span class="c1"># cloud-init template&lt;/span>
+&lt;span class="nb">clone&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;ubuntu-2004-cloudinit-template&amp;#34;&lt;/span>
+&lt;span class="c1"># 关机 guest agent&lt;/span>
+&lt;span class="n">agent&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>
+&lt;span class="n">os_type&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;ubuntu&amp;#34;&lt;/span>
+&lt;span class="n">onboot&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kp">true&lt;/span>
+&lt;span class="c1"># CPU&lt;/span>
+&lt;span class="n">cores&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">4&lt;/span>
+&lt;span class="n">sockets&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;span class="n">cpu&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;host&amp;#34;&lt;/span>
+&lt;span class="c1"># 内存&lt;/span>
+&lt;span class="n">memory&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">16384&lt;/span>
+&lt;span class="n">scsihw&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;virtio-scsi-pci&amp;#34;&lt;/span>
+&lt;span class="n">bootdisk&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;scsi0&amp;#34;&lt;/span>
+&lt;span class="c1"># 硬盘设置，因计算的方式 101580M 代替 100G&lt;/span>
+&lt;span class="n">disk&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">slot&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>
+&lt;span class="n">size&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;101580M&amp;#34;&lt;/span>
+&lt;span class="n">type&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;scsi&amp;#34;&lt;/span>
+&lt;span class="n">storage&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;local-lvm&amp;#34;&lt;/span>
+&lt;span class="n">iothread&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="c1"># 网络&lt;/span>
+&lt;span class="n">network&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">model&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;virtio&amp;#34;&lt;/span>
+&lt;span class="n">bridge&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;vmbr0&amp;#34;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="n">lifecycle&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">ignore_changes&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">[&lt;/span>
+&lt;span class="n">network&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">]&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="c1"># 记住这里要使用IP CIDR。因为只创建一个虚拟机，虚拟机的 IP 是 192.168.1.91。如果要创建多个虚拟机的话，IP 将会是 .91、.92、.93 。&lt;/span>
+&lt;span class="n">ipconfig0&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;ip=192.168.1.9${count.index + 1}/24,gw=192.168.1.2&amp;#34;&lt;/span>
+&lt;span class="c1"># 用户名和 SSH key&lt;/span>
+&lt;span class="n">ciuser&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;addo&amp;#34;&lt;/span>
+&lt;span class="n">sshkeys&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;span class="s">&lt;/span> &lt;span class="no">SSH&lt;/span> &lt;span class="no">KEYS&lt;/span> &lt;span class="no">HERE&lt;/span>
+&lt;span class="no">EOF&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建虚拟机">创建虚拟机&lt;/h3>
+&lt;p>第一次需要先执行 &lt;code>init&lt;/code> 命令进行初始化：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">terraform init
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以使用 &lt;code>terraform fmt&lt;/code> 和 &lt;code>terraform validate&lt;/code> 对配置文件进行格式化和校验。&lt;/p>
+&lt;p>然后执行 &lt;code>terraform apply&lt;/code> 并输入 &lt;code>yes&lt;/code> 开始创建虚拟机，&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">proxmox_vm_qemu.proxmox-ubuntu[0]: Creating...
+proxmox_vm_qemu.proxmox-ubuntu[0]: Still creating... [10s elapsed]
+proxmox_vm_qemu.proxmox-ubuntu[0]: Still creating... [20s elapsed]
+proxmox_vm_qemu.proxmox-ubuntu[0]: Still creating... [30s elapsed]
+proxmox_vm_qemu.proxmox-ubuntu[0]: Still creating... [40s elapsed]
+proxmox_vm_qemu.proxmox-ubuntu[0]: Creation complete after 42s [id=pve/qemu/100]
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样虚拟机就创建成功了，使用前面配置的私钥和 IP 地址就可以 ssh 到虚拟机中。&lt;/p>
+&lt;h3 id="销毁虚拟机">销毁虚拟机&lt;/h3>
+&lt;p>虚拟机的销毁也很简单，执行 &lt;code>terraform destory&lt;/code> 并输入 &lt;code>yes&lt;/code> 即可。&lt;/p>
+&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>有了 Terraform 和 Proxmox VE 后，就可以愉快的使用干净的实验环境了。但是干净到一些开发中常用软件都没有，使用起来也不方便。&lt;/p>
+&lt;p>后续考虑通过 cloud-init 来对虚拟机进行高级定制，比如容器环境和 K3s 等等。&lt;/p></description></item></channel></rss>

@@ -1,8 +1,110 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>源码分析 on 乱世浮生</title><link>https://atbug.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link><description>Recent content in 源码分析 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 11 Jun 2021 08:27:36 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml"/><item><title>可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读</title><link>https://atbug.com/articles/programming-archive-metrics-with-pipy/</link><pubDate>Fri, 11 Jun 2021 08:27:36 +0800</pubDate><guid>https://atbug.com/articles/programming-archive-metrics-with-pipy/</guid><description>由于要给团队做一下关于 Flomesh 的分享，准备下材料。
-“分享是最好的学习方法。”
-上一回初探可编程网关 Pipy，领略了 Pipy 的“风骚”。从 Pipy 的 GUI 交互深入了解了 Pipy 的配置加载流程。
-今天看一下 Pipy 如何实现 Metrics 的功能，顺便看下数据如何在多个 Pipeline 中进行流转。
-前置 首先，需要对 Pipy 有一定的了解，如果不了解看一下上一篇文章。
-其次构建好 Pipy 环境，关于构建还是去看上一篇文章。
-Metrics 功能实现 至于 Pipy 实现 Metrics 的方式，源码中就有，位于 test/006-metrics/pipy.js。
-代理监听 6080 端口，后端服务在 8080 端口，Metrics 在 9090 端口 共有 5 个 Pipeline：3 个 listen 类型，2 个 Pipeline 类型 7 种过滤器：fork、connect、decodeHttpRequest、onMessageStart、decodeHttpResponse、encodeHttpRespnse、replaceMessage 贴一下源码：</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>源码分析 on 乱世浮生</title><link>https://atbug.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link><description>Recent content in 源码分析 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 11 Jun 2021 08:27:36 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml"/><item><title>可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读</title><link>https://atbug.com/programming-archive-metrics-with-pipy/</link><pubDate>Fri, 11 Jun 2021 08:27:36 +0800</pubDate><guid>https://atbug.com/programming-archive-metrics-with-pipy/</guid><description>
+&lt;p>由于要给团队做一下关于 Flomesh 的分享，准备下材料。&lt;/p>
+&lt;p>“分享是最好的学习方法。”&lt;/p>
+&lt;p>上一回&lt;a href="https://mp.weixin.qq.com/s/l8JzYRn350fjuCAOoo8pcg">初探可编程网关 Pipy&lt;/a>，领略了 Pipy 的“风骚”。从 Pipy 的 GUI 交互深入了解了 Pipy 的配置加载流程。&lt;/p>
+&lt;p>今天看一下 Pipy 如何实现 Metrics 的功能，顺便看下数据如何在多个 Pipeline 中进行流转。&lt;/p>
+&lt;h2 id="前置">前置&lt;/h2>
+&lt;p>首先，需要对 Pipy 有一定的了解，如果不了解看一下&lt;a href="https://mp.weixin.qq.com/s/l8JzYRn350fjuCAOoo8pcg">上一篇文章&lt;/a>。&lt;/p>
+&lt;p>其次构建好 Pipy 环境，关于构建还是去看上一篇文章。&lt;/p>
+&lt;h2 id="metrics-功能实现">Metrics 功能实现&lt;/h2>
+&lt;p>至于 Pipy 实现 Metrics 的方式，源码中就有，位于 &lt;code>test/006-metrics/pipy.js&lt;/code>。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/10/20210610202734.png" alt="">&lt;/p>
+&lt;ul>
+&lt;li>代理监听 &lt;code>6080&lt;/code> 端口，后端服务在 &lt;code>8080&lt;/code> 端口，Metrics 在 &lt;code>9090&lt;/code> 端口&lt;/li>
+&lt;li>共有 5 个 Pipeline：3 个 listen 类型，2 个 Pipeline 类型&lt;/li>
+&lt;li>7 种过滤器：&lt;code>fork&lt;/code>、&lt;code>connect&lt;/code>、&lt;code>decodeHttpRequest&lt;/code>、&lt;code>onMessageStart&lt;/code>、&lt;code>decodeHttpResponse&lt;/code>、&lt;code>encodeHttpRespnse&lt;/code>、&lt;code>replaceMessage&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>贴一下源码：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-javascript" data-lang="javascript">&lt;span class="nx">pipy&lt;/span>&lt;span class="p">({&lt;/span>
+&lt;span class="nx">_metrics&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">count&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="nx">_statuses&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{},&lt;/span>
+&lt;span class="nx">_latencies&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">7&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">15&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">25&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">30&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">40&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">50&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">60&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">70&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">80&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">90&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="mi">200&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">300&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">400&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">500&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">1000&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">2000&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">5000&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">10000&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">30000&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">60000&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nb">Number&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">POSITIVE_INFINITY&lt;/span>
+&lt;span class="p">],&lt;/span>
+&lt;span class="nx">_buckets&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">[],&lt;/span>
+&lt;span class="nx">_timestamp&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">})&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">listen&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">6080&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">fork&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;in&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">connect&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;127.0.0.1:8080&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">fork&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;out&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="c1">// Extract request info
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">pipeline&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;in&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">decodeHttpRequest&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">onMessageStart&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="p">()&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="p">(&lt;/span>
+&lt;span class="nx">_timestamp&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">Date&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">now&lt;/span>&lt;span class="p">(),&lt;/span>
+&lt;span class="nx">_metrics&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">count&lt;/span>&lt;span class="o">++&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="c1">// Extract response info
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">pipeline&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;out&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">decodeHttpResponse&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">onMessageStart&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="nx">e&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="p">(&lt;/span>
+&lt;span class="p">((&lt;/span>&lt;span class="nx">status&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">latency&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">i&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="p">(&lt;/span>
+&lt;span class="nx">status&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">e&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">head&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">status&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">latency&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">Date&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">now&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="nx">_timestamp&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">i&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">_latencies&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">findIndex&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">t&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="nx">latency&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="nx">t&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;span class="nx">_buckets&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">i&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">++&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">_statuses&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">status&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">_statuses&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">status&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">|&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;span class="p">))()&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="c1">// Expose as Prometheus metrics
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">listen&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">9090&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">decodeHttpRequest&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">replaceMessage&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="p">()&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="p">(&lt;/span>
+&lt;span class="p">(&lt;/span>&lt;span class="nx">sum&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nx">Message&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="p">[&lt;/span>
+&lt;span class="sb">`count &lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nx">_metrics&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">count&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="sb">`&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">...&lt;/span>&lt;span class="nb">Object&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">entries&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">_statuses&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nx">map&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="p">([&lt;/span>&lt;span class="nx">k&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">v&lt;/span>&lt;span class="p">])&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="sb">`status{code=&amp;#34;&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nx">k&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="sb">&amp;#34;} &lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nx">v&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="sb">`&lt;/span>
+&lt;span class="p">),&lt;/span>
+&lt;span class="p">...&lt;/span>&lt;span class="nx">_buckets&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">map&lt;/span>&lt;span class="p">((&lt;/span>&lt;span class="nx">n&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">i&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="sb">`bucket{le=&amp;#34;&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nx">_latencies&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nx">i&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="sb">&amp;#34;} &lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nx">sum&lt;/span> &lt;span class="o">+=&lt;/span> &lt;span class="nx">n&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="sb">`&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">]&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">join&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;\n&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">))(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">encodeHttpResponse&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="c1">// Mock service on port 8080
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">listen&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">8080&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">decodeHttpRequest&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">replaceMessage&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="k">new&lt;/span> &lt;span class="nx">Message&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Hello!\n&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="nx">encodeHttpResponse&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="测试">测试&lt;/h2>
+&lt;p>使用 ab 做请求模拟 &lt;code>ab -n 2000 -c 10 http://localhost:6080/&lt;/code>，然后检查下记录的指标。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">$ http :9090 --body
+count &lt;span class="m">2000&lt;/span>
+status&lt;span class="o">{&lt;/span>&lt;span class="nv">code&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;200&amp;#34;&lt;/span>&lt;span class="o">}&lt;/span> &lt;span class="m">2000&lt;/span>
+bucket&lt;span class="o">{&lt;/span>&lt;span class="nv">le&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;1&amp;#34;&lt;/span>&lt;span class="o">}&lt;/span> &lt;span class="m">1762&lt;/span>
+bucket&lt;span class="o">{&lt;/span>&lt;span class="nv">le&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;2&amp;#34;&lt;/span>&lt;span class="o">}&lt;/span> &lt;span class="m">1989&lt;/span>
+bucket&lt;span class="o">{&lt;/span>&lt;span class="nv">le&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;5&amp;#34;&lt;/span>&lt;span class="o">}&lt;/span> &lt;span class="m">1994&lt;/span>
+bucket&lt;span class="o">{&lt;/span>&lt;span class="nv">le&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;7&amp;#34;&lt;/span>&lt;span class="o">}&lt;/span> &lt;span class="m">1999&lt;/span>
+bucket&lt;span class="o">{&lt;/span>&lt;span class="nv">le&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;10&amp;#34;&lt;/span>&lt;span class="o">}&lt;/span> &lt;span class="m">2000&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="分析">分析&lt;/h2>
+&lt;p>&lt;strong>TL;DR：本次示例的核心是 &lt;code>fork&lt;/code>，从字面意思就很容易理解：新开一个处理分支（Pipeline），与主线并行执行。&lt;/strong>&lt;/p>
+&lt;p>在 &lt;code>src/inbound.cpp:104 109&lt;/code> 处，Pipy 接收一个新的连接。
+&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/10/20210610210104.png" alt="">&lt;/p>
+&lt;p>创建 &lt;code>Context&lt;/code> 和 &lt;code>Session&lt;/code>，并在 L178 处注册事件的处理器，然后在 L187 处开始接收数据。
+&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/10/20210610210414.png" alt="">&lt;/p>
+&lt;p>在 &lt;code>#receive&lt;/code> 方法中，定义了数据接收处理器：将读到的数据写入 &lt;code>buffer&lt;/code> 中。这个 &lt;code>buffer&lt;/code> 存储的是 &lt;code>Event&lt;/code>类型数据。（所以说 Pipy 是基于数据流事件，将一些封装成了事件）&lt;/p>
+&lt;p>接着调用 &lt;code>Session#input&lt;/code>。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/10/20210610211221.png" alt="">&lt;/p>
+&lt;p>实际上调用的是 &lt;code>ReusableSession#input&lt;/code>，调用 &lt;code>m_filters&lt;/code> 的 &lt;code>#process&lt;/code> 方法。&lt;code>m_filters&lt;/code> 实际上是 &lt;code>Filter&lt;/code> 类型。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/10/20210610212917.png" alt="">&lt;/p>
+&lt;p>为什么只有一个 &lt;code>Filter&lt;/code>？重点来了，看下 &lt;code>ReusableSession&lt;/code> 的构造过程就能明白了（这里用了个反向迭代器）。&lt;code>output&lt;/code> 是当前 &lt;code>Filter&lt;/code> 处理完要执行的，实现类似链式的执行。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/10/20210610213338.png" alt="">&lt;/p>
+&lt;p>再回头看上面的示例，可以想象 &lt;code>fork&lt;/code> 就是 &lt;code>Session&lt;/code> 的 &lt;code>m_filters&lt;/code>。&lt;/p>
+&lt;p>&lt;code>src/filters/fork.cpp:85&lt;/code>，在 &lt;code>fork&lt;/code> 过滤器中，在 &lt;em>1&lt;/em> 处从 &lt;code>module&lt;/code> 中获取到目标 &lt;code>Pipeline&lt;/code>，并在 &lt;em>3&lt;/em> 和 &lt;em>4&lt;/em> 处 创建了新的 &lt;code>Session&lt;/code> 并保存原 &lt;code>Session&lt;/code> 的数据。&lt;/p>
+&lt;p>然后在 &lt;em>5&lt;/em> 处将原 &lt;code>Event&lt;/code> 输入到新的 &lt;code>Session&lt;/code> 中，触发目标 &lt;code>Pipeline&lt;/code> 的 &lt;code>Filter&lt;/code> 链。&lt;strong>值得注意的是，这里是基于事件的处理，并不是阻塞的。这就意味着，&lt;code>fork&lt;/code> 的目标 &lt;code>pipline&lt;/code>，与 &lt;code>fork&lt;/code> 所在的 pipeline 是并行执行的。&lt;/strong> 在示例中，就是 &lt;code>Pipeline&lt;/code> ‘in’ 与 主 &lt;code>Pipeline&lt;/code> 的 &lt;code>connect&lt;/code> 是并行执行的。&lt;/p>
+&lt;p>最终在 &lt;em>6&lt;/em> 处，继续使用原 &lt;code>Session&lt;/code> 的 &lt;code>Filter&lt;/code> 链。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/10/20210610214811.png" alt="">&lt;/p></description></item></channel></rss>

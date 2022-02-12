@@ -1,31 +1,621 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kafka on 乱世浮生</title><link>https://atbug.com/tags/kafka/</link><description>Recent content in Kafka on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 30 Aug 2019 11:10:46 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/kafka/index.xml" rel="self" type="application/rss+xml"/><item><title>如何选择Kafka Topic的分区数</title><link>https://atbug.com/articles/how-to-choose-topic-partition-count-number-kafka/</link><pubDate>Fri, 30 Aug 2019 11:10:46 +0800</pubDate><guid>https://atbug.com/articles/how-to-choose-topic-partition-count-number-kafka/</guid><description>在kafka中, topic的分区是并行计算的单元. 在producer端和broker端, 可以同时并发的写数据到不同的分区中. 在consumer端, Kafka总是将某个分区分配个一个consumer线程. 因此同一个消费组内的并行度与分区数息息相关.
-Partition分区数的大小, 更多直接影响到消费端的吞吐(一个分区只能同一消费组的一个消费者消费). 分区数小, 消费端的吞吐就低. 但是太大也会有其他的影响
-原则:
-更多的分区可提高吞吐量 分区数越多打开的文件句柄越多 分区数越多降低可用性 更多的分区增加端到端的延迟 客户端需要更多的内存 归根结底还是得有个度. 如何找出这个度?
-有个粗略的计算公式: max(t/p, t/c). t就是所预期吞吐量, p是当前生产端单个分区的吞吐, 那c就是消费端单个分区的吞吐.
-比如单个partition的生产端吞吐是200, 消费端是100. 预期的吞吐是500, 那么partition的数量就是5.
-单个分区的吞吐通常通过修改配置来提升, 比如生产端的批处理大小, 压缩算法, acknowledgement类型, 副本数等. 而在消费端则更依赖于消息的处理速度.
-参考 Confluent博客 Linkedin的benchmark</description></item><item><title>Kafka的消息可靠传递</title><link>https://atbug.com/articles/kafka-reliable-data-delivery/</link><pubDate>Sat, 18 Nov 2017 14:01:46 +0000</pubDate><guid>https://atbug.com/articles/kafka-reliable-data-delivery/</guid><description>Kafka提供的基础保障可以用来构建可靠的系统, 却无法保证完全可靠. 需要在可靠性和吞吐之间做取舍.
-Kafka在分区上提供了消息的顺序保证. 生产的消息在写入到所有的同步分区上后被认为是已提交 (不需要刷到硬盘). 生产者可以选择在消息提交完成后接收broker的确认, 是写入leader之后, 或者所有的副本 只要有一个副本存在, 提交的消息就不会丢失 消费者只能读取到已提交的消息 复制 Kafka的复制机制保证每个分区有多个副本, 每个副本可以作为leader或者follower的角色存在. 为了保证副本的同步, 需要做到:
-保持到zk的连接会话: 每隔6s向zk发送心跳, 时间可配置 每隔10s向leader拉取消息, 时间可配置 从leader拉取最近10s的写入的消息. 保持不间断的从leader获取消息是不够的, 必须保证几乎没有延迟 Broker配置 复制因子 default.replication.factor broker级别的副本数设置, 通过这个配置来控制自动创建的topic的副本数. 为N的时候, 可以容忍失去N-1个副本, 保证topic的可读写.
-脏副本的leader选举 unclean.leader.election.enable 0.11.0.0之前的版本, 默认为true; 之后的版本默认为false.</description></item><item><title>Kafka发送不同确认方式的性能差异</title><link>https://atbug.com/articles/kafka-producer-acknowledge-benchmark/</link><pubDate>Tue, 10 Oct 2017 11:49:58 +0000</pubDate><guid>https://atbug.com/articles/kafka-producer-acknowledge-benchmark/</guid><description>背景 Kafka的性能众所周知，Producer支持acknowledge模式。即Kafka会想Producer返回消息发送的结果。但是在Java Client中，acknowledge的确认有两种：同步和异步。 同步是通过调用future.get()实现的；异步则是通过提供callback方法来实现。写了个简单的程序测试一下单线程中吞吐差异能有多大。注意这里只考虑横向对比。
-发送端单线程 Kafka为单集群节点 topic的分区数为1 key长度1 payload长度100 测试工具 JMeter Kafka Meter future.get() + batch size =1 future.get() + batch size = 16K callback + batch size = 16k callback + batch size = 1</description></item><item><title>Kafka消息消费一致性</title><link>https://atbug.com/articles/kafka-consumer-consistency/</link><pubDate>Tue, 26 Sep 2017 19:13:48 +0000</pubDate><guid>https://atbug.com/articles/kafka-consumer-consistency/</guid><description>Kafka消费端的offset主要由consumer来控制, Kafka降每个consumer所监听的tocpic的partition的offset保存在__consumer_offsets主题中. consumer需要将处理完成的消息的offset提交到服务端, 主要有ConsumerCoordinator完成的.
-每次从kafka拉取数据之前, 假如是异步提交offset, 会先调用已经完成的offset commit的callBack, 然后检查ConsumerCoordinator的连接状态. 如果设置了自动提交offset, 会继续上次从服务端获取的数据的offset异步提交到服务端. 这里需要注意的是会有几种情况出现:
-消息处理耗时较多, 假如处理单条消息的耗时为t, 拉取的消息个数为n. t * n &amp;gt; auto_commit_interval_ms, 会导致没有处理完的消息的offset被commit到服务端. 假如此时消费端挂掉, 没有处理完的数据将会丢失. 假如消息处理完成, offset还未commit到服务端的时候消费端挂掉, 已经处理完的消息会被再次消费. 下面配置影响着数据一致性和性能, 因此需要结合业务场景合理配置一下参数, 进行取舍.
-enable.auto.commit 默认为true
-auto.commit.interval.ms 默认为5000 ms (5s)</description></item><item><title>Kafka 恰好一次发送和事务消费示例</title><link>https://atbug.com/articles/kafka-exactly-once-delivery-and-transactional-messaging-example/</link><pubDate>Fri, 22 Sep 2017 18:03:43 +0000</pubDate><guid>https://atbug.com/articles/kafka-exactly-once-delivery-and-transactional-messaging-example/</guid><description>核心思想 生产端一致性: 开启幂等和事务, 包含重试, 发送确认, 同一个连接的最大未确认请求数. 消费端一致性: 通过设置读已提交的数据和同时处理完成每一条消息之后手动提交offset. 生产端 public class ProducerTest { public static void main(String[] args) throws InterruptedException, ExecutionException { Properties props = new Properties(); props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, &amp;#34;192.168.31.186:9092&amp;#34;); props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, &amp;#34;my-transactional-id&amp;#34;); props.put(ProducerConfig.ACKS_CONFIG, &amp;#34;all&amp;#34;); props.put(ProducerConfig.RETRIES_CONFIG, &amp;#34;3&amp;#34;); props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, &amp;#34;1&amp;#34;); Producer&amp;lt;String, String&amp;gt; producer = new KafkaProducer&amp;lt;&amp;gt;(props, new StringSerializer(), new StringSerializer()); producer.</description></item><item><title>恰好一次发送和事务消息(译)</title><link>https://atbug.com/articles/kafka-exactly-once-delivery-and-transactional-messaging/</link><pubDate>Tue, 19 Sep 2017 19:13:26 +0000</pubDate><guid>https://atbug.com/articles/kafka-exactly-once-delivery-and-transactional-messaging/</guid><description>Kafka提供“至少一次”交付语义, 这意味着发送的消息可以传送一次或多次. 人们真正想要的是“一次”语义,因为重复的消息没有被传递。
-普遍地发声重复消息的情况有两种:
-如果客户端尝试向集群发送消息并获取网络错误, 则重试可能会导致重复. 如果在发送消息之前发生网络错误, 则不会发生重复. 但是, 如果在将消息附加到日志之后发生网络错误, 但在将响应发送给发件人之前, 发件人将不知道发生了什么. 唯一的选择是重试和冒险重复或放弃并声明消息丢失。 如果客户端尝试向集群发送消息并获取网络错误, 则重试可能会导致重复. 如果在发送消息之前发生网络错误, 则不会发生重复. 但是, 如果在将消息附加到日志之后发生网络错误, 但在将响应发送给发件人之前, 发件人将不知道发生了什么. 唯一的选择是重试和冒险重复或放弃并声明消息丢失。 第二种情况可以通过使用Kafka提供的偏移量由消费者处理. 他们可以将偏移量与其输出进行存储, 然后确保新消费者始终从最后存储的偏移量中提取. 或者, 他们可以使用偏移量作为一种关键字, 并使用它来对其输出的任何最终目标系统进行重复数据删除。
-Producer API改动 KafkaProducer.java
-public interface Producer&amp;lt;K,V&amp;gt; extends Closeable { /** * Needs to be called before any of the other transaction methods.</description></item><item><title>Kafka Producer配置解读</title><link>https://atbug.com/articles/kafka-producer-config/</link><pubDate>Tue, 19 Sep 2017 15:38:03 +0000</pubDate><guid>https://atbug.com/articles/kafka-producer-config/</guid><description>按照重要性分类, 基于版本0.11.0.0
-高 bootstrap.servers 一组host和port用于初始化连接. 不管这里配置了多少台server, 都只是用作发现整个集群全部server信息. 这个配置不需要包含集群所有的机器信息. 但是最好多于一个, 以防服务器挂掉.
-key.serializer 用来序列化key的Serializer接口的实现类.
-value.serializer 用来序列化value的Serializer接口的实现类
-acks producer希望leader返回的用于确认请求完成的确认数量. 可选值 all, -1, 0 1. 默认值为1
-acks=0 不需要等待服务器的确认. 这是retries设置无效. 响应里来自服务端的offset总是-1. producer只管发不管发送成功与否。延迟低，容易丢失数据。 acks=1 表示leader写入成功（但是并没有刷新到磁盘）后即向producer响应。延迟中等，一旦leader副本挂了，就会丢失数据。 acks=all等待数据完成副本的复制, 等同于-1. 假如需要保证消息不丢失, 需要使用该设置. 同时需要设置unclean.leader.election.enable为true, 保证当ISR列表为空时, 选择其他存活的副本作为新的leader. buffer.memory producer可以使用的最大内存来缓存等待发送到server端的消息. 如果消息速度大于producer交付到server端的阻塞时间max.</description></item><item><title>消费时offset被重置导致重复消费</title><link>https://atbug.com/articles/offset-be-reset-when-consuming/</link><pubDate>Mon, 20 Feb 2017 13:23:49 +0000</pubDate><guid>https://atbug.com/articles/offset-be-reset-when-consuming/</guid><description>这是实际使用时遇到的问题：kafka api的版本是0.10，发现有重复消费问题；检查log后发现在commit offset的时候发生超时。
-Auto offset commit failed for group test: Commit cannot be completed since the group has already rebalanced and assigned the partitions to another member. This means that the time between subsequent calls to poll() was longer than the configured session.</description></item><item><title>Kafka Java生产者模型</title><link>https://atbug.com/articles/kafka-java-producer-model/</link><pubDate>Wed, 04 Jan 2017 16:33:02 +0000</pubDate><guid>https://atbug.com/articles/kafka-java-producer-model/</guid><description>Producer初始化 初始化KafkaProducer实例，同时通过Config数据初始化MetaData、NetWorkClient、Accumulator和Sender线程。启动Sender线程。
-MetaData信息 记录Cluster的相关信息，第一次链接使用Config设置，之后会从远端poll信息回来，比如host.name等信息。
-Accumulator实例 Accumulator持有一个Map实例，key为TopicPartition（封装了topic和partition信息）对象，Value为RecordBatch的Deque集合。
-NetworkClient实例 通过MetaData信息初始化NetworkClient实例，NetworkClient使用NIO模型。
-Sender线程 sender持有NetworkClient和Accumulator实例，在Producer实例初始化完成之后，持续地将Accumulator中的Batch数据drain到一个List中，调用NetworkClient进行发送。
-发送 调用Producer实例进行消息发送，首先将消息序列化之后追加到Accumulator的Deque的最后一个batch中，之后唤醒sender-&amp;gt;client-&amp;gt;Selector进行消息发送。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kafka on 乱世浮生</title><link>https://atbug.com/tags/kafka/</link><description>Recent content in Kafka on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 30 Aug 2019 11:10:46 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/kafka/index.xml" rel="self" type="application/rss+xml"/><item><title>如何选择Kafka Topic的分区数</title><link>https://atbug.com/how-to-choose-topic-partition-count-number-kafka/</link><pubDate>Fri, 30 Aug 2019 11:10:46 +0800</pubDate><guid>https://atbug.com/how-to-choose-topic-partition-count-number-kafka/</guid><description>
+&lt;p>在kafka中, topic的分区是并行计算的单元. 在producer端和broker端, 可以同时并发的写数据到不同的分区中.
+在consumer端, Kafka总是将某个分区分配个一个consumer线程. 因此同一个消费组内的并行度与分区数息息相关.&lt;/p>
+&lt;p>Partition分区数的大小, 更多直接影响到消费端的吞吐(一个分区只能同一消费组的一个消费者消费). 分区数小, 消费端的吞吐就低. 但是太大也会有其他的影响&lt;/p>
+&lt;p>原则:&lt;/p>
+&lt;ul>
+&lt;li>更多的分区可提高吞吐量&lt;/li>
+&lt;li>分区数越多打开的文件句柄越多&lt;/li>
+&lt;li>分区数越多降低可用性&lt;/li>
+&lt;li>更多的分区增加端到端的延迟&lt;/li>
+&lt;li>客户端需要更多的内存&lt;/li>
+&lt;/ul>
+&lt;p>归根结底还是得有个度. 如何找出这个度?&lt;/p>
+&lt;p>有个粗略的计算公式: &lt;code>max(t/p, t/c)&lt;/code>. &lt;code>t&lt;/code>就是所预期吞吐量, &lt;code>p&lt;/code>是当前生产端单个分区的吞吐, 那&lt;code>c&lt;/code>就是消费端单个分区的吞吐.&lt;/p>
+&lt;p>比如单个partition的生产端吞吐是200, 消费端是100. 预期的吞吐是500, 那么partition的数量就是5.&lt;/p>
+&lt;p>单个分区的吞吐通常通过修改配置来提升, 比如生产端的批处理大小, 压缩算法, acknowledgement类型, 副本数等. 而在消费端则更依赖于消息的处理速度.&lt;/p>
+&lt;h3 id="参考">参考&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://www.confluent.io/blog/how-choose-number-topics-partitions-kafka-cluster">Confluent博客&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://engineering.linkedin.com/kafka/benchmarking-apache-kafka-2-million-writes-second-three-cheap-machines">Linkedin的benchmark&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Kafka的消息可靠传递</title><link>https://atbug.com/kafka-reliable-data-delivery/</link><pubDate>Sat, 18 Nov 2017 14:01:46 +0000</pubDate><guid>https://atbug.com/kafka-reliable-data-delivery/</guid><description>
+&lt;p>Kafka提供的基础保障可以用来构建可靠的系统, 却无法保证完全可靠. 需要在可靠性和吞吐之间做取舍.&lt;/p>
+&lt;ul>
+&lt;li>Kafka在分区上提供了消息的顺序保证.&lt;/li>
+&lt;li>生产的消息在写入到所有的同步分区上后被认为是&lt;strong>已提交&lt;/strong> (不需要刷到硬盘). 生产者可以选择在消息提交完成后接收broker的确认, 是写入leader之后, 或者所有的副本&lt;/li>
+&lt;li>只要有一个副本存在, 提交的消息就不会丢失&lt;/li>
+&lt;li>消费者只能读取到已提交的消息&lt;/li>
+&lt;/ul>
+&lt;h2 id="复制">复制&lt;/h2>
+&lt;p>Kafka的复制机制保证每个分区有多个副本, 每个副本可以作为leader或者follower的角色存在. 为了保证副本的同步, 需要做到:&lt;/p>
+&lt;ul>
+&lt;li>保持到zk的连接会话: 每隔6s向zk发送心跳, 时间可配置&lt;/li>
+&lt;li>每隔10s向leader拉取消息, 时间可配置&lt;/li>
+&lt;li>从leader拉取最近10s的写入的消息. 保持不间断的从leader获取消息是不够的, 必须保证几乎没有延迟&lt;/li>
+&lt;/ul>
+&lt;h2 id="broker配置">Broker配置&lt;/h2>
+&lt;h3 id="复制因子">复制因子&lt;/h3>
+&lt;p>&lt;code>default.replication.factor&lt;/code> broker级别的副本数设置, 通过这个配置来控制&lt;strong>自动创建&lt;/strong>的topic的副本数. 为N的时候, 可以容忍失去N-1个副本, 保证topic的可读写.&lt;/p>
+&lt;h3 id="脏副本的leader选举">脏副本的leader选举&lt;/h3>
+&lt;p>&lt;code>unclean.leader.election.enable&lt;/code> 0.11.0.0之前的版本, 默认为true; 之后的版本默认为false. 这个设置控制不同步的副本能否参与leader的选举. 如果设置为true, 当没有同步副本可用的时候, 不同步的副本会成为leader, 意味着有数据丢失. 如果设置为false, 则意味着系统会处于不可用的状态, 该部分没有leader提供服务. 需要在&lt;strong>可用性&lt;/strong>和&lt;strong>一致性&lt;/strong>之间做取舍.&lt;/p>
+&lt;h3 id="最小同步副本数">最小同步副本数&lt;/h3>
+&lt;p>&lt;code>min.insync.replicas&lt;/code> 这个设置可以作用于broker和topic级别. 假如broker数为3, 最小同步副本数为2. 当2个同步副本中的一个出现问题, 集群便不会再接受生产者的发送消息请求. 同事客户端会收到&lt;code>NotEnoughReplicasException&lt;/code>. 此时, 消费者还可以继续读取存在的数据. 唯一的同步副本变成只读.&lt;/p>
+&lt;h2 id="可靠系统中使用生产者">可靠系统中使用生产者&lt;/h2>
+&lt;h3 id="发送确认">发送确认&lt;/h3>
+&lt;p>&lt;code>acks&lt;/code> 可选0, 1或者all. 设置影响吞吐和一致性.&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>acks=0&lt;/code> 意味着消息发送出去后就认为是成功写入topic.&lt;/li>
+&lt;li>&lt;code>acks=1&lt;/code> 发送后等待leader写入后确认&lt;/li>
+&lt;li>&lt;code>acks=all&lt;/code> 发送后等待所有副本写入后确认&lt;/li>
+&lt;/ul>
+&lt;h3 id="重试">重试&lt;/h3>
+&lt;p>&lt;code>retries&lt;/code> 消息发送后会收到成功或者错误码. 错误有两种, 可重试的和不可重试的. 对于可重试的错误, 生产者会重复发送, 而&lt;code>reties&lt;/code>控制重试的次数. 比如borker返回&lt;code>LEADER_NOT_AVAILABLE&lt;/code>错误, 生产者会自动进行重试(retries不等于0), 因为broker之后会选择新的leader. 如果返回&lt;code>INVALID_CONFIG&lt;/code>, 重试也不会解决问题.
+同时&lt;code>retries&lt;/code>有可能导致消息重复, 这就是Kafka消息的&lt;code>at least once&lt;/code>保证. 在0.11.0.0之后, 提供了幂等的特性, 保证消息的&lt;code>exactly one&lt;/code>. 对于跨数据中心的复制(比如MirrorMaker), 默认设置为&lt;code>Integer.MAX_VALUE&lt;/code>&lt;/p>
+&lt;h3 id="额外的错误处理">额外的错误处理&lt;/h3>
+&lt;p>使用生产者内置的重试是一个正确处理多种错误而不丢失消息的简单途径. 但是开发者还需要处理其他的错误, 比如:&lt;/p>
+&lt;ul>
+&lt;li>不可重试错误&lt;/li>
+&lt;li>发送之前的错误&lt;/li>
+&lt;li>场试完所有的重试次数后还是未成功发送.&lt;/li>
+&lt;/ul>
+&lt;h2 id="可靠系统中使用消费者">可靠系统中使用消费者&lt;/h2>
+&lt;p>&lt;strong>已提交消息&lt;/strong>和&lt;strong>已提交偏移量&lt;/strong>
+完全不同的两个概念, 前者是对生产者有效, 后者是对消费者有效.&lt;/p>
+&lt;h3 id="重要设置">重要设置&lt;/h3>
+&lt;ul>
+&lt;li>&lt;code>group.id&lt;/code> 两个有相同&lt;code>group.id&lt;/code>并且订阅同一个topic的消费者, 会分配到topic下分区的一个子集, 并且是独立的子集.&lt;/li>
+&lt;li>&lt;code>auto.offset.reset&lt;/code> 这个参数控制当broker端没有发现任何提交的偏移量的时候, 消费者应该从什么位置开始读取消息. 接受&lt;code>earliest&lt;/code>和&lt;code>latest&lt;/code>两种设置. &lt;code>earliest&lt;/code>意思是会从0开始读取, 而&lt;code>latest&lt;/code>意思是从最末尾开始.&lt;/li>
+&lt;li>&lt;code>enable.auto.commit&lt;/code> 按照时间计划提交偏移量或者代码中手动提交. 对consumer来说这是一个&lt;strong>重大&lt;/strong>的决定. 自动提交会保证只提交循环中已经处理的数据, 但是有可能会在下次提交始前系统崩溃. 这就导致已经被处理的消息的偏移量没有提交到broker. 下次拉取的时候(consumer重新上线或者rebalance时候由其他消费者处理该分区)会重新拉取已经处理过的消息, &lt;strong>重复消费&lt;/strong>. 假如你是将拉取的消息交由其他的线程处理, 那自动提交可能会到时消息被拉取, 却没有被处理. 自动提交的好处是吞吐量大.&lt;/li>
+&lt;li>&lt;code>auto.commit.interval.ms&lt;/code> 当&lt;code>enable.auto.commit&lt;/code>设置为&lt;strong>true&lt;/strong>的时候, 通过这个配置控制自动提交的时间间隔. 越大吞吐就越大, 一致性就越低. 越小, 则会增加提交的次数, 影响吞吐, 但是会提高一致性.&lt;/li>
+&lt;/ul>
+&lt;h3 id="准确提交偏移量">准确提交偏移量&lt;/h3>
+&lt;h4 id="总是提交已经处理过得消息">总是提交已经处理过得消息&lt;/h4>
+&lt;p>假如你是在循环中处理所有的消息, 并且不需要维护跨多次轮询的状态, 会比较容易实现. 可以使用自动提交, 或者在轮询循环的末尾进行偏移量提交.&lt;/p>
+&lt;h4 id="提交频率是性能和系统崩溃时重复的消息数量间的取舍">提交频率是性能和系统崩溃时重复的消息数量间的取舍&lt;/h4>
+&lt;p>一次轮询循环中可以进行多次偏移量提交, 甚至每处理一条提交一次. 或者几个轮询提交一次. 提交会有性能上的开销, 类似生产者的&lt;code>acks=all&lt;/code>&lt;/p>
+&lt;h4 id="保证你清楚的了解将要提交什么偏移量">保证你清楚的了解将要提交什么偏移量&lt;/h4>
+&lt;p>常见的一个陷阱就是一次轮询循环中的偏移量提交了读到的最大偏移量, 而不是已经处理过得最大偏移量. 会导致消息丢失.&lt;/p>
+&lt;h3 id="再平衡">再平衡&lt;/h3>
+&lt;p>准确处理consumer的再平衡(consumer上线或者下线). 再平衡会引起先从消费者上摘取某些分区, 然后在分配某些分区. 通过实现RebalanceListener接口来实现控制.&lt;/p>
+&lt;h3 id="消费者可能需要重试">消费者可能需要重试&lt;/h3>
+&lt;p>某些场景下, 暂时不提交偏移量, 下次轮询的时候会重复拉取消息. 比如数据库连接暂时不可用的情况下.&lt;/p>
+&lt;h3 id="消费者可能需要维护状态">消费者可能需要维护状态&lt;/h3>
+&lt;p>某些场景下, 需要在多个轮询间存在聚合运算.&lt;/p>
+&lt;h3 id="处理长时间的处理">处理长时间的处理&lt;/h3>
+&lt;p>有些时候, 消息的处理耗时较长, 比如与其他系统交互或者进行比较复杂的运算.
+某些Kafka版本的消费者, 两次轮询的间隔不能太长 (0.10.0.0之前版本的消费者没有单独的心跳进程, 是通过轮询同时达到心跳目的). 太长, 消费者则会被认为是下线, 会发生再平衡.&lt;/p>
+&lt;h3 id="有且只有一次的消息投递">有且只有一次的消息投递&lt;/h3>
+&lt;p>有些场景需要至少一次的语义(没有消息丢失); 而某些场景则需要有些只有一次的语义. 但是当前Kafka没有提供完美的有且只有一次的支持. 需要与其他系统结合一起实现, 比如使用唯一的key写入数据库或者redis等存储中.&lt;/p></description></item><item><title>Kafka发送不同确认方式的性能差异</title><link>https://atbug.com/kafka-producer-acknowledge-benchmark/</link><pubDate>Tue, 10 Oct 2017 11:49:58 +0000</pubDate><guid>https://atbug.com/kafka-producer-acknowledge-benchmark/</guid><description>
+&lt;h2 id="背景">背景&lt;/h2>
+&lt;p>Kafka的性能众所周知，Producer支持acknowledge模式。即Kafka会想Producer返回消息发送的结果。但是在Java Client中，acknowledge的确认有两种：同步和异步。
+同步是通过调用future.get()实现的；异步则是通过提供callback方法来实现。写了个简单的程序测试一下单线程中吞吐差异能有多大。&lt;strong>注意这里只考虑横向对比。&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>发送端单线程&lt;/li>
+&lt;li>Kafka为单集群节点&lt;/li>
+&lt;li>topic的分区数为1&lt;/li>
+&lt;li>key长度1&lt;/li>
+&lt;li>payload长度100&lt;/li>
+&lt;/ul>
+&lt;h2 id="测试工具">测试工具&lt;/h2>
+&lt;ul>
+&lt;li>JMeter&lt;/li>
+&lt;li>&lt;a href="https://github.com/addozhang/kafka-meter">Kafka Meter&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="futureget--batch-size-1">future.get() + batch size =1&lt;/h3>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15076056852541.jpg" alt="">&lt;/p>
+&lt;h3 id="futureget--batch-size--16k">future.get() + batch size = 16K&lt;/h3>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15076057041954.jpg" alt="">&lt;/p>
+&lt;h3 id="callback--batch-size--16k">callback + batch size = 16k&lt;/h3>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15076057158000.jpg" alt="">&lt;/p>
+&lt;h3 id="callback--batch-size--1">callback + batch size = 1&lt;/h3>
+&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15076057250088.jpg" alt="">&lt;/p></description></item><item><title>Kafka消息消费一致性</title><link>https://atbug.com/kafka-consumer-consistency/</link><pubDate>Tue, 26 Sep 2017 19:13:48 +0000</pubDate><guid>https://atbug.com/kafka-consumer-consistency/</guid><description>
+&lt;p>Kafka消费端的offset主要由consumer来控制, Kafka降每个consumer所监听的tocpic的partition的offset保存在__consumer_offsets主题中. consumer需要将处理完成的消息的offset提交到服务端, 主要有ConsumerCoordinator完成的.&lt;/p>
+&lt;p>每次从kafka拉取数据之前, 假如是异步提交offset, 会先调用已经完成的offset commit的callBack, 然后检查ConsumerCoordinator的连接状态. 如果设置了&lt;strong>自动&lt;/strong>提交offset, 会继续上次从服务端获取的数据的offset&lt;strong>异步&lt;/strong>提交到服务端. 这里需要注意的是会有几种情况出现:&lt;/p>
+&lt;ul>
+&lt;li>消息处理耗时较多, 假如处理单条消息的耗时为t, 拉取的消息个数为n. t * n &amp;gt; auto_commit_interval_ms, 会导致没有处理完的消息的offset被commit到服务端. 假如此时消费端挂掉, 没有处理完的数据将会丢失.&lt;/li>
+&lt;li>假如消息处理完成, offset还未commit到服务端的时候消费端挂掉, 已经处理完的消息会被再次消费.&lt;/li>
+&lt;/ul>
+&lt;p>下面配置影响着数据一致性和性能, 因此需要结合业务场景合理配置一下参数, 进行取舍.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>enable.auto.commit&lt;/code> 默认为true&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>auto.commit.interval.ms&lt;/code> 默认为5000 ms (5s)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>max.poll.records&lt;/code> 默认为500&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>fetch.max.bytes&lt;/code> 默认为52428800 bytes (50Mib).&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="一致性">一致性&lt;/h3>
+&lt;p>这里我们针对前面出现的两个问题给出解决方案.&lt;/p>
+&lt;h4 id="kafka-java-client">Kafka Java Client&lt;/h4>
+&lt;p>把&lt;code>enable.auto.commit&lt;/code>设置为&lt;code>false&lt;/code>, 并在每处理完一条数据后手动提交offset.&lt;/p>
+&lt;p>&lt;strong>这里需要主意的时, 提交的offset是对当前消息的offset基础上进行加1.&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">ConsumerTest&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">InterruptedException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Properties&lt;/span> &lt;span class="n">props&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Properties&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">BOOTSTRAP_SERVERS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;192.168.31.186:9092&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">GROUP_ID_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;test&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">AUTO_OFFSET_RESET_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">OffsetResetStrategy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">NONE&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">toString&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">toLowerCase&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Locale&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">ROOT&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">ENABLE_AUTO_COMMIT_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;false&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">KEY_DESERIALIZER_CLASS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;org.apache.kafka.common.serialization.StringDeserializer&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">VALUE_DESERIALIZER_CLASS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;org.apache.kafka.common.serialization.StringDeserializer&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">KafkaConsumer&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">consumer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">KafkaConsumer&lt;/span>&lt;span class="o">&amp;lt;&amp;gt;(&lt;/span>&lt;span class="n">props&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">subscribe&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Arrays&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">asList&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;my-topic&amp;#34;&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">ConsumerRecords&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">records&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">consumer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">poll&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">100&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(!&lt;/span>&lt;span class="n">records&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isEmpty&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">for&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerRecord&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">record&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="n">records&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">printf&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;offset = %d, key = %s, value = %s%n&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">offset&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">key&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">value&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="c1">//Manually commit each record
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">consumer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">commitSync&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Collections&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">singletonMap&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="n">TopicPartition&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">topic&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">partition&lt;/span>&lt;span class="o">()),&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">OffsetAndMetadata&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">offset&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">1&lt;/span>&lt;span class="o">)));&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="spring-kafka">Spring Kafka&lt;/h4>
+&lt;ul>
+&lt;li>
+&lt;p>把&lt;code>enable.auto.commit&lt;/code>设置为&lt;code>false&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>设置&lt;code>ContainerProperties&lt;/code>的&lt;code>ackMode&lt;/code>为&lt;code>MANUAL_IMMEDIATE&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>使用AcknowledgingMessageListener作为listener, 并在消息处理完成后调用acknowledgment.acknowledge().&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">SpringConsumerTest&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">String&lt;/span> &lt;span class="n">bootstrapServer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;192.168.31.186:9092&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="n">String&lt;/span> &lt;span class="n">groupId&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;spring-consumer-group&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="n">ContainerProperties&lt;/span> &lt;span class="n">containerProperties&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ContainerProperties&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;my-topic&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">containerProperties&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setAckMode&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">AbstractMessageListenerContainer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">AckMode&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">MANUAL_IMMEDIATE&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">containerProperties&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setMessageListener&lt;/span>&lt;span class="o">(&lt;/span>
+&lt;span class="o">(&lt;/span>&lt;span class="n">AcknowledgingMessageListener&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;)&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">consumerRecord&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">acknowledgment&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">consumerRecord&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">acknowledgment&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">acknowledge&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">});&lt;/span>
+&lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">Object&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">consumerConfigs&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">HashMap&lt;/span>&lt;span class="o">&amp;lt;&amp;gt;();&lt;/span>
+&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">BOOTSTRAP_SERVERS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">bootstrapServer&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">GROUP_ID_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">groupId&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">ENABLE_AUTO_COMMIT_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;false&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">SESSION_TIMEOUT_MS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">10&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">1000&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">AUTO_OFFSET_RESET_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;earliest&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">METADATA_MAX_AGE_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">10&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">1000&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">KEY_DESERIALIZER_CLASS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">StringDeserializer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">class&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">VALUE_DESERIALIZER_CLASS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">StringDeserializer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">class&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">KafkaMessageListenerContainer&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">listenerContainer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">KafkaMessageListenerContainer&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;(&lt;/span>
+&lt;span class="k">new&lt;/span> &lt;span class="n">DefaultKafkaConsumerFactory&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">consumerConfigs&lt;/span>&lt;span class="o">),&lt;/span>
+&lt;span class="n">containerProperties&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">listenerContainer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">start&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Kafka 恰好一次发送和事务消费示例</title><link>https://atbug.com/kafka-exactly-once-delivery-and-transactional-messaging-example/</link><pubDate>Fri, 22 Sep 2017 18:03:43 +0000</pubDate><guid>https://atbug.com/kafka-exactly-once-delivery-and-transactional-messaging-example/</guid><description>
+&lt;h3 id="核心思想">核心思想&lt;/h3>
+&lt;ul>
+&lt;li>生产端一致性: 开启幂等和事务, 包含重试, 发送确认, 同一个连接的最大未确认请求数.&lt;/li>
+&lt;li>消费端一致性: 通过设置读已提交的数据和同时处理完成每一条消息之后手动提交offset.&lt;/li>
+&lt;/ul>
+&lt;h3 id="生产端">生产端&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">ProducerTest&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">InterruptedException&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">ExecutionException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Properties&lt;/span> &lt;span class="n">props&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Properties&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ProducerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">BOOTSTRAP_SERVERS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;192.168.31.186:9092&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ProducerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">TRANSACTIONAL_ID_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;my-transactional-id&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ProducerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">ACKS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;all&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ProducerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">RETRIES_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;3&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ProducerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;1&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">Producer&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">producer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">KafkaProducer&lt;/span>&lt;span class="o">&amp;lt;&amp;gt;(&lt;/span>&lt;span class="n">props&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">StringSerializer&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">StringSerializer&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="n">producer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">initTransactions&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">try&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">producer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">beginTransaction&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">for&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">0&lt;/span>&lt;span class="o">;&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">5&lt;/span>&lt;span class="o">;&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="o">++)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Future&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">RecordMetadata&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">send&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">producer&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="na">send&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="n">ProducerRecord&lt;/span>&lt;span class="o">&amp;lt;&amp;gt;(&lt;/span>&lt;span class="s">&amp;#34;my-topic&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">Integer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">toString&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="o">),&lt;/span> &lt;span class="n">Integer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">toString&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="o">)));&lt;/span>
+&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">send&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">offset&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="n">TimeUnit&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">MILLISECONDS&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">sleep&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">1000L&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="n">producer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">commitTransaction&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">catch&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">ProducerFencedException&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">OutOfOrderSequenceException&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">AuthorizationException&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// We can&amp;#39;t recover from these exceptions, so our only option is to close the producer and exit.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">producer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">close&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">catch&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">KafkaException&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// For all other exceptions, just abort the transaction and try again.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">producer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">abortTransaction&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="n">producer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">close&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="消费端">消费端&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">ConsumerTest&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">InterruptedException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Properties&lt;/span> &lt;span class="n">props&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Properties&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">BOOTSTRAP_SERVERS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;192.168.31.186:9092&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">GROUP_ID_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;test&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">AUTO_OFFSET_RESET_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">OffsetResetStrategy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">NONE&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">toString&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">toLowerCase&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Locale&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">ROOT&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">ENABLE_AUTO_COMMIT_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;false&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">KEY_DESERIALIZER_CLASS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;org.apache.kafka.common.serialization.StringDeserializer&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">VALUE_DESERIALIZER_CLASS_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;org.apache.kafka.common.serialization.StringDeserializer&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">props&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerConfig&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">ISOLATION_LEVEL_CONFIG&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">IsolationLevel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">READ_COMMITTED&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">toString&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">toLowerCase&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Locale&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">ROOT&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="n">KafkaConsumer&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">consumer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">KafkaConsumer&lt;/span>&lt;span class="o">&amp;lt;&amp;gt;(&lt;/span>&lt;span class="n">props&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">consumer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">subscribe&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Arrays&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">asList&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;my-topic&amp;#34;&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">ConsumerRecords&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">records&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">consumer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">poll&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">100&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(!&lt;/span>&lt;span class="n">records&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isEmpty&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">for&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">ConsumerRecord&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">record&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="n">records&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">printf&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;offset = %d, key = %s, value = %s%n&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">offset&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">key&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">value&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="c1">//Manually commit each record
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">consumer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">commitSync&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Collections&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">singletonMap&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="n">TopicPartition&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">topic&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">partition&lt;/span>&lt;span class="o">()),&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">OffsetAndMetadata&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">offset&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">1&lt;/span>&lt;span class="o">)));&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>恰好一次发送和事务消息(译)</title><link>https://atbug.com/kafka-exactly-once-delivery-and-transactional-messaging/</link><pubDate>Tue, 19 Sep 2017 19:13:26 +0000</pubDate><guid>https://atbug.com/kafka-exactly-once-delivery-and-transactional-messaging/</guid><description>
+&lt;p>Kafka提供“至少一次”交付语义, 这意味着发送的消息可以传送一次或多次. 人们真正想要的是“一次”语义,因为重复的消息没有被传递。&lt;/p>
+&lt;p>普遍地发声重复消息的情况有两种:&lt;/p>
+&lt;ul>
+&lt;li>如果客户端尝试向集群发送消息并获取网络错误, 则重试可能会导致重复. 如果在发送消息之前发生网络错误, 则不会发生重复. 但是, 如果在将消息附加到日志之后发生网络错误, 但在将响应发送给发件人之前, 发件人将不知道发生了什么. 唯一的选择是重试和冒险重复或放弃并声明消息丢失。&lt;/li>
+&lt;li>如果客户端尝试向集群发送消息并获取网络错误, 则重试可能会导致重复. 如果在发送消息之前发生网络错误, 则不会发生重复. 但是, 如果在将消息附加到日志之后发生网络错误, 但在将响应发送给发件人之前, 发件人将不知道发生了什么. 唯一的选择是重试和冒险重复或放弃并声明消息丢失。&lt;/li>
+&lt;/ul>
+&lt;p>第二种情况可以通过使用Kafka提供的偏移量由消费者处理. 他们可以将偏移量与其输出进行存储, 然后确保新消费者始终从最后存储的偏移量中提取. 或者, 他们可以使用偏移量作为一种关键字, 并使用它来对其输出的任何最终目标系统进行重复数据删除。&lt;/p>
+&lt;h2 id="producer-api改动">Producer API改动&lt;/h2>
+&lt;p>&lt;strong>KafkaProducer.java&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">interface&lt;/span> &lt;span class="nc">Producer&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">K&lt;/span>&lt;span class="o">,&lt;/span>&lt;span class="n">V&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="kd">extends&lt;/span> &lt;span class="n">Closeable&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Needs to be called before any of the other transaction methods. Assumes that
+&lt;/span>&lt;span class="cm"> * the transactional.id is specified in the producer configuration.
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> * This method does the following:
+&lt;/span>&lt;span class="cm"> * 1. Ensures any transactions initiated by previous instances of the producer
+&lt;/span>&lt;span class="cm"> * are completed. If the previous instance had failed with a transaction in
+&lt;/span>&lt;span class="cm"> * progress, it will be aborted. If the last transaction had begun completion,
+&lt;/span>&lt;span class="cm"> * but not yet finished, this method awaits its completion.
+&lt;/span>&lt;span class="cm"> * 2. Gets the internal producer id and epoch, used in all future transactional
+&lt;/span>&lt;span class="cm"> * messages issued by the producer.
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> * @throws IllegalStateException if the TransactionalId for the producer is not set
+&lt;/span>&lt;span class="cm"> * in the configuration.
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kt">void&lt;/span> &lt;span class="nf">initTransactions&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">IllegalStateException&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Should be called before the start of each new transaction.
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> * @throws ProducerFencedException if another producer is with the same
+&lt;/span>&lt;span class="cm"> * transactional.id is active.
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kt">void&lt;/span> &lt;span class="nf">beginTransaction&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">ProducerFencedException&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Sends a list of consumed offsets to the consumer group coordinator, and also marks
+&lt;/span>&lt;span class="cm"> * those offsets as part of the current transaction. These offsets will be considered
+&lt;/span>&lt;span class="cm"> * consumed only if the transaction is committed successfully.
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> * This method should be used when you need to batch consumed and produced messages
+&lt;/span>&lt;span class="cm"> * together, typically in a consume-transform-produce pattern.
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> * @throws ProducerFencedException if another producer is with the same
+&lt;/span>&lt;span class="cm"> * transactional.id is active.
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kt">void&lt;/span> &lt;span class="nf">sendOffsetsToTransaction&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">TopicPartition&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">OffsetAndMetadata&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">offsets&lt;/span>&lt;span class="o">,&lt;/span>
+&lt;span class="n">String&lt;/span> &lt;span class="n">consumerGroupId&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">ProducerFencedException&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Commits the ongoing transaction.
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> * @throws ProducerFencedException if another producer is with the same
+&lt;/span>&lt;span class="cm"> * transactional.id is active.
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kt">void&lt;/span> &lt;span class="nf">commitTransaction&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">ProducerFencedException&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Aborts the ongoing transaction.
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> * @throws ProducerFencedException if another producer is with the same
+&lt;/span>&lt;span class="cm"> * transactional.id is active.
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kt">void&lt;/span> &lt;span class="nf">abortTransaction&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">ProducerFencedException&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Send the given record asynchronously and return a future which will eventually contain the response information.
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> * @param record The record to send
+&lt;/span>&lt;span class="cm"> * @return A future which will eventually contain the response information
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">Future&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">RecordMetadata&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="nf">send&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ProducerRecord&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">K&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">V&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Send a record and invoke the given callback when the record has been acknowledged by the server
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">Future&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">RecordMetadata&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="nf">send&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ProducerRecord&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">K&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">V&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">Callback&lt;/span> &lt;span class="n">callback&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="outofsequenceexception">OutOfSequenceException&lt;/h3>
+&lt;p>如果broker检测到数据丢失，生产者将抛出OutOfOrderSequenceException。 换句话说，如果它接收到大于其预期的序列的序列号。 未来将返回此异常，并传递给回调（如果有）。 这是一个致命的异常，新的Producer方法如send，beginTransaction，commitTransaction等将会抛出IlegalStateException。&lt;/p>
+&lt;h3 id="应用示例">应用示例&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">KafkaTransactionsExample&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="o">[])&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">KafkaConsumer&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">consumer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">KafkaConsumer&lt;/span>&lt;span class="o">&amp;lt;&amp;gt;(&lt;/span>&lt;span class="n">consumerConfig&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">// Note that the ‘transactional.id’ configuration _must_ be specified in the
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// producer config in order to use transactions.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">KafkaProducer&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">producer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">KafkaProducer&lt;/span>&lt;span class="o">&amp;lt;&amp;gt;(&lt;/span>&lt;span class="n">producerConfig&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">// We need to initialize transactions once per producer instance. To use transactions,
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// it is assumed that the application id is specified in the config with the key
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// transactional.id.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// This method will recover or abort transactions initiated by previous instances of a
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// producer with the same app id. Any other transactional messages will report an error
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// if initialization was not performed.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// The response indicates success or failure. Some failures are irrecoverable and will
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// require a new producer instance. See the documentation for TransactionMetadata for a
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// list of error codes.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">producer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">initTransactions&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">while&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">ConsumerRecords&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">records&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">consumer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">poll&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">CONSUMER_POLL_TIMEOUT&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(!&lt;/span>&lt;span class="n">records&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isEmpty&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// Start a new transaction. This will begin the process of batching the consumed
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// records as well
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// as an records produced as a result of processing the input records.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// We need to check the response to make sure that this producer is able to initiate
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// a new transaction.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">producer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">beginTransaction&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="c1">// Process the input records and send them to the output topic(s).
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">List&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">ProducerRecord&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&amp;gt;&lt;/span> &lt;span class="n">outputRecords&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">processRecords&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">records&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">for&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">ProducerRecord&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">outputRecord&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="n">outputRecords&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">producer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">send&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">outputRecord&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="c1">// To ensure that the consumed and produced messages are batched, we need to commit
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// the offsets through
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// the producer and not the consumer.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// If this returns an error, we should abort the transaction.
+&lt;/span>&lt;span class="c1">&lt;/span>
+&lt;span class="n">sendOffsetsResult&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">producer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">sendOffsetsToTransaction&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">getUncommittedOffsets&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="c1">// Now that we have consumed, processed, and produced a batch of messages, let&amp;#39;s
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// commit the results.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// If this does not report success, then the transaction will be rolled back.
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">producer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">endTransaction&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="新增配置">新增配置&lt;/h3>
+&lt;h4 id="broker配置">Broker配置&lt;/h4>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>配置&lt;/th>
+&lt;th>描述&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>transactional.id.timeout.ms&lt;/td>
+&lt;td>事务协调器在主动过期生成器TransactionalId之前等待的最大时间（以ms为单位），而不从中接收任何事务状态更新。默认为604800000（7天）。 这允许定期的每周生产者工作来维护其ID。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>max.transaction.timeout.ms&lt;/td>
+&lt;td>允许的最大的事务超时时间. 如果一个客户端的事务请求超出这个设置, broker会在InitPidRequest的时候返回一个InvalidTransactionTimeout. 这样可以防止客户端太大的超时，这可能会延迟消费者从包含在事务中的主题中读取消息. 默认值为900000（15分钟）。 这是在消息的交易需要发送的时间段内的保守上限。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>transaction.state.log.replication.factor&lt;/td>
+&lt;td>事务状态主题(__transaction_state)的副本数, 默认为3&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>transaction.state.log.num.partitions&lt;/td>
+&lt;td>事务状态主题(__transaction_state)的的分区数, 默认为50&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>transaction.state.log.min.isr&lt;/td>
+&lt;td>事务状态主题的每个分区的最小数量的异步副本需要被视为联机的。 默认为2&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>transaction.state.log.segment.bytes&lt;/td>
+&lt;td>事务状态主题的段大小。默认值：104857600字节。100m&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="生产者配置">生产者配置&lt;/h4>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>配置&lt;/th>
+&lt;th>描述&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>enable.idempotence&lt;/td>
+&lt;td>是否启用幂等（默认情况下为false）。 如果禁用，生产者将不会在生成请求中设置PID字段，并且当前的生产者传递语义将生效。 请注意，必须启用幂等才能使用事务。当启用幂等时，我们强制执行acks = all，retries&amp;gt; 1和max.inflight.requests.per.connection = 1。 没有这些配置的这些值，我们不能保证幂等。 如果这些设置未被应用程序显式覆盖，则在启用幂等时，生产者将设置acks = all，retries = Integer.MAX_VALUE和max.inflight.requests.per.connection = 1。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>transaction.timeout.ms&lt;/td>
+&lt;td>在主动中止正在进行的事务之前，事务协调器将等待生产者的事务状态更新的最长时间（以ms为单位）。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>transactional.id&lt;/td>
+&lt;td>用于事务传递的TransactionalId。 这使得可以跨越多个生产者会话的可靠性语义，因为它允许客户端保证在开始任何新事务之前使用相同的TransactionalId的事务已经完成。 如果没有提供TransactionalId，则生产者被限制为幂等传递。请注意，如果配置了TransactionalId，则必须启用enable.idempotence。默认值为空，这意味着无法使用事务。&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="消费者配置">消费者配置&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>配置&lt;/th>
+&lt;th>描述&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>isolation.level&lt;/td>
+&lt;td>以下是可能的值（默认为read_uncommitted）：read_uncommitted：在偏移顺序中消费已提交和未提交的消息; read_committed：仅以偏移顺序消耗非事务性消息或已提交事务消息。 为了保持偏移顺序，该设置意味着我们必须缓冲消费者中的消息，直到我们看到给定事务中的所有消息。&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="2">2&lt;/h4>
+&lt;h2 id="idempotent-producer">Idempotent Producer&lt;/h2>
+&lt;h3 id="幂等生产者保障">幂等生产者保障&lt;/h3>
+&lt;p>为了实现幂等生产者语义, 引入了&lt;code>producer id&lt;/code>的概念, 下面称&lt;code>PID&lt;/code>. 每个producer在初始化的时候会被分配一个唯一PID. PID的分配对用户来说是完全透明的, 且没有被客户端暴露.&lt;/p>
+&lt;p>PID是从0开始单调递增的, 还有一个将要将要接受消息的主题分区的序号. 序号会随着producer向broker发送消息增长. broker在内存中维护着从每个PID中发过来的序号. 如果序号不是比上次提交PID/TopicParition组中的的序号大一, broker会拒绝producer的请求. 带有较小序号的消息会引发重复错误, producer可以忽略该错误. 带有较大的序号的消息会导致超出序号的错误, 意味着存在消息丢失, 这是致命的错误.&lt;/p>
+&lt;p>为了保证每条消息都被恰好一次地持久化在log中, producer需要在失败的时候重试请求. 每个生产者实例都会得到一个新的唯一的PID, 因此我们只能在单一的生产者会话中保证幂等.&lt;/p>
+&lt;p>这些幂等生成器语义对于无状态应用程序（如指标跟踪和审计）是非常有用的。&lt;/p>
+&lt;h3 id="事务保障">事务保障&lt;/h3>
+&lt;p>在核心上, 事务保证使应用程序能够以原子方式生成多个主题分区, 对这些主题分区的所有写入将成功或失败作为一个单元。&lt;/p>
+&lt;p>此外, 由于消费者进度被记录为对偏移主题的写入, 所以利用上述能力来使得应用能够将消费和产生的消息批量化成单个原子单元. 只有整个“消费变换产品”全部执行, 才能将消息集合视为消费。&lt;/p>
+&lt;p>为了跨多个生产者会话实现幂等, 需要提供一个在应用层面可以稳定的跨多个会话的transactionalId. transactionalId由用户提供.&lt;/p>
+&lt;p>有transactionalId后, Kafka可以保证:&lt;/p>
+&lt;ol>
+&lt;li>一个给定的transactionalId只有一个活跃的producer. 如果有新的使用同一个transactionalId的producer实例上线, 旧的实例会被隔离.&lt;/li>
+&lt;li>跨应用会话的事务恢复, 当一个应用实例死掉后, broker会结束(取消或者提交)未完成的事务以保护新上线的实例, 在恢复工作之前将新实例置于干净的状态.&lt;/li>
+&lt;/ol>
+&lt;p>注意这里提到的事务保障是从producer的角度. 在consumer端, 保障就会弱一些. 特别是, 我们不能保证承诺事务的所有消息都将一起被消费。原因如下:&lt;/p>
+&lt;ol>
+&lt;li>对于压缩主题, 事务的一些消息可能被较新版本覆盖。&lt;/li>
+&lt;li>事务可能跨越日志段. 因此, 当旧段删除时, 我们可能会在事务的第一部分丢失一些消息。&lt;/li>
+&lt;li>消费者可能会在事务中寻求任意的offset, 因此缺少一些初始消息。&lt;/li>
+&lt;li>消费者可能不会从参与事务的所有分区中消费. 因此, 他们永远无法读取包含该事务的所有消息。&lt;/li>
+&lt;/ol>
+&lt;h2 id="关键概念">关键概念&lt;/h2>
+&lt;p>实现事务, 即确保一组消息以原子方式产生和消费, 我们介绍几个新概念：&lt;/p>
+&lt;ol>
+&lt;li>我们引进一个称为事务协调器(Transaction Coordinator)的新实体。与消费者组协调器类似, 每个生产者都被分配一个事务协调器, 所有分配PID和管理事务的逻辑都由事务协调器完成。&lt;/li>
+&lt;li>我们引入一个名为事务日志(Transaction Log)的新的内部kafka主题(__transaction_state)。与Consumer Offsets主题(__consumer_offsets)类似, 事务日志是每个事务的持久和复制记录。事务日志是事务协调器的状态存储, 最新版本的日志的快照封装了每个活动事务的当前状态。&lt;/li>
+&lt;li>我们引入控制消息(Control Messages)的概念。这些是写入用户主题的特殊消息, 由客户端处理, 但不会暴露给用户。例如, 它们被用于让broker向消费者表明先前提取的消息是否已经原子性地提交。以前在&lt;a href="https://issues.apache.org/jira/browse/KAFKA-1639">这里&lt;/a>提出控制消息。&lt;/li>
+&lt;li>我们引入了TransactionalId的概念, 使用户能够以持续的方式唯一地识别生产者。具有相同TransactionalId的生产者的不同实例将能够恢复（或中止）由上一个实例实例化的任何事务。&lt;/li>
+&lt;li>我们引入生产者代(producer epoch)的概念, 这使我们能够确保只有一个具有给定的TransactionalId的生产者的合法活动实例, 从而使我们能够在发生故障的情况下维护事务保证。&lt;/li>
+&lt;/ol>
+&lt;p>除了上述新概念之外, 我们还引入了新的请求类型, 新版本的现有请求以及新版本的核心消息格式, 以支持事务。所有这些的细节将推迟到其他文档。&lt;/p>
+&lt;h2 id="数据流">数据流&lt;/h2>
+&lt;p>&lt;img src="https://cwiki.apache.org/confluence/download/attachments/66854913/Kafka%20Transactions%20Data%20Flow.png?version=1&amp;amp;modificationDate=1487185558000&amp;amp;api=v2" alt="img">&lt;/p>
+&lt;p>在上图中, 尖锐的边框表示不同的机器. 底部的圆形盒子表示Kafka TopicPartitions, 而对角圆形的框代表在broker内部运行的逻辑实体。&lt;/p>
+&lt;p>每个箭头表示RPC或写入Kafka主题. 这些操作按照每个箭头旁边的数字表示的顺序进行. 下面的部分编号为与上图中的操作相匹配, 并描述相关操作。&lt;/p>
+&lt;h3 id="1-查找一个事务协调器--findcoordinatorrequest">1. 查找一个事务协调器 — FindCoordinatorRequest&lt;/h3>
+&lt;p>事务协调器是分配PIDs和管理事务的核心组件, producer的第一件事是发送一个FindCoordinatorRequest请求(之前被称为GroupCoordinatorRequest, 但是现在更名为更一般的用法)到broker去获取其coordinator的位置. 译者补充比如ip, port.&lt;/p>
+&lt;h3 id="2-获取一个producer-id--initpidrequest">2. 获取一个Producer Id — InitPidRequest&lt;/h3>
+&lt;p>获取到coordinator位置之后, 下一步是获取producer的PID. 这个通过发送InitPidRequest请求到事务协调器完成.&lt;/p>
+&lt;h4 id="21当有指定transactionlid时">2.1当有指定TransactionlId时&lt;/h4>
+&lt;p>如果有配置transactionl.id, TransactionalId会随着InitPidRequest请求发出, 同时在2a中将PID和TransactionalId的对应关系保存在事务日志中. 这使我们能够将TransactionalId返回相同的PID给生产者的未来实例, 因此可以恢复或中止以前不完整的事务。&lt;/p>
+&lt;p>除了返回PID之外, InitPidRequest还执行以下任务：&lt;/p>
+&lt;pre>&lt;code> 1. 提升PID的代, 使生产者的任何之前的僵尸实例被隔离起来, 不能处理事务.
+2. 恢复(向前滚动或回滚)由生产者的上一个实例没有完成的任务事务.
+&lt;/code>&lt;/pre>
+&lt;p>InitPIDRequest的处理是同步完成的. 一旦返回, producer可以发送数据和开始新的事务.&lt;/p>
+&lt;h4 id="22当没有指定transactionalid">2.2当没有指定TransactionalId&lt;/h4>
+&lt;p>如果没有配置TransactionalId, 会分配一个新的PID. 这是producer只在单一的session中实现了幂等语义和事务语义.&lt;/p>
+&lt;h3 id="3-启动事务--begintransaction-api">3. 启动事务 — beginTransaction() API&lt;/h3>
+&lt;p>新的&lt;code>KafkaProducer&lt;/code>有一个beginTransaction()方法用来发出开始事务的信号. 生产者记录指示交易已经开始的本地状态, 但是在发送第一条记录之前, 在协调器看来事务还没有开始.&lt;/p>
+&lt;h3 id="4-消费-转换-生产循环">4. 消费-转换-生产循环&lt;/h3>
+&lt;p>在这个阶段, producer开始执行组成事务消费-转换-生产消息的流程. 这是一个很长的阶段, 可能包含多个请求&lt;/p>
+&lt;h4 id="41-addpartitionstotxnrequest">4.1 AddPartitionsToTxnRequest&lt;/h4>
+&lt;p>作为事务的一部分，生产者首次将新的TopicPartition作为事务的一部分发送给事务协调器。 协调器在步骤4.1a中记录了将此TopicPartition添加到事务中。 我们需要这些信息，以便我们可以将提交或中止标记写入每个TopicPartition（有关详细信息，请参阅第5.2节）。 如果这是添加到事务的第一个分区，协调器也将启动事务计时器。&lt;/p>
+&lt;h4 id="42-producerequest">4.2 ProduceRequest&lt;/h4>
+&lt;p>生产者通过一个或多个ProduceRequests（从生产者的发送方法触发）向用户的主题分区写入一堆消息。 这些请求包括如4.2a所示的PID，代和序号。&lt;/p>
+&lt;h4 id="43-addoffsetcommitstotxnrequest">4.3 AddOffsetCommitsToTxnRequest&lt;/h4>
+&lt;p>生产者有一个新的KafkaProducer.sendOffsetsToTransaction API方法，它可以批量消费和生成的消息。 此方法接受Map &amp;lt;TopicPartitions，OffsetAndMetadata&amp;gt;和groupId参数。&lt;/p>
+&lt;p>sendOffsetsToTransaction方法向事务协调器发送一个带有groupId的AddOffsetCommitsToTxnRequests，从而可以在内部__consumer-offsets主题中推导出该消费者组的TopicPartition。 事务协调器将在步骤4.3a中将该主题分区添加到事务日志中。&lt;/p>
+&lt;h4 id="44-txnoffsetcommitrequest">4.4 TxnOffsetCommitRequest&lt;/h4>
+&lt;p>另外作为sendOffset的一部分，生产者将向消费者协调器发送一个TxnOffsetCommitRequest，以在__consumer-offsets主题中保留偏移量（步骤4.4a）。 消费者协调员通过使用作为该请求的一部分发送的PID和生产者代来验证生产者是否允许发出请求（而不是僵尸）。&lt;/p>
+&lt;p>消费的offsets在事务提交之前不可见，这是我们现在将讨论的过程。&lt;/p>
+&lt;h3 id="5-提交或者终结事务">5. 提交或者终结事务&lt;/h3>
+&lt;p>一旦写入数据，用户必须调用KafkaProducer的新的commitTransaction或abortTransaction API方法。 这些方法将分别开始提交或中止事务。&lt;/p>
+&lt;h4 id="51-endtxnrquest">5.1 EndTxnRquest&lt;/h4>
+&lt;p>当生产者完成事务时，必须调用新引入的KafkaProducer.endTransaction或KafkaProducer.abortTransaction API方法。 前者使得&lt;code>步骤4&lt;/code>中生产的数据可用于下游消费者。 后者有效地从日志中擦除生成的数据: 用户永远不可访问。 下游消费者将读取并丢弃已中止的消息。&lt;/p>
+&lt;p>无论调用哪个生产者方法，生产者向事务协调器发出一个EndTxnRequest请求，附加数据指示事务是提交还是中止。 在收到此请求后，协调器：&lt;/p>
+&lt;ol>
+&lt;li>将PREPARE_COMMIT或PREPARE_ABORT消息写入事务日志。 (步骤5.1a)&lt;/li>
+&lt;li>通过WriteTxnMarkerRequest开始向用户日志写入称为COMMIT(或ABORT)标记的命令消息的过程。 (见下文第5.2节)。&lt;/li>
+&lt;li>最后将COMMITTED（或ABORTED）消息写入事务日志。 (见下文5.3)。&lt;/li>
+&lt;/ol>
+&lt;h4 id="52-writetxnmarkerrequest">5.2 WriteTxnMarkerRequest&lt;/h4>
+&lt;p>该请求由事务协调器发送给作为事务一部分的每个主题分配的leader. 在收到此请求后, 每个代理将向日志写入COMMIT(PID)或ABORT(PID)控制消息。 (步骤5.2a)&lt;/p>
+&lt;p>该消息向消费者指示具有给定PID的消息是否必须传递给用户或丢弃。 因此，消费者将缓冲具有PID的消息，直到它读取相应的COMMIT或ABORT消息，此时它将分别递送或丢弃消息。&lt;/p>
+&lt;p>请注意，如果__consumer-offsets主题是事务中的TopicPartition之一，则提交（或中止）标记也将写入日志，并且通知消费者协调器，以便在以下情况下实现这些偏移量 在中止情况下提交或忽略它们（左侧的步骤5.2a）。&lt;/p>
+&lt;h4 id="53-writing-the-final-commit-or-abort-message">5.3 Writing the final Commit or Abort Message&lt;/h4>
+&lt;p>在所有提交或中止标记写入数据日志之后，事务协调器将最后的COMMITTED或ABORTED消息写入事务日志，指示事务完成（图中的步骤5.3）。 此时，可以删除与事务日志中的事务有关的大多数消息。&lt;/p>
+&lt;p>我们只需要保留完成的事务的PID以及时间戳，所以我们最终可以删除生产者的TransactionalId-&amp;gt; PID映射。 请参阅下面的过期PID部分。&lt;/p>
+&lt;h2 id="简单的实现代码">简单的实现代码&lt;/h2>
+&lt;p>&lt;a href="http://atbug.com/kafka-exactly-once-delivery-and-transactional-messaging-example/">这里&lt;/a>&lt;/p>
+&lt;h2 id="参考资料">参考资料&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://cwiki.apache.org/confluence/display/KAFKA/KIP-98+-+Exactly+Once+Delivery+and+Transactional+Messaging">Exactly Once Delivery and Transactional Messaging&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Kafka Producer配置解读</title><link>https://atbug.com/kafka-producer-config/</link><pubDate>Tue, 19 Sep 2017 15:38:03 +0000</pubDate><guid>https://atbug.com/kafka-producer-config/</guid><description>
+&lt;p>按照重要性分类, 基于版本0.11.0.0&lt;/p>
+&lt;h2 id="高">高&lt;/h2>
+&lt;h3 id="bootstrapservers">bootstrap.servers&lt;/h3>
+&lt;p>一组host和port用于初始化连接. 不管这里配置了多少台server, 都只是用作发现整个集群全部server信息. 这个配置不需要包含集群所有的机器信息. 但是最好多于一个, 以防服务器挂掉.&lt;/p>
+&lt;h3 id="keyserializer">key.serializer&lt;/h3>
+&lt;p>用来序列化key的&lt;code>Serializer&lt;/code>接口的实现类.&lt;/p>
+&lt;h3 id="valueserializer">value.serializer&lt;/h3>
+&lt;p>用来序列化value的&lt;code>Serializer&lt;/code>接口的实现类&lt;/p>
+&lt;h3 id="acks">acks&lt;/h3>
+&lt;p>producer希望leader返回的用于确认请求完成的确认数量. 可选值 all, -1, 0 1. 默认值为1&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>acks=0&lt;/code> 不需要等待服务器的确认. 这是&lt;code>retries&lt;/code>设置无效. 响应里来自服务端的offset总是-1. producer只管发不管发送成功与否。延迟低，容易丢失数据。&lt;/li>
+&lt;li>&lt;code>acks=1&lt;/code> 表示leader写入成功（但是并没有刷新到磁盘）后即向producer响应。延迟中等，一旦leader副本挂了，就会丢失数据。&lt;/li>
+&lt;li>&lt;code>acks=all&lt;/code>等待数据完成副本的复制, 等同于&lt;code>-1&lt;/code>. 假如需要保证消息不丢失, 需要使用该设置. 同时需要设置&lt;code>unclean.leader.election.enable&lt;/code>为true, 保证当ISR列表为空时, 选择其他存活的副本作为新的leader.&lt;/li>
+&lt;/ul>
+&lt;h3 id="buffermemory">buffer.memory&lt;/h3>
+&lt;p>producer可以使用的最大内存来缓存等待发送到server端的消息. 如果消息速度大于producer交付到server端的阻塞时间&lt;code>max.block.ms&lt;/code>, 将会抛出异常. 默认值33554432 byte (32m). 这个设置不是一个严格的边界, 因为producer除了用来缓存消息, 还要用来进行压缩.&lt;/p>
+&lt;h3 id="compressiontype">compression.type&lt;/h3>
+&lt;p>producer压缩数据的类型, 默认为none, 就是不压缩. 可选&lt;code>none&lt;/code>, &lt;code>gzip&lt;/code>, &lt;code>snappy&lt;/code> 和&lt;code>lz4&lt;/code>. 压缩整个batch的数据, 因此batch的效果对压缩率也有影响. 更多的批处理意味着更好的压缩&lt;/p>
+&lt;h3 id="retries">retries&lt;/h3>
+&lt;p>设置大于零的值将导致客户端重新发送其发送失败并发生潜在的瞬时错误的记录. 相当于client在发送失败的时候会重新发行. 如果设置了&lt;code>retries&lt;/code>而没有将&lt;code>max.in.flight.request.per.connection&lt;/code>设置为1, 在两个batch发送到同一个partition时有可能打乱消息的发送顺序(第一个发送失败, 而第二个发送成功)&lt;/p>
+&lt;h2 id="中">中&lt;/h2>
+&lt;h3 id="batchsize">batch.size&lt;/h3>
+&lt;p>producer会尝试批量发送属于同一个partition的消息以减少请求的数量. 这样可以提升客户端和服务端的性能. 默认大小是16348 byte (16k).&lt;/p>
+&lt;p>发送到broker的请求可以包含多个batch, 每个batch的数据属于同一个partition.&lt;/p>
+&lt;p>太小的batch会降低吞吐. 太大会浪费内存.&lt;/p>
+&lt;h3 id="clientid">client.id&lt;/h3>
+&lt;p>发送请求时传递给服务端的id字符. 用来追溯请求源, 除了使用ip/port. 服务端的请求日志中会包含一个合理的应用名. 默认为空&lt;/p>
+&lt;h3 id="lingerms">linger.ms&lt;/h3>
+&lt;p>在正常负载的情况下, 要想减少请求的数量. 加上一个认为的延迟: 不是立即发送消息, 而是延迟等待更多的消息一起批量发送. 类似TCP中的Nagle算法. 当获得了&lt;code>batch.size&lt;/code>的同一partition的消息会立即发送, 不管&lt;code>linger.ms&lt;/code>的设置. 假如要发送的消息比较少, 会等待指定的时间以获取更多的消息.&lt;/p>
+&lt;p>默认设置为0 ms(没有延迟).&lt;/p>
+&lt;h4 id="maxblockms">max.block.ms&lt;/h4>
+&lt;p>控制&lt;code>KafkaProducer.send()&lt;/code>和&lt;code>KafkaProducer.partitionsFor()&lt;/code>的阻塞时间. 这些方法会因为buffer满了或者metadata不可用而阻塞. 用户设置在serializers或者partitioner中的阻塞不会计算在内.&lt;/p>
+&lt;h4 id="maxrequestsize">max.request.size&lt;/h4>
+&lt;p>请求的最大大小（以字节为单位）。 此设置将限制生产者在单个请求中发送的记录批次数，以避免发送巨大的请求。 这也是最大记录批量大小的上限。 请注意，服务器拥有自己的记录批量大小，可能与此不同。&lt;/p>
+&lt;h4 id="partitionerclass">partitioner.class&lt;/h4>
+&lt;p>&lt;code>Partitioner&lt;/code>接口的实现类, 默认是&lt;code>org.apache.kafka.clients.producer.internals.DefaultPartitioner&lt;/code>. 需要处理数据倾斜等原因调整分区逻辑的时候使用.&lt;/p>
+&lt;h4 id="requesttimeoutms">request.timeout.ms&lt;/h4>
+&lt;p>配置控制客户端等待请求响应的最长时间。 如果在超时之前未收到响应，客户端将在必要时重新发送请求，如果重试耗尽，则该请求将失败。 这应该大于replica.lag.time.max.ms(broker配置)，以减少由于不必要的生产者重试引起的消息重复的可能性。&lt;/p>
+&lt;h2 id="低">低&lt;/h2>
+&lt;h4 id="enableidempotence">enable.idempotence&lt;/h4>
+&lt;p>设置为&amp;rsquo;true', 将开启&lt;code>exactly-once&lt;/code>模式. 设置为&amp;rsquo;false'(默认值), producer会因为borker失败等原因重试发送, 可能会导致消息重复.&lt;/p>
+&lt;p>设置为&amp;rsquo;true&amp;rsquo;时需要结合&lt;code>max.in.flight.requests.per.connection&lt;/code>设为'1&amp;rsquo;和&lt;code>retires&lt;/code>不能为'0', 同时&lt;code>acks&lt;/code>需要设置为&amp;rsquo;all&amp;rsquo;或者''-1'.&lt;/p>
+&lt;h4 id="interceptorclasses">interceptor.classes&lt;/h4>
+&lt;p>一组&lt;code>ProducerInterceptor&lt;/code>接口的实现类, 默认为null. 可以通过该接口的实现类去拦截(可能需要修改)producer要发送的消息在发送到服务端之前.&lt;/p>
+&lt;h4 id="maxinflightrequestsperconnection">max.in.flight.requests.per.connection&lt;/h4>
+&lt;p>没有被确认unacknowledge的batch数, 如果设置大于1在&lt;code>retries&lt;/code>设置了的情况下会出现消息发送顺序错误.&lt;/p>
+&lt;h4 id="retrybackoffms">retry.backoff.ms&lt;/h4>
+&lt;p>失败请求重试的间隔时间. 默认是100毫秒&lt;/p>
+&lt;h4 id="transactiontimeoutms">transaction.timeout.ms&lt;/h4>
+&lt;p>事务协调器等待producer更新事务状态的最大毫秒数, 超过的话事务协调器会终止进行中的事务. 如果设置的时间大于broker的&lt;code>max.transaction.timeout.ms&lt;/code>会收到&lt;code>InvalidTransactionTimeout&lt;/code>错误.&lt;/p>
+&lt;h4 id="transactionalid">transactional.id&lt;/h4>
+&lt;p>用于事务传递的TransactionalId。 这使得可以跨越多个生产者会话的可靠性语义，因为它允许客户端保证在开始任何新事务之前使用相同的TransactionalId的事务已经完成。 如果没有提供TransactionalId，则生产者被限制为幂等传递。 请注意，如果配置了TransactionalId，则必须启用enable.idempotence。 默认值为空，这意味着无法使用事务。&lt;/p></description></item><item><title>消费时offset被重置导致重复消费</title><link>https://atbug.com/offset-be-reset-when-consuming/</link><pubDate>Mon, 20 Feb 2017 13:23:49 +0000</pubDate><guid>https://atbug.com/offset-be-reset-when-consuming/</guid><description>
+&lt;p>这是实际使用时遇到的问题：kafka api的版本是0.10，发现有重复消费问题；检查log后发现在commit offset的时候发生超时。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-text" data-lang="text">Auto offset commit failed for group test: Commit cannot be completed since the group has already rebalanced and assigned the partitions to another member. This means that the time between subsequent calls to poll() was longer than the configured session.timeout.ms, which typically implies that the poll loop is spending too much time message processing. You can address this either by increasing the session timeout or by reducing the maximum size of batches returned in poll() with max.poll.records.
+15:12:12.364 [main] WARN o.a.k.c.c.i.ConsumerCoordinator - Auto offset commit failed for group test: Commit offsets failed with retriable exception. You should retry committing offsets.
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>看了Kafka的API文档，发现0.10中提供了新的配置&lt;strong>max.poll.records&lt;/strong>：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-text" data-lang="text">The maximum number of records returned in a single call to poll().
+type: int
+default: 2147483647
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果生产端写入很快，消费端处理耗时。一个batch的处理时间大于session.timeout.ms，会导致session time out，引起offset commit失败。&lt;/p></description></item><item><title>Kafka Java生产者模型</title><link>https://atbug.com/kafka-java-producer-model/</link><pubDate>Wed, 04 Jan 2017 16:33:02 +0000</pubDate><guid>https://atbug.com/kafka-java-producer-model/</guid><description>
+&lt;p>&lt;img src="../../media/14835174309242.jpg" alt="">&lt;/p>
+&lt;h3 id="producer初始化">Producer初始化&lt;/h3>
+&lt;p>初始化KafkaProducer实例，同时通过Config数据初始化MetaData、NetWorkClient、Accumulator和Sender线程。启动Sender线程。&lt;/p>
+&lt;h4 id="metadata信息">MetaData信息&lt;/h4>
+&lt;p>记录Cluster的相关信息，第一次链接使用Config设置，之后会从远端poll信息回来，比如host.name等信息。&lt;/p>
+&lt;h4 id="accumulator实例">Accumulator实例&lt;/h4>
+&lt;p>Accumulator持有一个Map实例，key为TopicPartition（封装了topic和partition信息）对象，Value为RecordBatch的Deque集合。&lt;/p>
+&lt;h4 id="networkclient实例">NetworkClient实例&lt;/h4>
+&lt;p>通过MetaData信息初始化NetworkClient实例，NetworkClient使用NIO模型。&lt;/p>
+&lt;h4 id="sender线程">Sender线程&lt;/h4>
+&lt;p>sender持有NetworkClient和Accumulator实例，在Producer实例初始化完成之后，持续地将Accumulator中的Batch数据drain到一个List中，调用NetworkClient进行发送。&lt;/p>
+&lt;h3 id="发送">发送&lt;/h3>
+&lt;p>调用Producer实例进行消息发送，首先将消息序列化之后追加到Accumulator的Deque的最后一个batch中，之后唤醒sender-&amp;gt;client-&amp;gt;Selector进行消息发送。&lt;/p></description></item></channel></rss>

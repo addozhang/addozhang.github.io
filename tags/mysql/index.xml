@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Mysql on 乱世浮生</title><link>https://atbug.com/tags/mysql/</link><description>Recent content in Mysql on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 14 May 2020 11:34:24 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/mysql/index.xml" rel="self" type="application/rss+xml"/><item><title>Java 中的 Mysql 时区问题</title><link>https://atbug.com/mysql-timezone-in-java/</link><pubDate>Thu, 14 May 2020 11:34:24 +0800</pubDate><guid>https://atbug.com/mysql-timezone-in-java/</guid><description>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/14/anonymouspersonwithminiatureairplaneonchalkboard37.jpg" alt="anonymous-person-with-miniature-airplane-on-chalkboard-3769120">&lt;/p>
+&lt;p>&lt;em>(Photo by Andrea Piacquadio from Pexels)&lt;/em>&lt;/p>
+&lt;p>话说工作十多年，mysql 还真没用几年。起初是外企银行，无法直接接触到 DB；后来一直从事架构方面，也多是解决问题为主。&lt;/p>
+&lt;p>这次搭建海外机房，围绕时区大家做了一番讨论。不说最终的结果是什么，期间有同事认为 DB 返回的是 UTC 时间。&lt;/p>
+&lt;p>这里简单做个验证，顺便看下时区的问题到底是如何处理。&lt;/p>
+&lt;h2 id="环境">环境&lt;/h2>
+&lt;blockquote>
+&lt;p>openjdk version &amp;ldquo;1.8.0_242&amp;rdquo;
+mysql-connector-java &amp;ldquo;8.0.20&amp;rdquo;
+mysql &amp;ldquo;5.7&amp;rdquo; 时区 TZ=Europe/London
+本地时区 GMT+8&lt;/p>
+&lt;/blockquote>
+&lt;p>创建个简单的库&lt;code>test&lt;/code>及表&lt;code>user&lt;/code>， 表结构如下：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="k">CREATE&lt;/span> &lt;span class="k">TABLE&lt;/span> &lt;span class="o">`&lt;/span>&lt;span class="k">user&lt;/span>&lt;span class="o">`&lt;/span> &lt;span class="p">(&lt;/span>
+&lt;span class="o">`&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="o">`&lt;/span> &lt;span class="nb">varchar&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">50&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">NOT&lt;/span> &lt;span class="k">NULL&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">`&lt;/span>&lt;span class="n">birth_date&lt;/span>&lt;span class="o">`&lt;/span> &lt;span class="k">timestamp&lt;/span> &lt;span class="k">NULL&lt;/span> &lt;span class="k">DEFAULT&lt;/span> &lt;span class="k">CURRENT_TIMESTAMP&lt;/span>
+&lt;span class="p">)&lt;/span> &lt;span class="n">ENGINE&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">InnoDB&lt;/span> &lt;span class="k">DEFAULT&lt;/span> &lt;span class="n">CHARSET&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">latin1&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>插入一条测试数据：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="n">mysql&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="k">insert&lt;/span> &lt;span class="k">into&lt;/span> &lt;span class="o">`&lt;/span>&lt;span class="k">user&lt;/span>&lt;span class="o">`&lt;/span>
+&lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="k">values&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Tom&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">time&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;2020-05-15 08:00:00&amp;#39;&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;span class="n">Query&lt;/span> &lt;span class="n">OK&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="k">row&lt;/span> &lt;span class="n">affected&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="mi">01&lt;/span> &lt;span class="n">sec&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">mysql&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="k">select&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="k">from&lt;/span> &lt;span class="k">user&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="o">+&lt;/span>&lt;span class="c1">------+---------------------+
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="o">|&lt;/span> &lt;span class="n">name&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">birth_date&lt;/span> &lt;span class="o">|&lt;/span>
+&lt;span class="o">+&lt;/span>&lt;span class="c1">------+---------------------+
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="o">|&lt;/span> &lt;span class="n">Tom&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">2020&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">05&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">14&lt;/span> &lt;span class="mi">08&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">00&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">00&lt;/span> &lt;span class="o">|&lt;/span>
+&lt;span class="o">+&lt;/span>&lt;span class="c1">------+---------------------+
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="mi">1&lt;/span> &lt;span class="k">row&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="k">set&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="mi">00&lt;/span> &lt;span class="n">sec&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>测试代码：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="n">Connection&lt;/span> &lt;span class="n">conn&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">DriverManager&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getConnection&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;jdbc:mysql://localhost:3306/test?useSSL=false&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;root&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="s">&amp;#34;root&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">Statement&lt;/span> &lt;span class="n">stmt&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">conn&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">createStatement&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">stmt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">execute&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;select * from user where name = &amp;#39;Tom&amp;#39;&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">ResultSet&lt;/span> &lt;span class="n">rs&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">stmt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getResultSet&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">rs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">next&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Timestamp&lt;/span> &lt;span class="n">timestamp&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">rs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getTimestamp&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;birth_date&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">timestamp&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">toLocalDateTime&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">toString&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行结果：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">2020-05-14T15:00
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="分析">分析&lt;/h2>
+&lt;p>程序的执行过程同时用 wireshark 抓了包。可以看到一次查询，做了这么多次的交互（包含了会话初始化）。这里可以看到 #177 的交互返回查询的结果：&lt;code>Tom 2020-05-14 08:00:00&lt;/code>，与 DB 中的数据相符。&lt;strong>可见，返回的并不是 UTC 时间&lt;/strong>。&lt;/p>
+&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/14/15894244815090.jpg" alt="">&lt;/p>
+&lt;p>在 TCP 抓包结果中 #155 的查询语句：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="cm">/* mysql-connector-java-8.0.20 (Revision: afc0a13cd3c5a0bf57eaa809ee0ee6df1fd5ac9b) */&lt;/span>
+&lt;span class="k">SELECT&lt;/span> &lt;span class="o">@@&lt;/span>&lt;span class="k">session&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">auto_increment_increment&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">auto_increment_increment&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">character_set_client&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">character_set_client&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">character_set_connection&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">character_set_connection&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">character_set_results&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">character_set_results&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">character_set_server&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">character_set_server&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">collation_server&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">collation_server&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">collation_connection&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">collation_connection&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">init_connect&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">init_connect&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">interactive_timeout&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">interactive_timeout&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">license&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">license&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">lower_case_table_names&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">lower_case_table_names&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">max_allowed_packet&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">max_allowed_packet&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">net_write_timeout&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">net_write_timeout&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">performance_schema&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">performance_schema&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">query_cache_size&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">query_cache_size&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">query_cache_type&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">query_cache_type&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">sql_mode&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">sql_mode&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">system_time_zone&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">system_time_zone&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">time_zone&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">time_zone&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">transaction_isolation&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">transaction_isolation&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">@@&lt;/span>&lt;span class="n">wait_timeout&lt;/span> &lt;span class="k">AS&lt;/span> &lt;span class="n">wait_timeout&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/05/14/15894253881690.jpg" alt="">&lt;/p>
+&lt;p>服务端返回的 &lt;code>time_zone&lt;/code> 为 &lt;code>BST&lt;/code>。与本地时区的转换，由 mysql 的 connector 自动完成。&lt;/p>
+&lt;h2 id="进阶">进阶&lt;/h2>
+&lt;h3 id="时区自动转换">时区自动转换&lt;/h3>
+&lt;p>实现源码：&lt;/p>
+&lt;p>&lt;code>ResultSetImpl&lt;/code>源码&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">
+&lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">defaultTimestampValueFactory&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">SqlTimestampValueFactory&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">pset&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">session&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getServerSession&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getServerTimeZone&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">Timestamp&lt;/span> &lt;span class="nf">getTimestamp&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">columnIndex&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">checkRowPos&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">checkColumnBounds&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">columnIndex&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">thisRow&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getValue&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">columnIndex&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="n">1&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">defaultTimestampValueFactory&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="如何确认服务端时区">如何确认服务端时区？&lt;/h3>
+&lt;p>使用会话中的服务端时区进行服务端时区。会话初始化时会进行时区的确认，比如前面获取的到&lt;code>BST&lt;/code>。确认时区的逻辑在&lt;code>NativeProtocol#configureTimezone()&lt;/code>中：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">configureTimezone&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="err">#&lt;/span>&lt;span class="n">从mysql的响应获取&lt;/span> &lt;span class="n">time_zone&lt;/span> &lt;span class="n">和&lt;/span> &lt;span class="n">system_time_zone&lt;/span> &lt;span class="n">的设置&lt;/span>
+&lt;span class="n">String&lt;/span> &lt;span class="n">configuredTimeZoneOnServer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">serverSession&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getServerVariable&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;time_zone&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;SYSTEM&amp;#34;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">equalsIgnoreCase&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">configuredTimeZoneOnServer&lt;/span>&lt;span class="o">))&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">configuredTimeZoneOnServer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">serverSession&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getServerVariable&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;system_time_zone&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="err">#&lt;/span>&lt;span class="n">从&lt;/span> &lt;span class="n">jdbc&lt;/span> &lt;span class="n">url&lt;/span> &lt;span class="n">参数&lt;/span> &lt;span class="n">serverTimezone&lt;/span> &lt;span class="n">获取时区&lt;/span>
+&lt;span class="n">String&lt;/span> &lt;span class="n">canonicalTimezone&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">getPropertySet&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getStringProperty&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">PropertyKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">serverTimezone&lt;/span>&lt;span class="o">).&lt;/span>&lt;span class="na">getValue&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">configuredTimeZoneOnServer&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">//如果 jdbc url 中未通过 serverTimezone 指定时区。则从TimeZoneMapping.properties中获取mysql 回传的时区缩写对应的标准时区，比如此处的 BST =&amp;gt; Europe/London
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//会出现无法映射的情况，不如 CEST 无法映射到 =&amp;gt; Europe/Berlin，可以指定自定义的 Properties 文件进行映射
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// user can override this with driver properties, so don&amp;#39;t detect if that&amp;#39;s the case
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">canonicalTimezone&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="kc">null&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="n">StringUtils&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isEmptyOrWhitespaceOnly&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">canonicalTimezone&lt;/span>&lt;span class="o">))&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">try&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">canonicalTimezone&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">TimeUtil&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getCanonicalTimezone&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">configuredTimeZoneOnServer&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">getExceptionInterceptor&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">catch&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">IllegalArgumentException&lt;/span> &lt;span class="n">iae&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">throw&lt;/span> &lt;span class="n">ExceptionFactory&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">createException&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">WrongArgumentException&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">class&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">iae&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getMessage&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">getExceptionInterceptor&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="c1">//如果 jdbc url 中通过 serverTimezone 指定了时区，则优先使用该时区
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">canonicalTimezone&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">null&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">canonicalTimezone&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">length&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">0&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">serverSession&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setServerTimeZone&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">TimeZone&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getTimeZone&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">canonicalTimezone&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="c1">//
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// The Calendar class has the behavior of mapping unknown timezones to &amp;#39;GMT&amp;#39; instead of throwing an exception, so we must check for this...
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(!&lt;/span>&lt;span class="n">canonicalTimezone&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">equalsIgnoreCase&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;GMT&amp;#34;&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">serverSession&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getServerTimeZone&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getID&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">equals&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;GMT&amp;#34;&lt;/span>&lt;span class="o">))&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">throw&lt;/span> &lt;span class="n">ExceptionFactory&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">createException&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">WrongArgumentException&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">class&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">Messages&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getString&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;Connection.9&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Object&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="o">{&lt;/span> &lt;span class="n">canonicalTimezone&lt;/span> &lt;span class="o">}),&lt;/span>
+&lt;span class="n">getExceptionInterceptor&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="关于-servertimezone-的官方说明">关于 serverTimezone 的官方说明&lt;/h3>
+&lt;blockquote>
+&lt;p>Override detection/mapping of time zone. Used when time zone from server doesn&amp;rsquo;t map to Java time zone&lt;/p>
+&lt;/blockquote>
+&lt;p>修改一下 jdbc url，通过&lt;code>serverTimezone&lt;/code>指定时区为 &lt;code>GMT+8&lt;/code>：&lt;code>jdbc:mysql://localhost:3306/test?serverTimezone=GMT%2B8&amp;amp;useSSL=false&lt;/code>&lt;/p>
+&lt;p>再次执行代码：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">2020-05-14T08:00
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

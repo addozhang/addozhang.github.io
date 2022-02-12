@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Redis on 乱世浮生</title><link>https://atbug.com/tags/redis/</link><description>Recent content in Redis on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 07 Apr 2017 16:48:46 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/redis/index.xml" rel="self" type="application/rss+xml"/><item><title>Centos编译安装Redis</title><link>https://atbug.com/install-redis-on-centos/</link><pubDate>Fri, 07 Apr 2017 16:48:46 +0000</pubDate><guid>https://atbug.com/install-redis-on-centos/</guid><description>
+&lt;h4 id="版本">版本&lt;/h4>
+&lt;blockquote>
+&lt;p>Centos7&lt;/p>
+&lt;p>Redis3.2.8&lt;/p>
+&lt;/blockquote>
+&lt;h4 id="编译安装">编译安装&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">wget http://download.redis.io/releases/redis-3.2.8.tar.gz
+tar -zxvf redis-3.2.8.tar.gz
+&lt;span class="nb">cd&lt;/span> redis-3.2.8
+sudo make &lt;span class="nb">test&lt;/span>
+sudo make install
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="启动">启动&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">redis-server
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="问题">问题&lt;/h4>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;code>/bin/sh: cc: command not found&lt;/code>&lt;/p>
+&lt;p>**原因：**Centos安装时选择的类型是Infrastructure，没有c++的编译工具。&lt;/p>
+&lt;p>&lt;strong>解决：&lt;/strong>&lt;code>sudo yum -y install gcc gcc-c++ libstdc++-devel&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>malloc.h:50:31: fatal error: jemalloc/jemalloc.h: No such file or directory&lt;/code>&lt;/p>
+&lt;p>**原因：**Redis使用的默认的memory allocator是libc，而Linux系统中默认的是jemalloc，需要制动&lt;code>MALLOC&lt;/code>变量。&lt;/p>
+&lt;p>&lt;strong>解决：&lt;/strong>&lt;code>sudo make MALLOC=libc install&lt;/code>&lt;/p>
+&lt;/li>
+&lt;/ol></description></item><item><title>Key长度对Redis性能影响</title><link>https://atbug.com/redis-performance-key-length/</link><pubDate>Thu, 16 Mar 2017 10:37:03 +0000</pubDate><guid>https://atbug.com/redis-performance-key-length/</guid><description>
+&lt;p>最近Redis的使用中用的到key可能比较长，但是Redis的官方文档没提到key长度对性能的影响，故简单做了个测试。&lt;/p>
+&lt;h3 id="环境">环境&lt;/h3>
+&lt;p>Redis和测试程序都是运行在本地，不看单次的性能，只看不同的长度堆读写性能的影响。&lt;/p>
+&lt;h3 id="测试方法">测试方法&lt;/h3>
+&lt;p>使用长度分别为10, 100, 500, 1000, 2500, 5000, 7500, 10,000, and 20,000的key，value长度1000，读写1000次。&lt;/p>
+&lt;h3 id="结果">结果&lt;/h3>
+&lt;p>&lt;img src="../../media/14896309668401.jpg" alt="写">&lt;/p>
+&lt;p>&lt;img src="../../media/14896309585857.jpg" alt="读">&lt;/p>
+&lt;p>从结果来看随着长度的增加，读写的耗时都随之增加。&lt;/p>
+&lt;ul>
+&lt;li>长度为10：写平均耗时0.053ms，读0.040ms&lt;/li>
+&lt;li>长度为20000：写平均耗时0.352ms，读0.084ms&lt;/li>
+&lt;/ul>
+&lt;h3 id="测试代码">测试代码&lt;/h3>
+&lt;p>&lt;a href="https://gist.github.com/addozhang/cd8551af4ca008c1f86896b9232c7a3b">源码&lt;/a>&lt;/p>
+&lt;!-- raw HTML omitted -->
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Created by addo on 2017/3/16.
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">RedisTest&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">keys&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="n">1000&lt;/span>&lt;span class="o">];&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="nf">randomString&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">length&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Random&lt;/span> &lt;span class="n">random&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Random&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="kt">char&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">chars&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;#34;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">toCharArray&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">StringBuilder&lt;/span> &lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">StringBuilder&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">length&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="kt">int&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">length&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">i&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">0&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">append&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">chars&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="n">random&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">nextInt&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">chars&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">length&lt;/span>&lt;span class="o">)]);&lt;/span>
+&lt;span class="n">i&lt;/span>&lt;span class="o">--;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">toString&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">write&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Jedis&lt;/span> &lt;span class="n">jedis&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">length&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kt">long&lt;/span> &lt;span class="n">start&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">currentTimeMillis&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">String&lt;/span> &lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="n">String&lt;/span> &lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="k">for&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">0&lt;/span>&lt;span class="o">;&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">1000&lt;/span>&lt;span class="o">;&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="o">++)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">randomString&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">length&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">keys&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="o">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">randomString&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">1000&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">jedis&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">set&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">format&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;put key length %d with value length 1000 in 1000 tims costs: %d ms&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">length&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">currentTimeMillis&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="n">start&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">read&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Jedis&lt;/span> &lt;span class="n">jedis&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">length&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kt">long&lt;/span> &lt;span class="n">start&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">currentTimeMillis&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">for&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">0&lt;/span>&lt;span class="o">;&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">keys&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">length&lt;/span>&lt;span class="o">;&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="o">++)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">jedis&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">keys&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="o">]);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">format&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;get key length %d with value length 1000 in 1000 tims costs: %d ms&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">length&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">currentTimeMillis&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="n">start&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">InterruptedException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Jedis&lt;/span> &lt;span class="n">jedis&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Jedis&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;localhost&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">6379&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="kt">int&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">lengths&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">{&lt;/span>&lt;span class="n">10&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">100&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">500&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">1000&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">2500&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">5000&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">7500&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">10000&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">20000&lt;/span>&lt;span class="o">};&lt;/span>
+&lt;span class="k">for&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">0&lt;/span>&lt;span class="o">;&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">lengths&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">length&lt;/span>&lt;span class="o">;&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="o">++)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">write&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">jedis&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">lengths&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="o">]);&lt;/span>
+&lt;span class="n">read&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">jedis&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">lengths&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="o">]);&lt;/span>
+&lt;span class="n">keys&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="n">1000&lt;/span>&lt;span class="o">];&lt;/span>
+&lt;span class="n">jedis&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">flushAll&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

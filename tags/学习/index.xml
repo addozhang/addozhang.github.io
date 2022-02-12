@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>学习 on 乱世浮生</title><link>https://atbug.com/tags/%E5%AD%A6%E4%B9%A0/</link><description>Recent content in 学习 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 11 Apr 2017 10:15:15 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/%E5%AD%A6%E4%B9%A0/index.xml" rel="self" type="application/rss+xml"/><item><title>Scala笔记：用函数字面量块调用高阶函数</title><link>https://atbug.com/call-high-order-function-in-function-literal/</link><pubDate>Tue, 11 Apr 2017 10:15:15 +0000</pubDate><guid>https://atbug.com/call-high-order-function-in-function-literal/</guid><description>
+&lt;p>这里会用到几个概念高阶函数、函数字面量、参数组&lt;/p>
+&lt;h2 id="高阶函数">高阶函数&lt;/h2>
+&lt;p>high-order function 函数的一种，简单来说它包含了一个函数类型的参数或者返回值。&lt;/p>
+&lt;p>所谓的高阶是跟一阶函数相比，深入一下：&lt;/p>
+&lt;blockquote>
+&lt;ol>
+&lt;li>一个或多个参数是函数，并返回一个值。&lt;/li>
+&lt;li>返回一个函数，但没有参数是函数。&lt;/li>
+&lt;li>上述两者叠加：一个或多个参数是函数，并返回一个函数。&lt;/li>
+&lt;/ol>
+&lt;/blockquote>
+&lt;p>示例：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-scala" data-lang="scala">&lt;span class="k">def&lt;/span> &lt;span class="n">stringSafeOp&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="k">:&lt;/span> &lt;span class="kt">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">f&lt;/span>&lt;span class="k">:&lt;/span> &lt;span class="kt">String&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="nc">String&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="k">=&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span> &lt;span class="n">s&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="n">f&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="n">s&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="c1">//stringSafeOp: (s: String, f: String =&amp;gt; String)String
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="k">def&lt;/span> &lt;span class="n">reverse&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="k">:&lt;/span> &lt;span class="kt">String&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="k">=&lt;/span> &lt;span class="n">s&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">reverse&lt;/span>
+&lt;span class="c1">//reverse: (s: String)String
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="n">stringSafeOp&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;Ready&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">reverse&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="c1">//res86: String = ydaeR
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="函数字面量">函数字面量&lt;/h2>
+&lt;p>function literal，其他名字：匿名函数、Lambda表达式等。
+函数字面量可以存储在函数值和变量中，或者也可以定义为高阶函数调用的一部分。在任何接受函数类型的地方都可以使用函数字面量。&lt;/p>
+&lt;p>reverse的函数字面量定义：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-scala" data-lang="scala">&lt;span class="k">val&lt;/span> &lt;span class="n">reverse&lt;/span> &lt;span class="k">=&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="k">:&lt;/span>&lt;span class="kt">String&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="k">=&amp;gt;&lt;/span> &lt;span class="n">s&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">reverse&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>(s:String) =&amp;gt; s.reverse&lt;/code>定义了一个有类型的输入参数（s:String）和函数体（s.reverse）。&lt;/p>
+&lt;p>定义为高阶函数调用的一部分：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-scala" data-lang="scala">&lt;span class="n">stringSafeOp&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;Ready&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="k">:&lt;/span>&lt;span class="kt">String&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="k">=&amp;gt;&lt;/span> &lt;span class="n">s&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">reverse&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>由于已经定义了参数f的类型&lt;code>String =&amp;gt; String&lt;/code>，可以从函数字面量中删除显示类型，交由编译器自动推导其类型。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-scala" data-lang="scala">&lt;span class="n">stringSafeOp&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;Ready&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">s&lt;/span> &lt;span class="k">=&amp;gt;&lt;/span> &lt;span class="n">s&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">reverse&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="占位符语法">占位符语法&lt;/h3>
+&lt;p>Placeholder syntax是函数字面量的一种缩写形式，将命名参数替换为通配符（_）。&lt;/p>
+&lt;p>使用条件：&lt;/p>
+&lt;blockquote>
+&lt;p>函数的显示类型在字面量之外指定&lt;/p>
+&lt;p>参数最多只使用一次&lt;/p>
+&lt;/blockquote>
+&lt;p>前面的例子正好符合条件：&lt;/p>
+&lt;blockquote>
+&lt;p>stringSafeOp定义中指定了字面量的类型（字面量之外） &lt;code>String =&amp;gt; String&lt;/code>&lt;/p>
+&lt;p>参数s只使用一次 &lt;code>s.reverse&lt;/code>&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-scala" data-lang="scala">&lt;span class="n">stringSafeOp&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;Ready&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="k">_&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">reverse&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="参数组">参数组&lt;/h2>
+&lt;p>parameter groups 函数的参数列表的另一种形式：分解并使用小括号分隔。&lt;/p>
+&lt;p>stringSafeOp的参数组表示：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-scala" data-lang="scala">&lt;span class="k">def&lt;/span> &lt;span class="n">stringSafeOp&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="k">:&lt;/span> &lt;span class="kt">String&lt;/span>&lt;span class="o">)(&lt;/span>&lt;span class="n">f&lt;/span>&lt;span class="k">:&lt;/span> &lt;span class="kt">String&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="nc">String&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="k">=&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span> &lt;span class="n">s&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="n">f&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="n">s&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="c1">//stringSafeOp: (s: String)(f: String =&amp;gt; String)String
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="用函数字面量块调用高阶函数">用函数字面量块调用高阶函数&lt;/h2>
+&lt;p>组合上面的特性，就有了&lt;strong>用函数字面量块调用高阶函数&lt;/strong>。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-scala" data-lang="scala">&lt;span class="k">val&lt;/span> &lt;span class="n">newStringSafeOp&lt;/span> &lt;span class="k">=&lt;/span> &lt;span class="n">stringSafeOp&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;Ready&amp;#34;&lt;/span>&lt;span class="o">){&lt;/span>&lt;span class="k">_&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">reverse&lt;/span>&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="进阶">进阶&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-scala" data-lang="scala">&lt;span class="k">def&lt;/span> &lt;span class="n">timer&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="kt">A&lt;/span>&lt;span class="o">](&lt;/span>&lt;span class="n">f&lt;/span>&lt;span class="k">:&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="n">A&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="k">=&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="n">now&lt;/span> &lt;span class="k">=&lt;/span> &lt;span class="nc">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">currentTimeMillis&lt;/span>
+&lt;span class="k">val&lt;/span> &lt;span class="n">start&lt;/span> &lt;span class="k">=&lt;/span> &lt;span class="n">now&lt;/span>&lt;span class="o">;&lt;/span> &lt;span class="k">val&lt;/span> &lt;span class="n">a&lt;/span> &lt;span class="k">=&lt;/span> &lt;span class="n">f&lt;/span>&lt;span class="o">;&lt;/span> &lt;span class="k">val&lt;/span> &lt;span class="n">end&lt;/span> &lt;span class="k">=&lt;/span> &lt;span class="n">now&lt;/span>
+&lt;span class="n">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">s&amp;#34;Executed int &lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="n">end&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="n">start&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s"> ms&amp;#34;&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="n">a&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">val&lt;/span> &lt;span class="n">veryRandomAmount&lt;/span> &lt;span class="k">=&lt;/span> &lt;span class="n">timer&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">util&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="nc">Random&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">setSeed&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="nc">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">currentTimeMillis&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="k">for&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">i&lt;/span> &lt;span class="k">&amp;lt;-&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="mi">100000&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="n">util&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="nc">Random&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">nextDouble&lt;/span>
+&lt;span class="n">util&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="nc">Random&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">nextDouble&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>timer方法对方法调用进行时间记录，对目标代码没有侵入性。&lt;/p></description></item></channel></rss>
