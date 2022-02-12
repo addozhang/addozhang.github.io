@@ -1,42 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>golang on 乱世浮生</title><link>https://atbug.com/tags/golang/</link><description>Recent content in golang on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 22 Dec 2017 13:02:38 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/golang/index.xml" rel="self" type="application/rss+xml"/><item><title>自定义GOPATH下安装godep失败</title><link>https://atbug.com/install-godep-issue-in-custom-gopath/</link><pubDate>Fri, 22 Dec 2017 13:02:38 +0000</pubDate><guid>https://atbug.com/install-godep-issue-in-custom-gopath/</guid><description>
-&lt;p>我的环境变量是这样的:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="nb">export&lt;/span> &lt;span class="nv">GOROOT&lt;/span>&lt;span class="o">=&lt;/span>/usr/local/go
-&lt;span class="nb">export&lt;/span> &lt;span class="nv">GOPATH&lt;/span>&lt;span class="o">=&lt;/span>/Users/addo/Workspaces/go_w
-&lt;span class="nb">export&lt;/span> &lt;span class="nv">GOBIN&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$GOROOT&lt;/span>/bin
-&lt;span class="nb">export&lt;/span> &lt;span class="nv">PATH&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$PATH&lt;/span>:&lt;span class="nv">$GOBIN&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用下面的命令安装报错:&lt;/p>
-&lt;p>&lt;code>go get -v github.com/tools/godep&lt;/code>&lt;/p>
-&lt;blockquote>
-&lt;p>github.com/tools/godep (download)
-github.com/tools/godep/vendor/github.com/pmezard/go-difflib/difflib
-github.com/tools/godep/vendor/github.com/kr/fs
-github.com/tools/godep/vendor/github.com/kr/text
-github.com/tools/godep/vendor/golang.org/x/tools/go/vcs
-github.com/tools/godep/vendor/github.com/kr/pretty
-github.com/tools/godep
-go install github.com/tools/godep: open /usr/local/go/bin/godep: permission denied&lt;/p>
-&lt;/blockquote>
-&lt;p>默认是安装到&lt;code>$GOBIN&lt;/code>目录下, 权限不够.&lt;/p>
-&lt;p>使用:&lt;/p>
-&lt;p>&lt;code>sudo go get -v github.com/tools/godep&lt;/code>&lt;/p>
-&lt;blockquote>
-&lt;p>sudo go get -v github.com/tools/godep
-github.com/tools/godep (download)
-created GOPATH=/Users/addo/go; see &amp;lsquo;go help gopath&amp;rsquo;
-github.com/tools/godep/vendor/github.com/kr/fs
-github.com/tools/godep/vendor/github.com/kr/text
-github.com/tools/godep/vendor/github.com/pmezard/go-difflib/difflib
-github.com/tools/godep/vendor/golang.org/x/tools/go/vcs
-github.com/tools/godep/vendor/github.com/kr/pretty
-github.com/tools/godep&lt;/p>
-&lt;/blockquote>
-&lt;p>&lt;code>$GOBIN&lt;/code>并没有找到&lt;code>godef&lt;/code>. 输出提示&lt;code>created GOPATH=/Users/addo/go; &lt;/code>. 因为sudo的时候找不到&lt;code>GOPATH&lt;/code>变量, 便重新创建了目录.&lt;/p>
-&lt;p>解决方案一:&lt;/p>
-&lt;ol>
-&lt;li>临时修改&lt;code>GOBIN&lt;/code>: &lt;code>export GOBIN=$GOPATH/bin&lt;/code>&lt;/li>
-&lt;li>运行&lt;code>go get github.com/tools/godep&lt;/code>&lt;/li>
-&lt;li>将生成的godef复制到&lt;code>GOROOT/bin&lt;/code>下&lt;/li>
-&lt;li>回滚修改&lt;code>export GOBIN=$GOROOT/bin; export PATH=$PATH:$GOBIN&lt;/code>&lt;/li>
-&lt;/ol>
-&lt;p>解决方案二:&lt;/p>
-&lt;p>修改&lt;code>GOROOT/bin&lt;/code>的属组属主, 安全性问题, 不推荐.&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>golang on 乱世浮生</title><link>https://atbug.com/tags/golang/</link><description>Recent content in golang on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 22 Dec 2017 13:02:38 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/golang/index.xml" rel="self" type="application/rss+xml"/><item><title>自定义GOPATH下安装godep失败</title><link>https://atbug.com/articles/install-godep-issue-in-custom-gopath/</link><pubDate>Fri, 22 Dec 2017 13:02:38 +0000</pubDate><guid>https://atbug.com/articles/install-godep-issue-in-custom-gopath/</guid><description>我的环境变量是这样的:
+export GOROOT=/usr/local/go export GOPATH=/Users/addo/Workspaces/go_w export GOBIN=$GOROOT/bin export PATH=$PATH:$GOBIN 使用下面的命令安装报错:
+go get -v github.com/tools/godep
+github.com/tools/godep (download) github.com/tools/godep/vendor/github.com/pmezard/go-difflib/difflib github.com/tools/godep/vendor/github.com/kr/fs github.com/tools/godep/vendor/github.com/kr/text github.com/tools/godep/vendor/golang.org/x/tools/go/vcs github.com/tools/godep/vendor/github.com/kr/pretty github.com/tools/godep go install github.com/tools/godep: open /usr/local/go/bin/godep: permission denied
+默认是安装到$GOBIN目录下, 权限不够.
+使用:
+sudo go get -v github.com/tools/godep
+sudo go get -v github.</description></item></channel></rss>

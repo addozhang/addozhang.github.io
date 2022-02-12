@@ -1,72 +1,12 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Database on 乱世浮生</title><link>https://atbug.com/tags/database/</link><description>Recent content in Database on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 06 Apr 2017 22:54:17 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/database/index.xml" rel="self" type="application/rss+xml"/><item><title>Centos上安装Postgresql</title><link>https://atbug.com/install-postgresql-on-centos/</link><pubDate>Thu, 06 Apr 2017 22:54:17 +0000</pubDate><guid>https://atbug.com/install-postgresql-on-centos/</guid><description>
-&lt;h4 id="版本">版本&lt;/h4>
-&lt;p>Centos7&lt;/p>
-&lt;p>Postgresql9.2&lt;/p>
-&lt;h4 id="enable-ssh">Enable ssh&lt;/h4>
-&lt;blockquote>
-&lt;p>service sshd start&lt;/p>
-&lt;/blockquote>
-&lt;h4 id="open-firewall-for-22">Open firewall for 22&lt;/h4>
-&lt;blockquote>
-&lt;p>firewall-cmd —state&lt;/p>
-&lt;p>firewall-cmd —list-all&lt;/p>
-&lt;p>firewall-cmd —permanent —zone=public —add-port=22/tcp&lt;/p>
-&lt;p>firewall-cmd —reload&lt;/p>
-&lt;/blockquote>
-&lt;h4 id="install-postgresql">Install Postgresql&lt;/h4>
-&lt;blockquote>
-&lt;p>yum install postgres&lt;/p>
-&lt;p>su postgres&lt;/p>
-&lt;p>postgres —version&lt;/p>
-&lt;/blockquote>
-&lt;p>默认会创建postgres:postgres用户和组&lt;/p>
-&lt;h4 id="切换用户">切换用户&lt;/h4>
-&lt;blockquote>
-&lt;p>su - postgres&lt;/p>
-&lt;/blockquote>
-&lt;h4 id="初始化数据库">初始化数据库&lt;/h4>
-&lt;p>通过指定数据文件目录初始化db&lt;/p>
-&lt;blockquote>
-&lt;p>initdb -D /var/lib/pgsql/data&lt;/p>
-&lt;/blockquote>
-&lt;h4 id="修改端口防火墙">修改端口防火墙&lt;/h4>
-&lt;p>默认端口是5432，需要在防火墙中打开端口&lt;/p>
-&lt;blockquote>
-&lt;p>firewall-cmd &amp;ndash;permanent &amp;ndash;zone=public &amp;ndash;add-port=5432/tcp&lt;/p>
-&lt;/blockquote>
-&lt;h4 id="修改监听的ip">修改监听的ip&lt;/h4>
-&lt;p>需要外部访问的话，需要修改postgresql.conf中的监听ip，&amp;lsquo;0.0.0.0&amp;rsquo;允许所有ipv4的ip访问，''::&amp;lsquo;&amp;lsquo;允许所有ipv6的ip访问&lt;/p>
-&lt;blockquote>
-&lt;p>listen_addresses = &amp;ldquo;0.0.0.0&amp;rdquo;&lt;/p>
-&lt;/blockquote>
-&lt;p>修改需要重启postgresql&lt;/p>
-&lt;h4 id="启动">启动&lt;/h4>
-&lt;blockquote>
-&lt;p>postgres -D /var/lib/pgsql/data &amp;gt;logfile 2&amp;gt;&amp;amp;1 &amp;amp;&lt;/p>
-&lt;/blockquote>
-&lt;h4 id="登录控制台">登录控制台&lt;/h4>
-&lt;p>会使用当前系统用户postgres访问，系统提示符会变成&amp;rsquo;postgres=#&amp;rsquo;&lt;/p>
-&lt;blockquote>
-&lt;p>psql&lt;/p>
-&lt;/blockquote>
-&lt;p>修改密码&lt;/p>
-&lt;blockquote>
-&lt;p>\password postgres&lt;/p>
-&lt;/blockquote>
-&lt;p>创建用户&lt;/p>
-&lt;blockquote>
-&lt;p>CREATE USER dbuser WITH PASSWORD &amp;lsquo;password&amp;rsquo;;&lt;/p>
-&lt;p>CREATE DATABASE example OWNER dbuser;&lt;/p>
-&lt;p>GRANT ALL PRIVILEGES ON DATABASE example to dbuser;&lt;/p>
-&lt;/blockquote>
-&lt;h4 id="客户端权限配置文件">客户端权限配置文件&lt;/h4>
-&lt;p>默认只允许本地客户端连接，需要修改pg_hba.conf文件，&lt;/p>
-&lt;blockquote>
-&lt;p>host all all 127.0.0.1/32 trust&lt;/p>
-&lt;p>改为&lt;/p>
-&lt;p>host all all 0.0.0.0 /0 trust&lt;/p>
-&lt;/blockquote>
-&lt;h4 id="客户端连接">客户端连接&lt;/h4>
-&lt;blockquote>
-&lt;p>psql -U dbuser -d example -h 127.0.0.1 -p 5432&lt;/p>
-&lt;/blockquote></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Database on 乱世浮生</title><link>https://atbug.com/tags/database/</link><description>Recent content in Database on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 06 Apr 2017 22:54:17 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/database/index.xml" rel="self" type="application/rss+xml"/><item><title>Centos上安装Postgresql</title><link>https://atbug.com/articles/install-postgresql-on-centos/</link><pubDate>Thu, 06 Apr 2017 22:54:17 +0000</pubDate><guid>https://atbug.com/articles/install-postgresql-on-centos/</guid><description>版本 Centos7
+Postgresql9.2
+Enable ssh service sshd start
+Open firewall for 22 firewall-cmd —state
+firewall-cmd —list-all
+firewall-cmd —permanent —zone=public —add-port=22/tcp
+firewall-cmd —reload
+Install Postgresql yum install postgres
+su postgres
+postgres —version
+默认会创建postgres:postgres用户和组
+切换用户 su - postgres</description></item></channel></rss>

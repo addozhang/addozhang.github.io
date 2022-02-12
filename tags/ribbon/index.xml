@@ -1,75 +1,10 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ribbon on 乱世浮生</title><link>https://atbug.com/tags/ribbon/</link><description>Recent content in Ribbon on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 09 Jun 2020 19:35:53 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/ribbon/index.xml" rel="self" type="application/rss+xml"/><item><title>带你了解 Ribbon 负载均衡器的实现</title><link>https://atbug.com/how-loadbalancer-works-in-ribbon/</link><pubDate>Tue, 09 Jun 2020 19:35:53 +0800</pubDate><guid>https://atbug.com/how-loadbalancer-works-in-ribbon/</guid><description>
-&lt;p>Spring Cloud 中 &lt;code>Ribbon&lt;/code>有在 &lt;code>Zuul&lt;/code> 和 &lt;code>Feign&lt;/code> 中使用，当然也可以通过在&lt;code>RestTemplate&lt;/code>的 bean 定义上添加&lt;code>@LoadBalanced&lt;/code>注解方式获得一个带有负载均衡更能的&lt;code>RestTemplate&lt;/code>。&lt;/p>
-&lt;p>不过实现的方法都大同小异：对&lt;code>HttpClient&lt;/code>进行封装，加上实例的”选择“（这个选择的逻辑就是我们所说的负载均衡）。&lt;/p>
-&lt;p>要学习某个框架的时候，最简单的方案就是：&lt;strong>Running+Debugging&lt;/strong>。&lt;/p>
-&lt;p>&lt;strong>跑就是了。&lt;/strong>&lt;/p>
-&lt;blockquote>
-&lt;p>debug 不一定是为了 bug&lt;/p>
-&lt;p>debug 出真知&lt;/p>
-&lt;p>Debugging = Learning&lt;/p>
-&lt;/blockquote>
-&lt;p>选用 &lt;a href="https://www.alispit.tel">Ali Spittel&lt;/a> 的一条推文：&lt;/p>
-&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/06/09/screenshot-20200609-at-165236.png" alt="screenshot 2020-06-09 at 16.52.36">&lt;/p>
-&lt;h3 id="以-zuul-路由的线程栈为例">以 Zuul 路由的线程栈为例&lt;/h3>
-&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/06/09/screenshot-20200609-at-151421.png" alt="screenshot 2020-06-09 at 15.14.21">&lt;/p>
-&lt;p>调整下顺序：&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="n">RetryableRibbonLoadBalancingHttpClient&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">execute&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">RibbonApacheHttpRequest&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">IClientConfig&lt;/span>&lt;span class="o">)&lt;/span>
-&lt;span class="n">RetryableRibbonLoadBalancingHttpClient&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">executeWithRetry&lt;/span>&lt;span class="o">(...)&lt;/span>
-&lt;span class="n">RetryTemplate&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">execute&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">RetryCallback&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">E&lt;/span>&lt;span class="o">&amp;gt;,&lt;/span> &lt;span class="n">RecoveryCallback&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="o">&amp;gt;)&lt;/span>
-&lt;span class="n">RetryTemplate&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">doExecute&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">RetryCallback&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">E&lt;/span>&lt;span class="o">&amp;gt;,&lt;/span> &lt;span class="n">RecoveryCallback&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="o">&amp;gt;,&lt;/span> &lt;span class="n">RetryState&lt;/span>&lt;span class="o">)&lt;/span>
-&lt;span class="n">RetryTemplate&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">canRetry&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">RetryPolicy&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">RetryContext&lt;/span>&lt;span class="o">)&lt;/span>
-&lt;span class="n">InterceptorRetryPolicy&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">canRetry&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">RetryContext&lt;/span>&lt;span class="o">)&lt;/span>
-&lt;span class="n">AbstractLoadBalancingClient&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">choose&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span> &lt;span class="n">serviceId&lt;/span>&lt;span class="o">)&lt;/span>
-&lt;span class="n">ZoneAwareLoadBalancer&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">chooseServer&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Object&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="c1">//key as serviceId
-&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="n">BaseLoadBalancer&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">chooseServer&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Object&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="o">)&lt;/span>
-&lt;span class="n">PredicateBasedRule&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">choose&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Object&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="o">)&lt;/span>
-&lt;span class="n">AbstractServerPredicate&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">chooseRoundRobinAfterFiltering&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">List&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">Server&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">servers&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">Object&lt;/span> &lt;span class="n">loadBalancerKey&lt;/span>&lt;span class="o">)&lt;/span>
-&lt;span class="n">AbstractServerPredicate&lt;/span>&lt;span class="err">#&lt;/span>&lt;span class="n">apply&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Predicate&lt;/span>&lt;span class="o">)&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="分析">分析&lt;/h3>
-&lt;p>Zuul 收到请求经过一系列 Filter 的处理，来到 &lt;code>RibbonRoutingFilter&lt;/code>；将请求封装成 &lt;code>RibbonCommandContext&lt;/code>，然后使用 context 构建 &lt;code>RibbonCommand&lt;/code>。最终调用&lt;code>RibbonCommand#execute()&lt;/code>方法，将请求路由到下游。&lt;/p>
-&lt;p>&lt;code>RibbonCommand&lt;/code>持有&lt;code>AbstractLoadBalancerAwareClient&lt;/code>的对象，通过该 client 在处理请求和响应。&lt;/p>
-&lt;p>对于 &lt;strong>retryable&lt;/strong> 的 client（比如此处的&lt;code>RetryableRibbonLoadBalancingHttpClient&lt;/code>）， &lt;em>&lt;em>每次处理请求的时候都会创建一个&lt;/em>&lt;/em> &lt;code>RetryTemplate&lt;/code>对象来处理请求；同时根据&lt;code>RetryPolicy&lt;/code>来创建&lt;code>RetryContext&lt;/code>对象，用来保存重试的上下文，并 &lt;em>检查实例是否可以进行重试&lt;/em> 。&lt;/p>
-&lt;p>注意重点就在这里：检查的时候&lt;strong>如果重试次数为 0 且要检查的实例为空&lt;/strong>（说明是第一次请求），这时便会通过&lt;strong>负载均衡器客户端&lt;/strong>（基本都是&lt;code>AbstractLoadBalancingClient&lt;/code>的子类）从后端列表择出一个实例，保存在&lt;code>RetryContext&lt;/code>中。&lt;/p>
-&lt;p>负载均衡器客户端使用&lt;strong>负载均衡器&lt;/strong>（&lt;code>ILoadBalancer&lt;/code>的实现）来选择实例。每个负载均衡器都有自己的规则（&lt;code>IRule&lt;/code>的实现类），通过规则来选择实例。&lt;/p>
-&lt;p>&lt;code>IRule&lt;/code>的实现不是很多，&lt;/p>
-&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/06/09/screenshot-20200609-at-163309.png" alt="screenshot 2020-06-09 at 16.33.09">&lt;/p>
-&lt;p>其中的&lt;code>ClientConfigEnabledRoundRobinRule&lt;/code>在&lt;code>RoundRobinRule&lt;/code>的基础上，增加了配置的接口（因为其实现了&lt;code>IClientConfigAware&lt;/code>接口）可以对规则进行配置。&lt;/p>
-&lt;p>某些&lt;code>ClientConfigEnabledRoundRobinRule&lt;/code>的子类了，增加了&lt;code>Predicate&lt;/code>逻辑：使用&lt;code>Predicate&lt;/code>（&lt;code>AbstractServerPredicate&lt;/code>的子类）的逻辑进行选择；而&lt;code>ClientConfigEnabledRoundRobinRule&lt;/code>只是简单的使用&lt;code>RoundRobinRule&lt;/code>进行选择。&lt;/p>
-&lt;p>因此选择的逻辑都是在&lt;code>AbstractServerPredicate&lt;/code>子类中，其有个特别的子类&lt;code>CompositePredicate&lt;/code>，顾名思义就是将多个逻辑整合在一起（使用&lt;code>Predicate#and()&lt;/code>将所有逻辑串联起来，达到&lt;code>&amp;amp;&amp;amp;&lt;/code>的效果），所有的逻辑检查都通过（返回&lt;code>true&lt;/code>）时，这个实例就会被选中。&lt;/p>
-&lt;p>&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/06/09/screenshot-20200609-at-165642.png" alt="screenshot 2020-06-09 at 16.56.42">&lt;/p>
-&lt;hr>
-&lt;p>那么现在要你写个自己负载均衡规则，应该知道从哪里入手了吧？:D&lt;/p></description></item><item><title>Zuul网关Ribbon重试</title><link>https://atbug.com/ribbon-retry-in-zuul/</link><pubDate>Thu, 02 Aug 2018 08:55:43 +0000</pubDate><guid>https://atbug.com/ribbon-retry-in-zuul/</guid><description>
-&lt;h2 id="相关配置">相关配置&lt;/h2>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">#如果路由转发请求发生超时(连接超时或处理超时), 只要超时时间的设置小于Hystrix的命令超时时间,那么它就会自动发起重试. 默认为false. 或者对指定响应状态码进行重试
-zuul.retryable = true
-zuul.routes.&amp;lt;route&amp;gt;.retryable = false
-#同一实例上的最大重试次数, 默认值为0. 不包括首次调用
-ribbon.MaxAutoRetries=0
-#重试其他实例的最大重试次数, 不包括第一次选的实例. 默认为1
-ribbon.MaxAutoRetriesNextServer=1
-#是否所有操作执行重试, 默认值为false, 只重试`GET`请求
-ribbon.OkToRetryOnAllOperations=false
-#连接超时, 默认2000
-ribbon.ConnectTimeout=15000
-#响应超时, 默认5000
-ribbon.ReadTimeout=15000
-#每个host的最大连接数
-ribbon.MaxHttpConnectionsPerHost=50
-#最大连接数
-ribbon.MaxTotalHttpConnections=200
-#何种响应状态码才进行重试
-ribbon.retryableStatusCodes=404,502
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="实现">实现&lt;/h2>
-&lt;ol>
-&lt;li>&lt;code>SimpleRouteLocator#getRoute&lt;/code>返回的&lt;code>route&lt;/code>对象中会带上&lt;code>retryable&lt;/code>的设置.&lt;/li>
-&lt;li>&lt;code>PreDecorationFilter&lt;/code>在对&lt;code>RequestContext&lt;/code>进行装饰的时候会将&lt;code>retryable&lt;/code>的设置通过key&lt;code>FilterConstants.RETRYABLE_KEY&lt;/code>注入&lt;code>RequestContext&lt;/code>中.&lt;/li>
-&lt;li>&lt;code>RibbonRoutingFilter#buildCommandContext&lt;/code>会使用&lt;code>RequestContext&lt;/code>的&lt;code>retryable&lt;/code>设置构造&lt;code>RibbonCommandContext&lt;/code>对象.&lt;/li>
-&lt;li>&lt;code>RibbonCommandFactory&lt;/code>使用&lt;code>RibbonCommandContext&lt;/code>构建出&lt;code>RibbonCommand&lt;/code>对象.&lt;/li>
-&lt;li>&lt;code>RibbonCommand#run&lt;/code>中, 当&lt;code>retryable&lt;/code>为&lt;code>true&lt;/code>时, 会调用&lt;code>IClient&lt;/code>的&lt;code>execute&lt;/code>方法处理请求. 为&lt;code>false&lt;/code>时, 会调用&lt;code>IClient&lt;/code>的&lt;code>executeWithLoadBalancer&lt;/code>方法执行请求.
-&lt;ul>
-&lt;li>&lt;code>execute&lt;/code>会在失败时进行重试(不超过超时限制)&lt;/li>
-&lt;li>&lt;code>executeWithLoadBalancer&lt;/code>方法是先通过&lt;code>LoadBalancer&lt;/code>选择出一个&lt;code>Server&lt;/code>, 然后构建出请求地址.&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>&lt;code>IClient#execute&lt;/code>执行时, 通过&lt;code>LoadBalancedRetryPolicyFactory&lt;/code>创建一个&lt;code>LoadBalancedRetryPolicy&lt;/code>对象. &lt;code>LoadBalancedRetryPolicy&lt;/code>持有上面&lt;code>ribbon.XXX&lt;/code>的设置. 当响应状态码不在&lt;code>ribbon.retryableStatusCodes&lt;/code>设置中, 则会直接返回响应. 如果属于可重试的响应状态码, 则会将响应封装为&lt;code>HttpClientStatusCodeException&lt;/code>抛出. 异常被&lt;code>RetryTemplate&lt;/code>捕获, 然后使用&lt;code>LoadBalancedRetryPolicy&lt;/code>对当前状态(MaxAutoRetries, MaxAutoRetriesNextServer)计算出能否进行一次重试. 直至成功, 或者当前状态不满足条件.&lt;/li>
-&lt;/ol></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ribbon on 乱世浮生</title><link>https://atbug.com/tags/ribbon/</link><description>Recent content in Ribbon on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 09 Jun 2020 19:35:53 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/ribbon/index.xml" rel="self" type="application/rss+xml"/><item><title>带你了解 Ribbon 负载均衡器的实现</title><link>https://atbug.com/articles/how-loadbalancer-works-in-ribbon/</link><pubDate>Tue, 09 Jun 2020 19:35:53 +0800</pubDate><guid>https://atbug.com/articles/how-loadbalancer-works-in-ribbon/</guid><description>Spring Cloud 中 Ribbon有在 Zuul 和 Feign 中使用，当然也可以通过在RestTemplate的 bean 定义上添加@LoadBalanced注解方式获得一个带有负载均衡更能的RestTemplate。
+不过实现的方法都大同小异：对HttpClient进行封装，加上实例的”选择“（这个选择的逻辑就是我们所说的负载均衡）。
+要学习某个框架的时候，最简单的方案就是：Running+Debugging。
+跑就是了。
+debug 不一定是为了 bug
+debug 出真知
+Debugging = Learning
+选用 Ali Spittel 的一条推文：
+以 Zuul 路由的线程栈为例 调整下顺序：
+RetryableRibbonLoadBalancingHttpClient#execute(RibbonApacheHttpRequest, IClientConfig) RetryableRibbonLoadBalancingHttpClient#executeWithRetry(...) RetryTemplate#execute(RetryCallback&amp;lt;T, E&amp;gt;, RecoveryCallback&amp;lt;T&amp;gt;) RetryTemplate#doExecute(RetryCallback&amp;lt;T, E&amp;gt;, RecoveryCallback&amp;lt;T&amp;gt;, RetryState) RetryTemplate#canRetry(RetryPolicy, RetryContext) InterceptorRetryPolicy#canRetry(RetryContext) AbstractLoadBalancingClient#choose(String serviceId) ZoneAwareLoadBalancer#chooseServer(Object key) //key as serviceId BaseLoadBalancer#chooseServer(Object key) PredicateBasedRule#choose(Object key) AbstractServerPredicate#chooseRoundRobinAfterFiltering(List&amp;lt;Server&amp;gt; servers, Object loadBalancerKey) AbstractServerPredicate#apply(Predicate) 分析 Zuul 收到请求经过一系列 Filter 的处理，来到 RibbonRoutingFilter；将请求封装成 RibbonCommandContext，然后使用 context 构建 RibbonCommand。最终调用RibbonCommand#execute()方法，将请求路由到下游。</description></item><item><title>Zuul网关Ribbon重试</title><link>https://atbug.com/articles/ribbon-retry-in-zuul/</link><pubDate>Thu, 02 Aug 2018 08:55:43 +0000</pubDate><guid>https://atbug.com/articles/ribbon-retry-in-zuul/</guid><description>相关配置 #如果路由转发请求发生超时(连接超时或处理超时), 只要超时时间的设置小于Hystrix的命令超时时间,那么它就会自动发起重试. 默认为false. 或者对指定响应状态码进行重试 zuul.retryable = true zuul.routes.&amp;lt;route&amp;gt;.retryable = false #同一实例上的最大重试次数, 默认值为0. 不包括首次调用 ribbon.MaxAutoRetries=0 #重试其他实例的最大重试次数, 不包括第一次选的实例. 默认为1 ribbon.MaxAutoRetriesNextServer=1 #是否所有操作执行重试, 默认值为false, 只重试`GET`请求 ribbon.OkToRetryOnAllOperations=false #连接超时, 默认2000 ribbon.ConnectTimeout=15000 #响应超时, 默认5000 ribbon.ReadTimeout=15000 #每个host的最大连接数 ribbon.MaxHttpConnectionsPerHost=50 #最大连接数 ribbon.MaxTotalHttpConnections=200 #何种响应状态码才进行重试 ribbon.retryableStatusCodes=404,502 实现 SimpleRouteLocator#getRoute返回的route对象中会带上retryable的设置. PreDecorationFilter在对RequestContext进行装饰的时候会将retryable的设置通过keyFilterConstants.RETRYABLE_KEY注入RequestContext中. RibbonRoutingFilter#buildCommandContext会使用RequestContext的retryable设置构造RibbonCommandContext对象. RibbonCommandFactory使用RibbonCommandContext构建出RibbonCommand对象.</description></item></channel></rss>
