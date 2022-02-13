@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>负载均衡 on 乱世浮生</title><link>https://atbug.com/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</link><description>Recent content in 负载均衡 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 05 May 2018 11:18:05 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/index.xml" rel="self" type="application/rss+xml"/><item><title>Spring Cloud Ribbon 详解</title><link>https://atbug.com/spring-cloud-ribbon-breakdown-1/</link><pubDate>Sat, 05 May 2018 11:18:05 +0000</pubDate><guid>https://atbug.com/spring-cloud-ribbon-breakdown-1/</guid><description>
+&lt;p>客户端负载均衡, Ribbon的核心概念是命名的客户端.&lt;/p>
+&lt;h2 id="使用">使用&lt;/h2>
+&lt;h3 id="引入ribbon依赖和配置">引入Ribbon依赖和配置&lt;/h3>
+&lt;p>加入&lt;code>spring-cloud-starter-netflix-ribbon&lt;/code>依赖&lt;/p>
+&lt;h3 id="代码中使用ribbonclient注解">代码中使用RibbonClient注解&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="nd">@Configuration&lt;/span>
+&lt;span class="nd">@RibbonClient&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">name&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;foo&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">configuration&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">FooConfiguration&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">class&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">TestConfiguration&lt;/span> &lt;span class="o">{}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="nd">@Configuration&lt;/span> &lt;span class="kd">protected&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">FooConfiguration&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="nd">@Bean&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">ZonePreferenceServerListFilter&lt;/span> &lt;span class="nf">serverListFilter&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">ZonePreferenceServerListFilter&lt;/span> &lt;span class="n">filter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ZonePreferenceServerListFilter&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">filter&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">setZone&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;myTestZone&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">filter&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="nd">@Bean&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">IPing&lt;/span> &lt;span class="nf">ribbonPing&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">PingUrl&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Ribbon客户端的配置, 如果不指定会使用默认的实现:&lt;/p>
+&lt;ul>
+&lt;li>IClientConfig 客户端相关配置&lt;/li>
+&lt;li>IRule 定义负载均衡策略&lt;/li>
+&lt;li>IPing 定义如何ping目标服务实例来判断是否存活, ribbon使用单独的线程每隔一段时间(默认10s)对本地缓存的ServerList做一次检查&lt;/li>
+&lt;li>ServerList&lt;!-- raw HTML omitted --> 定义如何获取服务实例列表. 两种实现基于配置的&lt;code>ConfigurationBasedServerList&lt;/code>和基于Eureka服务发现的&lt;code>DiscoveryEnabledNIWSServerList&lt;/code>&lt;/li>
+&lt;li>ServerListFilter&lt;!-- raw HTML omitted --> 用来使用期望的特征过滤静态配置动态获得的候选服务实例列表. 若未提供, 默认使用&lt;code>ZoneAffinityServerListFilter&lt;/code>&lt;/li>
+&lt;li>ILoadBalancer 定义了软负载均衡器的操作的接口. 一个典型的负载均衡器至少需要一组用来做负载均衡的服务实例, 一个标记某个服务实例不在旋转中的方法, 和对应的方法调用从实例列表中选出某一个服务实例.&lt;/li>
+&lt;li>ServerListUpdater DynamicServerListLoadBalancer用来更新实例列表的策略(推&lt;code>EurekaNotificationServerListUpdater&lt;/code>/拉&lt;code>PollingServerListUpdater&lt;/code>, 默认是拉)&lt;/li>
+&lt;/ul></description></item></channel></rss>
