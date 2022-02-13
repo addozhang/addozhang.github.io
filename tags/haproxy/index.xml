@@ -1,24 +1,2 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Haproxy on 乱世浮生</title><link>https://atbug.com/tags/haproxy/</link><description>Recent content in Haproxy on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 27 Feb 2017 19:31:53 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/haproxy/index.xml" rel="self" type="application/rss+xml"/><item><title>Haproxy虚拟主机SSL</title><link>https://atbug.com/haproxy-multi-host-with-ssl/</link><pubDate>Mon, 27 Feb 2017 19:31:53 +0000</pubDate><guid>https://atbug.com/haproxy-multi-host-with-ssl/</guid><description>
-&lt;p>Haproxy为多个域名配置SSL&lt;/p>
-&lt;h2 id="生成自签名证书">生成自签名证书&lt;/h2>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">sudo mkdir /etc/ssl/atbug.com
-sudo openssl genrsa -out /etc/ssl/atbug.com/atbug.com.key &lt;span class="m">1024&lt;/span>
-sudo openssl req -new -key /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.csr
-sudo openssl x509 -req -days &lt;span class="m">365&lt;/span> -in /etc/ssl/atbug.com/atbug.com.csr -singkey /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.crt
-sudo openssl x509 -req -days &lt;span class="m">365&lt;/span> -in /etc/ssl/atbug.com/atbug.com.csr -signkey /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.crt
-sudo cat /etc/ssl/atbug.com/atbug.com.crt /etc/ssl/atbug.com/atbug.com.key &lt;span class="p">|&lt;/span> sudo tee /etc/ssl/atbug.com/atbug.com.pem
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="haproxy配置">Haproxy配置&lt;/h2>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">frontend https
-bind *:443 ssl crt /etc/ssl/atbug.com/atbug.com.pem
-option tcplog
-mode http
-#option forwardfor
-###atbug-https
-acl atbug-https hdr_beg(host) -i test.atbug.com
-use_backend rome-atbug-https-backend if atbug-https
-backend rome-atbug-https-backend
-balance roundrobin
-mode http
-option ssl-hello-chk
-server node-1 ip:port cookie dw2-vm-test-apps003 check inter 2000 rise 3 fall 3 weight 50
-&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>
+Haproxy为多个域名配置SSL 生成自签名证书 sudo mkdir /etc/ssl/atbug.com sudo openssl genrsa -out /etc/ssl/atbug.com/atbug.com.key 1024 sudo openssl req -new -key /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.csr sudo openssl x509 -req -days 365 -in /etc/ssl/atbug.com/atbug.com.csr -singkey /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.crt sudo openssl x509 -req -days 365 -in /etc/ssl/atbug.com/atbug.com.csr -signkey /etc/ssl/atbug.com/atbug.com.key -out /etc/ssl/atbug.com/atbug.com.crt sudo cat /etc/ssl/atbug.com/atbug.com.crt /etc/ssl/atbug.com/atbug.com.key | sudo tee /etc/ssl/atbug.com/atbug.com.pem Haproxy配置 frontend https bind *:443 ssl crt /etc/ssl/atbug.com/atbug.com.pem option tcplog mode http #option forwardfor ###atbug-https acl atbug-https hdr_beg(host) -i test.atbug.com use_backend rome-atbug-https-backend if atbug-https backend rome-atbug-https-backend balance roundrobin mode http option ssl-hello-chk server node-1 ip:port cookie dw2-vm-test-apps003 check inter 2000 rise 3 fall 3 weight 50</description></item></channel></rss>

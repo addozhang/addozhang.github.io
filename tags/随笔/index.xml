@@ -1,20 +1,2 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>随笔 on 乱世浮生</title><link>https://atbug.com/tags/%E9%9A%8F%E7%AC%94/</link><description>Recent content in 随笔 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 27 Aug 2019 14:29:12 +0000</lastBuildDate><atom:link href="https://atbug.com/tags/%E9%9A%8F%E7%AC%94/index.xml" rel="self" type="application/rss+xml"/><item><title>博客最近半年没什么产出</title><link>https://atbug.com/no-output-in-past-half-year/</link><pubDate>Tue, 27 Aug 2019 14:29:12 +0000</pubDate><guid>https://atbug.com/no-output-in-past-half-year/</guid><description>
-&lt;p>上一篇日志更新还是在去年的12月, 至今有差不多10个月没有更新了.&lt;/p>
-&lt;p>不是说没有东西可写, 而且想写的东西很多. 工作太忙, 不忙的时候又太懒, 归根结底还是太懒.&lt;/p>
-&lt;p>过去一年多都是在做基础架构方面的工作, 围绕技术中台展开的. 有很多技术需要去学习, 也有很多问题要处理. 过程中一直有记笔记的习惯, 所以可以写的东西很多. 不过有些属于公司的部分还是不能写的, 必要的职业道德还是要有的.&lt;/p>
-&lt;p>笔记记录一直在用&lt;a href="https://zh.mweb.im">MWeb&lt;/a>, 并使用iCloud同步, 最近几个月也在结合&lt;a href="https://mubu.com">幕布&lt;/a>整理思路和工作安排. 好用的软件我也比较喜欢分享, 记得最早在Workpress上的博客就分享了很多自己常用的软件. (有点扯远了~~~)&lt;/p>
-&lt;p>MWeb没有统计功能, 还有使用的是sqlite. 简单sql查询了下, 从去年这份工作开始有244篇笔记. 今年到现在有109篇. 当然有些笔记的内容比较少, 不得不说这一年多收获甚多.&lt;/p>
-&lt;p>为什么今天又写了这么一篇, 源于阮一峰的&lt;a href="http://www.ruanyifeng.com/blog/2019/08/weekly-issue-69.html">科技爱好者周刊：第 69 期&lt;/a>.&lt;/p>
-&lt;p>刊首语是&amp;quot;一件事&amp;quot;做得好&amp;quot;比较好，还是&amp;quot;做得快&amp;quot;比较好？&amp;quot;, 直接copy他的结论.&lt;/p>
-&lt;blockquote>
-&lt;p>我很赞同&lt;a href="http://jsomers.net/blog/speed-matters">一篇文章&lt;/a>的结论：做得快更好。&lt;/p>
-&lt;blockquote>
-&lt;p>做得快不仅可以让你在单位时间内完成更多的工作，而且 &lt;strong>因为你工作得很快，所以你会觉得成本低，从而倾向于做更多。&lt;/strong>&lt;/p>
-&lt;/blockquote>
-&lt;p>写一篇博客，你可能需要两天。这是很高的时间成本，你觉得太贵了，于是你很少写。但是，&lt;strong>做好一件事的唯一方法，就是多做这件事。&lt;/strong> 做得越快，这件事的时间成本就越低，你会愿意做得更多。&lt;/p>
-&lt;p>人们总是倾向于，多消费时间成本低的东西。网站很快，就会多访问；搜索很快，就会多搜索；文章很容易读懂，就会多读几篇。做得快的核心，就是要让时间成本降下来，从而多做。&lt;/p>
-&lt;/blockquote>
-&lt;p>之前写博客的时候, 确实投入很多. 笔记记录的时候很随意, 但是发到博客中又要花不少的时间来整理语言. 总想写的大而美, 也正是因为这个原因导致大半年没有更新(其实也还是懒), 每次想写都因为要花时间而萌生退意.&lt;/p>
-&lt;p>所以今后还是多写写, 小而美.&lt;/p>
-&lt;p>虽然大半年没更新, 访问量居然还有提升.&lt;/p>
-&lt;p>&lt;img src="https://i.loli.net/2019/08/27/XyNqw2HtTxFK6pP.jpg" alt="google analytics">&lt;/p></description></item></channel></rss>
+上一篇日志更新还是在去年的12月, 至今有差不多10个月没有更新了. 不是说没有东西可写, 而且想写的东西很多. 工作太忙, 不忙的时候又太懒, 归根结底还是太懒. 过去一年多都是在做基础架构方面的工作, 围绕技术中台展开的. 有很多技术需要去学习, 也有很多问题要处理. 过程中一直有记笔记的习惯, 所以可以写的东西很多. 不过有些属于公司的部分还是不能写的, 必要的职业道德还是要有的. 笔记记录一直在用MWeb, 并使用iCloud同步, 最近几个月也在结合幕布整理思路和工作安排. 好用的软件我也比较喜欢分享, 记得最早在Workpress上的博客就分享了很多自己常用的软件. (有点扯远了~~~) MWeb没有统计功能, 还有使用的是</description></item></channel></rss>

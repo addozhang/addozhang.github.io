@@ -8,73 +8,18 @@
 &lt;p>安装完插件, 需要开始&lt;code>基于角色的授权策略&lt;/code>. 同时添加角色和为用户分配角色.&lt;/p>
 &lt;h3 id="使用role-based-strategy作为验证方式">使用&lt;code>Role-Based Strategy&lt;/code>作为验证方式&lt;/h3>
 &lt;p>&lt;code>Manage Jenkins / Configure Global Security / Configure Global Security&lt;/code>&lt;/p>
-&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15241955282214.jpg" alt="">&lt;/p>
-&lt;h3 id="添加角色">添加角色&lt;/h3>
-&lt;p>&lt;code>Manage Jenkins / Manage and Assign Roles / Manage Roles / Global roles &lt;/code>&lt;/p>
-&lt;p>输入要添加的角色名&lt;/p>
-&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15241956860233.jpg" alt="">&lt;/p>
-&lt;h4 id="为新加的角色配置权限">为新加的角色配置权限&lt;/h4>
-&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15241957585851.jpg" alt="">&lt;/p>
-&lt;h3 id="为用户指定角色">为用户指定角色&lt;/h3>
-&lt;p>`Manage Jenkins / Manage and Assign Roles / Assign Roles / Global roles'&lt;/p>
-&lt;p>输入已有的用户名&lt;/p>
-&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15241960130076.jpg" alt="">&lt;/p>
-&lt;p>分配角色&lt;/p>
-&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15241960527215.jpg" alt="">&lt;/p>
-&lt;h2 id="编码">编码&lt;/h2>
-&lt;p>授权会在很多job里使用, 所以我们使用&lt;code>shared library&lt;/code>来定义.&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-groovy" data-lang="groovy">&lt;span class="n">timeout&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="nl">time:&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="nl">unit:&lt;/span> &lt;span class="s1">&amp;#39;MINUTES&amp;#39;&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
-&lt;span class="n">notifyAwaitApproval&lt;/span> &lt;span class="nl">approvers:&lt;/span> &lt;span class="n">getApprovers&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s1">&amp;#39;pre-release&amp;#39;&lt;/span>&lt;span class="o">),&lt;/span>
-&lt;span class="nl">emailPrompt:&lt;/span> &lt;span class="s1">&amp;#39;Build is ready to prepare release&amp;#39;&lt;/span>
-&lt;span class="o">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>给用户发送待审批邮件, 使用&lt;code>input&lt;/code>等待用户的交互, 同时使用&lt;code>milestone&lt;/code>阻塞后续的构建请求.
-&lt;code>notifyAwaitApproval.groovy&lt;/code>&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-groovy" data-lang="groovy">&lt;span class="kt">def&lt;/span> &lt;span class="nf">call&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">options&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
-&lt;span class="kt">def&lt;/span> &lt;span class="n">jobName&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">env&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">JOB_NAME&lt;/span>
-&lt;span class="k">if&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">message&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
-&lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">message&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;Action Required For Build $jobName&amp;#34;&lt;/span>
-&lt;span class="o">}&lt;/span>
-&lt;span class="kt">def&lt;/span> &lt;span class="n">csvApproverUsernames&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">{&lt;/span>
-&lt;span class="k">switch&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">approvers&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
-&lt;span class="k">case&lt;/span> &lt;span class="nl">String:&lt;/span>
-&lt;span class="c1">// already csv
-&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">approvers&lt;/span>
-&lt;span class="k">case&lt;/span> &lt;span class="nl">Map:&lt;/span>
-&lt;span class="c1">// keys are usernames and values are names
-&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">approvers&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">keySet&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">join&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s1">&amp;#39;,&amp;#39;&lt;/span>&lt;span class="o">)&lt;/span>
-&lt;span class="k">case&lt;/span> &lt;span class="nl">ArrayList:&lt;/span>
-&lt;span class="k">case&lt;/span> &lt;span class="nl">HashSet:&lt;/span>
-&lt;span class="k">return&lt;/span> &lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">approvers&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">join&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s1">&amp;#39;,&amp;#39;&lt;/span>&lt;span class="o">)&lt;/span>
-&lt;span class="k">default&lt;/span>&lt;span class="o">:&lt;/span>
-&lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nf">Exception&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;Unexpeced approver type ${options.approvers.class}!&amp;#34;&lt;/span>&lt;span class="o">)&lt;/span>
-&lt;span class="o">}&lt;/span>
-&lt;span class="o">}()&lt;/span>
-&lt;span class="n">echo&lt;/span> &lt;span class="s2">&amp;#34;Notify approvers: $csvApproverUsernames for approval&amp;#34;&lt;/span>
-&lt;span class="c1">// emailext needs to be inside a node block but don&amp;#39;t want to take up a node while waiting for approval
-&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">emailext&lt;/span> &lt;span class="nl">body:&lt;/span> &lt;span class="s2">&amp;#34;Action Required For Build \${jobName} (#\${env.BUILD_NUMBER})&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span>
-&lt;span class="nl">to:&lt;/span> &lt;span class="n">csvApproverUsernames&lt;/span>&lt;span class="o">,&lt;/span>
-&lt;span class="nl">subject:&lt;/span> &lt;span class="s2">&amp;#34;Action Required For Build \${jobName} (#\${env.BUILD_NUMBER})&amp;#34;&lt;/span>
-&lt;span class="n">milestone&lt;/span>&lt;span class="o">()&lt;/span>
-&lt;span class="n">input&lt;/span> &lt;span class="nl">id:&lt;/span> &lt;span class="s1">&amp;#39;Approval&amp;#39;&lt;/span>&lt;span class="o">,&lt;/span>
-&lt;span class="nl">message:&lt;/span> &lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">message&lt;/span>&lt;span class="o">,&lt;/span>
-&lt;span class="nl">submitter:&lt;/span> &lt;span class="n">csvApproverUsernames&lt;/span>&lt;span class="o">,&lt;/span>
-&lt;span class="nl">submitterParameter:&lt;/span> &lt;span class="s1">&amp;#39;submitter&amp;#39;&lt;/span>
-&lt;span class="n">milestone&lt;/span>&lt;span class="o">()&lt;/span>
-&lt;span class="o">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>检查并获取Jenkins当前配置的授权策略, 如果是&lt;code>Role-Based Authorization&lt;/code>, 返回拥有指定角色的用户列表.
-&lt;code>getApprovers.groovy&lt;/code>&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-groovy" data-lang="groovy">&lt;span class="kn">import&lt;/span> &lt;span class="nn">com.cloudbees.groovy.cps.NonCPS&lt;/span>
-&lt;span class="kn">import&lt;/span> &lt;span class="nn">com.michelin.cio.hudson.plugins.rolestrategy.RoleBasedAuthorizationStrategy&lt;/span>
-&lt;span class="nd">@NonCPS&lt;/span>
-&lt;span class="kt">def&lt;/span> &lt;span class="nf">call&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">role&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
-&lt;span class="n">echo&lt;/span> &lt;span class="s2">&amp;#34;Retrieving users for $role&amp;#34;&lt;/span>
-&lt;span class="kt">def&lt;/span> &lt;span class="n">strategy&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">RoleBasedAuthorizationStrategy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">instance&lt;/span>&lt;span class="o">;&lt;/span>
-&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">strategy&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
-&lt;span class="k">return&lt;/span> &lt;span class="n">strategy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getGrantedRoles&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">RoleBasedAuthorizationStrategy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">GLOBAL&lt;/span>&lt;span class="o">)&lt;/span>
-&lt;span class="o">.&lt;/span>&lt;span class="na">entrySet&lt;/span>&lt;span class="o">()&lt;/span>
-&lt;span class="o">.&lt;/span>&lt;span class="na">find&lt;/span> &lt;span class="o">{&lt;/span> &lt;span class="n">entry&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">entry&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getName&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">equals&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">role&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">}.&lt;/span>&lt;span class="na">getValue&lt;/span>&lt;span class="o">()&lt;/span>
-&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="o">{&lt;/span>
-&lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nf">Exception&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;Role Strategy Plugin not in use. Please enable to retrieve users for a role&amp;#34;&lt;/span>&lt;span class="o">)&lt;/span>
-&lt;span class="o">}&lt;/span>
-&lt;span class="o">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>
+&lt;p>
+&lt;div class="notices warning image-warning">
+&lt;div class="label">Image not found&lt;/div>
+&lt;style>
+a.warning-link {
+color: inherit !important;
+font-weight: inherit !important;
+text-decoration: underline !important;
+border-bottom: none !important; }
+&lt;/style>
+&lt;p>网站链接: &lt;a href='http://7xvxng.com1.z0.glb.clouddn.com/15241955282214.jpg' title='在新选项卡中打开此网站链接' target='_blank' class='warning-link'>http://7xvxng.com1.z0.glb.clouddn.com/15241955282214.jpg&lt;/a>&lt;/p>
+&lt;p>链接到文件: /static/http://7xvxng.com1.z0.glb.clouddn.com/15241955282214.jpg&lt;/p>
+&lt;p>使用 &lt;a href='https://gohugo.io/content-management/page-bundles/' title='相关信息 Hugo Page Bundles' target='_blank' class='warning-link'>Page Bundles&lt;/a>: false&lt;/p>
+&lt;/div>
+&lt;/p></description></item></channel></rss>
