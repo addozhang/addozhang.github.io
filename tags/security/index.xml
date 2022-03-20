@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Security on 乱世浮生</title><link>https://atbug.com/tags/security/</link><description>Recent content in Security on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 20 Mar 2022 21:58:52 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/security/index.xml" rel="self" type="application/rss+xml"/><item><title>《BeyondCorp Part III: The Access Proxy》笔记</title><link>https://atbug.com/the-access-proxy-notes/</link><pubDate>Sun, 20 Mar 2022 21:58:52 +0800</pubDate><guid>https://atbug.com/the-access-proxy-notes/</guid><description>这是一篇发表于 2016 年的论文，是 BeyondCorp 系列的第三篇。虽然过去多年，但是在流量的精细化控制方面仍然值得学习。
+BeyondCorp 是 Google 对零信任模型的实现。它建立在 Google 十年经验的基础上，并结合了社区的想法和最佳实践。通过将访问控制从网络边界转移到个人用户，BeyondCorp 几乎可以在任何位置进行安全工作，而无需传统的 VPN。
+The Access Proxy 详细描述了 BeyondCorp 前端基础设施的实现，介绍了在实现 Access Proxy（以下简称 AP）时的挑战与实践教训，并给出了最佳实践。
+AP 是在负载均衡反向代理的基础上增加了安全的处理，增加了验证、授权、集中日志记录，以及自服务配置。整个设计上，充分利用了对流量的精细化控制。
+认证 在传统代理的 TLS 外，引入认证功能。该功能的核心之一是请求方识别，验证用户身份。并支持一系列的身份验证选项。
+此外，认证还需要对后端服务“隐藏”身份验证凭证，也不会对后端服务自身的验证流程。
+多平台的认证 使用了一致的、不可复制的、唯一设备标识符和用于跟踪设备最新状态的存储，实现对设备的信任取代对网络的信任。
+对于不同的平台，充分利用各平台标识。比如 PC 和笔记本操作系统的设备证书，移动设备系统的设备标识。
+授权 授权的引入与认证功能一样，将基础功能与后端服务分离，解放了后端服务。但是由于复杂度限制，只能执行粗粒度的策略，还需与后端服务的细粒度策略结合使用。
+此外，还需解决代理与后端的双向认证问题，毕竟从ZTN（Zero Trust Network 零信任网络）的角度看内部网络同样不可信。通过双向认证确保数据（元数据，通常是请求头）不可欺骗的同时，还有额外的收益：通过增加元数据轻松地扩展 AP 的能力，新增的元数据也被后端接受并使用。</description></item></channel></rss>
