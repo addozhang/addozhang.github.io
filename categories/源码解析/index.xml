@@ -16,17 +16,7 @@ Vim 或者 Code 就算了，我只是阅读源码需要关联跳转就行。在 
 我将生成的内容挂在了 gist 上了，不想花费时间生成的可以直接复制。
 准备环境 1. 安装依赖的工具 brew install coreutils wget cmake libtool go automake ninja clang-format 2. bazel 使用 homebrew 进行安装： brew install bazel 即可
 安装问运行编译测试下：bazel build //source/exe:envoy-static，提示版本太高。
-现在 homebrew 安装的版本是3.</description></item><item><title>Kubernetes 源码解析 - Informer</title><link>https://atbug.com/kubernetes-source-code-how-informer-work/</link><pubDate>Sun, 16 Aug 2020 23:32:38 +0800</pubDate><guid>https://atbug.com/kubernetes-source-code-how-informer-work/</guid><description>上篇扒了 HPA 的源码，但是没深入细节，今天往细节深入。
-开局先祭出一张图：
-为什么要有 Informer？ Kubernetes 中的持久化数据保存在 etcd中，各个组件并不会直接访问 etcd，而是通过 api-server暴露的 RESTful 接口对集群进行访问和控制。
-资源的控制器（图中右侧灰色的部分）读取数据也并不会直接从 api-server 中获取资源信息（这样会增加 api-server 的压力），而是从其“本地缓存”中读取。这个“本地缓存”只是表象的存在，加上缓存的同步逻辑就是今天要是说的Informer（灰色区域中的第一个蓝色块）所提供的功能。
-从图中可以看到 Informer 的几个组件：
-Reflector：与 api-server交互，监听资源的变更。 Delta FIFO Queue：增量的 FIFO 队列，保存 Reflector 监听到的资源变更（简单的封装）。 Indexer：Informer 的本地缓存，FIFO 队列中的数据根据不同的变更类型，在该缓存中进行操作。 Local Store： 上篇 提到了水平自动伸缩的控制器HorizontalController，其构造方法就需要提供 Informer。</description></item><item><title>Kubernetes 源码解析 - HPA 水平自动伸缩如何工作</title><link>https://atbug.com/kubernetes-source-code-how-hpa-work/</link><pubDate>Sat, 15 Aug 2020 02:09:37 +0800</pubDate><guid>https://atbug.com/kubernetes-source-code-how-hpa-work/</guid><description>HPA - Horizontal Pod Autoscaler 的缩写，Pod 水平自动伸缩。通过对 Pod 负载的监控，来自动增加或者减少 Pod 的副本数量。
-从字面意思来看，其主要包含了两部分：
-监控 Pod 的负载 控制 Pod 的副本数量 那具体是如何实现的呢？以下基于1.17 源码，来分析下 HPA 如何工作。
-注意：文章中的代码在源码的基础上进行了精简：删掉了注释、序列化等信息，或保留了部分核心代码，加上新的注释。
-资源 HPA 的资源是HorizontalPodAutoscaler，在v1版本中，只支持基于 CPU 指标的计算；在v2beta2版本中加入了基于内存和自定义指标的计算。
-v1 //staging/src/k8s.io/api/autoscaling/v1/types.go type HorizontalPodAutoscaler struct { metav1.TypeMeta metav1.ObjectMeta Spec HorizontalPodAutoscalerSpec Status HorizontalPodAutoscalerStatus } type HorizontalPodAutoscalerSpec struct { ScaleTargetRef CrossVersionObjectReference //监控的目标资源 MinReplicas *int32 //最小副本数 MaxReplicas int32 //最大副本数 TargetCPUUtilizationPercentage *int32 //触发调整的CPU 使用率 } v2 //staging/src/k8s.</description></item><item><title>Spring Boot源码分析 - Configuration注解</title><link>https://atbug.com/spring-boot-configuration-annotation/</link><pubDate>Mon, 10 Dec 2018 16:24:33 +0000</pubDate><guid>https://atbug.com/spring-boot-configuration-annotation/</guid><description>@Configuration注解 @Configuration注解指示一个类声明一个或多个@Bean方法, 并且可以由Spring容器处理, 以在运行时为这些bean生成bean定义和服务请求.
+现在 homebrew 安装的版本是3.</description></item><item><title>Spring Boot源码分析 - Configuration注解</title><link>https://atbug.com/spring-boot-configuration-annotation/</link><pubDate>Mon, 10 Dec 2018 16:24:33 +0000</pubDate><guid>https://atbug.com/spring-boot-configuration-annotation/</guid><description>@Configuration注解 @Configuration注解指示一个类声明一个或多个@Bean方法, 并且可以由Spring容器处理, 以在运行时为这些bean生成bean定义和服务请求.
 使用ConfigurationClassParser来对@Configuration标注的类进行解析, 封装成ConfigurationClass实例. 具体的实现通过ConfigurationClassPostProcessor来实现的.
 ConfigurationClassPostProcessor 实现了BeanDefinitionRegistryPostProcessor接口, 间接实现了BeanFactorPostProcessor接口.
 #postProcessBeanDefinitionRegistry(): 注册所有ConfigurationClass中的BeanDefinition, 包括@Bean注解的方法, @ImporResource引入的资源中定义的bean, 和@Import注解引入的ImportBeanDefinitionRegistrar中注册的BeanDefinition #postProcessBeanFactory(): 在运行时以通过cglig增强的类来替换ConfigurationClass, 为服务bean请求做准备. 增强的实现是通过ConfigurationClassEnhancer完成的. 插入一点, ConfigurationClassEnhancer实现了直接使用bean注册方法来获取bean的操作, 提供了一个BeanMethodInterceptor的内部类来实行.
