@@ -929,6 +929,6 @@ SLF4J封装了使用起来和其他日志系统一样简单。上面提到过SLF
 SLF4J类在初始化的时候会尝试从ClassLoader中org/slf4j/impl/StaticLoggerBinder.class。这个类比较特殊，每个binding包里都有。不同binding包里的StaticLoggerBinder类会去初始化一个相应的实例，如slf4j-log4j里：
 [java] /**
 截取的部分代码 */ private StaticLoggerBinder() { loggerFactory = new Log4jLoggerFactory(); } [/java] 而Log4jLoggerAdapter实现了SLF4J的Logger接口，使用了Adapter模式对Log4j的Logger进行了封装并暴露了Logger的接口，Log4jLoggerFactory持有了Log4jLoggerAdapter的实例。</description></item><item><title>张晓辉</title><link>https://atbug.com/about/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://atbug.com/about/</guid><description>英文名 Addo。
-Flomesh高级云原生架构师。
+Flomesh 高级云原生架构师。
 资深程序员，LFAPAC 开源布道师，云原生社区管委会成员，公众号“云原生指北”作者。曾任职于汇丰软件、唯品会、数人云、小鹏汽车，有多年的微服务和基础架构实践经验，主要工作涉及微服务、容器、Kubernetes、DevOps 等。
-这里所有的文章都会同步发送到公众号：云原生指北 (微信号：sevenfeet)</description></item></channel></rss>
+这里所有的文章都会同步发送到公众号：云原生指北。</description></item></channel></rss>
