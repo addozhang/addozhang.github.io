@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 乱世浮生</title><link>https://atbug.com/posts/</link><description>Recent content in Posts on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 21 Sep 2022 23:37:43 +0800</lastBuildDate><atom:link href="https://atbug.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Argo Rollouts 和服务网格实现自动可控的金丝雀发布</title><link>https://atbug.com/canary-release-via-argo-rollouts-and-service-mesh/</link><pubDate>Wed, 21 Sep 2022 23:37:43 +0800</pubDate><guid>https://atbug.com/canary-release-via-argo-rollouts-and-service-mesh/</guid><description>金丝雀发布是服务治理中的重要功能，在发布时可以可控地将部分流量导入新版本的服务中；其余的流量则由旧版本处理。发布过程中，可以逐步增加新版本服务的流量。通过测试，可以决定是回滚还是升级所有实例，停用旧版本。
 有了金丝雀发布，使用真实流量对服务进行测试，通过对流量的控制可以有效的降低服务发布的风险。
-本文将介绍如何将使用 Argo Rollouts 和服务网格来进行应用的自动、可控的金丝雀发布，不涉及工作原理的分析。对工作原理有兴趣的同学可以留言，可以再做一篇原理的介绍。
+本文将介绍如何将使用 Argo Rollouts 和服务网格 osm-edge 来进行应用的自动、可控的金丝雀发布，不涉及工作原理的分析。对工作原理有兴趣的同学可以留言，可以再做一篇原理的介绍。
 Argo Rollouts Argo Rollouts 包括一个 Kubernetes控制器 和一组 CRD，提供如蓝绿色、金丝雀、金丝雀分析、体验等高级部署功能和 Kubernetes 的渐进交付功能。
 Argo Rollouts 与 入口控制器 和服务网格集成，利用其流量管理能力，在发布期间逐步将流量转移到新版本。此外，Rollouts 可以查询和解析来自各种提供商的指标，以验证关键 KPI，并在更新期间推动自动推进或回滚。
 Argo Rollouts 支持服务网格标准 SMI（Service Mesh Interface） 的 TrafficSplit API，通过 TrafficSplit API 的使用来控制金丝雀发布时的流量控制。
-服务网格 osm-edge 服务网格是处理服务间网络通信的基础设施组件，旨在从平台层面提供可观性、安全以及可靠性特性，以进程外的方式提供原本由部分应用层逻辑承载的基础能力，真正实现与业务逻辑的分离。
-osm-edge 是针对边缘计算环境设计的开源的服务网格，采用实现了服务网格标准 SMI（Service Mesh Interface） 的 osm（Open Service Mesh） 作为控制平面，采用 Pipy 作为数据平面，具有高性能、低资源、简单、易用、易扩展、广泛兼容（支持 x86/arm64/龙芯/RISC-V）的特点。</description></item><item><title>零信任安全：SPIFFE 和 SPIRE 通用身份验证的标准和实现</title><link>https://atbug.com/what-is-spiffe-and-spire/</link><pubDate>Thu, 15 Sep 2022 12:00:09 +0800</pubDate><guid>https://atbug.com/what-is-spiffe-and-spire/</guid><description>最近正在读 《Solving the Bottom Turtle》 这本书，这篇是对部分内容的总结和思考，由于内容较多，会分几篇来发。
+服务网格 osm-edge 服务网格是处理服务间网络通信的基础设施组件，旨在从平台层面提供可观性、安全以及可靠性特性，以进程外的方式提供原本由部分应用层逻辑承载的基础能力，真正实现与业务逻辑的分离。</description></item><item><title>零信任安全：SPIFFE 和 SPIRE 通用身份验证的标准和实现</title><link>https://atbug.com/what-is-spiffe-and-spire/</link><pubDate>Thu, 15 Sep 2022 12:00:09 +0800</pubDate><guid>https://atbug.com/what-is-spiffe-and-spire/</guid><description>最近正在读 《Solving the Bottom Turtle》 这本书，这篇是对部分内容的总结和思考，由于内容较多，会分几篇来发。
 这本书的副标题是：
 a SPIFFE Way to Establish Trust in Your Infrastructure via Universal Identity. 通过通用身份以 SPIFFE 的方式在基础设施中建立信任。
 大家记住其中的有几个关键词：通用身份、SPIFFE 的方式、基础设施、建立信任。
