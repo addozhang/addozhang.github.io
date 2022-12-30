@@ -1,4 +1,21 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>乱世浮生</title><link>https://atbug.com/</link><description>Recent content on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 29 Dec 2022 12:42:40 +0800</lastBuildDate><atom:link href="https://atbug.com/index.xml" rel="self" type="application/rss+xml"/><item><title>译：在 Kubernetes 上实施零信任</title><link>https://atbug.com/implementing-zero-trust-on-kubernetes/</link><pubDate>Thu, 29 Dec 2022 12:42:40 +0800</pubDate><guid>https://atbug.com/implementing-zero-trust-on-kubernetes/</guid><description>本文翻译自 ContainerJournal 的 2022 年度文章之一 《Implementing Zero-Trust on Kubernetes》，作者 Deepak Goel 在文中分享了 Kubernetes 上实施零信任的三个最佳实践。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>乱世浮生</title><link>https://atbug.com/</link><description>Recent content on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 31 Dec 2022 07:40:32 +0800</lastBuildDate><atom:link href="https://atbug.com/index.xml" rel="self" type="application/rss+xml"/><item><title>再见，超速的 2022</title><link>https://atbug.com/fare-well-2002/</link><pubDate>Sat, 31 Dec 2022 07:40:32 +0800</pubDate><guid>https://atbug.com/fare-well-2002/</guid><description>快，是真的快，感觉 与 2021 再见 就在几天前，然而回头又想不到做了什么，该总结什么。
+是的，这篇与技术无关。
+工作 去年（我现在可以称其为去年）换了现在的工作，换了新的方向，对于未知当初的几个月充满了新鲜与忐忑。年初在老板的几次正向 “PUA” 下，对这个方向慢慢有了更新的认识，并坚定的走下去。
+远程办公又一年，走出最初半年的“蜜月期”之后，尤其上半年的那几个月，心中充满了阴郁。短短的几个月，有点将居家做到了极致的异味，以至于年底两个月的居家变得无感了。也好，快速地度过了远程办公的“阵痛期”。
+工作中仍然有挑战，但更多的是来自自己不曾接触的知识领域，无他唯有不断地探索学习。这一年，从工作从同事那边都学到了很多。
+何其有幸，继续做着自己喜欢的工作。
+学习 阅读方面，书看的是不够多，更多的是碎片化的阅读时间。“哪里不会学哪里”，遇到不会的不需要尴尬，也正式填充认知拼图的机会。学习之后，将其记录下来。写博客写公众号，实际上是我学习的一种方式。
+公众号，这是我坚持的第二年，因为是记录学习，内容会显得杂乱。年初有朋友建议稍微运营一下，确实有考虑过，但最终放弃。不想在这上面浪费时间，不想改变写作的初衷，唯有持续学习才是写下去的动力。
+统计了下，2020 年有 34 篇原创 5 篇翻译，虽然数量没有去年多，但是有在尝试进行思考和沉淀。内容虽然不会很多，但我希望继续保持下去，只发原创。
+何其有幸，还能继续学习。
+生活 明天与她进入第 19 个年头，明年我也 38 了，开始超过人生一半的时间；父母陪在身边，不住在一起但住得越来越近；儿子也一天天长大，可以一起开始打游戏了。
+今年与医院打交道的次数有点多，所幸都一切都算顺利，坦然面对。
+何其有幸，有你们相伴。
+总结 过去一年，过得非常快，有得有失，有求而不得，有失而复得。
+珍惜眼前，珍惜当下。
+何其有幸，2023，它来了。
+希望你愿意听 我心中的旧日辉煌
+我的世界没有太阳 却依然明亮</description></item><item><title>译：在 Kubernetes 上实施零信任</title><link>https://atbug.com/implementing-zero-trust-on-kubernetes/</link><pubDate>Thu, 29 Dec 2022 12:42:40 +0800</pubDate><guid>https://atbug.com/implementing-zero-trust-on-kubernetes/</guid><description>本文翻译自 ContainerJournal 的 2022 年度文章之一 《Implementing Zero-Trust on Kubernetes》，作者 Deepak Goel 在文中分享了 Kubernetes 上实施零信任的三个最佳实践。
 作为云原生社区的基石，Kubernetes 帮助企业在生产环境中更高效地部署和管理容器。尽管 Kubernetes 最初设计时提供了基本的 安全功能，但广泛且迅速的采用以及日益复杂的威胁形势使 Kubernetes 更容易受到攻击。开发人员和安全专家当下的任务是扩展 Kubernetes 的内置安全性，以有效防范更复杂、更多样和更频繁的网络攻击。
 以往“信任但要验证”的方式已被证明对云计算复杂的分布式特性无效，因此 Kubernetes 必须转向“从不信任，始终验证”的零信任模型思想，为业务提供更大的保护。
 零信任模型的基本概念 基于“从不信任，始终验证”的原则，可以用三个基本概念来解释零信任模型：
