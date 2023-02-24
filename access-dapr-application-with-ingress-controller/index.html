@@ -111,11 +111,11 @@ kubectl apply -n httpbin -f - <span style=color:#e6db74>&lt;&lt;EOF
     <span style=color:#e6db74>&#34;Accept&#34;</span>: <span style=color:#e6db74>&#34;*/*&#34;</span>,
     <span style=color:#e6db74>&#34;Connection&#34;</span>: <span style=color:#e6db74>&#34;keep-alive&#34;</span>,
     <span style=color:#e6db74>&#34;Content-Length&#34;</span>: <span style=color:#e6db74>&#34;0&#34;</span>,
-    <span style=color:#e6db74>&#34;Host&#34;</span>: <span style=color:#e6db74>&#34;20.239.95.81:30508&#34;</span>,
+    <span style=color:#e6db74>&#34;Host&#34;</span>: <span style=color:#e6db74>&#34;10.0.0.13:80&#34;</span>,
     <span style=color:#e6db74>&#34;User-Agent&#34;</span>: <span style=color:#e6db74>&#34;curl/7.86.0&#34;</span>
   <span style=color:#f92672>}</span>,
   <span style=color:#e6db74>&#34;origin&#34;</span>: <span style=color:#e6db74>&#34;10.42.0.18&#34;</span>,
-  <span style=color:#e6db74>&#34;url&#34;</span>: <span style=color:#e6db74>&#34;http://20.239.95.81:30508/get&#34;</span>
+  <span style=color:#e6db74>&#34;url&#34;</span>: <span style=color:#e6db74>&#34;http://10.0.0.13:80/get&#34;</span>
 <span style=color:#f92672>}</span>
 </code></pre></div><h3 id=方案-2>方案 2</h3><p>方案 2 也同样需要配置入口规则，只是这次后端服务配置的入口控制器的 <code>Dapr Service</code>，通过 <code>kubectl get svc -n flomesh</code> 就可以找到名字带有 <code>-dapr</code> 后缀的 <code>Service</code>。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>kubectl apply -n flomesh -f - <span style=color:#e6db74>&lt;&lt;EOF
 </span><span style=color:#e6db74>apiVersion: networking.k8s.io/v1
