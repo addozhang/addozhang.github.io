@@ -8,4 +8,4 @@ Quarkus 是专为 OpenJDK HotSpot 和 GraalVM 定制的全栈 Kubernetes 原生 
 从 Quarkus 的官网，可以看到其有几个特性：
 容器优先 统一了命令式和响应式编程 开发者友好 最佳品种的库及标准 更多 Quarkus 可以参考官网的介绍及文档。今天主要就是跑一下 Quarkus 的 Hello world。
 放一张官网的图：
-环境准备 基于 Java 11 的 GraalVM Maven 3.</description></item></channel></rss>
+环境准备 基于 Java 11 的 GraalVM Maven 3.6.2+ 笔者使用的是 macos 10.</description></item></channel></rss>

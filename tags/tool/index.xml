@@ -6,7 +6,8 @@ CPU: Intel 8700 6C12T MEM: 64G DDR4 DISK: 1T SSD 折腾的目的：
 文档翻译自 Kubernetes Essential Tools: 2021，篇幅较长，做了部分增删。
 介绍 在本文中，我将尝试总结我最喜欢的 Kubernetes 工具，并特别强调最新的和鲜为人知但我认为会非常流行的工具。
 这只是我根据我的经验得出的个人清单，但为了避免偏见，我还将尝试提及每种工具的替代方案，以便你可以根据自己的需要进行比较和决定。我将尽可能缩短这篇文章并提供链接，以便你可以自行探索更多内容。我的目标是回答这个问题：“我如何在 Kubernetes 中做 X？” 通过描述不同软件开发任务的工具。
-K3D K3D 是我最喜欢的在笔记本电脑上运行 Kubernetes (K8s) 集群的方式。它非常轻巧且速度非常快。它是使用 Docker 围绕 K3S 的包装器。所以，你只需要 Docker 来运行它并且资源使用率非常低。唯一的问题是它不完全符合 K8s 标准，但这不应该是本地开发的问题。对于测试环境，你可以使用其他解决方案。K3D 比 Kind 快，但 Kind 完全兼容。</description></item><item><title>常用的几款工具让 Kubernetes 集群上的工作更容易</title><link>https://atbug.com/tools-accelerate-work-on-kubernetes-cluster/</link><pubDate>Sat, 26 Jun 2021 12:16:28 +0800</pubDate><guid>https://atbug.com/tools-accelerate-work-on-kubernetes-cluster/</guid><description>之前写过一篇 介绍了工具加速云原生 Java 开发。
+K3D K3D 是我最喜欢的在笔记本电脑上运行 Kubernetes (K8s) 集群的方式。它非常轻巧且速度非常快。它是使用 Docker 围绕 K3S 的包装器。所以，你只需要 Docker 来运行它并且资源使用率非常低。唯一的问题是它不完全符合 K8s 标准，但这不应该是本地开发的问题。对于测试环境，你可以使用其他解决方案。K3D 比 Kind 快，但 Kind 完全兼容。
+备选 K3S 物联网或者边缘计算 Kind 完全兼容 Kubernetes 的备选 MicroK8s MiniKube Krew Krew 是管理的必备工具 Kubectl 插件，这是一个必须有任何 K8S 用户。我不会详细介绍超过 145 个可用插件，但至少安装 kubens 和 kubectx。</description></item><item><title>常用的几款工具让 Kubernetes 集群上的工作更容易</title><link>https://atbug.com/tools-accelerate-work-on-kubernetes-cluster/</link><pubDate>Sat, 26 Jun 2021 12:16:28 +0800</pubDate><guid>https://atbug.com/tools-accelerate-work-on-kubernetes-cluster/</guid><description>之前写过一篇 介绍了工具加速云原生 Java 开发。
 其实日常工作中在集群上的操作也非常多，今天就来介绍我所使用的工具。
 kubectl-alias 使用频率最高的工具，我自己稍微修改了一下，加入了 StatefulSet 的支持。
 这个是我的 https://github.com/addozhang/kubectl-aliases，基于 https://github.com/ahmetb/kubectl-aliases。

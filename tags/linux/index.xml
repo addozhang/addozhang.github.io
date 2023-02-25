@@ -11,7 +11,7 @@ rsyslog服务启动后监听/run/systemd/journal/syslogsocket获取syslog类型�
 诊断步骤: rsyslog 重启rsyslog服务
 重启之后内存得到释放, 但是rsyslogd进程cpu跑到90%多, 且内存在持续升高.
 检查服务状态发现进程一直在报错:
-fopen() failed: 'Permission denied', path: '/imjournal.state.tmp' [try http://www.</description></item><item><title>KVM 安装手册</title><link>https://atbug.com/kvm-installation-note/</link><pubDate>Thu, 12 Apr 2018 12:45:15 +0000</pubDate><guid>https://atbug.com/kvm-installation-note/</guid><description>&lt;h2 id="添加虚拟机流程">添加虚拟机流程：&lt;/h2>
+fopen() failed: &amp;#39;Permission denied&amp;#39;, path: &amp;#39;/imjournal.state.tmp&amp;#39; [try http://www.rsyslog.com/e/2013 ] fopen() failed: &amp;#39;Permission denied&amp;#39;, path: &amp;#39;/imjournal.</description></item><item><title>KVM 安装手册</title><link>https://atbug.com/kvm-installation-note/</link><pubDate>Thu, 12 Apr 2018 12:45:15 +0000</pubDate><guid>https://atbug.com/kvm-installation-note/</guid><description>&lt;h2 id="添加虚拟机流程">添加虚拟机流程：&lt;/h2>
 &lt;pre>&lt;code>1. 配置网络
 2. 配置存储池
 3. 上传镜像
@@ -19,16 +19,16 @@ fopen() failed: 'Permission denied', path: '/imjournal.state.tmp' [try http://ww
 &lt;/code>&lt;/pre>
 &lt;h3 id="安装kvm虚拟机">安装KVM虚拟机&lt;/h3>
 &lt;h4 id="1-关闭防火墙selinux">1. 关闭防火墙，selinux&lt;/h4>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-shell" data-lang="shell">&lt;span style="color:#75715e"># service iptables stop&lt;/span>
-&lt;span style="color:#75715e"># setenforce 0 临时关闭&lt;/span>
-&lt;span style="color:#75715e"># chkconfig NetworkManager off&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="2-安装kvm虚拟机">2. 安装kvm虚拟机&lt;/h4>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-shell" data-lang="shell">&lt;span style="color:#75715e"># yum install kvm libvirt libvirt-devel python-virtinst python-virtinst qemu-kvm virt-viewer bridge-utils virt-top libguestfs-tools ca-certificates audit-libs-python device-mapper-libs virt-install&lt;/span>
-&lt;span style="color:#75715e"># 启动服务&lt;/span>
-&lt;span style="color:#75715e"># service libvirtd restart&lt;/span>
-下载virtio-win-1.5.2-1.el6.noarch.rpm 如果不安装window虚拟机或者使用带virtio驱动的镜像可以不用安装
-&lt;span style="color:#75715e"># rpm -ivh virtio-win-1.5.2-1.el6.noarch.rpm&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="3-libvirt在管理本地或远程hypervisor时的表现形式如下">3. Libvirt在管理本地或远程Hypervisor时的表现形式如下。&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># service iptables stop&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># setenforce 0 临时关闭&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># chkconfig NetworkManager off&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="2-安装kvm虚拟机">2. 安装kvm虚拟机&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># yum install kvm libvirt libvirt-devel python-virtinst python-virtinst qemu-kvm virt-viewer bridge-utils virt-top libguestfs-tools ca-certificates audit-libs-python device-mapper-libs virt-install&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 启动服务&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># service libvirtd restart&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>下载virtio-win-1.5.2-1.el6.noarch.rpm 如果不安装window虚拟机或者使用带virtio驱动的镜像可以不用安装
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># rpm -ivh virtio-win-1.5.2-1.el6.noarch.rpm&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="3-libvirt在管理本地或远程hypervisor时的表现形式如下">3. Libvirt在管理本地或远程Hypervisor时的表现形式如下。&lt;/h4>
 &lt;p>在libvirt内部管理了五部分：&lt;/p>
 &lt;ul>
 &lt;li>节点：所谓的节点就是我们的物理服务器，一个服务器代表一个节点，上边存放着Hyper和Domain&lt;/li>
@@ -42,7 +42,7 @@ Redis3.2.8
 编译安装 wget http://download.redis.io/releases/redis-3.2.8.tar.gz tar -zxvf redis-3.2.8.tar.gz cd redis-3.2.8 sudo make test sudo make install 启动 redis-server 问题 /bin/sh: cc: command not found
 **原因：**Centos安装时选择的类型是Infrastructure，没有c++的编译工具。
 解决：sudo yum -y install gcc gcc-c++ libstdc++-devel
-malloc.h:50:31: fatal error: jemalloc/jemalloc.</description></item><item><title>Centos 上安装 Postgresql</title><link>https://atbug.com/install-postgresql-on-centos/</link><pubDate>Thu, 06 Apr 2017 22:54:17 +0000</pubDate><guid>https://atbug.com/install-postgresql-on-centos/</guid><description>版本 Centos7
+malloc.h:50:31: fatal error: jemalloc/jemalloc.h: No such file or directory</description></item><item><title>Centos 上安装 Postgresql</title><link>https://atbug.com/install-postgresql-on-centos/</link><pubDate>Thu, 06 Apr 2017 22:54:17 +0000</pubDate><guid>https://atbug.com/install-postgresql-on-centos/</guid><description>版本 Centos7
 Postgresql9.2
 Enable ssh service sshd start
 Open firewall for 22 firewall-cmd —state
@@ -53,4 +53,6 @@ Install Postgresql yum install postgres
 su postgres
 postgres —version
 默认会创建postgres:postgres用户和组
-切换用户 su - postgres</description></item></channel></rss>
+切换用户 su - postgres
+初始化数据库 通过指定数据文件目录初始化db
+initdb -D /var/lib/pgsql/data</description></item></channel></rss>

@@ -5,4 +5,4 @@ eureka-client: 1.7.2 spring-boot: 1.5.12.RELEASE spring-cloud: Edgware.SR3
 问题重现 借助Btrace重现, java -noverify -cp .:btrace-boot.jar -javaagent:btrace-agent.jar=script=&amp;lt;pre-compiled-btrace-script&amp;gt; &amp;lt;MainClass&amp;gt; &amp;lt;AppArguments&amp;gt;
 思路 主线程更新实例本地状态(STARTING-&amp;gt;UP)前, 等待心跳线程完成第一次心跳并尝试注册实例, 获取到当前的状态STARTING. 主线程更新状态后触发
 Btrace 脚本
-import com.sun.btrace.annotations.BTrace; import com.sun.btrace.annotations.Kind; import com.sun.btrace.annotations.Location; import com.sun.btrace.annotations.OnMethod; import java.util.concurrent.atomic.AtomicBoolean; import static com.</description></item></channel></rss>
+import com.sun.btrace.annotations.BTrace; import com.sun.btrace.annotations.Kind; import com.sun.btrace.annotations.Location; import com.sun.btrace.annotations.OnMethod; import java.util.concurrent.atomic.AtomicBoolean; import static com.sun.btrace.BTraceUtils.currentThread; import static com.</description></item></channel></rss>

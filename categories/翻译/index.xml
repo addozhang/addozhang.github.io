@@ -16,7 +16,8 @@
 零信任是营销炒作，还是新的机会，各位看官你怎么看？
 要点
 零信任是一种被大量炒作的安全模型，但尽管存在营销噪音，但它对于具有安全意识的组织具有一些具体而直接的价值。 零信任的核心是，将授权从“在边界验证一次”转变为“随时随地验证”。 为此，零信任要求我们重新思考身份的概念，并摆脱基于位置的身份，例如 IP 地址。 Kubernetes 采用者在网络层实现零信任时具有明显的优势，这要归功于基于 Sidecar 的服务网格，它提供无需更改应用程序就可实现的最细粒度的身份验证和授权。 虽然服务网格可以提供帮助，但 Kubernetes 安全性仍然是一个复杂而微妙的话题，需要从多个层次进行了解。 零信任是一种位于现代安全实践前沿的强大的安全模型。这也是一个容易引起轰动和炒作的术语，因此很难消除噪音。那么，究竟什么是零信任，对于 Kubernetes，它究竟意味着什么？在本文中，我们将从工程的角度探讨什么是零信任，并构建一个基本框架来理解它对 Kubernetes 运维和安全团队等的影响。
-介绍 如果你正在构建现代云软件，无论是采用 Kubernetes 还是其他软件，可能都听说过“零信任”一词。零信任的安全模式变得如此重要，以至于美国联邦政府已经注意到：白宫最近发布了一份联邦零信任战略的备忘录，要求所有美国联邦机构在年底前满足特定的零信任安全标准。2024财年；国防部创建了零信任参考架构；美国国家安全局发布了一份Kubernetes 强化指南，专门描述了 Kubernetes 中零信任安全的最佳实践。</description></item><item><title>译：Kubernetes 最佳实践</title><link>https://atbug.com/translate-kubernetes-best-practices/</link><pubDate>Tue, 05 Jul 2022 07:53:30 +0800</pubDate><guid>https://atbug.com/translate-kubernetes-best-practices/</guid><description>本文翻译自 Jack Roper 的文章 Kubernetes Best Practice。
+介绍 如果你正在构建现代云软件，无论是采用 Kubernetes 还是其他软件，可能都听说过“零信任”一词。零信任的安全模式变得如此重要，以至于美国联邦政府已经注意到：白宫最近发布了一份联邦零信任战略的备忘录，要求所有美国联邦机构在年底前满足特定的零信任安全标准。2024财年；国防部创建了零信任参考架构；美国国家安全局发布了一份Kubernetes 强化指南，专门描述了 Kubernetes 中零信任安全的最佳实践。
+随着这种噪音，零信任无疑吸引了很多营销关注。但尽管有噪音，零信任不仅仅是一个空洞的术语——它代表了对未来安全的一些深刻和变革性的想法。那么具体来说，什么是零信任，为什么它突然变得如此重要？零信任对 Kubernetes 用户意味着什么？</description></item><item><title>译：Kubernetes 最佳实践</title><link>https://atbug.com/translate-kubernetes-best-practices/</link><pubDate>Tue, 05 Jul 2022 07:53:30 +0800</pubDate><guid>https://atbug.com/translate-kubernetes-best-practices/</guid><description>本文翻译自 Jack Roper 的文章 Kubernetes Best Practice。
 译者：文章中作者从应用程序开发、治理和集群配置三个方面给出了一些 Kubernetes 的最佳实践，同时翻译过程中也加入了我过往的一些使用经验。有误的地方，也欢迎大家指正。
 在这篇文章中，我将介绍一些使用 Kubernetes (K8s) 时的最佳实践。
 作为最流行的容器编排系统，K8s 是现代云工程师掌握的事实标准。众所周知，不管使用还是维护 K8s 复杂的系统，因此很好地掌握它应该做什么和不应该做什么，并知道什么是可能的，将是一个好的开局。
@@ -28,7 +29,8 @@
 了解各种类型边缘计算的一种简单方法是基于其靠近终端设备的程度以及与数据中心的往返延迟。 将延迟作为主要因素，边缘计算可以大致分为以下几类：
 IoT 边缘 本地边缘 接入边缘 网络边缘 IoT 边缘 这种边缘的延迟预期通常小于 1 毫秒。
 这几乎涵盖了任何连接到私有或公共网络（如互联网）的设备。该设备可以是能够处理数据的智能设备，例如移动电话或中继周围环境信息的简单传感器。
-包括但不限于零售亭、摄像头、工厂传感器、联网汽车、无人机、联网路灯、智能停车咪表、远程手术设备等。</description></item><item><title>追踪 Kubernetes 中的网络流量</title><link>https://atbug.com/tracing-path-of-kubernetes-network-packets/</link><pubDate>Sat, 22 Jan 2022 10:15:31 +0800</pubDate><guid>https://atbug.com/tracing-path-of-kubernetes-network-packets/</guid><description>译者注：
+包括但不限于零售亭、摄像头、工厂传感器、联网汽车、无人机、联网路灯、智能停车咪表、远程手术设备等。
+本地边缘 这种边缘的延迟预期通常小于 5 毫秒。</description></item><item><title>追踪 Kubernetes 中的网络流量</title><link>https://atbug.com/tracing-path-of-kubernetes-network-packets/</link><pubDate>Sat, 22 Jan 2022 10:15:31 +0800</pubDate><guid>https://atbug.com/tracing-path-of-kubernetes-network-packets/</guid><description>译者注：
 这篇文章很全面的罗列出了 Kubernetes 中涉及的网络知识，从 Linux 内核的网络内容，到容器、Kubernetes，一一进行了详细的说明。
 ​文章篇幅有点长，不得不说，网络是很复杂很麻烦的一层，但恰恰这层多年来变化不大。希望翻译的内容对大家能有所帮助，有误的地方，也欢迎大家指正。
 本文翻译获得 Learnk8s 的授权，原文 Tracing the path of network traffic in Kubernetes 作者 Kristijan Mitevski。
@@ -45,7 +47,7 @@ TL;DR： 本文将代理了解 Kubernetes 集群内外的数据流转。从最�
 本文翻译自 Chris Campbell 的 How Unnecessary Complexity Gave the Service Mesh a Bad Name
 关键要点 采用服务网格有巨大的价值，但必须以轻量级的方式进行，以避免不必要的复杂性。 在实施服务网时，要采取务实的方法，与技术的核心功能保持一致，并小心干扰（译者：注意力的分散）。 服务网格的一些核心特性包括标准化监控、自动加密和身份识别、智能路由、可靠的重试和网络可扩展性。 服务网格可以提供强大的功能，但这些功能会分散本应对核心优势的关注，并且这些功能也不是实施服务网格的主要原因。 在初始实施服务网格时没有必要去关注那些明显会分散注意力的功能，比如复杂的控制平面、多集群支持、Envoy、WASM 和 A/B 测试。 服务网格是 Kubernetes 世界中的一个热门话题，但许多潜在的采用者已经有些失望了。服务网格的落地受到压倒性的复杂性和看似无穷无尽的供应商解决方案的限制。在我亲自浏览了这个领域之后，我发现采用服务网格具有巨大的价值，但它必须以轻量级的方式完成，以避免不必要的复杂性。尽管普遍存在幻灭感，但服务网格的未来依然光明。
 在工作中学习 我进入服务网格的世界始于我在一家老牌的财富 500 强技术公司担任云计算架构师的角色。在开始我们的服务网格之旅时，我身边有许多强大的工程师，但大多数人几乎没有云计算开发经验。我们的组织诞生于云计算之前，完全实现云计算的价值需要时间。我们的传统业务线主要集中在技术栈的硬件元素上，云计算的决策最初是由为运送硬件或为该硬件提供固件和驱动程序而开发的流程驱动的。
-随着该组织经历其“数字化转型”，它越来越依赖于提供高质量的软件服务，并逐渐开发出更好的方法。但作为云计算架构师，我仍在为优先考虑硬件的业务流程，以及具有不同技能、流程和信念的工程团队导航。随着时间的推移，我和我的团队在将 .</description></item><item><title>容器神话 Docker 是如何一分为二的</title><link>https://atbug.com/how-docker-broke-in-half/</link><pubDate>Mon, 20 Sep 2021 08:01:30 +0800</pubDate><guid>https://atbug.com/how-docker-broke-in-half/</guid><description>译者点评：
+随着该组织经历其“数字化转型”，它越来越依赖于提供高质量的软件服务，并逐渐开发出更好的方法。但作为云计算架构师，我仍在为优先考虑硬件的业务流程，以及具有不同技能、流程和信念的工程团队导航。随着时间的推移，我和我的团队在将 .NET 应用程序迁移到 Linux、采用 Docker、迁移到 AWS 以及与之相关的最佳实践（如持续集成、自动化部署、不可变基础设施、基础设施即代码、监控等）方面变得熟练并成功。但挑战依然存在。</description></item><item><title>容器神话 Docker 是如何一分为二的</title><link>https://atbug.com/how-docker-broke-in-half/</link><pubDate>Mon, 20 Sep 2021 08:01:30 +0800</pubDate><guid>https://atbug.com/how-docker-broke-in-half/</guid><description>译者点评：
 最近听了很多资深的人士关于开源，以及商业化的分析。开源与商业化，听起来就是一对矛盾的所在，似乎大家都在尝试做其二者的平衡。是先有开源，还是先有商业化？俗话说“谈钱不伤感情”，近几年背靠开源的创业公司如雨后春笋般涌现，即使是开发人员也是需要生活的。
 容器神话 Docker 曾经无比风光，盛极一时。即使这样一个备受瞩目，大获风投的热捧的独角兽也未能免俗，并付出了不小的代价。
 今天这篇文章讲述了 Docker 这家公司从诞生到巅峰到没落，这一路上所做的抉择，并最终做了开源与商业的分离，再一次从开源踏上找寻商业化之路。这些都是值得我们参考和思考的，不管是已经开源或者准备从事开源的。
@@ -58,11 +60,13 @@ Docker 诞生了 2008 年由 Solomon Hykes 在巴黎创立的 DotCloud，这个�
 开源不是非黑即白，它具有开放性、透明、协作性和信任性的多个维度。有些开源是 Github 上的任何项目，有些必须通过 OSI 定义，有些是必须遵守不成文但普遍接受的开源规范。这里通过看一些商业和技术方面，再讨论社区管理习惯，来同大家分享一下我对评估开源项目的看法。
 免责声明 这些是我的个人观点，与我的雇主或我所属的软件基金会和项目无关。 这不是法律或专业意见（我不是律师，也不是专门从事 OSS 评估的），而是外行的意见。 更新：我收到了多位开源律师的反馈并更新了文章！ 这篇博文由订阅和分享按钮赞助，点击这些按钮表示支持。 知识产权 关于“开源”项目的第一个问题是关于知识产权的所有权。好消息是，即使不了解这些法律含义，你可以应用一个简单的 Litmus 测试。该项目是否属于你信任的信誉良好的开源基金会？例如，FSF 拥有其托管项目的版权，更多情况下拥有基金会（如 ASF、LF) 通过贡献者许可协议，聚合对其项目的贡献许可权。在任何一种情况下，你都可以相信他们将充当良好的去中心化管家，并且不会在一夜之间改变项目的未来方向。如果一个项目不属于信誉良好的软件基金会，而是由一家公司提供支持，那么问题是你是否信任该公司作为供应链合作伙伴。如果这些问题的答案是肯定的，请转到下一部分。如果答案是否定的，那么你最好调查一下版权所有者是谁，以及他们对你的长期前景和潜在风险是什么。今天的单一供应商开源项目，明天可能会变成闭源。
 许可 商标出现在许可之前的原因是软件的权利人（通常是作者）通过许可授予最终用户使用一个或多个软件副本的许可。自由软件许可证是一种说明，它授予源代码或其二进制形式的使用者修改和重新分发该软件的权利。如果没有许可，这些行为将受到版权法的禁止。这里的重点是权利人可以改变主意并更改许可。权利持有人可以决定在多个许可证下分发软件或随时将许可证更改为非开源许可证。该软件也可能在公共领域，在这种情况下，它不受版权法的限制。公共领域并不等同于开源许可证，这是一种不太流行的方法，我们可以在这里忽略。
-同样，如果不是律师，这是一个外行对许可的 Litmus 测试：该项目是否根据 OSI 批准的许可清单获得的许可？如果答案是肯定的，那么你可以依靠这些基金会的尽职调查来审查、分类许可并指出任何限制。如果答案是否定的，请让你公司的律师来查看和解释许可上的每个字以及可能的许可兼容性影响。</description></item><item><title>Kubernetes 必备工具：2021</title><link>https://atbug.com/translation-kuberletes-essential-tools-2021/</link><pubDate>Thu, 15 Jul 2021 08:10:22 +0800</pubDate><guid>https://atbug.com/translation-kuberletes-essential-tools-2021/</guid><description>有别于前些天的文章 - 常用的几款工具让 Kubernetes 集群上的工作更容易 偏重于工具类来提升工作效率，今天这篇文章更加适合用来做选型时的参考。
+同样，如果不是律师，这是一个外行对许可的 Litmus 测试：该项目是否根据 OSI 批准的许可清单获得的许可？如果答案是肯定的，那么你可以依靠这些基金会的尽职调查来审查、分类许可并指出任何限制。如果答案是否定的，请让你公司的律师来查看和解释许可上的每个字以及可能的许可兼容性影响。
+治理 在余下的检查中，我们正在从更多的商业和法律方面转向涉及开源项目领域的技术和社区。</description></item><item><title>Kubernetes 必备工具：2021</title><link>https://atbug.com/translation-kuberletes-essential-tools-2021/</link><pubDate>Thu, 15 Jul 2021 08:10:22 +0800</pubDate><guid>https://atbug.com/translation-kuberletes-essential-tools-2021/</guid><description>有别于前些天的文章 - 常用的几款工具让 Kubernetes 集群上的工作更容易 偏重于工具类来提升工作效率，今天这篇文章更加适合用来做选型时的参考。
 文档翻译自 Kubernetes Essential Tools: 2021，篇幅较长，做了部分增删。
 介绍 在本文中，我将尝试总结我最喜欢的 Kubernetes 工具，并特别强调最新的和鲜为人知但我认为会非常流行的工具。
 这只是我根据我的经验得出的个人清单，但为了避免偏见，我还将尝试提及每种工具的替代方案，以便你可以根据自己的需要进行比较和决定。我将尽可能缩短这篇文章并提供链接，以便你可以自行探索更多内容。我的目标是回答这个问题：“我如何在 Kubernetes 中做 X？” 通过描述不同软件开发任务的工具。
-K3D K3D 是我最喜欢的在笔记本电脑上运行 Kubernetes (K8s) 集群的方式。它非常轻巧且速度非常快。它是使用 Docker 围绕 K3S 的包装器。所以，你只需要 Docker 来运行它并且资源使用率非常低。唯一的问题是它不完全符合 K8s 标准，但这不应该是本地开发的问题。对于测试环境，你可以使用其他解决方案。K3D 比 Kind 快，但 Kind 完全兼容。</description></item><item><title>Kubernetes 的魔力在于企业标准化，而不是应用程序的可移植性</title><link>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</link><pubDate>Sun, 11 Jul 2021 08:05:42 +0800</pubDate><guid>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</guid><description>笔者：Kubernetes 抽象了资源和工作负载的操作模式，统一了工具集，实现人机接口的标准化。正如类 Docker 工具提供了应用运行时的操作模式；Spring Framework 提供了 Java 应用的开发模式。
+K3D K3D 是我最喜欢的在笔记本电脑上运行 Kubernetes (K8s) 集群的方式。它非常轻巧且速度非常快。它是使用 Docker 围绕 K3S 的包装器。所以，你只需要 Docker 来运行它并且资源使用率非常低。唯一的问题是它不完全符合 K8s 标准，但这不应该是本地开发的问题。对于测试环境，你可以使用其他解决方案。K3D 比 Kind 快，但 Kind 完全兼容。
+备选 K3S 物联网或者边缘计算 Kind 完全兼容 Kubernetes 的备选 MicroK8s MiniKube Krew Krew 是管理的必备工具 Kubectl 插件，这是一个必须有任何 K8S 用户。我不会详细介绍超过 145 个可用插件，但至少安装 kubens 和 kubectx。</description></item><item><title>Kubernetes 的魔力在于企业标准化，而不是应用程序的可移植性</title><link>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</link><pubDate>Sun, 11 Jul 2021 08:05:42 +0800</pubDate><guid>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</guid><description>笔者：Kubernetes 抽象了资源和工作负载的操作模式，统一了工具集，实现人机接口的标准化。正如类 Docker 工具提供了应用运行时的操作模式；Spring Framework 提供了 Java 应用的开发模式。
 Kubernetes 是关于跨云的技能、工具和实践的可移植性。不是工作负载的可移植性。 &amp;ndash; Bilgin Lbryam @bibryam
 本文翻译自 Kubernetes magic is in enterprise standardization, not app portability
 Kubernetes 不会神奇地使你的应用程序具有可移植性，但它可能会给你带来更好的东西。
@@ -81,7 +85,8 @@ Hello, Quarkus 应&amp;quot;云&amp;quot;而生的 Java 框架 Quarkus：构建�
 但是，因为有了单体架构没有一些新的挑战，因此做起来并不容器
 举几个例子，比如容错、服务发现、扩展性、日志记录和跟踪。
 为了解决这些挑战，每个微服务都应实现我们在 Red Hat 所说的“微服务特性”。
-该术语是指除业务逻辑以外，服务还必须实现来解决的跨领域关注点清单，如下图所示： 可以用任何语言（Java、Go、JavaScript）或任何框架（Spring Boot、Quarkus）实现业务逻辑，但是围绕业务逻辑，应实现以下关注点：</description></item><item><title>云上细粒度访问管理的参考架构</title><link>https://atbug.com/translation-access-management-reference-architecture/</link><pubDate>Wed, 28 Apr 2021 08:02:11 +0800</pubDate><guid>https://atbug.com/translation-access-management-reference-architecture/</guid><description>本文由 Addo Zhang 翻译自 A Reference Architecture for Fine-Grained Access Management on the Cloud
+该术语是指除业务逻辑以外，服务还必须实现来解决的跨领域关注点清单，如下图所示： 可以用任何语言（Java、Go、JavaScript）或任何框架（Spring Boot、Quarkus）实现业务逻辑，但是围绕业务逻辑，应实现以下关注点：
+API：可通过一组定义的 API 操作来访问该服务。例如，对于 RESTful Web API，HTTP 用作协议。此外，可以使用诸如 Swagger 之类的工具来记录 API 。 服务发现（Discovery）：服务需要发现其他服务。</description></item><item><title>云上细粒度访问管理的参考架构</title><link>https://atbug.com/translation-access-management-reference-architecture/</link><pubDate>Wed, 28 Apr 2021 08:02:11 +0800</pubDate><guid>https://atbug.com/translation-access-management-reference-architecture/</guid><description>本文由 Addo Zhang 翻译自 A Reference Architecture for Fine-Grained Access Management on the Cloud
 什么是访问管理？ 访问管理是识别用户或一组用户是否应该能够访问给定资源（例如主机、服务或数据库）的过程。例如，对于开发人员来说是否可以使用 SSH 登录生产应用程序服务器，如果可以，那么可以登录多长时间？如果 SRE 在非支持时间尝试访问数据库，他们这样做？如果数据工程师已转移到其他团队，他们是否应该继续访问 ETL 管道的 S3 存储桶？
 现在如何进行访问管理？ 在云上各种基础设施和数据服务激增之前，访问管理是 DevOps 和 Security 团队要解决的相对简单的问题。VPN 和堡垒主机是（现在仍然是）在网络级别封锁所有关键资源的首选机制。用户必须先通过 VPN 服务器进行身份验证，或者登录到堡垒主机，然后才能访问专用网络上的所有资源。
 当资源是静态的并且它们的数量相对较小时，此方法效果很好。但是，随着越来越多的资源动态地涌入专用网络的各处，VPN / 堡垒主机解决方案变得站不住脚。
@@ -121,4 +126,4 @@ Hello, Quarkus 应&amp;quot;云&amp;quot;而生的 Java 框架 Quarkus：构建�
 实例3下线, 但其始终存在注册表中.
 但此时注册表还会接受新实例的注册.
 自我保护的基本原理 自我保护功能在下面两种情况下是合理的:
-Eureka服务端因为弱网分区问题没有收到心跳(这并不意味着客户端下线), 但是这种问题可能会很快被修复.</description></item></channel></rss>
+Eureka服务端因为弱网分区问题没有收到心跳(这并不意味着客户端下线), 但是这种问题可能会很快被修复. 即使Eureka服务端和客户端的连接断开, 客户端间还可以继续保持连接.</description></item></channel></rss>

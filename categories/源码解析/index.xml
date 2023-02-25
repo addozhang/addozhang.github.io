@@ -2,7 +2,8 @@
 深入探索 Kubernetes 网络模型和网络通信 认识一下容器网络接口 CNI 源码分析：从 kubelet、容器运行时看 CNI 的使用 从 Flannel 学习 Kubernetes VXLAN 网络 Kubernetes 网络学习之 Cilium 与 eBPF（本篇） &amp;hellip; 开始之前说点题外话，距离上一篇 Flannel CNI 的发布已经快一个月了。这篇本想趁着势头在去年底完成的，正好在一个月内完成计划的所有内容。但上篇发布后不久，我中招了花了一个多周的时间才恢复。然而，恢复后的状态让我有点懵，总感觉很难集中精力，很容易精神涣散。可能接近网上流传的“脑雾”吧，而且 Cilium 也有点类似一团迷雾。再叠加网络知识的不足，eBPF 也未从涉足，学习的过程中断断续续，我曾经一度怀疑这篇会不会流产。
 文章中不免会有问题，如果有发现问题或者建议，望不吝赐教。
 背景 去年曾经写过一篇文章 《使用 Cilium 增强 Kubernetes 网络安全》 接触过 Cilium，借助 Cilium 的网络策略从网络层面对 pod 间的通信进行限制。但当时我不曾深入其实现原理，对 Kubernetes 网络和 CNI 的了解也不够深入。这次我们通过实际的环境来探寻 Cilium 的网络。</description></item><item><title>源码解析：从 kubelet、容器运行时看 CNI 的使用</title><link>https://atbug.com/how-kubelete-container-runtime-work-with-cni/</link><pubDate>Thu, 08 Dec 2022 22:32:25 +0800</pubDate><guid>https://atbug.com/how-kubelete-container-runtime-work-with-cni/</guid><description>这是 Kubernetes 网络学习的第三篇笔记。
-深入探索 Kubernetes 网络模型和网络通信 认识一下容器网络接口 CNI 源码分析：从 kubelet、容器运行时看 CNI 的使用（本篇） 从 Flannel 学习 Kubernetes VXLAN 网络 Kubernetes 网络学习之 Cilium 与 eBPF &amp;hellip; 在上一篇中，通过对 CNI 规范的解读了解了网络配置的操作和相关的流程。在网络的几个操作中除了 CNI_COMMAND 外，有另外三个参数几乎每次都要提供 CNI_CONTAINERID、CNI_IFNAME 和 CNI_NETNS，这些参数无外乎都来自容器运行时。这篇将结合 Kubernetes 和 Containerd 源码，来分析一下 CNI 的使用。</description></item><item><title>源码解析 kubectl port-forward 工作原理</title><link>https://atbug.com/how-kubectl-port-forward-works/</link><pubDate>Tue, 09 Aug 2022 07:10:28 +0800</pubDate><guid>https://atbug.com/how-kubectl-port-forward-works/</guid><description>本文的源码基于 Kubernetes v1.24.0，容器运行时使用 Containerd 1.5，从源码来分析 kubectl port-forward 的工作原理。
+深入探索 Kubernetes 网络模型和网络通信 认识一下容器网络接口 CNI 源码分析：从 kubelet、容器运行时看 CNI 的使用（本篇） 从 Flannel 学习 Kubernetes VXLAN 网络 Kubernetes 网络学习之 Cilium 与 eBPF &amp;hellip; 在上一篇中，通过对 CNI 规范的解读了解了网络配置的操作和相关的流程。在网络的几个操作中除了 CNI_COMMAND 外，有另外三个参数几乎每次都要提供 CNI_CONTAINERID、CNI_IFNAME 和 CNI_NETNS，这些参数无外乎都来自容器运行时。这篇将结合 Kubernetes 和 Containerd 源码，来分析一下 CNI 的使用。
+Kubernetes 的源码来自分支 release-1.</description></item><item><title>源码解析 kubectl port-forward 工作原理</title><link>https://atbug.com/how-kubectl-port-forward-works/</link><pubDate>Tue, 09 Aug 2022 07:10:28 +0800</pubDate><guid>https://atbug.com/how-kubectl-port-forward-works/</guid><description>本文的源码基于 Kubernetes v1.24.0，容器运行时使用 Containerd 1.5，从源码来分析 kubectl port-forward 的工作原理。
 通过 port-forward 流程的分析，梳理出 kubectl -&amp;gt; api-server -&amp;gt; kubelet -&amp;gt; 容器运行时 的交互，了解 cri 的工作方式。
 kubectl 简单创建个 pod：
 kubectl run pipy --image flomesh/pipy:latest -n default 在执行 kubectl forward 时添加参数 -v 9 打印日志。
@@ -13,7 +14,8 @@ kubectl port-forward pipy 8080 -v 9 .</description></item><item><title>可编程
 事件模型 上篇写了 Pipy 基于事件的信息流转，其实还未深入触及其核心的事件模型。既然是事件模型，先看事件。
 src/event.hpp:41 中定义了 Pipy 的四种事件：
 Data MessageStart MessageEnd SessionEnd 翻看源码可知（必须吐槽文档太少）这几种事件其实是有顺序的：MessageStart -&amp;gt; Data -&amp;gt; MessageEnd -&amp;gt; SessionEnd。
-这种面向事件模型，必然有生产者和消费者。又是翻看源码可知，生产者和消费者都是 pipy::Filter。我们在上篇文章中讲过：每个 Pipeline 都有一个过滤器链，类似单向链表的数据结构。</description></item><item><title>源码解析：一文读懂 Kubelet</title><link>https://atbug.com/kubelet-source-code-analysis/</link><pubDate>Tue, 15 Jun 2021 08:25:25 +0800</pubDate><guid>https://atbug.com/kubelet-source-code-analysis/</guid><description>本文主要介绍 kubelet 功能、核心组件，以及启动流程的源码分析，总结了 kubelet 的工作原理。
+这种面向事件模型，必然有生产者和消费者。又是翻看源码可知，生产者和消费者都是 pipy::Filter。我们在上篇文章中讲过：每个 Pipeline 都有一个过滤器链，类似单向链表的数据结构。
+那是不是按照上面说的，事件是从一个 Filter 流向下一个 Filter？也对，也不对。</description></item><item><title>源码解析：一文读懂 Kubelet</title><link>https://atbug.com/kubelet-source-code-analysis/</link><pubDate>Tue, 15 Jun 2021 08:25:25 +0800</pubDate><guid>https://atbug.com/kubelet-source-code-analysis/</guid><description>本文主要介绍 kubelet 功能、核心组件，以及启动流程的源码分析，总结了 kubelet 的工作原理。
 kubelet 简介 从官方的架构图中很容易就能找到 kubelet
 执行 kubelet -h 看到 kubelet 的功能介绍：
 kubelet 是每个 Node 节点上都运行的主要“节点代理”。使用如下的一个向 apiserver 注册 Node 节点：主机的 hostname；覆盖 host 的参数；或者云提供商指定的逻辑。 kubelet 基于 PodSpec 工作。PodSpec 是用 YAML 或者 JSON 对象来描述 Pod。Kubelet 接受通过各种机制（主要是 apiserver）提供的一组 PodSpec，并确保里面描述的容器良好运行。 除了由 apiserver 提供 PodSpec，还可以通过以下方式提供：</description></item><item><title>Kubernetes 上如何控制容器的启动顺序？</title><link>https://atbug.com/k8s-1.18-container-start-sequence-control/</link><pubDate>Fri, 30 Apr 2021 07:43:54 +0800</pubDate><guid>https://atbug.com/k8s-1.18-container-start-sequence-control/</guid><description>去年写过一篇博客：控制 Pod 内容器的启动顺序，分析了 TektonCD 的容器启动控制的原理。
@@ -33,21 +35,24 @@ ConfigurationClassPostProcessor 实现了BeanDefinitionRegistryPostProcessor接�
 &lt;h3 id="引入ribbon依赖和配置">引入Ribbon依赖和配置&lt;/h3>
 &lt;p>加入&lt;code>spring-cloud-starter-netflix-ribbon&lt;/code>依赖&lt;/p>
 &lt;h3 id="代码中使用ribbonclient注解">代码中使用RibbonClient注解&lt;/h3>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#a6e22e">@Configuration&lt;/span>
-&lt;span style="color:#a6e22e">@RibbonClient&lt;/span>&lt;span style="color:#f92672">(&lt;/span>name &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;foo&amp;#34;&lt;/span>&lt;span style="color:#f92672">,&lt;/span> configuration &lt;span style="color:#f92672">=&lt;/span> FooConfiguration&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">)&lt;/span> &lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">TestConfiguration&lt;/span> &lt;span style="color:#f92672">{}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#a6e22e">@Configuration&lt;/span> &lt;span style="color:#66d9ef">protected&lt;/span> &lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">FooConfiguration&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#a6e22e">@Bean&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> ZonePreferenceServerListFilter &lt;span style="color:#a6e22e">serverListFilter&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-ZonePreferenceServerListFilter filter &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> ZonePreferenceServerListFilter&lt;span style="color:#f92672">();&lt;/span>
-filter&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#a6e22e">setZone&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#e6db74">&amp;#34;myTestZone&amp;#34;&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
-&lt;span style="color:#66d9ef">return&lt;/span> filter&lt;span style="color:#f92672">;&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#a6e22e">@Bean&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> IPing &lt;span style="color:#a6e22e">ribbonPing&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> PingUrl&lt;span style="color:#f92672">();&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Ribbon客户端的配置, 如果不指定会使用默认的实现:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">@Configuration&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">@RibbonClient&lt;/span>&lt;span style="color:#f92672">(&lt;/span>name &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;foo&amp;#34;&lt;/span>&lt;span style="color:#f92672">,&lt;/span> configuration &lt;span style="color:#f92672">=&lt;/span> FooConfiguration&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">)&lt;/span> &lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">TestConfiguration&lt;/span> &lt;span style="color:#f92672">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">@Configuration&lt;/span> &lt;span style="color:#66d9ef">protected&lt;/span> &lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">FooConfiguration&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">@Bean&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> ZonePreferenceServerListFilter &lt;span style="color:#a6e22e">serverListFilter&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ZonePreferenceServerListFilter filter &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> ZonePreferenceServerListFilter&lt;span style="color:#f92672">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> filter&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#a6e22e">setZone&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#e6db74">&amp;#34;myTestZone&amp;#34;&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> filter&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">@Bean&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> IPing &lt;span style="color:#a6e22e">ribbonPing&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> PingUrl&lt;span style="color:#f92672">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Ribbon客户端的配置, 如果不指定会使用默认的实现:&lt;/p>
 &lt;ul>
 &lt;li>IClientConfig 客户端相关配置&lt;/li>
 &lt;li>IRule 定义负载均衡策略&lt;/li>
@@ -71,28 +76,30 @@ Zuul server的路由都通过&lt;code>ZuulProperties&lt;/code>进行配置.&lt;/
 &lt;ul>
 &lt;li>
 &lt;p>&lt;code>@EnableZuulProxy&lt;/code>引入了&lt;code>ZuulProxyMarkerConfiguration&lt;/code>, &lt;code>ZuulProxyMarkerConfiguration&lt;/code>只做了一件事, 实例化了内部类&lt;code>Marker&lt;/code>.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#a6e22e">@Configuration&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">ZuulProxyMarkerConfiguration&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#a6e22e">@Bean&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> Marker &lt;span style="color:#a6e22e">zuulProxyMarkerBean&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Marker&lt;span style="color:#f92672">();&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Marker&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">@Configuration&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">ZuulProxyMarkerConfiguration&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">@Bean&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> Marker &lt;span style="color:#a6e22e">zuulProxyMarkerBean&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Marker&lt;span style="color:#f92672">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Marker&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>
 &lt;p>&lt;code>@EnableZuulServer&lt;/code>引入了&lt;code>ZuulServerMarkerConfiguration&lt;/code>, &lt;code>ZuulServerMarkerConfiguration&lt;/code>也只做了一件事: 实例化了内部类&lt;code>Marker&lt;/code>&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#a6e22e">@Configuration&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">ZuulServerMarkerConfiguration&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#a6e22e">@Bean&lt;/span>
-&lt;span style="color:#66d9ef">public&lt;/span> Marker &lt;span style="color:#a6e22e">zuulServerMarkerBean&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Marker&lt;span style="color:#f92672">();&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Marker&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;span style="color:#f92672">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">@Configuration&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">ZuulServerMarkerConfiguration&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">@Bean&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> Marker &lt;span style="color:#a6e22e">zuulServerMarkerBean&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Marker&lt;span style="color:#f92672">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Marker&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul></description></item><item><title>Spring Cloud - Eureka服务注册</title><link>https://atbug.com/spring-cloud-service-registry-via-eureka/</link><pubDate>Wed, 14 Feb 2018 07:32:43 +0000</pubDate><guid>https://atbug.com/spring-cloud-service-registry-via-eureka/</guid><description>&lt;p>之前分析过&lt;a href="http://atbug.com/spring-cloud-eureka-client-source-code-analysis/">Spring Cloud的Eureka服务发现&lt;/a>, 今天分析一下服务注册.&lt;/p>
 &lt;h2 id="配置">配置&lt;/h2>
 &lt;h3 id="bootstrapconfiguration">BootstrapConfiguration&lt;/h3>

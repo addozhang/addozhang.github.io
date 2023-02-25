@@ -4,4 +4,5 @@
 背景 去年曾经写过一篇文章 《使用 Cilium 增强 Kubernetes 网络安全》 接触过 Cilium，借助 Cilium 的网络策略从网络层面对 pod 间的通信进行限制。但当时我不曾深入其实现原理，对 Kubernetes 网络和 CNI 的了解也不够深入。这次我们通过实际的环境来探寻 Cilium 的网络。</description></item><item><title>使用 Cilium 增强 Kubernetes 网络安全</title><link>https://atbug.com/enhance-kubernetes-network-security-with-cilium/</link><pubDate>Sun, 13 Feb 2022 05:03:48 +0800</pubDate><guid>https://atbug.com/enhance-kubernetes-network-security-with-cilium/</guid><description>TL;DR 在本篇，我们分别使用了 Kubernetes 原生的网络策略和 Cilium 的网络策略实现了 Pod 网络层面的隔离。不同的是，前者只提供了基于 L3/4 的网络策略；后者支持 L3/4、L7 的网络策略。
 通过网络策略来提升网络安全，可以极大降低了实现和维护的成本，同时对系统几乎没有影响。
 尤其是基于 eBPF 技术的 Cilium，解决了内核扩展性不足的问题，从内核层面为工作负载提供安全可靠、可观测的网络连接。
-目录 TL;DR 目录 背景 示例应用 Kubernetes 网络策略 测试 思考 Cilium 网络策略 Cilium 简介 测试 背景 为什么说 Kubernetes 网络存在安全隐患？集群中的 Pod 默认是未隔离的，也就是 Pod 之间的网络是互通的，可以互相通信的。</description></item></channel></rss>
+目录 TL;DR 目录 背景 示例应用 Kubernetes 网络策略 测试 思考 Cilium 网络策略 Cilium 简介 测试 背景 为什么说 Kubernetes 网络存在安全隐患？集群中的 Pod 默认是未隔离的，也就是 Pod 之间的网络是互通的，可以互相通信的。
+这里就会有问题，比如由于数据敏感服务 B 只允许特定的服务 A 才能访问，而服务 C 无法访问 B。要禁止服务 C 对服务 B 的访问，可以有几种方案：</description></item></channel></rss>

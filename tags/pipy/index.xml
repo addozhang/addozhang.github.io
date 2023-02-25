@@ -4,8 +4,7 @@
 架构 还是继续上次的场景，在 Pod 创建时对 Pod 使用的镜像所在仓库进行检查，以及检查镜像的 tag 是否合法。
 这里借助 Pipy Repo 的能力，将代表策略的脚本和配置交由 Repo 进行管理；Pipy 实例实时从 Pipy Repo 同步策略，并进行动态加载。
 同时 Pipy Repo 对外提供 REST API 来管理策略，对策略的修改更容易。也方便与企业现有管理后台进行对接。
-下面就开始部署验证，这里所使用的所有代码都已提交到GitHub 仓库：https://github.com/flomesh-io/demo-policy-as-code。
-运行 git clone https://github.</description></item><item><title>使用 Flomesh 进行 Dubbo 服务治理</title><link>https://atbug.com/enhance-dubbo-service-governance-with-flomesh/</link><pubDate>Wed, 18 Aug 2021 09:50:28 +0800</pubDate><guid>https://atbug.com/enhance-dubbo-service-governance-with-flomesh/</guid><description>写在最前 和上一篇《使用 Flomesh 强化 Spring Cloud 服务治理》一样，这次同样是在无代码侵入的情况下对 Dubbo 服务治理的提升。
+下面就开始部署验证，这里所使用的所有代码都已提交到 GitHub 仓库：https://github.com/flomesh-io/demo-policy-as-code。</description></item><item><title>使用 Flomesh 进行 Dubbo 服务治理</title><link>https://atbug.com/enhance-dubbo-service-governance-with-flomesh/</link><pubDate>Wed, 18 Aug 2021 09:50:28 +0800</pubDate><guid>https://atbug.com/enhance-dubbo-service-governance-with-flomesh/</guid><description>写在最前 和上一篇《使用 Flomesh 强化 Spring Cloud 服务治理》一样，这次同样是在无代码侵入的情况下对 Dubbo 服务治理的提升。
 更多治理场景陆续添加中，有兴趣的可关注 https://github.com/flomesh-io/service-mesh-dubbo-demo。
 开源的 Pipy 作为 Flomesh 的核心，得益于其轻量及灵活性可以通过编程的方式轻松快速的支持多中平台的服务发现机制，比如 Eureka、Consul、Nacos 等。
 概览 细节 环境搭建 搭建 Kubernetes 环境，可以选择 kubeadm 进行集群搭建。也可以选择 minikube、k3s、Kind 等，本文使用 k3s。
@@ -20,7 +19,8 @@ Pipy 采用了模块化、链式的处理架构，用顺序执行的模块来对
 事件模型 上篇写了 Pipy 基于事件的信息流转，其实还未深入触及其核心的事件模型。既然是事件模型，先看事件。
 src/event.hpp:41 中定义了 Pipy 的四种事件：
 Data MessageStart MessageEnd SessionEnd 翻看源码可知（必须吐槽文档太少）这几种事件其实是有顺序的：MessageStart -&amp;gt; Data -&amp;gt; MessageEnd -&amp;gt; SessionEnd。
-这种面向事件模型，必然有生产者和消费者。又是翻看源码可知，生产者和消费者都是 pipy::Filter。我们在上篇文章中讲过：每个 Pipeline 都有一个过滤器链，类似单向链表的数据结构。</description></item><item><title>可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读</title><link>https://atbug.com/programming-archive-metrics-with-pipy/</link><pubDate>Fri, 11 Jun 2021 08:27:36 +0800</pubDate><guid>https://atbug.com/programming-archive-metrics-with-pipy/</guid><description>由于要给团队做一下关于 Flomesh 的分享，准备下材料。
+这种面向事件模型，必然有生产者和消费者。又是翻看源码可知，生产者和消费者都是 pipy::Filter。我们在上篇文章中讲过：每个 Pipeline 都有一个过滤器链，类似单向链表的数据结构。
+那是不是按照上面说的，事件是从一个 Filter 流向下一个 Filter？也对，也不对。</description></item><item><title>可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读</title><link>https://atbug.com/programming-archive-metrics-with-pipy/</link><pubDate>Fri, 11 Jun 2021 08:27:36 +0800</pubDate><guid>https://atbug.com/programming-archive-metrics-with-pipy/</guid><description>由于要给团队做一下关于 Flomesh 的分享，准备下材料。
 “分享是最好的学习方法。”
 上一回初探可编程网关 Pipy，领略了 Pipy 的“风骚”。从 Pipy 的 GUI 交互深入了解了 Pipy 的配置加载流程。
 今天看一下 Pipy 如何实现 Metrics 的功能，顺便看下数据如何在多个 Pipeline 中进行流转。
