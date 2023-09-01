@@ -1,4 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 乱世浮生</title><link>https://atbug.com/tags/linux/</link><description>Recent content in Linux on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 02 Sep 2021 20:41:06 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>ARM64 平台基于 openEuler + iSula 环境部署 Kubernetes</title><link>https://atbug.com/setup-kubernetes-running-with-isulad-on-openeuler/</link><pubDate>Thu, 02 Sep 2021 20:41:06 +0800</pubDate><guid>https://atbug.com/setup-kubernetes-running-with-isulad-on-openeuler/</guid><description>为什么要在 arm64 平台上部署 Kubernetes，而且还是鲲鹏 920 的架构。说来话长 。。。</description></item><item><title>解决 rsyslogd 资源占用率高问题</title><link>https://atbug.com/rsyslogd-high-cpu-trouble-shooting/</link><pubDate>Fri, 01 Jun 2018 09:32:28 +0000</pubDate><guid>https://atbug.com/rsyslogd-high-cpu-trouble-shooting/</guid><description>rsyslogd资源占用高问题记录 问题: openshift集群安装在esxi的虚</description></item><item><title>KVM 安装手册</title><link>https://atbug.com/kvm-installation-note/</link><pubDate>Thu, 12 Apr 2018 12:45:15 +0000</pubDate><guid>https://atbug.com/kvm-installation-note/</guid><description>&lt;h2 id="添加虚拟机流程">添加虚拟机流程：&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 乱世浮生</title><link>https://atbug.com/tags/linux/</link><description>Recent content in Linux on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 02 Sep 2021 20:41:06 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>ARM64 平台基于 openEuler + iSula 环境部署 Kubernetes</title><link>https://atbug.com/setup-kubernetes-running-with-isulad-on-openeuler/</link><pubDate>Thu, 02 Sep 2021 20:41:06 +0800</pubDate><guid>https://atbug.com/setup-kubernetes-running-with-isulad-on-openeuler/</guid><description>为什么要在 arm64 平台上部署 Kubernetes，而且还是鲲鹏 920 的架构。说来话长 。。。 此处省略5000 字。
+介绍下系统信息；
+架构：鲲鹏 920(Kunpeng920) OS：openEuler 20.03 (LTS-SP1) CPU：4c 内存：16G 硬盘：若干 整个过程虽然参考了鲲鹏论坛的帖子，不过还是颇费周折。
+TL;DR 整个过程中要注意 arm64 平台上安装 Kubernetes 及网络组件，需要使用 arm64 版本的镜像。
+环境配置 1.关闭 selinux #临时关闭 setenforce 0 #永久关闭 SELINUX=disabled vim /etc/sysconfig/selinux 2. 关闭swap分区 #临时关闭 swapoff -a #永久关闭 注释 swap 行 vim /etc/fstab 3.</description></item><item><title>解决 rsyslogd 资源占用率高问题</title><link>https://atbug.com/rsyslogd-high-cpu-trouble-shooting/</link><pubDate>Fri, 01 Jun 2018 09:32:28 +0000</pubDate><guid>https://atbug.com/rsyslogd-high-cpu-trouble-shooting/</guid><description>rsyslogd资源占用高问题记录 问题: openshift集群安装在esxi的虚拟机上. 各个节点出现问题, 集群响应很慢.
+kswapd0进程cpu 90%多. rsyslogd进程内存 90%多. **先上总结: **
+system-journal服务监听/dev/logsocket获取日志, 保存在内存中, 并间歇性的写入/var/log/journal目录中.
+rsyslog服务启动后监听/run/systemd/journal/syslogsocket获取syslog类型日志, 并写入/var/log/messages文件中. 获取日志时需要记录日志条目的position到/var/lib/rsyslog/imjournal.state文件中.
+可能是虚拟机系统安装问题, 导致没有创建/var/lib/rsyslog. rsyslog将异常日志写入/dev/logsocket中.
+这样就导致了死循环, rsyslog因为要打开/var/log/messages并写入日志, 消耗cpu, 内存还有磁盘I/O.
+诊断步骤: rsyslog 重启rsyslog服务
+重启之后内存得到释放, 但是rsyslogd进程cpu跑到90%多, 且内存在持续升高.
+检查服务状态发现进程一直在报错:
+fopen() failed: &amp;#39;Permission denied&amp;#39;, path: &amp;#39;/imjournal.state.tmp&amp;#39; [try http://www.rsyslog.com/e/2013 ] fopen() failed: &amp;#39;Permission denied&amp;#39;, path: &amp;#39;/imjournal.</description></item><item><title>KVM 安装手册</title><link>https://atbug.com/kvm-installation-note/</link><pubDate>Thu, 12 Apr 2018 12:45:15 +0000</pubDate><guid>https://atbug.com/kvm-installation-note/</guid><description>&lt;h2 id="添加虚拟机流程">添加虚拟机流程：&lt;/h2>
 &lt;pre>&lt;code>1. 配置网络
 2. 配置存储池
 3. 上传镜像
@@ -24,4 +37,22 @@
 &lt;li>存储池（Storage Pool）：存储空间，支持多种协议和网络存储。作为虚拟机磁盘的存储源。&lt;/li>
 &lt;li>卷组（Volume）：虚拟机磁盘在Host上的表现形式。
 上边的五部分，我们必须使用的是前三个，因为很多时候根据业务规则或应用的灵活性并没有使用卷组（其实就是有了编制的虚拟磁盘文件），也就没有必要使用存储池。&lt;/li>
-&lt;/ul></description></item><item><title>Centos 编译安装 Redis</title><link>https://atbug.com/install-redis-on-centos/</link><pubDate>Fri, 07 Apr 2017 16:48:46 +0000</pubDate><guid>https://atbug.com/install-redis-on-centos/</guid><description>版本 Centos7 Redis3.2.8 编译安装 wget http://download.redis.io/releases/redis-3.2.8.tar.gz tar -zxvf redis-3.2.8.tar.gz cd redis-3.2.8 sudo make test sudo make install 启动 redis-server 问题 /bin/sh: cc: command not found **原因：**Ce</description></item><item><title>Centos 上安装 Postgresql</title><link>https://atbug.com/install-postgresql-on-centos/</link><pubDate>Thu, 06 Apr 2017 22:54:17 +0000</pubDate><guid>https://atbug.com/install-postgresql-on-centos/</guid><description>版本 Centos7 Postgresql9.2 Enable ssh service sshd start Open firewall for 22 firewall-cmd —state firewall-cmd —list-all firewall-cmd —permanen</description></item></channel></rss>
+&lt;/ul></description></item><item><title>Centos 编译安装 Redis</title><link>https://atbug.com/install-redis-on-centos/</link><pubDate>Fri, 07 Apr 2017 16:48:46 +0000</pubDate><guid>https://atbug.com/install-redis-on-centos/</guid><description>版本 Centos7
+Redis3.2.8
+编译安装 wget http://download.redis.io/releases/redis-3.2.8.tar.gz tar -zxvf redis-3.2.8.tar.gz cd redis-3.2.8 sudo make test sudo make install 启动 redis-server 问题 /bin/sh: cc: command not found
+**原因：**Centos安装时选择的类型是Infrastructure，没有c++的编译工具。
+解决：sudo yum -y install gcc gcc-c++ libstdc++-devel
+malloc.h:50:31: fatal error: jemalloc/jemalloc.h: No such file or directory</description></item><item><title>Centos 上安装 Postgresql</title><link>https://atbug.com/install-postgresql-on-centos/</link><pubDate>Thu, 06 Apr 2017 22:54:17 +0000</pubDate><guid>https://atbug.com/install-postgresql-on-centos/</guid><description>版本 Centos7
+Postgresql9.2
+Enable ssh service sshd start
+Open firewall for 22 firewall-cmd —state
+firewall-cmd —list-all
+firewall-cmd —permanent —zone=public —add-port=22/tcp
+firewall-cmd —reload
+Install Postgresql yum install postgres
+su postgres
+postgres —version
+默认会创建postgres:postgres用户和组
+切换用户 su - postgres
+初始化数据库 通过指定数据文件目录初始化db
+initdb -D /var/lib/pgsql/data</description></item></channel></rss>
