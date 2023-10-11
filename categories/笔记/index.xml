@@ -1,4 +1,16 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>笔记 on 乱世浮生</title><link>https://atbug.com/categories/%E7%AC%94%E8%AE%B0/</link><description>Recent content in 笔记 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 28 Aug 2023 12:25:57 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes 容器运行时接口 CRI</title><link>https://atbug.com/deep-dive-into-kubernetes-cri/</link><pubDate>Mon, 28 Aug 2023 12:25:57 +0800</pubDate><guid>https://atbug.com/deep-dive-into-kubernetes-cri/</guid><description>写这篇文章是来填 很久之前挖下的坑。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>笔记 on 乱世浮生</title><link>https://atbug.com/categories/%E7%AC%94%E8%AE%B0/</link><description>Recent content in 笔记 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 11 Oct 2023 19:06:24 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml"/><item><title>单体 or 微服务？Service Weaver：我全都要！</title><link>https://atbug.com/service-weaver-framework-for-writing-distributed-applications/</link><pubDate>Wed, 11 Oct 2023 19:06:24 +0800</pubDate><guid>https://atbug.com/service-weaver-framework-for-writing-distributed-applications/</guid><description>TL;DR 怎么理解 Service Weaver，就是一个应用中有很多的接口，这些接口间会互相调用。如果将操作系统进程（应用）比做一块电路板，接口比做元器件。可以选择将哪些元器件放入该电路板中，哪些元器件放入其他的电路板中。
+同一块电路板中的元器件间通过板上的导线连接（进程内的本地方法调用）；不同电路板中的元器件间通过排线来连接（远程方法调用）。
+总结几个关键词：
+一个编程框架 用于编写、部署、管理分布式应用 支持的语言 Go 在本地以单进程、多进程运行 在云端由框架拆分成微服务，并于云供应商集成 单体方式开发，微服务方式部署 体验了一圈下来，给我的感觉有点类似 Notion、Obsidian 这类笔记软件。传统的笔记软件只能引用其他的笔记，而这类笔记可以细粒度到 heading 内容。
+放到微服务下就是管理的维度不在是服务本身，而且更小的接口，并且对某些接口进行扩展，即使所有接口都位于同一个二进制文件中。
+背景 架构的演进，总是在解决问题的过程中引入新的问题，然后再解决问题，循环往复。
+从单体到微服务 软件架构从单体演进到微服务架构已经十多年了，尤其是近几年云原生风生水起，微服务架构已有深入人心的架势。
+单体架构由于在规模扩大时，单体面临性能瓶颈和硬件限制、无法支撑业务的快读迭代、开发效率下降协同难度增加等原因，颓势日渐明显。然后就有了微服务架构的提出，来解决单体架构的各种问题。
+上云 由于云平台提供显著的成本效益，减少初始投资并实现按需付费、提供极大的灵活性和可扩展性、提供的稳定性和可靠性确保业务连续性、专业的安全保障和合规性支持减轻企业的运营负担，企业将其业务和数据迁移至云计算平台。
+问题 拆分成微服务，由此带来了不少好处：更高效的应用扩展、更小的错误传播半径、独立的安全域以及完善的模块边界。
+反过来，如何正确地找到边界进行拆分并非易事。拆分的依据是什么？two pizza team？依据资源使用、组织架构、数据结构？亦或是考虑未来的增长？
+微服务的拆分执行下来毫无章法，最终的结果是微服务越来越多、更多的故障点、更长的链路、更大的延迟。这实际上增加了应用的开发、部署和管理成本。
+原本单个二进制文件，拆分后有多个；原本一次部署完成，拆分后需要多个 CI/CD 流水线来部署；原本一个配置文件，拆分后需要维护多个。 微服务彼此独立部署，无法忽略多版本的情况。需要调整部署策略来降低风险，同样还有本地开发和测试的难度增加。 学习成本高，需要学习如何将应用二进制文件包装成容器，并了解云的各种工具和部署方式，即使对经验丰富的程序员来说也难以理解。 同时还要解决分布式带来的各种问题，如服务发现、安全、负载均衡，以及服务间的调用。 延迟增加，时间消耗在数据的序列化以及网络传输上。 为什么用 Service Weaver？ 今年 3 月 Google 开源了 Service Weaver，希望能解决微服务架构的各种问题。</description></item><item><title>Kubernetes 容器运行时接口 CRI</title><link>https://atbug.com/deep-dive-into-kubernetes-cri/</link><pubDate>Mon, 28 Aug 2023 12:25:57 +0800</pubDate><guid>https://atbug.com/deep-dive-into-kubernetes-cri/</guid><description>写这篇文章是来填 很久之前挖下的坑。
 本文涉及组件的源码版本如下：
 Kubernetes 1.24 CRI 0.25.0 Containerd 1.6 容器运行时（Container Runtime）是负责管理和执行容器的组件。它负责将容器镜像转化为在主机上运行的实际容器进程，提供镜像管理、容器的生命周期管理、资源隔离、文件系统、网络配置等功能。
 常见容器运行时有下面这几种，这些容器运行时都提供了不同程度的功能和性能。但他们都遵循容器运行时接口（CRI），以便能够与 Kubernetes 或其他容器编排系统集成，实现容器的调度和管理。
