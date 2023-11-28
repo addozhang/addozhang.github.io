@@ -55,7 +55,7 @@ Prometheus 也是当下流行开源监控系统，通过 Prometheus 可以获取
 </span></span></code></pre></div><p>通过端口转发，可以在浏览器中访问 web 页面。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e># port forward</span>
 </span></span><span style=display:flex><span>kubectl port-forward svc/prometheus-server 9090:80 -n prometheus
 </span></span></code></pre></div><p>这里查询 Pod 的 RPS 使用 <code>sum(rate(http_requests_total[30s])) by (pod)</code> 语句查询：</p><p><img src=https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/01/18/20220118-at-112123.png alt></p><a class=headline-hash href=#prometheus-adapter><h3 id=prometheus-adapter>Prometheus Adapter</a></h3><p>同样使用 Helm 安装 Produmetheus Adapter，这里要进行额外的配置。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>helm install prometheus-adapter prometheus-community/prometheus-adapter -n default -f kubernetes/values-adapter.yaml
-</span></span></code></pre></div><p>除了要配置 Prometheus server 的访问方式外，还要配置自定义指标的计算规则，告诉 adapter 如何从 Prometheus 获取指标并计算出我们需要的指标：</p><pre tabindex=0><code>rules:
+</span></span></code></pre></div><p>需要配置 Prometheus Server 的连接，以及如何提取和转换指标的规则，以便 Adapter 能够获取所需的自定义指标数据：</p><pre tabindex=0><code>rules:
   default: false
   custom:
    - seriesQuery: &#39;{__name__=~&#34;^http_requests.*_total$&#34;,container!=&#34;POD&#34;,namespace!=&#34;&#34;,pod!=&#34;&#34;}&#39;
