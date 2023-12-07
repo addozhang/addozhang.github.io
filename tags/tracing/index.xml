@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tracing on 乱世浮生</title><link>https://atbug.com/tags/tracing/</link><description>Recent content in Tracing on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 08 Dec 2023 07:15:43 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/tracing/index.xml" rel="self" type="application/rss+xml"/><item><title>探索服务网格与 OpenTelemetry 的协同之分布式跟踪</title><link>https://atbug.com/integrate-service-mesh-with-opentelemetry-for-distributed-tracing/</link><pubDate>Fri, 08 Dec 2023 07:15:43 +0800</pubDate><guid>https://atbug.com/integrate-service-mesh-with-opentelemetry-for-distributed-tracing/</guid><description>在上一篇文章中，介绍了 如何在 k8s 中无侵入安装 Otel 探针 并实现了无侵入（某些语言还无法实现，比如 Go 的 eBPF 对内核的苛刻要求）的分布式跟踪。
+这篇文章发出后有读者评论 javaagent 的“无侵入”一说，这里有必要解释下。“无侵入”主要指的是不需要修改应用程序的业务逻辑代码就能实现的功能，对应用程序透明无感知，让开发者专注于业务开发；同时由于无需修改应用程序代码，更易于集成；同时还维护简单，在多种语言、框架间保证功能的一致性。
+而 Java Agent 在 JVM 启动时加载，它在运行时修改字节码来注入跟踪代码，而不是在应用程序的源代码层面上进行修改。
+背景 分布式跟踪 分布式跟踪是监控和诊断微服务请求流程的关键技术，也是可观测性的关键组成部分，提供了对微服务架构中复杂交互和性能问题的深入洞察。它通过提供服务间请求链路的清晰视图来管理复杂性，并帮助识别性能瓶颈、优化资源分配、快速定位和解决故障，提高系统的整体可靠性。
+服务网格的无侵入式分布式跟踪 又是无侵入性！服务网格中的代理自动处理所有入站和出站的网络通信，自动捕获、记录和分析服务间的请求和响应的详细细心，如请求时间、持续时间、状态代码和其他元数据。这种 实现方式 对应用程序本身透明，并且较 Java Agent 在运行时修改字节码更加彻底。
+这里有个前提是应用程序能够在请求中传递上下文信息，这样 sidecar 代理生成和发送的跟踪信息最终可以串联在一起，不会发生断链。
+网格的无侵入式分布式跟踪虽然为我们展示了请求的链路，但是如上图所示每个跨度（span）都是 sidecar 代理的信息。
+紧跟上篇文章之后，我们今天将探索 服务网格 FSM 与 OpenTelemetry 的集成，实现应用、网格的全链路分布式跟踪。</description></item></channel></rss>
