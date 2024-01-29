@@ -51,8 +51,8 @@ Backstage 简介 Backstage 是一个用于构建开发人员门户的开放平�
 </span></span><span style=display:flex><span>export POSTGRES_SERVICE_PORT<span style=color:#f92672>=</span><span style=color:#ae81ff>5432</span> 
 </span></span><span style=display:flex><span>export POSTGRES_USER<span style=color:#f92672>=</span> backstage 
 </span></span><span style=display:flex><span>export POSTGRES_PASSWORD<span style=color:#f92672>=</span>backstage
-</span></span><span style=display:flex><span>export AUTH_GITHUB_CLIENT_ID<span style=color:#f92672>=</span>e1c1fc80ec2014c91543
-</span></span><span style=display:flex><span>export AUTH_GITHUB_CLIENT_SECRET<span style=color:#f92672>=</span>0641e5e5af60c485a03f19f8bf63218d06ab7876
+</span></span><span style=display:flex><span>export AUTH_GITHUB_CLIENT_ID<span style=color:#f92672>=</span>e1c1fec2014c43
+</span></span><span style=display:flex><span>export AUTH_GITHUB_CLIENT_SECRET<span style=color:#f92672>=</span>0641e5e5af6f19f8bf63218d06ab7876
 </span></span><span style=display:flex><span>yarn dev
 </span></span></code></pre></div><p><img src=https://atbug.oss-cn-hangzhou.aliyuncs.com/2024/01/28/backstage-component-cicd-history.png alt></p><a class=headline-hash href=#kubernetes-上运行><h2 id=kubernetes-上运行>Kubernetes 上运行</a></h2><p>首先要有个 K8s 集群。在 Kubernetes 上我们这次使用 PostgreSQL 作为持久化存储。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create namespace backstage
 </span></span></code></pre></div><a class=headline-hash href=#部署-postgresql><h4 id=部署-postgresql>部署 PostgreSQL</a></h4><p>创建 Secret 用于配置 PostgreSQL 的认证信息。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -n backstage -f - <span style=color:#e6db74>&lt;&lt;EOF
