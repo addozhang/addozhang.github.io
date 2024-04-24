@@ -1,4 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CICD on 乱世浮生</title><link>https://atbug.com/tags/cicd/</link><description>Recent content in CICD on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 21 Sep 2022 23:37:43 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/cicd/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Argo Rollouts 和服务网格实现自动可控的金丝雀发布</title><link>https://atbug.com/canary-release-via-argo-rollouts-and-service-mesh/</link><pubDate>Wed, 21 Sep 2022 23:37:43 +0800</pubDate><guid>https://atbug.com/canary-release-via-argo-rollouts-and-service-mesh/</guid><description>金丝雀发布是服务治理中的重要功能，在发布时可以可控地将部分流量导入新版本的服务中；其余的流量则由旧版本处理。发布过程中，可以逐步增加新版本服务的流量。通过测试，可以决定是回滚还是升级所有实例，停用旧版本。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CICD on 乱世浮生</title><link>https://atbug.com/tags/cicd/</link><description>Recent content in CICD on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 24 Apr 2024 10:44:01 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/cicd/index.xml" rel="self" type="application/rss+xml"/><item><title>持续交付基金会发布最新的CICD 趋势报告</title><link>https://atbug.com/cdf-release-latest-cicd-trends-report/</link><pubDate>Wed, 24 Apr 2024 10:44:01 +0800</pubDate><guid>https://atbug.com/cdf-release-latest-cicd-trends-report/</guid><description>持续交付基金会（Continuous Delivery Foundation，简称 CDF）前几天发布了最新的一期的 CICD 趋势报告。这份报告中的调查结果基于 SlashData 过去 8 次的调查数据，这些调查在 2020 年 Q3 度到 2024 年 Q1 的三年半时间里覆盖了全球超过 150,000 名受访者。
+本文是针对部分结果的解读，结果数据来自官方的报告，解读的部分纯属个人观点。有兴趣的可以查看 完整的报告。
+软件交付性能的演变 软件的交付性能主要通过代码发布周期、部署频率和服务恢复时间三个关键指标来衡量，这些指标能够直观地反映出一个组织在软件开发和运维方面的效率和效果。
+代码发布周期 代码发布周期是指从代码提交（例如，合并到主分支）到成功部署到生产环境的时间。
+这个指标衡量团队对新功能、修复或更新做出反应的速度。较短的发布周期意味着团队能够快速地将变更推送到生产环境，对业务需求和问题做出迅速响应。
+从结果中可以看出代码变更的频率从 2020 年 Q3 开始逐年降低，尤其是变更频率低于每月一次的比例越来越高。
+部署频率 部署频率指软件部署到生产环境的频率，可以是每日、每周、每月等。
+高频率的部署通常表明高度自动化和成熟的持续交付能力。这种能力可以帮助团队减少单次部署的风险，因为每次部署的变更较小，更容易管理和修复。
+这个结果于代码变更的周期较一致。
+服务恢复时间 服务的恢复时间，这里的服务恢复是指在发生生产环境中断后，服务恢复到正常状态所需的时间。
+这个指标反映了团队在面对生产环境问题时，快速恢复服务的能力。较短的恢复时间表明团队有有效的事故响应和问题解决流程。
+从报告可以看到其向两个极端的发展：好的越来越好，差的越来越差。</description></item><item><title>使用 Argo Rollouts 和服务网格实现自动可控的金丝雀发布</title><link>https://atbug.com/canary-release-via-argo-rollouts-and-service-mesh/</link><pubDate>Wed, 21 Sep 2022 23:37:43 +0800</pubDate><guid>https://atbug.com/canary-release-via-argo-rollouts-and-service-mesh/</guid><description>金丝雀发布是服务治理中的重要功能，在发布时可以可控地将部分流量导入新版本的服务中；其余的流量则由旧版本处理。发布过程中，可以逐步增加新版本服务的流量。通过测试，可以决定是回滚还是升级所有实例，停用旧版本。
 有了金丝雀发布，使用真实流量对服务进行测试，通过对流量的控制可以有效的降低服务发布的风险。
 本文将介绍如何将使用 Argo Rollouts 和服务网格 osm-edge 来进行应用的自动、可控的金丝雀发布，不涉及工作原理的分析。对工作原理有兴趣的同学可以留言，可以再做一篇原理的介绍。
 Argo Rollouts Argo Rollouts 包括一个 Kubernetes控制器 和一组 CRD，提供如蓝绿色、金丝雀、金丝雀分析、体验等高级部署功能和 Kubernetes 的渐进交付功能。
