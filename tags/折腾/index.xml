@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>折腾 on 乱世浮生</title><link>https://atbug.com/tags/%E6%8A%98%E8%85%BE/</link><description>Recent content in 折腾 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 13 Jun 2024 11:35:09 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E6%8A%98%E8%85%BE/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 ZTM 增强极空间 NAS 的远程访问能力</title><link>https://atbug.com/enhance-remote-access-for-zspace-nas-with-ztm/</link><pubDate>Thu, 13 Jun 2024 11:35:09 +0800</pubDate><guid>https://atbug.com/enhance-remote-access-for-zspace-nas-with-ztm/</guid><description>入手极空间 Z4Pro 快两个周了，使用体验文章还得再等一等，多一些深度体验的时间。到目前来看，还是很满意的。
+背景 今天这篇来说说极空间的远程访问功能，产品页面对远程访问的描述是：
+让极空间真正成为你家庭中的网络设备控制中心：
+无需公网 IP 就可以便捷访问家中路由器、Docker 和智能家居 不用学习网络知识也可以以轻松使用，快速添加 自定义名称及颜色，方便查找与收藏，配合容器使用，扩展丰富功能 比如借助该功能可以方便地管理家中的软路由，非常适合没有公网 IP 的用户。
+然后就可以点击新添加的链接，在极空间的窗口内访问 OpenWrt 的 web 后台了。
+细心的你可能会注意到它只能支持 HTTP 协议（官方的功能介绍），只能通过极空间窗口访问，并且只能为管理员账号下使用该功能，灵活性大打折扣。比如远程访问家中的 Windows 设备（Windows 的远程桌面协议 RDP）；或者需要 ssh 远程访问 HomeLab 虚拟机。
+这些极空间的远程访问就无能为力了，这里就要用到 ZTM 了。
+关于 ZTM ZTM（Zero Trust Mesh）是一款开源的网络基础设施软件。它基于 HTTP/2 隧道构建，可以在任何类型的 IP 网络上运行，例如局域网、容器化网络和互联网等。</description></item></channel></rss>
