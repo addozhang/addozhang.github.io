@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AuthZ on 乱世浮生</title><link>https://atbug.com/tags/authz/</link><description>Recent content in AuthZ on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 21 Dec 2024 12:20:32 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/authz/index.xml" rel="self" type="application/rss+xml"/><item><title>AuthZen 工作组：打造统一的授权模型交互标准</title><link>https://atbug.com/authzen-future-standard-for-authorization-model-interactions/</link><pubDate>Sat, 21 Dec 2024 12:20:32 +0800</pubDate><guid>https://atbug.com/authzen-future-standard-for-authorization-model-interactions/</guid><description>背景 随着技术的快速发展并日益复杂化，安全和合规性的要求不断提升，传统的授权方案已经难以满足企业不断变化的需求。授权系统面临着如下挑战：
+动态和细粒度的授权需求增加：现代应用和服务需要能够对用户权限进行实时的管理，以适应快速变化的业务需求和复杂的数据访问控制规则。传统的授权模式，如将权限直接嵌入到令牌中的 OAuth2，往往灵活度不足。 缺乏互操作性和标准化：随着业务和组织架构的复杂化，企业慢慢地会采用不同的授权解决方案，而且这些方案中往往因为缺乏同一的交互模型和协议，无法在不同系统、应用和服务之间进行无缝集成和安全交互，阻碍了技术创新以及现有架构的融合。 安全性和合规性要求提高，随着数据保护法规和行业合规标准的不断增强，组织需要更加精确和可控的授权机制来保护敏感数据。 这些促使授权系统需要持续演进以适应新的技术和业务需求，通过标准化机制、协议和格式来交换授权相关信息，促进向更动态、更细粒度的授权能力的范式转变。
+如此就有了 OpenID 基金会的 AuthZen 工作组。
+AuthZen 工作组 AuthZen 是 Authorization Exchange 的简称（起初看到这个名字我以为 Zen 就是那个 Zen），是 OpenID 基金会 比较新的工作组，官宣于 2023 年 10 月。
+AuthZEN 工作组的目的是提供标准机制、协议和格式，以便在一个组织内部或跨组织之间的组件传递授权相关信息，这些组件可能由不同实体开发或来源。
+正如起名字，这个工作组试图来解决在授权中遇到的 Exchange（交换） 问题，即如何在不同组件之间交换授权信息。
+让我们来看一下 Exchange 发生在哪些地方：
+XACML 授权模型 下面是源于 23 年前的 XACML 数据流模型。</description></item></channel></rss>

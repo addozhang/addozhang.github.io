@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cline on 乱世浮生</title><link>https://atbug.com/tags/cline/</link><description>Recent content in Cline on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 23 May 2025 22:04:03 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/cline/index.xml" rel="self" type="application/rss+xml"/><item><title>我用 Vibe Coding 开发了一个量化交易程序</title><link>https://atbug.com/vibe-coding-quant-trading/</link><pubDate>Fri, 23 May 2025 22:04:03 +0800</pubDate><guid>https://atbug.com/vibe-coding-quant-trading/</guid><description>是的，你没看错，我确实用 Vibe Coding 写了一个量化交易程序。相信看到标题点进来的，再看到这么一句后，不免会冒出一个想法：“是谁给你的勇气写量化交易程序！”
+先澄清一下，这并不是一个“正经”的量化交易程序，而是为了参加公司 AI 编程 Hackathon 开发的一个简单量化交易程序。
+在比赛报名截止的前一天，我被拉进了编程小组。起初参加比赛纯属一时兴起，更没想到那几天工作和家里的事情都很忙，甚至连比赛的说明会和练习赛都没参加。到比赛的前一天，我还没能为小组贡献一行代码，甚至连比赛的细节都不清楚。
+可能是巧合，淘汰赛当天凌晨 5 点我就醒了。既然醒了，不如起床看看比赛的说明。看完说明后，我发现用 Vibe Coding 是个不错的选择。因为时间有限，Vibe Coding 可以让我更专注于问题本身，而不是实现细节。
+最终，我花了 2 个多小时搞定了这个量化交易程序，成绩自认为还不错。虽然因为某些原因小组赛没有晋级，但整个过程让我受益匪浅。
+在这里，我想分享一下这个量化交易程序的实现思路和方法。
+Vibe Coding 让我们先了解一下什么是 Vibe Coding。相信看完介绍后，你会明白是什么给了我写量化交易程序的勇气。
+Vibe Coding 是什么？ Vibe Coding，有些中文翻译为“氛围编程”，听起来可能有些抽象。
+这个概念最早由计算机科学家 Andrej Karpathy（OpenAI 联合创始人）于 2025 年 2 月提出。Vibe Coding 的核心思想是通过自然语言描述来生成代码，而不是通过传统的编程语言。它是一种基于自然语言的编程方法，允许用户通过自然语言描述，借助大模型工具生成代码。其目标是让编程变得更加简单和直观，尤其是对没有编程经验的人。</description></item></channel></rss>

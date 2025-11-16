@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Coding Agent on 乱世浮生</title><link>https://atbug.com/tags/coding-agent/</link><description>Recent content in Coding Agent on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 29 Aug 2025 08:09:55 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/coding-agent/index.xml" rel="self" type="application/rss+xml"/><item><title>预算有限，效率拉满：为什么 Kilo Code 成了我的首选 Coding Agent</title><link>https://atbug.com/budget-efficiency-kilo-code-choice/</link><pubDate>Fri, 29 Aug 2025 08:09:55 +0800</pubDate><guid>https://atbug.com/budget-efficiency-kilo-code-choice/</guid><description>TL;DR 打开 Kilo Code 的官网，首先入眼的就是这句话“适用于 VS Code 的最佳 AI 编程助手”，也确实我目前在 VS Code 上用过的几款插件中，Kilo Code 的表现是最好的。
+写这篇文章的时候，我想到的是老板的那句话“有什么模型就用什么”。
+在有限的条件下，寻找最优的解。
+不乏有比 Kilo Code 更加优秀的工具，但往往需要更强的模型支持，或者更高的费用。投入和产出是成正比的，单次请求成本越高，慢慢地 Coding Agent 也有“氪金”的趋势。
+照此以往，可能在不远的将来，优秀的工具和高级的模型会成为奢侈品，成为少数大企业的专属。
+Kilo Code 作为站在巨人肩膀上（Cline + Roo Code）的存在，凭借着自身的优化和改进，成为了我目前的首选。
+Kilo Code 可以支持 30+ 模型提供商，同时本身也提供了收费的 Kilo API。通过 Kilo API 可以使用几十种模型，包括 OpenAI、Claude、Gemini、MoonShot、Qwen、DeepSeek、xAI 各家的通用模型和 Coding 模型。并且计费与各家费用一样，Kilo Code 本身不加价不收手续费。</description></item></channel></rss>

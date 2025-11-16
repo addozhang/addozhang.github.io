@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI Agent on 乱世浮生</title><link>https://atbug.com/tags/ai-agent/</link><description>Recent content in AI Agent on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 22 Jun 2025 19:19:37 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/ai-agent/index.xml" rel="self" type="application/rss+xml"/><item><title>Agentic Mesh：增强现代企业系统中的自主 AI 代理</title><link>https://atbug.com/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems/</link><pubDate>Sun, 22 Jun 2025 19:19:37 +0800</pubDate><guid>https://atbug.com/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems/</guid><description>译者注：本文介绍了 Agentic Mesh（代理网格）这一新型 AI 架构，强调其在现代企业自动化中的作用。文章指出传统 AI 代理系统存在单点故障、扩展性差、协作能力弱等问题。Agentic Mesh 通过自组织、动态协作、角色分工和安全治理，实现 AI 代理的高效协作、自适应优化和可扩展性。文中还介绍了反思、工具使用、规划、多代理协作等智能设计模式，并举例说明其在企业助手、网络安全和金融分析等场景的应用，展望了 AI 自动化的未来趋势。
+阅读原文请跳转：https://medium.com/@vikram40441/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems-991fa6f36d6a
+AI 驱动的智能代理正迅速成为企业自动化的核心。德勤预计，到2025年，采用生成式AI的企业中将有25%部署AI代理，2027年将增长至50%。虽然这种趋势令人振奋，但也带来了一个重要问题：
+我们如何确保 AI Agent 具备可扩展性、适应性，并能无缝协作而不引发混乱？
+答案在于Agentic Mesh——一个结构化、动态且自我进化的 AI Agent 网络，能够自主发现、协作并优化任务。但在深入了解Agentic Mesh 是什么之前，先探讨传统 AI 架构的局限性，以及为何需要更先进的框架。
+为什么需要 Agentic Mesh？ 当前大多数企业仍依赖僵化的 AI 架构，Agent 各自为政或遵循预设流程。这些方式虽然可用，但随着企业 AI 自动化规模扩大，弊端日益显现。
+传统 AI 架构的问题 1.</description></item></channel></rss>

@@ -1,4 +1,50 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on 乱世浮生</title><link>https://atbug.com/tags/ai/</link><description>Recent content in AI on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 17 Jun 2024 20:05:13 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>K8sGPT+Ollama：免费的 Kubernetes 自动化诊断方案</title><link>https://atbug.com/k8sgpt-ollama-free-k8s-automation-diagnosis/</link><pubDate>Mon, 17 Jun 2024 20:05:13 +0800</pubDate><guid>https://atbug.com/k8sgpt-ollama-free-k8s-automation-diagnosis/</guid><description>周末检查博客草稿，发现了这篇。记得当时是与 Kubernetes 自动化诊断工具：k8sgpt-operator 一起写的，算算过去了一年之久，这拖延症也算是病入膏肓了。原本想使用 K8sGPT + LocalAI 的方案，由于之前试过 Ollama，感觉使用起来也更加友好，而且 Ollama 同样提供了 对 OpenAI API 的支持，索性改成用 Ollama 吧。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on 乱世浮生</title><link>https://atbug.com/tags/ai/</link><description>Recent content in AI on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 11 Nov 2025 17:11:38 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>Spring AI 与 Google ADK 集成实战：基于 Azure OpenAI 的智能体开发探索</title><link>https://atbug.com/spring-ai-google-adk-integration-azure-openai-agent-development/</link><pubDate>Tue, 11 Nov 2025 17:11:38 +0800</pubDate><guid>https://atbug.com/spring-ai-google-adk-integration-azure-openai-agent-development/</guid><description>TL;DR 本文用于验证 Spring AI 与 Google ADK 集成的可能性，为未来的正式版本提供实践经验和架构参考。核心收获在于验证了分层设计的可行性：Spring AI 处理 AI 服务抽象，ADK 管理智能体生命周期，两者通过标准接口实现实验性衔接。
+需要注意的是，Google ADK 的 Spring AI 支持确实处于早期 SNAPSHOT 阶段，API 可能存在变更风险，但整体架构设计已经展现了良好的技术融合潜力。
+背景 在企业级 AI 应用开发领域，如何将 Spring 生态的强大企业级特性与现代化智能体开发框架有机结合一直是技术团队面临的核心挑战。尤其是在探索 Google ADK（Agent Development Kit）与 Spring AI 的集成可能性时，开发者往往面临技术选型、架构设计和兼容性测试的多重考量。传统 AI 应用开发需要手动处理复杂的模型集成、工具调用和会话管理，导致代码耦合度高、维护成本大。本文通过一个简单但完整的时间查询智能体，展示了 Spring AI 的 Azure OpenAI 集成与 Google ADK 的智能体框架的融合可能性。特别需要注意的是，Google ADK 的 Java 版本中，Spring AI 支持目前仍处于 0.</description></item><item><title>预算有限，效率拉满：为什么 Kilo Code 成了我的首选 Coding Agent</title><link>https://atbug.com/budget-efficiency-kilo-code-choice/</link><pubDate>Fri, 29 Aug 2025 08:09:55 +0800</pubDate><guid>https://atbug.com/budget-efficiency-kilo-code-choice/</guid><description>TL;DR 打开 Kilo Code 的官网，首先入眼的就是这句话“适用于 VS Code 的最佳 AI 编程助手”，也确实我目前在 VS Code 上用过的几款插件中，Kilo Code 的表现是最好的。
+写这篇文章的时候，我想到的是老板的那句话“有什么模型就用什么”。
+在有限的条件下，寻找最优的解。
+不乏有比 Kilo Code 更加优秀的工具，但往往需要更强的模型支持，或者更高的费用。投入和产出是成正比的，单次请求成本越高，慢慢地 Coding Agent 也有“氪金”的趋势。
+照此以往，可能在不远的将来，优秀的工具和高级的模型会成为奢侈品，成为少数大企业的专属。
+Kilo Code 作为站在巨人肩膀上（Cline + Roo Code）的存在，凭借着自身的优化和改进，成为了我目前的首选。
+Kilo Code 可以支持 30+ 模型提供商，同时本身也提供了收费的 Kilo API。通过 Kilo API 可以使用几十种模型，包括 OpenAI、Claude、Gemini、MoonShot、Qwen、DeepSeek、xAI 各家的通用模型和 Coding 模型。并且计费与各家费用一样，Kilo Code 本身不加价不收手续费。</description></item><item><title>AGENTS.md：统一编码助手指令文件的新标准</title><link>https://atbug.com/agents-md-unifying-coding-agent-instructions/</link><pubDate>Sun, 24 Aug 2025 09:06:50 +0800</pubDate><guid>https://atbug.com/agents-md-unifying-coding-agent-instructions/</guid><description>TL;DR 从此刻起，你的项目中除了 README.md 文件外，可能还会包含另一个 markdown 文件：AGENTS.md
+README.md：为人类设计，通常提供如项目介绍、安装指南、使用示例等信息。 AGENTS.md：为 Coding Agents 设计，提供额外的详细信息，如环境搭建、构建步骤、测试方法、代码规范、安全注意事项等。 背景 如果你经常在多种编程助手间来回切换，肯定会我将要说的问题深有体会。通常如果想要编程助手更好的工作、输出更高质量的代码，我们需要在项目中为其提供 instructions（指令 - 系统提示词）文件。比如 .cursor/rules、.clinerules、.github/copilot-instructions.md、claude.md、gemini.md。这些文件的内容通常类似，但各自的文件名和位置不同。即使类似 Cline、Roo Code、Kilo Code 这类同出一脉的编程助手，他们的目录名也各不相同。更不同说不同的编程助手了。
+通常我的做法是使用软连接。首先创建一个统一的 instructions 文件，再通过软连接将 .clinerules 和 .cursor/rules、.github/copilot-instructions.md 都链接到同一个文件。
+你也可以使用 intellectronica/ruler，ruler 可以将同一份 instructions 文件 .ruler/ 分发给多个编程助手，并更新 .gitignore 文件。
+久而久之，你将会收获一个混乱的项目目录（再加上 MCP 服务器的管理文件），即使用上软链接或者 ruler（只是降低了维护成本）。</description></item><item><title>【译】AI 是否绑架了云原生创新？</title><link>https://atbug.com/the-future-of-ai-and-cloud-native/</link><pubDate>Sat, 23 Aug 2025 07:18:25 +0800</pubDate><guid>https://atbug.com/the-future-of-ai-and-cloud-native/</guid><description>译者注：近三年来，AI 热潮席卷科技行业，相关话题无处不在。与 AI 相关的讨论已经渗透到科技领域的每个角落，看似没有 AI 故事的产品变得更难推广。这里的云原生可以换成任何其他技术领域，AI 的兴起是否也在影响它们的发展和关注度？欢迎大家留言讨论。
+在这个充满变革的时代，保持开放心态、持续学习和积极拥抱新技术至关重要。无论是 AI 还是云原生，唯有不断探索和实践，才能在技术浪潮中立于不败之地。让我们共同见证创新的力量，推动行业向前发展。
+本文翻译自 Alan Shimel 的 Has AI Hijacked Cloud-Native Innovation?。
+AI 似乎正在成为科技领域的绝对焦点，几乎占据了所有讨论空间。
+从董事会会议室到行业活动的走廊，AI 话题无处不在。它令人兴奋、颠覆且充满变革力量。然而，AI 的迅猛发展也可能让其他重要技术创新被忽视。我不禁思考：AI 是否正在劫持云原生？
+仅仅一两年前，云原生还是企业技术领域的明星。Kubernetes 话题热度不减，可观察性平台蓬勃发展，Backstage 推动着内部开发者门户，GitOps 流水线高效运转，CNAPs 日益智能，服务网格架构迅速普及。云原生不仅意味着迁移到公有云，更是应用现代化、混合与边缘部署，甚至裸机部署的核心战略。
+云原生的普及有其深层原因——它为团队带来了创新所需的灵活性、可扩展性和模块化能力，帮助企业保持竞争力。
+在 Techstrong，我们对云原生的发展充满信心，甚至将其作为核心虚拟活动的名称：Cloud Native Now – One for the Road。这充分体现了云原生理念在现代 IT 领域的深度影响力。</description></item><item><title>Agentic Mesh：增强现代企业系统中的自主 AI 代理</title><link>https://atbug.com/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems/</link><pubDate>Sun, 22 Jun 2025 19:19:37 +0800</pubDate><guid>https://atbug.com/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems/</guid><description>译者注：本文介绍了 Agentic Mesh（代理网格）这一新型 AI 架构，强调其在现代企业自动化中的作用。文章指出传统 AI 代理系统存在单点故障、扩展性差、协作能力弱等问题。Agentic Mesh 通过自组织、动态协作、角色分工和安全治理，实现 AI 代理的高效协作、自适应优化和可扩展性。文中还介绍了反思、工具使用、规划、多代理协作等智能设计模式，并举例说明其在企业助手、网络安全和金融分析等场景的应用，展望了 AI 自动化的未来趋势。
+阅读原文请跳转：https://medium.com/@vikram40441/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems-991fa6f36d6a
+AI 驱动的智能代理正迅速成为企业自动化的核心。德勤预计，到2025年，采用生成式AI的企业中将有25%部署AI代理，2027年将增长至50%。虽然这种趋势令人振奋，但也带来了一个重要问题：
+我们如何确保 AI Agent 具备可扩展性、适应性，并能无缝协作而不引发混乱？
+答案在于Agentic Mesh——一个结构化、动态且自我进化的 AI Agent 网络，能够自主发现、协作并优化任务。但在深入了解Agentic Mesh 是什么之前，先探讨传统 AI 架构的局限性，以及为何需要更先进的框架。
+为什么需要 Agentic Mesh？ 当前大多数企业仍依赖僵化的 AI 架构，Agent 各自为政或遵循预设流程。这些方式虽然可用，但随着企业 AI 自动化规模扩大，弊端日益显现。
+传统 AI 架构的问题 1.</description></item><item><title>我用 Vibe Coding 开发了一个量化交易程序</title><link>https://atbug.com/vibe-coding-quant-trading/</link><pubDate>Fri, 23 May 2025 22:04:03 +0800</pubDate><guid>https://atbug.com/vibe-coding-quant-trading/</guid><description>是的，你没看错，我确实用 Vibe Coding 写了一个量化交易程序。相信看到标题点进来的，再看到这么一句后，不免会冒出一个想法：“是谁给你的勇气写量化交易程序！”
+先澄清一下，这并不是一个“正经”的量化交易程序，而是为了参加公司 AI 编程 Hackathon 开发的一个简单量化交易程序。
+在比赛报名截止的前一天，我被拉进了编程小组。起初参加比赛纯属一时兴起，更没想到那几天工作和家里的事情都很忙，甚至连比赛的说明会和练习赛都没参加。到比赛的前一天，我还没能为小组贡献一行代码，甚至连比赛的细节都不清楚。
+可能是巧合，淘汰赛当天凌晨 5 点我就醒了。既然醒了，不如起床看看比赛的说明。看完说明后，我发现用 Vibe Coding 是个不错的选择。因为时间有限，Vibe Coding 可以让我更专注于问题本身，而不是实现细节。
+最终，我花了 2 个多小时搞定了这个量化交易程序，成绩自认为还不错。虽然因为某些原因小组赛没有晋级，但整个过程让我受益匪浅。
+在这里，我想分享一下这个量化交易程序的实现思路和方法。
+Vibe Coding 让我们先了解一下什么是 Vibe Coding。相信看完介绍后，你会明白是什么给了我写量化交易程序的勇气。
+Vibe Coding 是什么？ Vibe Coding，有些中文翻译为“氛围编程”，听起来可能有些抽象。
+这个概念最早由计算机科学家 Andrej Karpathy（OpenAI 联合创始人）于 2025 年 2 月提出。Vibe Coding 的核心思想是通过自然语言描述来生成代码，而不是通过传统的编程语言。它是一种基于自然语言的编程方法，允许用户通过自然语言描述，借助大模型工具生成代码。其目标是让编程变得更加简单和直观，尤其是对没有编程经验的人。</description></item><item><title>几个常用的 MCP Server 收录平台</title><link>https://atbug.com/mcp-server-directory-platforms/</link><pubDate>Tue, 29 Apr 2025 06:39:54 +0800</pubDate><guid>https://atbug.com/mcp-server-directory-platforms/</guid><description>在人工智能与各类技术深度融合的当下，MCP（Model Context Protocol）发展迅猛热度不减。服务器的多样性和功能性不断拓展。对个人用户、AI 爱好者而言，找到合适的 MCP Server 收录平台，能更高效地获取工具和资源。以下是一些常用的 MCP Server 的收录平台，供大家参考：
+mcp.so https://mcp.so/
+目前已收录 11185 个 MCP 服务器。
+该平台展示了众多特色 MCP 服务器，如与各类地图、数据库、软件集成的服务器，还有用于文本处理、图像生成等功能的服务器 。
+awesome-mcp-servers https://github.com/punkpeye/awesome-mcp-servers/
+目前已收录 4148 个 MCP 服务器。
+基于 GitHub 仓库的索引，展示了 MCP 服务器的相关信息。该仓库提供了多种语言版本的文档，包括英文、中文（简体和繁体）、日语、韩语、葡萄牙语、泰语等。分类详细、全面，涵盖了多种类型的 MCP 服务器。
+Glama MCP https://glama.ai/mcp/servers
+一个 web 平台，提供了 MCP 服务器的索引和搜索功能，收录的内容来自上面的 awesome-mcp-servers 仓库。</description></item><item><title>从抓包看 MCP：AI 工具调用背后的通信机制</title><link>https://atbug.com/mcp-communication-protocol-packet-analysis/</link><pubDate>Sat, 26 Apr 2025 16:44:57 +0800</pubDate><guid>https://atbug.com/mcp-communication-protocol-packet-analysis/</guid><description>TL;DR 通过抓包分析，我们清晰地了解了 MCP 通信的全过程：从建立 SSE 连接、三步初始化、工具调用操作到最终的连接终止。可以看出，MCP 基于简单的 SSE 协议搭建了一个功能强大的工具调用框架，使 AI 代理能够便捷地调用外部工具完成复杂任务。
+相比传统的接口调用方式，MCP 更加灵活，能够自动适应不同的工具集，让 AI 代理 &amp;quot; 即插即用 &amp;quot; 地使用各种服务能力，这也是其设计的精妙之处。
+当然，MCP 也并不是完美的，作为一个新兴的协议，它仍然在不断发展中。未来可能会有更多的功能和特性被添加进来，以满足更复杂的需求。
+背景 MCP 支持两种标准的传输实现：标准输入/输出（stdio）和 Server-Sent Event（下称 SSE）。stdio 基于命令行工具，多用于本地集成，通过进程通信来实现；SSE 基于客户端和服务器的网络通信，用于跨设备网络的通信场景。
+既然是用抓包来分析，我们就要选择使用 SSE 传输 MCP server，然后通过工具进行网络抓包分析。在抓包分析之前，我们必要对 SSE 协议进行简单的了解。
+SSE 协议 SSE 协议 是一种服务器推送技术，使客户端能够通过 HTTP 连接从服务器自动接受更新，通常用于服务器向客户端发送消息更新或者连续的数据流（流信息 streaming）。</description></item><item><title>K8sGPT+Ollama：免费的 Kubernetes 自动化诊断方案</title><link>https://atbug.com/k8sgpt-ollama-free-k8s-automation-diagnosis/</link><pubDate>Mon, 17 Jun 2024 20:05:13 +0800</pubDate><guid>https://atbug.com/k8sgpt-ollama-free-k8s-automation-diagnosis/</guid><description>周末检查博客草稿，发现了这篇。记得当时是与 Kubernetes 自动化诊断工具：k8sgpt-operator 一起写的，算算过去了一年之久，这拖延症也算是病入膏肓了。原本想使用 K8sGPT + LocalAI 的方案，由于之前试过 Ollama，感觉使用起来也更加友好，而且 Ollama 同样提供了 对 OpenAI API 的支持，索性改成用 Ollama 吧。
 介绍 k8sgpt-operator 的文章发布后，有小伙伴反馈 OpenAI 的使用门槛，这个问题确实比较棘手，但也不是不能解决。不过本文并不是介绍如何解决这种问题的，而是介绍 OpenAI 的替代方案： Ollama。
 对 k8sgpt 和 k8sgpt-operator 就不做过多介绍了，有兴趣的可以看回 上一篇，去年底 k8sgpt 进入了 CNCF Sandbox。
 1. 安装 Ollama Ollama 是一个开源的大模型工具，使用它可以在本地或云端轻松的安装和运行 多种流量的大模型。它的操作非常友好，只需简单的命令就能运行。在 macOS 上可以通过 homebrew 一键安装：</description></item><item><title>Kubernetes 自动化诊断工具：k8sgpt-operator</title><link>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</link><pubDate>Tue, 02 May 2023 17:33:28 +0800</pubDate><guid>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</guid><description>背景 在 Kubernetes 上，从部署 Deployment 到正常提供服务，整个流程可能会出现各种各样问题，有兴趣的可以浏览 Kubernetes Deployment 的故障排查可视化指南（2021 中文版）。从可视化指南也可能看出这些问题实际上都是有迹可循，根据错误信息基本很容易找到解决方法。随着 ChatGPT 的流行，基于 LLM 的文本生成项目不断涌现，k8sgpt 便是其中之一。

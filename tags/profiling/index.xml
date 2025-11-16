@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Profiling on 乱世浮生</title><link>https://atbug.com/tags/profiling/</link><description>Recent content in Profiling on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 10 Nov 2024 22:34:07 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/profiling/index.xml" rel="self" type="application/rss+xml"/><item><title>探索 OpenTelemetry Profiling 进展：eBPF 代理快速上手</title><link>https://atbug.com/exploring-opentelemetry-profiling-progress-ebpf-agent-quickstart/</link><pubDate>Sun, 10 Nov 2024 22:34:07 +0800</pubDate><guid>https://atbug.com/exploring-opentelemetry-profiling-progress-ebpf-agent-quickstart/</guid><description>本文将介绍 OpenTelemetry Profiling 的进展，以及快速体验 Profiling 的 eBPF 代理。关于有 OTEL Profile 的概念和实现，将在下一篇介绍。
+虽然 Profiling 进展迅速，Profile 功能仍然在实验阶段，不建议在生产环境使用。
+背景 在软件工程中，可观测性（Observability）是指收集和分析程序执行情况、模块内部状态以及组件间通信数据的能力。可观测性的三大支柱——指标、跟踪和日志——为我们提供了深入了解应用程序行为的关键手段，尤其在分布式系统中尤为重要。
+分布式系统的应用组件分布在多个节点上，导致事件链条和数据流的复杂化。通过有效运用这三大可观测性手段，可以帮助我们识别潜在问题、定位故障源，从而显著提高系统的稳定性和可维护性。
+尽管可观测性的三大手段能够提供大量关于系统行为和性能的洞察，但无法探究程序内部代码函数层级的运行时表现。性能分析（Profiling）为深入了解应用程序的资源使用和执行效率提供了方法指导。持续性能分析（Continuous profiling）可以在应用程序运行期间连续进行性能剖析，帮助开发人员准确理解代码随着时间推移的运行情况。
+今年 3 月，成立两年的 OpenTelemetry Profiling SIG 宣布支持 性能分析信号（Profiling Signal），半年多过去了，从规范到工具层面 Profiling 的支持取得了很大的进展。
+进展 OTLP Profile 类型 继 traces、metrics、logs 和 baggage 之后，在 OTLP 1.</description></item></channel></rss>
