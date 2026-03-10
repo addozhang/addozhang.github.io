@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>效率工具 on 乱世浮生</title><link>https://atbug.com/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/</link><description>Recent content in 效率工具 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 10 Mar 2026 22:15:52 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml"/><item><title>我让龙虾替我工作了 38 天，它做了什么？</title><link>https://atbug.com/openclaw-38-days-what-did-it-do/</link><pubDate>Tue, 10 Mar 2026 22:15:52 +0800</pubDate><guid>https://atbug.com/openclaw-38-days-what-did-it-do/</guid><description>Photo by James Lee on Pexels
+一个决定 一开年，OpenClaw 突然在技术圈出圈了。
+这是一个自托管的 AI agent 网关，装在服务器上，能把 Telegram、WhatsApp、iMessage 这些聊天软件直接接到 AI agent——发一条消息，agent 帮你处理邮件、文件、代码，像个永远在线的私人助理。
+出于好奇，1 月底我也装了一个。
+最初装在 MacBook 上，但考虑到隐私安全，本地机器上有太多个人数据，不想让 agent 有过多访问权限，索性找了一台公有云的 Ubuntu 虚拟机，把它部署上去。模型用的是 GitHub Copilot，这得益于微软 MVP 赠送的 Copilot Pro 订阅，算是物尽其用。
+就这样，第一个 agent 上线了。后来随着使用深入，发现有些事情需要专注写代码的，有些只需要轻量协助，agent 数量从 1 个慢慢加到了 3 个：Nova 管日常，Forge 专门写代码，assistant 跑腿打杂。</description></item></channel></rss>
