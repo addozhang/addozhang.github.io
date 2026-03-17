@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>开发工具 on 乱世浮生</title><link>https://atbug.com/tags/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/</link><description>Recent content in 开发工具 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 18 Mar 2026 06:49:12 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml"/><item><title>用 Telegram 远程操控本地 OpenCode：opencode-telegram-bot 实战指南</title><link>https://atbug.com/opencode-telegram-bot-remote-control-guide/</link><pubDate>Wed, 18 Mar 2026 06:49:12 +0800</pubDate><guid>https://atbug.com/opencode-telegram-bot-remote-control-guide/</guid><description>TL;DR 用 opencode-telegram-bot，把 Telegram 变成本地 OpenCode 的远程终端。配置不超过 10 分钟，无需开放端口，代码不离开本地。适合个人电脑长期在家、需要随时远程驱动本地 AI 编码环境的场景。
+引言 两种场景，同一个痛点。
+场景一：手机拿在手，脑子里突然蹦出一个想法——「这个 bug 该怎么改？」打开电脑，启动终端，切换目录，输入 prompt……等你坐下来，思路早散了一半。
+场景二：个人项目只放在家里的电脑上，工作机碰不到。灵感在公司突然来了，只能先记到备忘录，回家再处理——但等到家，状态早就不一样了。
+opencode-telegram-bot 解决的就是这个摩擦。它不是一个云端 AI 服务，而是一座桥——把 Telegram，和家里本地运行的 OpenCode CLI 直接连接起来。本地的算力、本地的代码、本地的上下文，全部通过一条消息驱动，随时随地，无需等到坐在电脑前。
+不需要开放任何端口，不需要把代码推到云端。安全，轻量，随时可用。
+这篇文章记录完整的安装配置流程，以及实际跑通后的使用体验。
+工具介绍 opencode-telegram-bot 是一个开源的 Node.js 项目，核心逻辑很简单：监听 Telegram Bot 的消息，转发给本地的 OpenCode API，再把结果返回到 Telegram。
+整个通信链路如下：</description></item></channel></rss>
