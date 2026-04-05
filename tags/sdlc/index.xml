@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SDLC on 乱世浮生</title><link>https://atbug.com/tags/sdlc/</link><description>Recent content in SDLC on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 05 Apr 2026 21:41:43 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/sdlc/index.xml" rel="self" type="application/rss+xml"/><item><title>Harness Engineering 又来颠覆了——你们开发不写文档、没有研发流程？</title><link>https://atbug.com/harness-engineering-sdlc/</link><pubDate>Sun, 05 Apr 2026 21:41:43 +0800</pubDate><guid>https://atbug.com/harness-engineering-sdlc/</guid><description>TL;DR Harness Engineering 不是新范式，是软件工程基本功在 AI 时代的强制兑现——你欠的文档债、流程债、架构债，AI 会让你加倍还。
+颠覆的真相 AI coding 很火，Harness Engineering 这个词更火。
+OpenAI 用它造出了 100 万行代码，Anthropic 在探索让 Agent 自己迭代产品，Cursor 在用几百个 Agent 并行推进大型项目。每个人都在谈这是新范式、新方法论、软件工程的下一个时代。
+但拆开看，这些团队做的第一件事是什么？
+写文档。定流程。把架构约束编码进工具链。
+这不是新东西。这是你本来就该做、但一直没做好的事。
+AI coding 不会替你省掉软件工程的基本功——它会让你欠的债，加倍奉还。
+大家期待错了方向 AI coding 工具出来之前，大家最烦什么？
+写文档。开需求评审会。维护架构规范。定义 DoD。做 code review。这些事费时间、见效慢、没有人愿意当那个 &amp;quot; 非要搞流程 &amp;quot; 的人。</description></item></channel></rss>
