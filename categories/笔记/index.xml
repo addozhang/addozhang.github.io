@@ -39,11 +39,13 @@ opencode-telegram-bot 解决的就是这个摩擦。它不是一个云端 AI 服
 这是一个自托管的 AI agent 网关，装在服务器上，能把 Telegram、WhatsApp、iMessage 这些聊天软件直接接到 AI agent——发一条消息，agent 帮你处理邮件、文件、代码，像个永远在线的私人助理。
 出于好奇，1 月底我也装了一个。
 最初装在 MacBook 上，但考虑到隐私安全，本地机器上有太多个人数据，不想让 agent 有过多访问权限，索性找了一台公有云的 Ubuntu 虚拟机，把它部署上去。模型用的是 GitHub Copilot，这得益于微软 MVP 赠送的 Copilot Pro 订阅，算是物尽其用。
-就这样，第一个 agent 上线了。后来随着使用深入，发现有些事情需要专注写代码的，有些只需要轻量协助，agent 数量从 1 个慢慢加到了 3 个：Nova 管日常，Forge 专门写代码，assistant 跑腿打杂。</description></item><item><title>记忆不上云：mem9 + TiDB 打造 OpenClaw 私有记忆中枢</title><link>https://atbug.com/openclaw-private-memory-mem9-tidb-self-hosted/</link><pubDate>Mon, 09 Mar 2026 19:26:51 +0800</pubDate><guid>https://atbug.com/openclaw-private-memory-mem9-tidb-self-hosted/</guid><description>日期 更新内容 2026-03-09 初稿发布 2026-04-14 修正 docker-compose 配置（volume 路径、restart 策略、TIDB_ZERO 开关）；补充三个自建踩坑记录 Photo by Tweesak C. on Pexels
+就这样，第一个 agent 上线了。后来随着使用深入，发现有些事情需要专注写代码的，有些只需要轻量协助，agent 数量从 1 个慢慢加到了 3 个：Nova 管日常，Forge 专门写代码，assistant 跑腿打杂。</description></item><item><title>记忆不上云：mem9 + TiDB 打造 OpenClaw 私有记忆中枢</title><link>https://atbug.com/openclaw-private-memory-mem9-tidb-self-hosted/</link><pubDate>Mon, 09 Mar 2026 19:26:51 +0800</pubDate><guid>https://atbug.com/openclaw-private-memory-mem9-tidb-self-hosted/</guid><description>更新历史
+2026-03-09：初稿发布 2026-04-14：修正 docker-compose 配置（volume 路径、restart 策略、TIDB_ZERO 开关）；补充三个自建踩坑记录 Photo by Tweesak C. on Pexels
 记忆的代价 每次对话结束，AI agent 就会忘记一切。
 这不是比喻。OpenClaw 的默认 memory-core 把记忆写进本地 .md 文件，当文件积累到上百个，agent 没有能力在每次对话前全部扫描——记忆变成了需要你主动提示才能检索的档案馆。
 更根本的问题是：记忆无法跨 agent 共享。你告诉过主 agent 的偏好，coding agent 从零开始；每个 agent 都活在自己的信息孤岛里。
-理想的 agent 记忆系统应该满足四点：自动注入、跨 agent 共享、新记忆实时可用、数据留在本地。</description></item><item><title>Spring Boot 2 升 3：两条命令搞定 95%，AI 收尾</title><link>https://atbug.com/openrewrite-recipe-first-spring-boot-2-to-3-migration/</link><pubDate>Sun, 01 Mar 2026 08:33:41 +0800</pubDate><guid>https://atbug.com/openrewrite-recipe-first-spring-boot-2-to-3-migration/</guid><description>一年多前，我在另一个迁移项目里尝试过 OpenRewrite，做了可行性验证，最终评估下来方案不合适，那个项目转而采用了 AI 的方式。顺着那次探索写了个系列，然后就搁置了。最近真正的迁移计划提上日程，翻出来一看——当时踩过的坑、记下来的东西，全都用上了。
+理想的 agent 记忆系统应该满足四点：自动注入、跨 agent 共享、新记忆实时可用、数据留在本地。
+带着这四个要求，我开始寻找答案。这篇文章 介绍了 mem9 作为 AI agent 记忆方案的思路，给了我很大启发。但原文使用的是 mem9.</description></item><item><title>Spring Boot 2 升 3：两条命令搞定 95%，AI 收尾</title><link>https://atbug.com/openrewrite-recipe-first-spring-boot-2-to-3-migration/</link><pubDate>Sun, 01 Mar 2026 08:33:41 +0800</pubDate><guid>https://atbug.com/openrewrite-recipe-first-spring-boot-2-to-3-migration/</guid><description>一年多前，我在另一个迁移项目里尝试过 OpenRewrite，做了可行性验证，最终评估下来方案不合适，那个项目转而采用了 AI 的方式。顺着那次探索写了个系列，然后就搁置了。最近真正的迁移计划提上日程，翻出来一看——当时踩过的坑、记下来的东西，全都用上了。
 任何学习和痛苦都不会白费，只是兑现的时间不一定。
 为什么迁移这么痛 Spring Boot 2 的 EOL 早已过去，但很多团队的升级计划还停在 Jira 的某个角落吃灰。不是不想升，是真的怕。
 怕什么？怕的不是技术本身，而是规模。javax.* 全部变成 jakarta.*，Spring Security 配置 API 重写，WebMVC 和异步配置的适配器类被移除，JUnit 4 注解也换了一套。任何一个变化单独处理都不难，但加在一起，乘以整个代码库的文件数量，就成了一个让人望而却步的工程量——而且还是那种高度重复、极易出错、回归验证代价极高的工作。
