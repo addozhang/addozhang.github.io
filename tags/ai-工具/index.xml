@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI 工具 on 乱世浮生</title><link>https://atbug.com/tags/ai-%E5%B7%A5%E5%85%B7/</link><description>Recent content in AI 工具 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 02 Jun 2026 19:32:43 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/ai-%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml"/><item><title>从前慢：两种慢，两种命运</title><link>https://atbug.com/from-slow-two-kinds-of-slow-two-fates/</link><pubDate>Tue, 02 Jun 2026 19:32:43 +0800</pubDate><guid>https://atbug.com/from-slow-two-kinds-of-slow-two-fates/</guid><description>TLDR AI 消除了工作流里的摩擦，却也悄悄跳过了成长路上的必经之路。GitHub Copilot 改计费只是一个信号：不是所有的慢都该变快。
+一个计费变更引发的思考 2026 年 6 月 1 日，GitHub Copilot 改了计费规则。
+原来按「请求次数」收费，一次快速的问答和一次跑了一个小时的 agentic 任务，算同样的价钱。现在改成按 token 实际消耗计费，单位叫 GitHub AI Credits——模型越贵、跑得越久，花得越多。
+订阅价格没变，但这两天微信群和技术群里吐槽声不断。
+有人发现自己平时的用法，在新计费模式下账单会翻好几倍。有人的 credits 一天半就跑完了，只能切回质量差一档的模型继续干活。还有人感叹：「由奢入俭难。」
+更有意思的是另一种声音：「要学会高效利用。」
+这句话听起来是个建议，但仔细想想，它本身就是一种新的摩擦——以前用 AI 根本不需要想这件事，现在要专门腾出精力，研究怎么「用得更省」。AI 本来是来消除摩擦的，结果自己又制造了一种新的中间成本。
+这让我想到一个更大的问题：AI 在重新定价的，到底是什么？
+第一种慢——系统的包袱 先说工作流。
+一个典型的工程工作流，往往不是在单一系统里完成的。需求在 Jira，代码在 GitHub，部署在 Jenkins，监控在 Grafana，文档在 Confluence，通知在飞书。每个系统有自己的 API、自己的数据格式、自己的交互方式。</description></item></channel></rss>
