@@ -1,21 +1,118 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tool on 乱世浮生</title><link>https://atbug.com/tags/tool/</link><description>Recent content in Tool on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 03 Jan 2022 12:07:35 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/tool/index.xml" rel="self" type="application/rss+xml"/><item><title>快速搭建实验环境：使用 Terraform 部署 Proxmox 虚拟机</title><link>https://atbug.com/deploy-vm-on-proxmox-with-terraform/</link><pubDate>Mon, 03 Jan 2022 12:07:35 +0800</pubDate><guid>https://atbug.com/deploy-vm-on-proxmox-with-terraform/</guid><description>自从用上 m1 的电脑，本地开发环境偶尔会遇到兼容性的问题。比如之前尝试用 Colima 在虚拟机中运行容器运行时和 Kubernetes，其实际使用的还是 aarch64 虚拟机，实际使用还是会有些差异。
-手上有台之前用的黑苹果小主机，吃灰几个月了，实属浪费。正好元旦假期，有时间折腾一下。
-CPU: Intel 8700 6C12T MEM: 64G DDR4 DISK: 1T SSD 折腾的目的：
-将平台虚拟化 提供多套实验环境 快速创建销毁实验环境 体验基础设施即代码 IaaS 主要用到的工具：
-虚拟化工具 Proxmox VE Terraform：开源的基础设施即代码工具 terraform-provider-proxmox：Terraform Proxmox Provider，通过 Proxmox VE 的 REST API 在创建虚拟机。 安装 Proxmox 虚拟化工具 从官网 下载 ISO 镜像，写入到 U 盘中。macOS上推荐使用 balenaEtcher 写盘。</description></item><item><title>Kubernetes 必备工具：2021</title><link>https://atbug.com/translation-kuberletes-essential-tools-2021/</link><pubDate>Thu, 15 Jul 2021 08:10:22 +0800</pubDate><guid>https://atbug.com/translation-kuberletes-essential-tools-2021/</guid><description>有别于前些天的文章 - 常用的几款工具让 Kubernetes 集群上的工作更容易 偏重于工具类来提升工作效率，今天这篇文章更加适合用来做选型时的参考。
-文档翻译自 Kubernetes Essential Tools: 2021，篇幅较长，做了部分增删。
-介绍 在本文中，我将尝试总结我最喜欢的 Kubernetes 工具，并特别强调最新的和鲜为人知但我认为会非常流行的工具。
-这只是我根据我的经验得出的个人清单，但为了避免偏见，我还将尝试提及每种工具的替代方案，以便你可以根据自己的需要进行比较和决定。我将尽可能缩短这篇文章并提供链接，以便你可以自行探索更多内容。我的目标是回答这个问题：“我如何在 Kubernetes 中做 X？” 通过描述不同软件开发任务的工具。
-K3D K3D 是我最喜欢的在笔记本电脑上运行 Kubernetes (K8s) 集群的方式。它非常轻巧且速度非常快。它是使用 Docker 围绕 K3S 的包装器。所以，你只需要 Docker 来运行它并且资源使用率非常低。唯一的问题是它不完全符合 K8s 标准，但这不应该是本地开发的问题。对于测试环境，你可以使用其他解决方案。K3D 比 Kind 快，但 Kind 完全兼容。
-备选 K3S 物联网或者边缘计算 Kind 完全兼容 Kubernetes 的备选 MicroK8s MiniKube Krew Krew 是管理的必备工具 Kubectl 插件，这是一个必须有任何 K8S 用户。我不会详细介绍超过 145 个可用插件，但至少安装 kubens 和 kubectx。</description></item><item><title>常用的几款工具让 Kubernetes 集群上的工作更容易</title><link>https://atbug.com/tools-accelerate-work-on-kubernetes-cluster/</link><pubDate>Sat, 26 Jun 2021 12:16:28 +0800</pubDate><guid>https://atbug.com/tools-accelerate-work-on-kubernetes-cluster/</guid><description>之前写过一篇 介绍了工具加速云原生 Java 开发。
-其实日常工作中在集群上的操作也非常多，今天就来介绍我所使用的工具。
-kubectl-alias 使用频率最高的工具，我自己稍微修改了一下，加入了 StatefulSet 的支持。
-这个是我的 https://github.com/addozhang/kubectl-aliases，基于 https://github.com/ahmetb/kubectl-aliases。
-比如输出某个 pod 的 json，kgpoojson xxx 等同于 kubectl get pod xxx -o json。
-结合 jq 使用效果更好 😂。
-语法解读 k=kubectl sys=--namespace kube-system commands: g=get d=describe rm=delete a:apply -f ak:apply -k k:kustomize ex: exec -i -t lo: logs -f resources: po=pod, dep=deployment, ing=ingress, svc=service, cm=configmap, sec=secret,ns=namespace, no=node flags: output format: oyaml, ojson, owide all: --all or --all-namespaces depending on the command sl: --show-labels w=-w/--watch value flags (should be at the end): n=-n/--namespace f=-f/--filename l=-l/--selector kubectx + kubens 安装看这里</description></item><item><title>加速云原生的 Java 开发</title><link>https://atbug.com/speed-up-java-development-on-kubernetes/</link><pubDate>Sat, 21 Dec 2019 20:45:22 +0800</pubDate><guid>https://atbug.com/speed-up-java-development-on-kubernetes/</guid><description>今天来说说日常在Kubernetes开发Java项目遇到的问题.
-当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是copy+paste+modify. 能否以变成的方式来生成?
-开发时的步骤也比较繁琐: docker build, docker push, kubectl apple, kubectl delete pod. 对于一个Java应用来说还多了一步编译. 操作一次还ok, 但是一天十几次总会有想吐的感觉. 这些步骤能否简化成一个命令, 甚至修改了代码自动就完成上面一系列的操作?
-实现这些我们需要几个工具: dekorate, Jib, Skaffold. 其中Jib也在上一篇文章使用Jib为Java应用构建镜像中介绍过.
-dekorate Dekorate is a collection of Java compile-time generators and decorators for Kubernetes/OpenShift manifests. Dekorate是Java编译时生成和装饰Kubernetes/OpenShift的manifests的工具</description></item><item><title>使用 Jib 为 Java 应用构建镜像</title><link>https://atbug.com/build-docker-or-oci-image-with-jib-for-java/</link><pubDate>Mon, 09 Dec 2019 10:05:30 +0800</pubDate><guid>https://atbug.com/build-docker-or-oci-image-with-jib-for-java/</guid><description>Jib是Google Container Tools中的一个工具。
-Jib builds optimized Docker and OCI images for your Java applications without a Docker daemon - and without deep mastery of Docker best-practices. It is available as plugins for Maven and Gradle and as a Java library.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tool on 乱世浮生</title><link>https://atbug.com/tags/tool/</link><description>Recent content in Tool on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Mon, 03 Jan 2022 12:07:35 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/tool/index.xml" rel="self" type="application/rss+xml"/><item><title>快速搭建实验环境：使用 Terraform 部署 Proxmox 虚拟机</title><link>https://atbug.com/deploy-vm-on-proxmox-with-terraform/</link><pubDate>Mon, 03 Jan 2022 12:07:35 +0800</pubDate><guid>https://atbug.com/deploy-vm-on-proxmox-with-terraform/</guid><description>&lt;p&gt;自从用上 m1 的电脑，本地开发环境偶尔会遇到兼容性的问题。比如之前尝试&lt;a href="https://mp.weixin.qq.com/s/V9dTD3R6ApnW3b1DebzdEg"&gt;用 Colima 在虚拟机中运行容器运行时和 Kubernetes&lt;/a&gt;，其实际使用的还是 aarch64 虚拟机，实际使用还是会有些差异。&lt;/p&gt;
+&lt;p&gt;手上有台之前用的黑苹果小主机，吃灰几个月了，实属浪费。正好元旦假期，有时间折腾一下。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;CPU: Intel 8700 6C12T
+MEM: 64G DDR4
+DISK: 1T SSD
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;折腾的目的：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;将平台虚拟化&lt;/li&gt;
+&lt;li&gt;提供多套实验环境&lt;/li&gt;
+&lt;li&gt;快速创建销毁实验环境&lt;/li&gt;
+&lt;li&gt;体验基础设施即代码 IaaS&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;主要用到的工具：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;虚拟化工具 &lt;a href="https://www.proxmox.com/en/proxmox-ve"&gt;Proxmox VE&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.terraform.io"&gt;Terraform&lt;/a&gt;：开源的基础设施即代码工具&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/Telmate/terraform-provider-proxmox"&gt;terraform-provider-proxmox&lt;/a&gt;：Terraform Proxmox Provider，通过 Proxmox VE 的 REST API 在创建虚拟机。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="安装-proxmox-虚拟化工具"&gt;安装 Proxmox 虚拟化工具&lt;/h2&gt;
+&lt;p&gt;从&lt;a href="https://www.proxmox.com/en/downloads/category/proxmox-virtual-environment"&gt;官网&lt;/a&gt; 下载 ISO 镜像，写入到 U 盘中。macOS上推荐使用 balenaEtcher 写盘。&lt;/p&gt;</description></item><item><title>Kubernetes 必备工具：2021</title><link>https://atbug.com/translation-kuberletes-essential-tools-2021/</link><pubDate>Thu, 15 Jul 2021 08:10:22 +0800</pubDate><guid>https://atbug.com/translation-kuberletes-essential-tools-2021/</guid><description>&lt;p&gt;有别于前些天的文章 - &lt;a href="https://mp.weixin.qq.com/s/uU2zmT5yyVcKZ5XmLSRqtg"&gt;常用的几款工具让 Kubernetes 集群上的工作更容易&lt;/a&gt; 偏重于工具类来提升工作效率，今天这篇文章更加适合用来做选型时的参考。&lt;/p&gt;
+&lt;p&gt;文档翻译自 &lt;a href="https://itnext.io/kubernetes-essential-tools-2021-def12e84c572"&gt;Kubernetes Essential Tools: 2021&lt;/a&gt;，篇幅较长，做了部分增删。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="介绍"&gt;介绍&lt;/h2&gt;
+&lt;p&gt;在本文中，我将尝试总结我最喜欢的 &lt;a href="https://kubernetes.io/"&gt;Kubernetes&lt;/a&gt; 工具，并特别强调最新的和鲜为人知但我认为会非常流行的工具。&lt;/p&gt;
+&lt;p&gt;这只是我根据我的经验得出的个人清单，但为了避免偏见，我还将尝试提及每种工具的替代方案，以便你可以根据自己的需要进行比较和决定。我将尽可能缩短这篇文章并提供链接，以便你可以自行探索更多内容。我的目标是回答这个问题：“我如何在 Kubernetes 中做 X？” 通过描述不同软件开发任务的工具。&lt;/p&gt;
+&lt;h2 id="k3d"&gt;K3D&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://k3d.io/"&gt;K3D&lt;/a&gt; 是我最喜欢的在笔记本电脑上运行 Kubernetes (K8s) 集群的方式。它非常&lt;strong&gt;轻巧且&lt;/strong&gt;速度非常快。它是使用 &lt;strong&gt;Docker&lt;/strong&gt; 围绕 &lt;a href="https://k3s.io/"&gt;K3S&lt;/a&gt; 的包装器。所以，你只需要 Docker 来运行它并且资源使用率非常低。唯一的问题是&lt;strong&gt;它不完全符合 K8s 标准&lt;/strong&gt;，但这不应该是本地开发的问题。对于测试环境，你可以使用其他解决方案。K3D 比 Kind 快，但 Kind 完全兼容。&lt;/p&gt;
+&lt;h3 id="备选"&gt;备选&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://k3s.io/"&gt;&lt;strong&gt;K3S&lt;/strong&gt;&lt;/a&gt; 物联网或者边缘计算&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kind.sigs.k8s.io/"&gt;&lt;strong&gt;Kind&lt;/strong&gt;&lt;/a&gt; 完全兼容 Kubernetes 的备选&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://microk8s.io/"&gt;&lt;strong&gt;MicroK8s&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://minikube.sigs.k8s.io/docs/"&gt;&lt;strong&gt;MiniKube&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="krew"&gt;Krew&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://krew.sigs.k8s.io/"&gt;Krew&lt;/a&gt; 是管理的必备工具 &lt;strong&gt;Kubectl 插件&lt;/strong&gt;，这是一个必须有任何 K8S 用户。我不会详细介绍超过 145 个可用&lt;a href="https://krew.sigs.k8s.io/plugins/"&gt;插件&lt;/a&gt;，但至少安装 &lt;a href="https://github.com/ahmetb/kubectx"&gt;&lt;strong&gt;kubens&lt;/strong&gt;&lt;/a&gt; 和 &lt;a href="https://github.com/ahmetb/kubectx"&gt;&lt;strong&gt;kubectx&lt;/strong&gt;&lt;/a&gt;。&lt;/p&gt;</description></item><item><title>常用的几款工具让 Kubernetes 集群上的工作更容易</title><link>https://atbug.com/tools-accelerate-work-on-kubernetes-cluster/</link><pubDate>Sat, 26 Jun 2021 12:16:28 +0800</pubDate><guid>https://atbug.com/tools-accelerate-work-on-kubernetes-cluster/</guid><description>&lt;p&gt;之前写过一篇 &lt;a href="https://mp.weixin.qq.com/s/CXJ1zUoktdI3c3CHVju0gA"&gt;介绍了工具加速云原生 Java 开发&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;其实日常工作中在集群上的操作也非常多，今天就来介绍我所使用的工具。&lt;/p&gt;
+&lt;h2 id="kubectl-alias"&gt;kubectl-alias&lt;/h2&gt;
+&lt;p&gt;使用频率最高的工具，我自己稍微修改了一下，加入了 &lt;code&gt;StatefulSet&lt;/code&gt; 的支持。&lt;/p&gt;
+&lt;p&gt;这个是我的 &lt;a href="https://github.com/addozhang/kubectl-aliases"&gt;https://github.com/addozhang/kubectl-aliases&lt;/a&gt;，基于 &lt;a href="https://github.com/ahmetb/kubectl-aliases"&gt;https://github.com/ahmetb/kubectl-aliases&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;比如输出某个 pod 的 json，&lt;code&gt;kgpoojson xxx&lt;/code&gt; 等同于 &lt;code&gt;kubectl get pod xxx -o json&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;结合 &lt;a href="https://stedolan.github.io/jq/"&gt;jq&lt;/a&gt; 使用效果更好 😂。&lt;/p&gt;
+&lt;h3 id="语法解读"&gt;语法解读&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;k&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;kubectl&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;sys&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;--namespace kube-system&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;commands:
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;g&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;get&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;d&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;describe&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;rm&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;delete&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;a&lt;/code&gt;&lt;/strong&gt;:&lt;code&gt;apply -f&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;ak&lt;/code&gt;&lt;/strong&gt;:&lt;code&gt;apply -k&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;k&lt;/code&gt;&lt;/strong&gt;:&lt;code&gt;kustomize&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;ex&lt;/code&gt;&lt;/strong&gt;: &lt;code&gt;exec -i -t&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;lo&lt;/code&gt;&lt;/strong&gt;: &lt;code&gt;logs -f&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;resources:
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;po&lt;/code&gt;&lt;/strong&gt;=pod, &lt;strong&gt;&lt;code&gt;dep&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;deployment&lt;/code&gt;, &lt;strong&gt;&lt;code&gt;ing&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;ingress&lt;/code&gt;, &lt;strong&gt;&lt;code&gt;svc&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;service&lt;/code&gt;, &lt;strong&gt;&lt;code&gt;cm&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;configmap&lt;/code&gt;, &lt;strong&gt;&lt;code&gt;sec&lt;/code&gt;=&lt;code&gt;secret&lt;/code&gt;&lt;/strong&gt;,&lt;strong&gt;&lt;code&gt;ns&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;namespace&lt;/code&gt;, &lt;strong&gt;&lt;code&gt;no&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;node&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;flags:
+&lt;ul&gt;
+&lt;li&gt;output format: &lt;strong&gt;&lt;code&gt;oyaml&lt;/code&gt;&lt;/strong&gt;, &lt;strong&gt;&lt;code&gt;ojson&lt;/code&gt;&lt;/strong&gt;, &lt;strong&gt;&lt;code&gt;owide&lt;/code&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;all&lt;/code&gt;&lt;/strong&gt;: &lt;code&gt;--all&lt;/code&gt; or &lt;code&gt;--all-namespaces&lt;/code&gt; depending on the command&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;sl&lt;/code&gt;&lt;/strong&gt;: &lt;code&gt;--show-labels&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;w&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;-w/--watch&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;value flags (should be at the end):
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;n&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;-n/--namespace&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;f&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;-f/--filename&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;l&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;-l/--selector&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="kubectx--kubens"&gt;kubectx + kubens&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/ahmetb/kubectx#installation"&gt;安装看这里&lt;/a&gt;&lt;/p&gt;</description></item><item><title>加速云原生的 Java 开发</title><link>https://atbug.com/speed-up-java-development-on-kubernetes/</link><pubDate>Sat, 21 Dec 2019 20:45:22 +0800</pubDate><guid>https://atbug.com/speed-up-java-development-on-kubernetes/</guid><description>&lt;p&gt;今天来说说日常在Kubernetes开发Java项目遇到的问题.&lt;/p&gt;
+&lt;p&gt;当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是&lt;code&gt;copy+paste+modify&lt;/code&gt;. 能否以变成的方式来生成?&lt;/p&gt;
+&lt;p&gt;开发时的步骤也比较繁琐: &lt;code&gt;docker build&lt;/code&gt;, &lt;code&gt;docker push&lt;/code&gt;, &lt;code&gt;kubectl apple&lt;/code&gt;, &lt;code&gt;kubectl delete pod&lt;/code&gt;. 对于一个Java应用来说还多了一步编译. 操作一次还ok, 但是一天十几次总会有想吐的感觉. 这些步骤能否简化成一个命令, 甚至修改了代码自动就完成上面一系列的操作?&lt;/p&gt;
+&lt;p&gt;实现这些我们需要几个工具: &lt;a href="https://github.com/dekorateio/dekorate"&gt;dekorate&lt;/a&gt;, &lt;a href="https://github.com/GoogleContainerTools/jib"&gt;Jib&lt;/a&gt;, &lt;a href="https://github.com/GoogleContainerTools/skaffold"&gt;Skaffold&lt;/a&gt;. 其中Jib也在上一篇文章&lt;a href="https://atbug.com/build-docker-or-oci-image-with-jib-for-java/"&gt;使用Jib为Java应用构建镜像&lt;/a&gt;中介绍过.&lt;/p&gt;
+&lt;h2 id="dekorate"&gt;dekorate&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Dekorate is a collection of Java compile-time generators and decorators for Kubernetes/OpenShift manifests.
+Dekorate是Java编译时生成和装饰Kubernetes/OpenShift的manifests的工具&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="快速开始"&gt;快速开始&lt;/h3&gt;
+&lt;h4 id="1-通过使用spring-initializer生成一个项目spring-boot-222-并加入依赖"&gt;1. 通过使用&lt;a href="https://start.spring.io"&gt;Spring Initializer&lt;/a&gt;生成一个项目(Spring Boot 2.2.2), 并加入依赖:&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;io.dekorate&lt;span style="color:#f92672"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;kubernetes-spring-starter&lt;span style="color:#f92672"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;0.10.0&lt;span style="color:#f92672"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="2-加入一个简单的controller"&gt;2. 加入一个简单的&lt;code&gt;Controller&lt;/code&gt;:&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;/**
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt; * @author Addo.Zhang
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt; * @date 2019/12/22
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@RestController&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;DekorateExampleController&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@GetMapping&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; String &lt;span style="color:#a6e22e"&gt;hi&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Hello World&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="3-执行命令mvn-clean-install-然后在targetclassesmeta-infdekorate目录下可以找到kubernetesjson和kubernetesyml两个文件"&gt;3. 执行命令&lt;code&gt;mvn clean install&lt;/code&gt;, 然后在&lt;code&gt;target/classes/META-INF/dekorate&lt;/code&gt;目录下可以找到&lt;code&gt;kubernetes.json&lt;/code&gt;和&lt;code&gt;kubernetes.yml&lt;/code&gt;两个文件.&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;kubernetes.yml&lt;/code&gt;的内容:&lt;/p&gt;</description></item><item><title>使用 Jib 为 Java 应用构建镜像</title><link>https://atbug.com/build-docker-or-oci-image-with-jib-for-java/</link><pubDate>Mon, 09 Dec 2019 10:05:30 +0800</pubDate><guid>https://atbug.com/build-docker-or-oci-image-with-jib-for-java/</guid><description>&lt;p&gt;&lt;img src="https://github.com/GoogleContainerTools/jib/raw/master/logo/jib-build-docker-java-container-image.png" alt="pic from jib github"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/GoogleContainerTools/jib"&gt;Jib&lt;/a&gt;是Google Container Tools中的一个工具。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Jib builds optimized Docker and OCI images for your Java applications without a Docker daemon - and without deep mastery of Docker best-practices. It is available as plugins for Maven and Gradle and as a Java library.&lt;/p&gt;</description></item></channel></rss>

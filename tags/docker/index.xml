@@ -1,85 +1,415 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on 乱世浮生</title><link>https://atbug.com/tags/docker/</link><description>Recent content in Docker on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 24 Jan 2026 21:43:46 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>Apple Container 0.8.0：从初生到成熟的七个月演进之路</title><link>https://atbug.com/apple-container-evolution-seven-months-journey/</link><pubDate>Sat, 24 Jan 2026 21:43:46 +0800</pubDate><guid>https://atbug.com/apple-container-evolution-seven-months-journey/</guid><description>TL;DR 2026 年 1 月 22 日，Apple Container 0.8.0 发布。距离 WWDC 2025 首次发布的 0.1.0，整整七个月，九个版本。
-这七个月不仅是版本号的增长，更是一个架构理念的验证：每容器独立 VM 的隔离模式，能否在 macOS 上成为 Docker Desktop 的替代方案？
-0.8.0 给出的答案是：在特定场景下，可以。但这个答案背后，是数据完整性危机（0.7.1）、网络限制的解除（macOS 26）、以及对生产就绪定义的重新思考。
-本文不是功能列表，而是试图理解：Apple 为什么要做 Container？独立 VM 架构的代价是什么？七个月的快速迭代背后，哪些问题真正得到了解决，哪些仍在路上？
-写在前面：为什么要关注 Apple Container？ 在讨论版本演进之前，先简单回顾一下 Apple Container 的独特价值：
-原生 macOS 体验 苹果官方支持：基于 Apple Virtualization Framework 性能优越：每个容器独立虚拟机，无共享虚拟机开销 安全隔离：VM 级别隔离，比传统容器更安全 Apple Silicon 优化：为 ARM64 架构深度优化 与 Docker Desktop 的差异 特性 Docker Desktop Apple Container 架构模式 单一 VM + 多容器 每容器独立 VM 安全隔离 容器级 VM 级 macOS 集成 第三方工具 原生框架 价格 企业版收费 开源免费 但是，在 2025 年 6 月，0.</description></item><item><title>苹果发布 Containerization Framework：开启 macOS 容器化新纪元</title><link>https://atbug.com/apple-containerization-framework-macos-release/</link><pubDate>Sun, 15 Jun 2025 12:12:00 +0800</pubDate><guid>https://atbug.com/apple-containerization-framework-macos-release/</guid><description>TL;DR 苹果 Containerization Framework 的发布，标志着 macOS 容器化进入全新阶段。
-虽然苹果推出了原生容器化框架，但底层依然依赖虚拟机技术。为实现更高的安全性和隔离性，每个容器都运行在独立的轻量级虚拟机中，反而使虚拟机的使用频率和数量比以往更多。
-对行业来说，会对如 OrbStack、Docker Desktop 等商业产品产生显著影响。实际上，类似 OrbStack 这样的本地容器解决方案早已存在（笔者本人也已使用一两年，并在博客中做过介绍），但苹果官方的原生方案无疑将加剧市场竞争，推动相关产品加速创新。
-对开发者来说，虽然影响有限，但本地开发体验将变得更加安全高效（尤其是 M1 用户）。官方方案不仅提升了易用性和性能，也进一步促进了容器生态的融合与创新。
-对于开发者和行业而言，这既是机遇，也是挑战。让我们拭目以待，苹果如何在容器领域持续发力，带来更多可能。
-背景与动机 容器技术已成为现代软件开发和部署的基石。长期以来，macOS 用户在本地运行 Linux 容器时，主要依赖虚拟机方案（如 Docker Desktop、Colima、OrbStack 等），难以获得与 Linux 原生环境一致的体验。苹果在 WWDC2025 推出 Containerization Framework，旨在为 macOS 用户带来更安全、高效、原生的容器运行能力，推动开发生态进一步升级。
-什么是容器 容器是一种轻量级的虚拟化技术，允许开发者在隔离的环境中运行应用程序。与传统虚拟机相比，容器共享宿主操作系统内核，但每个容器拥有独立的文件系统、网络和进程空间。这种方式使得容器启动速度更快、资源占用更低，非常适合微服务架构和持续集成/持续部署（CI/CD）流程。
-与宿主机隔离：容器运行时与主机系统相互隔离，提升安全性。 工作负载之间隔离：不同容器之间互不影响，便于多应用并行部署。 便于开发环境一致性：开发、测试、生产环境可高度一致，减少“在我电脑上没问题”的情况。 运行时隔离：每个容器拥有独立的文件系统、网络和进程空间，保证应用运行互不干扰。 什么是 Containerization Framework Containerization Framework 是苹果开源的 Swift 框架，专为在 macOS 上运行 Linux 容器而设计。其核心目标包括：</description></item><item><title>Docker BuildKit 实战：使用缓存优化依赖管理加速构建</title><link>https://atbug.com/docker-buildkit-cache-optimization-dependencies-acceleration/</link><pubDate>Sun, 18 May 2025 23:24:26 +0800</pubDate><guid>https://atbug.com/docker-buildkit-cache-optimization-dependencies-acceleration/</guid><description>什么是 Docker BuildKit Docker BuildKit 是 Docker 的下一代构建引擎，它提供了更高效、更灵活的容器镜像构建能力。BuildKit 于 2018 年引入，从 Docker 18.09 版本开始集成到 Docker 引擎中，并在 Docker 23.0 版本后成为默认的构建系统。
-BuildKit 的主要特点 并行构建：能够并行执行独立的构建步骤，大幅提高构建效率 高级缓存机制：更智能的缓存系统，支持内容寻址存储 挂载功能：支持在构建过程中挂载文件系统，如缓存、密钥等 跨平台构建：可以在一个平台上构建用于其他平台的镜像 更安全的特权降级：更好的安全隔离 如何启用 BuildKit 从 Docker Engine v23.0 开始，BuildKit 已经开始作为 Docker 的默认构建引擎来使用。
-可以通过设置环境变量 DOCKER_BUILDKIT= 0 来禁用。</description></item><item><title>Docker Hub 限速时代：Spegel 无状态缓存如何实现离线镜像共享</title><link>https://atbug.com/docker-hub-rate-limit-era-spegel-stateless-cache-offline-image-sharing/</link><pubDate>Sun, 02 Mar 2025 08:28:20 +0800</pubDate><guid>https://atbug.com/docker-hub-rate-limit-era-spegel-stateless-cache-offline-image-sharing/</guid><description>TL;DR Spegel 是一个非常有意思的项目，可以帮助我们在 Kubernetes 集群中实现镜像共享，提高镜像拉取的速度，减少对外部镜像仓库的依赖。对于一些离线或者内网环境、带宽优化和成本控制、容灾和高可用等场景，尤其是绕过 Docker Hub 镜像拉取限制方面，Spegel 都是一个不错的选择。
-背景 Docker Hub 的限制越来越严，从今天的 4 月 1 日起，未经身份验证的用户每小时最多拉取 10 次镜像，并且是基于 IP 地址或 IPv6 子网限制，这意味着在一个局域网中多个用户共用一个公网 IP 的情况下，这个限制会更加严格。如果收到 429 Too Many Requests 响应，说明已经超过了限制，拉取请求被限流。
-Docker Hub 多年来一直免费，但是随着用户数量的增加，成本也在增加，为了保证服务的稳定性，Docker Hub 也需要收费，这是一个必然的趋势。毕竟，运营如此全球规模的服务，维护成本是非常高的。天下没有免费的午餐。
-但是对于一些个人开发者或者小团队来说，这样的限制可能会影响到他们的日常开发。
-如何避免被限流 1. 登录 Docker Hub 最简单的方法，登录 Docker Hub 可以提高拉取镜像的次数，每小时 100 次。这对于个人开发者来说应该是足够的了。</description></item><item><title>取代 Docker Desktop？Podman Desktop 发布 GA 版本 1.0</title><link>https://atbug.com/podman-desktop-announce-general-availability/</link><pubDate>Wed, 24 May 2023 23:46:39 +0800</pubDate><guid>https://atbug.com/podman-desktop-announce-general-availability/</guid><description>Podman（POD MANager）是一个跨平台的容器管理工具，可用于管理容器、镜像、卷以及以容器组形式存在的 Pod。Podman 可以在 Linux 上直接运行容器，但在像 macOS 和 Windows 这样的平台，是通过虚拟机间接运行容器。
-Podman Desktop 提供的图形用户界面使开发人员可以方便快捷地在本地环境中创建和管理容器，简化了容器的使用，无需记忆和输入复杂的命令，降低容器的使用门槛。
-主要特点 优秀的兼容性 多平台：支持 Linux、macOS、Windows 兼容 Docker API、Lima、Kind、Openshift Local、Podman Machine 容器和 Pod 管理 构建、运行容器的 Pod 无需 Kubernetes 直接运行 Pod 内置终端 ssh 到容器 与 Docker Compose 兼容 镜像和仓库管理 配置管理多个镜像仓库 构建、拉取、tag 和推送镜像 推送镜像到 Kind 集群 Kubernetes 兼容 Kubernetes YAML 创建 Pod 从容器或者 Pod 生成 Kubernetes YAML 兼容 Docker Extension 支持 Docker Desktop UI extensions，可以使用 OCI 镜像运行 Extension，如 flomesh/pipy-docker-ext 。</description></item><item><title>Docker 向全面集成 containerd 又迈进一步</title><link>https://atbug.com/docker-manipulate-image-via-containerd/</link><pubDate>Mon, 05 Sep 2022 07:08:15 +0800</pubDate><guid>https://atbug.com/docker-manipulate-image-via-containerd/</guid><description>Docker 在刚刚发布的 Docker Desktop 4.12.0 中，加入了实验特性：进一步集成 containerd，使用 containerd 来管理和存储镜像。
-为什么说是“进一步集成”？这就要翻翻 Docker 和 containerd 的历史了。
-containerd 的诞生 containerd 最早出现在 Docker Engine 中，后来为了将 Docker Engine 做得更加轻量、快速和健壮，在 2016 年 Docker 将 containerd 从 daemon（dockerd） 中独立出来，并完成了与 daemon 的集成。独立出来的 containerd 全面支持 OCI（Open Container Initiative）资源的启动和生命周期的管理，也因此 containerd 可以支持 runc（前身是 Docker 中的 libcontainer，后来捐赠给 LF）以外的其他 OCI 实现。2017 年 Docker 将 containerd 捐献给 CNCF；2019 年 2 月，containerd 毕业。</description></item><item><title>ttl.sh：临时 Docker 镜像的匿名仓库</title><link>https://atbug.com/store-ephemeral-image-in-ttl-registry/</link><pubDate>Mon, 30 May 2022 07:25:42 +0800</pubDate><guid>https://atbug.com/store-ephemeral-image-in-ttl-registry/</guid><description>在平时的工作中，不知道你有没有经常需要构建容器镜像进行测试，并且不一定是在构建环境中使用镜像。这时候就需要将镜像推送到镜像仓库做中转，然后在别处拉取并运行容器。久而久之，因为忘记清理镜像仓库中的“垃圾”镜像越来越多。
-当然，也可以使用类似 Harbor 这种带有自动清理功能镜像仓库。但只是作为临时镜像的中转，Harbor 这种未免太重了。
-今天要介绍的 ttl.sh 正适合处理这种场景。
-ttl.sh ttl.sh 是一个匿名的临时镜像仓库，免费使用无需登录，并且已经开源。无需登录，镜像名称本身就提供了保密性，比如你可以使用 UUID 来作为镜像名称，使用同一个 UUID 来推送和拉取镜像。
-使用 ttl.sh 的使用格外简单，跟平时使用 Docker Hub 或者 Docker Registry 没差别，只是 tag 的需要注意一下。
-docker build 构建镜像时通过 tag 为镜像指定有效期，比如 ttl.sh/b0a2c1c3-5751-4474-9dfe-6a9e17dfb927:1h。有效期默认是 1 小时，最长是 24 小时。有效的 tag 可以是 5m、300s、4h、1d，如果超过 24 小时有效期会被设置为 24 小时；如果时间格式无效，有效期设置为默认的 1 小时； 使用 docker push 推送镜像； 使用 docker pull 拉取镜像。 比如：</description></item><item><title>探秘 k8e：极简 Kubernetes 发行版</title><link>https://atbug.com/explore-simple-kubernetes-distribution/</link><pubDate>Mon, 07 Feb 2022 01:00:29 +0800</pubDate><guid>https://atbug.com/explore-simple-kubernetes-distribution/</guid><description>TL;DR 本文介绍并安装体验了极简 Kubernetes 发行版，也顺便分析学习下编译的流程。
-背景 k8e 本意为 kuber easy，是一个 Kubernetes 的极简发行版，意图让云原生落地部署 Kubernetes 更轻松。k8e 是基于另一个发行版 k3s ，经过裁剪（去掉了 Edge/IoT 相关功能、traefik等）、扩展（加入 ingress、sidecar 实现、cilium等）而来。
-k8e 具有以下特性：
-单二进制文件，集成了 k8s 的各种组件、containerd、runc、kubectl、nerdctl 等 使用 cilium 作为 cni 的实现，方便 eBPF 的快速落地 支持基于 Pipy 的 ingress、sidecar proxy，实现应用流量一站式管理 只维护一个 k8s 版本，目前是 1.</description></item><item><title>Colima：MacOS 上的极简容器运行时和 Kubernetes（支持 m1）</title><link>https://atbug.com/containers-runtime-on-macos-with-colima/</link><pubDate>Sun, 26 Dec 2021 12:31:16 +0800</pubDate><guid>https://atbug.com/containers-runtime-on-macos-with-colima/</guid><description>Colima 是一个以最小化设置来在MacOS上运行容器运行时和 Kubernetes 的工具。支持 m1（文末讨论），同样也支持 Linux。
-Colima 的名字取自 Container on Lima。Lima 是一个虚拟机工具，可以实现自动的文件共享、端口转发以及 containerd。
-Colima 实际上是通过 Lima 启动了名为 colima 的虚拟机，使用虚拟机中的 containerd 作为容器运行时。
-使用 Colima 的使用很简单，执行下面的命令就可以创建虚拟机，默认是 Docker 的运行时。
-初次运行需要下载虚拟机镜像创建虚拟机，耗时因网络情况有所差异。之后，启动虚拟机就只需要 30s 左右的时间。
-colima start INFO[0000] starting colima INFO[0000] creating and starting ... context=vm INFO[0119] provisioning .</description></item><item><title>沙盒化容器：是容器还是虚拟机</title><link>https://atbug.com/sandboxed-container/</link><pubDate>Tue, 07 Dec 2021 07:55:16 +0800</pubDate><guid>https://atbug.com/sandboxed-container/</guid><description>随着 IT 技术的发展，AI、区块链和大数据等技术提升了对应用毫秒级扩展的需求，开发人员也面临着的功能快速推出的压力。混合云是新常态，数字化转型是保持竞争力的必要条件，虚拟化成为这些挑战的基本技术。
-在虚拟化的世界，有两个词耳熟能详：虚拟机和容器。前者是对硬件的虚拟化，后者则更像是操作系统的虚拟化。两者都提供了沙箱的能力：虚拟机通过硬件级抽象提供，而容器则使用公共内核提供进程级的隔离。有很多人将容器看成是“轻量化的虚拟机”，通常情况下我们认为容器是安全的，那到底是不是跟我们想象的一样？
-容器：轻量化的虚拟机？ 容器是打包、共享和部署应用的现代化方式，帮助企业实现快速、标准、灵活地完成服务交互。容器化是建立在 Linux 的命名空间（namespace）和控制组（cgroup） 的设计之上。
-命名空间创建一个几乎隔离的用户空间，并为应用提供专用的系统资源，如文件系统、网络堆栈、进程ID和用户ID。随着用户命名空间的引入，内核版本 3.8 提供了对容器功能的支持：Mount（mnt）、进程 ID（pid）、Network（net）、进程间通信（ipc）、UTS、用户 ID（user）6 个命名空间（如今已达 8 个，后续加入了 cgroup 和 time 命名空间）。
-cgroup 则实施对应用的资源限制、优先级、记账和控制。cgroup可以控制 CPU、内存、设备和网络等资源。
-同时使用 namespace 和 cgroup 使得我们可以在一台主机上安全地运行多个应用，并且每个应用都位于隔离的环境中。
-虚拟机提供更强大的隔离 虽然容器很棒，足够轻量级。但通过上面的描述，同一个主机上的多个容器其实是共享同一个操作系统内核，只是做到了操作系统级的虚拟化。虽然命名空间提供了高度的隔离，但仍然有容器可以访问的资源，这些资源并没有提供命名空间。这些资源是主机上所有容器共有的，比如内核 Keyring、/proc、系统时间、内核模块、硬件。
-我们都知道没有 100% 安全的软件，容器化的应用也一样，从应用源码到依赖库到容器 base 镜像，甚至容器引擎本身都可能存在安全漏洞。发生容器逃逸的风险远高于虚拟机，黑客可以利用这些逃逸漏洞，操作容器的外部资源也就是宿主机上的资源。除了漏洞，有时使用的不当也会带来安全风险，比如为容器分配了过高的权限（CAP_SYS_ADMIN 功能、特权权限），都可能导致容器逃逸。
-而虚拟机依靠硬件级的虚拟化，实现的硬件隔离比命名空间隔离提供了更强大的安全边界。与容器相比，虚拟机提供了更高程度的隔离，只因其有自己的内核。
-由此可见，容器并不是真正的“沙盒”，也并不是轻量化的虚拟机。有没有可能为容器增加一个更安全的边界，尽可能的与主机操作系统隔离，做到类似虚拟机的强隔离，使其成为真正的“沙盒”？</description></item><item><title>从 Docker 的信号机制看容器的优雅停止</title><link>https://atbug.com/gracefully-stopping-docker-containers-with-correct-command/</link><pubDate>Mon, 29 Nov 2021 07:30:43 +0800</pubDate><guid>https://atbug.com/gracefully-stopping-docker-containers-with-correct-command/</guid><description>此文是前段时间笔记的整理，之前自己对这方面的关注不够，因此做下记录。
-有太多的文章介绍如何运行容器，然而如何停止容器的文章相对少很多。
-根据运行的应用类型，应用的停止过程非常重要。如果应用要写文件，停止前要保证正确刷新数据并关闭文件；如果是 HTTP 服务，要确保停止前处理所有未完成的请求。
-信号 信号是 Linux 内核与进程以及进程间通信的一种方式。针对每个信号进程都有个默认的动作，不过进程可以通过定义信号处理程序来覆盖默认的动作，除了 SIGSTOP 和 SIGKILL。二者都不能被捕获或重写，前者用来将进程暂停在当前状态，而后者则是从内核层面立即杀掉进程。
-有两个比较重要的进程 SIGTERM 和 SIGKILL。SIGTERM 是优雅地关闭命令，SIGKILL 则是暴力的关闭命令。比如 Docker，容器会先收到 SIGTERM 信号，10s 后会收到 SIGKILL 信号。
-还有很多其他的信号，只是限定于特定的上下文。
-中断 硬件的中断就像操作系统的信号。通常发生在硬件想要向操作系统注册事件时。操作系统必须立即停止运行，并处理中断。
-比较常见的中断例子就是键盘中断，比如按下 ctrl+z 或者 ctrl+c。Linux 将其分别转换成 SIGTSTP 和 SIGINT。硬件中断过去通常用来处理键盘和鼠标输入，但如今被用作操作系统软件驱动层面的信号轮训。
-Docker 前面说了这么多终于来到 Docker，容器的独特之处在于通常只运行一个进程。即使是单进程，容器内 PID 为 1 的进程也具有 init 系统的特殊规则和职责。</description></item><item><title>无需 Dockerfile 的镜像构建：BuildPack vs Dockerfile</title><link>https://atbug.com/build-docker-image-without-dockerfile/</link><pubDate>Fri, 29 Oct 2021 07:36:43 +0800</pubDate><guid>https://atbug.com/build-docker-image-without-dockerfile/</guid><description>过去的工作中，我们使用微服务、容器化以及服务编排构建了技术平台。为了提升开发团队的研发效率，我们同时还提供了 CICD 平台，用来将代码快速的部署到 Openshift（企业级的 Kubernetes） 集群。
-部署的第一步就是应用程序的容器化，持续集成的交付物从以往的 jar 包、webpack 等变成了容器镜像。容器化将软件代码和所需的所有组件（库、框架、运行环境）打包到一起，进而可以在任何环境任何基础架构上一致地运行，并与其他应用“隔离”。
-我们的代码需要从源码到编译到最终可运行的镜像，甚至部署，这一切在 CICD 的流水线中完成。最初，我们在每个代码仓库中都加入了三个文件，也通过项目生成器（类似 Spring Initializer）在新项目中注入：
-Jenkinsfile.groovy：用来定义 Jenkins 的 Pipeline，针对不同的语言还会有多种版本 Manifest YAML：用于定义 Kubernetes 资源，也就是工作负载及其运行的相关描述 Dockerfile：用于构建对象 这个三个文件也需要在工作中不断的演进，起初项目较少（十几个）的时候我们基础团队还可以去各个代码仓库去维护升级。随着项目爆发式的增长，维护的成本越来越高。我们对 CICD 平台进行了迭代，将“Jenkinsfile.groovy”和 “manifest YAML”从项目中移出，变更较少的 Dockerfile 就保留了下来。
-随着平台的演进，我们需要考虑将这唯一的“钉子户” Dockerfile 与代码解耦，必要的时候也需要对 Dockerfile 进行升级。因此调研了一下 buildpacks，就有了今天的这篇文章。
-什么是 Dockerfile Docker 通过读取 Dockerfile 中的说明自动构建镜像。Dockerfile 是一个文本文件，包含了由 Docker 可以执行用于构建镜像的指令。我们拿之前用于测试 Tekton 的 Java 项目的 Dockerfile 为例：</description></item><item><title>容器神话 Docker 是如何一分为二的</title><link>https://atbug.com/how-docker-broke-in-half/</link><pubDate>Mon, 20 Sep 2021 08:01:30 +0800</pubDate><guid>https://atbug.com/how-docker-broke-in-half/</guid><description>译者点评：
-最近听了很多资深的人士关于开源，以及商业化的分析。开源与商业化，听起来就是一对矛盾的所在，似乎大家都在尝试做其二者的平衡。是先有开源，还是先有商业化？俗话说“谈钱不伤感情”，近几年背靠开源的创业公司如雨后春笋般涌现，即使是开发人员也是需要生活的。
-容器神话 Docker 曾经无比风光，盛极一时。即使这样一个备受瞩目，大获风投的热捧的独角兽也未能免俗，并付出了不小的代价。
-今天这篇文章讲述了 Docker 这家公司从诞生到巅峰到没落，这一路上所做的抉择，并最终做了开源与商业的分离，再一次从开源踏上找寻商业化之路。这些都是值得我们参考和思考的，不管是已经开源或者准备从事开源的。
-这篇文章翻译自How Docker broke in half 这家改变游戏规则的容器公司是其昔日的外衣。作为云时代最热门的企业技术业务之一的它到底发生了什么？
-Docker 并没有发明容器——将计算机代码打包成紧凑单元的方法，可以轻松地从笔记本电脑移植到服务器——但它确实通过创建一套通用的开源工具和可重用的镜像使其成为主流，这使所有开发人员只需构建一次软件即可在任何地方运行。
-Docker 使开发人员能够轻松地将他们的代码“容器化”并将其从一个系统移动到另一个系统，迅速将其确立为行业标准，颠覆了在虚拟机 (VM) 上部署应用程序的主要方式，并使 Docker 成为新一代最快被采用的企业技术之一。
-今天，Docker 仍然活着，但它只是它可能成为的公司的一小部分，从未成功地将这种技术创新转化为可持续的商业模式，最终导致其企业业务于 2019 年 11 月出售给 Mirantis。InfoWorld 采访了十几位前任和现任 Docker 员工、开源贡献者、客户和行业分析师，了解 Docker 如何分崩离析的故事。
-Docker 诞生了 2008 年由 Solomon Hykes 在巴黎创立的 DotCloud，这个后来成为 Docker 的公司最初被设计为供开发人员轻松构建和发布他们的应用程序的平台即服务 (PaaS)。</description></item><item><title>使用 Open Policy Agent 实现可信镜像仓库检查</title><link>https://atbug.com/image-trusted-repository-with-open-policy-agent/</link><pubDate>Sat, 10 Jul 2021 07:14:47 +0800</pubDate><guid>https://atbug.com/image-trusted-repository-with-open-policy-agent/</guid><description>从互联网（或可信镜像仓库库以外的任何地方）拉取未知镜像会带来风险——例如恶意软件。但是还有其他很好的理由来维护单一的可信来源，例如在企业中实现可支持性。通过确保镜像仅来自受信任的镜像仓库，可以密切控制镜像库存，降低软件熵和蔓延的风险，并提高集群的整体安全性。除此以外，有时还会需要检查镜像的 tag，比如禁止使用 latest 镜像。
-这今天我们尝试用“策略即代码”的实现 OPA 来实现功能。
-还没开始之前可能有人会问：明明可以实现个 Admission Webhook 就行，为什么还要加上 OPA？
-确实可以，但是这样策略和逻辑都会耦合在一起，当策略需要调整的时候需要修改代码重新发布。而 OPA 就是用来做解耦的，其更像是一个策略的执行引擎。
-什么是 OPA Open Policy Agent（以下简称 OPA，发音 “oh-pa”）一个开源的通用策略引擎，可以统一整个堆栈的策略执行。OPA 提供了一种高级声明性语言（Rego），可让你将策略指定为代码和简单的 API，以从你的软件中卸载策略决策。你可以使用 OPA 在微服务、Kubernetes、CI/CD 管道、API 网关等中实施策略。
-Rego 是一种高级的声明性语言，是专门为 OPA 建立的。更多 OPA 的介绍可以看 Open Policy Agent 官网，不想看英文直接看这里。
-现在进入正题。
-启动集群 启动 minikube</description></item><item><title>Go Docker 镜像进阶: 精简镜像</title><link>https://atbug.com/build-minimal-docker-image-for-go-app/</link><pubDate>Wed, 11 Mar 2020 23:00:27 +0800</pubDate><guid>https://atbug.com/build-minimal-docker-image-for-go-app/</guid><description>​[图片来自 https://www.facebook.com/sequenceprocess/]
-问题: 入门到生产级的差距 昨天的文章《为 Go 应用创建 Docker 镜像》, 算是入门级的, 并不适用于生产级. 为什么?
-$ docker images REPOSITORY TAG IMAGE ID CREATED SIZE addozhang/golang-hello-world latest 4cce1292a87a 4 seconds ago 813MB 整个镜像的大小有 813MB, 这还只有一个简单的 Hello world. 因为其中包含了 Golang 的编译和运行环境. 但是实际生产环境中, 我们并不需要这么多.
-先看结果 精简之后只有 2.</description></item><item><title>为 Go 应用创建 Docker 镜像</title><link>https://atbug.com/build-docker-image-for-go-app/</link><pubDate>Wed, 11 Mar 2020 20:41:58 +0800</pubDate><guid>https://atbug.com/build-docker-image-for-go-app/</guid><description>嗯嗯, 最近开始用 Golang 了.
-今天需要为 Go 应用创建对象, 看了下官方博客. 拿 hello world 做个测试.
-使用下面的命令创建个新的项目
-$ mkdir -p $GOPATH/src/github.com/addozhang/golang-hello-world &amp;amp;&amp;amp; cd &amp;#34;$_&amp;#34; $ go mod init github.com/addozhang/golang-hello-world go: creating new go.mod: module github.com/addozhang/golang-hello-world $ cat &amp;lt;&amp;lt; EOF &amp;gt; main.go package main import &amp;#34;fmt&amp;#34; func main() { fmt.</description></item><item><title>加速云原生的 Java 开发</title><link>https://atbug.com/speed-up-java-development-on-kubernetes/</link><pubDate>Sat, 21 Dec 2019 20:45:22 +0800</pubDate><guid>https://atbug.com/speed-up-java-development-on-kubernetes/</guid><description>今天来说说日常在Kubernetes开发Java项目遇到的问题.
-当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是copy+paste+modify. 能否以变成的方式来生成?
-开发时的步骤也比较繁琐: docker build, docker push, kubectl apple, kubectl delete pod. 对于一个Java应用来说还多了一步编译. 操作一次还ok, 但是一天十几次总会有想吐的感觉. 这些步骤能否简化成一个命令, 甚至修改了代码自动就完成上面一系列的操作?
-实现这些我们需要几个工具: dekorate, Jib, Skaffold. 其中Jib也在上一篇文章使用Jib为Java应用构建镜像中介绍过.
-dekorate Dekorate is a collection of Java compile-time generators and decorators for Kubernetes/OpenShift manifests. Dekorate是Java编译时生成和装饰Kubernetes/OpenShift的manifests的工具</description></item><item><title>Alpine容器安装Docker和OpenShift Client Tools</title><link>https://atbug.com/install-docker-and-openshift-client-tools-in-alpine-container/</link><pubDate>Tue, 28 Aug 2018 09:14:12 +0000</pubDate><guid>https://atbug.com/install-docker-and-openshift-client-tools-in-alpine-container/</guid><description>安装Docker echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/main&amp;#34; &amp;gt; /etc/apk/repositories echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/community&amp;#34; &amp;gt;&amp;gt; /etc/apk/repositories echo &amp;#34;http://dl-2.alpinelinux.org/alpine/edge/testing&amp;#34; &amp;gt;&amp;gt; /etc/apk/repositories apk -U --no-cache \ --allow-untrusted add \ shadow \ docker \ py-pip \ openrc \ &amp;amp;&amp;amp; pip install docker-compose rc-update add docker boot 安装OpenShift Client Tools 需要先安装glibc</description></item><item><title>Docker 快速构建 Cassandra 和 Java 操作</title><link>https://atbug.com/java-operate-cassandra-deployed-in-docker/</link><pubDate>Thu, 18 May 2017 23:33:24 +0000</pubDate><guid>https://atbug.com/java-operate-cassandra-deployed-in-docker/</guid><description>搭建Cassandra 使用docker创建Cassandra，方便快捷
-docker pull cassandra:latest docker run -d --name cassandra -p 9042:9042 cassandra docker exec -it cassandra bash 创建keyspace、table #cqlsh&amp;gt; #create keyspace CREATE KEYSPACE contacts WITH REPLICATION = { &amp;#39;class&amp;#39; : &amp;#39;SimpleStrategy&amp;#39;, &amp;#39;replication_factor&amp;#39; : 1 }; #use USE contacts; #create table CREATE TABLE contact ( id UUID, email TEXT PRIMARY KEY ); 查看表数据 cqlsh:contacts&amp;gt; SELECT * FROM contact; email | id -------+---- (0 rows) Java客户端 引入依赖 &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.</description></item><item><title>从零开始用 docker 运行 spring boot 应用</title><link>https://atbug.com/run-spring-boot-app-in-docker/</link><pubDate>Thu, 20 Apr 2017 21:58:42 +0000</pubDate><guid>https://atbug.com/run-spring-boot-app-in-docker/</guid><description>假设已经安装好Docker
-Springboot应用 pom添加依赖和构建插件 &amp;lt;parent&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-starter-parent&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.5.3.RELEASE&amp;lt;/version&amp;gt; &amp;lt;/parent&amp;gt; &amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-starter-web&amp;lt;/artifactId&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt; &amp;lt;build&amp;gt; &amp;lt;plugins&amp;gt; &amp;lt;plugin&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-maven-plugin&amp;lt;/artifactId&amp;gt; &amp;lt;/plugin&amp;gt; &amp;lt;/plugins&amp;gt; &amp;lt;/build&amp;gt; 应用代码 package com.atbug.spring.boot.test; import org.springframework.boot.SpringApplication; import org.springframework.boot.autoconfigure.SpringBootApplication; import org.springframework.boot.web.servlet.FilterRegistrationBean; import org.springframework.context.annotation.Bean; import org.springframework.web.bind.annotation.RequestMapping; import org.springframework.web.bind.annotation.RestController; /** * Created by addo on 2017/5/15.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on 乱世浮生</title><link>https://atbug.com/tags/docker/</link><description>Recent content in Docker on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sat, 24 Jan 2026 21:43:46 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>Apple Container 0.8.0：从初生到成熟的七个月演进之路</title><link>https://atbug.com/apple-container-evolution-seven-months-journey/</link><pubDate>Sat, 24 Jan 2026 21:43:46 +0800</pubDate><guid>https://atbug.com/apple-container-evolution-seven-months-journey/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;2026 年 1 月 22 日，&lt;a href="https://github.com/apple/container/"&gt;Apple Container&lt;/a&gt; &lt;a href="https://github.com/apple/container/releases/tag/0.8.0"&gt;0.8.0 发布&lt;/a&gt;。距离 WWDC 2025 首次发布的 0.1.0，整整七个月，九个版本。&lt;/p&gt;
+&lt;p&gt;这七个月不仅是版本号的增长，更是一个架构理念的验证：每容器独立 VM 的隔离模式，能否在 macOS 上成为 Docker Desktop 的替代方案？&lt;/p&gt;
+&lt;p&gt;0.8.0 给出的答案是：在特定场景下，可以。但这个答案背后，是数据完整性危机（0.7.1）、网络限制的解除（macOS 26）、以及对生产就绪定义的重新思考。&lt;/p&gt;
+&lt;p&gt;本文不是功能列表，而是试图理解：Apple 为什么要做 Container？独立 VM 架构的代价是什么？七个月的快速迭代背后，哪些问题真正得到了解决，哪些仍在路上？&lt;/p&gt;
+&lt;h2 id="写在前面为什么要关注-apple-container"&gt;写在前面：为什么要关注 Apple Container？&lt;/h2&gt;
+&lt;p&gt;在讨论版本演进之前，先简单回顾一下 Apple Container 的独特价值：&lt;/p&gt;
+&lt;h3 id="原生-macos-体验"&gt;原生 macOS 体验&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;苹果官方支持&lt;/strong&gt;：基于 Apple Virtualization Framework&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;性能优越&lt;/strong&gt;：每个容器独立虚拟机，无共享虚拟机开销&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全隔离&lt;/strong&gt;：VM 级别隔离，比传统容器更安全&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Apple Silicon 优化&lt;/strong&gt;：为 ARM64 架构深度优化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="与-docker-desktop-的差异"&gt;与 Docker Desktop 的差异&lt;/h3&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;特性&lt;/th&gt;
+					&lt;th&gt;Docker Desktop&lt;/th&gt;
+					&lt;th&gt;Apple Container&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;架构模式&lt;/td&gt;
+					&lt;td&gt;单一 VM + 多容器&lt;/td&gt;
+					&lt;td&gt;每容器独立 VM&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;安全隔离&lt;/td&gt;
+					&lt;td&gt;容器级&lt;/td&gt;
+					&lt;td&gt;VM 级&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;macOS 集成&lt;/td&gt;
+					&lt;td&gt;第三方工具&lt;/td&gt;
+					&lt;td&gt;原生框架&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;价格&lt;/td&gt;
+					&lt;td&gt;企业版收费&lt;/td&gt;
+					&lt;td&gt;开源免费&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;但是&lt;/strong&gt;，在 2025 年 6 月，0.1.0 版本还有很多限制：&lt;/p&gt;</description></item><item><title>苹果发布 Containerization Framework：开启 macOS 容器化新纪元</title><link>https://atbug.com/apple-containerization-framework-macos-release/</link><pubDate>Sun, 15 Jun 2025 12:12:00 +0800</pubDate><guid>https://atbug.com/apple-containerization-framework-macos-release/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;苹果 &lt;a href="https://github.com/apple/containerization"&gt;Containerization Framework&lt;/a&gt; 的发布，标志着 macOS 容器化进入全新阶段。&lt;/p&gt;
+&lt;p&gt;虽然苹果推出了原生容器化框架，但底层依然依赖虚拟机技术。为实现更高的安全性和隔离性，每个容器都运行在独立的轻量级虚拟机中，反而使虚拟机的使用频率和数量比以往更多。&lt;/p&gt;
+&lt;p&gt;对行业来说，会对如 OrbStack、Docker Desktop 等商业产品产生显著影响。实际上，类似 OrbStack 这样的本地容器解决方案早已存在（笔者本人也已使用一两年，并在&lt;a href="https://atbug.com/setup-k3s-x86-cluster-on-apple-silicon-with-orbstack/"&gt;博客&lt;/a&gt;中做过介绍），但苹果官方的原生方案无疑将加剧市场竞争，推动相关产品加速创新。&lt;/p&gt;
+&lt;p&gt;对开发者来说，虽然影响有限，但本地开发体验将变得更加安全高效（尤其是 M1 用户）。官方方案不仅提升了易用性和性能，也进一步促进了容器生态的融合与创新。&lt;/p&gt;
+&lt;p&gt;对于开发者和行业而言，这既是机遇，也是挑战。让我们拭目以待，苹果如何在容器领域持续发力，带来更多可能。&lt;/p&gt;
+&lt;h2 id="背景与动机"&gt;背景与动机&lt;/h2&gt;
+&lt;p&gt;容器技术已成为现代软件开发和部署的基石。长期以来，macOS 用户在本地运行 Linux 容器时，主要依赖虚拟机方案（如 Docker Desktop、Colima、OrbStack 等），难以获得与 Linux 原生环境一致的体验。苹果在 &lt;a href="https://developer.apple.com/wwdc25/"&gt;WWDC2025&lt;/a&gt; 推出 Containerization Framework，旨在为 macOS 用户带来更安全、高效、原生的容器运行能力，推动开发生态进一步升级。&lt;/p&gt;
+&lt;h2 id="什么是容器"&gt;什么是容器&lt;/h2&gt;
+&lt;p&gt;容器是一种轻量级的虚拟化技术，允许开发者在隔离的环境中运行应用程序。与传统虚拟机相比，容器共享宿主操作系统内核，但每个容器拥有独立的文件系统、网络和进程空间。这种方式使得容器启动速度更快、资源占用更低，非常适合微服务架构和持续集成/持续部署（CI/CD）流程。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;与宿主机隔离：容器运行时与主机系统相互隔离，提升安全性。&lt;/li&gt;
+&lt;li&gt;工作负载之间隔离：不同容器之间互不影响，便于多应用并行部署。&lt;/li&gt;
+&lt;li&gt;便于开发环境一致性：开发、测试、生产环境可高度一致，减少“在我电脑上没问题”的情况。&lt;/li&gt;
+&lt;li&gt;运行时隔离：每个容器拥有独立的文件系统、网络和进程空间，保证应用运行互不干扰。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="什么是-containerization-framework"&gt;什么是 Containerization Framework&lt;/h2&gt;
+&lt;p&gt;Containerization Framework 是苹果开源的 Swift 框架，专为在 macOS 上运行 Linux 容器而设计。其核心目标包括：&lt;/p&gt;</description></item><item><title>Docker BuildKit 实战：使用缓存优化依赖管理加速构建</title><link>https://atbug.com/docker-buildkit-cache-optimization-dependencies-acceleration/</link><pubDate>Sun, 18 May 2025 23:24:26 +0800</pubDate><guid>https://atbug.com/docker-buildkit-cache-optimization-dependencies-acceleration/</guid><description>&lt;h2 id="什么是-docker-buildkit"&gt;什么是 Docker BuildKit&lt;/h2&gt;
+&lt;p&gt;Docker BuildKit 是 Docker 的下一代构建引擎，它提供了更高效、更灵活的容器镜像构建能力。BuildKit 于 2018 年引入，从 Docker 18.09 版本开始集成到 Docker 引擎中，并在 Docker 23.0 版本后成为默认的构建系统。&lt;/p&gt;
+&lt;h3 id="buildkit-的主要特点"&gt;BuildKit 的主要特点&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;并行构建&lt;/strong&gt;：能够并行执行独立的构建步骤，大幅提高构建效率&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;高级缓存机制&lt;/strong&gt;：更智能的缓存系统，支持内容寻址存储&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;挂载功能&lt;/strong&gt;：支持在构建过程中挂载文件系统，如缓存、密钥等&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;跨平台构建&lt;/strong&gt;：可以在一个平台上构建用于其他平台的镜像&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;更安全的特权降级&lt;/strong&gt;：更好的安全隔离&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="如何启用-buildkit"&gt;如何启用 BuildKit&lt;/h3&gt;
+&lt;p&gt;从 Docker Engine v23.0 开始，BuildKit 已经开始作为 Docker 的默认构建引擎来使用。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;可以通过设置环境变量 &lt;code&gt;DOCKER_BUILDKIT= 0&lt;/code&gt; 来禁用。&lt;/p&gt;</description></item><item><title>Docker Hub 限速时代：Spegel 无状态缓存如何实现离线镜像共享</title><link>https://atbug.com/docker-hub-rate-limit-era-spegel-stateless-cache-offline-image-sharing/</link><pubDate>Sun, 02 Mar 2025 08:28:20 +0800</pubDate><guid>https://atbug.com/docker-hub-rate-limit-era-spegel-stateless-cache-offline-image-sharing/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://spegel.dev/"&gt;Spegel&lt;/a&gt; 是一个非常有意思的项目，可以帮助我们在 Kubernetes 集群中实现镜像共享，提高镜像拉取的速度，减少对外部镜像仓库的依赖。对于一些离线或者内网环境、带宽优化和成本控制、容灾和高可用等场景，尤其是绕过 Docker Hub 镜像拉取限制方面，Spegel 都是一个不错的选择。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://docs.docker.com/docker-hub/usage/"&gt;Docker Hub 的限制越来越严&lt;/a&gt;，从今天的 4 月 1 日起，未经身份验证的用户&lt;strong&gt;每小时最多拉取 10 次镜像&lt;/strong&gt;，并且是基于 IP 地址或 IPv6 子网限制，这意味着在一个局域网中多个用户共用一个公网 IP 的情况下，这个限制会更加严格。如果收到 &lt;code&gt;429 Too Many Requests&lt;/code&gt; 响应，说明已经超过了限制，拉取请求被限流。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2025/03/02/docker-hub-limits-from-april-1st.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;Docker Hub 多年来一直免费，但是随着用户数量的增加，成本也在增加，为了保证服务的稳定性，Docker Hub 也需要收费，这是一个必然的趋势。毕竟，运营如此全球规模的服务，维护成本是非常高的。天下没有免费的午餐。&lt;/p&gt;
+&lt;p&gt;但是对于一些个人开发者或者小团队来说，这样的限制可能会影响到他们的日常开发。&lt;/p&gt;
+&lt;h2 id="如何避免被限流"&gt;如何避免被限流&lt;/h2&gt;
+&lt;h3 id="1-登录-docker-hub"&gt;1. 登录 Docker Hub&lt;/h3&gt;
+&lt;p&gt;最简单的方法，登录 Docker Hub 可以提高拉取镜像的次数，每小时 100 次。这对于个人开发者来说应该是足够的了。&lt;/p&gt;</description></item><item><title>取代 Docker Desktop？Podman Desktop 发布 GA 版本 1.0</title><link>https://atbug.com/podman-desktop-announce-general-availability/</link><pubDate>Wed, 24 May 2023 23:46:39 +0800</pubDate><guid>https://atbug.com/podman-desktop-announce-general-availability/</guid><description>&lt;p&gt;&lt;a href="https://podman.io/"&gt;Podman&lt;/a&gt;（POD MANager）是一个跨平台的容器管理工具，可用于管理容器、镜像、卷以及以容器组形式存在的 Pod。Podman 可以在 Linux 上直接运行容器，但在像 macOS 和 Windows 这样的平台，是通过虚拟机间接运行容器。&lt;/p&gt;
+&lt;p&gt;Podman Desktop 提供的图形用户界面使开发人员可以方便快捷地在本地环境中创建和管理容器，简化了容器的使用，无需记忆和输入复杂的命令，降低容器的使用门槛。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/podman-desktop.png" alt=""&gt;&lt;/p&gt;
+&lt;h2 id="主要特点"&gt;主要特点&lt;/h2&gt;
+&lt;h3 id="优秀的兼容性"&gt;优秀的兼容性&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;多平台：支持 Linux、macOS、Windows&lt;/li&gt;
+&lt;li&gt;兼容 Docker API、Lima、Kind、Openshift Local、Podman Machine&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/podman-desktop-multi-resources.png" alt=""&gt;&lt;/p&gt;
+&lt;h3 id="容器和-pod-管理"&gt;容器和 Pod 管理&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;构建、运行容器的 Pod&lt;/li&gt;
+&lt;li&gt;无需 Kubernetes 直接运行 Pod&lt;/li&gt;
+&lt;li&gt;内置终端 ssh 到容器&lt;/li&gt;
+&lt;li&gt;与 Docker Compose 兼容&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/podman-desktop-terminal.png" alt=""&gt;&lt;/p&gt;</description></item><item><title>Docker 向全面集成 containerd 又迈进一步</title><link>https://atbug.com/docker-manipulate-image-via-containerd/</link><pubDate>Mon, 05 Sep 2022 07:08:15 +0800</pubDate><guid>https://atbug.com/docker-manipulate-image-via-containerd/</guid><description>&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/09/05/20220904-at-161452.png" alt="Docker 4.12.0"&gt;&lt;/p&gt;
+&lt;p&gt;Docker 在刚刚发布的 &lt;a href="https://docs.docker.com/desktop/release-notes/#docker-desktop-4120"&gt;Docker Desktop 4.12.0&lt;/a&gt; 中，加入了实验特性：进一步集成 containerd，使用 containerd 来管理和存储镜像。&lt;/p&gt;
+&lt;p&gt;为什么说是“进一步集成”？这就要翻翻 Docker 和 containerd 的历史了。&lt;/p&gt;
+&lt;h3 id="containerd-的诞生"&gt;containerd 的诞生&lt;/h3&gt;
+&lt;p&gt;containerd 最早出现在 Docker Engine 中，后来为了将 Docker Engine 做得更加轻量、快速和健壮，在 2016 年 Docker 将 containerd 从 daemon（&lt;code&gt;dockerd&lt;/code&gt;） 中独立出来，并完成了与 daemon 的集成。独立出来的 containerd 全面支持 OCI（&lt;a href="https://www.opencontainers.org"&gt;Open Container Initiative&lt;/a&gt;）资源的启动和生命周期的管理，也因此 containerd 可以支持 runc（前身是 Docker 中的 libcontainer，后来捐赠给 LF）以外的其他 OCI 实现。2017 年 Docker 将 containerd 捐献给 CNCF；2019 年 2 月，containerd 毕业。&lt;/p&gt;</description></item><item><title>ttl.sh：临时 Docker 镜像的匿名仓库</title><link>https://atbug.com/store-ephemeral-image-in-ttl-registry/</link><pubDate>Mon, 30 May 2022 07:25:42 +0800</pubDate><guid>https://atbug.com/store-ephemeral-image-in-ttl-registry/</guid><description>&lt;p&gt;在平时的工作中，不知道你有没有经常需要构建容器镜像进行测试，并且不一定是在构建环境中使用镜像。这时候就需要将镜像推送到镜像仓库做中转，然后在别处拉取并运行容器。久而久之，因为忘记清理镜像仓库中的“垃圾”镜像越来越多。&lt;/p&gt;
+&lt;p&gt;当然，也可以使用类似 &lt;a href="https://goharbor.io"&gt;Harbor&lt;/a&gt; 这种带有自动清理功能镜像仓库。但只是作为临时镜像的中转，Harbor 这种未免太重了。&lt;/p&gt;
+&lt;p&gt;今天要介绍的 &lt;a href="https://ttl.sh"&gt;ttl.sh&lt;/a&gt; 正适合处理这种场景。&lt;/p&gt;
+&lt;h2 id="ttlsh"&gt;ttl.sh&lt;/h2&gt;
+&lt;p&gt;ttl.sh 是一个匿名的临时镜像仓库，免费使用无需登录，并且已经&lt;a href="https://github.com/replicatedhq/ttl.sh"&gt;开源&lt;/a&gt;。无需登录，镜像名称本身就提供了保密性，比如你可以使用 UUID 来作为镜像名称，使用同一个 UUID 来推送和拉取镜像。&lt;/p&gt;
+&lt;h2 id="使用"&gt;使用&lt;/h2&gt;
+&lt;p&gt;ttl.sh 的使用格外简单，跟平时使用 Docker Hub 或者 Docker Registry 没差别，只是 tag 的需要注意一下。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;docker build&lt;/code&gt; 构建镜像时通过 tag 为镜像指定有效期，比如 &lt;code&gt;ttl.sh/b0a2c1c3-5751-4474-9dfe-6a9e17dfb927:1h&lt;/code&gt;。有效期默认是 1 小时，最长是 24 小时。有效的 tag 可以是 &lt;code&gt;5m&lt;/code&gt;、&lt;code&gt;300s&lt;/code&gt;、&lt;code&gt;4h&lt;/code&gt;、&lt;code&gt;1d&lt;/code&gt;，如果超过 24 小时有效期会被设置为 24 小时；如果时间格式无效，有效期设置为默认的 1 小时；&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;docker push&lt;/code&gt; 推送镜像；&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;docker pull&lt;/code&gt; 拉取镜像。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;比如：&lt;/p&gt;</description></item><item><title>探秘 k8e：极简 Kubernetes 发行版</title><link>https://atbug.com/explore-simple-kubernetes-distribution/</link><pubDate>Mon, 07 Feb 2022 01:00:29 +0800</pubDate><guid>https://atbug.com/explore-simple-kubernetes-distribution/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;本文介绍并安装体验了极简 Kubernetes 发行版，也顺便分析学习下编译的流程。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/xiaods/k8e"&gt;k8e&lt;/a&gt; 本意为 &lt;em&gt;kuber easy&lt;/em&gt;，是一个 Kubernetes 的极简发行版，意图让云原生落地部署 Kubernetes 更轻松。k8e 是基于另一个发行版 &lt;a href="https://github.com/rancher/k3s"&gt;k3s&lt;/a&gt; ，经过裁剪（去掉了 Edge/IoT 相关功能、traefik等）、扩展（加入 ingress、sidecar 实现、cilium等）而来。&lt;/p&gt;
+&lt;p&gt;k8e 具有以下特性：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;单二进制文件，集成了 k8s 的各种组件、containerd、runc、kubectl、nerdctl 等&lt;/li&gt;
+&lt;li&gt;使用 cilium 作为 cni 的实现，方便 eBPF 的快速落地&lt;/li&gt;
+&lt;li&gt;支持基于 &lt;a href="https://github.com/flomesh-io/pipy"&gt;Pipy&lt;/a&gt; 的 ingress、sidecar proxy，实现应用流量一站式管理&lt;/li&gt;
+&lt;li&gt;只维护一个 k8s 版本，目前是 1.21&lt;/li&gt;
+&lt;li&gt;按照私有云的经验增加、优化代码&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;得益于这些特性，k8e 非常适合CI、开发和企业级部署，单机版的集群适合技术验证环境。&lt;/p&gt;</description></item><item><title>Colima：MacOS 上的极简容器运行时和 Kubernetes（支持 m1）</title><link>https://atbug.com/containers-runtime-on-macos-with-colima/</link><pubDate>Sun, 26 Dec 2021 12:31:16 +0800</pubDate><guid>https://atbug.com/containers-runtime-on-macos-with-colima/</guid><description>&lt;p&gt;&lt;a href="https://github.com/abiosoft/colima"&gt;Colima&lt;/a&gt; 是一个以最小化设置来在MacOS上运行容器运行时和 Kubernetes 的工具。支持 m1（文末讨论），同样也支持 Linux。&lt;/p&gt;
+&lt;p&gt;Colima 的名字取自 Container on Lima。&lt;a href="https://github.com/lima-vm/lima"&gt;Lima&lt;/a&gt; 是一个虚拟机工具，可以实现自动的文件共享、端口转发以及 containerd。&lt;/p&gt;
+&lt;p&gt;Colima 实际上是通过 Lima 启动了名为 &lt;code&gt;colima&lt;/code&gt; 的虚拟机，使用虚拟机中的 containerd 作为容器运行时。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/12/26/colima.gif" alt="colima"&gt;&lt;/p&gt;
+&lt;h2 id="使用"&gt;使用&lt;/h2&gt;
+&lt;p&gt;Colima 的使用很简单，执行下面的命令就可以创建虚拟机，默认是 Docker 的运行时。&lt;/p&gt;
+&lt;p&gt;初次运行需要下载虚拟机镜像创建虚拟机，耗时因网络情况有所差异。之后，启动虚拟机就只需要 30s 左右的时间。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;colima start
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0000&lt;span style="color:#f92672"&gt;]&lt;/span&gt; starting colima
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0000&lt;span style="color:#f92672"&gt;]&lt;/span&gt; creating and starting ... context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;vm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0119&lt;span style="color:#f92672"&gt;]&lt;/span&gt; provisioning ... context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;docker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0119&lt;span style="color:#f92672"&gt;]&lt;/span&gt; provisioning in VM ... context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;docker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0133&lt;span style="color:#f92672"&gt;]&lt;/span&gt; restarting VM to complete setup ... context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;docker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0133&lt;span style="color:#f92672"&gt;]&lt;/span&gt; stopping ... context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;vm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0136&lt;span style="color:#f92672"&gt;]&lt;/span&gt; starting ... context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;vm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0158&lt;span style="color:#f92672"&gt;]&lt;/span&gt; starting ... context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;docker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0159&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;此时，在宿主机上就可以使用 Docker 相关的命令了：&lt;/p&gt;</description></item><item><title>沙盒化容器：是容器还是虚拟机</title><link>https://atbug.com/sandboxed-container/</link><pubDate>Tue, 07 Dec 2021 07:55:16 +0800</pubDate><guid>https://atbug.com/sandboxed-container/</guid><description>&lt;p&gt;随着 IT 技术的发展，AI、区块链和大数据等技术提升了对应用毫秒级扩展的需求，开发人员也面临着的功能快速推出的压力。混合云是新常态，数字化转型是保持竞争力的必要条件，虚拟化成为这些挑战的基本技术。&lt;/p&gt;
+&lt;p&gt;在虚拟化的世界，有两个词耳熟能详：虚拟机和容器。前者是对硬件的虚拟化，后者则更像是操作系统的虚拟化。两者都提供了沙箱的能力：虚拟机通过硬件级抽象提供，而容器则使用公共内核提供进程级的隔离。有很多人将容器看成是“轻量化的虚拟机”，通常情况下我们认为容器是安全的，那到底是不是跟我们想象的一样？&lt;/p&gt;
+&lt;h2 id="容器轻量化的虚拟机"&gt;容器：轻量化的虚拟机？&lt;/h2&gt;
+&lt;p&gt;容器是打包、共享和部署应用的现代化方式，帮助企业实现快速、标准、灵活地完成服务交互。容器化是建立在 Linux 的命名空间（namespace）和控制组（cgroup） 的设计之上。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/12/06/20211206-at-210354.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;命名空间创建一个几乎隔离的用户空间，并为应用提供专用的系统资源，如文件系统、网络堆栈、进程ID和用户ID。随着用户命名空间的引入，内核版本 3.8 提供了对容器功能的支持：Mount（mnt）、进程 ID（pid）、Network（net）、进程间通信（ipc）、UTS、用户 ID（user）6 个命名空间（如今已达 8 个，后续加入了 cgroup 和 time 命名空间）。&lt;/p&gt;
+&lt;p&gt;cgroup 则实施对应用的资源限制、优先级、记账和控制。cgroup可以控制 CPU、内存、设备和网络等资源。&lt;/p&gt;
+&lt;p&gt;同时使用 namespace 和 cgroup 使得我们可以在一台主机上安全地运行多个应用，并且每个应用都位于隔离的环境中。&lt;/p&gt;
+&lt;h2 id="虚拟机提供更强大的隔离"&gt;虚拟机提供更强大的隔离&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/12/06/16387934257868.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;虽然容器很棒，足够轻量级。但通过上面的描述，同一个主机上的多个容器其实是&lt;strong&gt;共享同一个操作系统内核&lt;/strong&gt;，只是做到了操作系统级的虚拟化。虽然命名空间提供了高度的隔离，但仍然有容器可以访问的资源，这些资源并没有提供命名空间。这些资源是主机上所有容器共有的，比如内核 Keyring、/proc、系统时间、内核模块、硬件。&lt;/p&gt;
+&lt;p&gt;我们都知道没有 100% 安全的软件，容器化的应用也一样，从应用源码到依赖库到容器 base 镜像，甚至容器引擎本身都可能存在安全漏洞。发生容器逃逸的风险远高于虚拟机，黑客可以利用这些逃逸漏洞，操作容器的外部资源也就是宿主机上的资源。除了漏洞，有时使用的不当也会带来安全风险，比如为容器分配了过高的权限（CAP_SYS_ADMIN 功能、特权权限），都可能导致容器逃逸。&lt;/p&gt;</description></item><item><title>从 Docker 的信号机制看容器的优雅停止</title><link>https://atbug.com/gracefully-stopping-docker-containers-with-correct-command/</link><pubDate>Mon, 29 Nov 2021 07:30:43 +0800</pubDate><guid>https://atbug.com/gracefully-stopping-docker-containers-with-correct-command/</guid><description>&lt;p&gt;此文是前段时间笔记的整理，之前自己对这方面的关注不够，因此做下记录。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;有太多的文章介绍如何&lt;strong&gt;运行&lt;/strong&gt;容器，然而如何&lt;strong&gt;停止&lt;/strong&gt;容器的文章相对少很多。&lt;/p&gt;
+&lt;p&gt;根据运行的应用类型，应用的停止过程非常重要。如果应用要写文件，停止前要保证正确刷新数据并关闭文件；如果是 HTTP 服务，要确保停止前处理所有未完成的请求。&lt;/p&gt;
+&lt;h2 id="信号"&gt;信号&lt;/h2&gt;
+&lt;p&gt;信号是 Linux 内核与进程以及进程间通信的一种方式。针对每个信号进程都有个默认的动作，不过进程可以通过定义信号处理程序来覆盖默认的动作，除了 &lt;code&gt;SIGSTOP&lt;/code&gt; 和 &lt;code&gt;SIGKILL&lt;/code&gt;。二者都不能被捕获或重写，前者用来将进程暂停在当前状态，而后者则是从内核层面立即杀掉进程。&lt;/p&gt;
+&lt;p&gt;有两个比较重要的进程 &lt;code&gt;SIGTERM&lt;/code&gt; 和 &lt;code&gt;SIGKILL&lt;/code&gt;。&lt;code&gt;SIGTERM&lt;/code&gt; 是优雅地关闭命令，&lt;code&gt;SIGKILL&lt;/code&gt; 则是暴力的关闭命令。比如 Docker，容器会先收到 &lt;code&gt;SIGTERM&lt;/code&gt; 信号，10s 后会收到 &lt;code&gt;SIGKILL&lt;/code&gt; 信号。&lt;/p&gt;
+&lt;p&gt;还有很多其他的信号，只是限定于特定的上下文。&lt;/p&gt;
+&lt;h2 id="中断"&gt;中断&lt;/h2&gt;
+&lt;p&gt;硬件的中断就像操作系统的信号。通常发生在硬件想要向操作系统注册事件时。操作系统必须立即停止运行，并处理中断。&lt;/p&gt;
+&lt;p&gt;比较常见的中断例子就是键盘中断，比如按下 &lt;code&gt;ctrl+z&lt;/code&gt; 或者 &lt;code&gt;ctrl+c&lt;/code&gt;。Linux 将其分别转换成 &lt;code&gt;SIGTSTP&lt;/code&gt; 和 &lt;code&gt;SIGINT&lt;/code&gt;。硬件中断过去通常用来处理键盘和鼠标输入，但如今被用作操作系统软件驱动层面的信号轮训。&lt;/p&gt;
+&lt;h2 id="docker"&gt;Docker&lt;/h2&gt;
+&lt;p&gt;前面说了这么多终于来到 Docker，容器的独特之处在于通常只运行一个进程。即使是单进程，容器内 PID 为 1 的进程也具有 init 系统的特殊规则和职责。&lt;/p&gt;</description></item><item><title>无需 Dockerfile 的镜像构建：BuildPack vs Dockerfile</title><link>https://atbug.com/build-docker-image-without-dockerfile/</link><pubDate>Fri, 29 Oct 2021 07:36:43 +0800</pubDate><guid>https://atbug.com/build-docker-image-without-dockerfile/</guid><description>&lt;p&gt;过去的工作中，我们使用微服务、容器化以及服务编排构建了技术平台。为了提升开发团队的研发效率，我们同时还提供了 CICD 平台，用来将代码快速的部署到 Openshift（企业级的 Kubernetes） 集群。&lt;/p&gt;
+&lt;p&gt;部署的第一步就是应用程序的容器化，持续集成的交付物从以往的 jar 包、webpack 等变成了容器镜像。容器化将软件代码和所需的所有组件（库、框架、运行环境）打包到一起，进而可以在任何环境任何基础架构上一致地运行，并与其他应用“隔离”。&lt;/p&gt;
+&lt;p&gt;我们的代码需要从源码到编译到最终可运行的镜像，甚至部署，这一切在 CICD 的流水线中完成。最初，我们在每个代码仓库中都加入了三个文件，也通过项目生成器（类似 Spring Initializer）在新项目中注入：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Jenkinsfile.groovy：用来定义 Jenkins 的 Pipeline，针对不同的语言还会有多种版本&lt;/li&gt;
+&lt;li&gt;Manifest YAML：用于定义 Kubernetes 资源，也就是工作负载及其运行的相关描述&lt;/li&gt;
+&lt;li&gt;Dockerfile：用于构建对象&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这个三个文件也需要在工作中不断的演进，起初项目较少（十几个）的时候我们基础团队还可以去各个代码仓库去维护升级。随着项目爆发式的增长，维护的成本越来越高。我们对 CICD 平台进行了迭代，将“Jenkinsfile.groovy”和 “manifest YAML”从项目中移出，变更较少的 Dockerfile 就保留了下来。&lt;/p&gt;
+&lt;p&gt;随着平台的演进，我们需要考虑将这唯一的“钉子户” Dockerfile 与代码解耦，必要的时候也需要对 Dockerfile 进行升级。因此调研了一下 buildpacks，就有了今天的这篇文章。&lt;/p&gt;
+&lt;h2 id="什么是-dockerfile"&gt;什么是 Dockerfile&lt;/h2&gt;
+&lt;p&gt;Docker 通过读取 Dockerfile 中的说明自动构建镜像。Dockerfile 是一个文本文件，包含了由 Docker 可以执行用于构建镜像的指令。我们拿之前用于&lt;a href="https://github.com/addozhang/tekton-test"&gt;测试 Tekton 的 Java 项目&lt;/a&gt;的 Dockerfile 为例：&lt;/p&gt;</description></item><item><title>容器神话 Docker 是如何一分为二的</title><link>https://atbug.com/how-docker-broke-in-half/</link><pubDate>Mon, 20 Sep 2021 08:01:30 +0800</pubDate><guid>https://atbug.com/how-docker-broke-in-half/</guid><description>&lt;p&gt;译者点评：&lt;/p&gt;
+&lt;p&gt;最近听了很多资深的人士关于开源，以及商业化的分析。开源与商业化，听起来就是一对矛盾的所在，似乎大家都在尝试做其二者的平衡。是先有开源，还是先有商业化？俗话说“谈钱不伤感情”，近几年背靠开源的创业公司如雨后春笋般涌现，即使是开发人员也是需要生活的。&lt;/p&gt;
+&lt;p&gt;容器神话 Docker 曾经无比风光，盛极一时。即使这样一个备受瞩目，大获风投的热捧的独角兽也未能免俗，并付出了不小的代价。&lt;/p&gt;
+&lt;p&gt;今天这篇文章讲述了 Docker 这家公司从诞生到巅峰到没落，这一路上所做的抉择，并最终做了开源与商业的分离，再一次从开源踏上找寻商业化之路。这些都是值得我们参考和思考的，不管是已经开源或者准备从事开源的。&lt;/p&gt;
+&lt;h2 id="这篇文章翻译自how-docker-broke-in-half"&gt;这篇文章翻译自&lt;a href="https://www.infoworld.com/article/3632142/how-docker-broke-in-half.html"&gt;How Docker broke in half&lt;/a&gt;&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这家改变游戏规则的容器公司是其昔日的外衣。作为云时代最热门的企业技术业务之一的它到底发生了什么？&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://www.infoworld.com/article/3204171/what-is-docker-the-spark-for-the-container-revolution.html"&gt;Docker 并没有发明容器&lt;/a&gt;——将计算机代码打包成紧凑单元的方法，可以轻松地从笔记本电脑移植到服务器——但它确实通过创建一套通用的开源工具和可重用的镜像使其成为主流，这使所有开发人员只需构建一次软件即可在任何地方运行。&lt;/p&gt;
+&lt;p&gt;Docker 使开发人员能够轻松地将他们的代码“容器化”并将其从一个系统移动到另一个系统，迅速将其确立为行业标准，颠覆了在虚拟机 (VM) 上部署应用程序的主要方式，并使 Docker 成为新一代最快被采用的企业技术之一。&lt;/p&gt;
+&lt;p&gt;今天，Docker 仍然活着，但它只是它可能成为的公司的一小部分，从未成功地将这种技术创新转化为可持续的商业模式，最终导致其企业业务于 &lt;a href="https://twitter.com/QuinnyPig/status/1194687851587198977?s=20"&gt;2019 年 11 月出售给 Mirantis&lt;/a&gt;。InfoWorld 采访了十几位前任和现任 Docker 员工、开源贡献者、客户和行业分析师，了解 Docker 如何分崩离析的故事。&lt;/p&gt;
+&lt;h2 id="docker-诞生了"&gt;Docker 诞生了&lt;/h2&gt;
+&lt;p&gt;2008 年由 Solomon Hykes 在巴黎创立的 DotCloud，这个后来成为 Docker 的公司最初被设计为供开发人员轻松构建和发布他们的应用程序的&lt;a href="https://www.infoworld.com/article/3223434/what-is-paas-a-simpler-way-to-build-software-applications.html"&gt;平台即服务 (PaaS)&lt;/a&gt;。&lt;/p&gt;</description></item><item><title>使用 Open Policy Agent 实现可信镜像仓库检查</title><link>https://atbug.com/image-trusted-repository-with-open-policy-agent/</link><pubDate>Sat, 10 Jul 2021 07:14:47 +0800</pubDate><guid>https://atbug.com/image-trusted-repository-with-open-policy-agent/</guid><description>&lt;p&gt;从互联网（或可信镜像仓库库以外的任何地方）拉取未知镜像会带来风险——例如恶意软件。但是还有其他很好的理由来维护单一的可信来源，例如在企业中实现可支持性。通过确保镜像仅来自受信任的镜像仓库，可以密切控制镜像库存，降低软件熵和蔓延的风险，并提高集群的整体安全性。除此以外，有时还会需要检查镜像的 tag，比如禁止使用 latest 镜像。&lt;/p&gt;
+&lt;p&gt;这今天我们尝试用“策略即代码”的实现 OPA 来实现功能。&lt;/p&gt;
+&lt;p&gt;还没开始之前可能有人会问：明明可以实现个 &lt;a href="https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/"&gt;Admission Webhook&lt;/a&gt; 就行，为什么还要加上 OPA？&lt;/p&gt;
+&lt;p&gt;确实可以，但是这样策略和逻辑都会耦合在一起，当策略需要调整的时候需要修改代码重新发布。而 OPA 就是用来做解耦的，其更像是一个策略的执行引擎。&lt;/p&gt;
+&lt;h2 id="什么是-opa"&gt;什么是 OPA&lt;/h2&gt;
+&lt;p&gt;Open Policy Agent（以下简称 OPA，发音 “oh-pa”）一个开源的通用策略引擎，可以统一整个堆栈的策略执行。OPA 提供了一种高级声明性语言（Rego），可让你将策略指定为代码和简单的 API，以从你的软件中卸载策略决策。你可以使用 OPA 在微服务、Kubernetes、CI/CD 管道、API 网关等中实施策略。&lt;/p&gt;
+&lt;p&gt;Rego 是一种高级的声明性语言，是专门为 OPA 建立的。更多 OPA 的介绍可以看 &lt;a href="https://www.openpolicyagent.org/"&gt;Open Policy Agent 官网&lt;/a&gt;，不想看英文直接看&lt;a href="https://cloudnative.to/blog/introducing-policy-as-code-the-open-policy-agent-opa/"&gt;这里&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/09/20210709182625.png" alt="2021-07-09-18-26-25"&gt;&lt;/p&gt;
+&lt;p&gt;现在进入正题。&lt;/p&gt;
+&lt;h2 id="启动集群"&gt;启动集群&lt;/h2&gt;
+&lt;p&gt;启动 minikube&lt;/p&gt;</description></item><item><title>Go Docker 镜像进阶: 精简镜像</title><link>https://atbug.com/build-minimal-docker-image-for-go-app/</link><pubDate>Wed, 11 Mar 2020 23:00:27 +0800</pubDate><guid>https://atbug.com/build-minimal-docker-image-for-go-app/</guid><description>&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/03/11/15839387687383.jpg" alt=""&gt;
+​[图片来自 https://www.facebook.com/sequenceprocess/]&lt;/p&gt;
+&lt;h3 id="问题-入门到生产级的差距"&gt;问题: 入门到生产级的差距&lt;/h3&gt;
+&lt;p&gt;昨天的文章《为 Go 应用创建 Docker 镜像》, 算是入门级的, 并不适用于生产级. 为什么?&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker images
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;REPOSITORY TAG IMAGE ID CREATED SIZE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;addozhang/golang-hello-world latest 4cce1292a87a &lt;span style="color:#ae81ff"&gt;4&lt;/span&gt; seconds ago 813MB
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;整个镜像的大小有 813MB, 这还只有一个简单的 Hello world. 因为其中包含了 Golang 的编译和运行环境. 但是实际生产环境中, 我们并不需要这么多.&lt;/p&gt;
+&lt;h3 id="先看结果"&gt;先看结果&lt;/h3&gt;
+&lt;p&gt;精简之后只有 2.07MB, 而且并不影响运行.&lt;/p&gt;</description></item><item><title>为 Go 应用创建 Docker 镜像</title><link>https://atbug.com/build-docker-image-for-go-app/</link><pubDate>Wed, 11 Mar 2020 20:41:58 +0800</pubDate><guid>https://atbug.com/build-docker-image-for-go-app/</guid><description>&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/03/11/15839304511808.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;嗯嗯, 最近开始用 Golang 了.&lt;/p&gt;
+&lt;p&gt;今天需要为 Go 应用创建对象, 看了下官方博客. 拿 hello world 做个测试.&lt;/p&gt;
+&lt;p&gt;使用下面的命令创建个新的项目&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ mkdir -p $GOPATH/src/github.com/addozhang/golang-hello-world &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; cd &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$_&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ go mod init github.com/addozhang/golang-hello-world
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go: creating new go.mod: module github.com/addozhang/golang-hello-world
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ cat &lt;span style="color:#e6db74"&gt;&amp;lt;&amp;lt; EOF &amp;gt; main.go
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;package main
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;import &amp;#34;fmt&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;func main() {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;	fmt.Println(&amp;#34;Hello world&amp;#34;)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;EOF&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# go fmt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;运行检查一次&lt;/p&gt;</description></item><item><title>加速云原生的 Java 开发</title><link>https://atbug.com/speed-up-java-development-on-kubernetes/</link><pubDate>Sat, 21 Dec 2019 20:45:22 +0800</pubDate><guid>https://atbug.com/speed-up-java-development-on-kubernetes/</guid><description>&lt;p&gt;今天来说说日常在Kubernetes开发Java项目遇到的问题.&lt;/p&gt;
+&lt;p&gt;当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是&lt;code&gt;copy+paste+modify&lt;/code&gt;. 能否以变成的方式来生成?&lt;/p&gt;
+&lt;p&gt;开发时的步骤也比较繁琐: &lt;code&gt;docker build&lt;/code&gt;, &lt;code&gt;docker push&lt;/code&gt;, &lt;code&gt;kubectl apple&lt;/code&gt;, &lt;code&gt;kubectl delete pod&lt;/code&gt;. 对于一个Java应用来说还多了一步编译. 操作一次还ok, 但是一天十几次总会有想吐的感觉. 这些步骤能否简化成一个命令, 甚至修改了代码自动就完成上面一系列的操作?&lt;/p&gt;
+&lt;p&gt;实现这些我们需要几个工具: &lt;a href="https://github.com/dekorateio/dekorate"&gt;dekorate&lt;/a&gt;, &lt;a href="https://github.com/GoogleContainerTools/jib"&gt;Jib&lt;/a&gt;, &lt;a href="https://github.com/GoogleContainerTools/skaffold"&gt;Skaffold&lt;/a&gt;. 其中Jib也在上一篇文章&lt;a href="https://atbug.com/build-docker-or-oci-image-with-jib-for-java/"&gt;使用Jib为Java应用构建镜像&lt;/a&gt;中介绍过.&lt;/p&gt;
+&lt;h2 id="dekorate"&gt;dekorate&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Dekorate is a collection of Java compile-time generators and decorators for Kubernetes/OpenShift manifests.
+Dekorate是Java编译时生成和装饰Kubernetes/OpenShift的manifests的工具&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="快速开始"&gt;快速开始&lt;/h3&gt;
+&lt;h4 id="1-通过使用spring-initializer生成一个项目spring-boot-222-并加入依赖"&gt;1. 通过使用&lt;a href="https://start.spring.io"&gt;Spring Initializer&lt;/a&gt;生成一个项目(Spring Boot 2.2.2), 并加入依赖:&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;io.dekorate&lt;span style="color:#f92672"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;kubernetes-spring-starter&lt;span style="color:#f92672"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;0.10.0&lt;span style="color:#f92672"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="2-加入一个简单的controller"&gt;2. 加入一个简单的&lt;code&gt;Controller&lt;/code&gt;:&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;/**
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt; * @author Addo.Zhang
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt; * @date 2019/12/22
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@RestController&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;DekorateExampleController&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@GetMapping&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; String &lt;span style="color:#a6e22e"&gt;hi&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Hello World&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="3-执行命令mvn-clean-install-然后在targetclassesmeta-infdekorate目录下可以找到kubernetesjson和kubernetesyml两个文件"&gt;3. 执行命令&lt;code&gt;mvn clean install&lt;/code&gt;, 然后在&lt;code&gt;target/classes/META-INF/dekorate&lt;/code&gt;目录下可以找到&lt;code&gt;kubernetes.json&lt;/code&gt;和&lt;code&gt;kubernetes.yml&lt;/code&gt;两个文件.&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;kubernetes.yml&lt;/code&gt;的内容:&lt;/p&gt;</description></item><item><title>Alpine容器安装Docker和OpenShift Client Tools</title><link>https://atbug.com/install-docker-and-openshift-client-tools-in-alpine-container/</link><pubDate>Tue, 28 Aug 2018 09:14:12 +0000</pubDate><guid>https://atbug.com/install-docker-and-openshift-client-tools-in-alpine-container/</guid><description>&lt;h2 id="安装docker"&gt;安装Docker&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;http://dl-2.alpinelinux.org/alpine/edge/main&amp;#34;&lt;/span&gt; &amp;gt; /etc/apk/repositories
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;http://dl-2.alpinelinux.org/alpine/edge/community&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; /etc/apk/repositories
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;http://dl-2.alpinelinux.org/alpine/edge/testing&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; /etc/apk/repositories
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apk -U --no-cache &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	--allow-untrusted add &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	shadow &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; docker &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; py-pip &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; openrc &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; pip install docker-compose
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;rc-update add docker boot
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="安装openshift-client-tools"&gt;安装OpenShift Client Tools&lt;/h2&gt;
+&lt;p&gt;需要先安装glibc&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apk --no-cache add ca-certificates wget
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.28-r0/glibc-2.28-r0.apk
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apk add glibc-2.28-r0.apk
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;curl --retry 7 -Lo /tmp/client-tools.tar.gz &amp;quot;https://mirror.openshift.com/pub/openshift-v3/clients/3.9.1/linux/oc.tar.gz&amp;quot;&lt;/code&gt;&lt;/p&gt;</description></item><item><title>Docker 快速构建 Cassandra 和 Java 操作</title><link>https://atbug.com/java-operate-cassandra-deployed-in-docker/</link><pubDate>Thu, 18 May 2017 23:33:24 +0000</pubDate><guid>https://atbug.com/java-operate-cassandra-deployed-in-docker/</guid><description>&lt;h3 id="搭建cassandra"&gt;搭建Cassandra&lt;/h3&gt;
+&lt;p&gt;使用docker创建Cassandra，方便快捷&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker pull cassandra:latest
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -d --name cassandra -p 9042:9042 cassandra
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker exec -it cassandra bash
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="创建keyspacetable"&gt;创建keyspace、table&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-cql" data-lang="cql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;#&lt;/span&gt;cqlsh&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;#&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;create&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;keyspace&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEYSPACE&lt;/span&gt; contacts &lt;span style="color:#66d9ef"&gt;WITH&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;REPLICATION&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#e6db74"&gt;&amp;#39;class&amp;#39;&lt;/span&gt; : &lt;span style="color:#e6db74"&gt;&amp;#39;SimpleStrategy&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#e6db74"&gt;&amp;#39;replication_factor&amp;#39;&lt;/span&gt; : &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;#&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;use&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;USE&lt;/span&gt; contacts;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;#&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;create&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;table&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; contact ( 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; id UUID,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; email TEXT &lt;span style="color:#66d9ef"&gt;PRIMARY&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="查看表数据"&gt;查看表数据&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cqlsh:contacts&amp;gt; SELECT * FROM contact;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; email | id
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-------+----
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;(&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; rows&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="java客户端"&gt;Java客户端&lt;/h3&gt;
+&lt;h4 id="引入依赖"&gt;引入依赖&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;com.datastax.cassandra&lt;span style="color:#f92672"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;cassandra-driver-core&lt;span style="color:#f92672"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.2.0&lt;span style="color:#f92672"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="连接到cassandra并插入数据"&gt;连接到Cassandra并插入数据&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Cluster cluster &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Cluster.&lt;span style="color:#a6e22e"&gt;builder&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;addContactPoint&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;127.0.0.1&amp;#34;&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;build&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Session session &lt;span style="color:#f92672"&gt;=&lt;/span&gt; cluster.&lt;span style="color:#a6e22e"&gt;connect&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;contacts&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;String insert &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;INSERT INTO contact (id, email) &amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;VALUES (&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;bd297650-2885-11e4-8c21-0800200c9a66,&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#39;contact@example.com&amp;#39; &amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;);&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;session.&lt;span style="color:#a6e22e"&gt;execute&lt;/span&gt;(insert);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="查看表数据-1"&gt;查看表数据&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cqlsh:contacts&amp;gt; SELECT * FROM contact;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; email | id
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---------------------+--------------------------------------
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; contact@example.com | bd297650-2885-11e4-8c21-0800200c9a66
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;(&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; rows&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>从零开始用 docker 运行 spring boot 应用</title><link>https://atbug.com/run-spring-boot-app-in-docker/</link><pubDate>Thu, 20 Apr 2017 21:58:42 +0000</pubDate><guid>https://atbug.com/run-spring-boot-app-in-docker/</guid><description>&lt;p&gt;假设已经安装好Docker&lt;/p&gt;
+&lt;h3 id="springboot应用"&gt;Springboot应用&lt;/h3&gt;
+&lt;h4 id="pom添加依赖和构建插件"&gt;pom添加依赖和构建插件&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;parent&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span style="color:#f92672"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-parent&lt;span style="color:#f92672"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.5.3.RELEASE&lt;span style="color:#f92672"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/parent&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span style="color:#f92672"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-web&lt;span style="color:#f92672"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;build&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;plugins&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;plugin&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span style="color:#f92672"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-maven-plugin&lt;span style="color:#f92672"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/plugin&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/plugins&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/build&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="应用代码"&gt;应用代码&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; com.atbug.spring.boot.test;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.boot.SpringApplication;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.boot.autoconfigure.SpringBootApplication;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.boot.web.servlet.FilterRegistrationBean;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.context.annotation.Bean;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.web.bind.annotation.RequestMapping;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.web.bind.annotation.RestController;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;/**
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt; * Created by addo on 2017/5/15.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@SpringBootApplication&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@RestController&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Application&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@RequestMapping&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; String &lt;span style="color:#a6e22e"&gt;home&lt;/span&gt;(){
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Hello world!&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;static&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;(String&lt;span style="color:#f92672"&gt;[]&lt;/span&gt; args) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SpringApplication.&lt;span style="color:#a6e22e"&gt;run&lt;/span&gt;(Application.&lt;span style="color:#a6e22e"&gt;class&lt;/span&gt;, args);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="应用构建"&gt;应用构建&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mvn clean package
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="centos-7-with-java8"&gt;Centos 7 with Java8&lt;/h3&gt;
+&lt;h4 id="获取centos7-镜像"&gt;获取Centos7 镜像&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker pull centos:7
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="准备centos-java8的dockerfile"&gt;准备centos-java8的dockerfile&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;FROM centos:7
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;MAINTAINER Addo Zhang &lt;span style="color:#e6db74"&gt;&amp;#34;duwasai@gmail.com&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Set correct environment variables.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ENV	HOME /root
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ENV	LANG en_US.UTF-8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ENV	LC_ALL en_US.UTF-8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RUN yum install -y curl; yum upgrade -y; yum update -y; yum clean all
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ENV JDK_VERSION 8u11
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ENV JDK_BUILD_VERSION b12
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RUN curl -LO &lt;span style="color:#e6db74"&gt;&amp;#34;http://download.oracle.com/otn-pub/java/jdk/&lt;/span&gt;$JDK_VERSION&lt;span style="color:#e6db74"&gt;-&lt;/span&gt;$JDK_BUILD_VERSION&lt;span style="color:#e6db74"&gt;/jdk-&lt;/span&gt;$JDK_VERSION&lt;span style="color:#e6db74"&gt;-linux-x64.rpm&amp;#34;&lt;/span&gt; -H &lt;span style="color:#e6db74"&gt;&amp;#39;Cookie: oraclelicense=accept-securebackup-cookie&amp;#39;&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; rpm -i jdk-$JDK_VERSION-linux-x64.rpm; rm -f jdk-$JDK_VERSION-linux-x64.rpm; yum clean all
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ENV JAVA_HOME /usr/java/default
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RUN yum remove curl; yum clean all
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="创建centos-java8镜像"&gt;创建centos-java8镜像&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker build -t addo/centos-java8 .
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="docker中运行应用"&gt;Docker中运行应用&lt;/h3&gt;
+&lt;h4 id="准备应用镜像的dockerfile"&gt;准备应用镜像的dockerfile&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;FROM addo/centos-java8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ADD target/boot-test-1.0-SNAPSHOT.jar /opt/app.jar
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;EXPOSE &lt;span style="color:#ae81ff"&gt;8080&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CMD java -jar /opt/app.jar
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="构建应用镜像"&gt;构建应用镜像&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker build -t temp/spring-boot-app .
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="运行"&gt;运行&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run --name spring-boot-app -p 8080:8080 temp/spring-boot-app
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item></channel></rss>

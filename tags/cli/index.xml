@@ -1,9 +1,47 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CLI on 乱世浮生</title><link>https://atbug.com/tags/cli/</link><description>Recent content in CLI on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 31 May 2026 09:37:58 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/cli/index.xml" rel="self" type="application/rss+xml"/><item><title>告别 Jenkins UI：jk 让 AI Agent 也能操控 Jenkins</title><link>https://atbug.com/jk-jenkins-cli-for-ai-agent/</link><pubDate>Sun, 31 May 2026 09:37:58 +0800</pubDate><guid>https://atbug.com/jk-jenkins-cli-for-ai-agent/</guid><description>TLDR jk 是为 AI coding Agent 设计的 Jenkins CLI：附带配套的 SKILL，无需 MCP server，Agent 直接执行命令即可操作 Jenkins Pipeline。
-引言 每次要触发一次 Jenkins 构建，流程大概是这样：打开浏览器，找到对应的 Pipeline，点「Build with Parameters」，填参数，提交，然后等页面跳转，再点进构建详情，再点「Console Output」——就为了看一眼日志。
-如果 Pipeline 里有 input 步骤，还得盯着页面等它弹出来，手动点「Proceed」。
-这套操作每天重复十几次，没什么技术含量，但每次都要用鼠标。
-jk 是一个 Pipeline-native 的 Jenkins CLI，把上面这些操作都收进终端。它以 Jenkins 的 Job URL 作为操作对象，不需要额外配置 Job 名称或服务器路径——你浏览器地址栏里的那个 URL，直接拿来用。</description></item><item><title>命令行四件套：fd/rg/fzf/bat</title><link>https://atbug.com/cli-essentials-fd-rg-fzf-bat/</link><pubDate>Thu, 26 Mar 2026 11:00:10 +0800</pubDate><guid>https://atbug.com/cli-essentials-fd-rg-fzf-bat/</guid><description>TL;DR fd、ripgrep、fzf、bat 是四个现代命令行工具，分别替代 find、grep、cat，并额外引入交互式模糊搜索，组合起来尤其强大。
-引言 find、grep、cat 没有问题——它们工作了几十年，今天仍然能用。
-但 &amp;quot; 能用 &amp;quot; 和 &amp;quot; 好用 &amp;quot; 之间有距离。语法繁琐、输出没有高亮、速度在大型代码库下差强人意……这些摩擦日积月累，默默消耗效率。
-有四个工具可以直接替换它们，安装后几乎不需要学习成本：
-旧工具 新工具 核心优势 find fd 语法直观，自动忽略 .gitignore grep rg（ripgrep） 速度极快，输出友好 — fzf 给任何列表加上交互式模糊搜索 cat bat 语法高亮，自带行号和 Git 变更标记 fd —— 你不需要再记 find 的语法了 find 的语法是出了名的反人类：</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CLI on 乱世浮生</title><link>https://atbug.com/tags/cli/</link><description>Recent content in CLI on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sun, 31 May 2026 09:37:58 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/cli/index.xml" rel="self" type="application/rss+xml"/><item><title>告别 Jenkins UI：jk 让 AI Agent 也能操控 Jenkins</title><link>https://atbug.com/jk-jenkins-cli-for-ai-agent/</link><pubDate>Sun, 31 May 2026 09:37:58 +0800</pubDate><guid>https://atbug.com/jk-jenkins-cli-for-ai-agent/</guid><description>&lt;h2 id="tldr"&gt;TLDR&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;jk&lt;/code&gt; 是为 AI coding Agent 设计的 Jenkins CLI：附带配套的 SKILL，无需 MCP server，Agent 直接执行命令即可操作 Jenkins Pipeline。&lt;/p&gt;
+&lt;h2 id="引言"&gt;引言&lt;/h2&gt;
+&lt;p&gt;每次要触发一次 Jenkins 构建，流程大概是这样：打开浏览器，找到对应的 Pipeline，点「Build with Parameters」，填参数，提交，然后等页面跳转，再点进构建详情，再点「Console Output」——就为了看一眼日志。&lt;/p&gt;
+&lt;p&gt;如果 Pipeline 里有 &lt;code&gt;input&lt;/code&gt; 步骤，还得盯着页面等它弹出来，手动点「Proceed」。&lt;/p&gt;
+&lt;p&gt;这套操作每天重复十几次，没什么技术含量，但每次都要用鼠标。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/addozhang/jk"&gt;&lt;code&gt;jk&lt;/code&gt;&lt;/a&gt; 是一个 Pipeline-native 的 Jenkins CLI，把上面这些操作都收进终端。它以 Jenkins 的 Job URL 作为操作对象，不需要额外配置 Job 名称或服务器路径——你浏览器地址栏里的那个 URL，直接拿来用。&lt;/p&gt;</description></item><item><title>命令行四件套：fd/rg/fzf/bat</title><link>https://atbug.com/cli-essentials-fd-rg-fzf-bat/</link><pubDate>Thu, 26 Mar 2026 11:00:10 +0800</pubDate><guid>https://atbug.com/cli-essentials-fd-rg-fzf-bat/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;fd、ripgrep、fzf、bat 是四个现代命令行工具，分别替代 find、grep、cat，并额外引入交互式模糊搜索，组合起来尤其强大。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="引言"&gt;引言&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;find&lt;/code&gt;、&lt;code&gt;grep&lt;/code&gt;、&lt;code&gt;cat&lt;/code&gt; 没有问题——它们工作了几十年，今天仍然能用。&lt;/p&gt;
+&lt;p&gt;但 &amp;quot; 能用 &amp;quot; 和 &amp;quot; 好用 &amp;quot; 之间有距离。语法繁琐、输出没有高亮、速度在大型代码库下差强人意……这些摩擦日积月累，默默消耗效率。&lt;/p&gt;
+&lt;p&gt;有四个工具可以直接替换它们，安装后几乎不需要学习成本：&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;旧工具&lt;/th&gt;
+					&lt;th&gt;新工具&lt;/th&gt;
+					&lt;th&gt;核心优势&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;find&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;fd&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;语法直观，自动忽略 &lt;code&gt;.gitignore&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;grep&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;rg&lt;/code&gt;（ripgrep）&lt;/td&gt;
+					&lt;td&gt;速度极快，输出友好&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;—&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;fzf&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;给任何列表加上交互式模糊搜索&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;cat&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;bat&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;语法高亮，自带行号和 Git 变更标记&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="fd--你不需要再记-find-的语法了"&gt;fd —— 你不需要再记 find 的语法了&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;find&lt;/code&gt; 的语法是出了名的反人类：&lt;/p&gt;</description></item></channel></rss>

@@ -1,6 +1,55 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cursor on 乱世浮生</title><link>https://atbug.com/tags/cursor/</link><description>Recent content in Cursor on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 23 Apr 2026 19:20:27 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/cursor/index.xml" rel="self" type="application/rss+xml"/><item><title>平民价格用旗舰模型的窗口期结束了</title><link>https://atbug.com/ai-coding-tools-golden-window-is-over/</link><pubDate>Thu, 23 Apr 2026 19:20:27 +0800</pubDate><guid>https://atbug.com/ai-coding-tools-golden-window-is-over/</guid><description>TL;DR：2024 年底到 2025 年初，AI 编程工具曾以远低于成本的价格开放旗舰模型访问权限。那个窗口正在系统性地关闭，本文用完整的数据还原这个过程。
-2024 年底，你花 20 美元 订一个 Cursor Pro，可以全天调用 Claude Sonnet 写代码，500 次快速请求用完之后还有无限慢速请求兜底，真实 API 价值轻松超过 100 美元。同一时间，GitHub Copilot 10 美元/月，代码补全没有任何请求上限；Claude Pro 20 美元/月，几乎感受不到速率限制。
-那不是正常的市场定价，那是一场补贴战。
-现在回头看，2024 年底到 2025 年初是一段历史性的异常窗口。各平台用低于成本的价格抢占开发者心智，AI 编程工具的「真实价格」被人为压低了。那个窗口，正在系统性地关闭。
-黄金窗口期：那时候到底有多便宜 用数据说话。以下是窗口期内主要工具的实际权益：
-工具 价格 核心权益 时间节点 Cursor Pro 20 美元/月 500 次快速请求 + 无限慢速请求（Claude Sonnet/GPT-4o） ~2025 年 6 月前 GitHub Copilot Individual 10 美元/月 无限代码补全，无任何请求上限 2022 年 6 月上线 Windsurf Pro 10 美元/月 1000 次 Cascade agentic 步骤 2024 年 11 月 -12 月 Claude Pro 20 美元/月 几乎无感知的速率限制，实际可全天使用 ~2025 年初前 GLM Coding Lite 20 元/月（年付 240 元） 大量 Coding 请求配额 2025 年底 -2026 年 2 月前 阿里云 Qwen Lite 7.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cursor on 乱世浮生</title><link>https://atbug.com/tags/cursor/</link><description>Recent content in Cursor on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Thu, 23 Apr 2026 19:20:27 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/cursor/index.xml" rel="self" type="application/rss+xml"/><item><title>平民价格用旗舰模型的窗口期结束了</title><link>https://atbug.com/ai-coding-tools-golden-window-is-over/</link><pubDate>Thu, 23 Apr 2026 19:20:27 +0800</pubDate><guid>https://atbug.com/ai-coding-tools-golden-window-is-over/</guid><description>&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;：2024 年底到 2025 年初，AI 编程工具曾以远低于成本的价格开放旗舰模型访问权限。那个窗口正在系统性地关闭，本文用完整的数据还原这个过程。&lt;/p&gt;
+&lt;p&gt;2024 年底，你花 20 美元 订一个 Cursor Pro，可以全天调用 Claude Sonnet 写代码，500 次快速请求用完之后还有无限慢速请求兜底，真实 API 价值轻松超过 100 美元。同一时间，GitHub Copilot 10 美元/月，代码补全没有任何请求上限；Claude Pro 20 美元/月，几乎感受不到速率限制。&lt;/p&gt;
+&lt;p&gt;那不是正常的市场定价，那是一场补贴战。&lt;/p&gt;
+&lt;p&gt;现在回头看，2024 年底到 2025 年初是一段历史性的异常窗口。各平台用低于成本的价格抢占开发者心智，AI 编程工具的「真实价格」被人为压低了。那个窗口，正在系统性地关闭。&lt;/p&gt;
+&lt;h2 id="黄金窗口期那时候到底有多便宜"&gt;黄金窗口期：那时候到底有多便宜&lt;/h2&gt;
+&lt;p&gt;用数据说话。以下是窗口期内主要工具的实际权益：&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;工具&lt;/th&gt;
+					&lt;th&gt;价格&lt;/th&gt;
+					&lt;th&gt;核心权益&lt;/th&gt;
+					&lt;th&gt;时间节点&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Cursor Pro&lt;/td&gt;
+					&lt;td&gt;20 美元/月&lt;/td&gt;
+					&lt;td&gt;500 次快速请求 + 无限慢速请求（Claude Sonnet/GPT-4o）&lt;/td&gt;
+					&lt;td&gt;~2025 年 6 月前&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;GitHub Copilot Individual&lt;/td&gt;
+					&lt;td&gt;10 美元/月&lt;/td&gt;
+					&lt;td&gt;无限代码补全，无任何请求上限&lt;/td&gt;
+					&lt;td&gt;2022 年 6 月上线&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Windsurf Pro&lt;/td&gt;
+					&lt;td&gt;10 美元/月&lt;/td&gt;
+					&lt;td&gt;1000 次 Cascade agentic 步骤&lt;/td&gt;
+					&lt;td&gt;2024 年 11 月 -12 月&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Claude Pro&lt;/td&gt;
+					&lt;td&gt;20 美元/月&lt;/td&gt;
+					&lt;td&gt;几乎无感知的速率限制，实际可全天使用&lt;/td&gt;
+					&lt;td&gt;~2025 年初前&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;GLM Coding Lite&lt;/td&gt;
+					&lt;td&gt;20 元/月（年付 240 元）&lt;/td&gt;
+					&lt;td&gt;大量 Coding 请求配额&lt;/td&gt;
+					&lt;td&gt;2025 年底 -2026 年 2 月前&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;阿里云 Qwen Lite&lt;/td&gt;
+					&lt;td&gt;7.9 元首月，40 元/月&lt;/td&gt;
+					&lt;td&gt;18000 次请求/月，支持多家旗舰模型&lt;/td&gt;
+					&lt;td&gt;2026 年 2 月 -4 月&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;「无限慢速请求」是理解当时价值的关键。Cursor 的慢速队列意味着你只要不急，可以不限量地调用 Claude Sonnet，20 美元/月换来的是真正的旗舰模型全天访问权。Augment Code 后来在公告里亲自说出了真相：有用户每小时发 335 个请求，持续整整 30 天，平台实际成本约 15000 美元，但该用户只付了 250 美元。&lt;/p&gt;</description></item></channel></rss>

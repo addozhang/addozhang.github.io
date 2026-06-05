@@ -1,200 +1,842 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>云原生 on 乱世浮生</title><link>https://atbug.com/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/</link><description>Recent content in 云原生 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 03 Apr 2026 08:12:20 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes externalIPs：已知六年的安全漏洞，终于要移除了</title><link>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</link><pubDate>Fri, 03 Apr 2026 08:12:20 +0800</pubDate><guid>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</guid><description>TL;DR Kubernetes Service 的 externalIPs 字段存在长达六年的中间人攻击漏洞（CVE-2020-8554），任何有 Service 创建权限的用户都可以劫持集群流量 &amp;ndash;v1.36 终于启动了正式的废弃流程。
-开篇：一条命令，劫持集群流量 想象这样一个场景。
-你的集群里有一个开发者，他拥有普通的 Service 创建权限 &amp;ndash; 这在大多数团队中再正常不过。他写了一段这样的配置：
-apiVersion: v1 kind: Service metadata: name: dns-intercept spec: selector: app: attacker-pod ports: - port: 53 protocol: UDP externalIPs: - 8.8.8.8 一条 kubectl apply，几秒钟后，集群内所有节点上发往 8.</description></item><item><title>Apple Container 0.8.0：从初生到成熟的七个月演进之路</title><link>https://atbug.com/apple-container-evolution-seven-months-journey/</link><pubDate>Sat, 24 Jan 2026 21:43:46 +0800</pubDate><guid>https://atbug.com/apple-container-evolution-seven-months-journey/</guid><description>TL;DR 2026 年 1 月 22 日，Apple Container 0.8.0 发布。距离 WWDC 2025 首次发布的 0.1.0，整整七个月，九个版本。
-这七个月不仅是版本号的增长，更是一个架构理念的验证：每容器独立 VM 的隔离模式，能否在 macOS 上成为 Docker Desktop 的替代方案？
-0.8.0 给出的答案是：在特定场景下，可以。但这个答案背后，是数据完整性危机（0.7.1）、网络限制的解除（macOS 26）、以及对生产就绪定义的重新思考。
-本文不是功能列表，而是试图理解：Apple 为什么要做 Container？独立 VM 架构的代价是什么？七个月的快速迭代背后，哪些问题真正得到了解决，哪些仍在路上？
-写在前面：为什么要关注 Apple Container？ 在讨论版本演进之前，先简单回顾一下 Apple Container 的独特价值：
-原生 macOS 体验 苹果官方支持：基于 Apple Virtualization Framework 性能优越：每个容器独立虚拟机，无共享虚拟机开销 安全隔离：VM 级别隔离，比传统容器更安全 Apple Silicon 优化：为 ARM64 架构深度优化 与 Docker Desktop 的差异 特性 Docker Desktop Apple Container 架构模式 单一 VM + 多容器 每容器独立 VM 安全隔离 容器级 VM 级 macOS 集成 第三方工具 原生框架 价格 企业版收费 开源免费 但是，在 2025 年 6 月，0.</description></item><item><title>不止于网络：从 Cilium 2025年度报告，洞察云原生基础设施的六大演进</title><link>https://atbug.com/cilium-2025-report-6-infrastructure-trends/</link><pubDate>Sun, 21 Dec 2025 06:20:26 +0800</pubDate><guid>https://atbug.com/cilium-2025-report-6-infrastructure-trends/</guid><description>Cilium 项目始于 2015 年 12 月 16 日的第一次提交，已从一个实验性的 IPv6 容器网络项目成长为云原生世界的 CNI（容器网络接口）的事实标准。也正值 Cilium 的十周年，社区发布了 《Cilium 2025 年度报告》（PDF 原文）。
-CNCF 地位： Cilium 目前是 CNCF（云原生计算基金会）中贡献量第二大的项目，仅次于 Kubernetes。 市场占有率： 根据 Isovalent（Cilium 母公司）发布的 《2025 Kubernetes 网络现状报告》，Cilium 占据了超过 Cilium 目前是 CNCF（云原生计算基金会）中 的 CNI 部署份额，是第二名的两倍以上 。如果算上由 Cilium 驱动的托管服务（如 Azure CNI powered by Cilium 和 GKE Datapath V2），其覆盖率超过 60% 。 社区活跃度： 2025 年贡献了近 10,000 个 PR，年度开发活动较第一年增长了 55 倍 。 本文无意逐条复述报告内容。我们不妨将视线从具体数字上移开，转而透视这份行业风向标所揭示的云原生网络与安全核心趋势。希望能激发更多的思考与讨论。</description></item><item><title>告别代码修改：传统 VM 环境下的 OpenTelemetry 自动注入</title><link>https://atbug.com/opentelemetry-auto-injection-traditional-vm/</link><pubDate>Sat, 30 Aug 2025 18:23:19 +0800</pubDate><guid>https://atbug.com/opentelemetry-auto-injection-traditional-vm/</guid><description>在微服务架构中，可观测性就像是给应用装上 &amp;quot; 眼睛 &amp;quot; 和 &amp;quot; 耳朵 &amp;ldquo;。传统方式需要在每个服务中手动集成监控代码，而 OpenTelemetry Injector 提供了一种更优雅的解决方案。
-TL;DR OpenTelemetry Injector 是一个专为传统 VM 环境设计的零代码观测工具。通过 Linux 的 LD_PRELOAD 机制，无需修改应用代码即可为 Java、Node.js、.NET 应用自动注入 OpenTelemetry 观测能力。核心优势：系统级自动化、多语言统一管理、生产环境就绪。不适合容器/K8s 环境，云原生场景建议使用 OpenTelemetry Operator、init-container、sidecar 等方案。
-但是对于企业数据中心中的传统部署、混合技术栈的微服务架构，或者遗留系统的可观测升级，OpenTelemetry Injector 提供了一条优雅而高效的路径。
-为什么需要零代码检测？ 想象一下，你负责维护一个包含数百个微服务的系统。每个服务都用不同的语言编写（Java、Node.js、.NET），现在需要为它们添加可观测性能力。
-传统方式的问题：
-需要修改每个服务的代码 不同语言的集成方式各不相同 版本升级时需要重新修改 不同语言中的功能不一致 增加了出错的风险 增加了维护的成本 这就是 OpenTelemetry Injector 诞生的背景。</description></item><item><title>Azure 云上 10 分钟全自动部署 K3s 集群实战</title><link>https://atbug.com/azure-k3s-cluster-automation-in-10-minutes/</link><pubDate>Sun, 16 Mar 2025 23:06:30 +0800</pubDate><guid>https://atbug.com/azure-k3s-cluster-automation-in-10-minutes/</guid><description>背景 在云计算与容器化技术飞速发展的今天，快速搭建可扩展的 Kubernetes 集群成为开发者的必备技能。尤其是在开发测试环境中，能够快速创建、销毁集群是提升工作效率的关键。
-K3s 作为轻量级 Kubernetes 发行版，非常适合在云上快速搭建测试、开发或边缘计算集群。结合 IaC（基础设施即代码）工具 Terraform 和自动化脚本项目 k3s-cluster-automation，可以极大提升集群部署效率，降低人为操作风险。
-本文将介绍如何通过 Terraform 与 k3s-cluster-automation 脚本，在 Azure 云上实现从虚拟机创建到 K3s 集群部署的全自动化流程，整个过程无需手动干预，大幅提升开发测试效率。
-为什么选择 Azure + K3s + Terraform？ Azure：提供稳定的云计算资源，适合快速部署测试环境（还有另外一个原因，作为微软 MVP，可以免费使用 Azure 资源） K3s：轻量级 Kubernetes 发行版，资源占用少（仅需 512MB 内存），适合边缘计算与测试集群，是我喜欢的 Kubernetes 发行版之一 Terraform：基础设施即代码（IAC）工具，通过代码描述资源状态，支持版本控制与批量部署 前置条件 Azure 账户（需有资源创建权限） 本地环境：安装 Terraform CLI、Azure CLI K3s 部署工具：k3sup CLI（用于远程部署 K3s） 一、通过 Terraform 创建 Azure 虚拟机 1.</description></item><item><title>探索 OpenTelemetry Profiling 进展：eBPF 代理快速上手</title><link>https://atbug.com/exploring-opentelemetry-profiling-progress-ebpf-agent-quickstart/</link><pubDate>Sun, 10 Nov 2024 22:34:07 +0800</pubDate><guid>https://atbug.com/exploring-opentelemetry-profiling-progress-ebpf-agent-quickstart/</guid><description>本文将介绍 OpenTelemetry Profiling 的进展，以及快速体验 Profiling 的 eBPF 代理。关于有 OTEL Profile 的概念和实现，将在下一篇介绍。
-虽然 Profiling 进展迅速，Profile 功能仍然在实验阶段，不建议在生产环境使用。
-背景 在软件工程中，可观测性（Observability）是指收集和分析程序执行情况、模块内部状态以及组件间通信数据的能力。可观测性的三大支柱——指标、跟踪和日志——为我们提供了深入了解应用程序行为的关键手段，尤其在分布式系统中尤为重要。
-分布式系统的应用组件分布在多个节点上，导致事件链条和数据流的复杂化。通过有效运用这三大可观测性手段，可以帮助我们识别潜在问题、定位故障源，从而显著提高系统的稳定性和可维护性。
-尽管可观测性的三大手段能够提供大量关于系统行为和性能的洞察，但无法探究程序内部代码函数层级的运行时表现。性能分析（Profiling）为深入了解应用程序的资源使用和执行效率提供了方法指导。持续性能分析（Continuous profiling）可以在应用程序运行期间连续进行性能剖析，帮助开发人员准确理解代码随着时间推移的运行情况。
-今年 3 月，成立两年的 OpenTelemetry Profiling SIG 宣布支持 性能分析信号（Profiling Signal），半年多过去了，从规范到工具层面 Profiling 的支持取得了很大的进展。
-进展 OTLP Profile 类型 继 traces、metrics、logs 和 baggage 之后，在 OTLP 1.</description></item><item><title>K8sGPT+Ollama：免费的 Kubernetes 自动化诊断方案</title><link>https://atbug.com/k8sgpt-ollama-free-k8s-automation-diagnosis/</link><pubDate>Mon, 17 Jun 2024 20:05:13 +0800</pubDate><guid>https://atbug.com/k8sgpt-ollama-free-k8s-automation-diagnosis/</guid><description>周末检查博客草稿，发现了这篇。记得当时是与 Kubernetes 自动化诊断工具：k8sgpt-operator 一起写的，算算过去了一年之久，这拖延症也算是病入膏肓了。原本想使用 K8sGPT + LocalAI 的方案，由于之前试过 Ollama，感觉使用起来也更加友好，而且 Ollama 同样提供了 对 OpenAI API 的支持，索性改成用 Ollama 吧。
-介绍 k8sgpt-operator 的文章发布后，有小伙伴反馈 OpenAI 的使用门槛，这个问题确实比较棘手，但也不是不能解决。不过本文并不是介绍如何解决这种问题的，而是介绍 OpenAI 的替代方案： Ollama。
-对 k8sgpt 和 k8sgpt-operator 就不做过多介绍了，有兴趣的可以看回 上一篇，去年底 k8sgpt 进入了 CNCF Sandbox。
-1. 安装 Ollama Ollama 是一个开源的大模型工具，使用它可以在本地或云端轻松的安装和运行 多种流量的大模型。它的操作非常友好，只需简单的命令就能运行。在 macOS 上可以通过 homebrew 一键安装：</description></item><item><title>Kubernetes Gateway API v1.1 解读</title><link>https://atbug.com/kubernetes-gateway-api-v1-1-overview/</link><pubDate>Wed, 15 May 2024 10:38:06 +0800</pubDate><guid>https://atbug.com/kubernetes-gateway-api-v1-1-overview/</guid><description>几天前，K8s Network SIG 发布了 Gateway API（简称 gwapi）的 v1.1 版本，这个版本的发布包含了多项重要功能的 GA（一般可用），以及一些实验功能的引入。这两部分分别通过标准渠道和实验渠道发布。
-发布渠道用于指示网关 API 内的功能的稳定性。所有新功能和资源都是先从实验发布渠道开始，在后续迭代演进的过程中可能会升级到标准发布渠道，也有可能完全从 API 中废除。
-通过下图可以对 gwapi 的发布渠道有个清晰的了解。 在这些更新中，在我看来当属服务网格的支持 GA 最为重要，这意味着服务网格标准 API 向着统一又迈进了一步。差不多两年前，我曾写过 SMI 与 Gateway API 的 GAMMA 倡议意味着什么， 在 gwapi 差不多 1.0 的时候，SMI 在停止更新的几个月后归档了。
-标准发布渠道 GRPCRoute GA GRPCRoute API 的 v1 版本发布，标志着其可以在生产环境中稳定使用，并得到长期的支持的维护。同时 v1alpha2 版本被标记为废弃，在未来的版本中将会被移除。</description></item><item><title>探索 Gateway API 在 Service Mesh 中的工作机制</title><link>https://atbug.com/explore-how-gateway-api-works-in-service-mesh/</link><pubDate>Thu, 07 Sep 2023 12:57:26 +0800</pubDate><guid>https://atbug.com/explore-how-gateway-api-works-in-service-mesh/</guid><description>前几天 Gateway API 宣布在 0.8.0 中支持服务网格，这意味着 GAMMA（Gateway API for Mesh Management and Administration）有了新进展，虽然目前还是实验阶段。去年 6 月 Gateway API 发布 0.5.0 时，我还写了一篇 SMI 与 Gateway API 的 GAMMA 倡议意味着什么？。如今，SMI 作为 sandbox 项目的年度审查已经 过了几个月仍未提交，唏嘘。
-废话不多说，我们来看下 0.8.0 下的 Gateway API 如何在 Service Mesh 中工作。</description></item><item><title>Kubernetes 自动化诊断工具：k8sgpt-operator</title><link>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</link><pubDate>Tue, 02 May 2023 17:33:28 +0800</pubDate><guid>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</guid><description>背景 在 Kubernetes 上，从部署 Deployment 到正常提供服务，整个流程可能会出现各种各样问题，有兴趣的可以浏览 Kubernetes Deployment 的故障排查可视化指南（2021 中文版）。从可视化指南也可能看出这些问题实际上都是有迹可循，根据错误信息基本很容易找到解决方法。随着 ChatGPT 的流行，基于 LLM 的文本生成项目不断涌现，k8sgpt 便是其中之一。
-k8sgpt 是一个扫描 Kubernetes 集群、诊断和分类问题的工具。它将 SRE 经验编入其分析器，并通过 AI 帮助提取并丰富相关的信息。
-其内置了大量的分析器：
-podAnalyzer pvcAnalyzer rsAnalyzer serviceAnalyzer eventAnalyzer ingressAnalyzer statefulSetAnalyzer deploymentAnalyzer cronJobAnalyzer nodeAnalyzer hpaAnalyzer（可选） pdbAnalyzer（可选） networkPolicyAnalyzer（可选） k8sgpt 的能力是通过 CLI 来提供的，通过 CLI 可以对集群中的错误进行快速的诊断。</description></item><item><title>从单集群到多集群：Kubernetes在多云混合云环境的演进</title><link>https://atbug.com/kubernetes-cluster-evolution-in-multi-hybrid-cloud/</link><pubDate>Thu, 06 Apr 2023 16:13:14 +0800</pubDate><guid>https://atbug.com/kubernetes-cluster-evolution-in-multi-hybrid-cloud/</guid><description>Kubernetes 作为一项核心技术已成为现代应用程序架构的基础，越来越多的企业使用 Kubernetes 作为容器编排系统。
-下面的数据来自 2020 CNCF Survey 的原始数据，可以看到使用 Kubernete 的企业占比达到了 80%。
-Kubernetes 的流行主要有以下几个原因：
-自动化：Kubernetes 实现了容器的部署、扩展、负载均衡、故障恢复、滚动更新等操作的自动化，极大地简化了应用程序的管理和维护工作。这种自动化也提升了应用程序的弹性和可用性。 可移植性：Kubernetes 基于容器的架构模型，使得应用无需重新编码或更新配置就可以在任何云平台、物理机或者虚拟机中运行。 生态系统：Kubernetes 作为一个成功地开源项目，拥有强大的社区支持和生态系统，使其可以获得更好的创新、优化和安全性保障。从社区中，我们可以找到各种插件和工具，为开发者提供了丰富的选择和扩展性。 从单 Kubernetes 集群到多 Kubernetes 集群 初露端倪 企业中的应用程序通常比较复杂，需要不同的环境来进行开发、测试和生产部署。为了避免应用程序之间的干扰和交叉，通常需要在不同的 Kubernetes 集群中分别部署和管理应用程序。
-在同一个数据中心不同的环境部署独立的 Kubernetes 集群之后不同环境下的集群规模、管理方式、可靠性和安全性各有不同，从开发、测试到生产，成本的投入也逐步地提升，来保证更好的性能、更高的可靠性和安全性。
-这也是多 Kubernetes 集群的一种形式（注意这里说的是 多 Kubernetes 集群）。
-迅猛发展 随着对云计算接受程度不断提高、企业规模的持续增长，越来越多的企业开始考虑采用或者已经采用多云和混合云的架构。多云和混合云的驱动因素很多，总结之后分成了两类：主动因素和被动因素。</description></item><item><title>使用 eBPF 技术实现更快的网络数据包传输</title><link>https://atbug.com/accelerate-network-packets-transmission/</link><pubDate>Wed, 22 Mar 2023 07:03:28 +0800</pubDate><guid>https://atbug.com/accelerate-network-packets-transmission/</guid><description>在 上篇文章 用了整篇的内容来描述网络数据包在 Kubernetes 网络中的轨迹，文章末尾，我们提出了一种假设：同一个内核空间中的两个 socket 可以直接传输数据，是不是就可以省掉内核网络协议栈处理带来的延迟？
-不论是同 pod 中的两个不同容器，或者同节点的两个 pod 间的网络通信，实际上都发生在同一个内核空间中，互为对端的两个 socket 也都位于同一个内存中。而在上篇文章的开头也总结了数据包的传输轨迹实际上是 socket 的寻址过程，可以进一步将问题展开：同一节点上的两个 socket 间的通信，如果可以 快速定位到对端的 socket &amp;ndash; 找到其在内存中的地址，我们就可以跳过内核协议栈的环节进而加速数据包的传输。
-互为对端的两个 socket 也就是建立起连接的客户端 socket 和服务端 socket，他们可以通过 IP 地址和端口进行关联。客户端 socket 的本地地址和端口，是服务端 socket 的远端地址和端口；客户端 socket 的远端地址和端口，则是服务端 socket 的本地地址和端口。
-当客户端和服务端在完成连接的建立之后，如果可以使用本地地址 + 端口和远端地址 + 端口端口的组合 指向 socket，仅需调换本地和远端的地址 + 端口，即可定位到对端的 socket，然后将数据直接写到对端 socket（实际是写入 socket 的接收队列 RXQ，这里不做展开），就可以避开内核网络栈（包括 netfilter/iptables）甚至是 NIC 的处理。</description></item><item><title>kubectl foreach 在多个集群中执行 kubectl 命令</title><link>https://atbug.com/multi-clusters-operation-with-kubectl-foreach/</link><pubDate>Thu, 01 Dec 2022 08:04:02 +0800</pubDate><guid>https://atbug.com/multi-clusters-operation-with-kubectl-foreach/</guid><description>上周在写 K8s 多集群的流量调度 的 demo 部分时需要不停地在多个集群中安装组件、部署应用，或者执行各种命令。当时是通过 Linux shell 脚本并通过工具 kubectx 进行集群的切换，像这样：
-或者这样：
-操作繁琐，很是痛苦。
-今天偶然间发现了一个 kubectl 插件 kubectl foreach ，可以在多个集群（contexts）上执行 kubectl 命令。比如 kubectl foreach cluster-1 cluster-2 -- get po -n kube-system 。
-插件安装和使用很简单，通过 krew 进行安装：
-kubectl krew install foreach 使用也很简单：
-kubectl foreach -h Usage: kubectl foreach [OPTIONS] [PATTERN].</description></item><item><title>认识一下 Kubernetes 多集群服务 API</title><link>https://atbug.com/kubernetes-multi-cluster-api/</link><pubDate>Sun, 27 Nov 2022 22:37:11 +0800</pubDate><guid>https://atbug.com/kubernetes-multi-cluster-api/</guid><description>由于各种原因，采用 Kubernetes 的企业内部存在着几个、几十甚至上百个集群。比如处于研发流程上的考虑，不同环境下都存在独立的集群；监管层面的考虑，就地存储的用户数据需要搭配应用集群；单个集群的容量限制，无法满足业务体量；可用性要求的多云、多地、多中心；Kubernetes 原地升级成本大进而考虑新建集群，等等各种原因。然而，Kubernetes 设计之初并没有考虑多集群。
-这些集群彼此之间看似独立，但又有着千丝万缕的关系。比如高可用性的多集群，实现了集群级的灾备，但集群中的服务如何实现跨集群的故障迁移？
-我们先看下集群内的应用如何对集群外提供服务。由于 Kubernetes 网络隔离特性，存在着天然的网络边界，需要借助某些方案（如 Ingress、NodePort）来将服务暴露到集群外。虽然解决了连通性的问题，但是服务的注册和发现还无法解决。
-通常我们将 Service 作为 Kubernetes 平台的服务注册和发现，今天要介绍的 Multi-Cluster Service（多集群服务 API，简称 MCS API） 则可以看成是 跨 Kubernetes 集群的服务注册发现。
-MCS 介绍 MCS API 来自 Kubernetes Enhancement Proposal KEP-1645: Multi-Cluster Services API 目前还处于提案阶段。
-MCS 的目标是既然多集群不可避免，那就定义一套 API 来实现服务的跨集群注册和发现，并且这套 API 足够轻量级，做到能够像访问本地服务一样访问其他集群的服务。</description></item><item><title>一文搞懂 Kubernetes Gateway API 的 Policy Attachment</title><link>https://atbug.com/explore-k8s-gateway-api-policy-attachment/</link><pubDate>Sun, 30 Oct 2022 18:01:30 -0400</pubDate><guid>https://atbug.com/explore-k8s-gateway-api-policy-attachment/</guid><description>背景 在《SMI 与 Gateway API 的 GAMMA 倡议意味着什么？》的一文中，介绍过 Kubernetes Gateway API 处理东西向（网格）流量的可能性。让我们重新看下 Gateway API 中对流量定义（路由）的定义，以 HTTP 路由为例：
-apiVersion: gateway.networking.k8s.io/v1beta1 kind: HTTPRoute metadata: name: my-route namespace: gateway-api-example-ns2 spec: parentRefs: - kind: Gateway name: foo-gateway namespace: gateway-api-example-ns1 hostnames: - foo.example.com rules: - backendRefs: - name: foo-svc port: 8080 上面的 YAML 中，使用 parentRefs 字段将路由策略附加到了网关资源 foo-gateway 上。网关 foo-gateway 会根据请求头部的 HOST 来选择合适的 HTTPRoute，然后将流量代理到上游 Service foo-svc。简单来说，就是定义了“网关 -&amp;gt; 路由 -&amp;gt; 后端”的映射。</description></item><item><title>k3s 上的 kube-ovn 轻度体验</title><link>https://atbug.com/run-kube-ovn-on-k3s/</link><pubDate>Sat, 03 Sep 2022 19:10:39 +0800</pubDate><guid>https://atbug.com/run-kube-ovn-on-k3s/</guid><description>kube-ovn 从名字不难看出其是一款云原生的网络产品，将 SDN 等能力带入云原生领域。让 ovn/ovs 的使用更容易，屏蔽了复杂度，降低了使用的难度，并与云原生进行了结合。
-借助 OVS/OVN 在 SDN 领域成熟的能力，Kube-OVN 将网络虚拟化的丰富功能带入云原生领域。目前已支持子网管理， 静态 IP 分配，分布式/集中式网关，Underlay/Overlay 混合网络， VPC 多租户网络，跨集群互联网络，QoS 管理， 多网卡管理，ACL 网络控制，流量镜像，ARM 支持， Windows 支持等诸多功能。
-安装 k3s 参考官方的准备工作文档，操作系统使用 Ubuntu 20.04 以及 k3s v1.23.8+k3s2。
-在安装之前确保 /etc/cni/net.d/ 目录内容为空，不为空则清空其下的所有文件。kube-ovn 本身通过实现 cni 来管理网络。
-在安装 k3s 需要禁用 k3s 默认的网络策略控制器和flannel 的后端（默认是 VXLAN）：</description></item><item><title>另眼旁观 Linkerd 2.12 的发布：服务网格标准的曙光？</title><link>https://atbug.com/thoughts-on-linkerd-release/</link><pubDate>Sun, 28 Aug 2022 10:03:12 +0800</pubDate><guid>https://atbug.com/thoughts-on-linkerd-release/</guid><description>8 月 24 日，发明服务网格的公司 Buoyant 发布了 Linkerd 2.12，这是时隔近一年的版本发布。不知道大家的对新版本期待如何，在我来看新版本中的功能对于一年的时间来说确实不算多，但是我想说的是 Linkerd 还是那个 Linkerd，还是秉持着一贯的 “Keep it simple” 的设计理念。
-新版本的内容不一一介绍，其中最主要的功能：per-route 策略，相比上个版本基于端口的策略，扩展到了 per-route。
-而我想说的特别之处也就是在 per-route 和策略上。
-per-route 和策略有何特别之处？ 在《SMI 与 Gateway API 的 GAMMA 倡议意味着什么？》 层有过猜想：未来服务网格的标准有可能全部或者部分以 Kubernetes 原生 API 的方式存在。
-“网关 API，之于集群是入口/出口网关，之于 Pod 是 inbound/outbound sidecar。”</description></item><item><title>SMI 与 Gateway API 的 GAMMA 倡议意味着什么？</title><link>https://atbug.com/why-smi-collaborating-in-gateway-api-gamma/</link><pubDate>Fri, 22 Jul 2022 22:34:43 +0800</pubDate><guid>https://atbug.com/why-smi-collaborating-in-gateway-api-gamma/</guid><description>就在上周 Gateway API 发布版本 0.5.0，其中几个最重要的 CRD Gateway、GatewayClass 以及 HTTPRoute 第一次升级到了 beta 版本。升级的详细内容这里不做详谈，我也想说说的是与版本一同发布的，也是很容易被忽略的社区合作倡议 GAMMA。
-GAMMA 是 Gateway API Mesh Management and Administration 的简写，这个计划是 Gateway API 子项目中的一个专用工作流。这个小组的目标是调研、设计和跟踪 Gateway API 资源、语义和其他与服务网格技术和用例相关的组件。此外，小组还努力倡导服务网格项目的 Gateway API 实现之间的一致性，无论使用何种技术栈或者代理。
-可能你会有疑问如此简单一个倡议，有什么特别？有两点：
-规范的参与：这个倡议由 SIG Network（Gateway API 所在的 Kubernetes SIG）与服务网格社区共同发起，服务网格社区有来自 Cilium Service Mesh、Consul、Istio、Kuma、Linkerd、SMI、NGINX Service Mesh 和 Open Service Mesh 的代表。SMI 与其他几个不同，它是服务网格的规范 API，并非是实现，Gateway API 也一样。 面向东西向流量：小组的首个工作探索使用 Gateway API 处理东西向流量已经开始。东西向流量，也就是服务网格中服务到服务的流量。 可见，服务网格部分 API 的统一将迈进一步，且成为 Kubernetes 原生 API 的一员。当然现在还言之过早，还需看各个厂商的跟进程度。</description></item><item><title>ttl.sh：临时 Docker 镜像的匿名仓库</title><link>https://atbug.com/store-ephemeral-image-in-ttl-registry/</link><pubDate>Mon, 30 May 2022 07:25:42 +0800</pubDate><guid>https://atbug.com/store-ephemeral-image-in-ttl-registry/</guid><description>在平时的工作中，不知道你有没有经常需要构建容器镜像进行测试，并且不一定是在构建环境中使用镜像。这时候就需要将镜像推送到镜像仓库做中转，然后在别处拉取并运行容器。久而久之，因为忘记清理镜像仓库中的“垃圾”镜像越来越多。
-当然，也可以使用类似 Harbor 这种带有自动清理功能镜像仓库。但只是作为临时镜像的中转，Harbor 这种未免太重了。
-今天要介绍的 ttl.sh 正适合处理这种场景。
-ttl.sh ttl.sh 是一个匿名的临时镜像仓库，免费使用无需登录，并且已经开源。无需登录，镜像名称本身就提供了保密性，比如你可以使用 UUID 来作为镜像名称，使用同一个 UUID 来推送和拉取镜像。
-使用 ttl.sh 的使用格外简单，跟平时使用 Docker Hub 或者 Docker Registry 没差别，只是 tag 的需要注意一下。
-docker build 构建镜像时通过 tag 为镜像指定有效期，比如 ttl.sh/b0a2c1c3-5751-4474-9dfe-6a9e17dfb927:1h。有效期默认是 1 小时，最长是 24 小时。有效的 tag 可以是 5m、300s、4h、1d，如果超过 24 小时有效期会被设置为 24 小时；如果时间格式无效，有效期设置为默认的 1 小时； 使用 docker push 推送镜像； 使用 docker pull 拉取镜像。 比如：</description></item><item><title>开放服务网格 Open Service Mesh 如何开放？</title><link>https://atbug.com/how-open-presented-in-open-service-mesh/</link><pubDate>Wed, 13 Apr 2022 06:50:56 +0800</pubDate><guid>https://atbug.com/how-open-presented-in-open-service-mesh/</guid><description>TL;DR 本文从服务网格发展现状、到 Open Service Mesh 源码，分析开放服务网格中的开放是什么以及如何开放。笔者总结其开放体现在以下几点：
-资源提供者（Provider）接口和资源的重新封装：通过资源提供者接口抽象计算平台的资源，并封装成平台、代理无关的结构化类型，并由统一的接口 MeshCataloger 对外提供访问。虽然目前只有 Kubernetes 相关资源的 Provider 实现，但是通过抽象出的接口，可以兼容其他平台，比如虚拟机、物理机。 服务网格能力接口：对服务网格能力的抽象，定义服务网格的基础功能集。 代理控制面接口：这一层与反向代理，也就是 sidecar 的实现相关。实际上是反向代理所提供的接口，通过对接口的实现，加上 MeshCataloger 对资源的访问，生成并下发代理所需的配置。 背景 服务网格是什么 服务网格是在 2017年由 Buoyant 的 Willian Morgan 在 What’s a service mesh? And why do I need one? 给出了解释。
-服务网格是处理服务间网络通信的基础设施组件，旨在从平台层面提供可观性、安全以及可靠性特性，以进程外的方式提供原本由部分应用层逻辑承载的基础能力，真正实现与业务逻辑的分离。典型的实现是与应用程序一起部署的可扩展网络代理（通常称为 sidecar 模型），来代理服务间的网络通信，也是服务网格特性的接入点。这些代理就组成了服务网格的数据平面，并由控制平面进行统一的管理。</description></item><item><title>在 Kubernetes 集群中使用 MetalLB 作为 LoadBalancer（下）- BGP</title><link>https://atbug.com/load-balancer-service-with-metallb-bgp-mode/</link><pubDate>Mon, 07 Mar 2022 07:37:16 +0800</pubDate><guid>https://atbug.com/load-balancer-service-with-metallb-bgp-mode/</guid><description>在上一篇《在 Kubernetes 集群中使用 MetalLB 作为 LoadBalancer（上）- Layer2》中，我们使用 MetalLB 的 Layer2 模式作为 LoadBalancer 的实现，将 Kubernetes 集群中的服务暴露到集群外。
-还记得我们在 Configmap 中为 MetalLB 分配的 IP 地址池么？
-apiVersion: v1 kind: ConfigMap metadata: namespace: metallb-system name: config data: config: | address-pools: - name: default protocol: layer2 addresses: - 192.</description></item><item><title>在 Kubernetes 集群中使用 MetalLB 作为 LoadBalancer（上）- Layer2</title><link>https://atbug.com/load-balancer-service-with-metallb/</link><pubDate>Thu, 03 Mar 2022 01:12:17 +0800</pubDate><guid>https://atbug.com/load-balancer-service-with-metallb/</guid><description>这是系列文章的上篇，下篇《在 Kubernetes 集群中使用 MetalLB 作为 LoadBalancer（下）- BGP》。
-TL;DR 网络方面的知识又多又杂，很多又是系统内核的部分。原本自己不是做网络方面的，系统内核知识也薄弱。但恰恰是这些陌生的内容满满的诱惑，加上现在的工作跟网络关联更多了，逮住机会就学习下。
-这篇以 Kubernetes LoadBalancer 为起点，使用 MetalLB 去实现集群的负载均衡器，在探究其工作原理的同时了解一些网络的知识。
-由于 MetalLB 的内容有点多，一步步来，今天这篇仅介绍其中简单又容易理解的部分，不出意外还会有下篇（太复杂，等我搞明白先 :D）。
-LoadBalancer 类型 Service 由于 Kubernets 中 Pod 的 IP 地址不固定，重启后 IP 会发生变化，无法作为通信的地址。Kubernets 提供了 Service 来解决这个问题，对外暴露。
-Kubernetes 为一组 Pod 提供相同的 DNS 名和虚拟 IP，同时还提供了负载均衡的能力。这里 Pod 的分组通过给 Pod 打标签（Label ）来完成，定义 Service 时会声明标签选择器（selector）将 Service 与 这组 Pod 关联起来。</description></item><item><title>使用 Cilium 增强 Kubernetes 网络安全</title><link>https://atbug.com/enhance-kubernetes-network-security-with-cilium/</link><pubDate>Sun, 13 Feb 2022 05:03:48 +0800</pubDate><guid>https://atbug.com/enhance-kubernetes-network-security-with-cilium/</guid><description>TL;DR 在本篇，我们分别使用了 Kubernetes 原生的网络策略和 Cilium 的网络策略实现了 Pod 网络层面的隔离。不同的是，前者只提供了基于 L3/4 的网络策略；后者支持 L3/4、L7 的网络策略。
-通过网络策略来提升网络安全，可以极大降低了实现和维护的成本，同时对系统几乎没有影响。
-尤其是基于 eBPF 技术的 Cilium，解决了内核扩展性不足的问题，从内核层面为工作负载提供安全可靠、可观测的网络连接。
-目录 TL;DR 目录 背景 示例应用 Kubernetes 网络策略 测试 思考 Cilium 网络策略 Cilium 简介 测试 背景 为什么说 Kubernetes 网络存在安全隐患？集群中的 Pod 默认是未隔离的，也就是 Pod 之间的网络是互通的，可以互相通信的。
-这里就会有问题，比如由于数据敏感服务 B 只允许特定的服务 A 才能访问，而服务 C 无法访问 B。要禁止服务 C 对服务 B 的访问，可以有几种方案：</description></item><item><title>探秘 k8e：极简 Kubernetes 发行版</title><link>https://atbug.com/explore-simple-kubernetes-distribution/</link><pubDate>Mon, 07 Feb 2022 01:00:29 +0800</pubDate><guid>https://atbug.com/explore-simple-kubernetes-distribution/</guid><description>TL;DR 本文介绍并安装体验了极简 Kubernetes 发行版，也顺便分析学习下编译的流程。
-背景 k8e 本意为 kuber easy，是一个 Kubernetes 的极简发行版，意图让云原生落地部署 Kubernetes 更轻松。k8e 是基于另一个发行版 k3s ，经过裁剪（去掉了 Edge/IoT 相关功能、traefik等）、扩展（加入 ingress、sidecar 实现、cilium等）而来。
-k8e 具有以下特性：
-单二进制文件，集成了 k8s 的各种组件、containerd、runc、kubectl、nerdctl 等 使用 cilium 作为 cni 的实现，方便 eBPF 的快速落地 支持基于 Pipy 的 ingress、sidecar proxy，实现应用流量一站式管理 只维护一个 k8s 版本，目前是 1.</description></item><item><title>追踪 Kubernetes 中的网络流量</title><link>https://atbug.com/tracing-path-of-kubernetes-network-packets/</link><pubDate>Sat, 22 Jan 2022 10:15:31 +0800</pubDate><guid>https://atbug.com/tracing-path-of-kubernetes-network-packets/</guid><description>译者注：
-这篇文章很全面的罗列出了 Kubernetes 中涉及的网络知识，从 Linux 内核的网络内容，到容器、Kubernetes，一一进行了详细的说明。
-​文章篇幅有点长，不得不说，网络是很复杂很麻烦的一层，但恰恰这层多年来变化不大。希望翻译的内容对大家能有所帮助，有误的地方，也欢迎大家指正。
-本文翻译获得 Learnk8s 的授权，原文 Tracing the path of network traffic in Kubernetes 作者 Kristijan Mitevski。
-TL;DR： 本文将代理了解 Kubernetes 集群内外的数据流转。从最初的 Web 请求开始，一直到托管应用程序的容器。
-目录 目录 Kubernetes 网络要求 Linux 网络命名空间如何在 pod 中工作 Pause 容器创建 Pod 中的网络命名空间 为 Pod 分配了 IP 地址 检查集群中 pod 到 pod 的流量 Pod 命名空间连接到以太网桥接器 跟踪同一节点上 pod 间的流量 跟踪不同节点上 pod 间的通信 位运算的工作原理 容器网络接口 - CNI 检查 pod 到服务的流量 使用 Netfilter 和 Iptables 拦截和重写流量 检查服务的响应 回顾 Kubernetes 网络要求 在深入了解 Kubernetes 中的数据流转之前，让我们先澄清下 Kubernetes 网络的要求。</description></item><item><title>Kubernetes HPA 基于 Prometheus 自定义指标的可控弹性伸缩</title><link>https://atbug.com/kubernetes-pod-autoscale-on-prometheus-metrics/</link><pubDate>Tue, 18 Jan 2022 12:03:59 +0800</pubDate><guid>https://atbug.com/kubernetes-pod-autoscale-on-prometheus-metrics/</guid><description>在《Kubernetes 的自动伸缩你用对了吗？》 一文中详细说明了如何使用 Kubernetes 的自动伸缩。在 Kubernetes 中弹性伸缩主要有三种：HPA、VPA、CA。本文不再详细说明，有兴趣的可以看那篇文章。这里主要来说下 Pod 水平缩放 HPA。
-随着 Kubernetes v1.23 的发布，HPA 的 API 来到了稳定版 autoscaling/v2：
-基于自定义指标的伸缩 基于多项指标的伸缩 可配置的伸缩行为 从最初的 v1 版本 HPA 只支持 CPU、内存利用率的伸缩，到后来的自定义指标、聚合层 API 的支持，到了 v1.18 版本又加入了配置伸缩行为的支持，HPA 也越来越好用、可靠。
-依靠 CPU 或者内存指标的扩容并非使用所有系统，看起来也没那么可靠。对大部分的 web 后端系统来说，基于 RPS（每秒请求数）的弹性伸缩来处理突发的流量则会更加靠谱。
-Prometheus 也是当下流行开源监控系统，通过 Prometheus 可以获取到系统的实时流量负载指标，今天我们就来尝试下基于 Prometheus 的自定义指标进行弹性伸缩。</description></item><item><title>策略即代码：为了 OpenPolicyAgent 学 Rego？试试 Javascript</title><link>https://atbug.com/policy-as-code-with-pipy/</link><pubDate>Wed, 08 Dec 2021 07:49:37 +0800</pubDate><guid>https://atbug.com/policy-as-code-with-pipy/</guid><description>距离上个版本 用 Pipy 实现 OPA，已经过去快半年了。当初使用Pipy 实现了可信镜像仓库的检查，那时的版本实现起来会稍微复杂，从策略仓库到证书创建到Admission Webhook 的创建都需要大量的人工操作，配置和逻辑也还是耦合在一起。
-这个版本安装和使用起来会更加简单。
-当初我用“不务正业”来形容 Pipy 实现准入控制，等看完这篇文章，欢迎留言说说你的看法。
-架构 还是继续上次的场景，在 Pod 创建时对 Pod 使用的镜像所在仓库进行检查，以及检查镜像的 tag 是否合法。
-这里借助 Pipy Repo 的能力，将代表策略的脚本和配置交由 Repo 进行管理；Pipy 实例实时从 Pipy Repo 同步策略，并进行动态加载。
-同时 Pipy Repo 对外提供 REST API 来管理策略，对策略的修改更容易。也方便与企业现有管理后台进行对接。
-下面就开始部署验证，这里所使用的所有代码都已提交到 GitHub 仓库：https://github.com/flomesh-io/demo-policy-as-code。</description></item><item><title>沙盒化容器：是容器还是虚拟机</title><link>https://atbug.com/sandboxed-container/</link><pubDate>Tue, 07 Dec 2021 07:55:16 +0800</pubDate><guid>https://atbug.com/sandboxed-container/</guid><description>随着 IT 技术的发展，AI、区块链和大数据等技术提升了对应用毫秒级扩展的需求，开发人员也面临着的功能快速推出的压力。混合云是新常态，数字化转型是保持竞争力的必要条件，虚拟化成为这些挑战的基本技术。
-在虚拟化的世界，有两个词耳熟能详：虚拟机和容器。前者是对硬件的虚拟化，后者则更像是操作系统的虚拟化。两者都提供了沙箱的能力：虚拟机通过硬件级抽象提供，而容器则使用公共内核提供进程级的隔离。有很多人将容器看成是“轻量化的虚拟机”，通常情况下我们认为容器是安全的，那到底是不是跟我们想象的一样？
-容器：轻量化的虚拟机？ 容器是打包、共享和部署应用的现代化方式，帮助企业实现快速、标准、灵活地完成服务交互。容器化是建立在 Linux 的命名空间（namespace）和控制组（cgroup） 的设计之上。
-命名空间创建一个几乎隔离的用户空间，并为应用提供专用的系统资源，如文件系统、网络堆栈、进程ID和用户ID。随着用户命名空间的引入，内核版本 3.8 提供了对容器功能的支持：Mount（mnt）、进程 ID（pid）、Network（net）、进程间通信（ipc）、UTS、用户 ID（user）6 个命名空间（如今已达 8 个，后续加入了 cgroup 和 time 命名空间）。
-cgroup 则实施对应用的资源限制、优先级、记账和控制。cgroup可以控制 CPU、内存、设备和网络等资源。
-同时使用 namespace 和 cgroup 使得我们可以在一台主机上安全地运行多个应用，并且每个应用都位于隔离的环境中。
-虚拟机提供更强大的隔离 虽然容器很棒，足够轻量级。但通过上面的描述，同一个主机上的多个容器其实是共享同一个操作系统内核，只是做到了操作系统级的虚拟化。虽然命名空间提供了高度的隔离，但仍然有容器可以访问的资源，这些资源并没有提供命名空间。这些资源是主机上所有容器共有的，比如内核 Keyring、/proc、系统时间、内核模块、硬件。
-我们都知道没有 100% 安全的软件，容器化的应用也一样，从应用源码到依赖库到容器 base 镜像，甚至容器引擎本身都可能存在安全漏洞。发生容器逃逸的风险远高于虚拟机，黑客可以利用这些逃逸漏洞，操作容器的外部资源也就是宿主机上的资源。除了漏洞，有时使用的不当也会带来安全风险，比如为容器分配了过高的权限（CAP_SYS_ADMIN 功能、特权权限），都可能导致容器逃逸。
-而虚拟机依靠硬件级的虚拟化，实现的硬件隔离比命名空间隔离提供了更强大的安全边界。与容器相比，虚拟机提供了更高程度的隔离，只因其有自己的内核。
-由此可见，容器并不是真正的“沙盒”，也并不是轻量化的虚拟机。有没有可能为容器增加一个更安全的边界，尽可能的与主机操作系统隔离，做到类似虚拟机的强隔离，使其成为真正的“沙盒”？</description></item><item><title>低复杂度 - 服务网格的下一站</title><link>https://atbug.com/service-mesh-unnecessary-complexity/</link><pubDate>Fri, 15 Oct 2021 07:58:25 +0800</pubDate><guid>https://atbug.com/service-mesh-unnecessary-complexity/</guid><description>译者：
-作为一个曾经在制造业企业的基础架构团队任职，为支持公司的“互联网基因”和“数字化转型”落地了云原生基础设施平台，并在尝试采用服务网格未成的我来说，看到这篇文章深有感触。尤其是文中所说的“人少，问题多，需要快速输出价值”，直戳到了痛处。有限的人手有限的时间，我们需要将大部分精力集中在解决成熟度曲线较低的基本问题上，要想很好的运行复杂的系统是非常困难的。
-服务网格是一个新的基础设施层，可以承载很多的功能，未来还会有更大的想象空间和光明的未来。
-以上的种种原因，也促使我后来选择进入一家提供服务网格的产品企业，也希望服务网格可以被更简单的使用。
-“道阻且长，行则将至！”
-本文翻译自 Chris Campbell 的 How Unnecessary Complexity Gave the Service Mesh a Bad Name
-关键要点 采用服务网格有巨大的价值，但必须以轻量级的方式进行，以避免不必要的复杂性。 在实施服务网时，要采取务实的方法，与技术的核心功能保持一致，并小心干扰（译者：注意力的分散）。 服务网格的一些核心特性包括标准化监控、自动加密和身份识别、智能路由、可靠的重试和网络可扩展性。 服务网格可以提供强大的功能，但这些功能会分散本应对核心优势的关注，并且这些功能也不是实施服务网格的主要原因。 在初始实施服务网格时没有必要去关注那些明显会分散注意力的功能，比如复杂的控制平面、多集群支持、Envoy、WASM 和 A/B 测试。 服务网格是 Kubernetes 世界中的一个热门话题，但许多潜在的采用者已经有些失望了。服务网格的落地受到压倒性的复杂性和看似无穷无尽的供应商解决方案的限制。在我亲自浏览了这个领域之后，我发现采用服务网格具有巨大的价值，但它必须以轻量级的方式完成，以避免不必要的复杂性。尽管普遍存在幻灭感，但服务网格的未来依然光明。
-在工作中学习 我进入服务网格的世界始于我在一家老牌的财富 500 强技术公司担任云计算架构师的角色。在开始我们的服务网格之旅时，我身边有许多强大的工程师，但大多数人几乎没有云计算开发经验。我们的组织诞生于云计算之前，完全实现云计算的价值需要时间。我们的传统业务线主要集中在技术栈的硬件元素上，云计算的决策最初是由为运送硬件或为该硬件提供固件和驱动程序而开发的流程驱动的。
-随着该组织经历其“数字化转型”，它越来越依赖于提供高质量的软件服务，并逐渐开发出更好的方法。但作为云计算架构师，我仍在为优先考虑硬件的业务流程，以及具有不同技能、流程和信念的工程团队导航。随着时间的推移，我和我的团队在将 .NET 应用程序迁移到 Linux、采用 Docker、迁移到 AWS 以及与之相关的最佳实践（如持续集成、自动化部署、不可变基础设施、基础设施即代码、监控等）方面变得熟练并成功。但挑战依然存在。</description></item><item><title>使用 Flomesh 进行 Dubbo 服务治理</title><link>https://atbug.com/enhance-dubbo-service-governance-with-flomesh/</link><pubDate>Wed, 18 Aug 2021 09:50:28 +0800</pubDate><guid>https://atbug.com/enhance-dubbo-service-governance-with-flomesh/</guid><description>写在最前 和上一篇《使用 Flomesh 强化 Spring Cloud 服务治理》一样，这次同样是在无代码侵入的情况下对 Dubbo 服务治理的提升。
-更多治理场景陆续添加中，有兴趣的可关注 https://github.com/flomesh-io/service-mesh-dubbo-demo。
-开源的 Pipy 作为 Flomesh 的核心，得益于其轻量及灵活性可以通过编程的方式轻松快速的支持多中平台的服务发现机制，比如 Eureka、Consul、Nacos 等。
-概览 细节 环境搭建 搭建 Kubernetes 环境，可以选择 kubeadm 进行集群搭建。也可以选择 minikube、k3s、Kind 等，本文使用 k3s。
-使用 k3d 安装 k3s。k3d 将在 Docker 容器中运行 k3s，因此需要保证已经安装了 Docker。
-$ k3d cluster create dubbo-demo -p &amp;#34;80:80@loadbalancer&amp;#34; --k3s-server-arg &amp;#39;--no-deploy=traefik&amp;#39; 安装 Flomesh 从仓库 https://github.</description></item><item><title>使用 Flomesh 强化 Spring Cloud 服务治理</title><link>https://atbug.com/enhance-springcloud-service-governance-with-flomesh/</link><pubDate>Tue, 17 Aug 2021 18:47:33 +0800</pubDate><guid>https://atbug.com/enhance-springcloud-service-governance-with-flomesh/</guid><description>写在最前 这篇是关于如何使用 Flomesh 服务网格来强化 Spring Cloud 的服务治理能力，降低 Spring Cloud 微服务架构落地服务网格的门槛，实现“自主可控”。
-文档在 github 上持续更新，欢迎大家一起讨论：https://github.com/flomesh-io/flomesh-bookinfo-demo。
-架构 环境搭建 搭建 Kubernetes 环境，可以选择 kubeadm 进行集群搭建。也可以选择 minikube、k3s、Kind 等，本文使用 k3s。
-使用 k3d 安装 k3s。k3d 将在 Docker 容器中运行 k3s，因此需要保证已经安装了 Docker。
-$ k3d cluster create spring-demo -p &amp;#34;81:80@loadbalancer&amp;#34; --k3s-server-arg &amp;#39;--no-deploy=traefik&amp;#39; 安装 Flomesh 从仓库 https://github.</description></item><item><title>Open Policy Agent: Top 5 Kubernetes 准入控制策略</title><link>https://atbug.com/open-policy-agent-top-5-kubernetes-admission-control/</link><pubDate>Mon, 12 Jul 2021 08:20:40 +0800</pubDate><guid>https://atbug.com/open-policy-agent-top-5-kubernetes-admission-control/</guid><description>如何使用 Open Policy Agent 实现准入策略控制，可以参考这里
-本文翻译自 Open Policy Agent: The Top 5 Kubernetes Admission Control Policies
-Kubernetes 开发人员和平台工程师通常承受着非常大的压力，以保持应用程序部署的快速进行，并且总是为了速度和进度而做出妥协。平台团队越来越有责任确保这些妥协（例如管理 Ingress）不会导致客户数据暴露在整个互联网上等后果。
-幸运的是，Kubernetes 提供了设置策略的能力，通过检查并防止部署错误将其投入生产，从而避免这些后果。为了确保团队的应用程序不会比信心更重要，以下是现在应该在集群中运行的前五个 Kubernetes 准入控制策略。
-1. 可信镜像仓库 此策略很简单，但功能强大：仅允许从受信任的镜像仓库中拉取的容器映像，并且可以选择仅拉取与允许的仓库镜像地址列表匹配的那些镜像。
-当然，从互联网（或可信镜像仓库库以外的任何地方）拉取未知镜像会带来风险——例如恶意软件。但是还有其他很好的理由来维护单一的可信来源，例如在企业中实现可支持性。通过确保镜像仅来自受信任的镜像仓库，可以密切控制镜像库存，降低软件熵和蔓延的风险，并提高集群的整体安全性。
-相关策略：
-禁止所有带有“latest” tag 的镜像 仅允许签名镜像或匹配特定哈希/SHA 的镜像 策略示例：
-package kubernetes.validating.images deny[msg] { some i input.</description></item><item><title>Kubernetes 的魔力在于企业标准化，而不是应用程序的可移植性</title><link>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</link><pubDate>Sun, 11 Jul 2021 08:05:42 +0800</pubDate><guid>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</guid><description>笔者：Kubernetes 抽象了资源和工作负载的操作模式，统一了工具集，实现人机接口的标准化。正如类 Docker 工具提供了应用运行时的操作模式；Spring Framework 提供了 Java 应用的开发模式。
-Kubernetes 是关于跨云的技能、工具和实践的可移植性。不是工作负载的可移植性。 &amp;ndash; Bilgin Lbryam @bibryam
-本文翻译自 Kubernetes magic is in enterprise standardization, not app portability
-Kubernetes 不会神奇地使你的应用程序具有可移植性，但它可能会给你带来更好的东西。
-云为企业提供了看似无限的选择。然而，根据 Canonical-sponsored 的一项调查，这并不是大多数企业采用 Kubernetes 等云友好技术的原因。相反，Kubernetes 的主要目标是标准化——外观和操作与其他人一样。
-可移植性不是目标 我之前已经讨论过这个问题，参考了 Gartner 关于 Kubernetes 和可移植性的指南。许多人认为 Kubernetes（和容器）可以让他们在云之间轻松移植，但事实证明并不是这样的。正如 Gartner 分析师 Marco Meinardi 所写，当被问及公司是否应该采用“Kubernetes 使他们的应用程序可移植&amp;hellip;&amp;hellip;答案是：不。” 再说一次？</description></item><item><title>使用 Open Policy Agent 实现可信镜像仓库检查</title><link>https://atbug.com/image-trusted-repository-with-open-policy-agent/</link><pubDate>Sat, 10 Jul 2021 07:14:47 +0800</pubDate><guid>https://atbug.com/image-trusted-repository-with-open-policy-agent/</guid><description>从互联网（或可信镜像仓库库以外的任何地方）拉取未知镜像会带来风险——例如恶意软件。但是还有其他很好的理由来维护单一的可信来源，例如在企业中实现可支持性。通过确保镜像仅来自受信任的镜像仓库，可以密切控制镜像库存，降低软件熵和蔓延的风险，并提高集群的整体安全性。除此以外，有时还会需要检查镜像的 tag，比如禁止使用 latest 镜像。
-这今天我们尝试用“策略即代码”的实现 OPA 来实现功能。
-还没开始之前可能有人会问：明明可以实现个 Admission Webhook 就行，为什么还要加上 OPA？
-确实可以，但是这样策略和逻辑都会耦合在一起，当策略需要调整的时候需要修改代码重新发布。而 OPA 就是用来做解耦的，其更像是一个策略的执行引擎。
-什么是 OPA Open Policy Agent（以下简称 OPA，发音 “oh-pa”）一个开源的通用策略引擎，可以统一整个堆栈的策略执行。OPA 提供了一种高级声明性语言（Rego），可让你将策略指定为代码和简单的 API，以从你的软件中卸载策略决策。你可以使用 OPA 在微服务、Kubernetes、CI/CD 管道、API 网关等中实施策略。
-Rego 是一种高级的声明性语言，是专门为 OPA 建立的。更多 OPA 的介绍可以看 Open Policy Agent 官网，不想看英文直接看这里。
-现在进入正题。
-启动集群 启动 minikube</description></item><item><title>常用的几款工具让 Kubernetes 集群上的工作更容易</title><link>https://atbug.com/tools-accelerate-work-on-kubernetes-cluster/</link><pubDate>Sat, 26 Jun 2021 12:16:28 +0800</pubDate><guid>https://atbug.com/tools-accelerate-work-on-kubernetes-cluster/</guid><description>之前写过一篇 介绍了工具加速云原生 Java 开发。
-其实日常工作中在集群上的操作也非常多，今天就来介绍我所使用的工具。
-kubectl-alias 使用频率最高的工具，我自己稍微修改了一下，加入了 StatefulSet 的支持。
-这个是我的 https://github.com/addozhang/kubectl-aliases，基于 https://github.com/ahmetb/kubectl-aliases。
-比如输出某个 pod 的 json，kgpoojson xxx 等同于 kubectl get pod xxx -o json。
-结合 jq 使用效果更好 😂。
-语法解读 k=kubectl sys=--namespace kube-system commands: g=get d=describe rm=delete a:apply -f ak:apply -k k:kustomize ex: exec -i -t lo: logs -f resources: po=pod, dep=deployment, ing=ingress, svc=service, cm=configmap, sec=secret,ns=namespace, no=node flags: output format: oyaml, ojson, owide all: --all or --all-namespaces depending on the command sl: --show-labels w=-w/--watch value flags (should be at the end): n=-n/--namespace f=-f/--filename l=-l/--selector kubectx + kubens 安装看这里</description></item><item><title>Jenkins 如何与 Kubernetes 集群的 Tekton Pipeline 交互？</title><link>https://atbug.com/jenkins-interact-with-tekton-pipelines-via-plugin/</link><pubDate>Wed, 23 Jun 2021 07:58:45 +0800</pubDate><guid>https://atbug.com/jenkins-interact-with-tekton-pipelines-via-plugin/</guid><description>本文详细介绍了 Jenkins 如何通过 tekton-client-plugin 实现与 Kubernetes 上的 Tekton Pipeline 交互，包括 Kubernetes 上安装 Jenkins、Tekton Pipelines 等。
-关于如何使用 Tekton Pipeline 实现 CICD 可以看这篇文章 云原生 CICD: Tekton Pipeline 实战
-本文用于构建的项目以及所有 manifest yaml 都在可以在这里下载。
-TL;DR 惯例，先上总结。tekton-client-plugin 虽然还是处于初期阶段，但是 其价值非常明显，尤其是对先用使用 Jenkins 作为 CICD 实现的用户来说。从 Jenkins 迁移到云原生的 Tekton 时，可以省掉用户界面的开发成本，而且尽可能少的改变用户习惯 ，依靠版本管理可以控制迁移的节奏。</description></item><item><title>云原生 CICD: Tekton Pipeline 实战</title><link>https://atbug.com/tekton-pipeline-practice/</link><pubDate>Tue, 22 Jun 2021 07:19:33 +0800</pubDate><guid>https://atbug.com/tekton-pipeline-practice/</guid><description>更新历史：
-v1：2020.1.21 基于 Tekton Pipline v0.9.0 v2（当前）：2021.6.22 基于 Tekton Pipeline v0.25.0 Tekton 是 Google 开源的 Kubernetes 原生CI/CD 系统, 功能强大扩展性强. 前身是 Knavite 里的 build-pipeline 项目, 后期孵化成独立的项目. 并成为 CDF 下的四个项目之一, 其他三个分别是 Jenkins, Jenkins X, Spinnaker.
-为什么说 Tekton 是 Kubernetes 原生的, 以内其基于 Kubernetes 的 CRD 定义了 Pipeline 流水线.</description></item><item><title>初探可编程网关 Pipy</title><link>https://atbug.com/glance-at-programmable-gateway-pipy/</link><pubDate>Mon, 31 May 2021 00:45:08 +0800</pubDate><guid>https://atbug.com/glance-at-programmable-gateway-pipy/</guid><description>有幸参加了 Flomesh 组织的workshop，了解了他们的 Pipy 网络代理，以及围绕 Pipy 构建起来的生态。Pipy 在生态中，不止是代理的角色，还是 Flomesh 服务网格​中的数据平面。
-整理一下，做个记录，顺便瞄一下 Pipy 的部分源码。
-介绍 下面是摘自 Github 上关于 Pipy 的介绍：
-Pipy 是一个轻量级、高性能、高稳定、可编程的网络代理。Pipy 核心框架使用 C++ 开发，网络 IO 采用 ASIO 库。 Pipy 的可执行文件仅有 5M 左右，运行期的内存占用 10M 左右，因此 Pipy 非常适合做 Sidecar proxy。
-Pipy 内置了自研的 pjs 作为脚本扩展，使得Pipy 可以用 JS 脚本根据特定需求快速定制逻辑与功能。</description></item><item><title>开箱即用的 Prometheus 告警规则集</title><link>https://atbug.com/introduction-awesome-prometheus-alerts/</link><pubDate>Thu, 13 May 2021 08:01:00 +0800</pubDate><guid>https://atbug.com/introduction-awesome-prometheus-alerts/</guid><description>在配置系统监控的时候，是不是即使绞尽脑汁监控的也还是不够全面，或者不知如何获取想要的指标。
-Awesome Prometheus alerts 维护了一套开箱即用的 Prometheus 告警规则集合，有 300 多个告警规则。同时，还是说明如何获取对应的指标。这些规则，对每个 Prometheus 都是通用的。
-涉及如主机、硬件、容器等基础资源，到数据库、消息代理、运行时、反向代理、负责均衡器，运行时、服务编排，甚至是网络层面和 Prometheus 自身和集群。
-Prometheus 的安装和配置不做赘述，配置可以看这里。下面简单看下几个常用规则
-主机和硬件资源 主机和硬件资源的告警依赖 node-exporter 输出的指标。例如：
-内存不足 可用内存低于阈值 10% 就会触发告警。
-- alert: HostOutOfMemory expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 &amp;lt; 10 for: 2m labels: severity: warning annotations: summary: Host out of memory (instance {{ $labels.</description></item><item><title>Quarkus：谁说 Java 不能用来跑 Serverless？</title><link>https://atbug.com/quarkus-enable-java-running-in-serverless/</link><pubDate>Sat, 24 Apr 2021 09:16:05 +0800</pubDate><guid>https://atbug.com/quarkus-enable-java-running-in-serverless/</guid><description>想到这个标题的时候，我第一时间想到的就是星爷的《唐伯虎点秋香》的这一幕。
-当讨论起世界上最好的开发语言是什么的时候，Java 的粉丝们总会遇到这种场景：
-吹：“Java 语法简单，容易上手！” 黑：“Java 启动慢，性能差，耗资源！” 吹：“Java 有世界上最多的程序员！” 黑：“Java 启动慢，性能差，耗资源！” 吹：“Java 生态好！” 黑：“Java 启动慢，性能差，耗资源！” 吹：“滚！”
-今天我们继续说说 Quarkus，应“云”而生的 Java 框架。今天算是第三篇了，没看过的同学可以回顾一下：
-Hello, Quarkus 应&amp;quot;云&amp;quot;而生的 Java 框架 Quarkus：构建本机可执行文件 上一篇的结尾预告：试试 Quarkus 在 ArgoCD 中的应用，看下 Serverless 上的使用体验。不过不想用 ArgoCD 了，因为这 workflow 这种场景实在体现不出 Quarkus 到底有多快。但又想做 Serverless，那就想到了 Knative Serving 了。</description></item><item><title>Tekton 0.9.0 更新</title><link>https://atbug.com/tekton-0.9.0-release/</link><pubDate>Sun, 19 Jan 2020 14:33:17 +0800</pubDate><guid>https://atbug.com/tekton-0.9.0-release/</guid><description>翻译整理自 What’s New in Tekton 0.9
-功能及Bug修复 脚本模式 以前如果要在容器里运行个简单的 bash 脚本, 需要这么写:
-- name: hello image: ubuntu command: [&amp;#39;bash&amp;#39;] args: - -c - | set -ex echo &amp;#34;hello&amp;#34; 在 0.9 之后, 可以更加简单, 不需要再写command 和讨厌的-c.
-- name: hello image: ubuntu script: | #!</description></item><item><title>Minikube安装istio</title><link>https://atbug.com/install-istio-on-minikube/</link><pubDate>Fri, 17 Jan 2020 08:02:42 +0800</pubDate><guid>https://atbug.com/install-istio-on-minikube/</guid><description>准备 注意: istioctl的安装要使用安装里的, 不要是用homebrew里的. github issue
-curl -L https://istio.io/downloadIstio | sh - cd istio-1.4.2 cp bin/istioctl /usr/local/bin/istioctl 安装前检查 istioctl verify-install 如果检查没问题, 会看到Install Pre-Check passed! The cluster is ready for Istio installation.
-安装 istio有5种内建的安装配置1: remote, sds, default, demo, minimal
-istioctl profile list minimal: 使用istio的流量管理所需组件的最小化安装 default: 根据IstioControlPlane API的默认设置(建议用于生产部署)启用组件.</description></item><item><title>加速云原生的 Java 开发</title><link>https://atbug.com/speed-up-java-development-on-kubernetes/</link><pubDate>Sat, 21 Dec 2019 20:45:22 +0800</pubDate><guid>https://atbug.com/speed-up-java-development-on-kubernetes/</guid><description>今天来说说日常在Kubernetes开发Java项目遇到的问题.
-当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是copy+paste+modify. 能否以变成的方式来生成?
-开发时的步骤也比较繁琐: docker build, docker push, kubectl apple, kubectl delete pod. 对于一个Java应用来说还多了一步编译. 操作一次还ok, 但是一天十几次总会有想吐的感觉. 这些步骤能否简化成一个命令, 甚至修改了代码自动就完成上面一系列的操作?
-实现这些我们需要几个工具: dekorate, Jib, Skaffold. 其中Jib也在上一篇文章使用Jib为Java应用构建镜像中介绍过.
-dekorate Dekorate is a collection of Java compile-time generators and decorators for Kubernetes/OpenShift manifests. Dekorate是Java编译时生成和装饰Kubernetes/OpenShift的manifests的工具</description></item><item><title>macOS 安装 minishift</title><link>https://atbug.com/install-minishift-on-mac/</link><pubDate>Fri, 23 Feb 2018 15:32:26 +0000</pubDate><guid>https://atbug.com/install-minishift-on-mac/</guid><description>MacOS环境安装minishift
-安装minishift cli brew cask install minishift 使用virtualbox安装 安装的时候可以指定HTTP代理, 拉取墙外镜像时需要; 还可以指定insecure的镜像库.
-minishift start --docker-env HTTP_PROXY=&amp;#34;192.168.99.1:1087&amp;#34; --docker-env HTTPS_PROXY=&amp;#34;192.168.99.1:1087&amp;#34; --docker-env NO_PROXY=&amp;#34;192.168.0.0/16,172.30.0.0/16&amp;#34; --insecure-registry=&amp;#34;192.168.1.34&amp;#34; --vm-driver=virtualbox 启动 minishift start --vm-driver=virtualbox 删除 minishift delete 打开Openshift控制面板 minishift dashboard 获取集群ip地址 minishift ip 安装Openshift Cli brew install openshift-cli 可以使用openshift cli进行操作.</description></item><item><title>Kubernetes — 持久卷</title><link>https://atbug.com/kubernetes-persistent-volumes/</link><pubDate>Sun, 20 Aug 2017 22:25:40 +0000</pubDate><guid>https://atbug.com/kubernetes-persistent-volumes/</guid><description>Persistent Volume 译自Persistent Volumes
-介绍 管理存储是管理计算的独特问题。 PersistentVolume子系统为用户和管理员提供了一个API，其中提供了如何从如何使用存储提供存储的详细信息。为此，我们介绍两种新的API资源：PersistentVolume和PersistentVolumeClaim。
-PersistentVolume（PV）是由管理员配置的集群中的一段存储。它是集群中的一种资源就像一个节点是一个集群的资源。 PV是类似Volumes的卷插件，但是具有独立于使用PV的任何单个pod的生命周期。该API对象捕获存储的实现细节，即NFS，iSCSI或云提供商特定的存储系统。
-PersistentVolumeClaim（PVC）是用户存储的请求。它类似于pod。 Pod消耗节点资源，PVC消耗PV资源。Pods可以请求特定级别的资源（CPU和内存）。声明可以请求特定的大小和访问模式（例如，一次读写或者多次只读）。
-虽然PersistentVolumeClaims允许用户使用抽象存储资源，但是常见的是，用户需要具有不同属性（如性能）的PersistentVolumes，用于不同的问题。 集群管理员需要能够提供多种彼此不同的PersistentVolumes，而不仅仅是大小和访问模式，而不会使用户了解这些卷的实现细节。 对于这些需求，有一个StorageClass资源。
-StorageClass为管理员提供了一种描述他们提供的存储的“类”的方法。 不同的类可能映射到服务质量级别，或备份策略，或者由群集管理员确定的任意策略。 Kubernetes本身对于什么类别代表是不言而喻的。 这个概念有时在其他存储系统中称为“配置文件”。
-请参阅详细演练与工作示例。
-存储和声明的生命周期 PVs是集群中的资源；PVCs是对这种资源的声明，同时也扮演者对资源声明的检查。PVs和PVCs之前的交互遵循生命周期：供应、绑定、使用中、重新申请。
-集群管理员创建多个PV。它们携带可供集群用户使用的真实存储的详细信息。它们存在于Kubernetes API中，可用于消费。
-供应(Provisioning) PVs会以两种方式供应：静态和动态。
-静态 集群管理员创建多个PV。 它们携带可供集群用户使用的真实存储的详细信息。 它们存在于Kubernetes API中，可被使用。
-动态 当管理员创建的静态PV都不匹配用户的PersistentVolumeClaim时，集群可能会尝试为PVC指定动态配置卷。 此配置基于StorageClasses：PVC必须指定一个类，并且管理员必须已创建并配置该类才能进行动态配置。 要求该类的声明有效地为自己禁用动态配置。
-绑定(Binding) 当用户创建、或已经创建了一个PersistenVolumenClaim并指定大小和访问类型。Master中的控制循环会检测新的PVC，找到一个匹配的PV（如果可能的话），并将它们绑定在一起。如果一个PV被动态地供应某个PVC，循环将总是把这个PV和该PVC绑定。否则，用户总是至少得到他们要求的内容，但是卷可能超出了要求。一旦绑定，PersistentVolumeClaim绑定是排他的，不管用于绑定它们的模式。
-如果匹配的卷不存在，请求将无限期地保持。 随着匹配卷变得可用，请求将被绑定。 例如，提供许多50Gi PV的集群将不匹配要求100Gi的PVC。 当集群中添加100Gi PV时，可以绑定PVC。</description></item><item><title>Kubernetes学习 — Macos安装Kubernetes</title><link>https://atbug.com/install-kubernetes-on-macos/</link><pubDate>Thu, 17 Aug 2017 09:44:17 +0000</pubDate><guid>https://atbug.com/install-kubernetes-on-macos/</guid><description>Kubernetes 安装 macos 检查环境 sysctl -a | grep machdep.cpu.features | grep VMX 安装VirtualBox http://download.virtualbox.org/virtualbox/5.1.26/Oracle_VM_VirtualBox_Extension_Pack-5.1.26-117224.vbox-extpack 安装minikube curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.21.0/minikube-darwin-amd64 &amp;amp;&amp;amp; chmod +x minikube &amp;amp;&amp;amp; sudo mv minikube /usr/local/bin/ 创建集群 默认使用virtualbox。
-主机的ip是192.168.31.186， 1087是proxy的端口。需要将ss的http代理监听地址从127.0.0.1改为主机的ip。
-#启动 minikube start #使用私有库 minikube start --insecure-registry=&amp;#34;192.168.31.34&amp;#34; #使用proxy，用于获取镜像 minikube start --docker-env HTTP_PROXY=&amp;#34;192.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>云原生 on 乱世浮生</title><link>https://atbug.com/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/</link><description>Recent content in 云原生 on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Fri, 03 Apr 2026 08:12:20 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes externalIPs：已知六年的安全漏洞，终于要移除了</title><link>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</link><pubDate>Fri, 03 Apr 2026 08:12:20 +0800</pubDate><guid>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;Kubernetes Service 的 &lt;code&gt;externalIPs&lt;/code&gt; 字段存在长达六年的中间人攻击漏洞（&lt;a href="https://nvd.nist.gov/vuln/detail/CVE-2020-8554"&gt;CVE-2020-8554&lt;/a&gt;），任何有 Service 创建权限的用户都可以劫持集群流量 &amp;ndash;v1.36 终于启动了正式的废弃流程。&lt;/p&gt;
+&lt;h2 id="开篇一条命令劫持集群流量"&gt;开篇：一条命令，劫持集群流量&lt;/h2&gt;
+&lt;p&gt;想象这样一个场景。&lt;/p&gt;
+&lt;p&gt;你的集群里有一个开发者，他拥有普通的 Service 创建权限 &amp;ndash; 这在大多数团队中再正常不过。他写了一段这样的配置：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;dns-intercept&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;selector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;attacker-pod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;port&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;53&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;protocol&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;UDP&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;externalIPs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;8.8.8.8&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;一条 &lt;code&gt;kubectl apply&lt;/code&gt;，几秒钟后，集群内所有节点上发往 &lt;code&gt;8.8.8.8:53&lt;/code&gt; 的 DNS 查询，全部被悄悄转发到他控制的 Pod。&lt;/p&gt;
+&lt;p&gt;没有提权，没有漏洞利用，没有任何异常告警。完全合法的 Kubernetes 操作。&lt;/p&gt;</description></item><item><title>Apple Container 0.8.0：从初生到成熟的七个月演进之路</title><link>https://atbug.com/apple-container-evolution-seven-months-journey/</link><pubDate>Sat, 24 Jan 2026 21:43:46 +0800</pubDate><guid>https://atbug.com/apple-container-evolution-seven-months-journey/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;2026 年 1 月 22 日，&lt;a href="https://github.com/apple/container/"&gt;Apple Container&lt;/a&gt; &lt;a href="https://github.com/apple/container/releases/tag/0.8.0"&gt;0.8.0 发布&lt;/a&gt;。距离 WWDC 2025 首次发布的 0.1.0，整整七个月，九个版本。&lt;/p&gt;
+&lt;p&gt;这七个月不仅是版本号的增长，更是一个架构理念的验证：每容器独立 VM 的隔离模式，能否在 macOS 上成为 Docker Desktop 的替代方案？&lt;/p&gt;
+&lt;p&gt;0.8.0 给出的答案是：在特定场景下，可以。但这个答案背后，是数据完整性危机（0.7.1）、网络限制的解除（macOS 26）、以及对生产就绪定义的重新思考。&lt;/p&gt;
+&lt;p&gt;本文不是功能列表，而是试图理解：Apple 为什么要做 Container？独立 VM 架构的代价是什么？七个月的快速迭代背后，哪些问题真正得到了解决，哪些仍在路上？&lt;/p&gt;
+&lt;h2 id="写在前面为什么要关注-apple-container"&gt;写在前面：为什么要关注 Apple Container？&lt;/h2&gt;
+&lt;p&gt;在讨论版本演进之前，先简单回顾一下 Apple Container 的独特价值：&lt;/p&gt;
+&lt;h3 id="原生-macos-体验"&gt;原生 macOS 体验&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;苹果官方支持&lt;/strong&gt;：基于 Apple Virtualization Framework&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;性能优越&lt;/strong&gt;：每个容器独立虚拟机，无共享虚拟机开销&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全隔离&lt;/strong&gt;：VM 级别隔离，比传统容器更安全&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Apple Silicon 优化&lt;/strong&gt;：为 ARM64 架构深度优化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="与-docker-desktop-的差异"&gt;与 Docker Desktop 的差异&lt;/h3&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;特性&lt;/th&gt;
+					&lt;th&gt;Docker Desktop&lt;/th&gt;
+					&lt;th&gt;Apple Container&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;架构模式&lt;/td&gt;
+					&lt;td&gt;单一 VM + 多容器&lt;/td&gt;
+					&lt;td&gt;每容器独立 VM&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;安全隔离&lt;/td&gt;
+					&lt;td&gt;容器级&lt;/td&gt;
+					&lt;td&gt;VM 级&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;macOS 集成&lt;/td&gt;
+					&lt;td&gt;第三方工具&lt;/td&gt;
+					&lt;td&gt;原生框架&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;价格&lt;/td&gt;
+					&lt;td&gt;企业版收费&lt;/td&gt;
+					&lt;td&gt;开源免费&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;但是&lt;/strong&gt;，在 2025 年 6 月，0.1.0 版本还有很多限制：&lt;/p&gt;</description></item><item><title>不止于网络：从 Cilium 2025年度报告，洞察云原生基础设施的六大演进</title><link>https://atbug.com/cilium-2025-report-6-infrastructure-trends/</link><pubDate>Sun, 21 Dec 2025 06:20:26 +0800</pubDate><guid>https://atbug.com/cilium-2025-report-6-infrastructure-trends/</guid><description>&lt;p&gt;Cilium 项目始于 2015 年 12 月 16 日的第一次提交，已从一个实验性的 IPv6 容器网络项目成长为云原生世界的 &lt;em&gt;CNI（容器网络接口）的事实标准&lt;/em&gt;。也正值 Cilium 的十周年，社区发布了 &lt;a href="https://www.cncf.io/wp-content/uploads/2025/12/cilium-annual-report-2025-final.pdf"&gt;《Cilium 2025 年度报告》（PDF 原文）&lt;/a&gt;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;CNCF 地位：&lt;/strong&gt; Cilium 目前是 CNCF（云原生计算基金会）中&lt;strong&gt;贡献量第二大&lt;/strong&gt;的项目，仅次于 Kubernetes。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;市场占有率：&lt;/strong&gt; 根据 Isovalent（Cilium 母公司）发布的 &lt;a href="https://isovalent.com/blog/post/state-of-kubernetes-networking-report-2025/"&gt;《2025 Kubernetes 网络现状报告》&lt;/a&gt;，Cilium 占据了超过 &lt;strong&gt;Cilium 目前是 CNCF（云原生计算基金会）中&lt;/strong&gt; 的 CNI 部署份额，是第二名的两倍以上 。如果算上由 Cilium 驱动的托管服务（如 Azure CNI powered by Cilium 和 GKE Datapath V2），其覆盖率超过 &lt;strong&gt;60%&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;社区活跃度：&lt;/strong&gt; 2025 年贡献了近 10,000 个 PR，年度开发活动较第一年增长了 55 倍 。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;本文无意逐条复述报告内容。我们不妨将视线从具体数字上移开，转而透视这份行业风向标所揭示的云原生网络与安全核心趋势。希望能激发更多的思考与讨论。&lt;/p&gt;</description></item><item><title>告别代码修改：传统 VM 环境下的 OpenTelemetry 自动注入</title><link>https://atbug.com/opentelemetry-auto-injection-traditional-vm/</link><pubDate>Sat, 30 Aug 2025 18:23:19 +0800</pubDate><guid>https://atbug.com/opentelemetry-auto-injection-traditional-vm/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;在微服务架构中，可观测性就像是给应用装上 &amp;quot; 眼睛 &amp;quot; 和 &amp;quot; 耳朵 &amp;ldquo;。传统方式需要在每个服务中手动集成监控代码，而 OpenTelemetry Injector 提供了一种更优雅的解决方案。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/open-telemetry/opentelemetry-injector"&gt;OpenTelemetry Injector&lt;/a&gt; 是一个专为&lt;strong&gt;传统 VM 环境&lt;/strong&gt;设计的零代码观测工具。通过 Linux 的 &lt;code&gt;LD_PRELOAD&lt;/code&gt; 机制，无需修改应用代码即可为 Java、Node.js、.NET 应用自动注入 OpenTelemetry 观测能力。核心优势：系统级自动化、多语言统一管理、生产环境就绪。&lt;strong&gt;不适合容器/K8s 环境&lt;/strong&gt;，云原生场景建议使用 OpenTelemetry Operator、init-container、sidecar 等方案。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;但是对于企业数据中心中的传统部署、混合技术栈的微服务架构，或者遗留系统的可观测升级，OpenTelemetry Injector 提供了一条优雅而高效的路径。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="为什么需要零代码检测"&gt;为什么需要零代码检测？&lt;/h2&gt;
+&lt;p&gt;想象一下，你负责维护一个包含数百个微服务的系统。每个服务都用不同的语言编写（Java、Node.js、.NET），现在需要为它们添加可观测性能力。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;传统方式的问题：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;需要修改每个服务的代码&lt;/li&gt;
+&lt;li&gt;不同语言的集成方式各不相同&lt;/li&gt;
+&lt;li&gt;版本升级时需要重新修改&lt;/li&gt;
+&lt;li&gt;不同语言中的功能不一致&lt;/li&gt;
+&lt;li&gt;增加了出错的风险&lt;/li&gt;
+&lt;li&gt;增加了维护的成本&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;这就是 OpenTelemetry Injector 诞生的背景。&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>Azure 云上 10 分钟全自动部署 K3s 集群实战</title><link>https://atbug.com/azure-k3s-cluster-automation-in-10-minutes/</link><pubDate>Sun, 16 Mar 2025 23:06:30 +0800</pubDate><guid>https://atbug.com/azure-k3s-cluster-automation-in-10-minutes/</guid><description>&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;在云计算与容器化技术飞速发展的今天，快速搭建可扩展的 Kubernetes 集群成为开发者的必备技能。尤其是在开发测试环境中，能够快速创建、销毁集群是提升工作效率的关键。&lt;/p&gt;
+&lt;p&gt;K3s 作为轻量级 Kubernetes 发行版，非常适合在云上快速搭建测试、开发或边缘计算集群。结合 IaC（基础设施即代码）工具 Terraform 和自动化脚本项目 &lt;a href="https://github.com/addozhang/k3s-cluster-automation"&gt;k3s-cluster-automation&lt;/a&gt;，可以极大提升集群部署效率，降低人为操作风险。&lt;/p&gt;
+&lt;p&gt;本文将介绍如何通过 Terraform 与 k3s-cluster-automation 脚本，在 Azure 云上实现从虚拟机创建到 K3s 集群部署的全自动化流程，整个过程无需手动干预，大幅提升开发测试效率。&lt;/p&gt;
+&lt;h2 id="为什么选择-azure--k3s--terraform"&gt;为什么选择 Azure + K3s + Terraform？&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Azure&lt;/strong&gt;：提供稳定的云计算资源，适合快速部署测试环境（还有另外一个原因，作为微软 MVP，可以免费使用 Azure 资源）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;K3s&lt;/strong&gt;：轻量级 Kubernetes 发行版，资源占用少（仅需 512MB 内存），适合边缘计算与测试集群，是我喜欢的 Kubernetes 发行版之一&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Terraform&lt;/strong&gt;：基础设施即代码（IAC）工具，通过代码描述资源状态，支持版本控制与批量部署&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="前置条件"&gt;前置条件&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Azure 账户&lt;/strong&gt;（需有资源创建权限）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;本地环境&lt;/strong&gt;：安装 Terraform CLI、Azure CLI&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;K3s 部署工具&lt;/strong&gt;：k3sup CLI（用于远程部署 K3s）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="一通过-terraform-创建-azure-虚拟机"&gt;一、通过 Terraform 创建 Azure 虚拟机&lt;/h2&gt;
+&lt;h3 id="1-认证与订阅配置"&gt;1. 认证与订阅配置&lt;/h3&gt;
+&lt;p&gt;首先通过 Azure CLI 完成认证，并设置目标订阅：&lt;/p&gt;</description></item><item><title>探索 OpenTelemetry Profiling 进展：eBPF 代理快速上手</title><link>https://atbug.com/exploring-opentelemetry-profiling-progress-ebpf-agent-quickstart/</link><pubDate>Sun, 10 Nov 2024 22:34:07 +0800</pubDate><guid>https://atbug.com/exploring-opentelemetry-profiling-progress-ebpf-agent-quickstart/</guid><description>&lt;p&gt;本文将介绍 OpenTelemetry Profiling 的进展，以及快速体验 Profiling 的 eBPF 代理。关于有 OTEL Profile 的概念和实现，将在下一篇介绍。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;虽然 Profiling 进展迅速，Profile 功能仍然在实验阶段，不建议在生产环境使用。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;在软件工程中，可观测性（Observability）是指收集和分析程序执行情况、模块内部状态以及组件间通信数据的能力。可观测性的三大支柱——指标、跟踪和日志——为我们提供了深入了解应用程序行为的关键手段，尤其在分布式系统中尤为重要。&lt;/p&gt;
+&lt;p&gt;分布式系统的应用组件分布在多个节点上，导致事件链条和数据流的复杂化。通过有效运用这三大可观测性手段，可以帮助我们识别潜在问题、定位故障源，从而显著提高系统的稳定性和可维护性。&lt;/p&gt;
+&lt;p&gt;尽管可观测性的三大手段能够提供大量关于系统行为和性能的洞察，但无法探究程序内部代码函数层级的运行时表现。性能分析（Profiling）为深入了解应用程序的资源使用和执行效率提供了方法指导。持续性能分析（Continuous profiling）可以在应用程序运行期间连续进行性能剖析，帮助开发人员准确理解代码随着时间推移的运行情况。&lt;/p&gt;
+&lt;p&gt;今年 3 月，成立两年的 OpenTelemetry Profiling SIG 宣布支持 &lt;a href="https://github.com/open-telemetry/opentelemetry-proto/pull/534"&gt;性能分析信号（Profiling Signal）&lt;/a&gt;，半年多过去了，从规范到工具层面 Profiling 的支持取得了很大的进展。&lt;/p&gt;
+&lt;h2 id="进展"&gt;进展&lt;/h2&gt;
+&lt;h3 id="otlp-profile-类型"&gt;OTLP Profile 类型&lt;/h3&gt;
+&lt;p&gt;继  &lt;a href="https://opentelemetry.io/docs/concepts/signals/traces"&gt;traces&lt;/a&gt;、&lt;a href="https://opentelemetry.io/docs/concepts/signals/metrics"&gt;metrics&lt;/a&gt;、&lt;a href="https://opentelemetry.io/docs/concepts/signals/logs"&gt;logs&lt;/a&gt; 和 &lt;a href="https://opentelemetry.io/docs/concepts/signals/baggage"&gt;baggage&lt;/a&gt; 之后，在 &lt;a href="https://github.com/open-telemetry/opentelemetry-proto/releases/tag/v1.3.0"&gt;OTLP 1.3&lt;/a&gt; 中加入了新的数据类型 &lt;em&gt;profiles&lt;/em&gt;。原定的兼容 &lt;a href="https://github.com/google/pprof"&gt;Google PPROF&lt;/a&gt; 的目标被放弃。&lt;/p&gt;</description></item><item><title>K8sGPT+Ollama：免费的 Kubernetes 自动化诊断方案</title><link>https://atbug.com/k8sgpt-ollama-free-k8s-automation-diagnosis/</link><pubDate>Mon, 17 Jun 2024 20:05:13 +0800</pubDate><guid>https://atbug.com/k8sgpt-ollama-free-k8s-automation-diagnosis/</guid><description>&lt;p&gt;周末检查博客草稿，发现了这篇。记得当时是与 &lt;a href="https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/"&gt;Kubernetes 自动化诊断工具：k8sgpt-operator&lt;/a&gt; 一起写的，算算过去了一年之久，这拖延症也算是病入膏肓了。原本想使用 K8sGPT + &lt;a href="https://localai.io"&gt;LocalAI&lt;/a&gt; 的方案，由于之前试过 &lt;a href="https://ollama.com"&gt;Ollama&lt;/a&gt;，感觉使用起来也更加友好，而且 Ollama 同样提供了 &lt;a href="https://github.com/ollama/ollama/blob/main/docs/openai.md"&gt;对 OpenAI API 的支持&lt;/a&gt;，索性改成用 Ollama 吧。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;介绍 k8sgpt-operator 的文章发布后，有小伙伴反馈 OpenAI 的使用门槛，这个问题确实比较棘手，但也不是不能解决。不过本文并不是介绍如何解决这种问题的，而是介绍 OpenAI 的替代方案： Ollama。&lt;/p&gt;
+&lt;p&gt;对 k8sgpt 和 k8sgpt-operator 就不做过多介绍了，有兴趣的可以看回 &lt;a href="https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/"&gt;上一篇&lt;/a&gt;，去年底 &lt;a href="https://landscape.cncf.io/?item=observability-and-analysis--observability--k8sgpt"&gt;k8sgpt 进入了 CNCF Sandbox&lt;/a&gt;。&lt;/p&gt;
+&lt;h3 id="1-安装-ollama"&gt;1. 安装 Ollama&lt;/h3&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2024/06/17/Pasted%20image%2020240617065721.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;Ollama 是一个开源的大模型工具，使用它可以在本地或云端轻松的安装和运行 &lt;a href="https://ollama.com/library"&gt;多种流量的大模型&lt;/a&gt;。它的操作非常友好，只需简单的命令就能运行。在 macOS 上可以通过 homebrew 一键安装：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install ollama
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;当前最新的版本是 0.1.44。&lt;/p&gt;</description></item><item><title>Kubernetes Gateway API v1.1 解读</title><link>https://atbug.com/kubernetes-gateway-api-v1-1-overview/</link><pubDate>Wed, 15 May 2024 10:38:06 +0800</pubDate><guid>https://atbug.com/kubernetes-gateway-api-v1-1-overview/</guid><description>&lt;p&gt;几天前，K8s Network SIG 发布了 Gateway API（简称 gwapi）的 &lt;a href="https://github.com/kubernetes-sigs/gateway-api/releases/tag/v1.1.0"&gt;v1.1 版本&lt;/a&gt;，这个版本的发布包含了多项重要功能的 GA（一般可用），以及一些实验功能的引入。这两部分分别通过标准渠道和实验渠道发布。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;发布渠道用于指示网关 API 内的功能的稳定性。所有新功能和资源都是先从&lt;strong&gt;实验发布渠道&lt;/strong&gt;开始，在后续迭代演进的过程中可能会升级到&lt;strong&gt;标准发布渠道&lt;/strong&gt;，也有可能完全从 API 中废除。&lt;/p&gt;
+&lt;p&gt;通过下图可以对 gwapi 的发布渠道有个清晰的了解。
+&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2024/05/15/gwapi-release-channel.png" alt=""&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;在这些更新中，在我看来当属服务网格的支持 GA 最为重要，这意味着服务网格标准 API 向着统一又迈进了一步。差不多两年前，我曾写过 &lt;a href="https://atbug.com/why-smi-collaborating-in-gateway-api-gamma/"&gt;SMI 与 Gateway API 的 GAMMA 倡议意味着什么&lt;/a&gt;， 在 gwapi 差不多 1.0 的时候，SMI 在停止更新的几个月后归档了。&lt;/p&gt;
+&lt;h2 id="标准发布渠道"&gt;标准发布渠道&lt;/h2&gt;
+&lt;h3 id="grpcroute-ga"&gt;GRPCRoute GA&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;GRPCRoute&lt;/code&gt; API 的 &lt;code&gt;v1&lt;/code&gt; 版本发布，标志着其可以在生产环境中稳定使用，并得到长期的支持的维护。同时 &lt;code&gt;v1alpha2&lt;/code&gt; 版本被标记为废弃，在未来的版本中将会被移除。&lt;/p&gt;</description></item><item><title>探索 Gateway API 在 Service Mesh 中的工作机制</title><link>https://atbug.com/explore-how-gateway-api-works-in-service-mesh/</link><pubDate>Thu, 07 Sep 2023 12:57:26 +0800</pubDate><guid>https://atbug.com/explore-how-gateway-api-works-in-service-mesh/</guid><description>&lt;p&gt;前几天 &lt;a href="https://gateway-api.sigs.k8s.io/blog/2023/0829-mesh-support/#service-mesh-support-in-gateway-api"&gt;Gateway API 宣布在 0.8.0 中支持服务网格&lt;/a&gt;，这意味着 &lt;a href="https://gateway-api.sigs.k8s.io/concepts/gamma/"&gt;GAMMA&lt;/a&gt;（&lt;strong&gt;G&lt;/strong&gt;ateway &lt;strong&gt;A&lt;/strong&gt;PI for &lt;strong&gt;M&lt;/strong&gt;esh &lt;strong&gt;M&lt;/strong&gt;anagement and &lt;strong&gt;A&lt;/strong&gt;dministration）有了新进展，虽然目前还是&lt;strong&gt;实验阶段&lt;/strong&gt;。去年 6 月 Gateway API 发布 0.5.0 时，我还写了一篇 &lt;a href="https://atbug.com/why-smi-collaborating-in-gateway-api-gamma/"&gt;SMI 与 Gateway API 的 GAMMA 倡议意味着什么？&lt;/a&gt;。如今，SMI 作为 sandbox 项目的年度审查已经 &lt;a href="https://github.com/servicemeshinterface/smi-spec/issues/254"&gt;过了几个月仍未提交&lt;/a&gt;，唏嘘。&lt;/p&gt;
+&lt;p&gt;废话不多说，我们来看下 0.8.0 下的 Gateway API 如何在 Service Mesh 中工作。&lt;/p&gt;
+&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;Gateway API 对服务网格的支持仍然是实验阶段，但是已经有厂商跟进（当然也都是实验阶段）。&lt;/p&gt;</description></item><item><title>Kubernetes 自动化诊断工具：k8sgpt-operator</title><link>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</link><pubDate>Tue, 02 May 2023 17:33:28 +0800</pubDate><guid>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</guid><description>&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;在 Kubernetes 上，从部署 Deployment 到正常提供服务，整个流程可能会出现各种各样问题，有兴趣的可以浏览 &lt;a href="https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/"&gt;Kubernetes Deployment 的故障排查可视化指南（2021 中文版）&lt;/a&gt;。从可视化指南也可能看出这些问题实际上都是有迹可循，根据错误信息基本很容易找到解决方法。随着 ChatGPT 的流行，基于 LLM 的文本生成项目不断涌现，&lt;a href="https://github.com/k8sgpt-ai/k8sgpt"&gt;k8sgpt&lt;/a&gt; 便是其中之一。&lt;/p&gt;
+&lt;p&gt;k8sgpt 是一个扫描 Kubernetes 集群、诊断和分类问题的工具。它将 SRE 经验编入其分析器，并通过 AI 帮助提取并丰富相关的信息。&lt;/p&gt;
+&lt;p&gt;其内置了大量的分析器：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;podAnalyzer&lt;/li&gt;
+&lt;li&gt;pvcAnalyzer&lt;/li&gt;
+&lt;li&gt;rsAnalyzer&lt;/li&gt;
+&lt;li&gt;serviceAnalyzer&lt;/li&gt;
+&lt;li&gt;eventAnalyzer&lt;/li&gt;
+&lt;li&gt;ingressAnalyzer&lt;/li&gt;
+&lt;li&gt;statefulSetAnalyzer&lt;/li&gt;
+&lt;li&gt;deploymentAnalyzer&lt;/li&gt;
+&lt;li&gt;cronJobAnalyzer&lt;/li&gt;
+&lt;li&gt;nodeAnalyzer&lt;/li&gt;
+&lt;li&gt;hpaAnalyzer（可选）&lt;/li&gt;
+&lt;li&gt;pdbAnalyzer（可选）&lt;/li&gt;
+&lt;li&gt;networkPolicyAnalyzer（可选）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;k8sgpt 的能力是通过 CLI 来提供的，通过 CLI 可以对集群中的错误进行快速的诊断。&lt;/p&gt;</description></item><item><title>从单集群到多集群：Kubernetes在多云混合云环境的演进</title><link>https://atbug.com/kubernetes-cluster-evolution-in-multi-hybrid-cloud/</link><pubDate>Thu, 06 Apr 2023 16:13:14 +0800</pubDate><guid>https://atbug.com/kubernetes-cluster-evolution-in-multi-hybrid-cloud/</guid><description>&lt;p&gt;Kubernetes 作为一项核心技术已成为现代应用程序架构的基础，越来越多的企业使用 Kubernetes 作为容器编排系统。&lt;/p&gt;
+&lt;p&gt;下面的数据来自 2020 CNCF Survey 的原始数据，可以看到使用 Kubernete 的企业占比达到了 80%。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/kubernetes-adoption2.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;Kubernetes 的流行主要有以下几个原因：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;自动化：Kubernetes 实现了容器的部署、扩展、负载均衡、故障恢复、滚动更新等操作的自动化，极大地简化了应用程序的管理和维护工作。这种自动化也提升了应用程序的弹性和可用性。&lt;/li&gt;
+&lt;li&gt;可移植性：Kubernetes 基于容器的架构模型，使得应用无需重新编码或更新配置就可以在任何云平台、物理机或者虚拟机中运行。&lt;/li&gt;
+&lt;li&gt;生态系统：Kubernetes 作为一个成功地开源项目，拥有强大的社区支持和生态系统，使其可以获得更好的创新、优化和安全性保障。从社区中，我们可以找到各种插件和工具，为开发者提供了丰富的选择和扩展性。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="从单-kubernetes-集群到多-kubernetes-集群"&gt;从单 Kubernetes 集群到多 Kubernetes 集群&lt;/h2&gt;
+&lt;h3 id="初露端倪"&gt;初露端倪&lt;/h3&gt;
+&lt;p&gt;企业中的应用程序通常比较复杂，需要不同的环境来进行开发、测试和生产部署。为了避免应用程序之间的干扰和交叉，通常需要在不同的 Kubernetes 集群中分别部署和管理应用程序。&lt;/p&gt;
+&lt;p&gt;在同一个数据中心不同的环境部署独立的 Kubernetes 集群之后不同环境下的集群规模、管理方式、可靠性和安全性各有不同，从开发、测试到生产，成本的投入也逐步地提升，来保证更好的性能、更高的可靠性和安全性。&lt;/p&gt;
+&lt;p&gt;这也是多 Kubernetes 集群的一种形式（注意这里说的是 多 Kubernetes 集群）。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/devops-multi-clusters.png" alt=""&gt;&lt;/p&gt;</description></item><item><title>使用 eBPF 技术实现更快的网络数据包传输</title><link>https://atbug.com/accelerate-network-packets-transmission/</link><pubDate>Wed, 22 Mar 2023 07:03:28 +0800</pubDate><guid>https://atbug.com/accelerate-network-packets-transmission/</guid><description>&lt;p&gt;在 &lt;a href="https://atbug.com/tracing-network-packets-in-kubernetes/"&gt;上篇文章&lt;/a&gt; 用了整篇的内容来描述网络数据包在 Kubernetes 网络中的轨迹，文章末尾，我们提出了一种假设：同一个内核空间中的两个 socket 可以直接传输数据，是不是就可以省掉内核网络协议栈处理带来的延迟？&lt;/p&gt;
+&lt;p&gt;不论是同 pod 中的两个不同容器，或者同节点的两个 pod 间的网络通信，实际上都发生在同一个内核空间中，互为对端的两个 socket 也都位于同一个内存中。而在上篇文章的开头也总结了数据包的传输轨迹实际上是 socket 的寻址过程，可以进一步将问题展开：同一节点上的两个 socket 间的通信，如果可以 &lt;strong&gt;快速定位到对端的 socket&lt;/strong&gt; &amp;ndash; 找到其在内存中的地址，我们就可以跳过内核协议栈的环节进而加速数据包的传输。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/packet-through-sockets-directly.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;互为对端的两个 socket 也就是建立起连接的客户端 socket 和服务端 socket，他们可以通过 IP 地址和端口进行关联。客户端 socket 的本地地址和端口，是服务端 socket 的远端地址和端口；客户端 socket 的远端地址和端口，则是服务端 socket 的本地地址和端口。&lt;/p&gt;
+&lt;p&gt;当客户端和服务端在完成连接的建立之后，如果可以使用本地地址 + 端口和远端地址 + 端口端口的组合 &lt;strong&gt;指向&lt;/strong&gt; socket，仅需调换本地和远端的地址 + 端口，即可定位到对端的 socket，然后将数据直接写到对端 socket（实际是写入 socket 的接收队列 RXQ，这里不做展开），就可以避开内核网络栈（包括 netfilter/iptables）甚至是 NIC 的处理。&lt;/p&gt;</description></item><item><title>kubectl foreach 在多个集群中执行 kubectl 命令</title><link>https://atbug.com/multi-clusters-operation-with-kubectl-foreach/</link><pubDate>Thu, 01 Dec 2022 08:04:02 +0800</pubDate><guid>https://atbug.com/multi-clusters-operation-with-kubectl-foreach/</guid><description>&lt;p&gt;上周在写 &lt;a href="https://mp.weixin.qq.com/s/RF--gLZtJlT0ijaPp1ZP7A"&gt;K8s 多集群的流量调度&lt;/a&gt; 的 demo 部分时需要不停地在多个集群中安装组件、部署应用，或者执行各种命令。当时是通过 Linux shell 脚本并通过工具 &lt;a href="https://github.com/ahmetb/kubectx"&gt;kubectx&lt;/a&gt; 进行集群的切换，像这样：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/11/30/16698057245782.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;或者这样：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/11/30/16698057245977.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;操作繁琐，很是痛苦。&lt;/p&gt;
+&lt;p&gt;今天偶然间发现了一个 kubectl 插件 &lt;a href="https://github.com/ahmetb/kubectl-foreach"&gt;&lt;code&gt;kubectl foreach&lt;/code&gt;&lt;/a&gt; ，可以在多个集群（&lt;code&gt;contexts&lt;/code&gt;）上执行 kubectl 命令。比如 &lt;code&gt;kubectl foreach cluster-1 cluster-2 -- get po -n kube-system&lt;/code&gt; 。&lt;/p&gt;
+&lt;p&gt;插件安装和使用很简单，通过 &lt;a href="https://krew.sigs.k8s.io/docs/user-guide/setup/install/"&gt;&lt;code&gt;krew&lt;/code&gt;&lt;/a&gt; 进行安装：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl krew install foreach
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;使用也很简单：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl foreach -h
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Usage:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; kubectl foreach &lt;span style="color:#f92672"&gt;[&lt;/span&gt;OPTIONS&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;PATTERN&lt;span style="color:#f92672"&gt;]&lt;/span&gt;... -- &lt;span style="color:#f92672"&gt;[&lt;/span&gt;KUBECTL_ARGS...&lt;span style="color:#f92672"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Patterns can be used to match context names from kubeconfig:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;(&lt;/span&gt;empty&lt;span style="color:#f92672"&gt;)&lt;/span&gt;: matches all contexts
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; NAME: matches context with exact name
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; /PATTERN/: matches context with regular expression
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ^NAME: remove context with exact name from the matched results
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ^/PATTERN/: remove contexts matching the regular expression from the results
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Options:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -c&lt;span style="color:#f92672"&gt;=&lt;/span&gt;NUM Limit parallel executions &lt;span style="color:#f92672"&gt;(&lt;/span&gt;default: 0, unlimited&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -I&lt;span style="color:#f92672"&gt;=&lt;/span&gt;VAL Replace VAL occurring in KUBECTL_ARGS with context name
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -q Disable and accept confirmation prompts &lt;span style="color:#f92672"&gt;(&lt;/span&gt;$KUBECTL_FOREACH_DISABLE_PROMPTS&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -h/--help Print help
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Examples:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# get nodes on contexts named a b c&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; kubectl foreach a b c -- get nodes
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# get nodes on all contexts named c0..9 except c1 (note the escaping)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; kubectl foreach &lt;span style="color:#e6db74"&gt;&amp;#39;/^c[0-9]/&amp;#39;&lt;/span&gt; ^c1	 -- get nodes
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# get nodes on all contexts that has &amp;#34;prod&amp;#34; but not &amp;#34;foo&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; kubectl foreach /prod/ ^/foo/ -- get nodes
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# use &amp;#39;kubectl tail&amp;#39; plugin to follow logs of pods in contexts named *test*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; kubectl foreach -I _ /test/ -- tail --context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;_ -l app&lt;span style="color:#f92672"&gt;=&lt;/span&gt;foo
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;接下来测试下，使用 &lt;a href="https://k3d.io"&gt;&lt;code&gt;k3d&lt;/code&gt;&lt;/a&gt; 创建 3 个集群 （k3d 貌似不支持同时创建多个集群，还是需要 for 脚本来操作）：&lt;/p&gt;</description></item><item><title>认识一下 Kubernetes 多集群服务 API</title><link>https://atbug.com/kubernetes-multi-cluster-api/</link><pubDate>Sun, 27 Nov 2022 22:37:11 +0800</pubDate><guid>https://atbug.com/kubernetes-multi-cluster-api/</guid><description>&lt;p&gt;由于各种原因，采用 Kubernetes 的企业内部存在着几个、几十甚至上百个集群。比如处于研发流程上的考虑，不同环境下都存在独立的集群；监管层面的考虑，就地存储的用户数据需要搭配应用集群；单个集群的容量限制，无法满足业务体量；可用性要求的多云、多地、多中心；Kubernetes 原地升级成本大进而考虑新建集群，等等各种原因。然而，Kubernetes 设计之初并没有考虑多集群。&lt;/p&gt;
+&lt;p&gt;这些集群彼此之间看似独立，但又有着千丝万缕的关系。比如高可用性的多集群，实现了集群级的灾备，但集群中的服务如何实现跨集群的故障迁移？&lt;/p&gt;
+&lt;p&gt;我们先看下集群内的应用如何对集群外提供服务。由于 Kubernetes 网络隔离特性，存在着天然的网络边界，需要借助某些方案（如 Ingress、NodePort）来将服务暴露到集群外。虽然解决了连通性的问题，但是服务的注册和发现还无法解决。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/11/27/16695593792419.png" alt="k8s-svc-exposing"&gt;&lt;/p&gt;
+&lt;p&gt;通常我们将 Service 作为 Kubernetes 平台的服务注册和发现，今天要介绍的 Multi-Cluster Service（多集群服务 API，简称 MCS API） 则可以看成是 &lt;strong&gt;跨 Kubernetes 集群的服务注册发现&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id="mcs-介绍"&gt;MCS 介绍&lt;/h2&gt;
+&lt;p&gt;MCS API 来自 &lt;a href="https://github.com/kubernetes/enhancements/tree/master/keps/sig-multicluster/1645-multi-cluster-services-api#release-signoff-checklist"&gt; Kubernetes Enhancement Proposal KEP-1645: Multi-Cluster Services API&lt;/a&gt; 目前还处于提案阶段。&lt;/p&gt;
+&lt;p&gt;MCS 的目标是既然多集群不可避免，那就定义一套 API 来实现服务的跨集群注册和发现，并且这套 API 足够轻量级，做到能够像访问本地服务一样访问其他集群的服务。&lt;/p&gt;</description></item><item><title>一文搞懂 Kubernetes Gateway API 的 Policy Attachment</title><link>https://atbug.com/explore-k8s-gateway-api-policy-attachment/</link><pubDate>Sun, 30 Oct 2022 18:01:30 -0400</pubDate><guid>https://atbug.com/explore-k8s-gateway-api-policy-attachment/</guid><description>&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;在&lt;a href="https://atbug.com/why-smi-collaborating-in-gateway-api-gamma/"&gt;《SMI 与 Gateway API 的 GAMMA 倡议意味着什么？》&lt;/a&gt;的一文中，介绍过 Kubernetes Gateway API 处理东西向（网格）流量的可能性。让我们重新看下 Gateway API 中对流量定义（路由）的定义，以 HTTP 路由为例：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;gateway.networking.k8s.io/v1beta1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;HTTPRoute&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;my-route&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;gateway-api-example-ns2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;parentRefs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Gateway&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;foo-gateway&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;gateway-api-example-ns1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;hostnames&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;foo.example.com&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;rules&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;backendRefs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;foo-svc&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;port&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;8080&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;上面的 YAML 中，使用 &lt;code&gt;parentRefs&lt;/code&gt; 字段将路由策略附加到了网关资源 &lt;code&gt;foo-gateway&lt;/code&gt; 上。网关 &lt;code&gt;foo-gateway&lt;/code&gt; 会根据请求头部的 &lt;code&gt;HOST&lt;/code&gt; 来选择合适的 &lt;code&gt;HTTPRoute&lt;/code&gt;，然后将流量代理到上游 &lt;code&gt;Service&lt;/code&gt; &lt;code&gt;foo-svc&lt;/code&gt;。简单来说，就是定义了“网关 -&amp;gt; 路由 -&amp;gt; 后端”的映射。&lt;/p&gt;</description></item><item><title>k3s 上的 kube-ovn 轻度体验</title><link>https://atbug.com/run-kube-ovn-on-k3s/</link><pubDate>Sat, 03 Sep 2022 19:10:39 +0800</pubDate><guid>https://atbug.com/run-kube-ovn-on-k3s/</guid><description>&lt;p&gt;kube-ovn 从名字不难看出其是一款云原生的网络产品，将 SDN 等能力带入云原生领域。让 ovn/ovs 的使用更容易，屏蔽了复杂度，降低了使用的难度，并与云原生进行了结合。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;借助 OVS/OVN 在 SDN 领域成熟的能力，Kube-OVN 将网络虚拟化的丰富功能带入云原生领域。目前已支持子网管理， 静态 IP 分配，分布式/集中式网关，Underlay/Overlay 混合网络， VPC 多租户网络，跨集群互联网络，QoS 管理， 多网卡管理，ACL 网络控制，流量镜像，ARM 支持， Windows 支持等诸多功能。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="安装-k3s"&gt;安装 k3s&lt;/h2&gt;
+&lt;p&gt;参考官方的&lt;a href="https://kubeovn.github.io/docs/v1.10.x/start/prepare/"&gt;准备工作&lt;/a&gt;文档，操作系统使用 Ubuntu 20.04 以及 k3s v1.23.8+k3s2。&lt;/p&gt;
+&lt;p&gt;在安装之前确保 &lt;code&gt;/etc/cni/net.d/&lt;/code&gt; 目录内容为空，不为空则清空其下的所有文件。kube-ovn 本身通过实现 cni 来管理网络。&lt;/p&gt;
+&lt;p&gt;在安装 k3s 需要禁用 k3s 默认的网络策略控制器和flannel 的后端（默认是 VXLAN）：&lt;/p&gt;</description></item><item><title>另眼旁观 Linkerd 2.12 的发布：服务网格标准的曙光？</title><link>https://atbug.com/thoughts-on-linkerd-release/</link><pubDate>Sun, 28 Aug 2022 10:03:12 +0800</pubDate><guid>https://atbug.com/thoughts-on-linkerd-release/</guid><description>&lt;p&gt;8 月 24 日，发明服务网格的公司 Buoyant 发布了 &lt;a href="https://buoyant.io/blog/announcing-linkerd-2-12"&gt;Linkerd 2.12&lt;/a&gt;，这是时隔近一年的版本发布。不知道大家的对新版本期待如何，在我来看新版本中的功能对于一年的时间来说确实不算多，但是我想说的是 Linkerd 还是那个 Linkerd，还是秉持着一贯的 “Keep it simple” 的设计理念。&lt;/p&gt;
+&lt;p&gt;新版本的内容不一一介绍，其中最主要的功能：per-route 策略，相比上个版本基于端口的策略，扩展到了 per-route。&lt;/p&gt;
+&lt;p&gt;而我想说的特别之处也就是在 &lt;strong&gt;per-route&lt;/strong&gt; 和&lt;strong&gt;策略&lt;/strong&gt;上。&lt;/p&gt;
+&lt;h2 id="per-route-和策略有何特别之处"&gt;per-route 和策略有何特别之处？&lt;/h2&gt;
+&lt;p&gt;在&lt;a href="https://atbug.com/why-smi-collaborating-in-gateway-api-gamma/"&gt;《SMI 与 Gateway API 的 GAMMA 倡议意味着什么？》&lt;/a&gt; 层有过猜想：未来服务网格的标准有可能全部或者部分以 Kubernetes 原生 API 的方式存在。&lt;/p&gt;
+&lt;p&gt;“网关 API，之于集群是入口/出口网关，之于 Pod 是 inbound/outbound sidecar。”&lt;/p&gt;</description></item><item><title>SMI 与 Gateway API 的 GAMMA 倡议意味着什么？</title><link>https://atbug.com/why-smi-collaborating-in-gateway-api-gamma/</link><pubDate>Fri, 22 Jul 2022 22:34:43 +0800</pubDate><guid>https://atbug.com/why-smi-collaborating-in-gateway-api-gamma/</guid><description>&lt;p&gt;就在上周 Gateway API 发布版本 0.5.0，其中几个最重要的 CRD &lt;code&gt;Gateway&lt;/code&gt;、&lt;code&gt;GatewayClass&lt;/code&gt; 以及 &lt;code&gt;HTTPRoute&lt;/code&gt; 第一次升级到了 beta 版本。升级的详细内容这里不做详谈，我也想说说的是与版本一同发布的，也是很容易被忽略的社区合作倡议 &lt;a href="https://gateway-api.sigs.k8s.io/contributing/gamma/"&gt;GAMMA&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;GAMMA 是 Gateway API Mesh Management and Administration 的简写，这个计划是 Gateway API 子项目中的一个专用工作流。这个小组的目标是调研、设计和跟踪 Gateway API 资源、语义和其他与服务网格技术和用例相关的组件。此外，小组还努力倡导服务网格项目的 Gateway API 实现之间的一致性，无论使用何种技术栈或者代理。&lt;/p&gt;
+&lt;p&gt;可能你会有疑问如此简单一个倡议，有什么特别？有两点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;规范的参与：这个倡议由 SIG Network（&lt;strong&gt;Gateway API&lt;/strong&gt; 所在的 Kubernetes SIG）与服务网格社区共同发起，服务网格社区有来自 Cilium Service Mesh、Consul、Istio、Kuma、Linkerd、&lt;strong&gt;SMI&lt;/strong&gt;、NGINX Service Mesh 和 Open Service Mesh 的代表。&lt;strong&gt;SMI 与其他几个不同，它是服务网格的规范 API，并非是实现，Gateway API 也一样。&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;面向东西向流量：小组的首个工作&lt;a href="https://docs.google.com/document/d/1T_DtMQoq2tccLAtJTpo3c0ohjm25vRS35MsestSL9QU/"&gt;探索使用 Gateway API 处理东西向流量&lt;/a&gt;已经开始。&lt;strong&gt;东西向流量，也就是服务网格中服务到服务的流量。&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;可见，服务网格部分 API 的统一将迈进一步，且成为 Kubernetes 原生 API 的一员。当然现在还言之过早，还需看各个厂商的跟进程度。&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>ttl.sh：临时 Docker 镜像的匿名仓库</title><link>https://atbug.com/store-ephemeral-image-in-ttl-registry/</link><pubDate>Mon, 30 May 2022 07:25:42 +0800</pubDate><guid>https://atbug.com/store-ephemeral-image-in-ttl-registry/</guid><description>&lt;p&gt;在平时的工作中，不知道你有没有经常需要构建容器镜像进行测试，并且不一定是在构建环境中使用镜像。这时候就需要将镜像推送到镜像仓库做中转，然后在别处拉取并运行容器。久而久之，因为忘记清理镜像仓库中的“垃圾”镜像越来越多。&lt;/p&gt;
+&lt;p&gt;当然，也可以使用类似 &lt;a href="https://goharbor.io"&gt;Harbor&lt;/a&gt; 这种带有自动清理功能镜像仓库。但只是作为临时镜像的中转，Harbor 这种未免太重了。&lt;/p&gt;
+&lt;p&gt;今天要介绍的 &lt;a href="https://ttl.sh"&gt;ttl.sh&lt;/a&gt; 正适合处理这种场景。&lt;/p&gt;
+&lt;h2 id="ttlsh"&gt;ttl.sh&lt;/h2&gt;
+&lt;p&gt;ttl.sh 是一个匿名的临时镜像仓库，免费使用无需登录，并且已经&lt;a href="https://github.com/replicatedhq/ttl.sh"&gt;开源&lt;/a&gt;。无需登录，镜像名称本身就提供了保密性，比如你可以使用 UUID 来作为镜像名称，使用同一个 UUID 来推送和拉取镜像。&lt;/p&gt;
+&lt;h2 id="使用"&gt;使用&lt;/h2&gt;
+&lt;p&gt;ttl.sh 的使用格外简单，跟平时使用 Docker Hub 或者 Docker Registry 没差别，只是 tag 的需要注意一下。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;docker build&lt;/code&gt; 构建镜像时通过 tag 为镜像指定有效期，比如 &lt;code&gt;ttl.sh/b0a2c1c3-5751-4474-9dfe-6a9e17dfb927:1h&lt;/code&gt;。有效期默认是 1 小时，最长是 24 小时。有效的 tag 可以是 &lt;code&gt;5m&lt;/code&gt;、&lt;code&gt;300s&lt;/code&gt;、&lt;code&gt;4h&lt;/code&gt;、&lt;code&gt;1d&lt;/code&gt;，如果超过 24 小时有效期会被设置为 24 小时；如果时间格式无效，有效期设置为默认的 1 小时；&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;docker push&lt;/code&gt; 推送镜像；&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;docker pull&lt;/code&gt; 拉取镜像。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;比如：&lt;/p&gt;</description></item><item><title>开放服务网格 Open Service Mesh 如何开放？</title><link>https://atbug.com/how-open-presented-in-open-service-mesh/</link><pubDate>Wed, 13 Apr 2022 06:50:56 +0800</pubDate><guid>https://atbug.com/how-open-presented-in-open-service-mesh/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;本文从服务网格发展现状、到 Open Service Mesh 源码，分析开放服务网格中的开放是什么以及如何开放。笔者总结其开放体现在以下几点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;资源提供者（Provider）接口和资源的重新封装：&lt;strong&gt;通过资源提供者接口抽象计算平台的资源，并封装成平台、代理无关的结构化类型&lt;/strong&gt;，并由统一的接口 &lt;code&gt;MeshCataloger&lt;/code&gt; 对外提供访问。虽然目前只有 Kubernetes 相关资源的 Provider 实现，但是通过抽象出的接口，可以兼容其他平台，比如虚拟机、物理机。&lt;/li&gt;
+&lt;li&gt;服务网格能力接口：对服务网格能力的抽象，定义服务网格的基础功能集。&lt;/li&gt;
+&lt;li&gt;代理控制面接口：这一层与反向代理，也就是 sidecar 的实现相关。实际上是反向代理所提供的接口，通过对接口的实现，加上 &lt;code&gt;MeshCataloger&lt;/code&gt; 对资源的访问，生成并下发代理所需的配置。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;h3 id="服务网格是什么"&gt;服务网格是什么&lt;/h3&gt;
+&lt;p&gt;服务网格是在 2017年由 Buoyant 的 Willian Morgan 在 &lt;a href="https://buoyant.io/what-is-a-service-mesh/"&gt;What’s a service mesh? And why do I need one?&lt;/a&gt; 给出了解释。&lt;/p&gt;
+&lt;p&gt;服务网格是处理服务间网络通信的基础设施组件，旨在从平台层面提供可观性、安全以及可靠性特性，以进程外的方式提供原本由部分应用层逻辑承载的基础能力，真正实现与业务逻辑的分离。典型的实现是与应用程序一起部署的可扩展网络代理（通常称为 sidecar 模型），来代理服务间的网络通信，也是服务网格特性的接入点。这些代理就组成了服务网格的&lt;strong&gt;数据平面&lt;/strong&gt;，并由&lt;strong&gt;控制平面&lt;/strong&gt;进行统一的管理。&lt;/p&gt;</description></item><item><title>在 Kubernetes 集群中使用 MetalLB 作为 LoadBalancer（下）- BGP</title><link>https://atbug.com/load-balancer-service-with-metallb-bgp-mode/</link><pubDate>Mon, 07 Mar 2022 07:37:16 +0800</pubDate><guid>https://atbug.com/load-balancer-service-with-metallb-bgp-mode/</guid><description>&lt;p&gt;在上一篇&lt;a href="https://atbug.com/load-balancer-service-with-metallb/"&gt;《在 Kubernetes 集群中使用 MetalLB 作为 LoadBalancer（上）- Layer2》&lt;/a&gt;中，我们使用 MetalLB 的 Layer2 模式作为 LoadBalancer 的实现，将 Kubernetes 集群中的服务暴露到集群外。&lt;/p&gt;
+&lt;p&gt;还记得我们在 Configmap 中为 MetalLB 分配的 IP 地址池么？&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ConfigMap&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;metallb-system&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;data&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;config&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; address-pools:
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; - name: default
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; protocol: layer2
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; addresses:
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; - 192.168.1.30-192.168.1.49&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这里分配的 &lt;code&gt;192.168.1.30-192.168.1.49&lt;/code&gt; IP 段正好是在笔者的家庭网络中，当我们用 &lt;code&gt;192.168.1.30&lt;/code&gt; 可以成功访问服务。&lt;/p&gt;</description></item><item><title>在 Kubernetes 集群中使用 MetalLB 作为 LoadBalancer（上）- Layer2</title><link>https://atbug.com/load-balancer-service-with-metallb/</link><pubDate>Thu, 03 Mar 2022 01:12:17 +0800</pubDate><guid>https://atbug.com/load-balancer-service-with-metallb/</guid><description>&lt;p&gt;这是系列文章的上篇，下篇&lt;a href="https://atbug.com/load-balancer-service-with-metallb-bgp-mode/"&gt;《在 Kubernetes 集群中使用 MetalLB 作为 LoadBalancer（下）- BGP》&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;网络方面的知识又多又杂，很多又是系统内核的部分。原本自己不是做网络方面的，系统内核知识也薄弱。但恰恰是这些陌生的内容满满的诱惑，加上现在的工作跟网络关联更多了，逮住机会就学习下。&lt;/p&gt;
+&lt;p&gt;这篇以 Kubernetes LoadBalancer 为起点，使用 MetalLB 去实现集群的负载均衡器，在探究其工作原理的同时了解一些网络的知识。&lt;/p&gt;
+&lt;p&gt;由于 MetalLB 的内容有点多，一步步来，今天这篇仅介绍其中简单又容易理解的部分，不出意外还会有下篇（太复杂，等我搞明白先 :D）。&lt;/p&gt;
+&lt;h2 id="loadbalancer-类型-service"&gt;LoadBalancer 类型 Service&lt;/h2&gt;
+&lt;p&gt;由于 Kubernets 中 Pod 的 IP 地址不固定，重启后 IP 会发生变化，无法作为通信的地址。Kubernets 提供了 Service 来解决这个问题，对外暴露。&lt;/p&gt;
+&lt;p&gt;Kubernetes 为一组 Pod 提供相同的 DNS 名和虚拟 IP，同时还提供了负载均衡的能力。这里 Pod 的分组通过给 Pod 打标签（&lt;em&gt;Label&lt;/em&gt; ）来完成，定义 Service 时会声明标签选择器（&lt;em&gt;selector&lt;/em&gt;）将 &lt;em&gt;Service&lt;/em&gt; 与 这组 Pod 关联起来。&lt;/p&gt;</description></item><item><title>使用 Cilium 增强 Kubernetes 网络安全</title><link>https://atbug.com/enhance-kubernetes-network-security-with-cilium/</link><pubDate>Sun, 13 Feb 2022 05:03:48 +0800</pubDate><guid>https://atbug.com/enhance-kubernetes-network-security-with-cilium/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;在本篇，我们分别使用了 Kubernetes 原生的网络策略和 Cilium 的网络策略实现了 Pod 网络层面的隔离。不同的是，前者只提供了基于 L3/4 的网络策略；后者支持 L3/4、L7 的网络策略。&lt;/p&gt;
+&lt;p&gt;通过网络策略来提升网络安全，可以极大降低了实现和维护的成本，同时对系统几乎没有影响。&lt;/p&gt;
+&lt;p&gt;尤其是基于 eBPF 技术的 Cilium，解决了内核扩展性不足的问题，从内核层面为工作负载提供安全可靠、可观测的网络连接。&lt;/p&gt;
+&lt;h2 id="目录"&gt;目录&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#tldr"&gt;TL;DR&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#%E7%9B%AE%E5%BD%95"&gt;目录&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#%E8%83%8C%E6%99%AF"&gt;背景&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#%E7%A4%BA%E4%BE%8B%E5%BA%94%E7%94%A8"&gt;示例应用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#kubernetes-%E7%BD%91%E7%BB%9C%E7%AD%96%E7%95%A5"&gt;Kubernetes 网络策略&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#%E6%B5%8B%E8%AF%95"&gt;测试&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#%E6%80%9D%E8%80%83"&gt;思考&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#cilium-%E7%BD%91%E7%BB%9C%E7%AD%96%E7%95%A5"&gt;Cilium 网络策略&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#cilium-%E7%AE%80%E4%BB%8B"&gt;Cilium 简介&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#%E6%B5%8B%E8%AF%95-1"&gt;测试&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;为什么说 Kubernetes 网络存在安全隐患？集群中的 Pod 默认是未隔离的，也就是 Pod 之间的网络是互通的，可以互相通信的。&lt;/p&gt;
+&lt;p&gt;这里就会有问题，比如由于数据敏感服务 B 只允许特定的服务 A 才能访问，而服务 C 无法访问 B。要禁止服务 C 对服务 B 的访问，可以有几种方案：&lt;/p&gt;</description></item><item><title>探秘 k8e：极简 Kubernetes 发行版</title><link>https://atbug.com/explore-simple-kubernetes-distribution/</link><pubDate>Mon, 07 Feb 2022 01:00:29 +0800</pubDate><guid>https://atbug.com/explore-simple-kubernetes-distribution/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;本文介绍并安装体验了极简 Kubernetes 发行版，也顺便分析学习下编译的流程。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/xiaods/k8e"&gt;k8e&lt;/a&gt; 本意为 &lt;em&gt;kuber easy&lt;/em&gt;，是一个 Kubernetes 的极简发行版，意图让云原生落地部署 Kubernetes 更轻松。k8e 是基于另一个发行版 &lt;a href="https://github.com/rancher/k3s"&gt;k3s&lt;/a&gt; ，经过裁剪（去掉了 Edge/IoT 相关功能、traefik等）、扩展（加入 ingress、sidecar 实现、cilium等）而来。&lt;/p&gt;
+&lt;p&gt;k8e 具有以下特性：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;单二进制文件，集成了 k8s 的各种组件、containerd、runc、kubectl、nerdctl 等&lt;/li&gt;
+&lt;li&gt;使用 cilium 作为 cni 的实现，方便 eBPF 的快速落地&lt;/li&gt;
+&lt;li&gt;支持基于 &lt;a href="https://github.com/flomesh-io/pipy"&gt;Pipy&lt;/a&gt; 的 ingress、sidecar proxy，实现应用流量一站式管理&lt;/li&gt;
+&lt;li&gt;只维护一个 k8s 版本，目前是 1.21&lt;/li&gt;
+&lt;li&gt;按照私有云的经验增加、优化代码&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;得益于这些特性，k8e 非常适合CI、开发和企业级部署，单机版的集群适合技术验证环境。&lt;/p&gt;</description></item><item><title>追踪 Kubernetes 中的网络流量</title><link>https://atbug.com/tracing-path-of-kubernetes-network-packets/</link><pubDate>Sat, 22 Jan 2022 10:15:31 +0800</pubDate><guid>https://atbug.com/tracing-path-of-kubernetes-network-packets/</guid><description>&lt;p&gt;译者注：&lt;/p&gt;
+&lt;p&gt;这篇文章很全面的罗列出了 Kubernetes 中涉及的网络知识，从 Linux 内核的网络内容，到容器、Kubernetes，一一进行了详细的说明。&lt;/p&gt;
+&lt;p&gt;​文章篇幅有点长，不得不说，网络是很复杂很麻烦的一层，但恰恰这层多年来变化不大。希望翻译的内容对大家能有所帮助，有误的地方，也欢迎大家指正。&lt;/p&gt;
+&lt;p&gt;本文翻译获得 Learnk8s 的授权，原文 &lt;a href="https://learnk8s.io/kubernetes-network-packets"&gt;Tracing the path of network traffic in Kubernetes&lt;/a&gt; 作者 Kristijan Mitevski。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/01/22/16427680911539.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;TL;DR：&lt;/strong&gt; &lt;em&gt;本文将代理了解 Kubernetes 集群内外的数据流转。从最初的 Web 请求开始，一直到托管应用程序的容器。&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id="目录"&gt;目录&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#%E7%9B%AE%E5%BD%95"&gt;目录&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#kubernetes-%E7%BD%91%E7%BB%9C%E8%A6%81%E6%B1%82"&gt;Kubernetes 网络要求&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#linux-%E7%BD%91%E7%BB%9C%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E5%A6%82%E4%BD%95%E5%9C%A8-pod-%E4%B8%AD%E5%B7%A5%E4%BD%9C"&gt;Linux 网络命名空间如何在 pod 中工作&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#pause-%E5%AE%B9%E5%99%A8%E5%88%9B%E5%BB%BA-pod-%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4"&gt;Pause 容器创建 Pod 中的网络命名空间&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#%E4%B8%BA-pod-%E5%88%86%E9%85%8D%E4%BA%86-ip-%E5%9C%B0%E5%9D%80"&gt;为 Pod 分配了 IP 地址&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#%E6%A3%80%E6%9F%A5%E9%9B%86%E7%BE%A4%E4%B8%AD-pod-%E5%88%B0-pod-%E7%9A%84%E6%B5%81%E9%87%8F"&gt;检查集群中 pod 到 pod 的流量&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#pod-%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E8%BF%9E%E6%8E%A5%E5%88%B0%E4%BB%A5%E5%A4%AA%E7%BD%91%E6%A1%A5%E6%8E%A5%E5%99%A8"&gt;Pod 命名空间连接到以太网桥接器&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#%E8%B7%9F%E8%B8%AA%E5%90%8C%E4%B8%80%E8%8A%82%E7%82%B9%E4%B8%8A-pod-%E9%97%B4%E7%9A%84%E6%B5%81%E9%87%8F"&gt;跟踪同一节点上 pod 间的流量&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#%E8%B7%9F%E8%B8%AA%E4%B8%8D%E5%90%8C%E8%8A%82%E7%82%B9%E4%B8%8A-pod-%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1"&gt;跟踪不同节点上 pod 间的通信&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#%E4%BD%8D%E8%BF%90%E7%AE%97%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"&gt;位运算的工作原理&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3---cni"&gt;容器网络接口 - CNI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#%E6%A3%80%E6%9F%A5-pod-%E5%88%B0%E6%9C%8D%E5%8A%A1%E7%9A%84%E6%B5%81%E9%87%8F"&gt;检查 pod 到服务的流量&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#%E4%BD%BF%E7%94%A8-netfilter-%E5%92%8C-iptables-%E6%8B%A6%E6%88%AA%E5%92%8C%E9%87%8D%E5%86%99%E6%B5%81%E9%87%8F"&gt;使用 Netfilter 和 Iptables 拦截和重写流量&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#%E6%A3%80%E6%9F%A5%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%93%8D%E5%BA%94"&gt;检查服务的响应&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#%E5%9B%9E%E9%A1%BE"&gt;回顾&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="kubernetes-网络要求"&gt;Kubernetes 网络要求&lt;/h2&gt;
+&lt;p&gt;在深入了解 Kubernetes 中的数据流转之前，让我们先澄清下 Kubernetes 网络的要求。&lt;/p&gt;</description></item><item><title>Kubernetes HPA 基于 Prometheus 自定义指标的可控弹性伸缩</title><link>https://atbug.com/kubernetes-pod-autoscale-on-prometheus-metrics/</link><pubDate>Tue, 18 Jan 2022 12:03:59 +0800</pubDate><guid>https://atbug.com/kubernetes-pod-autoscale-on-prometheus-metrics/</guid><description>&lt;p&gt;在&lt;a href="https://mp.weixin.qq.com/s/GKS3DJHm4p0Tjtj8nJRGmA"&gt;《Kubernetes 的自动伸缩你用对了吗？》&lt;/a&gt;
+一文中详细说明了如何使用 Kubernetes 的自动伸缩。在 Kubernetes 中弹性伸缩主要有三种：HPA、VPA、CA。本文不再详细说明，有兴趣的可以看那篇文章。这里主要来说下 Pod 水平缩放 &lt;a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/"&gt;HPA&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;随着 Kubernetes v1.23 的发布，HPA 的 API 来到了稳定版 &lt;code&gt;autoscaling/v2&lt;/code&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;基于自定义指标的伸缩&lt;/li&gt;
+&lt;li&gt;基于多项指标的伸缩&lt;/li&gt;
+&lt;li&gt;可配置的伸缩行为&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;从最初的 v1 版本 HPA 只支持 CPU、内存利用率的伸缩，到后来的自定义指标、聚合层 API 的支持，到了 v1.18 版本又加入了配置伸缩行为的支持，HPA 也越来越好用、可靠。&lt;/p&gt;
+&lt;p&gt;依靠 CPU 或者内存指标的扩容并非使用所有系统，看起来也没那么可靠。对大部分的 web 后端系统来说，基于 RPS（每秒请求数）的弹性伸缩来处理突发的流量则会更加靠谱。&lt;/p&gt;
+&lt;p&gt;Prometheus 也是当下流行开源监控系统，通过 Prometheus 可以获取到系统的实时流量负载指标，今天我们就来尝试下基于 Prometheus 的自定义指标进行弹性伸缩。&lt;/p&gt;</description></item><item><title>策略即代码：为了 OpenPolicyAgent 学 Rego？试试 Javascript</title><link>https://atbug.com/policy-as-code-with-pipy/</link><pubDate>Wed, 08 Dec 2021 07:49:37 +0800</pubDate><guid>https://atbug.com/policy-as-code-with-pipy/</guid><description>&lt;p&gt;距离上个版本 &lt;a href="https://mp.weixin.qq.com/s/uZ_Q5Fn3XpfUEHBOFxWdvg"&gt;用 Pipy 实现 OPA&lt;/a&gt;，已经过去快半年了。当初使用Pipy 实现了可信镜像仓库的检查，那时的版本实现起来会稍微复杂，从策略仓库到证书创建到Admission Webhook 的创建都需要大量的人工操作，配置和逻辑也还是耦合在一起。&lt;/p&gt;
+&lt;p&gt;这个版本安装和使用起来会更加简单。&lt;/p&gt;
+&lt;p&gt;当初我用“不务正业”来形容 Pipy 实现准入控制，等看完这篇文章，欢迎留言说说你的看法。&lt;/p&gt;
+&lt;h2 id="架构"&gt;架构&lt;/h2&gt;
+&lt;p&gt;还是继续上次的场景，在 Pod 创建时对 Pod 使用的镜像所在仓库进行检查，以及检查镜像的 tag 是否&lt;em&gt;合法&lt;/em&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/12/08/untitled.jpg" alt="Untitled"&gt;&lt;/p&gt;
+&lt;p&gt;这里借助 Pipy Repo 的能力，将&lt;strong&gt;代表策略的脚本和配置&lt;/strong&gt;交由 Repo 进行管理；Pipy 实例实时从 Pipy Repo 同步&lt;strong&gt;策略&lt;/strong&gt;，并进行&lt;strong&gt;动态加载&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;同时 Pipy Repo 对外提供 REST API 来管理策略，对策略的修改更容易。也方便与企业现有管理后台进行对接。&lt;/p&gt;
+&lt;p&gt;下面就开始部署验证，这里所使用的所有代码都已提交到&lt;a href="https://github.com/flomesh-io/demo-policy-as-code"&gt; GitHub 仓库&lt;/a&gt;：https://github.com/flomesh-io/demo-policy-as-code。&lt;/p&gt;</description></item><item><title>沙盒化容器：是容器还是虚拟机</title><link>https://atbug.com/sandboxed-container/</link><pubDate>Tue, 07 Dec 2021 07:55:16 +0800</pubDate><guid>https://atbug.com/sandboxed-container/</guid><description>&lt;p&gt;随着 IT 技术的发展，AI、区块链和大数据等技术提升了对应用毫秒级扩展的需求，开发人员也面临着的功能快速推出的压力。混合云是新常态，数字化转型是保持竞争力的必要条件，虚拟化成为这些挑战的基本技术。&lt;/p&gt;
+&lt;p&gt;在虚拟化的世界，有两个词耳熟能详：虚拟机和容器。前者是对硬件的虚拟化，后者则更像是操作系统的虚拟化。两者都提供了沙箱的能力：虚拟机通过硬件级抽象提供，而容器则使用公共内核提供进程级的隔离。有很多人将容器看成是“轻量化的虚拟机”，通常情况下我们认为容器是安全的，那到底是不是跟我们想象的一样？&lt;/p&gt;
+&lt;h2 id="容器轻量化的虚拟机"&gt;容器：轻量化的虚拟机？&lt;/h2&gt;
+&lt;p&gt;容器是打包、共享和部署应用的现代化方式，帮助企业实现快速、标准、灵活地完成服务交互。容器化是建立在 Linux 的命名空间（namespace）和控制组（cgroup） 的设计之上。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/12/06/20211206-at-210354.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;命名空间创建一个几乎隔离的用户空间，并为应用提供专用的系统资源，如文件系统、网络堆栈、进程ID和用户ID。随着用户命名空间的引入，内核版本 3.8 提供了对容器功能的支持：Mount（mnt）、进程 ID（pid）、Network（net）、进程间通信（ipc）、UTS、用户 ID（user）6 个命名空间（如今已达 8 个，后续加入了 cgroup 和 time 命名空间）。&lt;/p&gt;
+&lt;p&gt;cgroup 则实施对应用的资源限制、优先级、记账和控制。cgroup可以控制 CPU、内存、设备和网络等资源。&lt;/p&gt;
+&lt;p&gt;同时使用 namespace 和 cgroup 使得我们可以在一台主机上安全地运行多个应用，并且每个应用都位于隔离的环境中。&lt;/p&gt;
+&lt;h2 id="虚拟机提供更强大的隔离"&gt;虚拟机提供更强大的隔离&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/12/06/16387934257868.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;虽然容器很棒，足够轻量级。但通过上面的描述，同一个主机上的多个容器其实是&lt;strong&gt;共享同一个操作系统内核&lt;/strong&gt;，只是做到了操作系统级的虚拟化。虽然命名空间提供了高度的隔离，但仍然有容器可以访问的资源，这些资源并没有提供命名空间。这些资源是主机上所有容器共有的，比如内核 Keyring、/proc、系统时间、内核模块、硬件。&lt;/p&gt;
+&lt;p&gt;我们都知道没有 100% 安全的软件，容器化的应用也一样，从应用源码到依赖库到容器 base 镜像，甚至容器引擎本身都可能存在安全漏洞。发生容器逃逸的风险远高于虚拟机，黑客可以利用这些逃逸漏洞，操作容器的外部资源也就是宿主机上的资源。除了漏洞，有时使用的不当也会带来安全风险，比如为容器分配了过高的权限（CAP_SYS_ADMIN 功能、特权权限），都可能导致容器逃逸。&lt;/p&gt;</description></item><item><title>低复杂度 - 服务网格的下一站</title><link>https://atbug.com/service-mesh-unnecessary-complexity/</link><pubDate>Fri, 15 Oct 2021 07:58:25 +0800</pubDate><guid>https://atbug.com/service-mesh-unnecessary-complexity/</guid><description>&lt;p&gt;&lt;strong&gt;译者：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;作为一个曾经在制造业企业的基础架构团队任职，为支持公司的“互联网基因”和“数字化转型”落地了云原生基础设施平台，并在尝试采用服务网格未成的我来说，看到这篇文章深有感触。尤其是文中所说的“人少，问题多，需要快速输出价值”，直戳到了痛处。有限的人手有限的时间，我们需要将大部分精力集中在解决成熟度曲线较低的基本问题上，要想很好的运行复杂的系统是非常困难的。&lt;/p&gt;
+&lt;p&gt;服务网格是一个新的基础设施层，可以承载很多的功能，未来还会有更大的想象空间和光明的未来。&lt;/p&gt;
+&lt;p&gt;以上的种种原因，也促使我后来选择进入一家提供服务网格的产品企业，也希望服务网格可以被更简单的使用。&lt;/p&gt;
+&lt;p&gt;“道阻且长，行则将至！”&lt;/p&gt;
+&lt;p&gt;本文翻译自 Chris Campbell 的 &lt;a href="https://www.infoq.com/articles/service-mesh-unnecessary-complexity"&gt;How Unnecessary Complexity Gave the Service Mesh a Bad Name&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="关键要点"&gt;关键要点&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;采用服务网格有巨大的价值，但必须以轻量级的方式进行，以避免不必要的复杂性。&lt;/li&gt;
+&lt;li&gt;在实施服务网时，要采取务实的方法，与技术的核心功能保持一致，并小心干扰（译者：注意力的分散）。&lt;/li&gt;
+&lt;li&gt;服务网格的一些核心特性包括标准化监控、自动加密和身份识别、智能路由、可靠的重试和网络可扩展性。&lt;/li&gt;
+&lt;li&gt;服务网格可以提供强大的功能，但这些功能会分散本应对核心优势的关注，并且这些功能也不是实施服务网格的主要原因。&lt;/li&gt;
+&lt;li&gt;在初始实施服务网格时没有必要去关注那些明显会分散注意力的功能，比如复杂的控制平面、多集群支持、Envoy、WASM 和 A/B 测试。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;服务网格是 Kubernetes 世界中的一个热门话题，但许多潜在的采用者已经有些失望了。服务网格的落地受到压倒性的复杂性和看似无穷无尽的供应商解决方案的限制。在我亲自浏览了这个领域之后，我发现采用服务网格具有巨大的价值，但它必须以轻量级的方式完成，以避免不必要的复杂性。尽管普遍存在幻灭感，但服务网格的未来依然光明。&lt;/p&gt;
+&lt;h2 id="在工作中学习"&gt;在工作中学习&lt;/h2&gt;
+&lt;p&gt;我进入服务网格的世界始于我在一家老牌的财富 500 强技术公司担任云计算架构师的角色。在开始我们的服务网格之旅时，我身边有许多强大的工程师，但大多数人几乎没有云计算开发经验。我们的组织诞生于云计算之前，完全实现云计算的价值需要时间。我们的传统业务线主要集中在技术栈的硬件元素上，云计算的决策最初是由为运送硬件或为该硬件提供固件和驱动程序而开发的流程驱动的。&lt;/p&gt;
+&lt;p&gt;随着该组织经历其“数字化转型”，它越来越依赖于提供高质量的软件服务，并逐渐开发出更好的方法。但作为云计算架构师，我仍在为优先考虑硬件的业务流程，以及具有不同技能、流程和信念的工程团队导航。随着时间的推移，我和我的团队在将 .NET 应用程序迁移到 Linux、采用 Docker、迁移到 AWS 以及与之相关的最佳实践（如持续集成、自动化部署、不可变基础设施、基础设施即代码、监控等）方面变得熟练并成功。但挑战依然存在。&lt;/p&gt;</description></item><item><title>使用 Flomesh 进行 Dubbo 服务治理</title><link>https://atbug.com/enhance-dubbo-service-governance-with-flomesh/</link><pubDate>Wed, 18 Aug 2021 09:50:28 +0800</pubDate><guid>https://atbug.com/enhance-dubbo-service-governance-with-flomesh/</guid><description>&lt;h2 id="写在最前"&gt;写在最前&lt;/h2&gt;
+&lt;p&gt;和上一篇&lt;a href="https://mp.weixin.qq.com/s/QnKWpXwe8Ex_CrUuAEjZ1Q"&gt;《使用 Flomesh 强化 Spring Cloud 服务治理》&lt;/a&gt;一样，这次同样是在无代码侵入的情况下对 Dubbo 服务治理的提升。&lt;/p&gt;
+&lt;p&gt;更多治理场景陆续添加中，有兴趣的可关注 &lt;a href="https://github.com/flomesh-io/service-mesh-dubbo-demo"&gt;https://github.com/flomesh-io/service-mesh-dubbo-demo&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;开源的 Pipy 作为 Flomesh 的核心，得益于其轻量及灵活性可以通过编程的方式轻松快速的支持多中平台的服务发现机制，比如 Eureka、Consul、Nacos 等。&lt;/p&gt;
+&lt;h2 id="概览"&gt;概览&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/08/18/16292498443406.jpg" alt=""&gt;&lt;/p&gt;
+&lt;h2 id="细节"&gt;细节&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/08/18/16292498964245.jpg" alt=""&gt;&lt;/p&gt;
+&lt;h2 id="环境搭建"&gt;环境搭建&lt;/h2&gt;
+&lt;p&gt;搭建 Kubernetes 环境，可以选择 kubeadm 进行集群搭建。也可以选择 minikube、k3s、Kind 等，本文使用 k3s。&lt;/p&gt;
+&lt;p&gt;使用 &lt;a href="https://k3d.io/"&gt;k3d&lt;/a&gt; 安装 &lt;a href="https://github.com/k3s-io/k3s"&gt;k3s&lt;/a&gt;。k3d 将在 Docker 容器中运行 k3s，因此需要保证已经安装了 Docker。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ k3d cluster create dubbo-demo -p &lt;span style="color:#e6db74"&gt;&amp;#34;80:80@loadbalancer&amp;#34;&lt;/span&gt; --k3s-server-arg &lt;span style="color:#e6db74"&gt;&amp;#39;--no-deploy=traefik&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="安装-flomesh"&gt;安装 Flomesh&lt;/h2&gt;
+&lt;p&gt;从仓库 &lt;code&gt;https://github.com/flomesh-io/service-mesh-dubbo-demo&lt;/code&gt; 克隆代码。进入到 &lt;code&gt;release&lt;/code&gt;目录。&lt;/p&gt;</description></item><item><title>使用 Flomesh 强化 Spring Cloud 服务治理</title><link>https://atbug.com/enhance-springcloud-service-governance-with-flomesh/</link><pubDate>Tue, 17 Aug 2021 18:47:33 +0800</pubDate><guid>https://atbug.com/enhance-springcloud-service-governance-with-flomesh/</guid><description>&lt;h2 id="写在最前"&gt;写在最前&lt;/h2&gt;
+&lt;p&gt;这篇是关于如何使用 &lt;a href="https://flomesh.cn/"&gt;Flomesh&lt;/a&gt; 服务网格来强化 Spring Cloud 的服务治理能力，降低 Spring Cloud 微服务架构落地服务网格的门槛，实现“自主可控”。&lt;/p&gt;
+&lt;p&gt;文档在 &lt;a href="https://github.com/flomesh-io/flomesh-bookinfo-demo"&gt;github&lt;/a&gt; 上持续更新，欢迎大家一起讨论：https://github.com/flomesh-io/flomesh-bookinfo-demo。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="架构"&gt;架构&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/08/17/springdemotypology.png" alt="Architect"&gt;&lt;/p&gt;
+&lt;h2 id="环境搭建"&gt;环境搭建&lt;/h2&gt;
+&lt;p&gt;搭建 Kubernetes 环境，可以选择 kubeadm 进行集群搭建。也可以选择 minikube、k3s、Kind 等，本文使用 k3s。&lt;/p&gt;
+&lt;p&gt;使用 &lt;a href="https://k3d.io/"&gt;k3d&lt;/a&gt; 安装 &lt;a href="https://github.com/k3s-io/k3s"&gt;k3s&lt;/a&gt;。k3d 将在 Docker 容器中运行 k3s，因此需要保证已经安装了 Docker。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ k3d cluster create spring-demo -p &lt;span style="color:#e6db74"&gt;&amp;#34;81:80@loadbalancer&amp;#34;&lt;/span&gt; --k3s-server-arg &lt;span style="color:#e6db74"&gt;&amp;#39;--no-deploy=traefik&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="安装-flomesh"&gt;安装 Flomesh&lt;/h2&gt;
+&lt;p&gt;从仓库 &lt;code&gt;https://github.com/flomesh-io/flomesh-bookinfo-demo.git&lt;/code&gt; 克隆代码。进入到 &lt;code&gt;flomesh-bookinfo-demo/kubernetes&lt;/code&gt;目录。&lt;/p&gt;</description></item><item><title>Open Policy Agent: Top 5 Kubernetes 准入控制策略</title><link>https://atbug.com/open-policy-agent-top-5-kubernetes-admission-control/</link><pubDate>Mon, 12 Jul 2021 08:20:40 +0800</pubDate><guid>https://atbug.com/open-policy-agent-top-5-kubernetes-admission-control/</guid><description>&lt;p&gt;如何使用 Open Policy Agent 实现准入策略控制，可以参考&lt;a href="https://mp.weixin.qq.com/s/RvqCVAhClJY3o_46ALu1bQ"&gt;这里&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;本文翻译自 &lt;a href="https://thenewstack.io/open-policy-agent-the-top-5-kubernetes-admission-control-policies/"&gt;Open Policy Agent: The Top 5 Kubernetes Admission Control Policies&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Kubernetes 开发人员和平台工程师通常承受着非常大的压力，以保持应用程序部署的快速进行，并且总是为了速度和进度而做出妥协。平台团队越来越有责任确保这些妥协（例如管理 Ingress）不会导致客户数据暴露在整个互联网上等后果。&lt;/p&gt;
+&lt;p&gt;幸运的是，Kubernetes 提供了设置策略的能力，通过检查并防止部署错误将其投入生产，从而避免这些后果。为了确保团队的应用程序不会比信心更重要，以下是现在应该在集群中运行的前五个 Kubernetes 准入控制策略。&lt;/p&gt;
+&lt;h2 id="1-可信镜像仓库"&gt;1. 可信镜像仓库&lt;/h2&gt;
+&lt;p&gt;此策略很简单，但功能强大：仅允许从受信任的镜像仓库中拉取的容器映像，并且可以选择仅拉取与允许的仓库镜像地址列表匹配的那些镜像。&lt;/p&gt;
+&lt;p&gt;当然，从互联网（或可信镜像仓库库以外的任何地方）拉取未知镜像会带来风险——例如恶意软件。但是还有其他很好的理由来维护单一的可信来源，例如在企业中实现可支持性。通过确保镜像仅来自受信任的镜像仓库，可以密切控制镜像库存，降低软件熵和蔓延的风险，并提高集群的整体安全性。&lt;/p&gt;
+&lt;p&gt;相关策略：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;禁止所有带有“latest” tag 的镜像&lt;/li&gt;
+&lt;li&gt;仅允许签名镜像或匹配特定哈希/SHA 的镜像&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;策略示例：&lt;/em&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;package kubernetes.validating.images
+ 
+deny[msg] {
+ some i
+ input.request.kind.kind == &amp;#34;Pod&amp;#34;
+ image := input.request.object.spec.containers[i].image
+ not startswith(image, &amp;#34;hooli.com/&amp;#34;)
+ msg := sprintf(&amp;#34;Image &amp;#39;%v&amp;#39; comes from untrusted registry&amp;#34;, [image])
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="2-标签安全"&gt;2. 标签安全&lt;/h2&gt;
+&lt;p&gt;此策略要求所有 Kubernetes 资源都包含指定的标签并使用适当的格式。由于标签决定了 Kubernetes 对象和策略的分组，包括工作负载可以运行的位置——前端、后端、数据层——以及哪些资源可以发送流量，标签错误会导致生产中无法解释的部署和可支持性问题。此外，如果没有对标签应用方式的访问控制，集群就缺乏基本的安全性。最后，手动输入标签的危险在于错误会蔓延，特别是因为标签在 Kubernetes 中既灵活又强大。应用此策略并确保标签配置正确且一致。&lt;/p&gt;</description></item><item><title>Kubernetes 的魔力在于企业标准化，而不是应用程序的可移植性</title><link>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</link><pubDate>Sun, 11 Jul 2021 08:05:42 +0800</pubDate><guid>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</guid><description>&lt;p&gt;笔者：Kubernetes 抽象了资源和工作负载的操作模式，统一了工具集，实现人机接口的标准化。正如类 Docker 工具提供了应用运行时的操作模式；Spring Framework 提供了 Java 应用的开发模式。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Kubernetes 是关于跨云的技能、工具和实践的可移植性。不是工作负载的可移植性。 &amp;ndash; Bilgin Lbryam @bibryam&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;本文翻译自 &lt;a href="https://www.techrepublic.com/google-amp/article/kubernetes-magic-is-in-enterprise-standardization-not-app-portability"&gt;Kubernetes magic is in enterprise standardization, not app portability&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Kubernetes 不会神奇地使你的应用程序具有可移植性，但它可能会给你带来更好的东西。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;云为企业提供了看似无限的选择。然而，根据 &lt;a href="https://juju.is/cloud-native-kubernetes-usage-report-2021"&gt;Canonical-sponsored 的一项调查&lt;/a&gt;，这并不是大多数企业采用 &lt;a href="https://www.techrepublic.com/article/kubernetes-the-smart-persons-guide/"&gt;Kubernetes&lt;/a&gt; 等云友好技术的原因。相反，Kubernetes 的主要目标是标准化——外观和操作与其他人一样。&lt;/p&gt;
+&lt;h2 id="可移植性不是目标"&gt;可移植性不是目标&lt;/h2&gt;
+&lt;p&gt;我之前已经讨论过这个问题，参考了 Gartner 关于 Kubernetes 和可移植性的指南。许多人认为 Kubernetes（和&lt;a href="https://www.techrepublic.com/article/containers-the-smart-persons-guide"&gt;容器&lt;/a&gt;）可以让他们在云之间轻松移植，但事实证明并不是这样的。正如 Gartner 分析师 &lt;a href="https://blogs.gartner.com/marco-meinardi/2020/09/04/adopting-kubernetes-application-portability-not-good-idea/"&gt;Marco Meinardi 所写&lt;/a&gt;，当被问及公司是否应该采用“Kubernetes 使他们的应用程序可移植&amp;hellip;&amp;hellip;答案是：不。” 再说一次？&lt;/p&gt;</description></item><item><title>使用 Open Policy Agent 实现可信镜像仓库检查</title><link>https://atbug.com/image-trusted-repository-with-open-policy-agent/</link><pubDate>Sat, 10 Jul 2021 07:14:47 +0800</pubDate><guid>https://atbug.com/image-trusted-repository-with-open-policy-agent/</guid><description>&lt;p&gt;从互联网（或可信镜像仓库库以外的任何地方）拉取未知镜像会带来风险——例如恶意软件。但是还有其他很好的理由来维护单一的可信来源，例如在企业中实现可支持性。通过确保镜像仅来自受信任的镜像仓库，可以密切控制镜像库存，降低软件熵和蔓延的风险，并提高集群的整体安全性。除此以外，有时还会需要检查镜像的 tag，比如禁止使用 latest 镜像。&lt;/p&gt;
+&lt;p&gt;这今天我们尝试用“策略即代码”的实现 OPA 来实现功能。&lt;/p&gt;
+&lt;p&gt;还没开始之前可能有人会问：明明可以实现个 &lt;a href="https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/"&gt;Admission Webhook&lt;/a&gt; 就行，为什么还要加上 OPA？&lt;/p&gt;
+&lt;p&gt;确实可以，但是这样策略和逻辑都会耦合在一起，当策略需要调整的时候需要修改代码重新发布。而 OPA 就是用来做解耦的，其更像是一个策略的执行引擎。&lt;/p&gt;
+&lt;h2 id="什么是-opa"&gt;什么是 OPA&lt;/h2&gt;
+&lt;p&gt;Open Policy Agent（以下简称 OPA，发音 “oh-pa”）一个开源的通用策略引擎，可以统一整个堆栈的策略执行。OPA 提供了一种高级声明性语言（Rego），可让你将策略指定为代码和简单的 API，以从你的软件中卸载策略决策。你可以使用 OPA 在微服务、Kubernetes、CI/CD 管道、API 网关等中实施策略。&lt;/p&gt;
+&lt;p&gt;Rego 是一种高级的声明性语言，是专门为 OPA 建立的。更多 OPA 的介绍可以看 &lt;a href="https://www.openpolicyagent.org/"&gt;Open Policy Agent 官网&lt;/a&gt;，不想看英文直接看&lt;a href="https://cloudnative.to/blog/introducing-policy-as-code-the-open-policy-agent-opa/"&gt;这里&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/07/09/20210709182625.png" alt="2021-07-09-18-26-25"&gt;&lt;/p&gt;
+&lt;p&gt;现在进入正题。&lt;/p&gt;
+&lt;h2 id="启动集群"&gt;启动集群&lt;/h2&gt;
+&lt;p&gt;启动 minikube&lt;/p&gt;</description></item><item><title>常用的几款工具让 Kubernetes 集群上的工作更容易</title><link>https://atbug.com/tools-accelerate-work-on-kubernetes-cluster/</link><pubDate>Sat, 26 Jun 2021 12:16:28 +0800</pubDate><guid>https://atbug.com/tools-accelerate-work-on-kubernetes-cluster/</guid><description>&lt;p&gt;之前写过一篇 &lt;a href="https://mp.weixin.qq.com/s/CXJ1zUoktdI3c3CHVju0gA"&gt;介绍了工具加速云原生 Java 开发&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;其实日常工作中在集群上的操作也非常多，今天就来介绍我所使用的工具。&lt;/p&gt;
+&lt;h2 id="kubectl-alias"&gt;kubectl-alias&lt;/h2&gt;
+&lt;p&gt;使用频率最高的工具，我自己稍微修改了一下，加入了 &lt;code&gt;StatefulSet&lt;/code&gt; 的支持。&lt;/p&gt;
+&lt;p&gt;这个是我的 &lt;a href="https://github.com/addozhang/kubectl-aliases"&gt;https://github.com/addozhang/kubectl-aliases&lt;/a&gt;，基于 &lt;a href="https://github.com/ahmetb/kubectl-aliases"&gt;https://github.com/ahmetb/kubectl-aliases&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;比如输出某个 pod 的 json，&lt;code&gt;kgpoojson xxx&lt;/code&gt; 等同于 &lt;code&gt;kubectl get pod xxx -o json&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;结合 &lt;a href="https://stedolan.github.io/jq/"&gt;jq&lt;/a&gt; 使用效果更好 😂。&lt;/p&gt;
+&lt;h3 id="语法解读"&gt;语法解读&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;k&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;kubectl&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;sys&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;--namespace kube-system&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;commands:
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;g&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;get&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;d&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;describe&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;rm&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;delete&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;a&lt;/code&gt;&lt;/strong&gt;:&lt;code&gt;apply -f&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;ak&lt;/code&gt;&lt;/strong&gt;:&lt;code&gt;apply -k&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;k&lt;/code&gt;&lt;/strong&gt;:&lt;code&gt;kustomize&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;ex&lt;/code&gt;&lt;/strong&gt;: &lt;code&gt;exec -i -t&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;lo&lt;/code&gt;&lt;/strong&gt;: &lt;code&gt;logs -f&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;resources:
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;po&lt;/code&gt;&lt;/strong&gt;=pod, &lt;strong&gt;&lt;code&gt;dep&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;deployment&lt;/code&gt;, &lt;strong&gt;&lt;code&gt;ing&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;ingress&lt;/code&gt;, &lt;strong&gt;&lt;code&gt;svc&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;service&lt;/code&gt;, &lt;strong&gt;&lt;code&gt;cm&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;configmap&lt;/code&gt;, &lt;strong&gt;&lt;code&gt;sec&lt;/code&gt;=&lt;code&gt;secret&lt;/code&gt;&lt;/strong&gt;,&lt;strong&gt;&lt;code&gt;ns&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;namespace&lt;/code&gt;, &lt;strong&gt;&lt;code&gt;no&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;node&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;flags:
+&lt;ul&gt;
+&lt;li&gt;output format: &lt;strong&gt;&lt;code&gt;oyaml&lt;/code&gt;&lt;/strong&gt;, &lt;strong&gt;&lt;code&gt;ojson&lt;/code&gt;&lt;/strong&gt;, &lt;strong&gt;&lt;code&gt;owide&lt;/code&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;all&lt;/code&gt;&lt;/strong&gt;: &lt;code&gt;--all&lt;/code&gt; or &lt;code&gt;--all-namespaces&lt;/code&gt; depending on the command&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;sl&lt;/code&gt;&lt;/strong&gt;: &lt;code&gt;--show-labels&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;w&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;-w/--watch&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;value flags (should be at the end):
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;n&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;-n/--namespace&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;f&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;-f/--filename&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;l&lt;/code&gt;&lt;/strong&gt;=&lt;code&gt;-l/--selector&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="kubectx--kubens"&gt;kubectx + kubens&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/ahmetb/kubectx#installation"&gt;安装看这里&lt;/a&gt;&lt;/p&gt;</description></item><item><title>Jenkins 如何与 Kubernetes 集群的 Tekton Pipeline 交互？</title><link>https://atbug.com/jenkins-interact-with-tekton-pipelines-via-plugin/</link><pubDate>Wed, 23 Jun 2021 07:58:45 +0800</pubDate><guid>https://atbug.com/jenkins-interact-with-tekton-pipelines-via-plugin/</guid><description>&lt;p&gt;本文详细介绍了 Jenkins 如何通过 &lt;a href="https://github.com/jenkinsci/tekton-client-plugin"&gt;tekton-client-plugin&lt;/a&gt; 实现与 Kubernetes 上的 Tekton Pipeline 交互，包括 Kubernetes 上安装 Jenkins、Tekton Pipelines 等。&lt;/p&gt;
+&lt;p&gt;关于如何使用 Tekton Pipeline 实现 CICD 可以看这篇文章 &lt;a href="https://atbug.com/tekton-pipeline-practice/"&gt;云原生 CICD: Tekton Pipeline 实战&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;本文用于构建的项目以及所有 manifest yaml 都在可以在&lt;a href="https://github.com/addozhang/tekton-test"&gt;这里&lt;/a&gt;下载。&lt;/p&gt;
+&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;惯例，先上总结。&lt;code&gt;tekton-client-plugin&lt;/code&gt; 虽然还是处于初期阶段，但是 &lt;em&gt;其价值非常明显，尤其是对先用使用 Jenkins 作为 CICD 实现的用户来说。从 Jenkins 迁移到云原生的 Tekton 时，可以省掉用户界面的开发成本，而且尽可能少的改变用户习惯&lt;/em&gt; ，依靠版本管理可以控制迁移的节奏。&lt;/p&gt;</description></item><item><title>云原生 CICD: Tekton Pipeline 实战</title><link>https://atbug.com/tekton-pipeline-practice/</link><pubDate>Tue, 22 Jun 2021 07:19:33 +0800</pubDate><guid>https://atbug.com/tekton-pipeline-practice/</guid><description>&lt;p&gt;更新历史：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;v1：2020.1.21 基于 Tekton Pipline &lt;a href="https://github.com/tektoncd/pipeline/tree/v0.9.0/docs#tekton-pipelines"&gt;v0.9.0&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;v2（当前）：2021.6.22 基于 Tekton Pipeline &lt;a href="https://github.com/tektoncd/pipeline/tree/v0.25.0/docs#tekton-pipelines"&gt;v0.25.0&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;Tekton 是 Google 开源的 Kubernetes 原生CI/CD 系统, 功能强大扩展性强. 前身是 Knavite 里的 build-pipeline 项目, 后期孵化成&lt;a href="https://github.com/tektoncd/pipeline"&gt;独立的项目&lt;/a&gt;. 并成为 &lt;a href="https://cd.foundation/projects/"&gt;CDF&lt;/a&gt; 下的四个项目之一, 其他三个分别是 Jenkins, Jenkins X, Spinnaker.&lt;/p&gt;
+&lt;p&gt;为什么说 Tekton 是 Kubernetes 原生的, 以内其基于 Kubernetes 的 CRD 定义了 Pipeline 流水线.&lt;/p&gt;</description></item><item><title>初探可编程网关 Pipy</title><link>https://atbug.com/glance-at-programmable-gateway-pipy/</link><pubDate>Mon, 31 May 2021 00:45:08 +0800</pubDate><guid>https://atbug.com/glance-at-programmable-gateway-pipy/</guid><description>&lt;p&gt;有幸参加了 &lt;a href="https://flomesh.cn/"&gt;Flomesh&lt;/a&gt; 组织的workshop，了解了他们的 Pipy 网络代理，以及围绕 Pipy 构建起来的生态。Pipy 在生态中，不止是代理的角色，还是 Flomesh 服务网格​中的数据平面。&lt;/p&gt;
+&lt;p&gt;整理一下，做个记录，顺便瞄一下 Pipy 的部分源码。&lt;/p&gt;
+&lt;h2 id="介绍"&gt;介绍&lt;/h2&gt;
+&lt;p&gt;下面是摘自 Github 上关于 Pipy 的介绍：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Pipy 是一个轻量级、高性能、高稳定、可编程的网络代理。Pipy 核心框架使用 C++ 开发，网络 IO 采用 ASIO 库。 Pipy 的可执行文件仅有 5M 左右，运行期的内存占用 10M 左右，因此 Pipy 非常适合做 Sidecar proxy。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Pipy 内置了自研的 pjs 作为脚本扩展，使得Pipy 可以用 JS 脚本根据特定需求快速定制逻辑与功能。&lt;/p&gt;</description></item><item><title>开箱即用的 Prometheus 告警规则集</title><link>https://atbug.com/introduction-awesome-prometheus-alerts/</link><pubDate>Thu, 13 May 2021 08:01:00 +0800</pubDate><guid>https://atbug.com/introduction-awesome-prometheus-alerts/</guid><description>&lt;p&gt;在配置系统监控的时候，是不是即使绞尽脑汁监控的也还是不够全面，或者不知如何获取想要的指标。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://awesome-prometheus-alerts.grep.to/"&gt;Awesome Prometheus alerts&lt;/a&gt; 维护了一套开箱即用的 Prometheus 告警规则集合，有 300 多个告警规则。同时，还是说明如何获取对应的指标。这些规则，对每个 Prometheus 都是通用的。&lt;/p&gt;
+&lt;p&gt;涉及如主机、硬件、容器等基础资源，到数据库、消息代理、运行时、反向代理、负责均衡器，运行时、服务编排，甚至是网络层面和 Prometheus 自身和集群。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/05/13/alertrulescover.png" alt="alert_rules"&gt;&lt;/p&gt;
+&lt;p&gt;Prometheus 的安装和配置不做赘述，配置可以看&lt;a href="https://awesome-prometheus-alerts.grep.to/alertmanager"&gt;这里&lt;/a&gt;。下面简单看下几个常用规则&lt;/p&gt;
+&lt;h3 id="主机和硬件资源"&gt;主机和硬件资源&lt;/h3&gt;
+&lt;p&gt;主机和硬件资源的告警依赖 &lt;a href="https://github.com/prometheus/node_exporter"&gt;node-exporter&lt;/a&gt; 输出的指标。例如：&lt;/p&gt;
+&lt;h4 id="内存不足"&gt;内存不足&lt;/h4&gt;
+&lt;p&gt;可用内存低于阈值 &lt;code&gt;10%&lt;/code&gt; 就会触发告警。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;alert&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;HostOutOfMemory&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;expr&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 &amp;lt; 10&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;for&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;2m&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;severity&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;warning&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;annotations&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;summary&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Host out of memory (instance {{ $labels.instance }})&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;description&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Node memory is filling up (&amp;lt; 10% left)\n VALUE = {{ $value }}\n LABELS = {{ $labels }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h5 id="主机异常的网络吞吐"&gt;主机异常的网络吞吐&lt;/h5&gt;
+&lt;p&gt;最近两分钟入站的流量超过 &lt;code&gt;100m&lt;/code&gt;。&lt;/p&gt;</description></item><item><title>Quarkus：谁说 Java 不能用来跑 Serverless？</title><link>https://atbug.com/quarkus-enable-java-running-in-serverless/</link><pubDate>Sat, 24 Apr 2021 09:16:05 +0800</pubDate><guid>https://atbug.com/quarkus-enable-java-running-in-serverless/</guid><description>&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/24/whynotjava.png" alt="why-not-java"&gt;&lt;/p&gt;
+&lt;p&gt;想到这个标题的时候，我第一时间想到的就是星爷的《唐伯虎点秋香》的这一幕。&lt;/p&gt;
+&lt;p&gt;当讨论起世界上最好的开发语言是什么的时候，Java 的粉丝们总会遇到这种场景：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;吹：“Java 语法简单，容易上手！”
+黑：“Java 启动慢，性能差，耗资源！”
+吹：“Java 有世界上最多的程序员！”
+黑：“Java 启动慢，性能差，耗资源！”
+吹：“Java 生态好！”
+黑：“Java 启动慢，性能差，耗资源！”
+吹：“滚！”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;今天我们继续说说 Quarkus，应“云”而生的 Java 框架。今天算是第三篇了，没看过的同学可以回顾一下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://mp.weixin.qq.com/s/YcEqFm3oxlsEvJ3ckRbQyA"&gt;Hello, Quarkus&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://mp.weixin.qq.com/s/Dq3hQrXE4XWH-MyjBAGMEw"&gt;应&amp;quot;云&amp;quot;而生的 Java 框架 Quarkus：构建本机可执行文件&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;上一篇的结尾预告：试试 Quarkus 在 ArgoCD 中的应用，看下 Serverless 上的使用体验。不过不想用 ArgoCD 了，因为这 workflow 这种场景实在体现不出 Quarkus 到底有多快。但又想做 Serverless，那就想到了 Knative Serving 了。&lt;/p&gt;</description></item><item><title>Tekton 0.9.0 更新</title><link>https://atbug.com/tekton-0.9.0-release/</link><pubDate>Sun, 19 Jan 2020 14:33:17 +0800</pubDate><guid>https://atbug.com/tekton-0.9.0-release/</guid><description>&lt;p&gt;翻译整理自 &lt;a href="https://cd.foundation/blog/2019/12/12/whats-new-in-tekton-0-9/"&gt;What’s New in Tekton 0.9&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="功能及bug修复"&gt;功能及Bug修复&lt;/h2&gt;
+&lt;h3 id="脚本模式"&gt;脚本模式&lt;/h3&gt;
+&lt;p&gt;以前如果要在容器里运行个简单的 bash 脚本, 需要这么写:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;hello&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;command&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#39;bash&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;args&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - -&lt;span style="color:#ae81ff"&gt;c&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; set -ex
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;hello&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在 0.9 之后, 可以更加简单, 不需要再写command 和讨厌的&lt;code&gt;-c&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;hello&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;script&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; #!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;hello&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="性能"&gt;性能&lt;/h3&gt;
+&lt;p&gt;通过一系列的工作, 每个 PipelineRun 的运行时间缩短了 5-20 秒&lt;/p&gt;</description></item><item><title>Minikube安装istio</title><link>https://atbug.com/install-istio-on-minikube/</link><pubDate>Fri, 17 Jan 2020 08:02:42 +0800</pubDate><guid>https://atbug.com/install-istio-on-minikube/</guid><description>&lt;h2 id="准备"&gt;准备&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;注意: istioctl的安装要使用安装里的, 不要是用homebrew里的. &lt;a href="https://github.com/istio/istio/issues/19029"&gt;github issue&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -L https://istio.io/downloadIstio | sh -
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd istio-1.4.2
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp bin/istioctl /usr/local/bin/istioctl
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="安装前检查"&gt;安装前检查&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;istioctl verify-install
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果检查没问题, 会看到&lt;code&gt;Install Pre-Check passed! The cluster is ready for Istio installation.&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id="安装"&gt;安装&lt;/h2&gt;
+&lt;p&gt;istio有5种内建的安装配置&lt;sup id="fnref:1"&gt;&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref"&gt;1&lt;/a&gt;&lt;/sup&gt;: remote, sds, default, demo, minimal&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;istioctl profile list
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;minimal: 使用istio的流量管理所需组件的最小化安装&lt;/li&gt;
+&lt;li&gt;default: 根据IstioControlPlane API的默认设置(建议用于生产部署)启用组件. 您可以通过运行命令istioctl profile dump显示默认设置.&lt;/li&gt;
+&lt;li&gt;demo: 几乎安装所有的特性, 包括logging和tracing的比例为100%. 不适合生产环境, 负载太重&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;&lt;/th&gt;
+					&lt;th&gt;default&lt;/th&gt;
+					&lt;th&gt;demo&lt;/th&gt;
+					&lt;th&gt;minimal&lt;/th&gt;
+					&lt;th&gt;sds&lt;/th&gt;
+					&lt;th&gt;remote&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Core components&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-citadel&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-egressgateway&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-galley&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-ingressgateway&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-nodeagent&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-pilot&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-policy&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-sidecar-injector&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-telemetry&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Addons&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;grafana&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-tracing&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;kiali&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;prometheus&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;code&gt;demo&lt;/code&gt; profile安装&lt;/p&gt;</description></item><item><title>加速云原生的 Java 开发</title><link>https://atbug.com/speed-up-java-development-on-kubernetes/</link><pubDate>Sat, 21 Dec 2019 20:45:22 +0800</pubDate><guid>https://atbug.com/speed-up-java-development-on-kubernetes/</guid><description>&lt;p&gt;今天来说说日常在Kubernetes开发Java项目遇到的问题.&lt;/p&gt;
+&lt;p&gt;当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是&lt;code&gt;copy+paste+modify&lt;/code&gt;. 能否以变成的方式来生成?&lt;/p&gt;
+&lt;p&gt;开发时的步骤也比较繁琐: &lt;code&gt;docker build&lt;/code&gt;, &lt;code&gt;docker push&lt;/code&gt;, &lt;code&gt;kubectl apple&lt;/code&gt;, &lt;code&gt;kubectl delete pod&lt;/code&gt;. 对于一个Java应用来说还多了一步编译. 操作一次还ok, 但是一天十几次总会有想吐的感觉. 这些步骤能否简化成一个命令, 甚至修改了代码自动就完成上面一系列的操作?&lt;/p&gt;
+&lt;p&gt;实现这些我们需要几个工具: &lt;a href="https://github.com/dekorateio/dekorate"&gt;dekorate&lt;/a&gt;, &lt;a href="https://github.com/GoogleContainerTools/jib"&gt;Jib&lt;/a&gt;, &lt;a href="https://github.com/GoogleContainerTools/skaffold"&gt;Skaffold&lt;/a&gt;. 其中Jib也在上一篇文章&lt;a href="https://atbug.com/build-docker-or-oci-image-with-jib-for-java/"&gt;使用Jib为Java应用构建镜像&lt;/a&gt;中介绍过.&lt;/p&gt;
+&lt;h2 id="dekorate"&gt;dekorate&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Dekorate is a collection of Java compile-time generators and decorators for Kubernetes/OpenShift manifests.
+Dekorate是Java编译时生成和装饰Kubernetes/OpenShift的manifests的工具&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="快速开始"&gt;快速开始&lt;/h3&gt;
+&lt;h4 id="1-通过使用spring-initializer生成一个项目spring-boot-222-并加入依赖"&gt;1. 通过使用&lt;a href="https://start.spring.io"&gt;Spring Initializer&lt;/a&gt;生成一个项目(Spring Boot 2.2.2), 并加入依赖:&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;io.dekorate&lt;span style="color:#f92672"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;kubernetes-spring-starter&lt;span style="color:#f92672"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;0.10.0&lt;span style="color:#f92672"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="2-加入一个简单的controller"&gt;2. 加入一个简单的&lt;code&gt;Controller&lt;/code&gt;:&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;/**
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt; * @author Addo.Zhang
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt; * @date 2019/12/22
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@RestController&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;DekorateExampleController&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@GetMapping&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; String &lt;span style="color:#a6e22e"&gt;hi&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Hello World&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="3-执行命令mvn-clean-install-然后在targetclassesmeta-infdekorate目录下可以找到kubernetesjson和kubernetesyml两个文件"&gt;3. 执行命令&lt;code&gt;mvn clean install&lt;/code&gt;, 然后在&lt;code&gt;target/classes/META-INF/dekorate&lt;/code&gt;目录下可以找到&lt;code&gt;kubernetes.json&lt;/code&gt;和&lt;code&gt;kubernetes.yml&lt;/code&gt;两个文件.&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;kubernetes.yml&lt;/code&gt;的内容:&lt;/p&gt;</description></item><item><title>macOS 安装 minishift</title><link>https://atbug.com/install-minishift-on-mac/</link><pubDate>Fri, 23 Feb 2018 15:32:26 +0000</pubDate><guid>https://atbug.com/install-minishift-on-mac/</guid><description>&lt;p&gt;MacOS环境安装minishift&lt;/p&gt;
+&lt;h4 id="安装minishift-cli"&gt;安装minishift cli&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew cask install minishift
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="使用virtualbox安装"&gt;使用virtualbox安装&lt;/h4&gt;
+&lt;p&gt;安装的时候可以指定HTTP代理, 拉取墙外镜像时需要; 还可以指定insecure的镜像库.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;minishift start --docker-env HTTP_PROXY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;192.168.99.1:1087&amp;#34;&lt;/span&gt; --docker-env HTTPS_PROXY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;192.168.99.1:1087&amp;#34;&lt;/span&gt; --docker-env NO_PROXY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;192.168.0.0/16,172.30.0.0/16&amp;#34;&lt;/span&gt; --insecure-registry&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;192.168.1.34&amp;#34;&lt;/span&gt; --vm-driver&lt;span style="color:#f92672"&gt;=&lt;/span&gt;virtualbox
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="启动"&gt;启动&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;minishift start --vm-driver&lt;span style="color:#f92672"&gt;=&lt;/span&gt;virtualbox
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="删除"&gt;删除&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;minishift delete
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="打开openshift控制面板"&gt;打开Openshift控制面板&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;minishift dashboard
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="获取集群ip地址"&gt;获取集群ip地址&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;minishift ip
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="安装openshift-cli"&gt;安装Openshift Cli&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install openshift-cli
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;可以使用openshift cli进行操作. minishift安装完成后会将配置信息写入到主机的用户目录下, &lt;code&gt;$HOME/.kube&lt;/code&gt;目录下除了&lt;code&gt;config&lt;/code&gt;信息, 还有openshift的集群信息及支持的api.&lt;/p&gt;</description></item><item><title>Kubernetes — 持久卷</title><link>https://atbug.com/kubernetes-persistent-volumes/</link><pubDate>Sun, 20 Aug 2017 22:25:40 +0000</pubDate><guid>https://atbug.com/kubernetes-persistent-volumes/</guid><description>&lt;h1 id="persistent-volume"&gt;Persistent Volume&lt;/h1&gt;
+&lt;p&gt;译自&lt;a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/"&gt;Persistent Volumes&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="介绍"&gt;介绍&lt;/h2&gt;
+&lt;p&gt;管理存储是管理计算的独特问题。 PersistentVolume子系统为用户和管理员提供了一个API，其中提供了如何从如何使用存储提供存储的详细信息。为此，我们介绍两种新的API资源：PersistentVolume和PersistentVolumeClaim。&lt;/p&gt;
+&lt;p&gt;PersistentVolume（PV）是由管理员配置的集群中的一段存储。它是集群中的一种资源就像一个节点是一个集群的资源。 PV是类似Volumes的卷插件，但是具有独立于使用PV的任何单个pod的生命周期。该API对象捕获存储的实现细节，即NFS，iSCSI或云提供商特定的存储系统。&lt;/p&gt;
+&lt;p&gt;PersistentVolumeClaim（PVC）是用户存储的请求。它类似于pod。 Pod消耗节点资源，PVC消耗PV资源。Pods可以请求特定级别的资源（CPU和内存）。声明可以请求特定的大小和访问模式（例如，一次读写或者多次只读）。&lt;/p&gt;
+&lt;p&gt;虽然PersistentVolumeClaims允许用户使用抽象存储资源，但是常见的是，用户需要具有不同属性（如性能）的PersistentVolumes，用于不同的问题。 集群管理员需要能够提供多种彼此不同的PersistentVolumes，而不仅仅是大小和访问模式，而不会使用户了解这些卷的实现细节。 对于这些需求，有一个StorageClass资源。&lt;/p&gt;
+&lt;p&gt;StorageClass为管理员提供了一种描述他们提供的存储的“类”的方法。 不同的类可能映射到服务质量级别，或备份策略，或者由群集管理员确定的任意策略。 Kubernetes本身对于什么类别代表是不言而喻的。 这个概念有时在其他存储系统中称为“配置文件”。&lt;/p&gt;
+&lt;p&gt;请参阅&lt;a href="https://kubernetes.io/docs/user-guide/persistent-volumes/walkthrough/"&gt;详细演练与工作示例&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id="存储和声明的生命周期"&gt;存储和声明的生命周期&lt;/h2&gt;
+&lt;p&gt;PVs是集群中的资源；PVCs是对这种资源的声明，同时也扮演者对资源声明的检查。PVs和PVCs之前的交互遵循生命周期：供应、绑定、使用中、重新申请。&lt;/p&gt;
+&lt;p&gt;集群管理员创建多个PV。它们携带可供集群用户使用的真实存储的详细信息。它们存在于Kubernetes API中，可用于消费。&lt;/p&gt;
+&lt;h3 id="供应provisioning"&gt;供应(Provisioning)&lt;/h3&gt;
+&lt;p&gt;PVs会以两种方式供应：静态和动态。&lt;/p&gt;
+&lt;h4 id="静态"&gt;静态&lt;/h4&gt;
+&lt;p&gt;集群管理员创建多个PV。 它们携带可供集群用户使用的真实存储的详细信息。 它们存在于Kubernetes API中，可被使用。&lt;/p&gt;
+&lt;h4 id="动态"&gt;动态&lt;/h4&gt;
+&lt;p&gt;当管理员创建的静态PV都不匹配用户的PersistentVolumeClaim时，集群可能会尝试为PVC指定动态配置卷。 此配置基于StorageClasses：PVC必须指定一个类，并且管理员必须已创建并配置该类才能进行动态配置。 要求该类的声明有效地为自己禁用动态配置。&lt;/p&gt;
+&lt;h3 id="绑定binding"&gt;绑定(Binding)&lt;/h3&gt;
+&lt;p&gt;当用户创建、或已经创建了一个PersistenVolumenClaim并指定大小和访问类型。Master中的控制循环会检测新的PVC，找到一个匹配的PV（如果可能的话），并将它们绑定在一起。如果一个PV被动态地供应某个PVC，循环将总是把这个PV和该PVC绑定。否则，用户总是至少得到他们要求的内容，但是卷可能超出了要求。一旦绑定，PersistentVolumeClaim绑定是排他的，不管用于绑定它们的模式。&lt;/p&gt;
+&lt;p&gt;如果匹配的卷不存在，请求将无限期地保持。 随着匹配卷变得可用，请求将被绑定。 例如，提供许多50Gi PV的集群将不匹配要求100Gi的PVC。 当集群中添加100Gi PV时，可以绑定PVC。&lt;/p&gt;</description></item><item><title>Kubernetes学习 — Macos安装Kubernetes</title><link>https://atbug.com/install-kubernetes-on-macos/</link><pubDate>Thu, 17 Aug 2017 09:44:17 +0000</pubDate><guid>https://atbug.com/install-kubernetes-on-macos/</guid><description>&lt;h1 id="kubernetes"&gt;Kubernetes&lt;/h1&gt;
+&lt;h2 id="安装"&gt;安装&lt;/h2&gt;
+&lt;h2 id="macos"&gt;macos&lt;/h2&gt;
+&lt;h3 id="检查环境"&gt;检查环境&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sysctl -a | grep machdep.cpu.features | grep VMX
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="安装virtualbox"&gt;安装VirtualBox&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;http://download.virtualbox.org/virtualbox/5.1.26/Oracle_VM_VirtualBox_Extension_Pack-5.1.26-117224.vbox-extpack
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="安装minikube"&gt;安装minikube&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.21.0/minikube-darwin-amd64 &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; chmod +x minikube &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; sudo mv minikube /usr/local/bin/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="创建集群"&gt;创建集群&lt;/h3&gt;
+&lt;p&gt;默认使用virtualbox。&lt;/p&gt;
+&lt;p&gt;主机的ip是&lt;code&gt;192.168.31.186&lt;/code&gt;， &lt;code&gt;1087&lt;/code&gt;是proxy的端口。需要将ss的http代理监听地址从&lt;code&gt;127.0.0.1&lt;/code&gt;改为主机的ip。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#启动&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;minikube start
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#使用私有库&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;minikube start --insecure-registry&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;192.168.31.34&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#使用proxy，用于获取镜像&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;minikube start --docker-env HTTP_PROXY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;192.168.31.186:1087&amp;#34;&lt;/span&gt; --docker-env HTTPS_PROXY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;192.168.31.186:1087&amp;#34;&lt;/span&gt; --docker-env NO_PROXY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;192.168.99.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="安装kubectl"&gt;安装kubectl&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -Lo kubectl http://storage.googleapis.com/kubernetes-release/release/v1.7.3/bin/darwin/amd64/kubectl &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; chmod +x kubectl &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; sudo mv kubectl /usr/local/bin/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="oh-my-zsh-tab-completion"&gt;oh-my-zsh tab completion&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vi ~/.zshrc
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;添加到plugin部分&lt;br&gt;
+plugins=(git zsh-completions kubectl)&lt;/p&gt;</description></item></channel></rss>

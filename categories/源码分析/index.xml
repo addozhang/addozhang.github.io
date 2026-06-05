@@ -1,13 +1,33 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>源码分析 on 乱世浮生</title><link>https://atbug.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link><description>Recent content in 源码分析 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 07 Feb 2026 02:44:12 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml"/><item><title>深入容器运行时：从 stdout/stderr 到 kubectl logs 的完整日志流处理机制</title><link>https://atbug.com/container-runtime-stdout-stderr-logging-mechanism/</link><pubDate>Sat, 07 Feb 2026 02:44:12 +0800</pubDate><guid>https://atbug.com/container-runtime-stdout-stderr-logging-mechanism/</guid><description>TL;DR 理解容器运行时如何处理 stdout/stderr 流，不仅能满足技术好奇心，更有实际价值：
-故障排查：日志丢失、截断、延迟等问题的根本原因 性能优化：高吞吐量场景下的 I/O 配置调优 架构决策：选择合适的容器运行时和日志收集方案 深入理解：Kubernetes、Containerd、Runc 各层的职责边界。 引言 作为一名长期使用 Kubernetes 的开发者，我一直对容器日志的底层机制充满好奇。每次执行 kubectl logs 命令，看着应用程序的输出实时流式显示在终端上，我都会忍不住思考：这些日志是如何从容器内部的 stdout 和 stderr 流，穿越多层抽象，最终到达屏幕？虽然日常工作中频繁使用这个功能，但对于这条路径上的技术细节，我却一直没有深入了解过。
-这次，我决定彻底弄清楚这个问题：从应用程序的 printf() 或 console.log()，到终端看到的日志，这中间经历了哪些关键步骤？让我们从头开始，逐层揭开这个机制的面纱。
-以下的内容基于目前最新的 Kubernetes v1.35.0 和 Containerd v2.2.1。
-完整的日志流处理架构 核心概念：CRI、Shim 在深入技术细节之前，我们需要理解三个关键组件。它们构成了容器日志流处理的基础架构。
-CRI：Container Runtime Interface CRI 是 Kubernetes 与容器运行时之间的标准接口。它的出现解决了一个关键问题：如何让 Kubernetes 支持多种容器运行时，而不需要为每个运行时编写专门的集成代码？ 关于 CRI 的详细介绍，可以浏览我之前的文章 Kubernetes 容器运行时接口 CRI。</description></item><item><title>可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读</title><link>https://atbug.com/programming-archive-metrics-with-pipy/</link><pubDate>Fri, 11 Jun 2021 08:27:36 +0800</pubDate><guid>https://atbug.com/programming-archive-metrics-with-pipy/</guid><description>由于要给团队做一下关于 Flomesh 的分享，准备下材料。
-“分享是最好的学习方法。”
-上一回初探可编程网关 Pipy，领略了 Pipy 的“风骚”。从 Pipy 的 GUI 交互深入了解了 Pipy 的配置加载流程。
-今天看一下 Pipy 如何实现 Metrics 的功能，顺便看下数据如何在多个 Pipeline 中进行流转。
-前置 首先，需要对 Pipy 有一定的了解，如果不了解看一下上一篇文章。
-其次构建好 Pipy 环境，关于构建还是去看上一篇文章。
-Metrics 功能实现 至于 Pipy 实现 Metrics 的方式，源码中就有，位于 test/006-metrics/pipy.js。
-代理监听 6080 端口，后端服务在 8080 端口，Metrics 在 9090 端口 共有 5 个 Pipeline：3 个 listen 类型，2 个 Pipeline 类型 7 种过滤器：fork、connect、decodeHttpRequest、onMessageStart、decodeHttpResponse、encodeHttpRespnse、replaceMessage 贴一下源码：</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>源码分析 on 乱世浮生</title><link>https://atbug.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link><description>Recent content in 源码分析 on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sat, 07 Feb 2026 02:44:12 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml"/><item><title>深入容器运行时：从 stdout/stderr 到 kubectl logs 的完整日志流处理机制</title><link>https://atbug.com/container-runtime-stdout-stderr-logging-mechanism/</link><pubDate>Sat, 07 Feb 2026 02:44:12 +0800</pubDate><guid>https://atbug.com/container-runtime-stdout-stderr-logging-mechanism/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;理解容器运行时如何处理 stdout/stderr 流，不仅能满足技术好奇心，更有实际价值：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;故障排查&lt;/strong&gt;：日志丢失、截断、延迟等问题的根本原因&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;性能优化&lt;/strong&gt;：高吞吐量场景下的 I/O 配置调优&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;架构决策&lt;/strong&gt;：选择合适的容器运行时和日志收集方案&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;深入理解&lt;/strong&gt;：Kubernetes、Containerd、Runc 各层的职责边界。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="引言"&gt;引言&lt;/h2&gt;
+&lt;p&gt;作为一名长期使用 Kubernetes 的开发者，我一直对容器日志的底层机制充满好奇。每次执行 &lt;code&gt;kubectl logs&lt;/code&gt; 命令，看着应用程序的输出实时流式显示在终端上，我都会忍不住思考：这些日志是如何从容器内部的 &lt;code&gt;stdout&lt;/code&gt; 和 &lt;code&gt;stderr&lt;/code&gt; 流，穿越多层抽象，最终到达屏幕？虽然日常工作中频繁使用这个功能，但对于这条路径上的技术细节，我却一直没有深入了解过。&lt;/p&gt;
+&lt;p&gt;这次，我决定彻底弄清楚这个问题：&lt;strong&gt;从应用程序的 &lt;code&gt;printf()&lt;/code&gt; 或 &lt;code&gt;console.log()&lt;/code&gt;&lt;/strong&gt;，到终端看到的日志，这中间经历了哪些关键步骤？让我们从头开始，逐层揭开这个机制的面纱。&lt;/p&gt;
+&lt;p&gt;以下的内容基于目前最新的 &lt;a href="https://github.com/kubernetes/kubernetes/tree/release-1.35"&gt;Kubernetes v1.35.0&lt;/a&gt; 和 &lt;a href="https://github.com/containerd/containerd/tree/release/2.2"&gt;Containerd v2.2.1&lt;/a&gt;。&lt;/p&gt;
+&lt;h3 id="完整的日志流处理架构"&gt;完整的日志流处理架构&lt;/h3&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2026/02/07/kubectl-logs-flow.png" alt=""&gt;&lt;/p&gt;
+&lt;h2 id="核心概念crishim"&gt;核心概念：CRI、Shim&lt;/h2&gt;
+&lt;p&gt;在深入技术细节之前，我们需要理解三个关键组件。它们构成了容器日志流处理的基础架构。&lt;/p&gt;
+&lt;h3 id="cricontainer-runtime-interface"&gt;CRI：Container Runtime Interface&lt;/h3&gt;
+&lt;p&gt;CRI 是 Kubernetes 与容器运行时之间的标准接口。它的出现解决了一个关键问题：&lt;strong&gt;如何让 Kubernetes 支持多种容器运行时，而不需要为每个运行时编写专门的集成代码？&lt;/strong&gt; 关于 CRI 的详细介绍，可以浏览我之前的文章 &lt;a href="https://atbug.com/deep-dive-into-kubernetes-cri/"&gt;Kubernetes 容器运行时接口 CRI&lt;/a&gt;。&lt;/p&gt;</description></item><item><title>可编程网关 Pipy 第二弹：编程实现 Metrics 及源码解读</title><link>https://atbug.com/programming-archive-metrics-with-pipy/</link><pubDate>Fri, 11 Jun 2021 08:27:36 +0800</pubDate><guid>https://atbug.com/programming-archive-metrics-with-pipy/</guid><description>&lt;p&gt;由于要给团队做一下关于 Flomesh 的分享，准备下材料。&lt;/p&gt;
+&lt;p&gt;“分享是最好的学习方法。”&lt;/p&gt;
+&lt;p&gt;上一回&lt;a href="https://mp.weixin.qq.com/s/l8JzYRn350fjuCAOoo8pcg"&gt;初探可编程网关 Pipy&lt;/a&gt;，领略了 Pipy 的“风骚”。从 Pipy 的 GUI 交互深入了解了 Pipy 的配置加载流程。&lt;/p&gt;
+&lt;p&gt;今天看一下 Pipy 如何实现 Metrics 的功能，顺便看下数据如何在多个 Pipeline 中进行流转。&lt;/p&gt;
+&lt;h2 id="前置"&gt;前置&lt;/h2&gt;
+&lt;p&gt;首先，需要对 Pipy 有一定的了解，如果不了解看一下&lt;a href="https://mp.weixin.qq.com/s/l8JzYRn350fjuCAOoo8pcg"&gt;上一篇文章&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;其次构建好 Pipy 环境，关于构建还是去看上一篇文章。&lt;/p&gt;
+&lt;h2 id="metrics-功能实现"&gt;Metrics 功能实现&lt;/h2&gt;
+&lt;p&gt;至于 Pipy 实现 Metrics 的方式，源码中就有，位于 &lt;code&gt;test/006-metrics/pipy.js&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/10/20210610202734.png" alt=""&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;代理监听 &lt;code&gt;6080&lt;/code&gt; 端口，后端服务在 &lt;code&gt;8080&lt;/code&gt; 端口，Metrics 在 &lt;code&gt;9090&lt;/code&gt; 端口&lt;/li&gt;
+&lt;li&gt;共有 5 个 Pipeline：3 个 listen 类型，2 个 Pipeline 类型&lt;/li&gt;
+&lt;li&gt;7 种过滤器：&lt;code&gt;fork&lt;/code&gt;、&lt;code&gt;connect&lt;/code&gt;、&lt;code&gt;decodeHttpRequest&lt;/code&gt;、&lt;code&gt;onMessageStart&lt;/code&gt;、&lt;code&gt;decodeHttpResponse&lt;/code&gt;、&lt;code&gt;encodeHttpRespnse&lt;/code&gt;、&lt;code&gt;replaceMessage&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;贴一下源码：&lt;/p&gt;</description></item></channel></rss>

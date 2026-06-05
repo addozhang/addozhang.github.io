@@ -1,46 +1,140 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI Agent on 乱世浮生</title><link>https://atbug.com/tags/ai-agent/</link><description>Recent content in AI Agent on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 31 May 2026 09:37:58 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/ai-agent/index.xml" rel="self" type="application/rss+xml"/><item><title>告别 Jenkins UI：jk 让 AI Agent 也能操控 Jenkins</title><link>https://atbug.com/jk-jenkins-cli-for-ai-agent/</link><pubDate>Sun, 31 May 2026 09:37:58 +0800</pubDate><guid>https://atbug.com/jk-jenkins-cli-for-ai-agent/</guid><description>TLDR jk 是为 AI coding Agent 设计的 Jenkins CLI：附带配套的 SKILL，无需 MCP server，Agent 直接执行命令即可操作 Jenkins Pipeline。
-引言 每次要触发一次 Jenkins 构建，流程大概是这样：打开浏览器，找到对应的 Pipeline，点「Build with Parameters」，填参数，提交，然后等页面跳转，再点进构建详情，再点「Console Output」——就为了看一眼日志。
-如果 Pipeline 里有 input 步骤，还得盯着页面等它弹出来，手动点「Proceed」。
-这套操作每天重复十几次，没什么技术含量，但每次都要用鼠标。
-jk 是一个 Pipeline-native 的 Jenkins CLI，把上面这些操作都收进终端。它以 Jenkins 的 Job URL 作为操作对象，不需要额外配置 Job 名称或服务器路径——你浏览器地址栏里的那个 URL，直接拿来用。</description></item><item><title>蒸馏 Google 工程基因：把高级工程师的判断力编码给 AI Agent</title><link>https://atbug.com/distilling-google-engineering-dna-agent-skills/</link><pubDate>Sat, 09 May 2026 16:05:15 +0800</pubDate><guid>https://atbug.com/distilling-google-engineering-dna-agent-skills/</guid><description>TL;DR AI coding agent 默认以最快速度到达「完成」，跳过写 spec、先写测试、上线检查这些在 diff 里看不见的工作。Addy Osmani 把 Google 二十年的工程实践蒸馏成 agent-skills——20 个结构化 Skill，加上一个负责任务路由的 Meta Skill，把高级工程师的判断力编码成 agent 无法绕过的工作流。
-值得注意的是，这套工程实践本身并不只属于 AI——写 spec、显式化假设、验收标准可量化、反合理化，对人类工程师同样适用，放进团队 wiki 照样有效。而 Addy 设计 Skill 的方式——触发条件、阶段检查点、边界三分法、反合理化内置——也是一套可以直接借鉴的方法论，无论你是在为 AI agent 还是为团队编写自己的 Skill。
-一、引子 你让 AI agent 实现一个用户登录功能。
-它没有问你任何问题，直接开始写代码。十分钟后，一个完整的实现摆在你面前——账号密码登录、JWT token、数据库查询，看起来一切正常。
-但你想要的是 OAuth。</description></item><item><title>Agent 装 Agent：用 OpenClaw 安装 Hermes，顺手验证自我进化</title><link>https://atbug.com/ai-agent-installs-ai-agent-openclaw-hermes/</link><pubDate>Tue, 14 Apr 2026 21:34:47 +0800</pubDate><guid>https://atbug.com/ai-agent-installs-ai-agent-openclaw-hermes/</guid><description>TL;DR：用 OpenClaw 全程操控远程 VM，从 Terraform 建机器到安装配置 Hermes Agent，并在实测中触发了自我进化，生成了一个高质量 Skill。
-一、缘起 前几天，朋友向我安利了 Hermes Agent——由 Nous Research 出品的开源个人 AI 助手。他重点提到了一个特性：自我进化。agent 能在完成复杂任务后自动创建 Skill，在后续使用中持续迭代优化，形成一个闭合的学习循环。
-这个概念让我想起了自己一直在做的事情。
-我已经在多个 AI 工具中用 skill-creator skill 手动实现类似的目标——无论是 OpenClaw 这样的个人助手，还是 OpenCode 这样的 coding agent，都在用同一套方式：用户主动触发 Skill 的创建和修正，在使用过程中不断迭代，逐步提升 agent 的能力上限。我也研究过 HyperAgents，探索 agent 自我进化的可能性。</description></item><item><title>让 AI 自己进化自己：深入 HyperAgents</title><link>https://atbug.com/hyperagents-deep-dive/</link><pubDate>Mon, 30 Mar 2026 07:07:11 +0800</pubDate><guid>https://atbug.com/hyperagents-deep-dive/</guid><description>TL;DR Meta 开源的 HyperAgents 用 &amp;ldquo;Agent 训练 Agent&amp;rdquo; 的思路实现自动进化：meta-agent 观察 task-agent 的表现，直接写代码补丁修改它，循环迭代。用 claude-opus-4.6 实测两个场景，5 代后准确率从 0% 升至 80%；模型越强，进化效果越好——强者恒强。如果说大模型预训练是第一阶段，&amp;quot; 训练 Agent&amp;quot; 或许是下一个竞争维度。
-一、引子 如果 AI 不只是执行任务，而是能改进自己的执行方式，会发生什么？
-2026 年 3 月，Meta 开源了 HyperAgents，一个让 AI agent 自动进化自身的框架。发布一周内 GitHub stars 突破 1200，论文同步挂上 arXiv：《HyperAgents》。
-它的核心思路只有一句话：用一个 meta-agent 观察 task-agent 的表现，自动生成代码补丁修改它，循环往复，让 agent 越来越强。</description></item><item><title>超越 Copilot Chat：用 SDK 打造专属 AI Agent（实战四场景）</title><link>https://atbug.com/github-copilot-sdk-demo-four-scenarios/</link><pubDate>Sun, 29 Mar 2026 07:48:59 +0800</pubDate><guid>https://atbug.com/github-copilot-sdk-demo-four-scenarios/</guid><description>前两篇我们从入门到架构，把 GitHub Copilot SDK 拆透了。这篇换个角度——直接上代码，用四个真实场景展示 SDK 能做什么，以及为什么这比 &amp;quot; 直接调 LLM&amp;quot; 更有意思。
-为什么需要 Demo？ 理论讲了很多：Client/Session 的职责分离、事件驱动模型、39 种事件类型……
-但真正让你 感受到 SDK 价值的，是看到它在实际场景里怎么运作。
-这四个场景来自我的 copilot-sdk-demo 仓库，从简单到复杂，每个场景都聚焦一个核心能力：
-场景 核心能力 一句话描述 场景一 工具调用 PR Code Review Bot 场景二 多工具 + 输出保存 自动文档生成器 场景三 交互式对话循环 kubectl 自然语言助手 场景四 Skills 机制 带团队规范的 PR Review 环境准备 # 克隆 demo 仓库 git clone https://github.</description></item><item><title>AI Agent 的代码执行沙箱：从容器到微虚拟机的隔离之道</title><link>https://atbug.com/ai-agent-code-execution-sandbox-container-to-microvm/</link><pubDate>Thu, 19 Mar 2026 18:14:38 +0800</pubDate><guid>https://atbug.com/ai-agent-code-execution-sandbox-container-to-microvm/</guid><description>TL;DR AI Agent 执行代码需要隔离，但隔离意味着开销。本文拆解容器、gVisor、Firecracker、ZeroBoot、Apple container、Wasm 六种沙箱方案的原理与取舍，帮你找到匹配自己场景的选型。
-一、开篇：0.79ms 启动一个 Linux VM 就在前几天，Hacker News 首页出现了一个项目：ZeroBoot。
-它宣称能在 0.79ms（p50）内启动一个完整的 Linux 虚拟机。评论区炸了——这怎么可能？Firecracker 这样专为 serverless 设计的 microVM，冷启动也要 150ms 以上。0.79ms 意味着什么？意味着 1 秒内可以冷启动 1000 个相互隔离的 VM。
-这不是魔法，是工程上的巧劲——Copy-on-Write KVM fork。这么厉害？
-这把 AI Agent 沙箱的核心矛盾摆上了桌面：Agent 执行代码，需要隔离；隔离意味着开销。ZeroBoot 给出了一个极端的答案。
-本文从这里出发，与我一起满足好奇心，拆解五种主流沙箱方案的原理与取舍。如果表述有任何问题，欢迎提出。
-二、为什么 Agent 执行代码需要沙箱？ 工具调用 vs 代码执行 传统 Agent 调用工具——搜索、查数据库、发邮件——行为可枚举、可审计。代码执行不同，它是图灵完备的：一旦 Agent 能执行任意代码，它能做的事就和一个程序员坐在终端前能做的事完全一样。</description></item><item><title>Chrome DevTools MCP：让 AI agent 真正接管浏览器调试</title><link>https://atbug.com/chrome-devtools-mcp-ai-browser-debugging/</link><pubDate>Tue, 17 Mar 2026 07:15:01 +0800</pubDate><guid>https://atbug.com/chrome-devtools-mcp-ai-browser-debugging/</guid><description>TL;DR chrome-devtools-mcp 是 Google 官方出品的 MCP server，通过 CDP 把 Chrome DevTools 的核心能力——截图、Console 监控、网络请求、性能 trace、Lighthouse 审计——暴露给 AI agent。
-配置只需两步：用 --remote-debugging-port=9222 --user-data-dir=/tmp/chrome-debug 启动 Chrome，再在 VS Code 或 OpenCode 的 MCP 配置里加一个 npx chrome-devtools-mcp 条目。
-它的定位是 &amp;quot; 调试感知 &amp;quot; 而非 &amp;quot; 自动化操控 &amp;ldquo;，让 agent 真正能看到浏览器的运行时状态。</description></item><item><title>记忆不上云：mem9 + TiDB 打造 OpenClaw 私有记忆中枢</title><link>https://atbug.com/openclaw-private-memory-mem9-tidb-self-hosted/</link><pubDate>Mon, 09 Mar 2026 19:26:51 +0800</pubDate><guid>https://atbug.com/openclaw-private-memory-mem9-tidb-self-hosted/</guid><description>更新历史
-2026-03-09：初稿发布 2026-04-14：修正 docker-compose 配置（volume 路径、restart 策略、TIDB_ZERO 开关）；补充三个自建踩坑记录 Photo by Tweesak C. on Pexels
-记忆的代价 每次对话结束，AI agent 就会忘记一切。
-这不是比喻。OpenClaw 的默认 memory-core 把记忆写进本地 .md 文件，当文件积累到上百个，agent 没有能力在每次对话前全部扫描——记忆变成了需要你主动提示才能检索的档案馆。
-更根本的问题是：记忆无法跨 agent 共享。你告诉过主 agent 的偏好，coding agent 从零开始；每个 agent 都活在自己的信息孤岛里。
-理想的 agent 记忆系统应该满足四点：自动注入、跨 agent 共享、新记忆实时可用、数据留在本地。
-带着这四个要求，我开始寻找答案。这篇文章 介绍了 mem9 作为 AI agent 记忆方案的思路，给了我很大启发。但原文使用的是 mem9.</description></item><item><title>深入 GitHub Copilot SDK：架构设计与进阶应用</title><link>https://atbug.com/dive-into-github-copilot-sdk-architecture-and-advanced/</link><pubDate>Sat, 14 Feb 2026 20:06:16 +0800</pubDate><guid>https://atbug.com/dive-into-github-copilot-sdk-architecture-and-advanced/</guid><description>TL;DR 在完成了 GitHub Copilot SDK 入门：五分钟构建你的第一个 AI Agent 后，本文将带你深入理解 SDK 的底层设计：
-核心架构：
-Client vs Session：连接管理器与对话上下文的职责分离，支持多会话并发和资源复用 事件驱动模型：从“请求 - 响应”到“订阅 - 推送”，实现进度感知、提前中断、细粒度控制 工具调用机制：LLM 通过工具描述和参数 schema 自主决策，无需硬编码调用逻辑 进阶能力：
-MCP 服务器集成：接入 GitHub、Slack、Notion 等预构建工具生态 自定义 Agent：构建专业化角色，携带长期记忆和特定工具集 性能优化：精简工具描述、控制返回值、选择合适模型，降低 token 成本 SDK 的价值不在于“简化 API 调用”，而是提供了一套经过生产验证的 Agent 运行时。理解其架构设计，才能在构建复杂应用时做出正确的技术选型。</description></item><item><title>GitHub Copilot SDK 入门：五分钟构建你的第一个 AI Agent</title><link>https://atbug.com/github-copilot-sdk-quickstart-build-first-ai-agent/</link><pubDate>Thu, 12 Feb 2026 22:13:47 +0800</pubDate><guid>https://atbug.com/github-copilot-sdk-quickstart-build-first-ai-agent/</guid><description>TL;DR GitHub Copilot SDK 的核心价值不是“调用 LLM”的便利性（这已经被 OpenAI SDK、LangChain 等解决），而是提供了一个经过生产验证的 Agent 运行时。
-它解决的真正问题是：
-编排复杂性：规划器、工具路由、状态管理已内置 稳定性：数百万开发者日常使用的可靠性保障 演进能力：新模型、新工具能力由 CLI 自动更新 当你开始构建下一个 AI 应用时，问自己两个问题：
-我的核心价值在哪里？ 如果是业务逻辑和工具定义，使用 SDK；如果是底层编排创新，自建框架。 多久能到生产环境？ SDK 让你跳过 80% 的基础设施工作，专注于最后 20% 的差异化能力。 Agent 开发的门槛已经降低，但真正的挑战在于：定义有价值的工具，设计流畅的交互，解决真实的问题。技术不再是壁垒，想象力才是。
-引言：为什么 Agent 开发不再是少数人的游戏 2026 年 1 月，GitHub 发布了 Copilot SDK，这标志着 AI Agent 开发从“专家领域”走向“大众工具”的关键转折。</description></item><item><title>Agentic Mesh：增强现代企业系统中的自主 AI 代理</title><link>https://atbug.com/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems/</link><pubDate>Sun, 22 Jun 2025 19:19:37 +0800</pubDate><guid>https://atbug.com/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems/</guid><description>译者注：本文介绍了 Agentic Mesh（代理网格）这一新型 AI 架构，强调其在现代企业自动化中的作用。文章指出传统 AI 代理系统存在单点故障、扩展性差、协作能力弱等问题。Agentic Mesh 通过自组织、动态协作、角色分工和安全治理，实现 AI 代理的高效协作、自适应优化和可扩展性。文中还介绍了反思、工具使用、规划、多代理协作等智能设计模式，并举例说明其在企业助手、网络安全和金融分析等场景的应用，展望了 AI 自动化的未来趋势。
-阅读原文请跳转：https://medium.com/@vikram40441/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems-991fa6f36d6a
-AI 驱动的智能代理正迅速成为企业自动化的核心。德勤预计，到2025年，采用生成式AI的企业中将有25%部署AI代理，2027年将增长至50%。虽然这种趋势令人振奋，但也带来了一个重要问题：
-我们如何确保 AI Agent 具备可扩展性、适应性，并能无缝协作而不引发混乱？
-答案在于Agentic Mesh——一个结构化、动态且自我进化的 AI Agent 网络，能够自主发现、协作并优化任务。但在深入了解Agentic Mesh 是什么之前，先探讨传统 AI 架构的局限性，以及为何需要更先进的框架。
-为什么需要 Agentic Mesh？ 当前大多数企业仍依赖僵化的 AI 架构，Agent 各自为政或遵循预设流程。这些方式虽然可用，但随着企业 AI 自动化规模扩大，弊端日益显现。
-传统 AI 架构的问题 1.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI-Agent on 乱世浮生</title><link>https://atbug.com/tags/ai-agent/</link><description>Recent content in AI-Agent on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sun, 31 May 2026 09:37:58 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/ai-agent/index.xml" rel="self" type="application/rss+xml"/><item><title>告别 Jenkins UI：jk 让 AI Agent 也能操控 Jenkins</title><link>https://atbug.com/jk-jenkins-cli-for-ai-agent/</link><pubDate>Sun, 31 May 2026 09:37:58 +0800</pubDate><guid>https://atbug.com/jk-jenkins-cli-for-ai-agent/</guid><description>&lt;h2 id="tldr"&gt;TLDR&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;jk&lt;/code&gt; 是为 AI coding Agent 设计的 Jenkins CLI：附带配套的 SKILL，无需 MCP server，Agent 直接执行命令即可操作 Jenkins Pipeline。&lt;/p&gt;
+&lt;h2 id="引言"&gt;引言&lt;/h2&gt;
+&lt;p&gt;每次要触发一次 Jenkins 构建，流程大概是这样：打开浏览器，找到对应的 Pipeline，点「Build with Parameters」，填参数，提交，然后等页面跳转，再点进构建详情，再点「Console Output」——就为了看一眼日志。&lt;/p&gt;
+&lt;p&gt;如果 Pipeline 里有 &lt;code&gt;input&lt;/code&gt; 步骤，还得盯着页面等它弹出来，手动点「Proceed」。&lt;/p&gt;
+&lt;p&gt;这套操作每天重复十几次，没什么技术含量，但每次都要用鼠标。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/addozhang/jk"&gt;&lt;code&gt;jk&lt;/code&gt;&lt;/a&gt; 是一个 Pipeline-native 的 Jenkins CLI，把上面这些操作都收进终端。它以 Jenkins 的 Job URL 作为操作对象，不需要额外配置 Job 名称或服务器路径——你浏览器地址栏里的那个 URL，直接拿来用。&lt;/p&gt;</description></item><item><title>蒸馏 Google 工程基因：把高级工程师的判断力编码给 AI Agent</title><link>https://atbug.com/distilling-google-engineering-dna-agent-skills/</link><pubDate>Sat, 09 May 2026 16:05:15 +0800</pubDate><guid>https://atbug.com/distilling-google-engineering-dna-agent-skills/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;AI coding agent 默认以最快速度到达「完成」，跳过写 spec、先写测试、上线检查这些在 diff 里看不见的工作。Addy Osmani 把 Google 二十年的工程实践蒸馏成 agent-skills——20 个结构化 Skill，加上一个负责任务路由的 Meta Skill，把高级工程师的判断力编码成 agent 无法绕过的工作流。&lt;/p&gt;
+&lt;p&gt;值得注意的是，这套工程实践本身并不只属于 AI——写 spec、显式化假设、验收标准可量化、反合理化，对人类工程师同样适用，放进团队 wiki 照样有效。而 Addy 设计 Skill 的方式——触发条件、阶段检查点、边界三分法、反合理化内置——也是一套可以直接借鉴的方法论，无论你是在为 AI agent 还是为团队编写自己的 Skill。&lt;/p&gt;
+&lt;h2 id="一引子"&gt;一、引子&lt;/h2&gt;
+&lt;p&gt;你让 AI agent 实现一个用户登录功能。&lt;/p&gt;
+&lt;p&gt;它没有问你任何问题，直接开始写代码。十分钟后，一个完整的实现摆在你面前——账号密码登录、JWT token、数据库查询，看起来一切正常。&lt;/p&gt;
+&lt;p&gt;但你想要的是 OAuth。&lt;/p&gt;</description></item><item><title>Agent 装 Agent：用 OpenClaw 安装 Hermes，顺手验证自我进化</title><link>https://atbug.com/ai-agent-installs-ai-agent-openclaw-hermes/</link><pubDate>Tue, 14 Apr 2026 21:34:47 +0800</pubDate><guid>https://atbug.com/ai-agent-installs-ai-agent-openclaw-hermes/</guid><description>&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;：用 OpenClaw 全程操控远程 VM，从 Terraform 建机器到安装配置 Hermes Agent，并在实测中触发了自我进化，生成了一个高质量 Skill。&lt;/p&gt;
+&lt;h2 id="一缘起"&gt;一、缘起&lt;/h2&gt;
+&lt;p&gt;前几天，朋友向我安利了 &lt;a href="https://hermes-agent.nousresearch.com"&gt;Hermes Agent&lt;/a&gt;——由 Nous Research 出品的开源个人 AI 助手。他重点提到了一个特性：&lt;strong&gt;自我进化&lt;/strong&gt;。agent 能在完成复杂任务后自动创建 Skill，在后续使用中持续迭代优化，形成一个闭合的学习循环。&lt;/p&gt;
+&lt;p&gt;这个概念让我想起了自己一直在做的事情。&lt;/p&gt;
+&lt;p&gt;我已经在多个 AI 工具中用 skill-creator skill 手动实现类似的目标——无论是 &lt;a href="https://openclaw.ai"&gt;OpenClaw&lt;/a&gt; 这样的个人助手，还是 &lt;a href="https://opencode.ai"&gt;OpenCode&lt;/a&gt; 这样的 coding agent，都在用同一套方式：用户主动触发 Skill 的创建和修正，在使用过程中不断迭代，逐步提升 agent 的能力上限。我也研究过 &lt;a href="https://atbug.com/hyperagents-deep-dive"&gt;HyperAgents&lt;/a&gt;，探索 agent 自我进化的可能性。&lt;/p&gt;
+&lt;p&gt;所以当朋友说“Hermes 能自动做这件事”时，我的第一反应不是兴奋，而是好奇：&lt;strong&gt;自动化和手动控制，哪种方式更有效？Hermes 的理念和我已经在做的事，差距到底有多大？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;决定装一个试试。但怎么装？用我的 AI agent 来装另一个 AI agent——这才是正确的打开方式。&lt;/p&gt;</description></item><item><title>让 AI 自己进化自己：深入 HyperAgents</title><link>https://atbug.com/hyperagents-deep-dive/</link><pubDate>Mon, 30 Mar 2026 07:07:11 +0800</pubDate><guid>https://atbug.com/hyperagents-deep-dive/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;Meta 开源的 HyperAgents 用 &amp;ldquo;Agent 训练 Agent&amp;rdquo; 的思路实现自动进化：meta-agent 观察 task-agent 的表现，直接写代码补丁修改它，循环迭代。用 claude-opus-4.6 实测两个场景，5 代后准确率从 0% 升至 80%；模型越强，进化效果越好——强者恒强。如果说大模型预训练是第一阶段，&amp;quot; 训练 Agent&amp;quot; 或许是下一个竞争维度。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="一引子"&gt;一、引子&lt;/h2&gt;
+&lt;p&gt;如果 AI 不只是执行任务，而是能改进自己的执行方式，会发生什么？&lt;/p&gt;
+&lt;p&gt;2026 年 3 月，Meta 开源了 &lt;a href="https://github.com/facebookresearch/hyperagents"&gt;HyperAgents&lt;/a&gt;，一个让 AI agent 自动进化自身的框架。发布一周内 GitHub stars 突破 1200，论文同步挂上 arXiv：&lt;a href="https://arxiv.org/abs/2603.19461"&gt;《HyperAgents》&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;它的核心思路只有一句话：&lt;strong&gt;用一个 meta-agent 观察 task-agent 的表现，自动生成代码补丁修改它，循环往复，让 agent 越来越强。&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>超越 Copilot Chat：用 SDK 打造专属 AI Agent（实战四场景）</title><link>https://atbug.com/github-copilot-sdk-demo-four-scenarios/</link><pubDate>Sun, 29 Mar 2026 07:48:59 +0800</pubDate><guid>https://atbug.com/github-copilot-sdk-demo-four-scenarios/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;前两篇我们从入门到架构，把 GitHub Copilot SDK 拆透了。这篇换个角度——直接上代码，用四个真实场景展示 SDK 能做什么，以及为什么这比 &amp;quot; 直接调 LLM&amp;quot; 更有意思。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="为什么需要-demo"&gt;为什么需要 Demo？&lt;/h2&gt;
+&lt;p&gt;理论讲了很多：Client/Session 的职责分离、事件驱动模型、39 种事件类型……&lt;/p&gt;
+&lt;p&gt;但真正让你 &lt;em&gt;感受到&lt;/em&gt; SDK 价值的，是看到它在实际场景里怎么运作。&lt;/p&gt;
+&lt;p&gt;这四个场景来自我的 &lt;a href="https://github.com/addozhang/copilot-sdk-demo"&gt;copilot-sdk-demo&lt;/a&gt; 仓库，从简单到复杂，每个场景都聚焦一个核心能力：&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;场景&lt;/th&gt;
+					&lt;th&gt;核心能力&lt;/th&gt;
+					&lt;th&gt;一句话描述&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;场景一&lt;/td&gt;
+					&lt;td&gt;工具调用&lt;/td&gt;
+					&lt;td&gt;PR Code Review Bot&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;场景二&lt;/td&gt;
+					&lt;td&gt;多工具 + 输出保存&lt;/td&gt;
+					&lt;td&gt;自动文档生成器&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;场景三&lt;/td&gt;
+					&lt;td&gt;交互式对话循环&lt;/td&gt;
+					&lt;td&gt;kubectl 自然语言助手&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;场景四&lt;/td&gt;
+					&lt;td&gt;Skills 机制&lt;/td&gt;
+					&lt;td&gt;带团队规范的 PR Review&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="环境准备"&gt;环境准备&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 克隆 demo 仓库&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/addozhang/copilot-sdk-demo
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd copilot-sdk-demo
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 安装依赖&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install -r requirements.txt
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;前置条件：已安装并登录 &lt;code&gt;gh-copilot&lt;/code&gt; CLI（详见 &lt;a href="https://atbug.com/github-copilot-sdk-quickstart-build-first-ai-agent/"&gt;入门篇&lt;/a&gt;）。&lt;/p&gt;</description></item><item><title>AI Agent 的代码执行沙箱：从容器到微虚拟机的隔离之道</title><link>https://atbug.com/ai-agent-code-execution-sandbox-container-to-microvm/</link><pubDate>Thu, 19 Mar 2026 18:14:38 +0800</pubDate><guid>https://atbug.com/ai-agent-code-execution-sandbox-container-to-microvm/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;AI Agent 执行代码需要隔离，但隔离意味着开销。本文拆解容器、gVisor、Firecracker、ZeroBoot、Apple container、Wasm 六种沙箱方案的原理与取舍，帮你找到匹配自己场景的选型。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="一开篇079ms-启动一个-linux-vm"&gt;一、开篇：0.79ms 启动一个 Linux VM&lt;/h2&gt;
+&lt;p&gt;就在前几天，Hacker News 首页出现了一个项目：ZeroBoot。&lt;/p&gt;
+&lt;p&gt;它宣称能在 &lt;strong&gt;0.79ms&lt;/strong&gt;（p50）内启动一个完整的 Linux 虚拟机。评论区炸了——这怎么可能？Firecracker 这样专为 serverless 设计的 microVM，冷启动也要 150ms 以上。0.79ms 意味着什么？意味着 1 秒内可以冷启动 &lt;strong&gt;1000 个相互隔离的 VM&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;这不是魔法，是工程上的巧劲——Copy-on-Write KVM fork。这么厉害？&lt;/p&gt;
+&lt;p&gt;这把 AI Agent 沙箱的核心矛盾摆上了桌面：Agent 执行代码，需要隔离；隔离意味着开销。ZeroBoot 给出了一个极端的答案。&lt;/p&gt;
+&lt;p&gt;本文从这里出发，与我一起满足好奇心，拆解五种主流沙箱方案的原理与取舍。如果表述有任何问题，欢迎提出。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="二为什么-agent-执行代码需要沙箱"&gt;二、为什么 Agent 执行代码需要沙箱？&lt;/h2&gt;
+&lt;h3 id="工具调用-vs-代码执行"&gt;工具调用 vs 代码执行&lt;/h3&gt;
+&lt;p&gt;传统 Agent 调用工具——搜索、查数据库、发邮件——行为可枚举、可审计。代码执行不同，它是图灵完备的：一旦 Agent 能执行任意代码，它能做的事就和一个程序员坐在终端前能做的事完全一样。&lt;/p&gt;</description></item><item><title>Chrome DevTools MCP：让 AI agent 真正接管浏览器调试</title><link>https://atbug.com/chrome-devtools-mcp-ai-browser-debugging/</link><pubDate>Tue, 17 Mar 2026 07:15:01 +0800</pubDate><guid>https://atbug.com/chrome-devtools-mcp-ai-browser-debugging/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;chrome-devtools-mcp 是 Google 官方出品的 MCP server，通过 CDP 把 Chrome DevTools 的核心能力——截图、Console 监控、网络请求、性能 trace、Lighthouse 审计——暴露给 AI agent。&lt;/p&gt;
+&lt;p&gt;配置只需两步：用 &lt;code&gt;--remote-debugging-port=9222 --user-data-dir=/tmp/chrome-debug&lt;/code&gt; 启动 Chrome，再在 VS Code 或 OpenCode 的 MCP 配置里加一个 &lt;code&gt;npx chrome-devtools-mcp&lt;/code&gt; 条目。&lt;/p&gt;
+&lt;p&gt;它的定位是 &amp;quot; 调试感知 &amp;quot; 而非 &amp;quot; 自动化操控 &amp;ldquo;，让 agent 真正能看到浏览器的运行时状态。&lt;/p&gt;</description></item><item><title>记忆不上云：mem9 + TiDB 打造 OpenClaw 私有记忆中枢</title><link>https://atbug.com/openclaw-private-memory-mem9-tidb-self-hosted/</link><pubDate>Mon, 09 Mar 2026 19:26:51 +0800</pubDate><guid>https://atbug.com/openclaw-private-memory-mem9-tidb-self-hosted/</guid><description>&lt;p&gt;&lt;strong&gt;更新历史&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;2026-03-09：初稿发布&lt;/li&gt;
+&lt;li&gt;2026-04-14：修正 docker-compose 配置（volume 路径、restart 策略、TIDB_ZERO 开关）；补充三个自建踩坑记录&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;Photo by &lt;a href="https://www.pexels.com/@tweesak-c-390169687"&gt;Tweesak C.&lt;/a&gt; on &lt;a href="https://www.pexels.com/photo/lighthouse-at-sea-in-clear-blue-sky-14783334/"&gt;Pexels&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id="记忆的代价"&gt;记忆的代价&lt;/h2&gt;
+&lt;p&gt;每次对话结束，AI agent 就会忘记一切。&lt;/p&gt;
+&lt;p&gt;这不是比喻。OpenClaw 的默认 &lt;code&gt;memory-core&lt;/code&gt; 把记忆写进本地 &lt;code&gt;.md&lt;/code&gt; 文件，当文件积累到上百个，agent 没有能力在每次对话前全部扫描——记忆变成了需要你主动提示才能检索的档案馆。&lt;/p&gt;
+&lt;p&gt;更根本的问题是：&lt;strong&gt;记忆无法跨 agent 共享&lt;/strong&gt;。你告诉过主 agent 的偏好，coding agent 从零开始；每个 agent 都活在自己的信息孤岛里。&lt;/p&gt;
+&lt;p&gt;理想的 agent 记忆系统应该满足四点：自动注入、跨 agent 共享、新记忆实时可用、数据留在本地。&lt;/p&gt;
+&lt;p&gt;带着这四个要求，我开始寻找答案。&lt;a href="https://mp.weixin.qq.com/s/r4Ad0uvEp-J7hr7Y9jQ4LA"&gt;这篇文章&lt;/a&gt; 介绍了 mem9 作为 AI agent 记忆方案的思路，给了我很大启发。但原文使用的是 mem9.ai 云服务——记忆数据存在远端。考虑到 agent 的记忆里沉淀着大量个人习惯、工作偏好和私人决策，这些数据不应该离开本机。因此本文在此基础上进一步，把整套系统搬到本地自托管。&lt;/p&gt;</description></item><item><title>深入 GitHub Copilot SDK：架构设计与进阶应用</title><link>https://atbug.com/dive-into-github-copilot-sdk-architecture-and-advanced/</link><pubDate>Sat, 14 Feb 2026 20:06:16 +0800</pubDate><guid>https://atbug.com/dive-into-github-copilot-sdk-architecture-and-advanced/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;在完成了 &lt;a href="https://atbug.com/github-copilot-sdk-quickstart-build-first-ai-agent/"&gt;GitHub Copilot SDK 入门：五分钟构建你的第一个 AI Agent&lt;/a&gt; 后，本文将带你深入理解 SDK 的底层设计：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;核心架构&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Client vs Session&lt;/strong&gt;：连接管理器与对话上下文的职责分离，支持多会话并发和资源复用&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;事件驱动模型&lt;/strong&gt;：从“请求 - 响应”到“订阅 - 推送”，实现进度感知、提前中断、细粒度控制&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;工具调用机制&lt;/strong&gt;：LLM 通过工具描述和参数 schema 自主决策，无需硬编码调用逻辑&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;进阶能力&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;MCP 服务器集成&lt;/strong&gt;：接入 GitHub、Slack、Notion 等预构建工具生态&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;自定义 Agent&lt;/strong&gt;：构建专业化角色，携带长期记忆和特定工具集&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;性能优化&lt;/strong&gt;：精简工具描述、控制返回值、选择合适模型，降低 token 成本&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;SDK 的价值不在于“简化 API 调用”，而是提供了一套经过生产验证的 Agent 运行时。理解其架构设计，才能在构建复杂应用时做出正确的技术选型。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="引言从入门到深入"&gt;引言：从入门到深入&lt;/h2&gt;
+&lt;p&gt;如果你已经完成了 &lt;a href="https://atbug.com/github-copilot-sdk-quickstart-build-first-ai-agent/"&gt;《GitHub Copilot SDK 入门：五分钟构建你的第一个 AI Agent》&lt;/a&gt;，你应该已经掌握了：&lt;/p&gt;</description></item><item><title>GitHub Copilot SDK 入门：五分钟构建你的第一个 AI Agent</title><link>https://atbug.com/github-copilot-sdk-quickstart-build-first-ai-agent/</link><pubDate>Thu, 12 Feb 2026 22:13:47 +0800</pubDate><guid>https://atbug.com/github-copilot-sdk-quickstart-build-first-ai-agent/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/github/copilot-sdk"&gt;GitHub Copilot SDK&lt;/a&gt; 的核心价值不是“调用 LLM”的便利性（这已经被 OpenAI SDK、LangChain 等解决），而是&lt;strong&gt;提供了一个经过生产验证的 Agent 运行时&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;它解决的真正问题是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;编排复杂性&lt;/strong&gt;：规划器、工具路由、状态管理已内置&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;稳定性&lt;/strong&gt;：数百万开发者日常使用的可靠性保障&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;演进能力&lt;/strong&gt;：新模型、新工具能力由 CLI 自动更新&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;当你开始构建下一个 AI 应用时，问自己两个问题：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;我的核心价值在哪里？&lt;/strong&gt; 如果是业务逻辑和工具定义，使用 SDK；如果是底层编排创新，自建框架。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;多久能到生产环境？&lt;/strong&gt; SDK 让你跳过 80% 的基础设施工作，专注于最后 20% 的差异化能力。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Agent 开发的门槛已经降低，但真正的挑战在于：&lt;strong&gt;定义有价值的工具，设计流畅的交互，解决真实的问题&lt;/strong&gt;。技术不再是壁垒，想象力才是。&lt;/p&gt;
+&lt;h2 id="引言为什么-agent-开发不再是少数人的游戏"&gt;引言：为什么 Agent 开发不再是少数人的游戏&lt;/h2&gt;
+&lt;p&gt;2026 年 1 月，GitHub 发布了 &lt;a href="https://github.com/github/copilot-sdk"&gt;Copilot SDK&lt;/a&gt;，这标志着 AI Agent 开发从“专家领域”走向“大众工具”的关键转折。&lt;/p&gt;</description></item><item><title>Agentic Mesh：增强现代企业系统中的自主 AI 代理</title><link>https://atbug.com/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems/</link><pubDate>Sun, 22 Jun 2025 19:19:37 +0800</pubDate><guid>https://atbug.com/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems/</guid><description>&lt;p&gt;译者注：本文介绍了 Agentic Mesh（代理网格）这一新型 AI 架构，强调其在现代企业自动化中的作用。文章指出传统 AI 代理系统存在单点故障、扩展性差、协作能力弱等问题。Agentic Mesh 通过自组织、动态协作、角色分工和安全治理，实现 AI 代理的高效协作、自适应优化和可扩展性。文中还介绍了反思、工具使用、规划、多代理协作等智能设计模式，并举例说明其在企业助手、网络安全和金融分析等场景的应用，展望了 AI 自动化的未来趋势。&lt;/p&gt;
+&lt;p&gt;阅读原文请跳转：https://medium.com/@vikram40441/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems-991fa6f36d6a&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;AI 驱动的智能代理正迅速成为企业自动化的核心。&lt;a href="https://www.deloitte.com/global/en/about/press-room/deloitte-globals-2025-predictions-report.html"&gt;德勤预计，&lt;strong&gt;到2025年，采用生成式AI的企业中将有25%部署AI代理，2027年将增长至50%&lt;/strong&gt;&lt;/a&gt;。虽然这种趋势令人振奋，但也带来了一个重要问题：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;我们如何确保 AI Agent 具备可扩展性、适应性，并能无缝协作而不引发混乱？&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;答案在于&lt;strong&gt;Agentic Mesh&lt;/strong&gt;——一个结构化、动态且自我进化的 AI Agent 网络，能够自主发现、协作并优化任务。但在深入了解&lt;strong&gt;Agentic Mesh 是什么&lt;/strong&gt;之前，先探讨&lt;strong&gt;传统 AI 架构的局限性&lt;/strong&gt;，以及为何需要更先进的框架。&lt;/p&gt;
+&lt;h1 id="为什么需要-agentic-mesh"&gt;为什么需要 Agentic Mesh？&lt;/h1&gt;
+&lt;p&gt;当前大多数企业仍依赖&lt;strong&gt;僵化的 AI 架构&lt;/strong&gt;，Agent 各自为政或遵循预设流程。这些方式虽然可用，但&lt;strong&gt;随着企业 AI 自动化规模扩大，弊端日益显现&lt;/strong&gt;。&lt;/p&gt;
+&lt;h1 id="传统-ai-架构的问题"&gt;传统 AI 架构的问题&lt;/h1&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2025/06/22/8dab8e08a0983d0a20b7fedc76259875_MD5.png" alt=""&gt;&lt;/p&gt;</description></item></channel></rss>

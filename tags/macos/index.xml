@@ -1,34 +1,145 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>macOS on 乱世浮生</title><link>https://atbug.com/tags/macos/</link><description>Recent content in macOS on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 24 Jan 2026 21:43:46 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/macos/index.xml" rel="self" type="application/rss+xml"/><item><title>Apple Container 0.8.0：从初生到成熟的七个月演进之路</title><link>https://atbug.com/apple-container-evolution-seven-months-journey/</link><pubDate>Sat, 24 Jan 2026 21:43:46 +0800</pubDate><guid>https://atbug.com/apple-container-evolution-seven-months-journey/</guid><description>TL;DR 2026 年 1 月 22 日，Apple Container 0.8.0 发布。距离 WWDC 2025 首次发布的 0.1.0，整整七个月，九个版本。
-这七个月不仅是版本号的增长，更是一个架构理念的验证：每容器独立 VM 的隔离模式，能否在 macOS 上成为 Docker Desktop 的替代方案？
-0.8.0 给出的答案是：在特定场景下，可以。但这个答案背后，是数据完整性危机（0.7.1）、网络限制的解除（macOS 26）、以及对生产就绪定义的重新思考。
-本文不是功能列表，而是试图理解：Apple 为什么要做 Container？独立 VM 架构的代价是什么？七个月的快速迭代背后，哪些问题真正得到了解决，哪些仍在路上？
-写在前面：为什么要关注 Apple Container？ 在讨论版本演进之前，先简单回顾一下 Apple Container 的独特价值：
-原生 macOS 体验 苹果官方支持：基于 Apple Virtualization Framework 性能优越：每个容器独立虚拟机，无共享虚拟机开销 安全隔离：VM 级别隔离，比传统容器更安全 Apple Silicon 优化：为 ARM64 架构深度优化 与 Docker Desktop 的差异 特性 Docker Desktop Apple Container 架构模式 单一 VM + 多容器 每容器独立 VM 安全隔离 容器级 VM 级 macOS 集成 第三方工具 原生框架 价格 企业版收费 开源免费 但是，在 2025 年 6 月，0.</description></item><item><title>macOS 原生容器 Apple Container 架构解析</title><link>https://atbug.com/macos-native-apple-container-architecture/</link><pubDate>Mon, 23 Jun 2025 20:55:51 +0800</pubDate><guid>https://atbug.com/macos-native-apple-container-architecture/</guid><description>TL;DR Apple Container 结合 macOS 框架与模块化插件体系，提供了强大的容器化环境。理解其架构与可扩展性，有助于开发者在云原生与虚拟化场景下充分发挥其能力。
-引言 Container 是 Apple 提供的开源命令行工具，专为在 Mac 上运行 Linux 容器而构建，尤其针对 Apple Silicon 进行了优化。它由 Swift 编写，基于 Containerization Framework 构建。Apple Containerization 和 Container CLI 于 WWDC 2025 发布。
-延伸阅读：
-苹果发布 Containerization Framework：开启 macOS 容器化新纪元 Apple Container 开箱实践 Apple Container 是一种客户端 - 服务器架构系统，使 macOS 上能够运行容器化工作负载。本文将深入探讨其架构、启动流程、核心插件、可扩展性及安全性等内容。</description></item><item><title>Apple Container 开箱实践</title><link>https://atbug.com/apple-container-hands-on/</link><pubDate>Sat, 21 Jun 2025 22:38:27 +0800</pubDate><guid>https://atbug.com/apple-container-hands-on/</guid><description>TL;DR Apple Container CLI 是一款强大的工具，可在 macOS 上运行 Linux 容器，特别针对 Apple Silicon 进行了优化。
-该 CLI 设计为开发者友好，命令风格与 Docker CLI 类似。对于已经熟悉 Docker CLI 的用户，Container CLI 应该会非常熟悉，并且为 macOS 用户提供了更原生的体验。
-本文将介绍 Container CLI、如何快速上手，以及如何在 macOS 上运行 Linux 容器。
-关于 Container CLI Container 是 Apple 提供的开源命令行工具，专为在 Mac 上运行 Linux 容器而构建，尤其针对 Apple Silicon 进行了优化。它由 Swift 编写，基于 Containerization Framework 构建。Apple Containerization 和 Container CLI 于 WWDC 2025 发布。</description></item><item><title>苹果发布 Containerization Framework：开启 macOS 容器化新纪元</title><link>https://atbug.com/apple-containerization-framework-macos-release/</link><pubDate>Sun, 15 Jun 2025 12:12:00 +0800</pubDate><guid>https://atbug.com/apple-containerization-framework-macos-release/</guid><description>TL;DR 苹果 Containerization Framework 的发布，标志着 macOS 容器化进入全新阶段。
-虽然苹果推出了原生容器化框架，但底层依然依赖虚拟机技术。为实现更高的安全性和隔离性，每个容器都运行在独立的轻量级虚拟机中，反而使虚拟机的使用频率和数量比以往更多。
-对行业来说，会对如 OrbStack、Docker Desktop 等商业产品产生显著影响。实际上，类似 OrbStack 这样的本地容器解决方案早已存在（笔者本人也已使用一两年，并在博客中做过介绍），但苹果官方的原生方案无疑将加剧市场竞争，推动相关产品加速创新。
-对开发者来说，虽然影响有限，但本地开发体验将变得更加安全高效（尤其是 M1 用户）。官方方案不仅提升了易用性和性能，也进一步促进了容器生态的融合与创新。
-对于开发者和行业而言，这既是机遇，也是挑战。让我们拭目以待，苹果如何在容器领域持续发力，带来更多可能。
-背景与动机 容器技术已成为现代软件开发和部署的基石。长期以来，macOS 用户在本地运行 Linux 容器时，主要依赖虚拟机方案（如 Docker Desktop、Colima、OrbStack 等），难以获得与 Linux 原生环境一致的体验。苹果在 WWDC2025 推出 Containerization Framework，旨在为 macOS 用户带来更安全、高效、原生的容器运行能力，推动开发生态进一步升级。
-什么是容器 容器是一种轻量级的虚拟化技术，允许开发者在隔离的环境中运行应用程序。与传统虚拟机相比，容器共享宿主操作系统内核，但每个容器拥有独立的文件系统、网络和进程空间。这种方式使得容器启动速度更快、资源占用更低，非常适合微服务架构和持续集成/持续部署（CI/CD）流程。
-与宿主机隔离：容器运行时与主机系统相互隔离，提升安全性。 工作负载之间隔离：不同容器之间互不影响，便于多应用并行部署。 便于开发环境一致性：开发、测试、生产环境可高度一致，减少“在我电脑上没问题”的情况。 运行时隔离：每个容器拥有独立的文件系统、网络和进程空间，保证应用运行互不干扰。 什么是 Containerization Framework Containerization Framework 是苹果开源的 Swift 框架，专为在 macOS 上运行 Linux 容器而设计。其核心目标包括：</description></item><item><title>使用 sdkman 在 M1 Mac 上 安装 graalvm jdk</title><link>https://atbug.com/install-graalvm-on-m1-mac-with-sdkman/</link><pubDate>Thu, 27 Jan 2022 11:07:34 +0800</pubDate><guid>https://atbug.com/install-graalvm-on-m1-mac-with-sdkman/</guid><description>&lt;p>SDKMAN 是一款管理多版本 SDK 的工具，可以实现在多个版本间的快速切换。安装和使用非常简单：&lt;/p></description></item><item><title>Colima：MacOS 上的极简容器运行时和 Kubernetes（支持 m1）</title><link>https://atbug.com/containers-runtime-on-macos-with-colima/</link><pubDate>Sun, 26 Dec 2021 12:31:16 +0800</pubDate><guid>https://atbug.com/containers-runtime-on-macos-with-colima/</guid><description>Colima 是一个以最小化设置来在MacOS上运行容器运行时和 Kubernetes 的工具。支持 m1（文末讨论），同样也支持 Linux。
-Colima 的名字取自 Container on Lima。Lima 是一个虚拟机工具，可以实现自动的文件共享、端口转发以及 containerd。
-Colima 实际上是通过 Lima 启动了名为 colima 的虚拟机，使用虚拟机中的 containerd 作为容器运行时。
-使用 Colima 的使用很简单，执行下面的命令就可以创建虚拟机，默认是 Docker 的运行时。
-初次运行需要下载虚拟机镜像创建虚拟机，耗时因网络情况有所差异。之后，启动虚拟机就只需要 30s 左右的时间。
-colima start INFO[0000] starting colima INFO[0000] creating and starting ... context=vm INFO[0119] provisioning .</description></item><item><title>Monterey 12.0.1 上的 bug</title><link>https://atbug.com/bug-with-m1-pro-and-monterey/</link><pubDate>Thu, 18 Nov 2021 08:54:44 +0800</pubDate><guid>https://atbug.com/bug-with-m1-pro-and-monterey/</guid><description>最近换上了 MacBook Pro 2021，也慢慢将工作转到新的电脑上。结束了一年多的黑白配，之前工作主力机是我的黑苹果，配置以及 OpenCore 的引导放在这里了。
-为了稳定性，系统一直停留在了 10.15.4。新的电脑拿到手就是 12.0.1，之前也就在我另一台 2016 款的 macbook pro 上用过几个周的 12.0.0。
-新的系统加上新的架构，不免有有些 bug，今天就说下我所遇到的两个比较棘手的。
-1. 安全相关 EXC_BAD_ACCESS (SIGKILL (Code Signature Invalid))
-公司的核心产品是用 c++ 开发的，编译之后我都习惯性的放到 /usr/local/bin 目录中。在新系统中，就出现了上面的错误（从控制台获取），运行的时候进程直接被 kill。
-网上查了下，说与 kernel cache 有关，重启可解决。
-This was caused by kernel caching of previously signed binaries and my replacing those binaries with newly compiled binaries which weren&amp;rsquo;t part of a signed package.</description></item><item><title>macOS 安装 minishift</title><link>https://atbug.com/install-minishift-on-mac/</link><pubDate>Fri, 23 Feb 2018 15:32:26 +0000</pubDate><guid>https://atbug.com/install-minishift-on-mac/</guid><description>MacOS环境安装minishift
-安装minishift cli brew cask install minishift 使用virtualbox安装 安装的时候可以指定HTTP代理, 拉取墙外镜像时需要; 还可以指定insecure的镜像库.
-minishift start --docker-env HTTP_PROXY=&amp;#34;192.168.99.1:1087&amp;#34; --docker-env HTTPS_PROXY=&amp;#34;192.168.99.1:1087&amp;#34; --docker-env NO_PROXY=&amp;#34;192.168.0.0/16,172.30.0.0/16&amp;#34; --insecure-registry=&amp;#34;192.168.1.34&amp;#34; --vm-driver=virtualbox 启动 minishift start --vm-driver=virtualbox 删除 minishift delete 打开Openshift控制面板 minishift dashboard 获取集群ip地址 minishift ip 安装Openshift Cli brew install openshift-cli 可以使用openshift cli进行操作.</description></item><item><title>Kubernetes学习 — Macos安装Kubernetes</title><link>https://atbug.com/install-kubernetes-on-macos/</link><pubDate>Thu, 17 Aug 2017 09:44:17 +0000</pubDate><guid>https://atbug.com/install-kubernetes-on-macos/</guid><description>Kubernetes 安装 macos 检查环境 sysctl -a | grep machdep.cpu.features | grep VMX 安装VirtualBox http://download.virtualbox.org/virtualbox/5.1.26/Oracle_VM_VirtualBox_Extension_Pack-5.1.26-117224.vbox-extpack 安装minikube curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.21.0/minikube-darwin-amd64 &amp;amp;&amp;amp; chmod +x minikube &amp;amp;&amp;amp; sudo mv minikube /usr/local/bin/ 创建集群 默认使用virtualbox。
-主机的ip是192.168.31.186， 1087是proxy的端口。需要将ss的http代理监听地址从127.0.0.1改为主机的ip。
-#启动 minikube start #使用私有库 minikube start --insecure-registry=&amp;#34;192.168.31.34&amp;#34; #使用proxy，用于获取镜像 minikube start --docker-env HTTP_PROXY=&amp;#34;192.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>MacOS on 乱世浮生</title><link>https://atbug.com/tags/macos/</link><description>Recent content in MacOS on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sat, 24 Jan 2026 21:43:46 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/macos/index.xml" rel="self" type="application/rss+xml"/><item><title>Apple Container 0.8.0：从初生到成熟的七个月演进之路</title><link>https://atbug.com/apple-container-evolution-seven-months-journey/</link><pubDate>Sat, 24 Jan 2026 21:43:46 +0800</pubDate><guid>https://atbug.com/apple-container-evolution-seven-months-journey/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;2026 年 1 月 22 日，&lt;a href="https://github.com/apple/container/"&gt;Apple Container&lt;/a&gt; &lt;a href="https://github.com/apple/container/releases/tag/0.8.0"&gt;0.8.0 发布&lt;/a&gt;。距离 WWDC 2025 首次发布的 0.1.0，整整七个月，九个版本。&lt;/p&gt;
+&lt;p&gt;这七个月不仅是版本号的增长，更是一个架构理念的验证：每容器独立 VM 的隔离模式，能否在 macOS 上成为 Docker Desktop 的替代方案？&lt;/p&gt;
+&lt;p&gt;0.8.0 给出的答案是：在特定场景下，可以。但这个答案背后，是数据完整性危机（0.7.1）、网络限制的解除（macOS 26）、以及对生产就绪定义的重新思考。&lt;/p&gt;
+&lt;p&gt;本文不是功能列表，而是试图理解：Apple 为什么要做 Container？独立 VM 架构的代价是什么？七个月的快速迭代背后，哪些问题真正得到了解决，哪些仍在路上？&lt;/p&gt;
+&lt;h2 id="写在前面为什么要关注-apple-container"&gt;写在前面：为什么要关注 Apple Container？&lt;/h2&gt;
+&lt;p&gt;在讨论版本演进之前，先简单回顾一下 Apple Container 的独特价值：&lt;/p&gt;
+&lt;h3 id="原生-macos-体验"&gt;原生 macOS 体验&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;苹果官方支持&lt;/strong&gt;：基于 Apple Virtualization Framework&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;性能优越&lt;/strong&gt;：每个容器独立虚拟机，无共享虚拟机开销&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全隔离&lt;/strong&gt;：VM 级别隔离，比传统容器更安全&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Apple Silicon 优化&lt;/strong&gt;：为 ARM64 架构深度优化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="与-docker-desktop-的差异"&gt;与 Docker Desktop 的差异&lt;/h3&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;特性&lt;/th&gt;
+					&lt;th&gt;Docker Desktop&lt;/th&gt;
+					&lt;th&gt;Apple Container&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;架构模式&lt;/td&gt;
+					&lt;td&gt;单一 VM + 多容器&lt;/td&gt;
+					&lt;td&gt;每容器独立 VM&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;安全隔离&lt;/td&gt;
+					&lt;td&gt;容器级&lt;/td&gt;
+					&lt;td&gt;VM 级&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;macOS 集成&lt;/td&gt;
+					&lt;td&gt;第三方工具&lt;/td&gt;
+					&lt;td&gt;原生框架&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;价格&lt;/td&gt;
+					&lt;td&gt;企业版收费&lt;/td&gt;
+					&lt;td&gt;开源免费&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;但是&lt;/strong&gt;，在 2025 年 6 月，0.1.0 版本还有很多限制：&lt;/p&gt;</description></item><item><title>macOS 原生容器 Apple Container 架构解析</title><link>https://atbug.com/macos-native-apple-container-architecture/</link><pubDate>Mon, 23 Jun 2025 20:55:51 +0800</pubDate><guid>https://atbug.com/macos-native-apple-container-architecture/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;Apple Container 结合 macOS 框架与模块化插件体系，提供了强大的容器化环境。理解其架构与可扩展性，有助于开发者在云原生与虚拟化场景下充分发挥其能力。&lt;/p&gt;
+&lt;h2 id="引言"&gt;引言&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/apple/container"&gt;Container&lt;/a&gt; 是 Apple 提供的开源命令行工具，专为在 Mac 上运行 Linux 容器而构建，尤其针对 Apple Silicon 进行了优化。它由 Swift 编写，基于 &lt;a href="https://github.com/apple/containerization"&gt;Containerization Framework&lt;/a&gt; 构建。Apple Containerization 和 Container CLI 于 WWDC 2025 发布。&lt;/p&gt;
+&lt;p&gt;延伸阅读：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/apple-containerization-framework-macos-release/"&gt;苹果发布 Containerization Framework：开启 macOS 容器化新纪元&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/apple-container-hands-on/"&gt;Apple Container 开箱实践&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Apple Container 是一种客户端 - 服务器架构系统，使 macOS 上能够运行容器化工作负载。本文将深入探讨其架构、启动流程、核心插件、可扩展性及安全性等内容。&lt;/p&gt;</description></item><item><title>Apple Container 开箱实践</title><link>https://atbug.com/apple-container-hands-on/</link><pubDate>Sat, 21 Jun 2025 22:38:27 +0800</pubDate><guid>https://atbug.com/apple-container-hands-on/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;Apple Container CLI 是一款强大的工具，可在 macOS 上运行 Linux 容器，特别针对 Apple Silicon 进行了优化。&lt;/p&gt;
+&lt;p&gt;该 CLI 设计为开发者友好，命令风格与 Docker CLI 类似。对于已经熟悉 Docker CLI 的用户，Container CLI 应该会非常熟悉，并且为 macOS 用户提供了更原生的体验。&lt;/p&gt;
+&lt;p&gt;本文将介绍 Container CLI、如何快速上手，以及如何在 macOS 上运行 Linux 容器。&lt;/p&gt;
+&lt;h2 id="关于-container-cli"&gt;关于 Container CLI&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/apple/container"&gt;Container&lt;/a&gt; 是 Apple 提供的开源命令行工具，专为在 Mac 上运行 Linux 容器而构建，尤其针对 Apple Silicon 进行了优化。它由 Swift 编写，基于 &lt;a href="https://github.com/apple/containerization"&gt;Containerization Framework&lt;/a&gt; 构建。Apple Containerization 和 Container CLI 于 WWDC 2025 发布。&lt;/p&gt;</description></item><item><title>苹果发布 Containerization Framework：开启 macOS 容器化新纪元</title><link>https://atbug.com/apple-containerization-framework-macos-release/</link><pubDate>Sun, 15 Jun 2025 12:12:00 +0800</pubDate><guid>https://atbug.com/apple-containerization-framework-macos-release/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;苹果 &lt;a href="https://github.com/apple/containerization"&gt;Containerization Framework&lt;/a&gt; 的发布，标志着 macOS 容器化进入全新阶段。&lt;/p&gt;
+&lt;p&gt;虽然苹果推出了原生容器化框架，但底层依然依赖虚拟机技术。为实现更高的安全性和隔离性，每个容器都运行在独立的轻量级虚拟机中，反而使虚拟机的使用频率和数量比以往更多。&lt;/p&gt;
+&lt;p&gt;对行业来说，会对如 OrbStack、Docker Desktop 等商业产品产生显著影响。实际上，类似 OrbStack 这样的本地容器解决方案早已存在（笔者本人也已使用一两年，并在&lt;a href="https://atbug.com/setup-k3s-x86-cluster-on-apple-silicon-with-orbstack/"&gt;博客&lt;/a&gt;中做过介绍），但苹果官方的原生方案无疑将加剧市场竞争，推动相关产品加速创新。&lt;/p&gt;
+&lt;p&gt;对开发者来说，虽然影响有限，但本地开发体验将变得更加安全高效（尤其是 M1 用户）。官方方案不仅提升了易用性和性能，也进一步促进了容器生态的融合与创新。&lt;/p&gt;
+&lt;p&gt;对于开发者和行业而言，这既是机遇，也是挑战。让我们拭目以待，苹果如何在容器领域持续发力，带来更多可能。&lt;/p&gt;
+&lt;h2 id="背景与动机"&gt;背景与动机&lt;/h2&gt;
+&lt;p&gt;容器技术已成为现代软件开发和部署的基石。长期以来，macOS 用户在本地运行 Linux 容器时，主要依赖虚拟机方案（如 Docker Desktop、Colima、OrbStack 等），难以获得与 Linux 原生环境一致的体验。苹果在 &lt;a href="https://developer.apple.com/wwdc25/"&gt;WWDC2025&lt;/a&gt; 推出 Containerization Framework，旨在为 macOS 用户带来更安全、高效、原生的容器运行能力，推动开发生态进一步升级。&lt;/p&gt;
+&lt;h2 id="什么是容器"&gt;什么是容器&lt;/h2&gt;
+&lt;p&gt;容器是一种轻量级的虚拟化技术，允许开发者在隔离的环境中运行应用程序。与传统虚拟机相比，容器共享宿主操作系统内核，但每个容器拥有独立的文件系统、网络和进程空间。这种方式使得容器启动速度更快、资源占用更低，非常适合微服务架构和持续集成/持续部署（CI/CD）流程。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;与宿主机隔离：容器运行时与主机系统相互隔离，提升安全性。&lt;/li&gt;
+&lt;li&gt;工作负载之间隔离：不同容器之间互不影响，便于多应用并行部署。&lt;/li&gt;
+&lt;li&gt;便于开发环境一致性：开发、测试、生产环境可高度一致，减少“在我电脑上没问题”的情况。&lt;/li&gt;
+&lt;li&gt;运行时隔离：每个容器拥有独立的文件系统、网络和进程空间，保证应用运行互不干扰。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="什么是-containerization-framework"&gt;什么是 Containerization Framework&lt;/h2&gt;
+&lt;p&gt;Containerization Framework 是苹果开源的 Swift 框架，专为在 macOS 上运行 Linux 容器而设计。其核心目标包括：&lt;/p&gt;</description></item><item><title>使用 sdkman 在 M1 Mac 上 安装 graalvm jdk</title><link>https://atbug.com/install-graalvm-on-m1-mac-with-sdkman/</link><pubDate>Thu, 27 Jan 2022 11:07:34 +0800</pubDate><guid>https://atbug.com/install-graalvm-on-m1-mac-with-sdkman/</guid><description>&lt;p&gt;SDKMAN 是一款管理多版本 SDK 的工具，可以实现在多个版本间的快速切换。安装和使用非常简单：&lt;/p&gt;</description></item><item><title>Colima：MacOS 上的极简容器运行时和 Kubernetes（支持 m1）</title><link>https://atbug.com/containers-runtime-on-macos-with-colima/</link><pubDate>Sun, 26 Dec 2021 12:31:16 +0800</pubDate><guid>https://atbug.com/containers-runtime-on-macos-with-colima/</guid><description>&lt;p&gt;&lt;a href="https://github.com/abiosoft/colima"&gt;Colima&lt;/a&gt; 是一个以最小化设置来在MacOS上运行容器运行时和 Kubernetes 的工具。支持 m1（文末讨论），同样也支持 Linux。&lt;/p&gt;
+&lt;p&gt;Colima 的名字取自 Container on Lima。&lt;a href="https://github.com/lima-vm/lima"&gt;Lima&lt;/a&gt; 是一个虚拟机工具，可以实现自动的文件共享、端口转发以及 containerd。&lt;/p&gt;
+&lt;p&gt;Colima 实际上是通过 Lima 启动了名为 &lt;code&gt;colima&lt;/code&gt; 的虚拟机，使用虚拟机中的 containerd 作为容器运行时。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/12/26/colima.gif" alt="colima"&gt;&lt;/p&gt;
+&lt;h2 id="使用"&gt;使用&lt;/h2&gt;
+&lt;p&gt;Colima 的使用很简单，执行下面的命令就可以创建虚拟机，默认是 Docker 的运行时。&lt;/p&gt;
+&lt;p&gt;初次运行需要下载虚拟机镜像创建虚拟机，耗时因网络情况有所差异。之后，启动虚拟机就只需要 30s 左右的时间。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;colima start
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0000&lt;span style="color:#f92672"&gt;]&lt;/span&gt; starting colima
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0000&lt;span style="color:#f92672"&gt;]&lt;/span&gt; creating and starting ... context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;vm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0119&lt;span style="color:#f92672"&gt;]&lt;/span&gt; provisioning ... context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;docker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0119&lt;span style="color:#f92672"&gt;]&lt;/span&gt; provisioning in VM ... context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;docker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0133&lt;span style="color:#f92672"&gt;]&lt;/span&gt; restarting VM to complete setup ... context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;docker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0133&lt;span style="color:#f92672"&gt;]&lt;/span&gt; stopping ... context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;vm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0136&lt;span style="color:#f92672"&gt;]&lt;/span&gt; starting ... context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;vm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0158&lt;span style="color:#f92672"&gt;]&lt;/span&gt; starting ... context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;docker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INFO&lt;span style="color:#f92672"&gt;[&lt;/span&gt;0159&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;此时，在宿主机上就可以使用 Docker 相关的命令了：&lt;/p&gt;</description></item><item><title>Monterey 12.0.1 上的 bug</title><link>https://atbug.com/bug-with-m1-pro-and-monterey/</link><pubDate>Thu, 18 Nov 2021 08:54:44 +0800</pubDate><guid>https://atbug.com/bug-with-m1-pro-and-monterey/</guid><description>&lt;p&gt;最近换上了 MacBook Pro 2021，也慢慢将工作转到新的电脑上。结束了一年多的黑白配，之前工作主力机是我的黑苹果，配置以及 OpenCore 的引导放在&lt;a href="https://github.com/addozhang/HackintoshEFI-Open"&gt;这里&lt;/a&gt;了。&lt;/p&gt;
+&lt;p&gt;为了稳定性，系统一直停留在了 10.15.4。新的电脑拿到手就是 12.0.1，之前也就在我另一台 2016 款的 macbook pro 上用过几个周的 12.0.0。&lt;/p&gt;
+&lt;p&gt;新的系统加上新的架构，不免有有些 bug，今天就说下我所遇到的两个比较棘手的。&lt;/p&gt;
+&lt;h3 id="1-安全相关"&gt;1. 安全相关&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;EXC_BAD_ACCESS (SIGKILL (Code Signature Invalid))&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;公司的&lt;a href="https://github.com/flomesh-io/pipy"&gt;核心产品&lt;/a&gt;是用 c++ 开发的，编译之后我都习惯性的放到 &lt;code&gt;/usr/local/bin&lt;/code&gt; 目录中。在新系统中，就出现了上面的错误（从控制台获取），运行的时候进程直接被 kill。&lt;/p&gt;
+&lt;p&gt;网上查了下，说&lt;a href="https://apple.stackexchange.com/questions/404553/macos-compiled-binary-runs-in-build-folder-but-reports-killed-9-when-moved-to"&gt;与 kernel cache 有关&lt;/a&gt;，重启可解决。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This was caused by kernel caching of previously signed binaries and my replacing those binaries with newly compiled binaries which weren&amp;rsquo;t part of a signed package.&lt;/p&gt;</description></item><item><title>macOS 安装 minishift</title><link>https://atbug.com/install-minishift-on-mac/</link><pubDate>Fri, 23 Feb 2018 15:32:26 +0000</pubDate><guid>https://atbug.com/install-minishift-on-mac/</guid><description>&lt;p&gt;MacOS环境安装minishift&lt;/p&gt;
+&lt;h4 id="安装minishift-cli"&gt;安装minishift cli&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew cask install minishift
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="使用virtualbox安装"&gt;使用virtualbox安装&lt;/h4&gt;
+&lt;p&gt;安装的时候可以指定HTTP代理, 拉取墙外镜像时需要; 还可以指定insecure的镜像库.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;minishift start --docker-env HTTP_PROXY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;192.168.99.1:1087&amp;#34;&lt;/span&gt; --docker-env HTTPS_PROXY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;192.168.99.1:1087&amp;#34;&lt;/span&gt; --docker-env NO_PROXY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;192.168.0.0/16,172.30.0.0/16&amp;#34;&lt;/span&gt; --insecure-registry&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;192.168.1.34&amp;#34;&lt;/span&gt; --vm-driver&lt;span style="color:#f92672"&gt;=&lt;/span&gt;virtualbox
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="启动"&gt;启动&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;minishift start --vm-driver&lt;span style="color:#f92672"&gt;=&lt;/span&gt;virtualbox
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="删除"&gt;删除&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;minishift delete
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="打开openshift控制面板"&gt;打开Openshift控制面板&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;minishift dashboard
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="获取集群ip地址"&gt;获取集群ip地址&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;minishift ip
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="安装openshift-cli"&gt;安装Openshift Cli&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install openshift-cli
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;可以使用openshift cli进行操作. minishift安装完成后会将配置信息写入到主机的用户目录下, &lt;code&gt;$HOME/.kube&lt;/code&gt;目录下除了&lt;code&gt;config&lt;/code&gt;信息, 还有openshift的集群信息及支持的api.&lt;/p&gt;</description></item><item><title>Kubernetes学习 — Macos安装Kubernetes</title><link>https://atbug.com/install-kubernetes-on-macos/</link><pubDate>Thu, 17 Aug 2017 09:44:17 +0000</pubDate><guid>https://atbug.com/install-kubernetes-on-macos/</guid><description>&lt;h1 id="kubernetes"&gt;Kubernetes&lt;/h1&gt;
+&lt;h2 id="安装"&gt;安装&lt;/h2&gt;
+&lt;h2 id="macos"&gt;macos&lt;/h2&gt;
+&lt;h3 id="检查环境"&gt;检查环境&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sysctl -a | grep machdep.cpu.features | grep VMX
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="安装virtualbox"&gt;安装VirtualBox&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;http://download.virtualbox.org/virtualbox/5.1.26/Oracle_VM_VirtualBox_Extension_Pack-5.1.26-117224.vbox-extpack
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="安装minikube"&gt;安装minikube&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.21.0/minikube-darwin-amd64 &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; chmod +x minikube &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; sudo mv minikube /usr/local/bin/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="创建集群"&gt;创建集群&lt;/h3&gt;
+&lt;p&gt;默认使用virtualbox。&lt;/p&gt;
+&lt;p&gt;主机的ip是&lt;code&gt;192.168.31.186&lt;/code&gt;， &lt;code&gt;1087&lt;/code&gt;是proxy的端口。需要将ss的http代理监听地址从&lt;code&gt;127.0.0.1&lt;/code&gt;改为主机的ip。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#启动&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;minikube start
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#使用私有库&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;minikube start --insecure-registry&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;192.168.31.34&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#使用proxy，用于获取镜像&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;minikube start --docker-env HTTP_PROXY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;192.168.31.186:1087&amp;#34;&lt;/span&gt; --docker-env HTTPS_PROXY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;192.168.31.186:1087&amp;#34;&lt;/span&gt; --docker-env NO_PROXY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;192.168.99.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="安装kubectl"&gt;安装kubectl&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -Lo kubectl http://storage.googleapis.com/kubernetes-release/release/v1.7.3/bin/darwin/amd64/kubectl &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; chmod +x kubectl &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; sudo mv kubectl /usr/local/bin/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="oh-my-zsh-tab-completion"&gt;oh-my-zsh tab completion&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vi ~/.zshrc
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;添加到plugin部分&lt;br&gt;
+plugins=(git zsh-completions kubectl)&lt;/p&gt;</description></item></channel></rss>

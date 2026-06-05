@@ -1,27 +1,93 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>网络 on 乱世浮生</title><link>https://atbug.com/tags/%E7%BD%91%E7%BB%9C/</link><description>Recent content in 网络 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 03 Apr 2026 08:12:20 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E7%BD%91%E7%BB%9C/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes externalIPs：已知六年的安全漏洞，终于要移除了</title><link>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</link><pubDate>Fri, 03 Apr 2026 08:12:20 +0800</pubDate><guid>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</guid><description>TL;DR Kubernetes Service 的 externalIPs 字段存在长达六年的中间人攻击漏洞（CVE-2020-8554），任何有 Service 创建权限的用户都可以劫持集群流量 &amp;ndash;v1.36 终于启动了正式的废弃流程。
-开篇：一条命令，劫持集群流量 想象这样一个场景。
-你的集群里有一个开发者，他拥有普通的 Service 创建权限 &amp;ndash; 这在大多数团队中再正常不过。他写了一段这样的配置：
-apiVersion: v1 kind: Service metadata: name: dns-intercept spec: selector: app: attacker-pod ports: - port: 53 protocol: UDP externalIPs: - 8.8.8.8 一条 kubectl apply，几秒钟后，集群内所有节点上发往 8.</description></item><item><title>从抓包看 MCP：AI 工具调用背后的通信机制</title><link>https://atbug.com/mcp-communication-protocol-packet-analysis/</link><pubDate>Sat, 26 Apr 2025 16:44:57 +0800</pubDate><guid>https://atbug.com/mcp-communication-protocol-packet-analysis/</guid><description>TL;DR 通过抓包分析，我们清晰地了解了 MCP 通信的全过程：从建立 SSE 连接、三步初始化、工具调用操作到最终的连接终止。可以看出，MCP 基于简单的 SSE 协议搭建了一个功能强大的工具调用框架，使 AI 代理能够便捷地调用外部工具完成复杂任务。
-相比传统的接口调用方式，MCP 更加灵活，能够自动适应不同的工具集，让 AI 代理 &amp;quot; 即插即用 &amp;quot; 地使用各种服务能力，这也是其设计的精妙之处。
-当然，MCP 也并不是完美的，作为一个新兴的协议，它仍然在不断发展中。未来可能会有更多的功能和特性被添加进来，以满足更复杂的需求。
-背景 MCP 支持两种标准的传输实现：标准输入/输出（stdio）和 Server-Sent Event（下称 SSE）。stdio 基于命令行工具，多用于本地集成，通过进程通信来实现；SSE 基于客户端和服务器的网络通信，用于跨设备网络的通信场景。
-既然是用抓包来分析，我们就要选择使用 SSE 传输 MCP server，然后通过工具进行网络抓包分析。在抓包分析之前，我们必要对 SSE 协议进行简单的了解。
-SSE 协议 SSE 协议 是一种服务器推送技术，使客户端能够通过 HTTP 连接从服务器自动接受更新，通常用于服务器向客户端发送消息更新或者连续的数据流（流信息 streaming）。</description></item><item><title>使用 eBPF 技术实现更快的网络数据包传输</title><link>https://atbug.com/accelerate-network-packets-transmission/</link><pubDate>Wed, 22 Mar 2023 07:03:28 +0800</pubDate><guid>https://atbug.com/accelerate-network-packets-transmission/</guid><description>在 上篇文章 用了整篇的内容来描述网络数据包在 Kubernetes 网络中的轨迹，文章末尾，我们提出了一种假设：同一个内核空间中的两个 socket 可以直接传输数据，是不是就可以省掉内核网络协议栈处理带来的延迟？
-不论是同 pod 中的两个不同容器，或者同节点的两个 pod 间的网络通信，实际上都发生在同一个内核空间中，互为对端的两个 socket 也都位于同一个内存中。而在上篇文章的开头也总结了数据包的传输轨迹实际上是 socket 的寻址过程，可以进一步将问题展开：同一节点上的两个 socket 间的通信，如果可以 快速定位到对端的 socket &amp;ndash; 找到其在内存中的地址，我们就可以跳过内核协议栈的环节进而加速数据包的传输。
-互为对端的两个 socket 也就是建立起连接的客户端 socket 和服务端 socket，他们可以通过 IP 地址和端口进行关联。客户端 socket 的本地地址和端口，是服务端 socket 的远端地址和端口；客户端 socket 的远端地址和端口，则是服务端 socket 的本地地址和端口。
-当客户端和服务端在完成连接的建立之后，如果可以使用本地地址 + 端口和远端地址 + 端口端口的组合 指向 socket，仅需调换本地和远端的地址 + 端口，即可定位到对端的 socket，然后将数据直接写到对端 socket（实际是写入 socket 的接收队列 RXQ，这里不做展开），就可以避开内核网络栈（包括 netfilter/iptables）甚至是 NIC 的处理。</description></item><item><title>追踪 Kubernetes 中的数据包</title><link>https://atbug.com/tracing-network-packets-in-kubernetes/</link><pubDate>Sat, 18 Mar 2023 02:25:17 +0800</pubDate><guid>https://atbug.com/tracing-network-packets-in-kubernetes/</guid><description>网络和操作系统内核，对我来说是既陌生又满是吸引，希望能够拨开层层迷雾找到背后的真相。
-在 上一篇文章 中我深入探讨了 Kubernetes 网络模型，这次我想更深入一点：了解数据包在 Kubernetes 中的传输，为学习 Kubernetes 的 eBPF 网络加速做准备，加深对网络和操作系统内核的理解。 文中可能有疏漏之处，还望大家赐教。
-在开始之前，我可以用一句话来总结我的学习成果：数据包的流转其实就是一个网络套接字描述符（Socket File Descriptor，中文有点冗长，以下简称 socket fd）的寻址过程。 它不是简单的指 socket fd 的内存地址，还包括它的网络地址。
-在 Unix 和类 Unix 系统中，一切皆文件，也可以通过文件描述符来操作 socket。
-基础知识 数据包 既然要讨论数据包的流转，先看看什么是数据包。
-网络数据包（network packet），也称为网络数据报（network datagram）或网络帧（Network frame），是通过计算机网络传输的数据单位。拿最常见的 TCP 数据包来看包含如下几个部分：
-Ethernet header：链路层信息，主要包括目的 MAC 地址和源 MAC 地址，以及报文的格式，这里是 IP 包。 IP header：网络层信息，主要包括长度、源 IP 地址和目的 IP 地址以及报文的格式，当然这里必须是 TCP 包。 TCP header：传输层信息，包括源端口和目的端口。 数据：一般是第 7 层的数据，比如 HTTP 等。 这里没有介绍的 checksum 和 FCS 通常是用来检查数据包在传输过程中是否被篡改或者发生了错误。</description></item><item><title>从 Flannel 学习 Kubernetes overlay 网络</title><link>https://atbug.com/cross-node-traffic-on-flannel-vxlan-network/</link><pubDate>Thu, 15 Dec 2022 07:00:13 +0800</pubDate><guid>https://atbug.com/cross-node-traffic-on-flannel-vxlan-network/</guid><description>这是 Kubernetes 网络学习的第四篇笔记。
-深入探索 Kubernetes 网络模型和网络通信 认识一下容器网络接口 CNI 源码分析：从 kubelet、容器运行时看 CNI 的使用 从 Flannel 学习 Kubernetes VXLAN 网络（本篇） Kubernetes 网络学习之 Cilium 与 eBPF &amp;hellip; Flannel 介绍 Flannel 是一个非常简单的 overlay 网络（VXLAN），是 Kubernetes 网络 CNI 的解决方案之一。Flannel 在每台主机上运行一个简单的轻量级 agent flanneld 来监听集群中节点的变更，并对地址空间进行预配置。Flannel 还会在每台主机上安装 vtep flannel.</description></item><item><title>认识一下容器网络接口 CNI</title><link>https://atbug.com/deep-dive-cni-spec/</link><pubDate>Tue, 06 Dec 2022 19:53:46 +0800</pubDate><guid>https://atbug.com/deep-dive-cni-spec/</guid><description>写在最前，周末写到这篇的时候我就发现可能是给自己挖了很大的坑，整个 Kubernetes 网关相关的内容会非常复杂且庞大。
-深入探索 Kubernetes 网络模型和网络通信 认识一下容器网络接口 CNI（本篇） 源码分析：从 kubelet、容器运行时看 CNI 的使用 从 Flannel 学习 Kubernetes VXLAN 网络 Kubernetes 网络学习之 Cilium 与 eBPF &amp;hellip; 看自己能学到哪一步~
-在 《深入探索 Kubernetes 网络模型和网络通信》 文章中，我们介绍了网络命名空间（network namespace） 如何在 Kubernetes 网络模型中工作，通过示例分析 pod 间的流量传输路径。整个传输过程需要各种不同组件的参与才完成，而这些组件与 pod 相同的生命周期，跟随 pod 的创建和销毁。容器的维护由 kubelet 委托给容器运行时（container runtime）来完成，而容器的网络命名空间则是由容器运行时委托网络插件共同完成。</description></item><item><title>深入探索 Kubernetes 网络模型和网络通信</title><link>https://atbug.com/deep-dive-k8s-network-mode-and-communication/</link><pubDate>Sun, 04 Dec 2022 08:48:11 +0800</pubDate><guid>https://atbug.com/deep-dive-k8s-network-mode-and-communication/</guid><description>这是 Kubernetes 网络学习的第一篇笔记。
-深入探索 Kubernetes 网络模型和网络通信（本篇） 认识一下容器网络接口 CNI 源码分析：从 kubelet、容器运行时看 CNI 的使用 从 Flannel 学习 Kubernetes VXLAN 网络 Kubernetes 网络学习之 Cilium 与 eBPF Kubernetes 定义了一种简单、一致的网络模型，基于扁平网络结构的设计，无需将主机端口与网络端口进行映射便可以进行高效地通讯，也无需其他组件进行转发。该模型也使应用程序很容易从虚拟机或者主机物理机迁移到 Kubernetes 管理的 pod 中。
-这篇文章主要深入探索 Kubernetes 网络模型，并了解容器、pod 间如何进行通讯。对于网络模型的实现将会在后面的文章介绍。
-Kubernetes 网络模型 该模型定义了：
-每个 pod 都有自己的 IP 地址，这个 IP 在集群范围内可达 Pod 中的所有容器共享 pod IP 地址（包括 MAC 地址），并且容器之前可以相互通信（使用 localhost） Pod 可以使用 pod IP 地址与集群中任一节点上的其他 pod 通信，无需 NAT Kubernetes 的组件之间可以相互通信，也可以与 pod 通信 网络隔离可以通过网络策略实现 上面的定义中提到了几个相关的组件：</description></item><item><title>Kubernetes LoadBalancer Service 与负载均衡器</title><link>https://atbug.com/k8s-service-and-load-balancer/</link><pubDate>Fri, 30 Sep 2022 16:04:30 +0800</pubDate><guid>https://atbug.com/k8s-service-and-load-balancer/</guid><description>之前介绍过一些 Ingress 使用，比如 Ingress SSL 透传、Ingress 的多租户。从 Demo 看起来是创建 Ingress 之后，就能从集群外访问服务了。实际上除了 Ingress 的作用以外，还有 Kubernetes Service 和负载均衡器（Load Balancer）参与（当 Service 类型为 LoadBalancer 时）。
-这篇文章就来介绍了 Kubernetes LoadBalancer Service 和两个比较典型的负载均衡器的工作原理。
-LoadBalancer Service Service 是 Kubernetes 中的资源类型，用来将一组 Pod 的应用作为网络服务公开。每个 Pod 都有自己的 IP，但是这个 IP 的生命周期与 Pod 生命周期一致，也就是说 Pod 销毁后这个 IP 也就无效了（也可能被分配给其他的 Pod 使用）。而 Service 的 IP（ClusterIP） 则是在创建之后便不会改变，Service 与 Pod 之前通过 userspace 代理、iptables 和 ipvs 代理 等手段关联。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>网络 on 乱世浮生</title><link>https://atbug.com/tags/%E7%BD%91%E7%BB%9C/</link><description>Recent content in 网络 on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Fri, 03 Apr 2026 08:12:20 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E7%BD%91%E7%BB%9C/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes externalIPs：已知六年的安全漏洞，终于要移除了</title><link>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</link><pubDate>Fri, 03 Apr 2026 08:12:20 +0800</pubDate><guid>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;Kubernetes Service 的 &lt;code&gt;externalIPs&lt;/code&gt; 字段存在长达六年的中间人攻击漏洞（&lt;a href="https://nvd.nist.gov/vuln/detail/CVE-2020-8554"&gt;CVE-2020-8554&lt;/a&gt;），任何有 Service 创建权限的用户都可以劫持集群流量 &amp;ndash;v1.36 终于启动了正式的废弃流程。&lt;/p&gt;
+&lt;h2 id="开篇一条命令劫持集群流量"&gt;开篇：一条命令，劫持集群流量&lt;/h2&gt;
+&lt;p&gt;想象这样一个场景。&lt;/p&gt;
+&lt;p&gt;你的集群里有一个开发者，他拥有普通的 Service 创建权限 &amp;ndash; 这在大多数团队中再正常不过。他写了一段这样的配置：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;dns-intercept&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;selector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;attacker-pod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;port&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;53&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;protocol&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;UDP&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;externalIPs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;8.8.8.8&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;一条 &lt;code&gt;kubectl apply&lt;/code&gt;，几秒钟后，集群内所有节点上发往 &lt;code&gt;8.8.8.8:53&lt;/code&gt; 的 DNS 查询，全部被悄悄转发到他控制的 Pod。&lt;/p&gt;
+&lt;p&gt;没有提权，没有漏洞利用，没有任何异常告警。完全合法的 Kubernetes 操作。&lt;/p&gt;</description></item><item><title>从抓包看 MCP：AI 工具调用背后的通信机制</title><link>https://atbug.com/mcp-communication-protocol-packet-analysis/</link><pubDate>Sat, 26 Apr 2025 16:44:57 +0800</pubDate><guid>https://atbug.com/mcp-communication-protocol-packet-analysis/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;通过抓包分析，我们清晰地了解了 MCP 通信的全过程：从建立 SSE 连接、三步初始化、工具调用操作到最终的连接终止。可以看出，MCP 基于简单的 SSE 协议搭建了一个功能强大的工具调用框架，使 AI 代理能够便捷地调用外部工具完成复杂任务。&lt;/p&gt;
+&lt;p&gt;相比传统的接口调用方式，MCP 更加灵活，能够自动适应不同的工具集，让 AI 代理 &amp;quot; 即插即用 &amp;quot; 地使用各种服务能力，这也是其设计的精妙之处。&lt;/p&gt;
+&lt;p&gt;当然，MCP 也并不是完美的，作为一个新兴的协议，它仍然在不断发展中。未来可能会有更多的功能和特性被添加进来，以满足更复杂的需求。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;MCP 支持两种标准的传输实现：标准输入/输出（stdio）和 &lt;a href="https://en.wikipedia.org/wiki/Server-sent_events"&gt;Server-Sent Event&lt;/a&gt;（下称 SSE）。stdio 基于命令行工具，多用于本地集成，通过进程通信来实现；SSE 基于客户端和服务器的网络通信，用于跨设备网络的通信场景。&lt;/p&gt;
+&lt;p&gt;既然是用抓包来分析，我们就要选择使用 SSE 传输 MCP server，然后通过工具进行网络抓包分析。在抓包分析之前，我们必要对 SSE 协议进行简单的了解。&lt;/p&gt;
+&lt;h2 id="sse-协议"&gt;SSE 协议&lt;/h2&gt;
+&lt;p&gt;SSE 协议 是一种服务器推送技术，使客户端能够通过 HTTP 连接从服务器自动接受更新，通常用于服务器向客户端发送消息更新或者连续的数据流（流信息 streaming）。&lt;/p&gt;</description></item><item><title>使用 eBPF 技术实现更快的网络数据包传输</title><link>https://atbug.com/accelerate-network-packets-transmission/</link><pubDate>Wed, 22 Mar 2023 07:03:28 +0800</pubDate><guid>https://atbug.com/accelerate-network-packets-transmission/</guid><description>&lt;p&gt;在 &lt;a href="https://atbug.com/tracing-network-packets-in-kubernetes/"&gt;上篇文章&lt;/a&gt; 用了整篇的内容来描述网络数据包在 Kubernetes 网络中的轨迹，文章末尾，我们提出了一种假设：同一个内核空间中的两个 socket 可以直接传输数据，是不是就可以省掉内核网络协议栈处理带来的延迟？&lt;/p&gt;
+&lt;p&gt;不论是同 pod 中的两个不同容器，或者同节点的两个 pod 间的网络通信，实际上都发生在同一个内核空间中，互为对端的两个 socket 也都位于同一个内存中。而在上篇文章的开头也总结了数据包的传输轨迹实际上是 socket 的寻址过程，可以进一步将问题展开：同一节点上的两个 socket 间的通信，如果可以 &lt;strong&gt;快速定位到对端的 socket&lt;/strong&gt; &amp;ndash; 找到其在内存中的地址，我们就可以跳过内核协议栈的环节进而加速数据包的传输。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/packet-through-sockets-directly.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;互为对端的两个 socket 也就是建立起连接的客户端 socket 和服务端 socket，他们可以通过 IP 地址和端口进行关联。客户端 socket 的本地地址和端口，是服务端 socket 的远端地址和端口；客户端 socket 的远端地址和端口，则是服务端 socket 的本地地址和端口。&lt;/p&gt;
+&lt;p&gt;当客户端和服务端在完成连接的建立之后，如果可以使用本地地址 + 端口和远端地址 + 端口端口的组合 &lt;strong&gt;指向&lt;/strong&gt; socket，仅需调换本地和远端的地址 + 端口，即可定位到对端的 socket，然后将数据直接写到对端 socket（实际是写入 socket 的接收队列 RXQ，这里不做展开），就可以避开内核网络栈（包括 netfilter/iptables）甚至是 NIC 的处理。&lt;/p&gt;</description></item><item><title>追踪 Kubernetes 中的数据包</title><link>https://atbug.com/tracing-network-packets-in-kubernetes/</link><pubDate>Sat, 18 Mar 2023 02:25:17 +0800</pubDate><guid>https://atbug.com/tracing-network-packets-in-kubernetes/</guid><description>&lt;p&gt;网络和操作系统内核，对我来说是既陌生又满是吸引，希望能够拨开层层迷雾找到背后的真相。&lt;/p&gt;
+&lt;p&gt;在 &lt;a href="https://atbug.com/deep-dive-k8s-network-mode-and-communication/"&gt;上一篇文章&lt;/a&gt; 中我深入探讨了 Kubernetes 网络模型，这次我想更深入一点：了解数据包在 Kubernetes 中的传输，为学习 Kubernetes 的 eBPF 网络加速做准备，加深对网络和操作系统内核的理解。 文中可能有疏漏之处，还望大家赐教。&lt;/p&gt;
+&lt;p&gt;在开始之前，我可以用一句话来总结我的学习成果：数据包的流转其实就是一个网络套接字描述符（Socket File Descriptor，中文有点冗长，以下简称 socket fd）的寻址过程。 它不是简单的指 socket fd 的内存地址，还包括它的网络地址。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在 Unix 和类 Unix 系统中，一切皆文件，也可以通过文件描述符来操作 socket。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="基础知识"&gt;基础知识&lt;/h2&gt;
+&lt;h3 id="数据包"&gt;数据包&lt;/h3&gt;
+&lt;p&gt;既然要讨论数据包的流转，先看看什么是数据包。&lt;/p&gt;
+&lt;p&gt;网络数据包（network packet），也称为网络数据报（network datagram）或网络帧（Network frame），是通过计算机网络传输的数据单位。拿最常见的 TCP 数据包来看包含如下几个部分：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Ethernet header：链路层信息，主要包括目的 MAC 地址和源 MAC 地址，以及报文的格式，这里是 IP 包。&lt;/li&gt;
+&lt;li&gt;IP header：网络层信息，主要包括长度、源 IP 地址和目的 IP 地址以及报文的格式，当然这里必须是 TCP 包。&lt;/li&gt;
+&lt;li&gt;TCP header：传输层信息，包括源端口和目的端口。&lt;/li&gt;
+&lt;li&gt;数据：一般是第 7 层的数据，比如 HTTP 等。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这里没有介绍的 checksum 和 FCS 通常是用来检查数据包在传输过程中是否被篡改或者发生了错误。&lt;/p&gt;</description></item><item><title>从 Flannel 学习 Kubernetes overlay 网络</title><link>https://atbug.com/cross-node-traffic-on-flannel-vxlan-network/</link><pubDate>Thu, 15 Dec 2022 07:00:13 +0800</pubDate><guid>https://atbug.com/cross-node-traffic-on-flannel-vxlan-network/</guid><description>&lt;p&gt;这是 Kubernetes 网络学习的第四篇笔记。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/deep-dive-k8s-network-mode-and-communication/"&gt;深入探索 Kubernetes 网络模型和网络通信&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/deep-dive-cni-spec/"&gt;认识一下容器网络接口 CNI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/how-kubelete-container-runtime-work-with-cni/"&gt;源码分析：从 kubelet、容器运行时看 CNI 的使用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/cross-node-traffic-on-flannel-vxlan-network/"&gt;从 Flannel 学习 Kubernetes VXLAN 网络（本篇）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/learn-cilium-and-ebpf"&gt;Kubernetes 网络学习之 Cilium 与 eBPF&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&amp;hellip;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="flannel-介绍"&gt;Flannel 介绍&lt;/h2&gt;
+&lt;p&gt;Flannel 是一个非常简单的 overlay 网络（VXLAN），是 Kubernetes 网络 CNI 的解决方案之一。Flannel 在每台主机上运行一个简单的轻量级 agent &lt;code&gt;flanneld&lt;/code&gt; 来监听集群中节点的变更，并对地址空间进行预配置。Flannel 还会在每台主机上安装 vtep &lt;code&gt;flannel.1&lt;/code&gt;（VXLAN tunnel endpoints），与其他主机通过 VXLAN 隧道相连。&lt;/p&gt;</description></item><item><title>认识一下容器网络接口 CNI</title><link>https://atbug.com/deep-dive-cni-spec/</link><pubDate>Tue, 06 Dec 2022 19:53:46 +0800</pubDate><guid>https://atbug.com/deep-dive-cni-spec/</guid><description>&lt;p&gt;写在最前，周末写到这篇的时候我就发现可能是给自己挖了很大的坑，整个 Kubernetes 网关相关的内容会非常复杂且庞大。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/deep-dive-k8s-network-mode-and-communication/"&gt;深入探索 Kubernetes 网络模型和网络通信&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/deep-dive-cni-spec/"&gt;认识一下容器网络接口 CNI（本篇）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/how-kubelete-container-runtime-work-with-cni/"&gt;源码分析：从 kubelet、容器运行时看 CNI 的使用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/cross-node-traffic-on-flannel-vxlan-network/"&gt;从 Flannel 学习 Kubernetes VXLAN 网络&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/learn-cilium-and-ebpf"&gt;Kubernetes 网络学习之 Cilium 与 eBPF&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&amp;hellip;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;看自己能学到哪一步~&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;在 &lt;a href="https://atbug.com/deep-dive-k8s-network-mode-and-communication/"&gt;《深入探索 Kubernetes 网络模型和网络通信》&lt;/a&gt; 文章中，我们介绍了网络命名空间（network namespace） 如何在 Kubernetes 网络模型中工作，通过示例分析 pod 间的流量传输路径。整个传输过程需要各种不同组件的参与才完成，而这些组件与 pod 相同的生命周期，跟随 pod 的创建和销毁。容器的维护由 kubelet 委托给容器运行时（container runtime）来完成，而容器的网络命名空间则是由容器运行时委托网络插件共同完成。&lt;/p&gt;</description></item><item><title>深入探索 Kubernetes 网络模型和网络通信</title><link>https://atbug.com/deep-dive-k8s-network-mode-and-communication/</link><pubDate>Sun, 04 Dec 2022 08:48:11 +0800</pubDate><guid>https://atbug.com/deep-dive-k8s-network-mode-and-communication/</guid><description>&lt;p&gt;这是 Kubernetes 网络学习的第一篇笔记。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/deep-dive-k8s-network-mode-and-communication/"&gt;深入探索 Kubernetes 网络模型和网络通信（本篇）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/deep-dive-cni-spec/"&gt;认识一下容器网络接口 CNI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/how-kubelete-container-runtime-work-with-cni/"&gt;源码分析：从 kubelet、容器运行时看 CNI 的使用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/cross-node-traffic-on-flannel-vxlan-network/"&gt;从 Flannel 学习 Kubernetes VXLAN 网络&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/learn-cilium-and-ebpf"&gt;Kubernetes 网络学习之 Cilium 与 eBPF&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Kubernetes 定义了一种简单、一致的网络模型，基于扁平网络结构的设计，无需将主机端口与网络端口进行映射便可以进行高效地通讯，也无需其他组件进行转发。该模型也使应用程序很容易从虚拟机或者主机物理机迁移到 Kubernetes 管理的 pod 中。&lt;/p&gt;
+&lt;p&gt;这篇文章主要深入探索 Kubernetes 网络模型，并了解容器、pod 间如何进行通讯。对于网络模型的实现将会在后面的文章介绍。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/12/03/16700771818249.png" alt="network-iceberg"&gt;&lt;/p&gt;
+&lt;h2 id="kubernetes-网络模型"&gt;Kubernetes 网络模型&lt;/h2&gt;
+&lt;p&gt;该模型定义了：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;每个 pod 都有自己的 IP 地址，这个 IP 在集群范围内可达&lt;/li&gt;
+&lt;li&gt;Pod 中的所有容器共享 pod IP 地址（包括 MAC 地址），并且容器之前可以相互通信（使用 &lt;code&gt;localhost&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;Pod 可以使用 pod IP 地址与集群中任一节点上的其他 pod 通信，无需 NAT&lt;/li&gt;
+&lt;li&gt;Kubernetes 的组件之间可以相互通信，也可以与 pod 通信&lt;/li&gt;
+&lt;li&gt;网络隔离可以通过网络策略实现&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;上面的定义中提到了几个相关的组件：&lt;/p&gt;</description></item><item><title>Kubernetes LoadBalancer Service 与负载均衡器</title><link>https://atbug.com/k8s-service-and-load-balancer/</link><pubDate>Fri, 30 Sep 2022 16:04:30 +0800</pubDate><guid>https://atbug.com/k8s-service-and-load-balancer/</guid><description>&lt;p&gt;之前介绍过一些 Ingress 使用，比如 &lt;a href="https://mp.weixin.qq.com/s/w8SVxU5xG85gWint0KYiUA"&gt;Ingress SSL 透传&lt;/a&gt;、&lt;a href="https://mp.weixin.qq.com/s/HYkmIqf_PBQTOwm_vOcrUg"&gt;Ingress 的多租户&lt;/a&gt;。从 Demo 看起来是创建 Ingress 之后，就能从集群外访问服务了。实际上除了 Ingress 的作用以外，还有 &lt;a href="https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/#publishing-services-service-types"&gt;Kubernetes Service&lt;/a&gt; 和负载均衡器（Load Balancer）参与（当 &lt;code&gt;Service&lt;/code&gt; 类型为 &lt;code&gt;LoadBalancer&lt;/code&gt; 时）。&lt;/p&gt;
+&lt;p&gt;这篇文章就来介绍了 Kubernetes LoadBalancer Service 和两个比较典型的负载均衡器的工作原理。&lt;/p&gt;
+&lt;h2 id="loadbalancer-service"&gt;LoadBalancer Service&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Service&lt;/code&gt; 是 Kubernetes 中的资源类型，用来将一组 Pod 的应用作为网络服务公开。每个 Pod 都有自己的 IP，但是这个 IP 的生命周期与 Pod 生命周期一致，也就是说 Pod 销毁后这个 IP 也就无效了（也可能被分配给其他的 Pod 使用）。而 &lt;code&gt;Service&lt;/code&gt; 的 IP（&lt;code&gt;ClusterIP&lt;/code&gt;） 则是在创建之后便不会改变，Service 与 Pod 之前通过 &lt;code&gt;userspace 代理&lt;/code&gt;、&lt;code&gt;iptables&lt;/code&gt; 和 &lt;code&gt;ipvs 代理&lt;/code&gt; 等手段关联。&lt;/p&gt;</description></item></channel></rss>

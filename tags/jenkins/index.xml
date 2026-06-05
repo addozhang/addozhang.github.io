@@ -1,25 +1,65 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jenkins on 乱世浮生</title><link>https://atbug.com/tags/jenkins/</link><description>Recent content in Jenkins on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 31 May 2026 09:37:58 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/jenkins/index.xml" rel="self" type="application/rss+xml"/><item><title>告别 Jenkins UI：jk 让 AI Agent 也能操控 Jenkins</title><link>https://atbug.com/jk-jenkins-cli-for-ai-agent/</link><pubDate>Sun, 31 May 2026 09:37:58 +0800</pubDate><guid>https://atbug.com/jk-jenkins-cli-for-ai-agent/</guid><description>TLDR jk 是为 AI coding Agent 设计的 Jenkins CLI：附带配套的 SKILL，无需 MCP server，Agent 直接执行命令即可操作 Jenkins Pipeline。
-引言 每次要触发一次 Jenkins 构建，流程大概是这样：打开浏览器，找到对应的 Pipeline，点「Build with Parameters」，填参数，提交，然后等页面跳转，再点进构建详情，再点「Console Output」——就为了看一眼日志。
-如果 Pipeline 里有 input 步骤，还得盯着页面等它弹出来，手动点「Proceed」。
-这套操作每天重复十几次，没什么技术含量，但每次都要用鼠标。
-jk 是一个 Pipeline-native 的 Jenkins CLI，把上面这些操作都收进终端。它以 Jenkins 的 Job URL 作为操作对象，不需要额外配置 Job 名称或服务器路径——你浏览器地址栏里的那个 URL，直接拿来用。</description></item><item><title>Jenkins 如何与 Kubernetes 集群的 Tekton Pipeline 交互？</title><link>https://atbug.com/jenkins-interact-with-tekton-pipelines-via-plugin/</link><pubDate>Wed, 23 Jun 2021 07:58:45 +0800</pubDate><guid>https://atbug.com/jenkins-interact-with-tekton-pipelines-via-plugin/</guid><description>本文详细介绍了 Jenkins 如何通过 tekton-client-plugin 实现与 Kubernetes 上的 Tekton Pipeline 交互，包括 Kubernetes 上安装 Jenkins、Tekton Pipelines 等。
-关于如何使用 Tekton Pipeline 实现 CICD 可以看这篇文章 云原生 CICD: Tekton Pipeline 实战
-本文用于构建的项目以及所有 manifest yaml 都在可以在这里下载。
-TL;DR 惯例，先上总结。tekton-client-plugin 虽然还是处于初期阶段，但是 其价值非常明显，尤其是对先用使用 Jenkins 作为 CICD 实现的用户来说。从 Jenkins 迁移到云原生的 Tekton 时，可以省掉用户界面的开发成本，而且尽可能少的改变用户习惯 ，依靠版本管理可以控制迁移的节奏。</description></item><item><title>Jenkins CI/CD (一) 基于角色的授权策略</title><link>https://atbug.com/using-role-based-authorization-strategy-in-jenkins/</link><pubDate>Fri, 20 Apr 2018 12:18:46 +0000</pubDate><guid>https://atbug.com/using-role-based-authorization-strategy-in-jenkins/</guid><description>&lt;p>最近开始客串运维做CI/CD的规划设计, 主要是基于&amp;rsquo;Pipeline as Code in Jenkins&amp;rsquo;. 整理了下思路和技术点, 慢慢的写.&lt;/p>
-&lt;p>这一篇是关于基于角色的授权策略, 用的是&lt;code>Role-Based Authorization Strategy Plugin&lt;/code>.&lt;/p>
-&lt;p>授权在CI/CD流程中比较常见, 比如我们只让某些特定用户才可以构建Pre-Release的Job. 而更高级的Release发布, 又会需要某些用户的审批才可以进行. 需要授权时, 可能还需要发邮件提醒用户.&lt;/p>
-&lt;p>UI上如何使用就不提了, 这里只说Pipeline as Code. 后面的几篇也会是这个背景.&lt;/p>
-&lt;p>参考的这篇&lt;a href="https://www.avioconsulting.com/blog/using-role-based-authorization-strategy-jenkins">文章&lt;/a>, 文章里的代码运行失败, 做了修复.&lt;/p>
-&lt;h2 id="配置">配置&lt;/h2>
-&lt;p>安装完插件, 需要开始&lt;code>基于角色的授权策略&lt;/code>. 同时添加角色和为用户分配角色.&lt;/p>
-&lt;h3 id="使用role-based-strategy作为验证方式">使用&lt;code>Role-Based Strategy&lt;/code>作为验证方式&lt;/h3>
-&lt;p>&lt;code>Manage Jenkins / Configure Global Security / Configure Global Security&lt;/code>&lt;/p>
-&lt;p>&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15241955282214.jpg" alt="">&lt;/p></description></item><item><title>启用Jenkins CLI</title><link>https://atbug.com/jenkins-cli-enable/</link><pubDate>Mon, 09 Apr 2018 11:16:38 +0000</pubDate><guid>https://atbug.com/jenkins-cli-enable/</guid><description>Jenkins CLI提供了SSH和Client模式.
-Docker运行Jenkins
-version: &amp;#39;3&amp;#39; services: jenkins: image: jenkins/jenkins:alpine ports: - 8080:8080 - 50000:50000 - 46059:46059 volumes: - &amp;#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&amp;#34; note: 以为是docker运行, ssh端口设置选用了固定端口.
-Client 从http://JENKINS_URL/cli页面下载client jar
-使用方法:
-java -jar jenkins-cli.jar -s http://localhost:8080/ help 构建:
-java -jar jenkins-cli.jar -s http://localhost:8080/ build JOB [-c] [-f] [-p] [-r N] [-s] [-v] [-w] Starts a build, and optionally waits for a completion.</description></item><item><title>Jenkins - 解决execute shell中启动的进程被在Job退出时被杀死问题</title><link>https://atbug.com/resolve-process-be-killed-after-jenkins-job-done/</link><pubDate>Thu, 15 Mar 2018 17:00:25 +0000</pubDate><guid>https://atbug.com/resolve-process-be-killed-after-jenkins-job-done/</guid><description>因为ProcessTreeKiller的存在, 构建过程中使用shell启动的进程在Job完成时都会被kill掉.
-各种搜索以及ProcessTreeKiller提供的解决方式是修改BUILD_ID和添加 -Dhudson.util.ProcessTree.disable=true都无法解决.
-最后参考StackOverflow和Jenkins JIRA, 修改JENKINS_NODE_COOKIE为任何值, 如dontKillMe. 这种方法可以解决, 记录一下. (搜索排名靠前的结果都不对).</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jenkins on 乱世浮生</title><link>https://atbug.com/tags/jenkins/</link><description>Recent content in Jenkins on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sun, 31 May 2026 09:37:58 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/jenkins/index.xml" rel="self" type="application/rss+xml"/><item><title>告别 Jenkins UI：jk 让 AI Agent 也能操控 Jenkins</title><link>https://atbug.com/jk-jenkins-cli-for-ai-agent/</link><pubDate>Sun, 31 May 2026 09:37:58 +0800</pubDate><guid>https://atbug.com/jk-jenkins-cli-for-ai-agent/</guid><description>&lt;h2 id="tldr"&gt;TLDR&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;jk&lt;/code&gt; 是为 AI coding Agent 设计的 Jenkins CLI：附带配套的 SKILL，无需 MCP server，Agent 直接执行命令即可操作 Jenkins Pipeline。&lt;/p&gt;
+&lt;h2 id="引言"&gt;引言&lt;/h2&gt;
+&lt;p&gt;每次要触发一次 Jenkins 构建，流程大概是这样：打开浏览器，找到对应的 Pipeline，点「Build with Parameters」，填参数，提交，然后等页面跳转，再点进构建详情，再点「Console Output」——就为了看一眼日志。&lt;/p&gt;
+&lt;p&gt;如果 Pipeline 里有 &lt;code&gt;input&lt;/code&gt; 步骤，还得盯着页面等它弹出来，手动点「Proceed」。&lt;/p&gt;
+&lt;p&gt;这套操作每天重复十几次，没什么技术含量，但每次都要用鼠标。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/addozhang/jk"&gt;&lt;code&gt;jk&lt;/code&gt;&lt;/a&gt; 是一个 Pipeline-native 的 Jenkins CLI，把上面这些操作都收进终端。它以 Jenkins 的 Job URL 作为操作对象，不需要额外配置 Job 名称或服务器路径——你浏览器地址栏里的那个 URL，直接拿来用。&lt;/p&gt;</description></item><item><title>Jenkins 如何与 Kubernetes 集群的 Tekton Pipeline 交互？</title><link>https://atbug.com/jenkins-interact-with-tekton-pipelines-via-plugin/</link><pubDate>Wed, 23 Jun 2021 07:58:45 +0800</pubDate><guid>https://atbug.com/jenkins-interact-with-tekton-pipelines-via-plugin/</guid><description>&lt;p&gt;本文详细介绍了 Jenkins 如何通过 &lt;a href="https://github.com/jenkinsci/tekton-client-plugin"&gt;tekton-client-plugin&lt;/a&gt; 实现与 Kubernetes 上的 Tekton Pipeline 交互，包括 Kubernetes 上安装 Jenkins、Tekton Pipelines 等。&lt;/p&gt;
+&lt;p&gt;关于如何使用 Tekton Pipeline 实现 CICD 可以看这篇文章 &lt;a href="https://atbug.com/tekton-pipeline-practice/"&gt;云原生 CICD: Tekton Pipeline 实战&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;本文用于构建的项目以及所有 manifest yaml 都在可以在&lt;a href="https://github.com/addozhang/tekton-test"&gt;这里&lt;/a&gt;下载。&lt;/p&gt;
+&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;惯例，先上总结。&lt;code&gt;tekton-client-plugin&lt;/code&gt; 虽然还是处于初期阶段，但是 &lt;em&gt;其价值非常明显，尤其是对先用使用 Jenkins 作为 CICD 实现的用户来说。从 Jenkins 迁移到云原生的 Tekton 时，可以省掉用户界面的开发成本，而且尽可能少的改变用户习惯&lt;/em&gt; ，依靠版本管理可以控制迁移的节奏。&lt;/p&gt;</description></item><item><title>Jenkins CI/CD (一) 基于角色的授权策略</title><link>https://atbug.com/using-role-based-authorization-strategy-in-jenkins/</link><pubDate>Fri, 20 Apr 2018 12:18:46 +0000</pubDate><guid>https://atbug.com/using-role-based-authorization-strategy-in-jenkins/</guid><description>&lt;p&gt;最近开始客串运维做CI/CD的规划设计, 主要是基于&amp;rsquo;Pipeline as Code in Jenkins&amp;rsquo;. 整理了下思路和技术点, 慢慢的写.&lt;/p&gt;
+&lt;p&gt;这一篇是关于基于角色的授权策略, 用的是&lt;code&gt;Role-Based Authorization Strategy Plugin&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;授权在CI/CD流程中比较常见, 比如我们只让某些特定用户才可以构建Pre-Release的Job. 而更高级的Release发布, 又会需要某些用户的审批才可以进行. 需要授权时, 可能还需要发邮件提醒用户.&lt;/p&gt;
+&lt;p&gt;UI上如何使用就不提了, 这里只说Pipeline as Code. 后面的几篇也会是这个背景.&lt;/p&gt;
+&lt;p&gt;参考的这篇&lt;a href="https://www.avioconsulting.com/blog/using-role-based-authorization-strategy-jenkins"&gt;文章&lt;/a&gt;, 文章里的代码运行失败, 做了修复.&lt;/p&gt;
+&lt;h2 id="配置"&gt;配置&lt;/h2&gt;
+&lt;p&gt;安装完插件, 需要开始&lt;code&gt;基于角色的授权策略&lt;/code&gt;. 同时添加角色和为用户分配角色.&lt;/p&gt;
+&lt;h3 id="使用role-based-strategy作为验证方式"&gt;使用&lt;code&gt;Role-Based Strategy&lt;/code&gt;作为验证方式&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;Manage Jenkins / Configure Global Security / Configure Global Security&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15241955282214.jpg" alt=""&gt;&lt;/p&gt;</description></item><item><title>启用Jenkins CLI</title><link>https://atbug.com/jenkins-cli-enable/</link><pubDate>Mon, 09 Apr 2018 11:16:38 +0000</pubDate><guid>https://atbug.com/jenkins-cli-enable/</guid><description>&lt;p&gt;Jenkins CLI提供了SSH和Client模式.&lt;/p&gt;
+&lt;p&gt;Docker运行Jenkins&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yml" data-lang="yml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;3&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;jenkins&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;jenkins/jenkins:alpine&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;8080&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;8080&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;50000&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;50000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;46059&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;46059&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;note: 以为是docker运行, ssh端口设置选用了固定端口.&lt;/p&gt;
+&lt;h3 id="client"&gt;Client&lt;/h3&gt;
+&lt;p&gt;从&lt;code&gt;http://JENKINS_URL/cli&lt;/code&gt;页面下载client jar&lt;/p&gt;
+&lt;p&gt;使用方法:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;java -jar jenkins-cli.jar -s http://localhost:8080/ help
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;构建:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;java -jar jenkins-cli.jar -s http://localhost:8080/ build JOB &lt;span style="color:#f92672"&gt;[&lt;/span&gt;-c&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;-f&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;-p&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;-r N&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;-s&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;-v&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;-w&lt;span style="color:#f92672"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Starts a build, and optionally waits &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; a completion.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Aside from general scripting use, this command can be
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used to invoke another job from within a build of one job.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;With the -s option, this command changes the exit code based on
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;the outcome of the build &lt;span style="color:#f92672"&gt;(&lt;/span&gt;exit code &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; indicates a success&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;and interrupting the command will interrupt the job.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;With the -f option, this command changes the exit code based on
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;the outcome of the build &lt;span style="color:#f92672"&gt;(&lt;/span&gt;exit code &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; indicates a success&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;however, unlike -s, interrupting the command will not interrupt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;the job &lt;span style="color:#f92672"&gt;(&lt;/span&gt;exit code &lt;span style="color:#ae81ff"&gt;125&lt;/span&gt; indicates the command was interrupted&lt;span style="color:#f92672"&gt;)&lt;/span&gt;.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;With the -c option, a build will only run &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; there has been
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;an SCM change.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; JOB : Name of the job to build
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -c : Check &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; SCM changes before starting the build, and &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; there&lt;span style="color:#960050;background-color:#1e0010"&gt;&amp;#39;&lt;/span&gt;s no
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; change, exit without doing a build
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -f : Follow the build progress. Like -s only interrupts are not passed
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; through to the build.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -p : Specify the build parameters in the key&lt;span style="color:#f92672"&gt;=&lt;/span&gt;value format.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -s : Wait &lt;span style="color:#66d9ef"&gt;until&lt;/span&gt; the completion/abortion of the command. Interrupts are passed
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; through to the build.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -v : Prints out the console output of the build. Use with -s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -w : Wait &lt;span style="color:#66d9ef"&gt;until&lt;/span&gt; the start of the command
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="ssh"&gt;SSH&lt;/h3&gt;
+&lt;p&gt;启用SSH, 使用随机端口. 也可以使用固定端口:&lt;/p&gt;</description></item><item><title>Jenkins - 解决execute shell中启动的进程被在Job退出时被杀死问题</title><link>https://atbug.com/resolve-process-be-killed-after-jenkins-job-done/</link><pubDate>Thu, 15 Mar 2018 17:00:25 +0000</pubDate><guid>https://atbug.com/resolve-process-be-killed-after-jenkins-job-done/</guid><description>&lt;p&gt;因为&lt;a href="https://wiki.jenkins.io/display/JENKINS/ProcessTreeKiller"&gt;ProcessTreeKiller&lt;/a&gt;的存在, 构建过程中使用shell启动的进程在Job完成时都会被kill掉.&lt;/p&gt;
+&lt;p&gt;各种搜索以及&lt;a href="https://wiki.jenkins.io/display/JENKINS/ProcessTreeKiller"&gt;ProcessTreeKiller&lt;/a&gt;提供的解决方式是修改&lt;code&gt;BUILD_ID&lt;/code&gt;和添加&lt;code&gt; -Dhudson.util.ProcessTree.disable=true&lt;/code&gt;都无法解决.&lt;/p&gt;
+&lt;p&gt;最后参考&lt;a href="https://issues.jenkins-ci.org/browse/JENKINS-28182"&gt;StackOverflow&lt;/a&gt;和&lt;a href="https://issues.jenkins-ci.org/browse/JENKINS-28182"&gt;Jenkins JIRA&lt;/a&gt;, 修改&lt;code&gt;JENKINS_NODE_COOKIE&lt;/code&gt;为任何值, 如&lt;code&gt;dontKillMe&lt;/code&gt;. 这种方法可以解决, 记录一下. (搜索排名靠前的结果都不对).&lt;/p&gt;</description></item></channel></rss>

@@ -1,27 +1,44 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CICD on 乱世浮生</title><link>https://atbug.com/tags/cicd/</link><description>Recent content in CICD on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 24 Apr 2024 10:44:01 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/cicd/index.xml" rel="self" type="application/rss+xml"/><item><title>持续交付基金会发布最新的 CICD 趋势报告</title><link>https://atbug.com/cdf-release-latest-cicd-trends-report/</link><pubDate>Wed, 24 Apr 2024 10:44:01 +0800</pubDate><guid>https://atbug.com/cdf-release-latest-cicd-trends-report/</guid><description>持续交付基金会（Continuous Delivery Foundation，简称 CDF）前几天发布了最新的一期的 CICD 趋势报告。这份报告中的调查结果基于 SlashData 过去 8 次的调查数据，这些调查在 2020 年 Q3 度到 2024 年 Q1 的三年半时间里覆盖了全球超过 150,000 名受访者。
-本文是针对部分结果的解读，结果数据来自官方的报告，解读的部分纯属个人观点。有兴趣的可以查看 完整的报告。
-软件交付性能的演变 软件的交付性能主要通过代码发布周期、部署频率和服务恢复时间三个关键指标来衡量，这些指标能够直观地反映出一个组织在软件开发和运维方面的效率和效果。
-代码发布周期 代码发布周期是指从代码提交（例如，合并到主分支）到成功部署到生产环境的时间。
-这个指标衡量团队对新功能、修复或更新做出反应的速度。较短的发布周期意味着团队能够快速地将变更推送到生产环境，对业务需求和问题做出迅速响应。
-从结果中可以看出代码变更的频率从 2020 年 Q3 开始逐年降低，尤其是变更频率低于每月一次的比例越来越高。
-部署频率 部署频率指软件部署到生产环境的频率，可以是每日、每周、每月等。
-高频率的部署通常表明高度自动化和成熟的持续交付能力。这种能力可以帮助团队减少单次部署的风险，因为每次部署的变更较小，更容易管理和修复。
-这个结果于代码变更的周期较一致。
-服务恢复时间 服务的恢复时间，这里的服务恢复是指在发生生产环境中断后，服务恢复到正常状态所需的时间。
-这个指标反映了团队在面对生产环境问题时，快速恢复服务的能力。较短的恢复时间表明团队有有效的事故响应和问题解决流程。
-从报告可以看到其向两个极端的发展：好的越来越好，差的越来越差。</description></item><item><title>使用 Argo Rollouts 和服务网格实现自动可控的金丝雀发布</title><link>https://atbug.com/canary-release-via-argo-rollouts-and-service-mesh/</link><pubDate>Wed, 21 Sep 2022 23:37:43 +0800</pubDate><guid>https://atbug.com/canary-release-via-argo-rollouts-and-service-mesh/</guid><description>金丝雀发布是服务治理中的重要功能，在发布时可以可控地将部分流量导入新版本的服务中；其余的流量则由旧版本处理。发布过程中，可以逐步增加新版本服务的流量。通过测试，可以决定是回滚还是升级所有实例，停用旧版本。
-有了金丝雀发布，使用真实流量对服务进行测试，通过对流量的控制可以有效的降低服务发布的风险。
-本文将介绍如何将使用 Argo Rollouts 和服务网格 osm-edge 来进行应用的自动、可控的金丝雀发布，不涉及工作原理的分析。对工作原理有兴趣的同学可以留言，可以再做一篇原理的介绍。
-Argo Rollouts Argo Rollouts 包括一个 Kubernetes控制器 和一组 CRD，提供如蓝绿色、金丝雀、金丝雀分析、体验等高级部署功能和 Kubernetes 的渐进交付功能。
-Argo Rollouts 与 入口控制器 和服务网格集成，利用其流量管理能力，在发布期间逐步将流量转移到新版本。此外，Rollouts 可以查询和解析来自各种提供商的指标，以验证关键 KPI，并在更新期间推动自动推进或回滚。
-Argo Rollouts 支持服务网格标准 SMI（Service Mesh Interface） 的 TrafficSplit API，通过 TrafficSplit API 的使用来控制金丝雀发布时的流量控制。
-服务网格 osm-edge 服务网格是处理服务间网络通信的基础设施组件，旨在从平台层面提供可观性、安全以及可靠性特性，以进程外的方式提供原本由部分应用层逻辑承载的基础能力，真正实现与业务逻辑的分离。</description></item><item><title>在 Kubernetes 上执行 GitHub Actions 流水线作业</title><link>https://atbug.com/run-github-actions-runners-on-kubernetes/</link><pubDate>Sun, 10 Jul 2022 16:56:09 +0800</pubDate><guid>https://atbug.com/run-github-actions-runners-on-kubernetes/</guid><description>GitHub Actions 是一个功能强大、“免费” 的 CI（持续集成）工具。
-与之前介绍的 Tekton 类似，GitHub Actions 的核心也是 Pipeline as Code 也就是所谓的流水线即代码。二者不同的是，GitHub Actions 本身就是一个 CI 平台，用户可以使用代码来定义流水线并在平台上运行；而 Tekton 本身是一个用于构建 CI/CD 平台的开源框架。
-Pipeline as Code，既然与代码扯上了关系。那流水线的定义就可繁可简了，完全看需求。小到一个 GitHub Pages，大到流程复杂的项目都可以使用 GitHub Actions 来构建。
-本篇文章不会介绍如何使用 GitHub Actions 的，如果还未用过的同学可以浏览下官方的文档。今天主要来分享下如何在 Kubernetes 上的自托管资源来执行流水线作业。
-0x01 背景 在介绍 GitHub Actions 的时候，免费带上了引号，为何？其作为一个 CI 工具，允许用户定义流水线并在平台上运行，需要消耗计算、存储、网络等资源，这些运行流水线的机器称为 Runner。GitHub 为不同类（等）型（级）的用户每月提供了不同的免费额度（额度用完后，每分钟 0.</description></item><item><title>CICD 的供应链安全工具 Tekton Chains</title><link>https://atbug.com/tekton-chains-secure-supply-chain/</link><pubDate>Sat, 14 May 2022 13:46:16 +0800</pubDate><guid>https://atbug.com/tekton-chains-secure-supply-chain/</guid><description>软件供应链是指进入软件中的所有内容及其来源，简单地可以理解成软件的依赖项。依赖项是软件运行时所需的重要内容，可以是代码、二进制文件或其他组件，也可以是这些组件的来源，比如存储库或者包管理器之类的。包括代码的已知漏洞、受支持的版本、许可证信息、作者、贡献时间，以及在整个过程中的行为和任何时候接触到它的任何内容，比如用于编译、分发软件的基础架构组件。
-CICD 流水线作为基础架构组件，承担着软件的构建、测试、分发和部署。作为供应链的一环，其也成为恶意攻击的目标。CICD 的行为信息可以作为安全审查的重要依据，比如构建打包的环境、操作流程、处理结果等等。
-今天介绍的 Tekton Chains，便是这样的行为收集工具。
-Tekton Chains Chains 是一个 Kubernetes CRD 控制器，用于管理 Tekton 中的供应链安全。Chains 使 Tekton 能够在持续交付中，捕获 PipelineRun 和 TaskRun 运行的元数据用于安全审计，实现二进制溯源和可验证的构建，成为构成保证供应链安全的基础设施的一部分。
-当前 Chains（v0.9.0）提供如下功能：
-使用用户提供的加密密钥，将 TaskRun 的结果（包含 TaskRun 本身和 OCI 镜像）镜像进行签名 支持类似 in-toto 的证明格式 使用多种加密密钥类型和服务（x509、KMS）进行签名 签名的存储支持多种实现 接下来的 Demo，我们还是继续使用之前在 Tekton Pipeline 实战 用的 Java 项目 tekton-test，在代码中同样还包含了 Pipeline 和 Task 的定义。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CICD on 乱世浮生</title><link>https://atbug.com/tags/cicd/</link><description>Recent content in CICD on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Wed, 24 Apr 2024 10:44:01 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/cicd/index.xml" rel="self" type="application/rss+xml"/><item><title>持续交付基金会发布最新的 CICD 趋势报告</title><link>https://atbug.com/cdf-release-latest-cicd-trends-report/</link><pubDate>Wed, 24 Apr 2024 10:44:01 +0800</pubDate><guid>https://atbug.com/cdf-release-latest-cicd-trends-report/</guid><description>&lt;p&gt;&lt;a href="https://cd.foundation"&gt;持续交付基金会&lt;/a&gt;（Continuous Delivery Foundation，简称 CDF）前几天发布了最新的一期的 CICD 趋势报告。这份报告中的调查结果基于 SlashData 过去 8 次的调查数据，这些调查在 2020 年 Q3 度到 2024 年 Q1 的三年半时间里覆盖了全球超过 150,000 名受访者。&lt;/p&gt;
+&lt;p&gt;本文是针对部分结果的解读，结果数据来自官方的报告，解读的部分纯属个人观点。有兴趣的可以查看 &lt;a href="https://cd.foundation/state-of-cicd-2024/"&gt;完整的报告&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id="软件交付性能的演变"&gt;软件交付性能的演变&lt;/h2&gt;
+&lt;p&gt;软件的交付性能主要通过代码发布周期、部署频率和服务恢复时间三个关键指标来衡量，这些指标能够直观地反映出一个组织在软件开发和运维方面的效率和效果。&lt;/p&gt;
+&lt;h3 id="代码发布周期"&gt;代码发布周期&lt;/h3&gt;
+&lt;p&gt;代码发布周期是指从代码提交（例如，合并到主分支）到成功部署到生产环境的时间。&lt;/p&gt;
+&lt;p&gt;这个指标&lt;strong&gt;衡量团队对新功能、修复或更新做出反应的速度&lt;/strong&gt;。较短的发布周期意味着团队能够快速地将变更推送到生产环境，对业务需求和问题做出迅速响应。&lt;/p&gt;
+&lt;p&gt;从结果中可以看出代码变更的频率从 2020 年 Q3 开始逐年降低，尤其是变更频率低于每月一次的比例越来越高。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2024/04/24/cdf-report-2024-lead-time-for-code-changes.jpg" alt=""&gt;&lt;/p&gt;
+&lt;h3 id="部署频率"&gt;部署频率&lt;/h3&gt;
+&lt;p&gt;部署频率指软件部署到生产环境的频率，可以是每日、每周、每月等。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;高频率的部署通常表明高度自动化和成熟的持续交付能力&lt;/strong&gt;。这种能力可以帮助团队减少单次部署的风险，因为每次部署的变更较小，更容易管理和修复。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2024/04/24/cdf-report-2024-deployment-frequency.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;这个结果于代码变更的周期较一致。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2024/04/24/cdf-report-2024-code-changes-and-deployment-frequency-tightly-linked.jpg" alt=""&gt;&lt;/p&gt;
+&lt;h3 id="服务恢复时间"&gt;服务恢复时间&lt;/h3&gt;
+&lt;p&gt;服务的恢复时间，这里的服务恢复是指在发生生产环境中断后，服务恢复到正常状态所需的时间。&lt;/p&gt;</description></item><item><title>使用 Argo Rollouts 和服务网格实现自动可控的金丝雀发布</title><link>https://atbug.com/canary-release-via-argo-rollouts-and-service-mesh/</link><pubDate>Wed, 21 Sep 2022 23:37:43 +0800</pubDate><guid>https://atbug.com/canary-release-via-argo-rollouts-and-service-mesh/</guid><description>&lt;p&gt;金丝雀发布是服务治理中的重要功能，在发布时可以可控地将部分流量导入新版本的服务中；其余的流量则由旧版本处理。发布过程中，可以逐步增加新版本服务的流量。通过测试，可以决定是回滚还是升级所有实例，停用旧版本。&lt;/p&gt;
+&lt;p&gt;有了金丝雀发布，使用真实流量对服务进行测试，通过对流量的控制可以有效的降低服务发布的风险。&lt;/p&gt;
+&lt;p&gt;本文将介绍如何将使用 Argo Rollouts 和服务网格 osm-edge 来进行应用的自动、可控的金丝雀发布，不涉及工作原理的分析。对工作原理有兴趣的同学可以留言，可以再做一篇原理的介绍。&lt;/p&gt;
+&lt;h3 id="argo-rollouts"&gt;Argo Rollouts&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://argoproj.github.io/argo-rollouts/"&gt;Argo Rollouts&lt;/a&gt; 包括一个 &lt;a href="https://kubernetes.io/docs/concepts/architecture/controller/"&gt;Kubernetes控制器&lt;/a&gt; 和一组 &lt;a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/"&gt;CRD&lt;/a&gt;，提供如蓝绿色、金丝雀、金丝雀分析、体验等高级部署功能和 Kubernetes 的渐进交付功能。&lt;/p&gt;
+&lt;p&gt;Argo Rollouts 与 &lt;a href="https://kubernetes.io/docs/concepts/services-networking/ingress/"&gt;入口控制器&lt;/a&gt; 和服务网格集成，利用其流量管理能力，在发布期间逐步将流量转移到新版本。此外，Rollouts 可以查询和解析来自各种提供商的指标，以验证关键 KPI，并在更新期间推动自动推进或回滚。&lt;/p&gt;
+&lt;p&gt;Argo Rollouts 支持服务网格标准 &lt;a href="https://smi-spec.io"&gt;SMI（Service Mesh Interface）&lt;/a&gt; 的 &lt;a href="https://github.com/servicemeshinterface/smi-spec/blob/main/apis/traffic-split/v1alpha2/traffic-split.md"&gt;TrafficSplit API&lt;/a&gt;，通过 TrafficSplit API 的使用来控制金丝雀发布时的流量控制。&lt;/p&gt;
+&lt;h3 id="服务网格-osm-edge"&gt;服务网格 osm-edge&lt;/h3&gt;
+&lt;p&gt;服务网格是处理服务间网络通信的基础设施组件，旨在从平台层面提供可观性、安全以及可靠性特性，以进程外的方式提供原本由部分应用层逻辑承载的基础能力，真正实现与业务逻辑的分离。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://osm-edge-docs.flomesh.io"&gt;osm-edge&lt;/a&gt; 是面向云边一体的轻量化服务网格，采用实现了服务网格标准 &lt;a href="https://smi-spec.io"&gt;SMI（Service Mesh Interface）&lt;/a&gt; 的 &lt;a href="https://openservicemesh.io"&gt;osm（Open Service Mesh）&lt;/a&gt; 作为控制平面，采用 &lt;a href="https://github.com/flomesh-io/pipy"&gt;Pipy&lt;/a&gt; 作为数据平面，采用 fsm 项目提供的 Ingress、Egress、Gateway API 多集群服务网格能力，具有高性能、低资源、简单、易用、易扩展、广泛兼容（支持 x86/arm64/龙芯/RISC-V）的特点。&lt;/p&gt;</description></item><item><title>在 Kubernetes 上执行 GitHub Actions 流水线作业</title><link>https://atbug.com/run-github-actions-runners-on-kubernetes/</link><pubDate>Sun, 10 Jul 2022 16:56:09 +0800</pubDate><guid>https://atbug.com/run-github-actions-runners-on-kubernetes/</guid><description>&lt;p&gt;&lt;a href="https://github.com/features/actions"&gt;GitHub Actions&lt;/a&gt; 是一个功能强大、“免费” 的 CI（持续集成）工具。&lt;/p&gt;
+&lt;p&gt;与&lt;a href="https://atbug.com/tekton-pipeline-practice/"&gt;之前介绍的 Tekton&lt;/a&gt; 类似，GitHub Actions 的核心也是 Pipeline as Code 也就是所谓的流水线即代码。二者不同的是，GitHub Actions 本身就是一个 CI 平台，用户可以使用代码来定义流水线并在平台上运行；而 Tekton 本身是一个用于构建 CI/CD 平台的开源框架。&lt;/p&gt;
+&lt;p&gt;Pipeline as Code，既然与代码扯上了关系。那流水线的定义就可繁可简了，完全看需求。小到一个 GitHub Pages，大到流程复杂的项目都可以使用 GitHub Actions 来构建。&lt;/p&gt;
+&lt;p&gt;本篇文章不会介绍如何使用 GitHub Actions 的，如果还未用过的同学可以浏览下官方的&lt;a href="https://docs.github.com/en/actions/quickstart"&gt;文档&lt;/a&gt;。今天主要来分享下如何在 Kubernetes 上的自托管资源来执行流水线作业。&lt;/p&gt;
+&lt;h2 id="0x01-背景"&gt;0x01 背景&lt;/h2&gt;
+&lt;p&gt;在介绍 GitHub Actions 的时候，免费带上了引号，为何？其作为一个 CI 工具，允许用户定义流水线并在平台上运行，需要消耗计算、存储、网络等资源，这些运行流水线的机器称为 Runner。GitHub 为不同类（等）型（级）的用户每月提供了不同的免费额度（额度用完后，每分钟 0.008 美元。），见下图。不同类型的主机，分钟数的消耗倍数也不同：Linux 为 1、macOS 为 10、Windows 为 2。&lt;/p&gt;</description></item><item><title>CICD 的供应链安全工具 Tekton Chains</title><link>https://atbug.com/tekton-chains-secure-supply-chain/</link><pubDate>Sat, 14 May 2022 13:46:16 +0800</pubDate><guid>https://atbug.com/tekton-chains-secure-supply-chain/</guid><description>&lt;p&gt;软件供应链是指进入软件中的所有内容及其来源，简单地可以理解成软件的依赖项。依赖项是软件运行时所需的重要内容，可以是代码、二进制文件或其他组件，也可以是这些组件的来源，比如存储库或者包管理器之类的。包括代码的已知漏洞、受支持的版本、许可证信息、作者、贡献时间，以及在整个过程中的行为和任何时候接触到它的任何内容，比如用于编译、分发软件的基础架构组件。&lt;/p&gt;
+&lt;p&gt;CICD 流水线作为基础架构组件，承担着软件的构建、测试、分发和部署。作为供应链的一环，其也成为恶意攻击的目标。CICD 的行为信息可以作为安全审查的重要依据，比如构建打包的环境、操作流程、处理结果等等。&lt;/p&gt;
+&lt;p&gt;今天介绍的 Tekton Chains，便是这样的行为收集工具。&lt;/p&gt;
+&lt;h2 id="tekton-chains"&gt;Tekton Chains&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/05/14/16524602574062.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/tektoncd/chains"&gt;Chains&lt;/a&gt; 是一个 Kubernetes CRD 控制器，用于管理 Tekton 中的供应链安全。Chains 使 Tekton 能够在持续交付中，捕获 &lt;code&gt;PipelineRun&lt;/code&gt; 和 &lt;code&gt;TaskRun&lt;/code&gt; 运行的元数据用于安全审计，实现二进制溯源和可验证的构建，成为构成保证供应链安全的基础设施的一部分。&lt;/p&gt;
+&lt;p&gt;当前 Chains（v0.9.0）提供如下功能：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;使用用户提供的加密密钥，将 TaskRun 的结果（包含 TaskRun 本身和 OCI 镜像）镜像进行签名&lt;/li&gt;
+&lt;li&gt;支持类似 &lt;a href="https://in-toto.io"&gt;in-toto&lt;/a&gt; 的证明格式&lt;/li&gt;
+&lt;li&gt;使用多种加密密钥类型和服务（x509、KMS）进行签名&lt;/li&gt;
+&lt;li&gt;签名的存储支持多种实现&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;接下来的 Demo，我们还是继续使用之前在 &lt;a href="https://atbug.com/tekton-pipeline-practice/"&gt;Tekton Pipeline 实战&lt;/a&gt; 用的 Java 项目 &lt;a href="https://github.com/addozhang/tekton-test"&gt;tekton-test&lt;/a&gt;，在代码中同样还包含了 &lt;code&gt;Pipeline&lt;/code&gt; 和 &lt;code&gt;Task&lt;/code&gt; 的定义。&lt;/p&gt;</description></item></channel></rss>

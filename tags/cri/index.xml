@@ -1,18 +1,68 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CRI on 乱世浮生</title><link>https://atbug.com/tags/cri/</link><description>Recent content in CRI on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 07 Feb 2026 02:44:12 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/cri/index.xml" rel="self" type="application/rss+xml"/><item><title>深入容器运行时：从 stdout/stderr 到 kubectl logs 的完整日志流处理机制</title><link>https://atbug.com/container-runtime-stdout-stderr-logging-mechanism/</link><pubDate>Sat, 07 Feb 2026 02:44:12 +0800</pubDate><guid>https://atbug.com/container-runtime-stdout-stderr-logging-mechanism/</guid><description>TL;DR 理解容器运行时如何处理 stdout/stderr 流，不仅能满足技术好奇心，更有实际价值：
-故障排查：日志丢失、截断、延迟等问题的根本原因 性能优化：高吞吐量场景下的 I/O 配置调优 架构决策：选择合适的容器运行时和日志收集方案 深入理解：Kubernetes、Containerd、Runc 各层的职责边界。 引言 作为一名长期使用 Kubernetes 的开发者，我一直对容器日志的底层机制充满好奇。每次执行 kubectl logs 命令，看着应用程序的输出实时流式显示在终端上，我都会忍不住思考：这些日志是如何从容器内部的 stdout 和 stderr 流，穿越多层抽象，最终到达屏幕？虽然日常工作中频繁使用这个功能，但对于这条路径上的技术细节，我却一直没有深入了解过。
-这次，我决定彻底弄清楚这个问题：从应用程序的 printf() 或 console.log()，到终端看到的日志，这中间经历了哪些关键步骤？让我们从头开始，逐层揭开这个机制的面纱。
-以下的内容基于目前最新的 Kubernetes v1.35.0 和 Containerd v2.2.1。
-完整的日志流处理架构 核心概念：CRI、Shim 在深入技术细节之前，我们需要理解三个关键组件。它们构成了容器日志流处理的基础架构。
-CRI：Container Runtime Interface CRI 是 Kubernetes 与容器运行时之间的标准接口。它的出现解决了一个关键问题：如何让 Kubernetes 支持多种容器运行时，而不需要为每个运行时编写专门的集成代码？ 关于 CRI 的详细介绍，可以浏览我之前的文章 Kubernetes 容器运行时接口 CRI。</description></item><item><title>Kubernetes 容器运行时接口 CRI</title><link>https://atbug.com/deep-dive-into-kubernetes-cri/</link><pubDate>Mon, 28 Aug 2023 12:25:57 +0800</pubDate><guid>https://atbug.com/deep-dive-into-kubernetes-cri/</guid><description>写这篇文章是来填 很久之前挖下的坑。
-本文涉及组件的源码版本如下：
-Kubernetes 1.24 CRI 0.25.0 Containerd 1.6 容器运行时（Container Runtime）是负责管理和执行容器的组件。它负责将容器镜像转化为在主机上运行的实际容器进程，提供镜像管理、容器的生命周期管理、资源隔离、文件系统、网络配置等功能。
-常见容器运行时有下面这几种，这些容器运行时都提供了不同程度的功能和性能。但他们都遵循容器运行时接口（CRI），以便能够与 Kubernetes 或其他容器编排系统集成，实现容器的调度和管理。
-containerd CRI-O Docker Engine Mirantis Container Runtime 有了 CRI，我们也可以“随意”地在几种容器运行时之间进行切换，而无需重新编译 Kubernetes。简单来讲，CRI 定义了所有对容器的操作，作为容器编排系统与容器运行时间的标准接口存在。
-CRI 的前生今世 CRI 的首次引入是在 Kubernets 1.5，初始版本是 v1alpha1。在这之前，Kubernetes 需要在 kubelet 源码中维护对各个容器运行时的支持。
-有了 CRI 之后，在 kubelet 中仅需支持 CRI 即可，然后通过一个中间层 CRI shim（grpc 服务器）与容器运行时进行交互。因为此时各家容器运行时实现还未支持 CRI。</description></item><item><title>源码解析：从 kubelet、容器运行时看 CNI 的使用</title><link>https://atbug.com/how-kubelete-container-runtime-work-with-cni/</link><pubDate>Thu, 08 Dec 2022 22:32:25 +0800</pubDate><guid>https://atbug.com/how-kubelete-container-runtime-work-with-cni/</guid><description>这是 Kubernetes 网络学习的第三篇笔记。
-深入探索 Kubernetes 网络模型和网络通信 认识一下容器网络接口 CNI 源码分析：从 kubelet、容器运行时看 CNI 的使用（本篇） 从 Flannel 学习 Kubernetes VXLAN 网络 Kubernetes 网络学习之 Cilium 与 eBPF &amp;hellip; 在上一篇中，通过对 CNI 规范的解读了解了网络配置的操作和相关的流程。在网络的几个操作中除了 CNI_COMMAND 外，有另外三个参数几乎每次都要提供 CNI_CONTAINERID、CNI_IFNAME 和 CNI_NETNS，这些参数无外乎都来自容器运行时。这篇将结合 Kubernetes 和 Containerd 源码，来分析一下 CNI 的使用。
-Kubernetes 的源码来自分支 release-1.</description></item><item><title>源码解析 kubectl port-forward 工作原理</title><link>https://atbug.com/how-kubectl-port-forward-works/</link><pubDate>Tue, 09 Aug 2022 07:10:28 +0800</pubDate><guid>https://atbug.com/how-kubectl-port-forward-works/</guid><description>本文的源码基于 Kubernetes v1.24.0，容器运行时使用 Containerd 1.5，从源码来分析 kubectl port-forward 的工作原理。
-通过 port-forward 流程的分析，梳理出 kubectl -&amp;gt; api-server -&amp;gt; kubelet -&amp;gt; 容器运行时 的交互，了解 cri 的工作方式。
-kubectl 简单创建个 pod：
-kubectl run pipy --image flomesh/pipy:latest -n default 在执行 kubectl forward 时添加参数 -v 9 打印日志。
-kubectl port-forward pipy 8080 -v 9 .</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CRI on 乱世浮生</title><link>https://atbug.com/tags/cri/</link><description>Recent content in CRI on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sat, 07 Feb 2026 02:44:12 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/cri/index.xml" rel="self" type="application/rss+xml"/><item><title>深入容器运行时：从 stdout/stderr 到 kubectl logs 的完整日志流处理机制</title><link>https://atbug.com/container-runtime-stdout-stderr-logging-mechanism/</link><pubDate>Sat, 07 Feb 2026 02:44:12 +0800</pubDate><guid>https://atbug.com/container-runtime-stdout-stderr-logging-mechanism/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;理解容器运行时如何处理 stdout/stderr 流，不仅能满足技术好奇心，更有实际价值：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;故障排查&lt;/strong&gt;：日志丢失、截断、延迟等问题的根本原因&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;性能优化&lt;/strong&gt;：高吞吐量场景下的 I/O 配置调优&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;架构决策&lt;/strong&gt;：选择合适的容器运行时和日志收集方案&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;深入理解&lt;/strong&gt;：Kubernetes、Containerd、Runc 各层的职责边界。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="引言"&gt;引言&lt;/h2&gt;
+&lt;p&gt;作为一名长期使用 Kubernetes 的开发者，我一直对容器日志的底层机制充满好奇。每次执行 &lt;code&gt;kubectl logs&lt;/code&gt; 命令，看着应用程序的输出实时流式显示在终端上，我都会忍不住思考：这些日志是如何从容器内部的 &lt;code&gt;stdout&lt;/code&gt; 和 &lt;code&gt;stderr&lt;/code&gt; 流，穿越多层抽象，最终到达屏幕？虽然日常工作中频繁使用这个功能，但对于这条路径上的技术细节，我却一直没有深入了解过。&lt;/p&gt;
+&lt;p&gt;这次，我决定彻底弄清楚这个问题：&lt;strong&gt;从应用程序的 &lt;code&gt;printf()&lt;/code&gt; 或 &lt;code&gt;console.log()&lt;/code&gt;&lt;/strong&gt;，到终端看到的日志，这中间经历了哪些关键步骤？让我们从头开始，逐层揭开这个机制的面纱。&lt;/p&gt;
+&lt;p&gt;以下的内容基于目前最新的 &lt;a href="https://github.com/kubernetes/kubernetes/tree/release-1.35"&gt;Kubernetes v1.35.0&lt;/a&gt; 和 &lt;a href="https://github.com/containerd/containerd/tree/release/2.2"&gt;Containerd v2.2.1&lt;/a&gt;。&lt;/p&gt;
+&lt;h3 id="完整的日志流处理架构"&gt;完整的日志流处理架构&lt;/h3&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2026/02/07/kubectl-logs-flow.png" alt=""&gt;&lt;/p&gt;
+&lt;h2 id="核心概念crishim"&gt;核心概念：CRI、Shim&lt;/h2&gt;
+&lt;p&gt;在深入技术细节之前，我们需要理解三个关键组件。它们构成了容器日志流处理的基础架构。&lt;/p&gt;
+&lt;h3 id="cricontainer-runtime-interface"&gt;CRI：Container Runtime Interface&lt;/h3&gt;
+&lt;p&gt;CRI 是 Kubernetes 与容器运行时之间的标准接口。它的出现解决了一个关键问题：&lt;strong&gt;如何让 Kubernetes 支持多种容器运行时，而不需要为每个运行时编写专门的集成代码？&lt;/strong&gt; 关于 CRI 的详细介绍，可以浏览我之前的文章 &lt;a href="https://atbug.com/deep-dive-into-kubernetes-cri/"&gt;Kubernetes 容器运行时接口 CRI&lt;/a&gt;。&lt;/p&gt;</description></item><item><title>Kubernetes 容器运行时接口 CRI</title><link>https://atbug.com/deep-dive-into-kubernetes-cri/</link><pubDate>Mon, 28 Aug 2023 12:25:57 +0800</pubDate><guid>https://atbug.com/deep-dive-into-kubernetes-cri/</guid><description>&lt;p&gt;写这篇文章是来填 &lt;a href="https://atbug.com/how-kubelete-container-runtime-work-with-cni/#%E5%88%9B%E5%BB%BA-pod"&gt;很久之前挖下的坑&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;本文涉及组件的源码版本如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Kubernetes 1.24&lt;/li&gt;
+&lt;li&gt;CRI 0.25.0&lt;/li&gt;
+&lt;li&gt;Containerd 1.6&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;容器运行时（Container Runtime）是负责管理和执行容器的组件。它负责将容器镜像转化为在主机上运行的实际容器进程，提供镜像管理、容器的生命周期管理、资源隔离、文件系统、网络配置等功能。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2023/08/28/kubelet-with-cri.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;常见容器运行时有下面这几种，这些容器运行时都提供了不同程度的功能和性能。但他们都遵循容器运行时接口（CRI），以便能够与 Kubernetes 或其他容器编排系统集成，实现容器的调度和管理。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd"&gt;containerd&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubernetes.io/docs/setup/production-environment/container-runtimes/#cri-o"&gt;CRI-O&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubernetes.io/docs/setup/production-environment/container-runtimes/#docker"&gt;Docker Engine&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubernetes.io/docs/setup/production-environment/container-runtimes/#mcr"&gt;Mirantis Container Runtime&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;有了 CRI，我们也可以“随意”地在几种容器运行时之间进行切换，而无需重新编译 Kubernetes。简单来讲，CRI 定义了所有对容器的操作，作为容器编排系统与容器运行时间的标准接口存在。&lt;/p&gt;
+&lt;h3 id="cri-的前生今世"&gt;CRI 的前生今世&lt;/h3&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2023/08/28/k8s-cri-history.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;CRI 的首次引入是在 &lt;a href="https://kubernetes.io/blog/2016/12/container-runtime-interface-cri-in-kubernetes/"&gt;Kubernets 1.5&lt;/a&gt;，初始版本是 &lt;code&gt;v1alpha1&lt;/code&gt;。在这之前，Kubernetes 需要在 kubelet 源码中维护对各个容器运行时的支持。&lt;/p&gt;
+&lt;p&gt;有了 CRI 之后，在 kubelet 中仅需支持 CRI 即可，然后通过一个中间层 CRI shim（grpc 服务器）与容器运行时进行交互。因为此时各家容器运行时实现还未支持 CRI。&lt;/p&gt;</description></item><item><title>源码解析：从 kubelet、容器运行时看 CNI 的使用</title><link>https://atbug.com/how-kubelete-container-runtime-work-with-cni/</link><pubDate>Thu, 08 Dec 2022 22:32:25 +0800</pubDate><guid>https://atbug.com/how-kubelete-container-runtime-work-with-cni/</guid><description>&lt;p&gt;这是 Kubernetes 网络学习的第三篇笔记。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/deep-dive-k8s-network-mode-and-communication/"&gt;深入探索 Kubernetes 网络模型和网络通信&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/deep-dive-cni-spec/"&gt;认识一下容器网络接口 CNI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/how-kubelete-container-runtime-work-with-cni/"&gt;源码分析：从 kubelet、容器运行时看 CNI 的使用（本篇）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/cross-node-traffic-on-flannel-vxlan-network/"&gt;从 Flannel 学习 Kubernetes VXLAN 网络&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/learn-cilium-and-ebpf"&gt;Kubernetes 网络学习之 Cilium 与 eBPF&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&amp;hellip;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在上一篇中，通过对 CNI 规范的解读了解了网络配置的操作和相关的流程。在网络的几个操作中除了 &lt;code&gt;CNI_COMMAND&lt;/code&gt; 外，有另外三个参数几乎每次都要提供 &lt;code&gt;CNI_CONTAINERID&lt;/code&gt;、&lt;code&gt;CNI_IFNAME&lt;/code&gt; 和 &lt;code&gt;CNI_NETNS&lt;/code&gt;，这些参数无外乎都来自容器运行时。这篇将结合 Kubernetes 和 &lt;a href="https://containerd.io"&gt;Containerd&lt;/a&gt; 源码，来分析一下 CNI 的使用。&lt;/p&gt;
+&lt;p&gt;Kubernetes 的源码来自分支 &lt;code&gt;release-1.24&lt;/code&gt;，Containerd 的来自分支 &lt;code&gt;release/1.6&lt;/code&gt;。&lt;/p&gt;</description></item><item><title>源码解析 kubectl port-forward 工作原理</title><link>https://atbug.com/how-kubectl-port-forward-works/</link><pubDate>Tue, 09 Aug 2022 07:10:28 +0800</pubDate><guid>https://atbug.com/how-kubectl-port-forward-works/</guid><description>&lt;p&gt;本文的源码基于 Kubernetes v1.24.0，容器运行时使用 Containerd 1.5，从源码来分析 kubectl port-forward 的工作原理。&lt;/p&gt;
+&lt;p&gt;通过 port-forward 流程的分析，梳理出 kubectl -&amp;gt; api-server -&amp;gt; kubelet -&amp;gt; 容器运行时 的交互，了解 cri 的工作方式。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/08/09/kubectlportforward.png" alt="kubectl-port-forward"&gt;&lt;/p&gt;
+&lt;h2 id="kubectl"&gt;kubectl&lt;/h2&gt;
+&lt;p&gt;简单创建个 pod：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl run pipy --image flomesh/pipy:latest -n default
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在执行 &lt;code&gt;kubectl forward&lt;/code&gt; 时添加参数 &lt;code&gt;-v 9&lt;/code&gt; 打印日志。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl port-forward pipy &lt;span style="color:#ae81ff"&gt;8080&lt;/span&gt; -v &lt;span style="color:#ae81ff"&gt;9&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;I0807 21:45:58.457986 &lt;span style="color:#ae81ff"&gt;14495&lt;/span&gt; round_trippers.go:466&lt;span style="color:#f92672"&gt;]&lt;/span&gt; curl -v -XPOST -H &lt;span style="color:#e6db74"&gt;&amp;#34;User-Agent: kubectl/v1.24.3 (darwin/arm64) kubernetes/aef86a9&amp;#34;&lt;/span&gt; -H &lt;span style="color:#e6db74"&gt;&amp;#34;X-Stream-Protocol-Version: portforward.k8s.io&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;https://192.168.1.12:6443/api/v1/namespaces/default/pods/pipy/portforward&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;I0807 21:45:58.484013 &lt;span style="color:#ae81ff"&gt;14495&lt;/span&gt; round_trippers.go:553&lt;span style="color:#f92672"&gt;]&lt;/span&gt; POST https://192.168.1.12:6443/api/v1/namespaces/default/pods/pipy/portforward &lt;span style="color:#ae81ff"&gt;101&lt;/span&gt; Switching Protocols in &lt;span style="color:#ae81ff"&gt;26&lt;/span&gt; milliseconds
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;I0807 21:45:58.484029 &lt;span style="color:#ae81ff"&gt;14495&lt;/span&gt; round_trippers.go:570&lt;span style="color:#f92672"&gt;]&lt;/span&gt; HTTP Statistics: DNSLookup &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; ms Dial &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; ms TLSHandshake &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; ms Duration &lt;span style="color:#ae81ff"&gt;26&lt;/span&gt; ms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;I0807 21:45:58.484035 &lt;span style="color:#ae81ff"&gt;14495&lt;/span&gt; round_trippers.go:577&lt;span style="color:#f92672"&gt;]&lt;/span&gt; Response Headers:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;I0807 21:45:58.484040 &lt;span style="color:#ae81ff"&gt;14495&lt;/span&gt; round_trippers.go:580&lt;span style="color:#f92672"&gt;]&lt;/span&gt; Upgrade: SPDY/3.1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;I0807 21:45:58.484044 &lt;span style="color:#ae81ff"&gt;14495&lt;/span&gt; round_trippers.go:580&lt;span style="color:#f92672"&gt;]&lt;/span&gt; X-Stream-Protocol-Version: portforward.k8s.io
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;I0807 21:45:58.484047 &lt;span style="color:#ae81ff"&gt;14495&lt;/span&gt; round_trippers.go:580&lt;span style="color:#f92672"&gt;]&lt;/span&gt; Date: Sun, &lt;span style="color:#ae81ff"&gt;07&lt;/span&gt; Aug &lt;span style="color:#ae81ff"&gt;2022&lt;/span&gt; 13:45:58 GMT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;I0807 21:45:58.484051 &lt;span style="color:#ae81ff"&gt;14495&lt;/span&gt; round_trippers.go:580&lt;span style="color:#f92672"&gt;]&lt;/span&gt; Connection: Upgrade
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Forwarding from 127.0.0.1:8080 -&amp;gt; &lt;span style="color:#ae81ff"&gt;8080&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Forwarding from &lt;span style="color:#f92672"&gt;[&lt;/span&gt;::1&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:8080 -&amp;gt; &lt;span style="color:#ae81ff"&gt;8080&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;从日志可以看到请求的地址为 &lt;code&gt;/api/v1/namespaces/default/pods/pipy/portforward&lt;/code&gt;，其中 &lt;code&gt;portforward&lt;/code&gt; 为 pod 资源的子资源。&lt;/p&gt;</description></item></channel></rss>

@@ -1,16 +1,85 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GitHub Copilot on 乱世浮生</title><link>https://atbug.com/tags/github-copilot/</link><description>Recent content in GitHub Copilot on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 29 Mar 2026 07:48:59 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/github-copilot/index.xml" rel="self" type="application/rss+xml"/><item><title>超越 Copilot Chat：用 SDK 打造专属 AI Agent（实战四场景）</title><link>https://atbug.com/github-copilot-sdk-demo-four-scenarios/</link><pubDate>Sun, 29 Mar 2026 07:48:59 +0800</pubDate><guid>https://atbug.com/github-copilot-sdk-demo-four-scenarios/</guid><description>前两篇我们从入门到架构，把 GitHub Copilot SDK 拆透了。这篇换个角度——直接上代码，用四个真实场景展示 SDK 能做什么，以及为什么这比 &amp;quot; 直接调 LLM&amp;quot; 更有意思。
-为什么需要 Demo？ 理论讲了很多：Client/Session 的职责分离、事件驱动模型、39 种事件类型……
-但真正让你 感受到 SDK 价值的，是看到它在实际场景里怎么运作。
-这四个场景来自我的 copilot-sdk-demo 仓库，从简单到复杂，每个场景都聚焦一个核心能力：
-场景 核心能力 一句话描述 场景一 工具调用 PR Code Review Bot 场景二 多工具 + 输出保存 自动文档生成器 场景三 交互式对话循环 kubectl 自然语言助手 场景四 Skills 机制 带团队规范的 PR Review 环境准备 # 克隆 demo 仓库 git clone https://github.</description></item><item><title>深入 GitHub Copilot SDK：架构设计与进阶应用</title><link>https://atbug.com/dive-into-github-copilot-sdk-architecture-and-advanced/</link><pubDate>Sat, 14 Feb 2026 20:06:16 +0800</pubDate><guid>https://atbug.com/dive-into-github-copilot-sdk-architecture-and-advanced/</guid><description>TL;DR 在完成了 GitHub Copilot SDK 入门：五分钟构建你的第一个 AI Agent 后，本文将带你深入理解 SDK 的底层设计：
-核心架构：
-Client vs Session：连接管理器与对话上下文的职责分离，支持多会话并发和资源复用 事件驱动模型：从“请求 - 响应”到“订阅 - 推送”，实现进度感知、提前中断、细粒度控制 工具调用机制：LLM 通过工具描述和参数 schema 自主决策，无需硬编码调用逻辑 进阶能力：
-MCP 服务器集成：接入 GitHub、Slack、Notion 等预构建工具生态 自定义 Agent：构建专业化角色，携带长期记忆和特定工具集 性能优化：精简工具描述、控制返回值、选择合适模型，降低 token 成本 SDK 的价值不在于“简化 API 调用”，而是提供了一套经过生产验证的 Agent 运行时。理解其架构设计，才能在构建复杂应用时做出正确的技术选型。</description></item><item><title>GitHub Copilot SDK 入门：五分钟构建你的第一个 AI Agent</title><link>https://atbug.com/github-copilot-sdk-quickstart-build-first-ai-agent/</link><pubDate>Thu, 12 Feb 2026 22:13:47 +0800</pubDate><guid>https://atbug.com/github-copilot-sdk-quickstart-build-first-ai-agent/</guid><description>TL;DR GitHub Copilot SDK 的核心价值不是“调用 LLM”的便利性（这已经被 OpenAI SDK、LangChain 等解决），而是提供了一个经过生产验证的 Agent 运行时。
-它解决的真正问题是：
-编排复杂性：规划器、工具路由、状态管理已内置 稳定性：数百万开发者日常使用的可靠性保障 演进能力：新模型、新工具能力由 CLI 自动更新 当你开始构建下一个 AI 应用时，问自己两个问题：
-我的核心价值在哪里？ 如果是业务逻辑和工具定义，使用 SDK；如果是底层编排创新，自建框架。 多久能到生产环境？ SDK 让你跳过 80% 的基础设施工作，专注于最后 20% 的差异化能力。 Agent 开发的门槛已经降低，但真正的挑战在于：定义有价值的工具，设计流畅的交互，解决真实的问题。技术不再是壁垒，想象力才是。
-引言：为什么 Agent 开发不再是少数人的游戏 2026 年 1 月，GitHub 发布了 Copilot SDK，这标志着 AI Agent 开发从“专家领域”走向“大众工具”的关键转折。</description></item><item><title>通过 Azure 订阅 Github Copilot</title><link>https://atbug.com/github-copilot-azure-subscription-enterprise-guide/</link><pubDate>Sun, 18 Jan 2026 11:17:27 +0800</pubDate><guid>https://atbug.com/github-copilot-azure-subscription-enterprise-guide/</guid><description>Github Copilot 已从实验性工具成长为开发者日常工作流的核心组件。对于企业而言，通过 Azure 订阅来管理 Github Copilot 不仅是成本优化的选择，更是统一云资源管理、简化账单流程的必然路径。
-本文不是简单的功能介绍，而是基于实际配置过程梳理出的完整落地方案。从 Azure 工作账户的创建，到 Github 组织与 Azure 订阅的绑定，再到 Copilot 席位的启用，每一步都直指核心操作。
-Azure 工作账户：前置条件的准备 Github Copilot 的 Azure 计费集成要求使用 Azure 工作账户（Work Account），而非个人 Microsoft 账户。这一限制源于企业级订阅管理的权限体系：工作账户通过 Microsoft Entra ID（前身为 Azure Active Directory）进行身份管理，能够精细化控制订阅访问权限。
-如果你的 Azure 主账户为个人账户，需要先创建一个有效的工作账户。
-创建工作账户 登录 Azure Portal，进入 Microsoft Entra ID 服务。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GitHub Copilot on 乱世浮生</title><link>https://atbug.com/tags/github-copilot/</link><description>Recent content in GitHub Copilot on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sun, 29 Mar 2026 07:48:59 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/github-copilot/index.xml" rel="self" type="application/rss+xml"/><item><title>超越 Copilot Chat：用 SDK 打造专属 AI Agent（实战四场景）</title><link>https://atbug.com/github-copilot-sdk-demo-four-scenarios/</link><pubDate>Sun, 29 Mar 2026 07:48:59 +0800</pubDate><guid>https://atbug.com/github-copilot-sdk-demo-four-scenarios/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;前两篇我们从入门到架构，把 GitHub Copilot SDK 拆透了。这篇换个角度——直接上代码，用四个真实场景展示 SDK 能做什么，以及为什么这比 &amp;quot; 直接调 LLM&amp;quot; 更有意思。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="为什么需要-demo"&gt;为什么需要 Demo？&lt;/h2&gt;
+&lt;p&gt;理论讲了很多：Client/Session 的职责分离、事件驱动模型、39 种事件类型……&lt;/p&gt;
+&lt;p&gt;但真正让你 &lt;em&gt;感受到&lt;/em&gt; SDK 价值的，是看到它在实际场景里怎么运作。&lt;/p&gt;
+&lt;p&gt;这四个场景来自我的 &lt;a href="https://github.com/addozhang/copilot-sdk-demo"&gt;copilot-sdk-demo&lt;/a&gt; 仓库，从简单到复杂，每个场景都聚焦一个核心能力：&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;场景&lt;/th&gt;
+					&lt;th&gt;核心能力&lt;/th&gt;
+					&lt;th&gt;一句话描述&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;场景一&lt;/td&gt;
+					&lt;td&gt;工具调用&lt;/td&gt;
+					&lt;td&gt;PR Code Review Bot&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;场景二&lt;/td&gt;
+					&lt;td&gt;多工具 + 输出保存&lt;/td&gt;
+					&lt;td&gt;自动文档生成器&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;场景三&lt;/td&gt;
+					&lt;td&gt;交互式对话循环&lt;/td&gt;
+					&lt;td&gt;kubectl 自然语言助手&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;场景四&lt;/td&gt;
+					&lt;td&gt;Skills 机制&lt;/td&gt;
+					&lt;td&gt;带团队规范的 PR Review&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="环境准备"&gt;环境准备&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 克隆 demo 仓库&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/addozhang/copilot-sdk-demo
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd copilot-sdk-demo
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 安装依赖&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install -r requirements.txt
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;前置条件：已安装并登录 &lt;code&gt;gh-copilot&lt;/code&gt; CLI（详见 &lt;a href="https://atbug.com/github-copilot-sdk-quickstart-build-first-ai-agent/"&gt;入门篇&lt;/a&gt;）。&lt;/p&gt;</description></item><item><title>深入 GitHub Copilot SDK：架构设计与进阶应用</title><link>https://atbug.com/dive-into-github-copilot-sdk-architecture-and-advanced/</link><pubDate>Sat, 14 Feb 2026 20:06:16 +0800</pubDate><guid>https://atbug.com/dive-into-github-copilot-sdk-architecture-and-advanced/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;在完成了 &lt;a href="https://atbug.com/github-copilot-sdk-quickstart-build-first-ai-agent/"&gt;GitHub Copilot SDK 入门：五分钟构建你的第一个 AI Agent&lt;/a&gt; 后，本文将带你深入理解 SDK 的底层设计：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;核心架构&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Client vs Session&lt;/strong&gt;：连接管理器与对话上下文的职责分离，支持多会话并发和资源复用&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;事件驱动模型&lt;/strong&gt;：从“请求 - 响应”到“订阅 - 推送”，实现进度感知、提前中断、细粒度控制&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;工具调用机制&lt;/strong&gt;：LLM 通过工具描述和参数 schema 自主决策，无需硬编码调用逻辑&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;进阶能力&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;MCP 服务器集成&lt;/strong&gt;：接入 GitHub、Slack、Notion 等预构建工具生态&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;自定义 Agent&lt;/strong&gt;：构建专业化角色，携带长期记忆和特定工具集&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;性能优化&lt;/strong&gt;：精简工具描述、控制返回值、选择合适模型，降低 token 成本&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;SDK 的价值不在于“简化 API 调用”，而是提供了一套经过生产验证的 Agent 运行时。理解其架构设计，才能在构建复杂应用时做出正确的技术选型。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="引言从入门到深入"&gt;引言：从入门到深入&lt;/h2&gt;
+&lt;p&gt;如果你已经完成了 &lt;a href="https://atbug.com/github-copilot-sdk-quickstart-build-first-ai-agent/"&gt;《GitHub Copilot SDK 入门：五分钟构建你的第一个 AI Agent》&lt;/a&gt;，你应该已经掌握了：&lt;/p&gt;</description></item><item><title>GitHub Copilot SDK 入门：五分钟构建你的第一个 AI Agent</title><link>https://atbug.com/github-copilot-sdk-quickstart-build-first-ai-agent/</link><pubDate>Thu, 12 Feb 2026 22:13:47 +0800</pubDate><guid>https://atbug.com/github-copilot-sdk-quickstart-build-first-ai-agent/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/github/copilot-sdk"&gt;GitHub Copilot SDK&lt;/a&gt; 的核心价值不是“调用 LLM”的便利性（这已经被 OpenAI SDK、LangChain 等解决），而是&lt;strong&gt;提供了一个经过生产验证的 Agent 运行时&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;它解决的真正问题是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;编排复杂性&lt;/strong&gt;：规划器、工具路由、状态管理已内置&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;稳定性&lt;/strong&gt;：数百万开发者日常使用的可靠性保障&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;演进能力&lt;/strong&gt;：新模型、新工具能力由 CLI 自动更新&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;当你开始构建下一个 AI 应用时，问自己两个问题：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;我的核心价值在哪里？&lt;/strong&gt; 如果是业务逻辑和工具定义，使用 SDK；如果是底层编排创新，自建框架。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;多久能到生产环境？&lt;/strong&gt; SDK 让你跳过 80% 的基础设施工作，专注于最后 20% 的差异化能力。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Agent 开发的门槛已经降低，但真正的挑战在于：&lt;strong&gt;定义有价值的工具，设计流畅的交互，解决真实的问题&lt;/strong&gt;。技术不再是壁垒，想象力才是。&lt;/p&gt;
+&lt;h2 id="引言为什么-agent-开发不再是少数人的游戏"&gt;引言：为什么 Agent 开发不再是少数人的游戏&lt;/h2&gt;
+&lt;p&gt;2026 年 1 月，GitHub 发布了 &lt;a href="https://github.com/github/copilot-sdk"&gt;Copilot SDK&lt;/a&gt;，这标志着 AI Agent 开发从“专家领域”走向“大众工具”的关键转折。&lt;/p&gt;</description></item><item><title>通过 Azure 订阅 Github Copilot</title><link>https://atbug.com/github-copilot-azure-subscription-enterprise-guide/</link><pubDate>Sun, 18 Jan 2026 11:17:27 +0800</pubDate><guid>https://atbug.com/github-copilot-azure-subscription-enterprise-guide/</guid><description>&lt;p&gt;Github Copilot 已从实验性工具成长为开发者日常工作流的核心组件。对于企业而言，通过 Azure 订阅来管理 Github Copilot 不仅是成本优化的选择，更是统一云资源管理、简化账单流程的必然路径。&lt;/p&gt;
+&lt;p&gt;本文不是简单的功能介绍，而是基于实际配置过程梳理出的完整落地方案。从 Azure 工作账户的创建，到 Github 组织与 Azure 订阅的绑定，再到 Copilot 席位的启用，每一步都直指核心操作。&lt;/p&gt;
+&lt;h2 id="azure-工作账户前置条件的准备"&gt;Azure 工作账户：前置条件的准备&lt;/h2&gt;
+&lt;p&gt;Github Copilot 的 Azure 计费集成要求使用 &lt;strong&gt;Azure 工作账户&lt;/strong&gt;（Work Account），而非个人 Microsoft 账户。这一限制源于企业级订阅管理的权限体系：工作账户通过 Microsoft Entra ID（前身为 Azure Active Directory）进行身份管理，能够精细化控制订阅访问权限。&lt;/p&gt;
+&lt;p&gt;如果你的 Azure 主账户为个人账户，需要先创建一个有效的工作账户。&lt;/p&gt;
+&lt;h3 id="创建工作账户"&gt;创建工作账户&lt;/h3&gt;
+&lt;p&gt;登录 &lt;a href="https://portal.azure.com"&gt;Azure Portal&lt;/a&gt;，进入 &lt;strong&gt;Microsoft Entra ID&lt;/strong&gt; 服务。&lt;/p&gt;</description></item></channel></rss>

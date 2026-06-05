@@ -1,9 +1,57 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>隐私 on 乱世浮生</title><link>https://atbug.com/tags/%E9%9A%90%E7%A7%81/</link><description>Recent content in 隐私 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 29 Apr 2026 07:31:27 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E9%9A%90%E7%A7%81/index.xml" rel="self" type="application/rss+xml"/><item><title>你的数据正在喂养 AI：从 Atlassian 公告，看科技平台的数据训练默认政策</title><link>https://atbug.com/your-data-is-feeding-ai-platform-training-policy/</link><pubDate>Wed, 29 Apr 2026 07:31:27 +0800</pubDate><guid>https://atbug.com/your-data-is-feeding-ai-platform-training-policy/</guid><description>TL;DR：Atlassian 宣布默认使用用户数据训练 AI，这不是意外，而是行业惯例。本文梳理海外和中国主流平台的数据训练政策，拆解背后的三个共同规律。
-一、Atlassian 的公告 2026 年 8 月 17 日，Atlassian 的一项隐私政策更新悄悄生效。
-对于数百万使用 Jira 和 Confluence 的团队而言，这意味着：你在 Confluence 里写的文档、Jira 里记录的需求和 Bug 描述，默认情况下可以被用于训练 Atlassian 的 AI 模型。
-公告关键条款分两层。第一层是元数据，免费和标准版用户无法退出；第二层是应用内容（Confluence 正文、Jira 描述和评论），默认开启，可以关闭，但完全退出需要升级到企业版。
-Atlassian 的措辞相当克制——“去标识化处理”“用于改进 AI 功能”“保障隐私安全”。这套话术你可能在其他地方见过，因为几乎每一家做同样事情的公司都在用同样的句式。
-官方 FAQ：https://www.atlassian.com/trust/ai/data-contribution/faqs
-二、这不是孤例，而是行业惯例 Atlassian 公告引发了一些讨论，但坦白说，它只是在做一件大多数同行早就在做的事。
-以下是海外主流平台的现状：
-平台 默认行为 退出方式 ChatGPT（免费/Plus） 默认开启 App 内设置关闭 GitHub Copilot（免费） 默认开启 设置关闭 LinkedIn 默认开启 可退出，但已收集数据不撤回 Slack 默认开启 邮件申请退出 Atlassian 默认开启 企业版才能完全退出 X/Twitter 默认开启 隐私设置关闭 Zoom 曾默认开启 2023 年因舆论压力撤回 几个值得单独说的细节：</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>隐私 on 乱世浮生</title><link>https://atbug.com/tags/%E9%9A%90%E7%A7%81/</link><description>Recent content in 隐私 on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Wed, 29 Apr 2026 07:31:27 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E9%9A%90%E7%A7%81/index.xml" rel="self" type="application/rss+xml"/><item><title>你的数据正在喂养 AI：从 Atlassian 公告，看科技平台的数据训练默认政策</title><link>https://atbug.com/your-data-is-feeding-ai-platform-training-policy/</link><pubDate>Wed, 29 Apr 2026 07:31:27 +0800</pubDate><guid>https://atbug.com/your-data-is-feeding-ai-platform-training-policy/</guid><description>&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;：Atlassian 宣布默认使用用户数据训练 AI，这不是意外，而是行业惯例。本文梳理海外和中国主流平台的数据训练政策，拆解背后的三个共同规律。&lt;/p&gt;
+&lt;h2 id="一atlassian-的公告"&gt;一、Atlassian 的公告&lt;/h2&gt;
+&lt;p&gt;2026 年 8 月 17 日，Atlassian 的一项隐私政策更新悄悄生效。&lt;/p&gt;
+&lt;p&gt;对于数百万使用 Jira 和 Confluence 的团队而言，这意味着：你在 Confluence 里写的文档、Jira 里记录的需求和 Bug 描述，默认情况下可以被用于训练 Atlassian 的 AI 模型。&lt;/p&gt;
+&lt;p&gt;公告关键条款分两层。第一层是元数据，免费和标准版用户无法退出；第二层是应用内容（Confluence 正文、Jira 描述和评论），默认开启，可以关闭，但完全退出需要升级到企业版。&lt;/p&gt;
+&lt;p&gt;Atlassian 的措辞相当克制——“去标识化处理”“用于改进 AI 功能”“保障隐私安全”。这套话术你可能在其他地方见过，因为几乎每一家做同样事情的公司都在用同样的句式。&lt;/p&gt;
+&lt;p&gt;官方 FAQ：https://www.atlassian.com/trust/ai/data-contribution/faqs&lt;/p&gt;
+&lt;h2 id="二这不是孤例而是行业惯例"&gt;二、这不是孤例，而是行业惯例&lt;/h2&gt;
+&lt;p&gt;Atlassian 公告引发了一些讨论，但坦白说，它只是在做一件大多数同行早就在做的事。&lt;/p&gt;
+&lt;p&gt;以下是海外主流平台的现状：&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;平台&lt;/th&gt;
+					&lt;th&gt;默认行为&lt;/th&gt;
+					&lt;th&gt;退出方式&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;ChatGPT（免费/Plus）&lt;/td&gt;
+					&lt;td&gt;默认开启&lt;/td&gt;
+					&lt;td&gt;App 内设置关闭&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;GitHub Copilot（免费）&lt;/td&gt;
+					&lt;td&gt;默认开启&lt;/td&gt;
+					&lt;td&gt;设置关闭&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;LinkedIn&lt;/td&gt;
+					&lt;td&gt;默认开启&lt;/td&gt;
+					&lt;td&gt;可退出，但已收集数据不撤回&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Slack&lt;/td&gt;
+					&lt;td&gt;默认开启&lt;/td&gt;
+					&lt;td&gt;邮件申请退出&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Atlassian&lt;/td&gt;
+					&lt;td&gt;默认开启&lt;/td&gt;
+					&lt;td&gt;企业版才能完全退出&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;X/Twitter&lt;/td&gt;
+					&lt;td&gt;默认开启&lt;/td&gt;
+					&lt;td&gt;隐私设置关闭&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Zoom&lt;/td&gt;
+					&lt;td&gt;曾默认开启&lt;/td&gt;
+					&lt;td&gt;2023 年因舆论压力撤回&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;几个值得单独说的细节：&lt;/p&gt;</description></item></channel></rss>

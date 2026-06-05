@@ -1,35 +1,94 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Opentelemetry on 乱世浮生</title><link>https://atbug.com/tags/opentelemetry/</link><description>Recent content in Opentelemetry on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 30 Aug 2025 18:23:19 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/opentelemetry/index.xml" rel="self" type="application/rss+xml"/><item><title>告别代码修改：传统 VM 环境下的 OpenTelemetry 自动注入</title><link>https://atbug.com/opentelemetry-auto-injection-traditional-vm/</link><pubDate>Sat, 30 Aug 2025 18:23:19 +0800</pubDate><guid>https://atbug.com/opentelemetry-auto-injection-traditional-vm/</guid><description>在微服务架构中，可观测性就像是给应用装上 &amp;quot; 眼睛 &amp;quot; 和 &amp;quot; 耳朵 &amp;ldquo;。传统方式需要在每个服务中手动集成监控代码，而 OpenTelemetry Injector 提供了一种更优雅的解决方案。
-TL;DR OpenTelemetry Injector 是一个专为传统 VM 环境设计的零代码观测工具。通过 Linux 的 LD_PRELOAD 机制，无需修改应用代码即可为 Java、Node.js、.NET 应用自动注入 OpenTelemetry 观测能力。核心优势：系统级自动化、多语言统一管理、生产环境就绪。不适合容器/K8s 环境，云原生场景建议使用 OpenTelemetry Operator、init-container、sidecar 等方案。
-但是对于企业数据中心中的传统部署、混合技术栈的微服务架构，或者遗留系统的可观测升级，OpenTelemetry Injector 提供了一条优雅而高效的路径。
-为什么需要零代码检测？ 想象一下，你负责维护一个包含数百个微服务的系统。每个服务都用不同的语言编写（Java、Node.js、.NET），现在需要为它们添加可观测性能力。
-传统方式的问题：
-需要修改每个服务的代码 不同语言的集成方式各不相同 版本升级时需要重新修改 不同语言中的功能不一致 增加了出错的风险 增加了维护的成本 这就是 OpenTelemetry Injector 诞生的背景。</description></item><item><title>从零开始：使用 OpenTelemetry Collector 构建强大的日志处理流水线</title><link>https://atbug.com/from-zero-building-a-powerful-log-processing-pipeline-with-opentelemetry-collector/</link><pubDate>Sat, 22 Feb 2025 17:30:48 +0800</pubDate><guid>https://atbug.com/from-zero-building-a-powerful-log-processing-pipeline-with-opentelemetry-collector/</guid><description>在 上篇文章 中，我们通过基于 Kubernetes 注解的 OpenTelemetry 动态发现为应用添加了日志采集的能力。从 OpenTelemetry Collector 日志我们可以看到为两个示例应用创建了 FileLog 接收器 来采集日志。
-在本文中，我们将深入探索 OpenTelemetry Collector 的 FileLog 日志接收器的使用。
-前文回顾 首先回看下上篇文章的结尾，Otel 的 Kubernetes Observer 发现了带有指定注解或者符合接收器创建规则的 Pod，自动为其创建了 FileLog 接收器。
-我们将日志中 Reciver Creator 通过内置配置模板创建的接收器，转换为 OpenTelemetry Collector 配置文件：
-config: receivers: filelog: include: - &amp;#34;/var/log/pods/default_java-sample-77b6d8f9c5-5zzh5_e6c5ca2a-6c3f-4ae4-89a6-34ca5cd9a3fa/java-sample/*.</description></item><item><title>基于 Kubernetes 注解的 OpenTelemetry 动态发现：打造自服务的可观测方案</title><link>https://atbug.com/self-service-observability-with-kubernetes-annotations-and-opentelemetry/</link><pubDate>Sat, 15 Feb 2025 22:23:15 +0800</pubDate><guid>https://atbug.com/self-service-observability-with-kubernetes-annotations-and-opentelemetry/</guid><description>背景 在云原生时代，Kubernetes 已经成为容器编排的事实标准，越来越多的企业将其作为核心基础设施来运行和管理现代化应用。然而，随着微服务架构的普及和容器化工作负载的动态性增强，传统的监控和可观测性工具逐渐暴露出局限性——静态配置难以应对快速变化的环境，手动维护监控规则的成本也变得越来越高。
-传统的监控方式通常依赖于集中式的配置管理，即由管理员预先定义好需要监控的目标和服务。这种方式不仅缺乏灵活性，还容易导致配置更新滞后，无法及时反映集群中的实际状态，还伴随着出错的风险。这种挑战，即使是作为开放标准的可观测性框架 OpenTelemetry 也无法避免。
-不过 OpenTelemetry 通过 Reciver Creator 和 Kubernetes Observer 特性可以解决这个问题，实现基于 Kubernetes 注解的 OpenTelemetry Collector 动态发现功能。
-工作原理 Kubernetes Observer 负责检测 Pod 及其元数据（如暴露的端口、注解等）。Observer 除了支持 Kubernetes API，还支持 Docker API（1.24+）、ECS API、ECS Tasks 元数据端点、Host。 Receiver Creator 根据这些信息动态实例化适当的接收器（如文件日志接收器）。Receiver Creator 可以支持 log、metrics 和 trace 接收器的创建。 这一功能通过将监控配置的控制权下放至开发人员，显著简化了可观测性管理的复杂性。</description></item><item><title>探索 OpenTelemetry Profiling 进展：eBPF 代理快速上手</title><link>https://atbug.com/exploring-opentelemetry-profiling-progress-ebpf-agent-quickstart/</link><pubDate>Sun, 10 Nov 2024 22:34:07 +0800</pubDate><guid>https://atbug.com/exploring-opentelemetry-profiling-progress-ebpf-agent-quickstart/</guid><description>本文将介绍 OpenTelemetry Profiling 的进展，以及快速体验 Profiling 的 eBPF 代理。关于有 OTEL Profile 的概念和实现，将在下一篇介绍。
-虽然 Profiling 进展迅速，Profile 功能仍然在实验阶段，不建议在生产环境使用。
-背景 在软件工程中，可观测性（Observability）是指收集和分析程序执行情况、模块内部状态以及组件间通信数据的能力。可观测性的三大支柱——指标、跟踪和日志——为我们提供了深入了解应用程序行为的关键手段，尤其在分布式系统中尤为重要。
-分布式系统的应用组件分布在多个节点上，导致事件链条和数据流的复杂化。通过有效运用这三大可观测性手段，可以帮助我们识别潜在问题、定位故障源，从而显著提高系统的稳定性和可维护性。
-尽管可观测性的三大手段能够提供大量关于系统行为和性能的洞察，但无法探究程序内部代码函数层级的运行时表现。性能分析（Profiling）为深入了解应用程序的资源使用和执行效率提供了方法指导。持续性能分析（Continuous profiling）可以在应用程序运行期间连续进行性能剖析，帮助开发人员准确理解代码随着时间推移的运行情况。
-今年 3 月，成立两年的 OpenTelemetry Profiling SIG 宣布支持 性能分析信号（Profiling Signal），半年多过去了，从规范到工具层面 Profiling 的支持取得了很大的进展。
-进展 OTLP Profile 类型 继 traces、metrics、logs 和 baggage 之后，在 OTLP 1.</description></item><item><title>自定义 OpenTelemetry Collector 容器镜像</title><link>https://atbug.com/custom-opentelemetry-collector-container-image/</link><pubDate>Mon, 04 Mar 2024 22:17:56 +0800</pubDate><guid>https://atbug.com/custom-opentelemetry-collector-container-image/</guid><description>OpenTelemetry Collector 有两个官方发行版：Core 和 Contrib。
-Core 发行版是 Collector 的基础发行版，供 OTel 开发人员进行开发和测试。它包含一组基本的扩展、连接器、接收器、处理器和导出器。 Contrib 发行版供非 OTel 开发人员进行实验和学习。它还扩展了 Core 发行版，并包含由第三方（包括供应商和个人社区成员）创建的组件，这些组件对整个 OpenTelemetry 社区非常有用。在之前的文章 《使用 OpenTelemetry 和 Loki 实现高效的应用日志采集和分析》 我用的就是这个发行版。 不管 Core 还是 Contrib 都不应该成为你生产工作负载的一部分。仅仅使用 Core 本身太过简单，无法满足组织的需求（尽管它提供的组件都是必须的）；虽然 Contrib 中提供的组件足够全面，然而并不是说每个组件都是你所需要的，太多冗余的组件显得过于臃肿，还增大的攻击面。
-那如何选择你所需的发行版呢？答案就是构建自己的发行版。可以使用官方提供的名为 OpenTelemetry Collector Builder (OCB) 的工具来自定义附件。</description></item><item><title>使用 OpenTelemetry 和 Loki 实现高效的应用日志采集和分析</title><link>https://atbug.com/efficient-app-log-collection-analysis-opentelemetry-loki/</link><pubDate>Sun, 24 Dec 2023 23:30:45 +0800</pubDate><guid>https://atbug.com/efficient-app-log-collection-analysis-opentelemetry-loki/</guid><description>2025.2.15 更新：支持 Loki 3.3.2。
-在之前的文章陆续介绍了 如何在 Kubernetes 中使用 Otel 的自动插桩 以及 Otel 与 服务网格协同实现分布式跟踪，这两篇的文章都将目标聚焦在分布式跟踪中，而作为可观测性三大支柱之一的日志也是我们经常使用的系统观测手段，今天这篇文章就来体验下应用日志的操作闭环。
-背景 OpenTelemetry 简介 OpenTelemetry （以下简称 Otel）是一个开源项目，旨在为分布式追踪、度量和日志提供统一的标准，简化应用程序的观测性（Observability）。它提供了一系列工具和 API，用于收集和传输应用程序的性能数据和日志，帮助开发者和运维团队更好地理解系统的行为。功能包括自动和手动检测应用程序的追踪数据，收集关键度量指标，以及捕获和传输日志。Otel 支持多种编程语言和框架，可以与多个后端系统集成，如 Prometheus、Jaeger、Elasticsearch 等。
-Log 是 OpenTelemetry 项目的一部分，旨在提供一种标准化的方式来收集、传输和存储日志数据。
-Loki 简介 Loki 是 Grafana Labs 开发的一个水平可扩展、高可用性、多租户的日志聚合系统，专为效率和易用性而设计。与传统的日志聚合系统不同，Loki 主要索引日志内容的元数据而不是内容本身，这使得它既轻量又高效。Loki 采用了与 Prometheus 类似的标签系统，使得日志查询更加灵活和强大。常用于存储和查询大量日志数据，特别是与 Grafana 结合使用时，提供了强大的日志可视化和分析能力。</description></item><item><title>探索服务网格与 OpenTelemetry 的协同之分布式跟踪</title><link>https://atbug.com/integrate-service-mesh-with-opentelemetry-for-distributed-tracing/</link><pubDate>Fri, 08 Dec 2023 07:15:43 +0800</pubDate><guid>https://atbug.com/integrate-service-mesh-with-opentelemetry-for-distributed-tracing/</guid><description>在上一篇文章中，介绍了 如何在 k8s 中无侵入安装 Otel 探针 并实现了无侵入（某些语言还无法实现，比如 Go 的 eBPF 对内核的苛刻要求）的分布式跟踪。
-这篇文章发出后有读者评论 javaagent 的“无侵入”一说，这里有必要解释下。“无侵入”主要指的是不需要修改应用程序的业务逻辑代码就能实现的功能，对应用程序透明无感知，让开发者专注于业务开发；同时由于无需修改应用程序代码，更易于集成；同时还维护简单，在多种语言、框架间保证功能的一致性。
-而 Java Agent 在 JVM 启动时加载，它在运行时修改字节码来注入跟踪代码，而不是在应用程序的源代码层面上进行修改。
-背景 分布式跟踪 分布式跟踪是监控和诊断微服务请求流程的关键技术，也是可观测性的关键组成部分，提供了对微服务架构中复杂交互和性能问题的深入洞察。它通过提供服务间请求链路的清晰视图来管理复杂性，并帮助识别性能瓶颈、优化资源分配、快速定位和解决故障，提高系统的整体可靠性。
-服务网格的无侵入式分布式跟踪 又是无侵入性！服务网格中的代理自动处理所有入站和出站的网络通信，自动捕获、记录和分析服务间的请求和响应的详细细心，如请求时间、持续时间、状态代码和其他元数据。这种 实现方式 对应用程序本身透明，并且较 Java Agent 在运行时修改字节码更加彻底。
-这里有个前提是应用程序能够在请求中传递上下文信息，这样 sidecar 代理生成和发送的跟踪信息最终可以串联在一起，不会发生断链。
-网格的无侵入式分布式跟踪虽然为我们展示了请求的链路，但是如上图所示每个跨度（span）都是 sidecar 代理的信息。
-紧跟上篇文章之后，我们今天将探索 服务网格 FSM 与 OpenTelemetry 的集成，实现应用、网格的全链路分布式跟踪。</description></item><item><title>在 Kubernetes 中无侵入安装 OpenTelemetry 探针</title><link>https://atbug.com/non-intrusive-inject-otel-auto-instrumentation-in-k8s/</link><pubDate>Thu, 07 Dec 2023 07:10:00 +0800</pubDate><guid>https://atbug.com/non-intrusive-inject-otel-auto-instrumentation-in-k8s/</guid><description>背景 OpenTelemetry 探针 OpenTelemetry（简称 Otel，最新的版本是 1.27） 是一个用于观察性的开源项目，提供了一套工具、APIs 和 SDKs，用于收集、处理和导出遥测数据（如指标、日志和追踪信息）。应用程序遥测数据（如追踪、指标和日志）的收集是通过探针来完成的，探针通常以库的形式集成到应用程序中，自动捕获重要信息协助监控和调试。OpenTelemetry 探针支持市面上大多数的编程语言，探针的安装（通常被称为插桩，Instrumentation）分为手动和自动两种方式。
-手动插桩：指开发者直接在其应用程序代码中显式地添加遥测数据收集的代码，需要手动完成 SDK 初始化、插入追踪点、添加上下文信息等一系列操作。 自动插桩：利用 OpenTelemetry 提供的库自动捕获应用程序的遥测数据，无需或只需很少的代码更改。比如，Java 通过 javaagent 实现探针的自动安装。 二者各有优劣：手动插桩适用于需要高度定制和精确控制遥测数据收集的场景；自动插桩适合快速启动和简化集成，特别是在使用标准框架和库的应用程序中。
-OpenTelemetry Operator 介绍 OpenTelemetry Operator 是一个为了简化 OpenTelemetry 组件在 Kubernetes 环境中的部署和管理而设计的 Kubernetes Operator。
-OpenTelemetry Operator 通过 CRD（OpenTelemetryCollector、Instrumentation、OpAMPBridge） 实现在 Kubernetes 集群中自动部署和管理 OpenTelemetry Collector；在工作负载中自动安装 OpenTelemetry 探针。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Opentelemetry on 乱世浮生</title><link>https://atbug.com/tags/opentelemetry/</link><description>Recent content in Opentelemetry on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sat, 30 Aug 2025 18:23:19 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/opentelemetry/index.xml" rel="self" type="application/rss+xml"/><item><title>告别代码修改：传统 VM 环境下的 OpenTelemetry 自动注入</title><link>https://atbug.com/opentelemetry-auto-injection-traditional-vm/</link><pubDate>Sat, 30 Aug 2025 18:23:19 +0800</pubDate><guid>https://atbug.com/opentelemetry-auto-injection-traditional-vm/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;在微服务架构中，可观测性就像是给应用装上 &amp;quot; 眼睛 &amp;quot; 和 &amp;quot; 耳朵 &amp;ldquo;。传统方式需要在每个服务中手动集成监控代码，而 OpenTelemetry Injector 提供了一种更优雅的解决方案。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/open-telemetry/opentelemetry-injector"&gt;OpenTelemetry Injector&lt;/a&gt; 是一个专为&lt;strong&gt;传统 VM 环境&lt;/strong&gt;设计的零代码观测工具。通过 Linux 的 &lt;code&gt;LD_PRELOAD&lt;/code&gt; 机制，无需修改应用代码即可为 Java、Node.js、.NET 应用自动注入 OpenTelemetry 观测能力。核心优势：系统级自动化、多语言统一管理、生产环境就绪。&lt;strong&gt;不适合容器/K8s 环境&lt;/strong&gt;，云原生场景建议使用 OpenTelemetry Operator、init-container、sidecar 等方案。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;但是对于企业数据中心中的传统部署、混合技术栈的微服务架构，或者遗留系统的可观测升级，OpenTelemetry Injector 提供了一条优雅而高效的路径。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="为什么需要零代码检测"&gt;为什么需要零代码检测？&lt;/h2&gt;
+&lt;p&gt;想象一下，你负责维护一个包含数百个微服务的系统。每个服务都用不同的语言编写（Java、Node.js、.NET），现在需要为它们添加可观测性能力。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;传统方式的问题：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;需要修改每个服务的代码&lt;/li&gt;
+&lt;li&gt;不同语言的集成方式各不相同&lt;/li&gt;
+&lt;li&gt;版本升级时需要重新修改&lt;/li&gt;
+&lt;li&gt;不同语言中的功能不一致&lt;/li&gt;
+&lt;li&gt;增加了出错的风险&lt;/li&gt;
+&lt;li&gt;增加了维护的成本&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;这就是 OpenTelemetry Injector 诞生的背景。&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>从零开始：使用 OpenTelemetry Collector 构建强大的日志处理流水线</title><link>https://atbug.com/from-zero-building-a-powerful-log-processing-pipeline-with-opentelemetry-collector/</link><pubDate>Sat, 22 Feb 2025 17:30:48 +0800</pubDate><guid>https://atbug.com/from-zero-building-a-powerful-log-processing-pipeline-with-opentelemetry-collector/</guid><description>&lt;p&gt;在 &lt;a href="https://atbug.com/self-service-observability-with-kubernetes-annotations-and-opentelemetry/"&gt;上篇文章&lt;/a&gt; 中，我们通过基于 Kubernetes 注解的 OpenTelemetry 动态发现为应用添加了日志采集的能力。从 OpenTelemetry Collector 日志我们可以看到为两个示例应用创建了 &lt;a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/filelogreceiver/README.md"&gt;FileLog 接收器&lt;/a&gt; 来采集日志。&lt;/p&gt;
+&lt;p&gt;在本文中，我们将深入探索 OpenTelemetry Collector 的 FileLog 日志接收器的使用。&lt;/p&gt;
+&lt;h2 id="前文回顾"&gt;前文回顾&lt;/h2&gt;
+&lt;p&gt;首先回看下上篇文章的结尾，Otel 的 Kubernetes Observer 发现了带有指定注解或者符合接收器创建规则的 Pod，自动为其创建了 FileLog 接收器。&lt;/p&gt;
+&lt;p&gt;我们将日志中 &lt;a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.117.0/receiver/receivercreator/README.md"&gt;Reciver Creator&lt;/a&gt; 通过内置配置模板创建的接收器，转换为 OpenTelemetry Collector 配置文件：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;config&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;receivers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;filelog&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;include&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;/var/log/pods/default_java-sample-77b6d8f9c5-5zzh5_e6c5ca2a-6c3f-4ae4-89a6-34ca5cd9a3fa/java-sample/*.log&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;include_file_name&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;include_file_path&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;operators&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;id&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;container-parser&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;type&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;container&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在这个配置中，我们指定了 &lt;code&gt;filelog&lt;/code&gt; 接收器的配置：&lt;/p&gt;</description></item><item><title>基于 Kubernetes 注解的 OpenTelemetry 动态发现：打造自服务的可观测方案</title><link>https://atbug.com/self-service-observability-with-kubernetes-annotations-and-opentelemetry/</link><pubDate>Sat, 15 Feb 2025 22:23:15 +0800</pubDate><guid>https://atbug.com/self-service-observability-with-kubernetes-annotations-and-opentelemetry/</guid><description>&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;在云原生时代，Kubernetes 已经成为容器编排的事实标准，越来越多的企业将其作为核心基础设施来运行和管理现代化应用。然而，随着微服务架构的普及和容器化工作负载的动态性增强，传统的监控和可观测性工具逐渐暴露出局限性——静态配置难以应对快速变化的环境，手动维护监控规则的成本也变得越来越高。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2025/02/15/otel-collector-config-classic.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;传统的监控方式通常依赖于集中式的配置管理，即由管理员预先定义好需要监控的目标和服务。这种方式不仅缺乏灵活性，还容易导致配置更新滞后，无法及时反映集群中的实际状态，还伴随着出错的风险。这种挑战，即使是作为开放标准的可观测性框架 &lt;a href="https://opentelemetry.io/"&gt;OpenTelemetry&lt;/a&gt; 也无法避免。&lt;/p&gt;
+&lt;p&gt;不过 OpenTelemetry 通过 &lt;a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.117.0/receiver/receivercreator/README.md"&gt;Reciver Creator&lt;/a&gt; 和 &lt;a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.117.0/extension/observer/k8sobserver/README.md"&gt;Kubernetes Observer&lt;/a&gt; 特性可以解决这个问题，实现&lt;strong&gt;基于 Kubernetes 注解的 OpenTelemetry Collector 动态发现&lt;/strong&gt;功能。&lt;/p&gt;
+&lt;h2 id="工作原理"&gt;工作原理&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Kubernetes Observer&lt;/strong&gt; 负责检测 Pod 及其元数据（如暴露的端口、注解等）。Observer 除了支持 Kubernetes API，还支持 Docker API（1.24+）、ECS API、ECS Tasks 元数据端点、Host。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Receiver Creator&lt;/strong&gt; 根据这些信息动态实例化适当的接收器（如文件日志接收器）。Receiver Creator 可以支持 log、metrics 和 trace 接收器的创建。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2025/02/15/otel-collector-config-discoverable.png" alt=""&gt;&lt;/p&gt;</description></item><item><title>探索 OpenTelemetry Profiling 进展：eBPF 代理快速上手</title><link>https://atbug.com/exploring-opentelemetry-profiling-progress-ebpf-agent-quickstart/</link><pubDate>Sun, 10 Nov 2024 22:34:07 +0800</pubDate><guid>https://atbug.com/exploring-opentelemetry-profiling-progress-ebpf-agent-quickstart/</guid><description>&lt;p&gt;本文将介绍 OpenTelemetry Profiling 的进展，以及快速体验 Profiling 的 eBPF 代理。关于有 OTEL Profile 的概念和实现，将在下一篇介绍。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;虽然 Profiling 进展迅速，Profile 功能仍然在实验阶段，不建议在生产环境使用。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;在软件工程中，可观测性（Observability）是指收集和分析程序执行情况、模块内部状态以及组件间通信数据的能力。可观测性的三大支柱——指标、跟踪和日志——为我们提供了深入了解应用程序行为的关键手段，尤其在分布式系统中尤为重要。&lt;/p&gt;
+&lt;p&gt;分布式系统的应用组件分布在多个节点上，导致事件链条和数据流的复杂化。通过有效运用这三大可观测性手段，可以帮助我们识别潜在问题、定位故障源，从而显著提高系统的稳定性和可维护性。&lt;/p&gt;
+&lt;p&gt;尽管可观测性的三大手段能够提供大量关于系统行为和性能的洞察，但无法探究程序内部代码函数层级的运行时表现。性能分析（Profiling）为深入了解应用程序的资源使用和执行效率提供了方法指导。持续性能分析（Continuous profiling）可以在应用程序运行期间连续进行性能剖析，帮助开发人员准确理解代码随着时间推移的运行情况。&lt;/p&gt;
+&lt;p&gt;今年 3 月，成立两年的 OpenTelemetry Profiling SIG 宣布支持 &lt;a href="https://github.com/open-telemetry/opentelemetry-proto/pull/534"&gt;性能分析信号（Profiling Signal）&lt;/a&gt;，半年多过去了，从规范到工具层面 Profiling 的支持取得了很大的进展。&lt;/p&gt;
+&lt;h2 id="进展"&gt;进展&lt;/h2&gt;
+&lt;h3 id="otlp-profile-类型"&gt;OTLP Profile 类型&lt;/h3&gt;
+&lt;p&gt;继  &lt;a href="https://opentelemetry.io/docs/concepts/signals/traces"&gt;traces&lt;/a&gt;、&lt;a href="https://opentelemetry.io/docs/concepts/signals/metrics"&gt;metrics&lt;/a&gt;、&lt;a href="https://opentelemetry.io/docs/concepts/signals/logs"&gt;logs&lt;/a&gt; 和 &lt;a href="https://opentelemetry.io/docs/concepts/signals/baggage"&gt;baggage&lt;/a&gt; 之后，在 &lt;a href="https://github.com/open-telemetry/opentelemetry-proto/releases/tag/v1.3.0"&gt;OTLP 1.3&lt;/a&gt; 中加入了新的数据类型 &lt;em&gt;profiles&lt;/em&gt;。原定的兼容 &lt;a href="https://github.com/google/pprof"&gt;Google PPROF&lt;/a&gt; 的目标被放弃。&lt;/p&gt;</description></item><item><title>自定义 OpenTelemetry Collector 容器镜像</title><link>https://atbug.com/custom-opentelemetry-collector-container-image/</link><pubDate>Mon, 04 Mar 2024 22:17:56 +0800</pubDate><guid>https://atbug.com/custom-opentelemetry-collector-container-image/</guid><description>&lt;p&gt;OpenTelemetry Collector 有两个官方发行版：Core 和 Contrib。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Core 发行版是 Collector 的基础发行版，供 OTel 开发人员进行开发和测试。它包含一组基本的扩展、连接器、接收器、处理器和导出器。&lt;/li&gt;
+&lt;li&gt;Contrib 发行版供非 OTel 开发人员进行实验和学习。它还扩展了 Core 发行版，并包含由第三方（包括供应商和个人社区成员）创建的组件，这些组件对整个 OpenTelemetry 社区非常有用。在之前的文章 &lt;a href="https://atbug.com/efficient-app-log-collection-analysis-opentelemetry-loki/#%E9%85%8D%E7%BD%AE-opentelemetry-collector"&gt;《使用 OpenTelemetry 和 Loki 实现高效的应用日志采集和分析》&lt;/a&gt; 我用的就是这个发行版。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;不管 Core 还是 Contrib 都不应该成为你生产工作负载的一部分。仅仅使用 Core 本身太过简单，无法满足组织的需求（尽管它提供的组件都是必须的）；虽然 Contrib 中提供的组件足够全面，然而并不是说每个组件都是你所需要的，太多冗余的组件显得过于臃肿，还增大的攻击面。&lt;/p&gt;
+&lt;p&gt;那如何选择你所需的发行版呢？答案就是构建自己的发行版。可以使用官方提供的名为 OpenTelemetry Collector Builder (OCB) 的工具来自定义附件。&lt;/p&gt;
+&lt;h3 id="安装-ocb"&gt;安装 OCB&lt;/h3&gt;
+&lt;p&gt;ocb 是个简单的 CLI，支持 Window/Linux/macOS 以及 x86 和 arm64 平台。我们可以从 &lt;a href="https://github.com/open-telemetry/opentelemetry-collector/releases?q=builder"&gt;release 页面&lt;/a&gt; 下载 ocb 的 binary。&lt;/p&gt;</description></item><item><title>使用 OpenTelemetry 和 Loki 实现高效的应用日志采集和分析</title><link>https://atbug.com/efficient-app-log-collection-analysis-opentelemetry-loki/</link><pubDate>Sun, 24 Dec 2023 23:30:45 +0800</pubDate><guid>https://atbug.com/efficient-app-log-collection-analysis-opentelemetry-loki/</guid><description>&lt;p&gt;&lt;strong&gt;2025.2.15 更新：支持 Loki 3.3.2。&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;在之前的文章陆续介绍了 &lt;a href="https://atbug.com/non-intrusive-inject-otel-auto-instrumentation-in-k8s/"&gt;如何在 Kubernetes 中使用 Otel 的自动插桩&lt;/a&gt; 以及 &lt;a href="https://atbug.com/integrate-service-mesh-with-opentelemetry-for-distributed-tracing/"&gt;Otel 与 服务网格协同实现分布式跟踪&lt;/a&gt;，这两篇的文章都将目标聚焦在分布式跟踪中，而作为可观测性三大支柱之一的日志也是我们经常使用的系统观测手段，今天这篇文章就来体验下应用日志的操作闭环。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;h3 id="opentelemetry-简介"&gt;OpenTelemetry 简介&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://opentelemetry.io"&gt;OpenTelemetry&lt;/a&gt; （以下简称 Otel）是一个开源项目，旨在为分布式追踪、度量和日志提供统一的标准，简化应用程序的观测性（Observability）。它提供了一系列工具和 API，用于收集和传输应用程序的性能数据和日志，帮助开发者和运维团队更好地理解系统的行为。功能包括自动和手动检测应用程序的追踪数据，收集关键度量指标，以及捕获和传输日志。Otel 支持多种编程语言和框架，可以与多个后端系统集成，如 Prometheus、Jaeger、Elasticsearch 等。&lt;/p&gt;
+&lt;p&gt;Log 是 OpenTelemetry 项目的一部分，旨在提供一种标准化的方式来收集、传输和存储日志数据。&lt;/p&gt;
+&lt;h3 id="loki-简介"&gt;Loki 简介&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://grafana.com/oss/loki/"&gt;Loki&lt;/a&gt; 是 &lt;a href="https://grafana.com"&gt;Grafana Labs&lt;/a&gt; 开发的一个水平可扩展、高可用性、多租户的日志聚合系统，专为效率和易用性而设计。与传统的日志聚合系统不同，Loki 主要索引日志内容的元数据而不是内容本身，这使得它既轻量又高效。Loki 采用了与 &lt;a href="https://prometheus.io"&gt;Prometheus&lt;/a&gt; 类似的标签系统，使得日志查询更加灵活和强大。常用于存储和查询大量日志数据，特别是与 Grafana 结合使用时，提供了强大的日志可视化和分析能力。&lt;/p&gt;
+&lt;h2 id="演示"&gt;演示&lt;/h2&gt;
+&lt;p&gt;在本演示中将使用 Java 应用进行日志闭环操作的演示，在 &lt;a href="https://opentelemetry.io/docs/concepts/signals/logs/#language-support"&gt;Otel Log 支持的语言&lt;/a&gt; 中，Java 是的最全面的语言之一。&lt;/p&gt;</description></item><item><title>探索服务网格与 OpenTelemetry 的协同之分布式跟踪</title><link>https://atbug.com/integrate-service-mesh-with-opentelemetry-for-distributed-tracing/</link><pubDate>Fri, 08 Dec 2023 07:15:43 +0800</pubDate><guid>https://atbug.com/integrate-service-mesh-with-opentelemetry-for-distributed-tracing/</guid><description>&lt;p&gt;在上一篇文章中，介绍了 &lt;a href="https://atbug.com/non-intrusive-inject-otel-auto-instrumentation-in-k8s/"&gt;如何在 k8s 中无侵入安装 Otel 探针&lt;/a&gt; 并实现了无侵入（某些语言还无法实现，比如 Go 的 eBPF 对内核的苛刻要求）的分布式跟踪。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这篇文章发出后有读者评论 javaagent 的“无侵入”一说，这里有必要解释下。“无侵入”主要指的是不需要修改应用程序的业务逻辑代码就能实现的功能，对应用程序&lt;strong&gt;透明&lt;/strong&gt;无感知，让开发者专注于业务开发；同时由于无需修改应用程序代码，更&lt;strong&gt;易于集成&lt;/strong&gt;；同时还&lt;strong&gt;维护简单&lt;/strong&gt;，在多种语言、框架间保证功能的&lt;strong&gt;一致性&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;而 Java Agent 在 JVM 启动时加载，它在运行时修改字节码来注入跟踪代码，而不是在应用程序的源代码层面上进行修改。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;h3 id="分布式跟踪"&gt;分布式跟踪&lt;/h3&gt;
+&lt;p&gt;分布式跟踪是监控和诊断微服务请求流程的关键技术，也是可观测性的关键组成部分，提供了对微服务架构中复杂交互和性能问题的深入洞察。它通过提供服务间请求链路的清晰视图来管理复杂性，并帮助识别性能瓶颈、优化资源分配、快速定位和解决故障，提高系统的整体可靠性。&lt;/p&gt;
+&lt;h3 id="服务网格的无侵入式分布式跟踪"&gt;服务网格的无侵入式分布式跟踪&lt;/h3&gt;
+&lt;p&gt;又是无侵入性！服务网格中的代理自动处理所有入站和出站的网络通信，自动捕获、记录和分析服务间的请求和响应的详细细心，如请求时间、持续时间、状态代码和其他元数据。这种 &lt;a href="https://fsm-docs.flomesh.io/guides/observability/tracing/"&gt;实现方式&lt;/a&gt; 对应用程序本身透明，并且较 Java Agent 在运行时修改字节码更加彻底。&lt;/p&gt;
+&lt;p&gt;这里有个前提是应用程序能够在请求中传递上下文信息，这样 sidecar 代理生成和发送的跟踪信息最终可以串联在一起，不会发生断链。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2023/12/08/mesh-jaeger-tracing-timeline.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;网格的无侵入式分布式跟踪虽然为我们展示了请求的链路，但是如上图所示每个跨度（span）都是 sidecar 代理的信息。&lt;/p&gt;
+&lt;p&gt;紧跟上篇文章之后，我们今天将探索 &lt;a href="http://fsm-docs.flomesh.io"&gt;服务网格 FSM&lt;/a&gt; 与 OpenTelemetry 的集成，实现应用、网格的全链路分布式跟踪。&lt;/p&gt;</description></item><item><title>在 Kubernetes 中无侵入安装 OpenTelemetry 探针</title><link>https://atbug.com/non-intrusive-inject-otel-auto-instrumentation-in-k8s/</link><pubDate>Thu, 07 Dec 2023 07:10:00 +0800</pubDate><guid>https://atbug.com/non-intrusive-inject-otel-auto-instrumentation-in-k8s/</guid><description>&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;h3 id="opentelemetry-探针"&gt;OpenTelemetry 探针&lt;/h3&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2023/12/07/opentelemetry.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;OpenTelemetry（简称 Otel，最新的版本是 1.27） 是一个用于观察性的开源项目，提供了一套工具、APIs 和 SDKs，用于收集、处理和导出遥测数据（如指标、日志和追踪信息）。应用程序遥测数据（如追踪、指标和日志）的收集是通过探针来完成的，探针通常以库的形式集成到应用程序中，自动捕获重要信息协助监控和调试。OpenTelemetry 探针支持市面上大多数的编程语言，探针的安装（通常被称为插桩，Instrumentation）分为手动和自动两种方式。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;手动插桩：指开发者直接在其应用程序代码中显式地添加遥测数据收集的代码，需要手动完成 SDK 初始化、插入追踪点、添加上下文信息等一系列操作。&lt;/li&gt;
+&lt;li&gt;自动插桩：利用 OpenTelemetry 提供的库自动捕获应用程序的遥测数据，无需或只需很少的代码更改。比如，&lt;a href="https://opentelemetry.io/docs/instrumentation/java/automatic/"&gt;Java 通过 &lt;code&gt;javaagent&lt;/code&gt; 实现探针的自动安装&lt;/a&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;二者各有优劣：手动插桩适用于需要高度定制和精确控制遥测数据收集的场景；自动插桩适合快速启动和简化集成，特别是在使用标准框架和库的应用程序中。&lt;/p&gt;
+&lt;h3 id="opentelemetry-operator-介绍"&gt;OpenTelemetry Operator 介绍&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://opentelemetry.io/docs/kubernetes/operator/"&gt;OpenTelemetry Operator&lt;/a&gt; 是一个为了简化 OpenTelemetry 组件在 Kubernetes 环境中的部署和管理而设计的 Kubernetes Operator。&lt;/p&gt;
+&lt;p&gt;OpenTelemetry Operator 通过 CRD（&lt;a href="https://github.com/open-telemetry/opentelemetry-operator/blob/main/docs/api.md#opentelemetrycollector"&gt;OpenTelemetryCollector&lt;/a&gt;、&lt;a href="https://github.com/open-telemetry/opentelemetry-operator/blob/main/docs/api.md#instrumentation"&gt;Instrumentation&lt;/a&gt;、&lt;a href="https://github.com/open-telemetry/opentelemetry-operator/blob/main/docs/api.md#opampbridge"&gt;OpAMPBridge&lt;/a&gt;） 实现在 Kubernetes 集群中自动部署和管理 OpenTelemetry Collector；在工作负载中自动安装 OpenTelemetry 探针。&lt;/p&gt;</description></item></channel></rss>

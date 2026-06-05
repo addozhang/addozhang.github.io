@@ -1,182 +1,455 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>云原生 on 乱世浮生</title><link>https://atbug.com/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/</link><description>Recent content in 云原生 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 23 Aug 2025 07:18:25 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/index.xml" rel="self" type="application/rss+xml"/><item><title>【译】AI 是否绑架了云原生创新？</title><link>https://atbug.com/the-future-of-ai-and-cloud-native/</link><pubDate>Sat, 23 Aug 2025 07:18:25 +0800</pubDate><guid>https://atbug.com/the-future-of-ai-and-cloud-native/</guid><description>译者注：近三年来，AI 热潮席卷科技行业，相关话题无处不在。与 AI 相关的讨论已经渗透到科技领域的每个角落，看似没有 AI 故事的产品变得更难推广。这里的云原生可以换成任何其他技术领域，AI 的兴起是否也在影响它们的发展和关注度？欢迎大家留言讨论。
-在这个充满变革的时代，保持开放心态、持续学习和积极拥抱新技术至关重要。无论是 AI 还是云原生，唯有不断探索和实践，才能在技术浪潮中立于不败之地。让我们共同见证创新的力量，推动行业向前发展。
-本文翻译自 Alan Shimel 的 Has AI Hijacked Cloud-Native Innovation?。
-AI 似乎正在成为科技领域的绝对焦点，几乎占据了所有讨论空间。
-从董事会会议室到行业活动的走廊，AI 话题无处不在。它令人兴奋、颠覆且充满变革力量。然而，AI 的迅猛发展也可能让其他重要技术创新被忽视。我不禁思考：AI 是否正在劫持云原生？
-仅仅一两年前，云原生还是企业技术领域的明星。Kubernetes 话题热度不减，可观察性平台蓬勃发展，Backstage 推动着内部开发者门户，GitOps 流水线高效运转，CNAPs 日益智能，服务网格架构迅速普及。云原生不仅意味着迁移到公有云，更是应用现代化、混合与边缘部署，甚至裸机部署的核心战略。
-云原生的普及有其深层原因——它为团队带来了创新所需的灵活性、可扩展性和模块化能力，帮助企业保持竞争力。
-在 Techstrong，我们对云原生的发展充满信心，甚至将其作为核心虚拟活动的名称：Cloud Native Now – One for the Road。这充分体现了云原生理念在现代 IT 领域的深度影响力。</description></item><item><title>macOS 原生容器 Apple Container 架构解析</title><link>https://atbug.com/macos-native-apple-container-architecture/</link><pubDate>Mon, 23 Jun 2025 20:55:51 +0800</pubDate><guid>https://atbug.com/macos-native-apple-container-architecture/</guid><description>TL;DR Apple Container 结合 macOS 框架与模块化插件体系，提供了强大的容器化环境。理解其架构与可扩展性，有助于开发者在云原生与虚拟化场景下充分发挥其能力。
-引言 Container 是 Apple 提供的开源命令行工具，专为在 Mac 上运行 Linux 容器而构建，尤其针对 Apple Silicon 进行了优化。它由 Swift 编写，基于 Containerization Framework 构建。Apple Containerization 和 Container CLI 于 WWDC 2025 发布。
-延伸阅读：
-苹果发布 Containerization Framework：开启 macOS 容器化新纪元 Apple Container 开箱实践 Apple Container 是一种客户端 - 服务器架构系统，使 macOS 上能够运行容器化工作负载。本文将深入探讨其架构、启动流程、核心插件、可扩展性及安全性等内容。</description></item><item><title>Apple Container 开箱实践</title><link>https://atbug.com/apple-container-hands-on/</link><pubDate>Sat, 21 Jun 2025 22:38:27 +0800</pubDate><guid>https://atbug.com/apple-container-hands-on/</guid><description>TL;DR Apple Container CLI 是一款强大的工具，可在 macOS 上运行 Linux 容器，特别针对 Apple Silicon 进行了优化。
-该 CLI 设计为开发者友好，命令风格与 Docker CLI 类似。对于已经熟悉 Docker CLI 的用户，Container CLI 应该会非常熟悉，并且为 macOS 用户提供了更原生的体验。
-本文将介绍 Container CLI、如何快速上手，以及如何在 macOS 上运行 Linux 容器。
-关于 Container CLI Container 是 Apple 提供的开源命令行工具，专为在 Mac 上运行 Linux 容器而构建，尤其针对 Apple Silicon 进行了优化。它由 Swift 编写，基于 Containerization Framework 构建。Apple Containerization 和 Container CLI 于 WWDC 2025 发布。</description></item><item><title>苹果发布 Containerization Framework：开启 macOS 容器化新纪元</title><link>https://atbug.com/apple-containerization-framework-macos-release/</link><pubDate>Sun, 15 Jun 2025 12:12:00 +0800</pubDate><guid>https://atbug.com/apple-containerization-framework-macos-release/</guid><description>TL;DR 苹果 Containerization Framework 的发布，标志着 macOS 容器化进入全新阶段。
-虽然苹果推出了原生容器化框架，但底层依然依赖虚拟机技术。为实现更高的安全性和隔离性，每个容器都运行在独立的轻量级虚拟机中，反而使虚拟机的使用频率和数量比以往更多。
-对行业来说，会对如 OrbStack、Docker Desktop 等商业产品产生显著影响。实际上，类似 OrbStack 这样的本地容器解决方案早已存在（笔者本人也已使用一两年，并在博客中做过介绍），但苹果官方的原生方案无疑将加剧市场竞争，推动相关产品加速创新。
-对开发者来说，虽然影响有限，但本地开发体验将变得更加安全高效（尤其是 M1 用户）。官方方案不仅提升了易用性和性能，也进一步促进了容器生态的融合与创新。
-对于开发者和行业而言，这既是机遇，也是挑战。让我们拭目以待，苹果如何在容器领域持续发力，带来更多可能。
-背景与动机 容器技术已成为现代软件开发和部署的基石。长期以来，macOS 用户在本地运行 Linux 容器时，主要依赖虚拟机方案（如 Docker Desktop、Colima、OrbStack 等），难以获得与 Linux 原生环境一致的体验。苹果在 WWDC2025 推出 Containerization Framework，旨在为 macOS 用户带来更安全、高效、原生的容器运行能力，推动开发生态进一步升级。
-什么是容器 容器是一种轻量级的虚拟化技术，允许开发者在隔离的环境中运行应用程序。与传统虚拟机相比，容器共享宿主操作系统内核，但每个容器拥有独立的文件系统、网络和进程空间。这种方式使得容器启动速度更快、资源占用更低，非常适合微服务架构和持续集成/持续部署（CI/CD）流程。
-与宿主机隔离：容器运行时与主机系统相互隔离，提升安全性。 工作负载之间隔离：不同容器之间互不影响，便于多应用并行部署。 便于开发环境一致性：开发、测试、生产环境可高度一致，减少“在我电脑上没问题”的情况。 运行时隔离：每个容器拥有独立的文件系统、网络和进程空间，保证应用运行互不干扰。 什么是 Containerization Framework Containerization Framework 是苹果开源的 Swift 框架，专为在 macOS 上运行 Linux 容器而设计。其核心目标包括：</description></item><item><title>【译】如何提升云原生应用的安全性</title><link>https://atbug.com/how-to-enhance-cloud-native-application-security/</link><pubDate>Mon, 26 Aug 2024 11:13:44 +0800</pubDate><guid>https://atbug.com/how-to-enhance-cloud-native-application-security/</guid><description>此文为原文翻译，仅供参考，不代表本人立场。翻译难免有疏漏，欢迎提出建议反馈。
-本文翻译自 Hazel Raoult 的 How to Optimize Security in Cloud-Native Applications。
-近年来，企业对云原生应用的依赖日益增加，这也使云原生应用成为攻击的首选目标。如今，企业的安全团队需要优先考虑这些资产的安全性，以防止大规模的服务中断和数据泄露。
-根据 IBM 2024 年《Cost of a Data Breach（数据泄露成本报告）》显示，目前 45%的网络攻击 是基于云的。2024 年 7 月，微软的 Azure 遭遇了一次重大的 DDoS 攻击，导致关键服务 停运近10小时。对于依赖这些服务来为客户提供不间断服务的企业来说，这种停机时间无疑会带来巨大的损失。
-基于这一背景，让我们探讨如何提升云原生应用的安全性，以防止类似情况的发生，并确保关键云服务的韧性和可靠性。
-用户控制优化 人为因素始终在数字资产（包括云原生应用程序）的安全中发挥重要作用。除非我们在不久的将来完全被机器取代，否则人类仍将在代码编写、配置管理以及最终的应用安全性方面做出重要决策。这是一种巨大的压力，因为一个小小的错误就可能导致严重的漏洞，进而让我们的云资产暴露在攻击和操作失误的风险之下。
-一个合理的解决方案是加强教育和培训，使开发人员和用户能够理解潜在风险，并学会实施强有力的安全协议和最佳实践。
-在技术措施方面，应重点关注强大的身份和访问管理（IAM）。最小权限原则是实现强 IAM 的首选方法。它确保用户被授予完成任务所需的最低访问权限，从而显着减少攻击面和帐户受损的风险。
-花时间为每个无服务器函数或容器创建最小角色或权限集。这样，即使云原生架构中的某个元素被攻破，造成的损害也将最小，且不会轻易扩散到其他组件。</description></item><item><title>初探 Backstage：快速上手指南</title><link>https://atbug.com/exploring-backstage-a-quick-start-guide/</link><pubDate>Sun, 28 Jan 2024 11:59:38 +0800</pubDate><guid>https://atbug.com/exploring-backstage-a-quick-start-guide/</guid><description>坦白说，虽然我之前阅读过相关文档，但实际上从未亲自尝试运行 Backstage。我一直有种感觉，Backstage 不过是一个开发者门户而非开发者平台。上周在 分享我对平台工程的理解 后，朋友圈中有人提议我写一篇关于 Backstage 入门的文章。这激起了我的好奇心，我决定深入探究一下 Backstage 究竟是什么。
-Backstage 简介 Backstage 是一个用于构建开发人员门户的开放平台，统一了所有基础设施工具、服务和文档，以创建端到端的简化开发环境，由 Spotify 开源并捐赠给 CNCF。Backstage 提供了开箱即用的几个核心功能：
-软件目录 软件目录（Software Catalog）是一个集中式系统，用于跟踪生态系统中所有软件（服务、网站、库、数据管道等）的所有权和元数据。开发人员提供软件的实体信息，Backstage 根据实体的信息与已有实体建立关联，并生成最终版本的软件实体保存在目录中。
-从 Backstage 仓库的软件目录示例中可以找到 多种类型的实体定义。
-软件模板 软件模板 （Software Template）是一个可以帮助开发在 Backstage 中创建组件的工具。默认情况下，它能够加载代码骨架、带有变量中的模板，然后将模板发布到某些位置，例如 GitHub 或 GitLab。
-技术文档 技术文档（TechDocs） 是 Spotify 自行开发的直接内置于 Backstage 中的类文档代码解决方案。开发人员在与代码一起存在的 Markdown 文件中编写文档 - 只需很少的配置即可在 Backstage 中获得一个漂亮的文档站点。</description></item><item><title>聊聊我所理解的平台工程</title><link>https://atbug.com/my-understanding-of-platform-engineering/</link><pubDate>Sun, 21 Jan 2024 13:26:34 +0800</pubDate><guid>https://atbug.com/my-understanding-of-platform-engineering/</guid><description>Gartner 将平台工程列为 2024 顶级战略技术趋势之一。
-说起平台工程（Platform Engineering） ，经常听到有人说是：新瓶装（平台工程）旧酒（DevOps）。
-今天根据过去自服务平台的实践经验，聊聊我所理解的平台工程。
-云原生平台 说到平台工程，不可不免地要聊聊云原生，不过这里不会针对是否转向云原生进行讨论。
-云原生的三驾马车：微服务、Kubernetes、DevOps。根据过往的实践经验，我认为云原生技术平台的核心能力（包括但并不限于）可概括为：
-容器平台：专注于容器化技术和 Kubernetes 编排，实现应用的弹性、高效存储和网络通信。这为微服务和 DevOps 的实现提供了基础架构支持。 微服务平台：集中管理微服务，包括统一的服务治理、配置管理、API 网关和支持多样的微服务框架，以适应复杂的服务交互和灵活的开发需求。 监控平台：提供全方位的监控系统，包括日志收集、性能指标监控、链路跟踪、实时告警以及监控数据的可视化展示，助力于系统的稳定运行和故障迅速定位。 DevOps 集成平台：集成持续集成和持续部署（CICD）流程，以及文档中心和代码质量管理，实现自动化、高效和标准化的软件开发和运维流程。 对于风靡多年的云原生（近来也有降温的趋势？），业界的褒贬不一：提升了研发效率和资源的利用率，；浪费资源、部署维护困难、可观测性变差等等。
-云原生技术所面临的众多负面反馈，很大程度上源于其本身的复杂性。云原生平台向开发人员展现了过多的复杂性。
-云原生的复杂性 云原生技术，尽管带来了许多优势，比如灵活性、可扩展性和高效的资源利用，但同时也引入了一定的复杂性：
-技术栈的复杂性：云原生环境通常涉及到容器化、微服务架构、CI/CD、以及基于 Kubernetes 的容器编排等技术。这些技术各自有其学习曲线，并且技术之间需要集成并协同工作，增加了系统的整体复杂性。 管理和运维的复杂性：在云原生环境中，应用程序通常被分解为多个微服务，每个微服务部署在不同的容器中，这使得监控、日志记录、故障排查和性能优化变得更加复杂。 网络复杂性：微服务架构意味着服务之间有大量的网络通信，再叠加容器、混合多云的网络环境，管理这些服务间的网络流量、确保高可用性和网络安全，以及实现服务发现等都增加了网络管理的复杂性。 可观测性和监控的挑战：确保对在不断变化的环境中运行的众多微服务有足够的可见性，需要复杂的监控和日志系统。 安全挑战：云原生架构中的分布式和动态性质引入了新的安全挑战。例如，需要确保容器安全、服务间通信的安全，以及在动态环境中持续地管理和更新安全策略。 这些复杂性给开发人员带来了显著的摩擦和认知负担，从而降低了他们的开发体验。在专注于业务开发的开发人员与底层基础设施之间，形成了一个模糊的交界区域。平台工程正是专注于这个模糊地带，旨在缩小这一差距并简化开发流程。
-平台工程是一个胶水层。
-什么是平台工程 平台工程是一门在云原生时代为软件工程组织设计和构建工具链及工作流程的学科，旨在提供自助服务能力。平台工程师提供的综合产品通常被称为“内部开发者平台”，涵盖了应用程序整个生命周期的运营需求。
-Platform engineering is the discipline of designing and building toolchains and workflows that enable self-service capabilities for software engineering organizations in the cloud-native era.</description></item><item><title>Netflix 零配置服务网格与按需集群发现</title><link>https://atbug.com/translation-zero-configuration-service-mesh-with-on-demand-cluster-discovery/</link><pubDate>Mon, 25 Sep 2023 12:39:05 +0800</pubDate><guid>https://atbug.com/translation-zero-configuration-service-mesh-with-on-demand-cluster-discovery/</guid><description>本文翻译自由 David Vroom, James Mulcahy, Ling Yuan, Rob Gulewich 编写的 Netflix 博客 Zero Configuration Service Mesh with On-Demand Cluster Discovery。
-Netflix 相信大家并不陌生，在 Spring Cloud 生态中就有 Netflix 全家桶。多年前，我也曾将基于 Netflix OSS 构建的微服务架构搬上了 Kubernetes 平台，并持续折腾好几年。
-Spring Cloud Netflix 有着庞大的用户群以及用户场景，其提供了微服务治理的一整套解决方案：服务发现 Eureka、客户端负载均衡 Ribbon、断路器 Hystrix、微服务网格 Zuul。</description></item><item><title>软件栈的商品化：应用程序为先的云服务如何改变游戏规则</title><link>https://atbug.com/translation-application-first-cloud-services/</link><pubDate>Wed, 29 Mar 2023 07:55:33 +0800</pubDate><guid>https://atbug.com/translation-application-first-cloud-services/</guid><description>今天读到这篇文章，觉得不错就翻译一下。文章是翻译自 Steef-Jan Wiggers The Commoditization of the Software Stack:How Application-first Cloud Services are Changing the Game，内容来自 Bilgin Ibryam 在 QCon London 上的演讲。Ibryam 在分享中从应用开发和运维两个不同的维度来讨论架构的演进：内部架构和外部架构。二者从单体应用时期的明显的界限，到如今界限愈来愈模糊。
-我认为随着架构的演进，应用程序发生着巨大的变化，能力从应用中分离出来，下沉到基础设施中，甚至变成新的基础设施。基础设施，也从狭义上的物理设施、计算资源演变为软件定义的能力，这些能力不断地被产品化、商品化。新生代的基础设施，以各种运行时的方式游离在应用程序之外，二者仍保持着一定的联系：API。
-以下是原文的翻译。
-云服务正在不断演进，这影响着开发者构建分布式应用程序的方式。在 QCon London 大会上，来自 Diagrid 的产品经理 Bilgin Ibryam 探讨了云原生技术（如 Dapr）与面向开发者的云服务的交集。
-Ibryam 首先介绍了如何看待从 单体应用程序 到 微服务 的转变，以及接下来会出现什么。此外，他还谈到了云服务以及它正在以什么样的形式塑造架构的演变。</description></item><item><title>【译】分拆：技术栈的自然演进</title><link>https://atbug.com/the-unbundling-of-tech-stack-translation/</link><pubDate>Sun, 12 Feb 2023 20:26:32 +0800</pubDate><guid>https://atbug.com/the-unbundling-of-tech-stack-translation/</guid><description>本文翻译自 Bilgin Lbryam 的 Unbundling: The Natural Evolution of Tech Stacks，翻译难免有所疏漏，有建议请反馈。
-“unbundling” 如何翻译，有点纠结，我一度将其翻译成“解耦”，但解耦是 “decoupling” 的翻译。这里我将其翻译成分拆，如果你有更好的翻译请告知。
-译者注 作者应该是去年 7 月离开红帽加入了基于 Dapr 的创业公司 Diagrid，曾写过 Multi-Runtime Microservices Architecture 介绍多运行时，多运行时实际上也是分拆的体现。
-作者从多种技术和团队触发，介绍在演进中分拆的体现。除了文中提到，我认为可以分拆的是计算资源。将计算资源拆分：虚拟机、多租户、多集群、多云、混合云，以降低成本、避免供应商绑定、提升性能和可靠性。在计算资源拆分过程中，也衍生出了与之配套的技术来解决拆分后带来的不便。
-随着 IT 领域的不断发展，新的软件架构、开发技术和工具层出不穷。包括微服务、微前端、零信任、服务网格和数据网格，并将其网格化。尽管这些技术和方法间存在着明显的不同，但它们都被一个共同趋势联系在一起：技术栈和团队的分拆。这种趋势包括将系统分解成更小的、独立的组件，并将工作组织成更小、更专注的团队，以实现更高的灵活性和模块化。
-他们都是如何体现分拆的？
-微服务 的出现是为了应对单体架构的局限性，随着应用程序的增长单体架构灵活性不足，并且扩展和维护困难。通过将单体应用程序分解为更小的、独立服务，就可以独立开发、部署和扩展应用程序的每一部分，从而缩短开发周期并提高灵活性。 六边形架构 的出现是为了通过将组件解耦并提供与它们交互的标准接口来提高 3 层应用程序的灵活性和可维护性。 领域驱动设计 (DDD) 是一种软件开发方法，可以帮助将整体应用程序分解成更小的、松耦合的、代表不同的业务领域或上下文的模块。 微前端 架构是一种设计方法，是将大型单体前端应用程序分解为较小的、独立的、可以单独开发和部署的模块。 JAMstack 通过将构成用户界面的 HTML、CSS 和 JavaScript 与为应用程序提供支持的服务器端代码和数据库分离，实现应用程序的前端和后端分离。由于系统的一部分的变更无需变更其他部分，从而可以更轻松地维护应用。 服务网格 将分布式应用程序的网络职责（例如路由、负载平衡和服务发现）与应用程序本身分离，使开发人员可以专注于构建业务逻辑和功能，而无需担心底层网络基础设施。 与微服务类似，数据网格 将大型复杂系统分解为更小的独立组件。它将数据治理和管理实践分解为更小的、独立组件，这些组件可以跨不同的数据源和系统一致地实现和执行。 2 个比萨团队 模型是一种在组织中组织团队和工作的策略，它提倡更小的团队能够更快地响应变化、沟通和协作，并可以更快地做出决策并更有效地解决问题。 每种技术趋势的最终结果都是分拆。将技术栈分解为独立的组件，将团队分解为更小、更专注的团队，这些团队可能会扩展到所有其他领域。在前端、数据、网络、安全之后，下一个拆分领域你认为会是什么？ 和我一起 致力于 Dapr 和分拆集成。 也可以在 @bibryam 上关注我，并大声说出关于 分拆 主题的任何想法和评论。</description></item><item><title>CICD 的供应链安全工具 Tekton Chains</title><link>https://atbug.com/tekton-chains-secure-supply-chain/</link><pubDate>Sat, 14 May 2022 13:46:16 +0800</pubDate><guid>https://atbug.com/tekton-chains-secure-supply-chain/</guid><description>软件供应链是指进入软件中的所有内容及其来源，简单地可以理解成软件的依赖项。依赖项是软件运行时所需的重要内容，可以是代码、二进制文件或其他组件，也可以是这些组件的来源，比如存储库或者包管理器之类的。包括代码的已知漏洞、受支持的版本、许可证信息、作者、贡献时间，以及在整个过程中的行为和任何时候接触到它的任何内容，比如用于编译、分发软件的基础架构组件。
-CICD 流水线作为基础架构组件，承担着软件的构建、测试、分发和部署。作为供应链的一环，其也成为恶意攻击的目标。CICD 的行为信息可以作为安全审查的重要依据，比如构建打包的环境、操作流程、处理结果等等。
-今天介绍的 Tekton Chains，便是这样的行为收集工具。
-Tekton Chains Chains 是一个 Kubernetes CRD 控制器，用于管理 Tekton 中的供应链安全。Chains 使 Tekton 能够在持续交付中，捕获 PipelineRun 和 TaskRun 运行的元数据用于安全审计，实现二进制溯源和可验证的构建，成为构成保证供应链安全的基础设施的一部分。
-当前 Chains（v0.9.0）提供如下功能：
-使用用户提供的加密密钥，将 TaskRun 的结果（包含 TaskRun 本身和 OCI 镜像）镜像进行签名 支持类似 in-toto 的证明格式 使用多种加密密钥类型和服务（x509、KMS）进行签名 签名的存储支持多种实现 接下来的 Demo，我们还是继续使用之前在 Tekton Pipeline 实战 用的 Java 项目 tekton-test，在代码中同样还包含了 Pipeline 和 Task 的定义。</description></item><item><title>Kubernetes HPA 基于 Prometheus 自定义指标的可控弹性伸缩</title><link>https://atbug.com/kubernetes-pod-autoscale-on-prometheus-metrics/</link><pubDate>Tue, 18 Jan 2022 12:03:59 +0800</pubDate><guid>https://atbug.com/kubernetes-pod-autoscale-on-prometheus-metrics/</guid><description>在《Kubernetes 的自动伸缩你用对了吗？》 一文中详细说明了如何使用 Kubernetes 的自动伸缩。在 Kubernetes 中弹性伸缩主要有三种：HPA、VPA、CA。本文不再详细说明，有兴趣的可以看那篇文章。这里主要来说下 Pod 水平缩放 HPA。
-随着 Kubernetes v1.23 的发布，HPA 的 API 来到了稳定版 autoscaling/v2：
-基于自定义指标的伸缩 基于多项指标的伸缩 可配置的伸缩行为 从最初的 v1 版本 HPA 只支持 CPU、内存利用率的伸缩，到后来的自定义指标、聚合层 API 的支持，到了 v1.18 版本又加入了配置伸缩行为的支持，HPA 也越来越好用、可靠。
-依靠 CPU 或者内存指标的扩容并非使用所有系统，看起来也没那么可靠。对大部分的 web 后端系统来说，基于 RPS（每秒请求数）的弹性伸缩来处理突发的流量则会更加靠谱。
-Prometheus 也是当下流行开源监控系统，通过 Prometheus 可以获取到系统的实时流量负载指标，今天我们就来尝试下基于 Prometheus 的自定义指标进行弹性伸缩。</description></item><item><title>OpenFaaS - 以自己的方式运行容器化函数</title><link>https://atbug.com/openfaas-case-study-zh/</link><pubDate>Fri, 17 Dec 2021 09:13:59 +0800</pubDate><guid>https://atbug.com/openfaas-case-study-zh/</guid><description>译者注： 本文篇幅较长，有助于了解 FaaS 和 OpenFaaS。作者分别从开发人员和运维人员的视角来了解 OpenFaaS，对了解新的技术是个很好的方式。
-本文翻译自 Ivan Velichko 的 OpenFaaS - Run Containerized Functions On Your Own Terms。
-长期以来，无服务器（serverless） 对我来说无非就是 AWS Lambda 的代名词。Lambda 提供了一种方便的途径，可以将任意代码附加到平台事件（云实例的状态变更、DynamoDB 记录的更新或新的 SNS 消息）中。但是，我时不时会想到某个逻辑，但其又没大到足以有自己的服务，同时有不适合任何现有服务的范围。因此，我经常将其放入函数中，以便日后使用 CLI 命令或者 HTTP 调用来调用它。
-几年前，我来开了 AWS，自那以后，我一直怀念部署无服务器功能的便利性。因此，当我得知 OpenFaaS 项目时惊喜万分。它将在 Kubernetes 集群上部署函数变得简单，甚至仅需要 Containerd 就可以部署到虚拟机上。</description></item><item><title>策略即代码：为了 OpenPolicyAgent 学 Rego？试试 Javascript</title><link>https://atbug.com/policy-as-code-with-pipy/</link><pubDate>Wed, 08 Dec 2021 07:49:37 +0800</pubDate><guid>https://atbug.com/policy-as-code-with-pipy/</guid><description>距离上个版本 用 Pipy 实现 OPA，已经过去快半年了。当初使用Pipy 实现了可信镜像仓库的检查，那时的版本实现起来会稍微复杂，从策略仓库到证书创建到Admission Webhook 的创建都需要大量的人工操作，配置和逻辑也还是耦合在一起。
-这个版本安装和使用起来会更加简单。
-当初我用“不务正业”来形容 Pipy 实现准入控制，等看完这篇文章，欢迎留言说说你的看法。
-架构 还是继续上次的场景，在 Pod 创建时对 Pod 使用的镜像所在仓库进行检查，以及检查镜像的 tag 是否合法。
-这里借助 Pipy Repo 的能力，将代表策略的脚本和配置交由 Repo 进行管理；Pipy 实例实时从 Pipy Repo 同步策略，并进行动态加载。
-同时 Pipy Repo 对外提供 REST API 来管理策略，对策略的修改更容易。也方便与企业现有管理后台进行对接。
-下面就开始部署验证，这里所使用的所有代码都已提交到 GitHub 仓库：https://github.com/flomesh-io/demo-policy-as-code。</description></item><item><title>Kubernetes Deployment 的故障排查可视化指南（2021 中文版）</title><link>https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/</link><pubDate>Sat, 20 Nov 2021 18:29:19 +0800</pubDate><guid>https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/</guid><description>将应用部署到 Kubernetes 时通常会使用 Deployment、Service、Ingress，整个应用从部署到正常运行，经历的流程很长。从 kubectl apply YAML 文件，经过 apiserver、controller manager、scheduler、kubelet、以及 CRI、CNI 等众多组件的协同工作。
-漫长的“行程”，Pod 也经历各种正常和不正常的状态变化，即使正常运行也会出现服务无法访问的问题。对于刚开始在 Kubernetes 平台开展工作的同学来说，故障的排查确实棘手。之前工作的时候，经常要协助排查各种问题。去年在 Learnk8s 上看到了关于 Deployment 故障排查的视图，我还参考做了当时整个平台的故障排查视图，包括了从项目源码、CICD 流水线、部署整个流程的故障排查参考。
-现在 Learnk8s 的 Deployment 排查指南更新了，也有了中文版本。
-年中翻译 Learnk8s 的文章《Kubernetes 的自动伸缩你用对了吗？》 时，与 Daniele Polencic 沟通时被问及是否能翻译故障排查的可视化指南。
-年中的时候就翻译完了，今天电报上被告知文章 A visual guide on troubleshooting Kubernetes deployments已更新，排查视图较上一版有了部分的调整。</description></item><item><title>低复杂度 - 服务网格的下一站</title><link>https://atbug.com/service-mesh-unnecessary-complexity/</link><pubDate>Fri, 15 Oct 2021 07:58:25 +0800</pubDate><guid>https://atbug.com/service-mesh-unnecessary-complexity/</guid><description>译者：
-作为一个曾经在制造业企业的基础架构团队任职，为支持公司的“互联网基因”和“数字化转型”落地了云原生基础设施平台，并在尝试采用服务网格未成的我来说，看到这篇文章深有感触。尤其是文中所说的“人少，问题多，需要快速输出价值”，直戳到了痛处。有限的人手有限的时间，我们需要将大部分精力集中在解决成熟度曲线较低的基本问题上，要想很好的运行复杂的系统是非常困难的。
-服务网格是一个新的基础设施层，可以承载很多的功能，未来还会有更大的想象空间和光明的未来。
-以上的种种原因，也促使我后来选择进入一家提供服务网格的产品企业，也希望服务网格可以被更简单的使用。
-“道阻且长，行则将至！”
-本文翻译自 Chris Campbell 的 How Unnecessary Complexity Gave the Service Mesh a Bad Name
-关键要点 采用服务网格有巨大的价值，但必须以轻量级的方式进行，以避免不必要的复杂性。 在实施服务网时，要采取务实的方法，与技术的核心功能保持一致，并小心干扰（译者：注意力的分散）。 服务网格的一些核心特性包括标准化监控、自动加密和身份识别、智能路由、可靠的重试和网络可扩展性。 服务网格可以提供强大的功能，但这些功能会分散本应对核心优势的关注，并且这些功能也不是实施服务网格的主要原因。 在初始实施服务网格时没有必要去关注那些明显会分散注意力的功能，比如复杂的控制平面、多集群支持、Envoy、WASM 和 A/B 测试。 服务网格是 Kubernetes 世界中的一个热门话题，但许多潜在的采用者已经有些失望了。服务网格的落地受到压倒性的复杂性和看似无穷无尽的供应商解决方案的限制。在我亲自浏览了这个领域之后，我发现采用服务网格具有巨大的价值，但它必须以轻量级的方式完成，以避免不必要的复杂性。尽管普遍存在幻灭感，但服务网格的未来依然光明。
-在工作中学习 我进入服务网格的世界始于我在一家老牌的财富 500 强技术公司担任云计算架构师的角色。在开始我们的服务网格之旅时，我身边有许多强大的工程师，但大多数人几乎没有云计算开发经验。我们的组织诞生于云计算之前，完全实现云计算的价值需要时间。我们的传统业务线主要集中在技术栈的硬件元素上，云计算的决策最初是由为运送硬件或为该硬件提供固件和驱动程序而开发的流程驱动的。
-随着该组织经历其“数字化转型”，它越来越依赖于提供高质量的软件服务，并逐渐开发出更好的方法。但作为云计算架构师，我仍在为优先考虑硬件的业务流程，以及具有不同技能、流程和信念的工程团队导航。随着时间的推移，我和我的团队在将 .NET 应用程序迁移到 Linux、采用 Docker、迁移到 AWS 以及与之相关的最佳实践（如持续集成、自动化部署、不可变基础设施、基础设施即代码、监控等）方面变得熟练并成功。但挑战依然存在。</description></item><item><title>Rego 不好用？用 Pipy 实现 OPA</title><link>https://atbug.com/pipy-implement-kubernetes-admission-control/</link><pubDate>Tue, 13 Jul 2021 08:44:56 +0800</pubDate><guid>https://atbug.com/pipy-implement-kubernetes-admission-control/</guid><description>还不知道 Pipy 是什么的同学可以看下 GitHub 。
-Pipy 是一个轻量级、高性能、高稳定、可编程的网络代理。Pipy 核心框架使用 C++ 开发，网络 IO 采用 ASIO 库。 Pipy 的可执行文件仅有 5M 左右，运行期的内存占用 10M 左右，因此 Pipy 非常适合做 Sidecar proxy。
-Pipy 内置了自研的 pjs 作为脚本扩展，使得Pipy 可以用 JS 脚本根据特定需求快速定制逻辑与功能。
-Pipy 采用了模块化、链式的处理架构，用顺序执行的模块来对网络数据块进行处理。这种简单的架构使得 Pipy 底层简单可靠，同时具备了动态编排流量的能力，兼顾了简单和灵活。通过使用 REUSE_PORT 的机制（主流 Linux 和 BSD 版本都支持该功能），Pipy 可以以多进程模式运行，使得 Pipy 不仅适用于 Sidecar 模式，也适用于大规模的流量处理场景。 在实践中，Pipy 独立部署的时候用作“软负载”，可以在低延迟的情况下，实现媲美硬件的负载均衡吞吐能力，同时具有灵活的扩展性。</description></item><item><title>Open Policy Agent: Top 5 Kubernetes 准入控制策略</title><link>https://atbug.com/open-policy-agent-top-5-kubernetes-admission-control/</link><pubDate>Mon, 12 Jul 2021 08:20:40 +0800</pubDate><guid>https://atbug.com/open-policy-agent-top-5-kubernetes-admission-control/</guid><description>如何使用 Open Policy Agent 实现准入策略控制，可以参考这里
-本文翻译自 Open Policy Agent: The Top 5 Kubernetes Admission Control Policies
-Kubernetes 开发人员和平台工程师通常承受着非常大的压力，以保持应用程序部署的快速进行，并且总是为了速度和进度而做出妥协。平台团队越来越有责任确保这些妥协（例如管理 Ingress）不会导致客户数据暴露在整个互联网上等后果。
-幸运的是，Kubernetes 提供了设置策略的能力，通过检查并防止部署错误将其投入生产，从而避免这些后果。为了确保团队的应用程序不会比信心更重要，以下是现在应该在集群中运行的前五个 Kubernetes 准入控制策略。
-1. 可信镜像仓库 此策略很简单，但功能强大：仅允许从受信任的镜像仓库中拉取的容器映像，并且可以选择仅拉取与允许的仓库镜像地址列表匹配的那些镜像。
-当然，从互联网（或可信镜像仓库库以外的任何地方）拉取未知镜像会带来风险——例如恶意软件。但是还有其他很好的理由来维护单一的可信来源，例如在企业中实现可支持性。通过确保镜像仅来自受信任的镜像仓库，可以密切控制镜像库存，降低软件熵和蔓延的风险，并提高集群的整体安全性。
-相关策略：
-禁止所有带有“latest” tag 的镜像 仅允许签名镜像或匹配特定哈希/SHA 的镜像 策略示例：
-package kubernetes.validating.images deny[msg] { some i input.</description></item><item><title>Kubernetes 的魔力在于企业标准化，而不是应用程序的可移植性</title><link>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</link><pubDate>Sun, 11 Jul 2021 08:05:42 +0800</pubDate><guid>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</guid><description>笔者：Kubernetes 抽象了资源和工作负载的操作模式，统一了工具集，实现人机接口的标准化。正如类 Docker 工具提供了应用运行时的操作模式；Spring Framework 提供了 Java 应用的开发模式。
-Kubernetes 是关于跨云的技能、工具和实践的可移植性。不是工作负载的可移植性。 &amp;ndash; Bilgin Lbryam @bibryam
-本文翻译自 Kubernetes magic is in enterprise standardization, not app portability
-Kubernetes 不会神奇地使你的应用程序具有可移植性，但它可能会给你带来更好的东西。
-云为企业提供了看似无限的选择。然而，根据 Canonical-sponsored 的一项调查，这并不是大多数企业采用 Kubernetes 等云友好技术的原因。相反，Kubernetes 的主要目标是标准化——外观和操作与其他人一样。
-可移植性不是目标 我之前已经讨论过这个问题，参考了 Gartner 关于 Kubernetes 和可移植性的指南。许多人认为 Kubernetes（和容器）可以让他们在云之间轻松移植，但事实证明并不是这样的。正如 Gartner 分析师 Marco Meinardi 所写，当被问及公司是否应该采用“Kubernetes 使他们的应用程序可移植&amp;hellip;&amp;hellip;答案是：不。” 再说一次？</description></item><item><title>Kubernetes CKA 证书备考笔记</title><link>https://atbug.com/notes-for-cka-preparation/</link><pubDate>Fri, 02 Jul 2021 08:02:15 +0800</pubDate><guid>https://atbug.com/notes-for-cka-preparation/</guid><description>Kubernetes 使用有好几年了，但在今年 5 月才完成 CKA 的考试。虽说用了几年，还是提前刷了部分题熟悉下。
-绝大部分题都是有在 minikube 的环境上操作过，只有部分比如升级集群受限于环境问题没有实地操作。
-写在最前 保存常用文档进书签，如果有 Alfred 启用浏览器书签 workflow。效果见下图 kubectl 自动补全 echo &amp;quot;source &amp;lt;(kubectl completion bash)&amp;quot; &amp;gt;&amp;gt; ~/.bashrc; source ~/.bashrc 每道题开始前要切换 context 和 namespace，直接复制题目里的命令即可 必要的 alias 善用 --dry-run=client -o yaml 避免手动敲太多 善用 kubectl explain [resource[.field]] 看懂题目最重要，输出正确的结果更重要（重要的事讲三遍） 看懂题目最重要，输出正确的结果更重要（重要的事讲三遍） 看懂题目最重要，输出正确的结果更重要（重要的事讲三遍） 书签地址：K8s-CKA-CAKD-Bookmarks.</description></item><item><title>云原生 CICD: Tekton Pipeline 实战</title><link>https://atbug.com/tekton-pipeline-practice/</link><pubDate>Tue, 22 Jun 2021 07:19:33 +0800</pubDate><guid>https://atbug.com/tekton-pipeline-practice/</guid><description>更新历史：
-v1：2020.1.21 基于 Tekton Pipline v0.9.0 v2（当前）：2021.6.22 基于 Tekton Pipeline v0.25.0 Tekton 是 Google 开源的 Kubernetes 原生CI/CD 系统, 功能强大扩展性强. 前身是 Knavite 里的 build-pipeline 项目, 后期孵化成独立的项目. 并成为 CDF 下的四个项目之一, 其他三个分别是 Jenkins, Jenkins X, Spinnaker.
-为什么说 Tekton 是 Kubernetes 原生的, 以内其基于 Kubernetes 的 CRD 定义了 Pipeline 流水线.</description></item><item><title>源码解析：一文读懂 Kubelet</title><link>https://atbug.com/kubelet-source-code-analysis/</link><pubDate>Tue, 15 Jun 2021 08:25:25 +0800</pubDate><guid>https://atbug.com/kubelet-source-code-analysis/</guid><description>本文主要介绍 kubelet 功能、核心组件，以及启动流程的源码分析，总结了 kubelet 的工作原理。
-kubelet 简介 从官方的架构图中很容易就能找到 kubelet
-执行 kubelet -h 看到 kubelet 的功能介绍：
-kubelet 是每个 Node 节点上都运行的主要“节点代理”。使用如下的一个向 apiserver 注册 Node 节点：主机的 hostname；覆盖 host 的参数；或者云提供商指定的逻辑。 kubelet 基于 PodSpec 工作。PodSpec 是用 YAML 或者 JSON 对象来描述 Pod。Kubelet 接受通过各种机制（主要是 apiserver）提供的一组 PodSpec，并确保里面描述的容器良好运行。 除了由 apiserver 提供 PodSpec，还可以通过以下方式提供：</description></item><item><title>Kubernetes 的自动伸缩你用对了吗？</title><link>https://atbug.com/auto-scaling-best-practice-in-kubernetes/</link><pubDate>Wed, 09 Jun 2021 00:34:25 +0800</pubDate><guid>https://atbug.com/auto-scaling-best-practice-in-kubernetes/</guid><description>本文翻译自 learnk8s 的 Architecting Kubernetes clusters — choosing the best autoscaling strategy，有增删部分内容。
-TL;DR: 在默认设置下，扩展 Kubernetes 集群中的 pod 和节点可能需要几分钟时间。了解如何调整集群节点的大小、配置水平和集群自动缩放器以及过度配置集群以加快扩展速度。
-自动扩展器 在 Kubernetes 中，常说的“自用扩展”有：
-HPA：Pod 水平缩放器 VPA：Pod 垂直缩放器 CA：集群自动缩放器 不同类型的自动缩放器，使用的场景不一样。
-HPA HPA 定期检查内存和 CPU 等指标，自动调整 Deployment 中的副本数，比如流量变化：
-VPA 有些时候无法通过增加 Pod 数来扩容，比如数据库。这时候可以通过 VPA 增加 Pod 的大小，比如调整 Pod 的 CPU 和内存：</description></item><item><title>初探可编程网关 Pipy</title><link>https://atbug.com/glance-at-programmable-gateway-pipy/</link><pubDate>Mon, 31 May 2021 00:45:08 +0800</pubDate><guid>https://atbug.com/glance-at-programmable-gateway-pipy/</guid><description>有幸参加了 Flomesh 组织的workshop，了解了他们的 Pipy 网络代理，以及围绕 Pipy 构建起来的生态。Pipy 在生态中，不止是代理的角色，还是 Flomesh 服务网格​中的数据平面。
-整理一下，做个记录，顺便瞄一下 Pipy 的部分源码。
-介绍 下面是摘自 Github 上关于 Pipy 的介绍：
-Pipy 是一个轻量级、高性能、高稳定、可编程的网络代理。Pipy 核心框架使用 C++ 开发，网络 IO 采用 ASIO 库。 Pipy 的可执行文件仅有 5M 左右，运行期的内存占用 10M 左右，因此 Pipy 非常适合做 Sidecar proxy。
-Pipy 内置了自研的 pjs 作为脚本扩展，使得Pipy 可以用 JS 脚本根据特定需求快速定制逻辑与功能。</description></item><item><title>云上细粒度访问管理的参考架构</title><link>https://atbug.com/translation-access-management-reference-architecture/</link><pubDate>Wed, 28 Apr 2021 08:02:11 +0800</pubDate><guid>https://atbug.com/translation-access-management-reference-architecture/</guid><description>本文由 Addo Zhang 翻译自 A Reference Architecture for Fine-Grained Access Management on the Cloud
-什么是访问管理？ 访问管理是识别用户或一组用户是否应该能够访问给定资源（例如主机、服务或数据库）的过程。例如，对于开发人员来说是否可以使用 SSH 登录生产应用程序服务器，如果可以，那么可以登录多长时间？如果 SRE 在非支持时间尝试访问数据库，他们这样做？如果数据工程师已转移到其他团队，他们是否应该继续访问 ETL 管道的 S3 存储桶？
-现在如何进行访问管理？ 在云上各种基础设施和数据服务激增之前，访问管理是 DevOps 和 Security 团队要解决的相对简单的问题。VPN 和堡垒主机是（现在仍然是）在网络级别封锁所有关键资源的首选机制。用户必须先通过 VPN 服务器进行身份验证，或者登录到堡垒主机，然后才能访问专用网络上的所有资源。
-当资源是静态的并且它们的数量相对较小时，此方法效果很好。但是，随着越来越多的资源动态地涌入专用网络的各处，VPN / 堡垒主机解决方案变得站不住脚。
-具体来说，在三个方面，VPN 和堡垒主机不足以作为一种有效的访问管理机制。
-它们作用于网络层面：用户通过 VPN 进行身份验证并获得对专用网络的访问权限后，他们实际上就可以访问其上运行的所有服务。无法根据用户的身份在基础架构或数据服务的粒度上管理访问。 凭据是攻击的媒介：VPN 和堡垒主机都要求用户记住并存储凭据。过期和轮换凭证作为安全策略非常困难，尤其是在涉及大量用户的情况下，凭证因此成为潜在的攻击媒介。 不能管理第三方 SaaS 工具：SaaS 工具（如 Looker、Tableau 和 Periscope Data）需要直接访问数据端点。因此，使用这些工具访问数据的任何人都无法通过使用了相同的机制和凭据的基础设施进行身份验证。 云上访问管理的新架构 在本文中，我们将定义新的参考架构，为那些正在寻求简化访问管理云资源（从 SSH 主机、数据库、数据仓库到消息管道和云存储终结点）解决方案的云原生企业。</description></item><item><title>应“云”而生的 Java 框架：构建本机可执行文件</title><link>https://atbug.com/quarkus-build-native-executable-file/</link><pubDate>Sat, 17 Apr 2021 09:08:40 +0800</pubDate><guid>https://atbug.com/quarkus-build-native-executable-file/</guid><description>电影《功夫》中，火云邪神有句话：“天下武功无坚不摧，唯快不破。”
-在 上一篇文章 中，我们写了第一个 Quarkus 应用，并尝试着构建了 legacy-jar 和 fast-jar。
-今天来看一下 Quarkus 构建出来的本机可执行文件到底比 Spring 应用能快多少，生态的成熟度不在这里讨论。
-TLDR 先上结论， 与只有一个 Controller 的Spring Web 应用做下对比。
-应用启动时间：0.012s vs 2.294s 镜像大小：49MB vs 237 MB Spring 应用镜像使用 openjdk:11.0-jre-slim 作为 base 镜像，大小为 220MB。
-docker images REPOSITORY TAG IMAGE ID CREATED SIZE spring/spring-getting-started latest 5f47030c5c3f 6 minutes ago 237MB quarkus/quarkus-getting-started distroless2 fe973c5ac172 24 minutes ago 49MB quarkus/quarkus-getting-started distroless 6fe27dd44e86 31 minutes ago 51MB quarkus/quarkus-getting-started ubi 8f86f5915715 58 minutes ago 132MB Java 应用容器化的困境 云原生世界中，应用容器化是个显著的特点。Java 应用容器化时面临了如下问题：</description></item><item><title>应“云”而生的 Java 框架：Hello, Quarkus</title><link>https://atbug.com/hello-quarkus/</link><pubDate>Mon, 05 Apr 2021 21:08:40 +0800</pubDate><guid>https://atbug.com/hello-quarkus/</guid><description>Wikipedia上有关 Quarkus 的信息还很少，只有一句简单的介绍：
-Quarkus 是专为 OpenJDK HotSpot 和 GraalVM 定制的全栈 Kubernetes 原生 Java 应用程序框架。与如 Spring 之类的其他框架相比，它提供了较小的内存占用并缩短了启动时间。它允许结合命令式和非阻塞响应式编程。
-从 Quarkus 的官网，可以看到其有几个特性：
-容器优先 统一了命令式和响应式编程 开发者友好 最佳品种的库及标准 更多 Quarkus 可以参考官网的介绍及文档。今天主要就是跑一下 Quarkus 的 Hello world。
-放一张官网的图：
-环境准备 基于 Java 11 的 GraalVM Maven 3.6.2+ 笔者使用的是 macos 10.</description></item><item><title>分布式系统在 Kubernetes 上的进化</title><link>https://atbug.com/translation-distributed-systems-kubernetes/</link><pubDate>Mon, 29 Mar 2021 23:11:25 +0800</pubDate><guid>https://atbug.com/translation-distributed-systems-kubernetes/</guid><description>本文译自 The Evolution of Distributed Systems on Kubernetes
-在 3 月份的 QCon 上，我做了一个关于 Kubernetes 的分布式系统进化的演讲。首先，我想先问一个问题，微服务之后是什么？我相信大家都有各自的答案，我也有我的答案。你会在最后发现我的想法是什么。为了达到这个目的，我建议大家看看分布式系统的需求是什么？以及这些需求在过去是如何发展的，从单体应用开始到 Kubernetes，再到最近的 Dapr、Istio、Knative 等项目，它们是如何改变我们做分布式系统的方式。我们将尝试对未来做一些预测。
-现代分布式应用 为了给这个话题提供更多的背景信息，我认为的分布式系统是由数百个组件组成的系统。这些组件可以是有状态的、无状态的或者无服务器的。此外，这些组件可以用不同的语言创建，运行在混合环境上，并开发开源技术、开放标准和互操作性。我相信你可以使用闭源软件来构建这样的系统，也可以在 AWS 和其他地方构建。具体到这次演讲，我将关注 Kubernetes 生态系统，以及你如何在 Kubernetes 平台上构建这样一个系统。
-我们从分布式系统的需求讲起。我认为是我们要创建一个应用或者服务，并写一些业务逻辑。那从运行时的平台到构建分布式系统，我们还需要什么呢？在底层，最开始是我们要一些生命周期的能力。当你用任一语言开发你的应用时，我们希望有能力把这个应用可靠地打包和部署、回滚、健康检查。并且能够把应用部署到不同的节点上，并实现资源隔离、扩展、配置管理，以及所有这些。这些都是你创建分布式应用所需要的第一点。
-第二点是围绕网络。我们有了应用之后，我们希望它能够可靠地连接到其他服务，无论该服务是在集群内部还是在外部。我们希望其具有服务发现、负载均衡的能力。为了不同的发布策略或是其他的一些原因的我们希望有流量转移的能力。然后我们还希望其具有与其他系统进行弹性通信的能力，无论是通过重试、超时还是断路器。要有适当的安全保障，并且要有足够的监控、追踪、可观察性等等。
-我们有了网络之后，接下来就是我们希望有能力与不同的 API 和端点交互，即资源绑定&amp;ndash;与其他协议和不同的数据格式交互。甚至能够从一种数据格式转换成另一种数据格式。我还会在这里加入诸如滤光的功能，也就是说，当我们订阅一个主题时，我们也许只对某些事件感兴趣。
-你认为最后一类是什么？是状态。当我在说状态和有状态的抽象时，我并不是在谈论实际的状态管理，比如数据库或者文件系统的功能。我要说的更多是有关幕后依赖状态的开发人员抽象。可能，你需要具有工作流管理的能力。也许你想管理运行时间长的进程或者做临时调度或者某些定时任务来定期运行服务。也许你还想进行分布式缓存，具有幂等性或者支持回滚。所有这些都是开发人员级的原语，但在幕后，它们依赖于具有某种状态。你想随意使用这些抽象俩创建完善的分布式系统。
-我们将使用这个分布式系统原语的框架来评估它们在 Kubernetes 和其他项目上的变化情况。
-单体架构 &amp;ndash; 传统中间件功能 假设我们从单体架构以及如何获得这些能力开始。在那种情况下，首先是当我说单体的时候，在分布式应用的情况下我想到的是 ESB。ESB 是相当强大的，当我们检查我们的需求列表时，我们会说 ESB 对所有有状态的抽象有很好的支持。</description></item><item><title>【译】2021 年及未来的云原生预测</title><link>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</link><pubDate>Tue, 09 Feb 2021 06:43:54 +0800</pubDate><guid>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</guid><description>本文译自 Cloud Native Predictions for 2021 and Beyond
-原文发布在 Chris Aniszczyk 的个人博客
-我希望每个人都有一个美好的假期，因为 2021 年 1 月的前几周一直非常疯狂，从叛乱到新的 COVID 菌株。在云原生国度，CNCF 最近发布了关于我们去年完成的所有工作的年度报告。我建议大家找个机会去看一下这份报告，在疫情大流行的这一年，我们收获颇丰。https://twitter.com/CloudNativeFdn/status/1343914259177222145
-作为我工作的一部分，我对云原生趋势有一个独特的观点，送给所有与我合作的会员公司和开发人员，所以我想我会分享我对 2021 年及以后云原生发展的想法。
-云原生的 IDE
-作为一个在 Eclipse 基金会内部从事开发者工具工作的人，我对最近的技术状态进展感到无比兴奋。未来，开发生命周期（代码、构建、调试）将主要发生在云端，而不是你本地的 Emacs 或 VSCode。你将每一个拉动请求最终得到一个完整的开发环境设置，预先配置并连接到他们自己的部署，以协助你的开发和调试需求。今天这种技术的一个具体例子是通过 GitHub Codespaces 和 GitPod 实现的。虽然 GitHub Codespaces 还处于测试阶段，但今天你可以通过 GitPod 来体验，以 Prometheus 为例。一分钟左右，你就拥有了一个有编辑器和预览环境的完全实时的开发环境。最疯狂的是，这个开发环境（工作空间）是 用代码描述，并且可以像其他代码工件一样，与你团队的其他开发者共享。</description></item><item><title>【译】应用架构：为什么要随着市场演进</title><link>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</link><pubDate>Sun, 17 Jan 2021 21:37:23 +0800</pubDate><guid>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</guid><description>本文译自 Application architecture: why it should evolve with the market 最初由Mia Platform团队发布在Mia Platform的博客上
-如今，IT 挑战在于通过有效选择应用架构来适应市场和业务需求的发展。为了满足业务和客户的需求，IT 部门应能够对技术和方法采取行动以确保软件具有灵活性，并实现产品和服务的持续创新流程，从而做出更快的反应 。
-当然，过去的单体应用程序和刚性基础设施无法做到这一点。相反，它可以通过为演化而设计的架构来实现，该架构在需要时易于更新和重构。容器化实践的广泛应用（根据 Gartner，到2022年，大公司的就业人数将从目前的 30％ 增长到 75％），这种情况下采用云原生方法重新设计微服务应用是成功的关键。
-如何构建不断发展的应用架构 海外专家称它们为可演进的架构，以将它们与当今阻碍或无助于改变的传统架构区分开。应用架构基于微服务架构风格 ，被设计成在现代虚拟化 IT 和云环境中发挥最佳性能。
-基本思想是创建可以轻松“分解”的应用程序，其组件可以在其他上下文或组合中重用，如 Lego 系列。开发一系列微服务，每个微服务都用于执行单个业务功能（根据“单一职责原则”），可以在应用本身的开发和演进中获得相当大的灵活性。实际上，可以根据支持功能的特定生命周期独立开发、更新和测试服务。
-此外，谈到部署，微服务应用的架构具有很大的优势：可以根据需要在内部或云中通过使用可用资源来扩展单个微服务。
-为此，微服务应用获得基于容器的基础设施的支持，该基础设施通过业务编排系统（通常为 Kubernetes）进行管理，该流程可以自动化并促进公司系统之间以及从这些系统到云提供商服务的软件作业的迁移。
-随着业务发展的应用架构的优势 基于微服务的应用架构在开发和部署方面具有更大的自治权。如我们所见，微服务可以在其他应用程序中单独实现、“分解”、更新和重用。因此，通过产品或客户需求的演变，它有降低减少市场所需的每个新产品的设计/开发时间和成本。
-此外，通过使用容器化实践，可以简化在本地、云、多云或混合环境的任何环境中应用程序的部署，从而优化成本。
-在微服务架构风格的优点中，我们还发现有可能在各种服务之间的对话及其健康状况上获得更大的透明度：更好的可观察性意味着可以轻松解决复杂应用的问题。实际上，管理员可以更快地定位和解决性能和安全性问题，在运维和代码层面实施措施，从而使响应速度与变更的长期有效性保持一致。
-通过采用微服务以及新的开发和部署方法，可以创建能够随时间发展的应用架构。除了 IT 团队必须掌握的新技能外，还必须对公司的未来有一个清晰的愿景，以确保所提供的服务对业务发展有用。</description></item><item><title>翻译：多运行时微服务架构</title><link>https://atbug.com/translation-multi-runtime-microservices-architecture/</link><pubDate>Wed, 01 Apr 2020 23:18:00 +0800</pubDate><guid>https://atbug.com/translation-multi-runtime-microservices-architecture/</guid><description>这样文章通过Google翻译和人工逐字修改的方式完成的，某些位置也加上自己的理解。如有错误，请指出。
-翻译这篇文章的目的其实是为了自己加深对微服务、分布式架构以及多运行时架构的理解。整篇文章从”战略“上分析了微服务”从古至今“解决的问题，以及带来的新问题；进而在“战术”层面，给出了解决这些新问题的手段。
-个人见解：架构从来都是解决问题并带来问题， 取舍之道 。
-背景知识 微服务的 12 要素：
-基准代码：一份基准代码，多份部署 依赖：显式声明依赖关系 配置：在环境中存储配置 后端服务：把后端服务当做附加资源 构建、发布、运行：严格分离构建和运行 进程：以一个或多个无状态进程运行应用 端口绑定：通过端口绑定提供服务 并发：通过进程模型进行扩展 易处理：快速启动和优雅终止可最大化健壮性 开发环境与线上环境等价：尽可能的保持开发、预发布、线上环境相同 日志：把日志当做事件流 管理进程：后台管理任务当做一次性进程运行 原文从此处开始：
-创建分布式系统并非易事。围绕“微服务”架构和“ 12要素应用程序”设计出现了最佳实践。这些提供了与交付生命周期，网络，状态管理以及对外部依赖项的绑定有关的准则。 但是，以可扩展和可维护的方式一致地实施这些原则是具有挑战性的。 解决这些原理的以技术为中心的传统方法包括企业服务总线（ESB）和面向消息的中间件（MOM）。虽然这些解决方案提供了良好的功能集，但主要的挑战是整体架构以及业务逻辑和平台之间的紧密技术耦合。 随着云，容器和容器协调器（Kubernetes）的流行，出现了解决这些原理的新解决方案。例如，Knative用于交付，服务网格用于网络，而Camel-K用于绑定和集成。 通过这种方法，业务逻辑（称为“微逻辑”）构成了应用程序的核心，并且可以创建提供强大的现成分布式原语的sidecar“ mecha”组件。 微观组件和机械组件的这种分离可以改善第二天的操作，例如打补丁和升级，并有助于维持业务逻辑内聚单元的长期可维护性。 创建良好的分布式应用程序并非易事：此类系统通常遵循12要素应用程序和微服务原则。它们必须是无状态的，可伸缩的，可配置的，独立发布的，容器化的，可自动化的，并且有时是事件驱动的和无服务器的。创建后，它们应该易于升级，并且长期可以承受。在当今的技术中，要在这些相互竞争的要求之间找到良好的平衡仍然是一项艰巨的努力。
-在本文中，我将探讨分布式平台如何发展以实现这种平衡，更重要的是，在分布式系统的演进中还需要发生什么事情，以简化可维护的分布式体系结构的创建。如果您想让我实时谈论这个话题，请加入我的QCon 三月的伦敦。
-分布式应用程序需求 在此讨论中，我将把现代分布式应用程序的需求分为四个类别-生命周期，网络，状态，绑定-并简要分析它们在最近几年中的发展情况。
-生命周期 Lifecycle 打包 Packaging 健康检查 Healthcheck 部署 Deployment 扩展 Scaling 配置 Configuration 让我们从基础开始。当我们编写一项功能时，编程语言将指示生态系统中的可用库，打包格式和运行时。例如，Java使用.</description></item><item><title>加速云原生的 Java 开发</title><link>https://atbug.com/speed-up-java-development-on-kubernetes/</link><pubDate>Sat, 21 Dec 2019 20:45:22 +0800</pubDate><guid>https://atbug.com/speed-up-java-development-on-kubernetes/</guid><description>今天来说说日常在Kubernetes开发Java项目遇到的问题.
-当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是copy+paste+modify. 能否以变成的方式来生成?
-开发时的步骤也比较繁琐: docker build, docker push, kubectl apple, kubectl delete pod. 对于一个Java应用来说还多了一步编译. 操作一次还ok, 但是一天十几次总会有想吐的感觉. 这些步骤能否简化成一个命令, 甚至修改了代码自动就完成上面一系列的操作?
-实现这些我们需要几个工具: dekorate, Jib, Skaffold. 其中Jib也在上一篇文章使用Jib为Java应用构建镜像中介绍过.
-dekorate Dekorate is a collection of Java compile-time generators and decorators for Kubernetes/OpenShift manifests. Dekorate是Java编译时生成和装饰Kubernetes/OpenShift的manifests的工具</description></item><item><title>Kubernetes — 持久卷</title><link>https://atbug.com/kubernetes-persistent-volumes/</link><pubDate>Sun, 20 Aug 2017 22:25:40 +0000</pubDate><guid>https://atbug.com/kubernetes-persistent-volumes/</guid><description>Persistent Volume 译自Persistent Volumes
-介绍 管理存储是管理计算的独特问题。 PersistentVolume子系统为用户和管理员提供了一个API，其中提供了如何从如何使用存储提供存储的详细信息。为此，我们介绍两种新的API资源：PersistentVolume和PersistentVolumeClaim。
-PersistentVolume（PV）是由管理员配置的集群中的一段存储。它是集群中的一种资源就像一个节点是一个集群的资源。 PV是类似Volumes的卷插件，但是具有独立于使用PV的任何单个pod的生命周期。该API对象捕获存储的实现细节，即NFS，iSCSI或云提供商特定的存储系统。
-PersistentVolumeClaim（PVC）是用户存储的请求。它类似于pod。 Pod消耗节点资源，PVC消耗PV资源。Pods可以请求特定级别的资源（CPU和内存）。声明可以请求特定的大小和访问模式（例如，一次读写或者多次只读）。
-虽然PersistentVolumeClaims允许用户使用抽象存储资源，但是常见的是，用户需要具有不同属性（如性能）的PersistentVolumes，用于不同的问题。 集群管理员需要能够提供多种彼此不同的PersistentVolumes，而不仅仅是大小和访问模式，而不会使用户了解这些卷的实现细节。 对于这些需求，有一个StorageClass资源。
-StorageClass为管理员提供了一种描述他们提供的存储的“类”的方法。 不同的类可能映射到服务质量级别，或备份策略，或者由群集管理员确定的任意策略。 Kubernetes本身对于什么类别代表是不言而喻的。 这个概念有时在其他存储系统中称为“配置文件”。
-请参阅详细演练与工作示例。
-存储和声明的生命周期 PVs是集群中的资源；PVCs是对这种资源的声明，同时也扮演者对资源声明的检查。PVs和PVCs之前的交互遵循生命周期：供应、绑定、使用中、重新申请。
-集群管理员创建多个PV。它们携带可供集群用户使用的真实存储的详细信息。它们存在于Kubernetes API中，可用于消费。
-供应(Provisioning) PVs会以两种方式供应：静态和动态。
-静态 集群管理员创建多个PV。 它们携带可供集群用户使用的真实存储的详细信息。 它们存在于Kubernetes API中，可被使用。
-动态 当管理员创建的静态PV都不匹配用户的PersistentVolumeClaim时，集群可能会尝试为PVC指定动态配置卷。 此配置基于StorageClasses：PVC必须指定一个类，并且管理员必须已创建并配置该类才能进行动态配置。 要求该类的声明有效地为自己禁用动态配置。
-绑定(Binding) 当用户创建、或已经创建了一个PersistenVolumenClaim并指定大小和访问类型。Master中的控制循环会检测新的PVC，找到一个匹配的PV（如果可能的话），并将它们绑定在一起。如果一个PV被动态地供应某个PVC，循环将总是把这个PV和该PVC绑定。否则，用户总是至少得到他们要求的内容，但是卷可能超出了要求。一旦绑定，PersistentVolumeClaim绑定是排他的，不管用于绑定它们的模式。
-如果匹配的卷不存在，请求将无限期地保持。 随着匹配卷变得可用，请求将被绑定。 例如，提供许多50Gi PV的集群将不匹配要求100Gi的PVC。 当集群中添加100Gi PV时，可以绑定PVC。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>云原生 on 乱世浮生</title><link>https://atbug.com/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/</link><description>Recent content in 云原生 on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sat, 23 Aug 2025 07:18:25 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/index.xml" rel="self" type="application/rss+xml"/><item><title>【译】AI 是否绑架了云原生创新？</title><link>https://atbug.com/the-future-of-ai-and-cloud-native/</link><pubDate>Sat, 23 Aug 2025 07:18:25 +0800</pubDate><guid>https://atbug.com/the-future-of-ai-and-cloud-native/</guid><description>&lt;p&gt;&lt;strong&gt;译者注&lt;/strong&gt;：近三年来，AI 热潮席卷科技行业，相关话题无处不在。与 AI 相关的讨论已经渗透到科技领域的每个角落，看似没有 AI 故事的产品变得更难推广。这里的云原生可以换成任何其他技术领域，AI 的兴起是否也在影响它们的发展和关注度？欢迎大家留言讨论。&lt;/p&gt;
+&lt;p&gt;在这个充满变革的时代，保持开放心态、持续学习和积极拥抱新技术至关重要。无论是 AI 还是云原生，唯有不断探索和实践，才能在技术浪潮中立于不败之地。让我们共同见证创新的力量，推动行业向前发展。&lt;/p&gt;
+&lt;p&gt;本文翻译自 Alan Shimel 的 &lt;a href="https://cloudnativenow.com/features/has-ai-hijacked-cloud-native-innovation/"&gt;Has AI Hijacked Cloud-Native Innovation?&lt;/a&gt;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;AI 似乎正在成为科技领域的绝对焦点，几乎占据了所有讨论空间。&lt;/p&gt;
+&lt;p&gt;从董事会会议室到行业活动的走廊，AI 话题无处不在。它令人兴奋、颠覆且充满变革力量。然而，AI 的迅猛发展也可能让其他重要技术创新被忽视。我不禁思考：AI 是否正在劫持云原生？&lt;/p&gt;
+&lt;p&gt;仅仅一两年前，云原生还是企业技术领域的明星。Kubernetes 话题热度不减，可观察性平台蓬勃发展，Backstage 推动着内部开发者门户，GitOps 流水线高效运转，CNAPs 日益智能，服务网格架构迅速普及。云原生不仅意味着迁移到公有云，更是应用现代化、混合与边缘部署，甚至裸机部署的核心战略。&lt;/p&gt;
+&lt;p&gt;云原生的普及有其深层原因——它为团队带来了创新所需的灵活性、可扩展性和模块化能力，帮助企业保持竞争力。&lt;/p&gt;
+&lt;p&gt;在 Techstrong，我们对云原生的发展充满信心，甚至将其作为核心虚拟活动的名称：&lt;a href="https://www.techstrongevents.com/cloud-native-now-2025/home?__hstc=181228792.add11cc03e8f37c31977527f3fb44533.1755902547536.1755902547536.1755902547536.1&amp;amp;__hssc=181228792.2.1755902547536&amp;amp;__hsfp=570170634"&gt;Cloud Native Now – One for the Road&lt;/a&gt;。这充分体现了云原生理念在现代 IT 领域的深度影响力。&lt;/p&gt;</description></item><item><title>macOS 原生容器 Apple Container 架构解析</title><link>https://atbug.com/macos-native-apple-container-architecture/</link><pubDate>Mon, 23 Jun 2025 20:55:51 +0800</pubDate><guid>https://atbug.com/macos-native-apple-container-architecture/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;Apple Container 结合 macOS 框架与模块化插件体系，提供了强大的容器化环境。理解其架构与可扩展性，有助于开发者在云原生与虚拟化场景下充分发挥其能力。&lt;/p&gt;
+&lt;h2 id="引言"&gt;引言&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/apple/container"&gt;Container&lt;/a&gt; 是 Apple 提供的开源命令行工具，专为在 Mac 上运行 Linux 容器而构建，尤其针对 Apple Silicon 进行了优化。它由 Swift 编写，基于 &lt;a href="https://github.com/apple/containerization"&gt;Containerization Framework&lt;/a&gt; 构建。Apple Containerization 和 Container CLI 于 WWDC 2025 发布。&lt;/p&gt;
+&lt;p&gt;延伸阅读：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/apple-containerization-framework-macos-release/"&gt;苹果发布 Containerization Framework：开启 macOS 容器化新纪元&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/apple-container-hands-on/"&gt;Apple Container 开箱实践&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Apple Container 是一种客户端 - 服务器架构系统，使 macOS 上能够运行容器化工作负载。本文将深入探讨其架构、启动流程、核心插件、可扩展性及安全性等内容。&lt;/p&gt;</description></item><item><title>Apple Container 开箱实践</title><link>https://atbug.com/apple-container-hands-on/</link><pubDate>Sat, 21 Jun 2025 22:38:27 +0800</pubDate><guid>https://atbug.com/apple-container-hands-on/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;Apple Container CLI 是一款强大的工具，可在 macOS 上运行 Linux 容器，特别针对 Apple Silicon 进行了优化。&lt;/p&gt;
+&lt;p&gt;该 CLI 设计为开发者友好，命令风格与 Docker CLI 类似。对于已经熟悉 Docker CLI 的用户，Container CLI 应该会非常熟悉，并且为 macOS 用户提供了更原生的体验。&lt;/p&gt;
+&lt;p&gt;本文将介绍 Container CLI、如何快速上手，以及如何在 macOS 上运行 Linux 容器。&lt;/p&gt;
+&lt;h2 id="关于-container-cli"&gt;关于 Container CLI&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/apple/container"&gt;Container&lt;/a&gt; 是 Apple 提供的开源命令行工具，专为在 Mac 上运行 Linux 容器而构建，尤其针对 Apple Silicon 进行了优化。它由 Swift 编写，基于 &lt;a href="https://github.com/apple/containerization"&gt;Containerization Framework&lt;/a&gt; 构建。Apple Containerization 和 Container CLI 于 WWDC 2025 发布。&lt;/p&gt;</description></item><item><title>苹果发布 Containerization Framework：开启 macOS 容器化新纪元</title><link>https://atbug.com/apple-containerization-framework-macos-release/</link><pubDate>Sun, 15 Jun 2025 12:12:00 +0800</pubDate><guid>https://atbug.com/apple-containerization-framework-macos-release/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;苹果 &lt;a href="https://github.com/apple/containerization"&gt;Containerization Framework&lt;/a&gt; 的发布，标志着 macOS 容器化进入全新阶段。&lt;/p&gt;
+&lt;p&gt;虽然苹果推出了原生容器化框架，但底层依然依赖虚拟机技术。为实现更高的安全性和隔离性，每个容器都运行在独立的轻量级虚拟机中，反而使虚拟机的使用频率和数量比以往更多。&lt;/p&gt;
+&lt;p&gt;对行业来说，会对如 OrbStack、Docker Desktop 等商业产品产生显著影响。实际上，类似 OrbStack 这样的本地容器解决方案早已存在（笔者本人也已使用一两年，并在&lt;a href="https://atbug.com/setup-k3s-x86-cluster-on-apple-silicon-with-orbstack/"&gt;博客&lt;/a&gt;中做过介绍），但苹果官方的原生方案无疑将加剧市场竞争，推动相关产品加速创新。&lt;/p&gt;
+&lt;p&gt;对开发者来说，虽然影响有限，但本地开发体验将变得更加安全高效（尤其是 M1 用户）。官方方案不仅提升了易用性和性能，也进一步促进了容器生态的融合与创新。&lt;/p&gt;
+&lt;p&gt;对于开发者和行业而言，这既是机遇，也是挑战。让我们拭目以待，苹果如何在容器领域持续发力，带来更多可能。&lt;/p&gt;
+&lt;h2 id="背景与动机"&gt;背景与动机&lt;/h2&gt;
+&lt;p&gt;容器技术已成为现代软件开发和部署的基石。长期以来，macOS 用户在本地运行 Linux 容器时，主要依赖虚拟机方案（如 Docker Desktop、Colima、OrbStack 等），难以获得与 Linux 原生环境一致的体验。苹果在 &lt;a href="https://developer.apple.com/wwdc25/"&gt;WWDC2025&lt;/a&gt; 推出 Containerization Framework，旨在为 macOS 用户带来更安全、高效、原生的容器运行能力，推动开发生态进一步升级。&lt;/p&gt;
+&lt;h2 id="什么是容器"&gt;什么是容器&lt;/h2&gt;
+&lt;p&gt;容器是一种轻量级的虚拟化技术，允许开发者在隔离的环境中运行应用程序。与传统虚拟机相比，容器共享宿主操作系统内核，但每个容器拥有独立的文件系统、网络和进程空间。这种方式使得容器启动速度更快、资源占用更低，非常适合微服务架构和持续集成/持续部署（CI/CD）流程。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;与宿主机隔离：容器运行时与主机系统相互隔离，提升安全性。&lt;/li&gt;
+&lt;li&gt;工作负载之间隔离：不同容器之间互不影响，便于多应用并行部署。&lt;/li&gt;
+&lt;li&gt;便于开发环境一致性：开发、测试、生产环境可高度一致，减少“在我电脑上没问题”的情况。&lt;/li&gt;
+&lt;li&gt;运行时隔离：每个容器拥有独立的文件系统、网络和进程空间，保证应用运行互不干扰。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="什么是-containerization-framework"&gt;什么是 Containerization Framework&lt;/h2&gt;
+&lt;p&gt;Containerization Framework 是苹果开源的 Swift 框架，专为在 macOS 上运行 Linux 容器而设计。其核心目标包括：&lt;/p&gt;</description></item><item><title>【译】如何提升云原生应用的安全性</title><link>https://atbug.com/how-to-enhance-cloud-native-application-security/</link><pubDate>Mon, 26 Aug 2024 11:13:44 +0800</pubDate><guid>https://atbug.com/how-to-enhance-cloud-native-application-security/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;此文为原文翻译，仅供参考，不代表本人立场。翻译难免有疏漏，欢迎提出建议反馈。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;本文翻译自 &lt;a href="https://cloudnativenow.com/author/hazel-raoult/"&gt;Hazel Raoult&lt;/a&gt; 的 &lt;a href="https://cloudnativenow.com/editorial-calendar/cloud-native-security/how-to-optimize-security-in-cloud-native-applications/"&gt;How to Optimize Security in Cloud-Native Applications&lt;/a&gt;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;近年来，企业对云原生应用的依赖日益增加，这也使云原生应用成为攻击的首选目标。如今，企业的安全团队需要优先考虑这些资产的安全性，以防止大规模的服务中断和数据泄露。&lt;/p&gt;
+&lt;p&gt;根据 IBM 2024 年《Cost of a Data Breach（数据泄露成本报告）》显示，目前 &lt;a href="https://www.ibm.com/reports/data-breach"&gt;45%的网络攻击&lt;/a&gt; 是基于云的。2024 年 7 月，微软的 Azure 遭遇了一次重大的 DDoS 攻击，导致关键服务 &lt;a href="https://www.forbes.com/sites/kateoflahertyuk/2024/07/31/microsoft-confirms-new-outage-was-triggered-by-cyberattack/"&gt;停运近10小时&lt;/a&gt;。对于依赖这些服务来为客户提供不间断服务的企业来说，这种停机时间无疑会带来巨大的损失。&lt;/p&gt;
+&lt;p&gt;基于这一背景，让我们探讨如何提升云原生应用的安全性，以防止类似情况的发生，并确保关键云服务的韧性和可靠性。&lt;/p&gt;
+&lt;h3 id="用户控制优化"&gt;用户控制优化&lt;/h3&gt;
+&lt;p&gt;人为因素始终在数字资产（包括云原生应用程序）的安全中发挥重要作用。除非我们在不久的将来完全被机器取代，否则人类仍将在代码编写、配置管理以及最终的应用安全性方面做出重要决策。这是一种巨大的压力，因为一个小小的错误就可能导致严重的漏洞，进而让我们的云资产暴露在攻击和操作失误的风险之下。&lt;/p&gt;
+&lt;p&gt;一个合理的解决方案是加强教育和培训，使开发人员和用户能够理解潜在风险，并学会实施强有力的安全协议和最佳实践。&lt;/p&gt;
+&lt;p&gt;在技术措施方面，应重点关注强大的身份和访问管理（IAM）。最小权限原则是实现强 IAM 的首选方法。它确保用户被授予完成任务所需的最低访问权限，从而显着减少攻击面和帐户受损的风险。&lt;/p&gt;
+&lt;p&gt;花时间为每个无服务器函数或容器创建最小角色或权限集。这样，即使云原生架构中的某个元素被攻破，造成的损害也将最小，且不会轻易扩散到其他组件。&lt;/p&gt;
+&lt;p&gt;这里需要避免的一个错误是将访问级别审查限制在不频繁的时间间隔。随着工作职责的变化（或解除），应持续监控和调整访问权限。定期评估和更新角色，以确保访问权限保持适当并与当前职责保持一致。&lt;/p&gt;
+&lt;h3 id="安全测试精简化"&gt;安全测试精简化&lt;/h3&gt;
+&lt;p&gt;云原生应用相较于传统开发的一个优势在于能够利用更细粒度的自动化安全测试。云原生环境可以利用持续集成和持续部署（CI/CD）流水线。这使开发人员能够将安全测试 &lt;a href="https://cloudnativenow.com/topics/revolutionizing-software-development-with-cloud-native-devsecops/"&gt;集成到开发的每个阶段&lt;/a&gt;，使其成为软件开发生命周期的基础组成部分，而不是事后的考虑。&lt;/p&gt;
+&lt;p&gt;有各种开源工具和应用安全服务可用于增强安全测试。自动化工具可以 &lt;a href="https://www.imperva.com/learn/application-security/application-security/"&gt;确保代码&lt;/a&gt; 没有错误配置和漏洞，并避免敏感数据的意外泄露。这些工具可以扫描已知的漏洞，检查是否符合安全最佳实践，甚至实时识别潜在的风险区域。&lt;/p&gt;</description></item><item><title>初探 Backstage：快速上手指南</title><link>https://atbug.com/exploring-backstage-a-quick-start-guide/</link><pubDate>Sun, 28 Jan 2024 11:59:38 +0800</pubDate><guid>https://atbug.com/exploring-backstage-a-quick-start-guide/</guid><description>&lt;p&gt;坦白说，虽然我之前阅读过相关文档，但实际上从未亲自尝试运行 &lt;a href="https://backstage.io"&gt;Backstage&lt;/a&gt;。我一直有种感觉，Backstage 不过是一个开发者门户而非开发者平台。上周在 &lt;a href="https://mp.weixin.qq.com/s/45Xf66iavX2AckT_HuqfEw"&gt;分享我对平台工程的理解&lt;/a&gt; 后，朋友圈中有人提议我写一篇关于 Backstage 入门的文章。这激起了我的好奇心，我决定深入探究一下 Backstage 究竟是什么。&lt;/p&gt;
+&lt;h2 id="backstage-简介"&gt;Backstage 简介&lt;/h2&gt;
+&lt;p&gt;Backstage 是一个用于构建开发人员门户的开放平台，统一了所有基础设施工具、服务和文档，以创建端到端的简化开发环境，由 &lt;a href="https://backstage.io/blog/2022/03/16/backstage-turns-two/#out-of-the-sandbox-and-into-incubation"&gt;Spotify 开源并捐赠给 CNCF&lt;/a&gt;。Backstage 提供了开箱即用的几个核心功能：&lt;/p&gt;
+&lt;h3 id="软件目录"&gt;软件目录&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://backstage.io/docs/features/software-catalog/"&gt;软件目录&lt;/a&gt;（Software Catalog）是一个集中式系统，用于跟踪生态系统中所有软件（服务、网站、库、数据管道等）的所有权和元数据。开发人员提供软件的实体信息，Backstage 根据实体的信息与已有实体建立关联，并生成最终版本的软件实体保存在目录中。&lt;/p&gt;
+&lt;p&gt;从 Backstage 仓库的软件目录示例中可以找到 &lt;a href="https://github.com/backstage/backstage/tree/master/packages/catalog-model/examples"&gt;多种类型的实体定义&lt;/a&gt;。&lt;/p&gt;
+&lt;h3 id="软件模板"&gt;软件模板&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://backstage.io/docs/features/software-templates/"&gt;软件模板&lt;/a&gt; （Software Template）是一个可以帮助开发在 Backstage 中创建组件的工具。默认情况下，它能够加载代码骨架、带有变量中的模板，然后将模板发布到某些位置，例如 GitHub 或 GitLab。&lt;/p&gt;
+&lt;h3 id="技术文档"&gt;技术文档&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://backstage.io/docs/features/techdocs/"&gt;技术文档&lt;/a&gt;（TechDocs） 是 Spotify 自行开发的直接内置于 Backstage 中的类文档代码解决方案。开发人员在与代码一起存在的 Markdown 文件中编写文档 - 只需很少的配置即可在 Backstage 中获得一个漂亮的文档站点。&lt;/p&gt;</description></item><item><title>聊聊我所理解的平台工程</title><link>https://atbug.com/my-understanding-of-platform-engineering/</link><pubDate>Sun, 21 Jan 2024 13:26:34 +0800</pubDate><guid>https://atbug.com/my-understanding-of-platform-engineering/</guid><description>&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2024/01/21/gartner-top-strategic-technology-trends-2024.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Gartner 将平台工程列为 2024 顶级战略技术趋势之一。&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;说起平台工程（Platform Engineering） ，经常听到有人说是：新瓶装（平台工程）旧酒（DevOps）。&lt;/p&gt;
+&lt;p&gt;今天根据过去自服务平台的实践经验，聊聊我所理解的平台工程。&lt;/p&gt;
+&lt;h2 id="云原生平台"&gt;云原生平台&lt;/h2&gt;
+&lt;p&gt;说到平台工程，不可不免地要聊聊云原生，不过这里不会针对是否转向云原生进行讨论。&lt;/p&gt;
+&lt;p&gt;云原生的三驾马车：微服务、Kubernetes、DevOps。根据过往的实践经验，我认为云原生技术平台的核心能力（包括但并不限于）可概括为：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;容器平台&lt;/strong&gt;：专注于容器化技术和 Kubernetes 编排，实现应用的弹性、高效存储和网络通信。这为微服务和 DevOps 的实现提供了基础架构支持。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;微服务平台&lt;/strong&gt;：集中管理微服务，包括统一的服务治理、配置管理、API 网关和支持多样的微服务框架，以适应复杂的服务交互和灵活的开发需求。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;监控平台&lt;/strong&gt;：提供全方位的监控系统，包括日志收集、性能指标监控、链路跟踪、实时告警以及监控数据的可视化展示，助力于系统的稳定运行和故障迅速定位。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;DevOps 集成平台&lt;/strong&gt;：集成持续集成和持续部署（CICD）流程，以及文档中心和代码质量管理，实现自动化、高效和标准化的软件开发和运维流程。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;对于风靡多年的云原生（近来也有降温的趋势？），业界的褒贬不一：提升了研发效率和资源的利用率，；浪费资源、部署维护困难、可观测性变差等等。&lt;/p&gt;
+&lt;p&gt;云原生技术所面临的众多负面反馈，很大程度上源于其本身的复杂性。&lt;strong&gt;云原生平台向开发人员展现了过多的复杂性。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="云原生的复杂性"&gt;云原生的复杂性&lt;/h2&gt;
+&lt;p&gt;云原生技术，尽管带来了许多优势，比如灵活性、可扩展性和高效的资源利用，但同时也引入了一定的复杂性：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;技术栈的复杂性：云原生环境通常涉及到容器化、微服务架构、CI/CD、以及基于 Kubernetes 的容器编排等技术。这些技术各自有其学习曲线，并且技术之间需要集成并协同工作，增加了系统的整体复杂性。&lt;/li&gt;
+&lt;li&gt;管理和运维的复杂性：在云原生环境中，应用程序通常被分解为多个微服务，每个微服务部署在不同的容器中，这使得监控、日志记录、故障排查和性能优化变得更加复杂。&lt;/li&gt;
+&lt;li&gt;网络复杂性：微服务架构意味着服务之间有大量的网络通信，再叠加容器、混合多云的网络环境，管理这些服务间的网络流量、确保高可用性和网络安全，以及实现服务发现等都增加了网络管理的复杂性。&lt;/li&gt;
+&lt;li&gt;可观测性和监控的挑战：确保对在不断变化的环境中运行的众多微服务有足够的可见性，需要复杂的监控和日志系统。&lt;/li&gt;
+&lt;li&gt;安全挑战：云原生架构中的分布式和动态性质引入了新的安全挑战。例如，需要确保容器安全、服务间通信的安全，以及在动态环境中持续地管理和更新安全策略。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这些复杂性给开发人员带来了显著的摩擦和认知负担，从而降低了他们的开发体验。在专注于业务开发的开发人员与底层基础设施之间，形成了一个模糊的交界区域。平台工程正是专注于这个模糊地带，旨在缩小这一差距并简化开发流程。&lt;/p&gt;
+&lt;p&gt;平台工程是一个胶水层。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2024/01/21/Glue%20Tier%20Platform%20Engineering.png" alt=""&gt;&lt;/p&gt;
+&lt;h2 id="什么是平台工程"&gt;什么是平台工程&lt;/h2&gt;
+&lt;p&gt;平台工程是一门在云原生时代为软件工程组织设计和构建工具链及工作流程的学科，旨在提供自助服务能力。平台工程师提供的综合产品通常被称为“内部开发者平台”，涵盖了应用程序整个生命周期的运营需求。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Platform engineering is the discipline of designing and building toolchains and workflows that enable self-service capabilities for software engineering organizations in the cloud-native era. Platform engineers provide an integrated product most often referred to as an “Internal Developer Platform” covering the operational necessities of the entire lifecycle of an application.&lt;/p&gt;</description></item><item><title>Netflix 零配置服务网格与按需集群发现</title><link>https://atbug.com/translation-zero-configuration-service-mesh-with-on-demand-cluster-discovery/</link><pubDate>Mon, 25 Sep 2023 12:39:05 +0800</pubDate><guid>https://atbug.com/translation-zero-configuration-service-mesh-with-on-demand-cluster-discovery/</guid><description>&lt;p&gt;本文翻译自由 David Vroom, James Mulcahy, Ling Yuan, Rob Gulewich 编写的 Netflix 博客 &lt;a href="https://netflixtechblog.com/zero-configuration-service-mesh-with-on-demand-cluster-discovery-**ac6483b52a51**"&gt;Zero Configuration Service Mesh with On-Demand Cluster Discovery&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;Netflix 相信大家并不陌生，在 Spring Cloud 生态中就有 Netflix 全家桶。多年前，我也曾将基于 Netflix OSS 构建的微服务架构搬上了 Kubernetes 平台，并持续折腾好几年。&lt;/p&gt;
+&lt;p&gt;Spring Cloud Netflix 有着庞大的用户群以及用户场景，其提供了微服务治理的一整套解决方案：服务发现 Eureka、客户端负载均衡 Ribbon、断路器 Hystrix、微服务网格 Zuul。&lt;/p&gt;
+&lt;p&gt;有过相同经历的小伙伴应该都会同感，这样一套微服务解决方案的架构，经过多年的演进也会让人痛苦不堪：复杂度越来越高、版本碎片化严重、多语言多框架的支持和功能无法统一等等。这也是 Netflix 自己也不得不面对的问题，随后他们将目光转向了服务网格，并寻求一个无缝迁移的方案。&lt;/p&gt;</description></item><item><title>软件栈的商品化：应用程序为先的云服务如何改变游戏规则</title><link>https://atbug.com/translation-application-first-cloud-services/</link><pubDate>Wed, 29 Mar 2023 07:55:33 +0800</pubDate><guid>https://atbug.com/translation-application-first-cloud-services/</guid><description>&lt;p&gt;今天读到这篇文章，觉得不错就翻译一下。文章是翻译自 Steef-Jan Wiggers &lt;a href="https://www.infoq.com/news/2023/03/application-first-cloud-services/"&gt;The Commoditization of the Software Stack:How Application-first Cloud Services are Changing the Game&lt;/a&gt;，内容来自 Bilgin Ibryam 在 QCon London 上的演讲。Ibryam 在分享中从应用开发和运维两个不同的维度来讨论架构的演进：内部架构和外部架构。二者从单体应用时期的明显的界限，到如今界限愈来愈模糊。&lt;/p&gt;
+&lt;p&gt;我认为随着架构的演进，应用程序发生着巨大的变化，&lt;strong&gt;能力从应用中分离出来，下沉到基础设施中，甚至变成新的基础设施&lt;/strong&gt;。基础设施，也从狭义上的物理设施、计算资源演变为软件定义的能力，这些能力不断地被产品化、商品化。新生代的基础设施，以各种运行时的方式游离在应用程序之外，二者仍保持着一定的联系：API。&lt;/p&gt;
+&lt;p&gt;以下是原文的翻译。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;云服务正在不断演进，这影响着开发者构建分布式应用程序的方式。在 QCon London 大会上，来自 &lt;a href="https://www.diagrid.io/"&gt;Diagrid&lt;/a&gt; 的产品经理 &lt;a href="https://qconlondon.com/speakers/bilginibryam"&gt;Bilgin Ibryam&lt;/a&gt; 探讨了云原生技术（如 &lt;a href="https://dapr.io/"&gt;Dapr&lt;/a&gt;）与面向开发者的云服务的交集。&lt;/p&gt;
+&lt;p&gt;Ibryam 首先介绍了如何看待从 &lt;a href="https://en.wikipedia.org/wiki/Monolithic_application"&gt;单体应用程序&lt;/a&gt; 到 &lt;a href="https://en.wikipedia.org/wiki/Microservices"&gt;微服务&lt;/a&gt; 的转变，以及接下来会出现什么。此外，他还谈到了云服务以及它正在以什么样的形式塑造架构的演变。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://imgopt.infoq.com/fit-in/1200x2400/filters:quality(80)/filters:no_upscale()/news/2023/03/application-first-cloud-services/en/resources/1IMG_8085-1679963988230.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;演讲期间，Ibryam 讲述了在云之前或云早期构建应用程序的不同阶段（时间线），从基础设施和应用程序趋势的角度探讨了计算为先的云、以及应用程序为先的云时代。&lt;/p&gt;
+&lt;p&gt;Ibryam 从云之前或云早期开始讨论，这意味着应用程序是单体 x 的。这个时代是在云计算成为主流之前，而且还没有微服务。相反，开发人员必须使用围绕业务逻辑的所有内容，从异步交互（如消息传递）到打包和缓存。此外，由两个团队（开发人员和运维人员）管理的应用程序层和基础设施之间也存在区别。&lt;/p&gt;</description></item><item><title>【译】分拆：技术栈的自然演进</title><link>https://atbug.com/the-unbundling-of-tech-stack-translation/</link><pubDate>Sun, 12 Feb 2023 20:26:32 +0800</pubDate><guid>https://atbug.com/the-unbundling-of-tech-stack-translation/</guid><description>&lt;p&gt;本文翻译自 Bilgin Lbryam 的 &lt;a href="https://www.ofbizian.com/2023/01/the-unbundling-of-tech-stack.html"&gt;Unbundling: The Natural Evolution of Tech Stacks&lt;/a&gt;，翻译难免有所疏漏，有建议请反馈。&lt;/p&gt;
+&lt;p&gt;“unbundling” 如何翻译，有点纠结，我一度将其翻译成“解耦”，但解耦是 “decoupling” 的翻译。这里我将其翻译成分拆，如果你有更好的翻译请告知。&lt;/p&gt;
+&lt;h2 id="译者注"&gt;译者注&lt;/h2&gt;
+&lt;p&gt;作者应该是去年 7 月离开红帽加入了基于 Dapr 的创业公司 Diagrid，曾写过 &lt;a href="https://www.infoq.com/articles/multi-runtime-microservice-architecture/"&gt;Multi-Runtime Microservices Architecture&lt;/a&gt; 介绍多运行时，多运行时实际上也是分拆的体现。&lt;/p&gt;
+&lt;p&gt;作者从多种技术和团队触发，介绍在演进中分拆的体现。除了文中提到，我认为可以分拆的是计算资源。将计算资源拆分：虚拟机、多租户、多集群、多云、混合云，以降低成本、避免供应商绑定、提升性能和可靠性。在计算资源拆分过程中，也衍生出了与之配套的技术来解决拆分后带来的不便。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;随着 IT 领域的不断发展，新的软件架构、开发技术和工具层出不穷。包括微服务、微前端、零信任、服务网格和数据网格，并将其网格化。尽管这些技术和方法间存在着明显的不同，但它们都被一个共同趋势联系在一起：技术栈和团队的分拆。这种趋势包括将系统分解成更小的、独立的组件，并将工作组织成更小、更专注的团队，以实现更高的灵活性和模块化。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/The-unbundling-of-the-tech-stack.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;他们都是如何体现分拆的？&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;微服务&lt;/strong&gt; 的出现是为了应对单体架构的局限性，随着应用程序的增长单体架构灵活性不足，并且扩展和维护困难。通过将单体应用程序分解为更小的、独立服务，就可以独立开发、部署和扩展应用程序的每一部分，从而缩短开发周期并提高灵活性。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;六边形架构&lt;/strong&gt; 的出现是为了通过将组件解耦并提供与它们交互的标准接口来提高 3 层应用程序的灵活性和可维护性。&lt;/li&gt;
+&lt;li&gt;领域驱动设计 (DDD) 是一种软件开发方法，可以帮助将整体应用程序分解成更小的、松耦合的、代表不同的业务领域或上下文的模块。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;微前端&lt;/strong&gt; 架构是一种设计方法，是将大型单体前端应用程序分解为较小的、独立的、可以单独开发和部署的模块。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;JAMstack&lt;/strong&gt; 通过将构成用户界面的 HTML、CSS 和 JavaScript 与为应用程序提供支持的服务器端代码和数据库分离，实现应用程序的前端和后端分离。由于系统的一部分的变更无需变更其他部分，从而可以更轻松地维护应用。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;服务网格&lt;/strong&gt; 将分布式应用程序的网络职责（例如路由、负载平衡和服务发现）与应用程序本身分离，使开发人员可以专注于构建业务逻辑和功能，而无需担心底层网络基础设施。&lt;/li&gt;
+&lt;li&gt;与微服务类似，&lt;strong&gt;数据网格&lt;/strong&gt; 将大型复杂系统分解为更小的独立组件。它将数据治理和管理实践分解为更小的、独立组件，这些组件可以跨不同的数据源和系统一致地实现和执行。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;2 个比萨团队&lt;/strong&gt; 模型是一种在组织中组织团队和工作的策略，它提倡更小的团队能够更快地响应变化、沟通和协作，并可以更快地做出决策并更有效地解决问题。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;每种技术趋势的最终结果都是分拆。将技术栈分解为独立的组件，将团队分解为更小、更专注的团队，这些团队可能会扩展到所有其他领域。在前端、数据、网络、安全之后，下一个拆分领域你认为会是什么？ &lt;a href="https://www.diagrid.io/"&gt;和我一起&lt;/a&gt; 致力于 &lt;a href="http://dapr.io/"&gt;Dapr&lt;/a&gt; 和分拆集成。 也可以在 &lt;a href="https://twitter.com/bibryam"&gt;@bibryam&lt;/a&gt; 上关注我，并大声说出关于 &lt;a href="https://twitter.com/bibryam/status/1610237692087779329"&gt;分拆&lt;/a&gt; 主题的任何想法和评论。&lt;/p&gt;</description></item><item><title>CICD 的供应链安全工具 Tekton Chains</title><link>https://atbug.com/tekton-chains-secure-supply-chain/</link><pubDate>Sat, 14 May 2022 13:46:16 +0800</pubDate><guid>https://atbug.com/tekton-chains-secure-supply-chain/</guid><description>&lt;p&gt;软件供应链是指进入软件中的所有内容及其来源，简单地可以理解成软件的依赖项。依赖项是软件运行时所需的重要内容，可以是代码、二进制文件或其他组件，也可以是这些组件的来源，比如存储库或者包管理器之类的。包括代码的已知漏洞、受支持的版本、许可证信息、作者、贡献时间，以及在整个过程中的行为和任何时候接触到它的任何内容，比如用于编译、分发软件的基础架构组件。&lt;/p&gt;
+&lt;p&gt;CICD 流水线作为基础架构组件，承担着软件的构建、测试、分发和部署。作为供应链的一环，其也成为恶意攻击的目标。CICD 的行为信息可以作为安全审查的重要依据，比如构建打包的环境、操作流程、处理结果等等。&lt;/p&gt;
+&lt;p&gt;今天介绍的 Tekton Chains，便是这样的行为收集工具。&lt;/p&gt;
+&lt;h2 id="tekton-chains"&gt;Tekton Chains&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/05/14/16524602574062.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/tektoncd/chains"&gt;Chains&lt;/a&gt; 是一个 Kubernetes CRD 控制器，用于管理 Tekton 中的供应链安全。Chains 使 Tekton 能够在持续交付中，捕获 &lt;code&gt;PipelineRun&lt;/code&gt; 和 &lt;code&gt;TaskRun&lt;/code&gt; 运行的元数据用于安全审计，实现二进制溯源和可验证的构建，成为构成保证供应链安全的基础设施的一部分。&lt;/p&gt;
+&lt;p&gt;当前 Chains（v0.9.0）提供如下功能：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;使用用户提供的加密密钥，将 TaskRun 的结果（包含 TaskRun 本身和 OCI 镜像）镜像进行签名&lt;/li&gt;
+&lt;li&gt;支持类似 &lt;a href="https://in-toto.io"&gt;in-toto&lt;/a&gt; 的证明格式&lt;/li&gt;
+&lt;li&gt;使用多种加密密钥类型和服务（x509、KMS）进行签名&lt;/li&gt;
+&lt;li&gt;签名的存储支持多种实现&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;接下来的 Demo，我们还是继续使用之前在 &lt;a href="https://atbug.com/tekton-pipeline-practice/"&gt;Tekton Pipeline 实战&lt;/a&gt; 用的 Java 项目 &lt;a href="https://github.com/addozhang/tekton-test"&gt;tekton-test&lt;/a&gt;，在代码中同样还包含了 &lt;code&gt;Pipeline&lt;/code&gt; 和 &lt;code&gt;Task&lt;/code&gt; 的定义。&lt;/p&gt;</description></item><item><title>Kubernetes HPA 基于 Prometheus 自定义指标的可控弹性伸缩</title><link>https://atbug.com/kubernetes-pod-autoscale-on-prometheus-metrics/</link><pubDate>Tue, 18 Jan 2022 12:03:59 +0800</pubDate><guid>https://atbug.com/kubernetes-pod-autoscale-on-prometheus-metrics/</guid><description>&lt;p&gt;在&lt;a href="https://mp.weixin.qq.com/s/GKS3DJHm4p0Tjtj8nJRGmA"&gt;《Kubernetes 的自动伸缩你用对了吗？》&lt;/a&gt;
+一文中详细说明了如何使用 Kubernetes 的自动伸缩。在 Kubernetes 中弹性伸缩主要有三种：HPA、VPA、CA。本文不再详细说明，有兴趣的可以看那篇文章。这里主要来说下 Pod 水平缩放 &lt;a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/"&gt;HPA&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;随着 Kubernetes v1.23 的发布，HPA 的 API 来到了稳定版 &lt;code&gt;autoscaling/v2&lt;/code&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;基于自定义指标的伸缩&lt;/li&gt;
+&lt;li&gt;基于多项指标的伸缩&lt;/li&gt;
+&lt;li&gt;可配置的伸缩行为&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;从最初的 v1 版本 HPA 只支持 CPU、内存利用率的伸缩，到后来的自定义指标、聚合层 API 的支持，到了 v1.18 版本又加入了配置伸缩行为的支持，HPA 也越来越好用、可靠。&lt;/p&gt;
+&lt;p&gt;依靠 CPU 或者内存指标的扩容并非使用所有系统，看起来也没那么可靠。对大部分的 web 后端系统来说，基于 RPS（每秒请求数）的弹性伸缩来处理突发的流量则会更加靠谱。&lt;/p&gt;
+&lt;p&gt;Prometheus 也是当下流行开源监控系统，通过 Prometheus 可以获取到系统的实时流量负载指标，今天我们就来尝试下基于 Prometheus 的自定义指标进行弹性伸缩。&lt;/p&gt;</description></item><item><title>OpenFaaS - 以自己的方式运行容器化函数</title><link>https://atbug.com/openfaas-case-study-zh/</link><pubDate>Fri, 17 Dec 2021 09:13:59 +0800</pubDate><guid>https://atbug.com/openfaas-case-study-zh/</guid><description>&lt;p&gt;&lt;strong&gt;译者注：&lt;/strong&gt;
+本文篇幅较长，有助于了解 FaaS 和 OpenFaaS。作者分别从开发人员和运维人员的视角来了解 OpenFaaS，对了解新的技术是个很好的方式。&lt;/p&gt;
+&lt;p&gt;本文翻译自 &lt;a href="https://twitter.com/iximiuz"&gt;Ivan Velichko&lt;/a&gt; 的 &lt;a href="https://iximiuz.com/en/posts/openfaas-case-study/"&gt;OpenFaaS - Run Containerized Functions On Your Own Terms&lt;/a&gt;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;长期以来，&lt;em&gt;无服务器（serverless）&lt;/em&gt; 对我来说无非就是 AWS Lambda 的代名词。Lambda 提供了一种方便的途径，可以将任意代码附加到平台事件（云实例的状态变更、DynamoDB 记录的更新或新的 SNS 消息）中。但是，我时不时会想到某个逻辑，但其又没大到足以有自己的服务，同时有不适合任何现有服务的范围。因此，我经常将其放入函数中，以便日后使用 CLI 命令或者 HTTP 调用来调用它。&lt;/p&gt;
+&lt;p&gt;几年前，我来开了 AWS，自那以后，我一直怀念部署无服务器功能的便利性。因此，当我得知 &lt;a href="https://www.openfaas.com"&gt;OpenFaaS&lt;/a&gt;
+项目时惊喜万分。它将在 Kubernetes 集群上部署函数变得简单，甚至仅需要 Containerd 就可以部署到虚拟机上。&lt;/p&gt;
+&lt;p&gt;有兴趣？那么继续！&lt;/p&gt;
+&lt;h2 id="无服务器与-faas"&gt;无服务器与 FaaS&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Serverless_computing"&gt;无服务器&lt;/a&gt; 已成为一个流行词，目前其实际含义扔不够清晰。&lt;/p&gt;</description></item><item><title>策略即代码：为了 OpenPolicyAgent 学 Rego？试试 Javascript</title><link>https://atbug.com/policy-as-code-with-pipy/</link><pubDate>Wed, 08 Dec 2021 07:49:37 +0800</pubDate><guid>https://atbug.com/policy-as-code-with-pipy/</guid><description>&lt;p&gt;距离上个版本 &lt;a href="https://mp.weixin.qq.com/s/uZ_Q5Fn3XpfUEHBOFxWdvg"&gt;用 Pipy 实现 OPA&lt;/a&gt;，已经过去快半年了。当初使用Pipy 实现了可信镜像仓库的检查，那时的版本实现起来会稍微复杂，从策略仓库到证书创建到Admission Webhook 的创建都需要大量的人工操作，配置和逻辑也还是耦合在一起。&lt;/p&gt;
+&lt;p&gt;这个版本安装和使用起来会更加简单。&lt;/p&gt;
+&lt;p&gt;当初我用“不务正业”来形容 Pipy 实现准入控制，等看完这篇文章，欢迎留言说说你的看法。&lt;/p&gt;
+&lt;h2 id="架构"&gt;架构&lt;/h2&gt;
+&lt;p&gt;还是继续上次的场景，在 Pod 创建时对 Pod 使用的镜像所在仓库进行检查，以及检查镜像的 tag 是否&lt;em&gt;合法&lt;/em&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/12/08/untitled.jpg" alt="Untitled"&gt;&lt;/p&gt;
+&lt;p&gt;这里借助 Pipy Repo 的能力，将&lt;strong&gt;代表策略的脚本和配置&lt;/strong&gt;交由 Repo 进行管理；Pipy 实例实时从 Pipy Repo 同步&lt;strong&gt;策略&lt;/strong&gt;，并进行&lt;strong&gt;动态加载&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;同时 Pipy Repo 对外提供 REST API 来管理策略，对策略的修改更容易。也方便与企业现有管理后台进行对接。&lt;/p&gt;
+&lt;p&gt;下面就开始部署验证，这里所使用的所有代码都已提交到&lt;a href="https://github.com/flomesh-io/demo-policy-as-code"&gt; GitHub 仓库&lt;/a&gt;：https://github.com/flomesh-io/demo-policy-as-code。&lt;/p&gt;</description></item><item><title>Kubernetes Deployment 的故障排查可视化指南（2021 中文版）</title><link>https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/</link><pubDate>Sat, 20 Nov 2021 18:29:19 +0800</pubDate><guid>https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/</guid><description>&lt;p&gt;将应用部署到 Kubernetes 时通常会使用 Deployment、Service、Ingress，整个应用从部署到正常运行，经历的流程很长。从 kubectl apply YAML 文件，经过 apiserver、controller manager、scheduler、kubelet、以及 CRI、CNI 等众多组件的协同工作。&lt;/p&gt;
+&lt;p&gt;漫长的“行程”，Pod 也经历各种正常和不正常的状态变化，即使正常运行也会出现服务无法访问的问题。对于刚开始在 Kubernetes 平台开展工作的同学来说，故障的排查确实棘手。之前工作的时候，经常要协助排查各种问题。去年在 Learnk8s 上看到了关于 Deployment 故障排查的视图，我还参考做了当时整个平台的故障排查视图，包括了从项目源码、CICD 流水线、部署整个流程的故障排查参考。&lt;/p&gt;
+&lt;p&gt;现在 Learnk8s 的 Deployment 排查指南更新了，也有了中文版本。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;年中翻译 Learnk8s 的文章&lt;a href="https://mp.weixin.qq.com/s/GKS3DJHm4p0Tjtj8nJRGmA"&gt;《Kubernetes 的自动伸缩你用对了吗？》&lt;/a&gt; 时，与 Daniele Polencic 沟通时被问及是否能翻译故障排查的可视化指南。&lt;/p&gt;
+&lt;p&gt;年中的时候就翻译完了，今天电报上被告知&lt;a href="https://learnk8s.io/troubleshooting-deployments"&gt;文章 A visual guide on troubleshooting Kubernetes deployments&lt;/a&gt;已更新，排查视图较上一版有了部分的调整。&lt;/p&gt;</description></item><item><title>低复杂度 - 服务网格的下一站</title><link>https://atbug.com/service-mesh-unnecessary-complexity/</link><pubDate>Fri, 15 Oct 2021 07:58:25 +0800</pubDate><guid>https://atbug.com/service-mesh-unnecessary-complexity/</guid><description>&lt;p&gt;&lt;strong&gt;译者：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;作为一个曾经在制造业企业的基础架构团队任职，为支持公司的“互联网基因”和“数字化转型”落地了云原生基础设施平台，并在尝试采用服务网格未成的我来说，看到这篇文章深有感触。尤其是文中所说的“人少，问题多，需要快速输出价值”，直戳到了痛处。有限的人手有限的时间，我们需要将大部分精力集中在解决成熟度曲线较低的基本问题上，要想很好的运行复杂的系统是非常困难的。&lt;/p&gt;
+&lt;p&gt;服务网格是一个新的基础设施层，可以承载很多的功能，未来还会有更大的想象空间和光明的未来。&lt;/p&gt;
+&lt;p&gt;以上的种种原因，也促使我后来选择进入一家提供服务网格的产品企业，也希望服务网格可以被更简单的使用。&lt;/p&gt;
+&lt;p&gt;“道阻且长，行则将至！”&lt;/p&gt;
+&lt;p&gt;本文翻译自 Chris Campbell 的 &lt;a href="https://www.infoq.com/articles/service-mesh-unnecessary-complexity"&gt;How Unnecessary Complexity Gave the Service Mesh a Bad Name&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="关键要点"&gt;关键要点&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;采用服务网格有巨大的价值，但必须以轻量级的方式进行，以避免不必要的复杂性。&lt;/li&gt;
+&lt;li&gt;在实施服务网时，要采取务实的方法，与技术的核心功能保持一致，并小心干扰（译者：注意力的分散）。&lt;/li&gt;
+&lt;li&gt;服务网格的一些核心特性包括标准化监控、自动加密和身份识别、智能路由、可靠的重试和网络可扩展性。&lt;/li&gt;
+&lt;li&gt;服务网格可以提供强大的功能，但这些功能会分散本应对核心优势的关注，并且这些功能也不是实施服务网格的主要原因。&lt;/li&gt;
+&lt;li&gt;在初始实施服务网格时没有必要去关注那些明显会分散注意力的功能，比如复杂的控制平面、多集群支持、Envoy、WASM 和 A/B 测试。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;服务网格是 Kubernetes 世界中的一个热门话题，但许多潜在的采用者已经有些失望了。服务网格的落地受到压倒性的复杂性和看似无穷无尽的供应商解决方案的限制。在我亲自浏览了这个领域之后，我发现采用服务网格具有巨大的价值，但它必须以轻量级的方式完成，以避免不必要的复杂性。尽管普遍存在幻灭感，但服务网格的未来依然光明。&lt;/p&gt;
+&lt;h2 id="在工作中学习"&gt;在工作中学习&lt;/h2&gt;
+&lt;p&gt;我进入服务网格的世界始于我在一家老牌的财富 500 强技术公司担任云计算架构师的角色。在开始我们的服务网格之旅时，我身边有许多强大的工程师，但大多数人几乎没有云计算开发经验。我们的组织诞生于云计算之前，完全实现云计算的价值需要时间。我们的传统业务线主要集中在技术栈的硬件元素上，云计算的决策最初是由为运送硬件或为该硬件提供固件和驱动程序而开发的流程驱动的。&lt;/p&gt;
+&lt;p&gt;随着该组织经历其“数字化转型”，它越来越依赖于提供高质量的软件服务，并逐渐开发出更好的方法。但作为云计算架构师，我仍在为优先考虑硬件的业务流程，以及具有不同技能、流程和信念的工程团队导航。随着时间的推移，我和我的团队在将 .NET 应用程序迁移到 Linux、采用 Docker、迁移到 AWS 以及与之相关的最佳实践（如持续集成、自动化部署、不可变基础设施、基础设施即代码、监控等）方面变得熟练并成功。但挑战依然存在。&lt;/p&gt;</description></item><item><title>Rego 不好用？用 Pipy 实现 OPA</title><link>https://atbug.com/pipy-implement-kubernetes-admission-control/</link><pubDate>Tue, 13 Jul 2021 08:44:56 +0800</pubDate><guid>https://atbug.com/pipy-implement-kubernetes-admission-control/</guid><description>&lt;p&gt;还不知道 Pipy 是什么的同学可以看下 &lt;a href="https://github.com/flomesh-io/pipy"&gt;GitHub&lt;/a&gt; 。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Pipy 是一个轻量级、高性能、高稳定、可编程的网络代理。Pipy 核心框架使用 C++ 开发，网络 IO 采用 ASIO 库。 Pipy 的可执行文件仅有 5M 左右，运行期的内存占用 10M 左右，因此 Pipy 非常适合做 Sidecar proxy。&lt;/p&gt;
+&lt;p&gt;Pipy 内置了自研的 pjs 作为脚本扩展，使得Pipy 可以用 JS 脚本根据特定需求快速定制逻辑与功能。&lt;/p&gt;
+&lt;p&gt;Pipy 采用了模块化、链式的处理架构，用顺序执行的模块来对网络数据块进行处理。这种简单的架构使得 Pipy 底层简单可靠，同时具备了动态编排流量的能力，兼顾了简单和灵活。通过使用 REUSE_PORT 的机制（主流 Linux 和 BSD 版本都支持该功能），Pipy 可以以多进程模式运行，使得 Pipy 不仅适用于 Sidecar 模式，也适用于大规模的流量处理场景。 在实践中，Pipy 独立部署的时候用作“软负载”，可以在低延迟的情况下，实现媲美硬件的负载均衡吞吐能力，同时具有灵活的扩展性。&lt;/p&gt;</description></item><item><title>Open Policy Agent: Top 5 Kubernetes 准入控制策略</title><link>https://atbug.com/open-policy-agent-top-5-kubernetes-admission-control/</link><pubDate>Mon, 12 Jul 2021 08:20:40 +0800</pubDate><guid>https://atbug.com/open-policy-agent-top-5-kubernetes-admission-control/</guid><description>&lt;p&gt;如何使用 Open Policy Agent 实现准入策略控制，可以参考&lt;a href="https://mp.weixin.qq.com/s/RvqCVAhClJY3o_46ALu1bQ"&gt;这里&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;本文翻译自 &lt;a href="https://thenewstack.io/open-policy-agent-the-top-5-kubernetes-admission-control-policies/"&gt;Open Policy Agent: The Top 5 Kubernetes Admission Control Policies&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Kubernetes 开发人员和平台工程师通常承受着非常大的压力，以保持应用程序部署的快速进行，并且总是为了速度和进度而做出妥协。平台团队越来越有责任确保这些妥协（例如管理 Ingress）不会导致客户数据暴露在整个互联网上等后果。&lt;/p&gt;
+&lt;p&gt;幸运的是，Kubernetes 提供了设置策略的能力，通过检查并防止部署错误将其投入生产，从而避免这些后果。为了确保团队的应用程序不会比信心更重要，以下是现在应该在集群中运行的前五个 Kubernetes 准入控制策略。&lt;/p&gt;
+&lt;h2 id="1-可信镜像仓库"&gt;1. 可信镜像仓库&lt;/h2&gt;
+&lt;p&gt;此策略很简单，但功能强大：仅允许从受信任的镜像仓库中拉取的容器映像，并且可以选择仅拉取与允许的仓库镜像地址列表匹配的那些镜像。&lt;/p&gt;
+&lt;p&gt;当然，从互联网（或可信镜像仓库库以外的任何地方）拉取未知镜像会带来风险——例如恶意软件。但是还有其他很好的理由来维护单一的可信来源，例如在企业中实现可支持性。通过确保镜像仅来自受信任的镜像仓库，可以密切控制镜像库存，降低软件熵和蔓延的风险，并提高集群的整体安全性。&lt;/p&gt;
+&lt;p&gt;相关策略：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;禁止所有带有“latest” tag 的镜像&lt;/li&gt;
+&lt;li&gt;仅允许签名镜像或匹配特定哈希/SHA 的镜像&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;策略示例：&lt;/em&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;package kubernetes.validating.images
+ 
+deny[msg] {
+ some i
+ input.request.kind.kind == &amp;#34;Pod&amp;#34;
+ image := input.request.object.spec.containers[i].image
+ not startswith(image, &amp;#34;hooli.com/&amp;#34;)
+ msg := sprintf(&amp;#34;Image &amp;#39;%v&amp;#39; comes from untrusted registry&amp;#34;, [image])
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="2-标签安全"&gt;2. 标签安全&lt;/h2&gt;
+&lt;p&gt;此策略要求所有 Kubernetes 资源都包含指定的标签并使用适当的格式。由于标签决定了 Kubernetes 对象和策略的分组，包括工作负载可以运行的位置——前端、后端、数据层——以及哪些资源可以发送流量，标签错误会导致生产中无法解释的部署和可支持性问题。此外，如果没有对标签应用方式的访问控制，集群就缺乏基本的安全性。最后，手动输入标签的危险在于错误会蔓延，特别是因为标签在 Kubernetes 中既灵活又强大。应用此策略并确保标签配置正确且一致。&lt;/p&gt;</description></item><item><title>Kubernetes 的魔力在于企业标准化，而不是应用程序的可移植性</title><link>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</link><pubDate>Sun, 11 Jul 2021 08:05:42 +0800</pubDate><guid>https://atbug.com/translation-kubernetes-magic-is-in-enterprise-standardization-not-app-portability/</guid><description>&lt;p&gt;笔者：Kubernetes 抽象了资源和工作负载的操作模式，统一了工具集，实现人机接口的标准化。正如类 Docker 工具提供了应用运行时的操作模式；Spring Framework 提供了 Java 应用的开发模式。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Kubernetes 是关于跨云的技能、工具和实践的可移植性。不是工作负载的可移植性。 &amp;ndash; Bilgin Lbryam @bibryam&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;本文翻译自 &lt;a href="https://www.techrepublic.com/google-amp/article/kubernetes-magic-is-in-enterprise-standardization-not-app-portability"&gt;Kubernetes magic is in enterprise standardization, not app portability&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Kubernetes 不会神奇地使你的应用程序具有可移植性，但它可能会给你带来更好的东西。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;云为企业提供了看似无限的选择。然而，根据 &lt;a href="https://juju.is/cloud-native-kubernetes-usage-report-2021"&gt;Canonical-sponsored 的一项调查&lt;/a&gt;，这并不是大多数企业采用 &lt;a href="https://www.techrepublic.com/article/kubernetes-the-smart-persons-guide/"&gt;Kubernetes&lt;/a&gt; 等云友好技术的原因。相反，Kubernetes 的主要目标是标准化——外观和操作与其他人一样。&lt;/p&gt;
+&lt;h2 id="可移植性不是目标"&gt;可移植性不是目标&lt;/h2&gt;
+&lt;p&gt;我之前已经讨论过这个问题，参考了 Gartner 关于 Kubernetes 和可移植性的指南。许多人认为 Kubernetes（和&lt;a href="https://www.techrepublic.com/article/containers-the-smart-persons-guide"&gt;容器&lt;/a&gt;）可以让他们在云之间轻松移植，但事实证明并不是这样的。正如 Gartner 分析师 &lt;a href="https://blogs.gartner.com/marco-meinardi/2020/09/04/adopting-kubernetes-application-portability-not-good-idea/"&gt;Marco Meinardi 所写&lt;/a&gt;，当被问及公司是否应该采用“Kubernetes 使他们的应用程序可移植&amp;hellip;&amp;hellip;答案是：不。” 再说一次？&lt;/p&gt;</description></item><item><title>Kubernetes CKA 证书备考笔记</title><link>https://atbug.com/notes-for-cka-preparation/</link><pubDate>Fri, 02 Jul 2021 08:02:15 +0800</pubDate><guid>https://atbug.com/notes-for-cka-preparation/</guid><description>&lt;p&gt;Kubernetes 使用有好几年了，但在今年 5 月才完成 CKA 的考试。虽说用了几年，还是提前刷了部分题熟悉下。&lt;/p&gt;
+&lt;p&gt;绝大部分题都是有在 minikube 的环境上操作过，只有部分比如升级集群受限于环境问题没有实地操作。&lt;/p&gt;
+&lt;h2 id="写在最前"&gt;写在最前&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;保存常用文档进书签，如果有 Alfred 启用浏览器书签 workflow。效果见下图&lt;/li&gt;
+&lt;li&gt;kubectl 自动补全 &lt;code&gt;echo &amp;quot;source &amp;lt;(kubectl completion bash)&amp;quot; &amp;gt;&amp;gt; ~/.bashrc; source ~/.bashrc&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;每道题开始前要切换 context 和 namespace，直接复制题目里的命令即可&lt;/li&gt;
+&lt;li&gt;必要的 alias&lt;/li&gt;
+&lt;li&gt;善用 &lt;code&gt;--dry-run=client -o yaml&lt;/code&gt; 避免手动敲太多&lt;/li&gt;
+&lt;li&gt;善用 &lt;code&gt;kubectl explain [resource[.field]]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;看懂题目最重要，输出正确的结果更重要（重要的事讲三遍）&lt;/li&gt;
+&lt;li&gt;看懂题目最重要，输出正确的结果更重要（重要的事讲三遍）&lt;/li&gt;
+&lt;li&gt;看懂题目最重要，输出正确的结果更重要（重要的事讲三遍）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;书签地址：&lt;a href="https://gist.github.com/addozhang/3ca950ce9b38930abfe7c5fb067e74de"&gt;K8s-CKA-CAKD-Bookmarks.html&lt;/a&gt;&lt;/p&gt;</description></item><item><title>云原生 CICD: Tekton Pipeline 实战</title><link>https://atbug.com/tekton-pipeline-practice/</link><pubDate>Tue, 22 Jun 2021 07:19:33 +0800</pubDate><guid>https://atbug.com/tekton-pipeline-practice/</guid><description>&lt;p&gt;更新历史：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;v1：2020.1.21 基于 Tekton Pipline &lt;a href="https://github.com/tektoncd/pipeline/tree/v0.9.0/docs#tekton-pipelines"&gt;v0.9.0&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;v2（当前）：2021.6.22 基于 Tekton Pipeline &lt;a href="https://github.com/tektoncd/pipeline/tree/v0.25.0/docs#tekton-pipelines"&gt;v0.25.0&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;Tekton 是 Google 开源的 Kubernetes 原生CI/CD 系统, 功能强大扩展性强. 前身是 Knavite 里的 build-pipeline 项目, 后期孵化成&lt;a href="https://github.com/tektoncd/pipeline"&gt;独立的项目&lt;/a&gt;. 并成为 &lt;a href="https://cd.foundation/projects/"&gt;CDF&lt;/a&gt; 下的四个项目之一, 其他三个分别是 Jenkins, Jenkins X, Spinnaker.&lt;/p&gt;
+&lt;p&gt;为什么说 Tekton 是 Kubernetes 原生的, 以内其基于 Kubernetes 的 CRD 定义了 Pipeline 流水线.&lt;/p&gt;</description></item><item><title>源码解析：一文读懂 Kubelet</title><link>https://atbug.com/kubelet-source-code-analysis/</link><pubDate>Tue, 15 Jun 2021 08:25:25 +0800</pubDate><guid>https://atbug.com/kubelet-source-code-analysis/</guid><description>&lt;p&gt;本文主要介绍 kubelet 功能、核心组件，以及启动流程的源码分析，总结了 kubelet 的工作原理。&lt;/p&gt;
+&lt;h2 id="kubelet-简介"&gt;kubelet 简介&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/15/20210613091144.png" alt="Kubernetes 的架构图"&gt;&lt;/p&gt;
+&lt;p&gt;从官方的架构图中很容易就能找到 &lt;code&gt;kubelet&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;执行 &lt;code&gt;kubelet -h&lt;/code&gt; 看到 kubelet 的功能介绍：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;kubelet 是每个 Node 节点上都运行的主要“节点代理”。使用如下的一个向 apiserver 注册 Node 节点：主机的 &lt;code&gt;hostname&lt;/code&gt;；覆盖 &lt;code&gt;host&lt;/code&gt; 的参数；或者云提供商指定的逻辑。&lt;/li&gt;
+&lt;li&gt;kubelet 基于 &lt;code&gt;PodSpec&lt;/code&gt; 工作。&lt;code&gt;PodSpec&lt;/code&gt; 是用 &lt;code&gt;YAML&lt;/code&gt; 或者 &lt;code&gt;JSON&lt;/code&gt; 对象来描述 Pod。Kubelet 接受通过各种机制（主要是 apiserver）提供的一组 &lt;code&gt;PodSpec&lt;/code&gt;，并确保里面描述的容器良好运行。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;除了由 apiserver 提供 &lt;code&gt;PodSpec&lt;/code&gt;，还可以通过以下方式提供：&lt;/p&gt;</description></item><item><title>Kubernetes 的自动伸缩你用对了吗？</title><link>https://atbug.com/auto-scaling-best-practice-in-kubernetes/</link><pubDate>Wed, 09 Jun 2021 00:34:25 +0800</pubDate><guid>https://atbug.com/auto-scaling-best-practice-in-kubernetes/</guid><description>&lt;p&gt;本文翻译自 learnk8s 的 &lt;a href="https://learnk8s.io/kubernetes-autoscaling-strategies#when-autoscaling-pods-goes-wrong"&gt;Architecting Kubernetes clusters — choosing the best autoscaling strategy&lt;/a&gt;，&lt;u&gt;有增删部分内容&lt;/u&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/09/cleanshot-20210608-at-2159402x.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;TL;DR: 在默认设置下，扩展 Kubernetes 集群中的 pod 和节点可能需要几分钟时间。了解如何调整集群节点的大小、配置水平和集群自动缩放器以及过度配置集群以加快扩展速度。&lt;/p&gt;
+&lt;h2 id="自动扩展器"&gt;自动扩展器&lt;/h2&gt;
+&lt;p&gt;在 Kubernetes 中，常说的“自用扩展”有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/"&gt;HPA：Pod 水平缩放器&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler"&gt;VPA：Pod 垂直缩放器&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler"&gt;CA：集群自动缩放器&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;不同类型的自动缩放器，使用的场景不一样。&lt;/p&gt;
+&lt;h3 id="hpa"&gt;HPA&lt;/h3&gt;
+&lt;p&gt;HPA 定期检查内存和 CPU 等指标，自动调整 Deployment 中的副本数，比如流量变化：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/09/cleanshot-20210608-at-2206552x.png" alt="调整前"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/06/09/cleanshot-20210608-at-2207122x.png" alt="调整后"&gt;&lt;/p&gt;
+&lt;h3 id="vpa"&gt;VPA&lt;/h3&gt;
+&lt;p&gt;有些时候无法通过增加 Pod 数来扩容，比如数据库。这时候可以通过 VPA 增加 Pod 的大小，比如调整 Pod 的 CPU 和内存：&lt;/p&gt;</description></item><item><title>初探可编程网关 Pipy</title><link>https://atbug.com/glance-at-programmable-gateway-pipy/</link><pubDate>Mon, 31 May 2021 00:45:08 +0800</pubDate><guid>https://atbug.com/glance-at-programmable-gateway-pipy/</guid><description>&lt;p&gt;有幸参加了 &lt;a href="https://flomesh.cn/"&gt;Flomesh&lt;/a&gt; 组织的workshop，了解了他们的 Pipy 网络代理，以及围绕 Pipy 构建起来的生态。Pipy 在生态中，不止是代理的角色，还是 Flomesh 服务网格​中的数据平面。&lt;/p&gt;
+&lt;p&gt;整理一下，做个记录，顺便瞄一下 Pipy 的部分源码。&lt;/p&gt;
+&lt;h2 id="介绍"&gt;介绍&lt;/h2&gt;
+&lt;p&gt;下面是摘自 Github 上关于 Pipy 的介绍：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Pipy 是一个轻量级、高性能、高稳定、可编程的网络代理。Pipy 核心框架使用 C++ 开发，网络 IO 采用 ASIO 库。 Pipy 的可执行文件仅有 5M 左右，运行期的内存占用 10M 左右，因此 Pipy 非常适合做 Sidecar proxy。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Pipy 内置了自研的 pjs 作为脚本扩展，使得Pipy 可以用 JS 脚本根据特定需求快速定制逻辑与功能。&lt;/p&gt;</description></item><item><title>云上细粒度访问管理的参考架构</title><link>https://atbug.com/translation-access-management-reference-architecture/</link><pubDate>Wed, 28 Apr 2021 08:02:11 +0800</pubDate><guid>https://atbug.com/translation-access-management-reference-architecture/</guid><description>&lt;p&gt;本文由 &lt;a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&amp;amp;__biz=MjM5OTg2MTM0MQ==&amp;amp;scene=124#wechat_redirect"&gt;Addo Zhang&lt;/a&gt; 翻译自 &lt;a href="https://www.infoq.com/articles/access-management-reference-architecture/"&gt;A Reference Architecture for Fine-Grained Access Management on the Cloud&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id="什么是访问管理"&gt;什么是访问管理？&lt;/h1&gt;
+&lt;p&gt;访问管理是识别用户或一组用户是否应该能够访问给定资源（例如主机、服务或数据库）的过程。例如，对于开发人员来说是否可以使用 SSH 登录生产应用程序服务器，如果可以，那么可以登录多长时间？如果 SRE 在非支持时间尝试访问数据库，他们这样做？如果数据工程师已转移到其他团队，他们是否应该继续访问 ETL 管道的 S3 存储桶？&lt;/p&gt;
+&lt;h1 id="现在如何进行访问管理"&gt;现在如何进行访问管理？&lt;/h1&gt;
+&lt;p&gt;在云上各种基础设施和数据服务激增之前，访问管理是 DevOps 和 Security 团队要解决的相对简单的问题。VPN 和堡垒主机是（现在仍然是）在网络级别封锁所有关键资源的首选机制。用户必须先通过 VPN 服务器进行身份验证，或者登录到堡垒主机，然后才能访问专用网络上的所有资源。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/27/16195301216852.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;当资源是静态的并且它们的数量相对较小时，此方法效果很好。但是，随着越来越多的资源动态地涌入专用网络的各处，VPN / 堡垒主机解决方案变得站不住脚。&lt;/p&gt;
+&lt;p&gt;具体来说，在三个方面，VPN 和堡垒主机不足以作为一种有效的访问管理机制。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;它们作用于网络层面&lt;/strong&gt;：用户通过 VPN 进行身份验证并获得对专用网络的访问权限后，他们实际上就可以访问其上运行的所有服务。无法根据用户的身份在基础架构或数据服务的粒度上管理访问。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;凭据是攻击的媒介&lt;/strong&gt;：VPN 和堡垒主机都要求用户记住并存储凭据。过期和轮换凭证作为安全策略非常困难，尤其是在涉及大量用户的情况下，凭证因此成为潜在的攻击媒介。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;不能管理第三方 SaaS 工具&lt;/strong&gt;：SaaS 工具（如 Looker、Tableau 和 Periscope Data）需要直接访问数据端点。因此，使用这些工具访问数据的任何人都无法通过使用了相同的机制和凭据的基础设施进行身份验证。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="云上访问管理的新架构"&gt;云上访问管理的新架构&lt;/h1&gt;
+&lt;p&gt;在本文中，我们将定义新的参考架构，为那些正在寻求简化访问管理云资源（从 SSH 主机、数据库、数据仓库到消息管道和云存储终结点）解决方案的云原生企业。&lt;/p&gt;</description></item><item><title>应“云”而生的 Java 框架：构建本机可执行文件</title><link>https://atbug.com/quarkus-build-native-executable-file/</link><pubDate>Sat, 17 Apr 2021 09:08:40 +0800</pubDate><guid>https://atbug.com/quarkus-build-native-executable-file/</guid><description>&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/17/16186233244243.jpg" alt=""&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;电影《功夫》中，火云邪神有句话：“天下武功无坚不摧，唯快不破。”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;在 &lt;a href="https://mp.weixin.qq.com/s/YcEqFm3oxlsEvJ3ckRbQyA"&gt;上一篇文章&lt;/a&gt; 中，我们写了第一个 Quarkus 应用，并尝试着构建了 &lt;code&gt;legacy-jar&lt;/code&gt; 和 &lt;code&gt;fast-jar&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;今天来看一下 Quarkus 构建出来的本机可执行文件到底比 Spring 应用能快多少，&lt;strong&gt;生态的成熟度不在这里讨论&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id="tldr"&gt;TLDR&lt;/h2&gt;
+&lt;p&gt;先上结论， 与只有一个 Controller 的Spring Web 应用做下对比。&lt;/p&gt;
+&lt;h3 id="应用启动时间0012s-vs-2294s"&gt;应用启动时间：0.012s vs 2.294s&lt;/h3&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/17/cleanshot-20210417-at-0900292x.png" alt="CleanShot 2021-04-17 at 09.00.29@2x"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/17/cleanshot-20210417-at-0915282x.png" alt="CleanShot 2021-04-17 at 09.15.28@2x"&gt;&lt;/p&gt;
+&lt;h3 id="镜像大小49mb-vs-237-mb"&gt;镜像大小：49MB vs 237 MB&lt;/h3&gt;
+&lt;p&gt;Spring 应用镜像使用 &lt;code&gt;openjdk:11.0-jre-slim&lt;/code&gt; 作为 base 镜像，大小为 220MB。&lt;/p&gt;</description></item><item><title>应“云”而生的 Java 框架：Hello, Quarkus</title><link>https://atbug.com/hello-quarkus/</link><pubDate>Mon, 05 Apr 2021 21:08:40 +0800</pubDate><guid>https://atbug.com/hello-quarkus/</guid><description>&lt;p&gt;Wikipedia上有关 Quarkus 的信息还很少，只有一句简单的介绍：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Quarkus 是专为 OpenJDK HotSpot 和 GraalVM 定制的全栈 Kubernetes 原生 Java 应用程序框架。与如 Spring 之类的其他框架相比，它提供了较小的内存占用并缩短了启动时间。它允许结合命令式和非阻塞响应式编程。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;从 Quarkus 的&lt;a href="https://quarkus.io/"&gt;官网&lt;/a&gt;，可以看到其有几个特性：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;容器优先&lt;/li&gt;
+&lt;li&gt;统一了命令式和响应式编程&lt;/li&gt;
+&lt;li&gt;开发者友好&lt;/li&gt;
+&lt;li&gt;最佳品种的库及标准&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;更多 Quarkus 可以参考&lt;a href="https://quarkus.io/"&gt;官网&lt;/a&gt;的介绍及文档。今天主要就是跑一下 Quarkus 的 &lt;code&gt;Hello world&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;放一张官网的图：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/05/16176279246527.jpg" alt=""&gt;&lt;/p&gt;
+&lt;h2 id="环境准备"&gt;环境准备&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;基于 Java 11 的 GraalVM&lt;/li&gt;
+&lt;li&gt;Maven 3.6.2+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;笔者使用的是 macos 10.15.4，GraalVM 和 Maven 建议通过 &lt;a href="https://sdkman.io"&gt;sdkman&lt;/a&gt; 进行安装。&lt;/p&gt;</description></item><item><title>分布式系统在 Kubernetes 上的进化</title><link>https://atbug.com/translation-distributed-systems-kubernetes/</link><pubDate>Mon, 29 Mar 2021 23:11:25 +0800</pubDate><guid>https://atbug.com/translation-distributed-systems-kubernetes/</guid><description>&lt;p&gt;本文译自 &lt;a href="https://www.infoq.com/articles/distributed-systems-kubernetes/"&gt;The Evolution of Distributed Systems on Kubernetes&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;在 3 月份的 QCon 上，我做了一个关于 Kubernetes 的分布式系统进化的演讲。首先，我想先问一个问题，微服务之后是什么？我相信大家都有各自的答案，我也有我的答案。你会在最后发现我的想法是什么。为了达到这个目的，我建议大家看看分布式系统的需求是什么？以及这些需求在过去是如何发展的，从单体应用开始到 Kubernetes，再到最近的 Dapr、Istio、Knative 等项目，它们是如何改变我们做分布式系统的方式。我们将尝试对未来做一些预测。&lt;/p&gt;
+&lt;h2 id="现代分布式应用"&gt;现代分布式应用&lt;/h2&gt;
+&lt;p&gt;为了给这个话题提供更多的背景信息，我认为的分布式系统是由数百个组件组成的系统。这些组件可以是有状态的、无状态的或者无服务器的。此外，这些组件可以用不同的语言创建，运行在混合环境上，并开发开源技术、开放标准和互操作性。我相信你可以使用闭源软件来构建这样的系统，也可以在 AWS 和其他地方构建。具体到这次演讲，我将关注 Kubernetes 生态系统，以及你如何在 Kubernetes 平台上构建这样一个系统。&lt;/p&gt;
+&lt;p&gt;我们从分布式系统的需求讲起。我认为是我们要创建一个应用或者服务，并写一些业务逻辑。那从运行时的平台到构建分布式系统，我们还需要什么呢？在底层，最开始是我们要一些生命周期的能力。当你用任一语言开发你的应用时，我们希望有能力把这个应用可靠地打包和部署、回滚、健康检查。并且能够把应用部署到不同的节点上，并实现资源隔离、扩展、配置管理，以及所有这些。这些都是你创建分布式应用所需要的第一点。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/55image0011616431697020.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;第二点是围绕网络。我们有了应用之后，我们希望它能够可靠地连接到其他服务，无论该服务是在集群内部还是在外部。我们希望其具有服务发现、负载均衡的能力。为了不同的发布策略或是其他的一些原因的我们希望有流量转移的能力。然后我们还希望其具有与其他系统进行弹性通信的能力，无论是通过重试、超时还是断路器。要有适当的安全保障，并且要有足够的监控、追踪、可观察性等等。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/25image0021616431698392.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;我们有了网络之后，接下来就是我们希望有能力与不同的 API 和端点交互，即资源绑定&amp;ndash;与其他协议和不同的数据格式交互。甚至能够从一种数据格式转换成另一种数据格式。我还会在这里加入诸如滤光的功能，也就是说，当我们订阅一个主题时，我们也许只对某些事件感兴趣。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/45image0031616431697873.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;你认为最后一类是什么？是状态。当我在说状态和有状态的抽象时，我并不是在谈论实际的状态管理，比如数据库或者文件系统的功能。我要说的更多是有关幕后依赖状态的开发人员抽象。可能，你需要具有工作流管理的能力。也许你想管理运行时间长的进程或者做临时调度或者某些定时任务来定期运行服务。也许你还想进行分布式缓存，具有幂等性或者支持回滚。所有这些都是开发人员级的原语，但在幕后，它们依赖于具有某种状态。你想随意使用这些抽象俩创建完善的分布式系统。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/03/30/26image0041616431697348.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;我们将使用这个分布式系统原语的框架来评估它们在 Kubernetes 和其他项目上的变化情况。&lt;/p&gt;
+&lt;h2 id="单体架构--传统中间件功能"&gt;单体架构 &amp;ndash; 传统中间件功能&lt;/h2&gt;
+&lt;p&gt;假设我们从单体架构以及如何获得这些能力开始。在那种情况下，首先是当我说单体的时候，在分布式应用的情况下我想到的是 ESB。ESB 是相当强大的，当我们检查我们的需求列表时，我们会说 ESB 对所有有状态的抽象有很好的支持。&lt;/p&gt;</description></item><item><title>【译】2021 年及未来的云原生预测</title><link>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</link><pubDate>Tue, 09 Feb 2021 06:43:54 +0800</pubDate><guid>https://atbug.com/translation-cloud-native-predictions-for-2021-and-beyond/</guid><description>&lt;p&gt;本文译自 &lt;a href="https://www.cncf.io/blog/2021/01/29/cloud-native-predictions-for-2021-and-beyond/"&gt;Cloud Native Predictions for 2021 and Beyond&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;原文发布在 &lt;a href="https://www.aniszczyk.org/2021/01/19/cloud-native-predictions-for-2021-and-beyond/"&gt;Chris Aniszczyk 的个人博客&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;我希望每个人都有一个美好的假期，因为 2021 年 1 月的前几周一直非常疯狂，从叛乱到新的 COVID 菌株。在云原生国度，CNCF 最近发布了关于我们去年完成的所有工作的&lt;a href="https://www.cncf.io/cncf-annual-report-2020/"&gt;年度报告&lt;/a&gt;。我建议大家找个机会去看一下这份报告，在疫情大流行的这一年，我们收获颇丰。&lt;a href="https://twitter.com/CloudNativeFdn/status/1343914259177222145"&gt;https://twitter.com/CloudNativeFdn/status/1343914259177222145&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;作为我工作的一部分，我对云原生趋势有一个独特的观点，送给所有与我合作的会员公司和开发人员，所以我想我会分享我对 2021 年及以后云原生发展的想法。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;云原生的 IDE&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;作为一个在 Eclipse 基金会内部从事开发者工具工作的人，我对最近的技术状态进展感到无比兴奋。未来，开发生命周期（代码、构建、调试）将主要发生在云端，而不是你本地的 Emacs 或 VSCode。你将每一个拉动请求最终得到一个完整的开发环境设置，预先配置并连接到他们自己的部署，以协助你的开发和调试需求。今天这种技术的一个具体例子是通过 GitHub &lt;a href="https://github.com/features/codespaces"&gt;Codespaces&lt;/a&gt; 和 &lt;a href="https://gitpod.io/"&gt;GitPod&lt;/a&gt; 实现的。虽然 GitHub Codespaces 还处于测试阶段，但今天你可以通过 GitPod 来体验，以 &lt;a href="https://gitpod.io/#https://github.com/prometheus/prometheus"&gt;Prometheus&lt;/a&gt; 为例。一分钟左右，你就拥有了一个有编辑器和预览环境的完全实时的开发环境。最疯狂的是，这个开发环境（工作空间）是 &lt;a href="https://github.com/prometheus/prometheus/blob/master/.gitpod.yml"&gt;用代码描述&lt;/a&gt;，并且可以像其他代码工件一样，与你团队的其他开发者共享。&lt;/p&gt;
+&lt;p&gt;最后，我期望在接下来的一年里，能看到云原生 IDE 领域出现令人难以置信的创新，特别是随着 GitHub Codespaces 进入测试版之后，并得到广泛地使用，让开发者可以体验到这个新概念，并爱上它。&lt;/p&gt;</description></item><item><title>【译】应用架构：为什么要随着市场演进</title><link>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</link><pubDate>Sun, 17 Jan 2021 21:37:23 +0800</pubDate><guid>https://atbug.com/translation-application-architecture-why-it-should-evolve-with-the-market/</guid><description>&lt;p&gt;本文译自 &lt;a href="https://www.cncf.io/blog/2021/01/07/application-architecture-why-it-should-evolve-with-the-market/"&gt;Application architecture: why it should evolve with the market&lt;/a&gt;
+最初由Mia Platform团队发布在&lt;a href="https://blog.mia-platform.eu/en/application-architecture-why-it-should-evolve-with-the-market"&gt;Mia Platform的博客&lt;/a&gt;上&lt;/p&gt;
+&lt;p&gt;如今，IT 挑战在于通过有效选择应用架构来适应市场和业务需求的发展。为了满足业务和客户的需求，IT 部门应能够对技术和&lt;strong&gt;方法&lt;/strong&gt;采取行动以确保软件具有灵活性，并实现产品和服务的持续创新流程，从而做出更快的反应 。&lt;/p&gt;
+&lt;p&gt;当然，过去的单体应用程序和刚性基础设施无法做到这一点。相反，它可以通过&lt;strong&gt;为演化而设计的架构&lt;/strong&gt;来实现，该架构在需要时易于更新和重构。容器化实践的广泛应用（根据 &lt;a href="https://www.gartner.com/en/newsroom/press-releases/2020-06-25-gartner-forecasts-strong-revenue-growth-for-global-co"&gt;Gartner&lt;/a&gt;，到2022年，大公司的就业人数将从目前的 30％ 增长到 75％），这种情况下采用云原生方法重新设计微服务应用是成功的关键。&lt;/p&gt;
+&lt;h2 id="如何构建不断发展的应用架构"&gt;如何构建不断发展的应用架构&lt;/h2&gt;
+&lt;p&gt;海外专家称它们为&lt;strong&gt;可演进的架构&lt;/strong&gt;，以将它们与当今阻碍或无助于改变的传统架构区分开。应用架构基于&lt;a href="https://blog.mia-platform.eu/it/architettura-a-microservizi-i-vantaggi-per-il-business-e-per-lit"&gt;微服务架构风格&lt;/a&gt; ，被设计成在现代虚拟化 IT 和云环境中发挥最佳性能。&lt;/p&gt;
+&lt;p&gt;基本思想是&lt;strong&gt;创建可以轻松“分解”的应用程序，其组件可以在其他上下文或组合中重用&lt;/strong&gt;，如 Lego 系列。开发一系列微服务，每个微服务都用于执行单个业务功能（根据“单一职责原则”），可以在应用本身的开发和演进中获得相当大的灵活性。实际上，可以根据支持功能的特定生命周期独立开发、更新和测试服务。&lt;/p&gt;
+&lt;p&gt;此外，谈到部署，微服务应用的架构具有很大的优势：可以根据需要在内部或云中通过使用可用资源来扩展单个微服务。&lt;/p&gt;
+&lt;p&gt;为此，微服务应用获得&lt;strong&gt;基于容器的基础设施&lt;/strong&gt;的支持，该基础设施通过业务编排系统（通常为 &lt;a href="https://blog.mia-platform.eu/en/kubernetes-why-it-is-so-popular-and-who-should-use-it"&gt;Kubernetes&lt;/a&gt;）进行管理，该流程可以自动化并促进公司系统之间以及从这些系统到云提供商服务的软件作业的迁移。&lt;/p&gt;
+&lt;h2 id="随着业务发展的应用架构的优势"&gt;随着业务发展的应用架构的优势&lt;/h2&gt;
+&lt;p&gt;基于微服务的应用架构在开发和部署方面具有更大的自治权。如我们所见，微服务可以在其他应用程序中单独实现、“分解”、更新和重用。因此，通过产品或客户需求的演变，它有降低&lt;strong&gt;减少市场所需的每个新产品的设计/开发时间和成本&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;此外，通过使用容器化实践，可以简化在本地、云、多云或混合环境的任何环境中应用程序的部署，从而优化成本。&lt;/p&gt;
+&lt;p&gt;在微服务架构风格的优点中，我们还发现有可能在各种服务之间的对话及其健康状况上获得更大的&lt;strong&gt;透明度&lt;/strong&gt;：更好的可观察性意味着可以轻松解决复杂应用的问题。实际上，管理员可以&lt;strong&gt;更快地定位和解决性能和安全性问题&lt;/strong&gt;，在运维和代码层面实施措施，从而使响应速度与变更的长期有效性保持一致。&lt;/p&gt;
+&lt;p&gt;通过采用微服务以及新的开发和部署方法，可以创建能够随时间发展的应用架构。除了 IT 团队必须掌握的新技能外，还必须对公司的未来有一个清晰的愿景，以确保所提供的服务对业务发展有用。&lt;/p&gt;
+&lt;h2 id="创建可演进的应用架构"&gt;创建可演进的应用架构&lt;/h2&gt;
+&lt;p&gt;我们已经看到了基于微服务的现代应用架构如何保证软件的灵活性，并允许你利用本地和按需使用的所有资源，在可以&lt;strong&gt;方便地&lt;/strong&gt;获得所需性能、降低成本或保护数据的&lt;strong&gt;位置分配作业&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;为了使之成为可能，有必要在云和混合环境中创建和管理虚拟化的 IT 环境，并&lt;strong&gt;采用最合适的方法和策略&lt;/strong&gt;。例如，在用于将开发和运维活动链接在一起的DevOps领域中，&lt;strong&gt;持续集成/持续交付&lt;/strong&gt;（CI / CD）策略的方法学支持可帮助提高更新速度和应用软件的质量。&lt;/p&gt;</description></item><item><title>翻译：多运行时微服务架构</title><link>https://atbug.com/translation-multi-runtime-microservices-architecture/</link><pubDate>Wed, 01 Apr 2020 23:18:00 +0800</pubDate><guid>https://atbug.com/translation-multi-runtime-microservices-architecture/</guid><description>&lt;p&gt;这样文章通过Google翻译和人工逐字修改的方式完成的，某些位置也加上自己的理解。如有错误，请指出。&lt;/p&gt;
+&lt;p&gt;翻译这篇文章的目的其实是为了自己加深对微服务、分布式架构以及多运行时架构的理解。整篇文章从”战略“上分析了微服务”从古至今“解决的问题，以及带来的新问题；进而在“战术”层面，给出了解决这些新问题的手段。&lt;/p&gt;
+&lt;p&gt;个人见解：架构从来都是解决问题并带来问题， &lt;em&gt;取舍之道&lt;/em&gt; 。&lt;/p&gt;
+&lt;h3 id="背景知识"&gt;背景知识&lt;/h3&gt;
+&lt;p&gt;微服务的 12 要素：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;基准代码：一份基准代码，多份部署&lt;/li&gt;
+&lt;li&gt;依赖：显式声明依赖关系&lt;/li&gt;
+&lt;li&gt;配置：在环境中存储配置&lt;/li&gt;
+&lt;li&gt;后端服务：把后端服务当做附加资源&lt;/li&gt;
+&lt;li&gt;构建、发布、运行：严格分离构建和运行&lt;/li&gt;
+&lt;li&gt;进程：以一个或多个无状态进程运行应用&lt;/li&gt;
+&lt;li&gt;端口绑定：通过端口绑定提供服务&lt;/li&gt;
+&lt;li&gt;并发：通过进程模型进行扩展&lt;/li&gt;
+&lt;li&gt;易处理：快速启动和优雅终止可最大化健壮性&lt;/li&gt;
+&lt;li&gt;开发环境与线上环境等价：尽可能的保持开发、预发布、线上环境相同&lt;/li&gt;
+&lt;li&gt;日志：把日志当做事件流&lt;/li&gt;
+&lt;li&gt;管理进程：后台管理任务当做一次性进程运行&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;em&gt;原文从此处开始：&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;创建分布式系统并非易事。围绕“微服务”架构和“ 12要素应用程序”设计出现了最佳实践。这些提供了与交付生命周期，网络，状态管理以及对外部依赖项的绑定有关的准则。&lt;/li&gt;
+&lt;li&gt;但是，以可扩展和可维护的方式一致地实施这些原则是具有挑战性的。&lt;/li&gt;
+&lt;li&gt;解决这些原理的以技术为中心的传统方法包括企业服务总线（ESB）和面向消息的中间件（MOM）。虽然这些解决方案提供了良好的功能集，但主要的挑战是整体架构以及业务逻辑和平台之间的紧密技术耦合。&lt;/li&gt;
+&lt;li&gt;随着云，容器和容器协调器（Kubernetes）的流行，出现了解决这些原理的新解决方案。例如，Knative用于交付，服务网格用于网络，而Camel-K用于绑定和集成。&lt;/li&gt;
+&lt;li&gt;通过这种方法，业务逻辑（称为“微逻辑”）构成了应用程序的核心，并且可以创建提供强大的现成分布式原语的sidecar“ mecha”组件。&lt;/li&gt;
+&lt;li&gt;微观组件和机械组件的这种分离可以改善第二天的操作，例如打补丁和升级，并有助于维持业务逻辑内聚单元的长期可维护性。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;创建良好的分布式应用程序并非易事：此类系统通常遵循12要素应用程序和微服务原则。它们必须是无状态的，可伸缩的，可配置的，独立发布的，容器化的，可自动化的，并且有时是事件驱动的和无服务器的。创建后，它们应该易于升级，并且长期可以承受。在当今的技术中，要在这些相互竞争的要求之间找到良好的平衡仍然是一项艰巨的努力。&lt;/p&gt;
+&lt;p&gt;在本文中，我将探讨分布式平台如何发展以实现这种平衡，更重要的是，在分布式系统的演进中还需要发生什么事情，以简化可维护的分布式体系结构的创建。如果您想让我实时谈论这个话题，请加入我的QCon 三月的伦敦。&lt;/p&gt;
+&lt;h2 id="分布式应用程序需求"&gt;分布式应用程序需求&lt;/h2&gt;
+&lt;p&gt;在此讨论中，我将把现代分布式应用程序的需求分为四个类别-生命周期，网络，状态，绑定-并简要分析它们在最近几年中的发展情况。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2020/04/01/15856635785757.jpg" alt=""&gt;&lt;/p&gt;
+&lt;h3 id="生命周期-lifecycle"&gt;生命周期 Lifecycle&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;打包 Packaging&lt;/li&gt;
+&lt;li&gt;健康检查 Healthcheck&lt;/li&gt;
+&lt;li&gt;部署 Deployment&lt;/li&gt;
+&lt;li&gt;扩展 Scaling&lt;/li&gt;
+&lt;li&gt;配置 Configuration&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;让我们从基础开始。当我们编写一项功能时，编程语言将指示生态系统中的可用库，打包格式和运行时。例如，Java使用.jar格式，将所有Maven依赖项用作生态系统，并将JVM用作运行时。如今，随着发布周期的缩短，生命周期更重要的是能够自动部署，从错误中恢复以及扩展服务的能力。这组功能广泛地代表了我们的应用程序生命周期需求。&lt;/p&gt;</description></item><item><title>加速云原生的 Java 开发</title><link>https://atbug.com/speed-up-java-development-on-kubernetes/</link><pubDate>Sat, 21 Dec 2019 20:45:22 +0800</pubDate><guid>https://atbug.com/speed-up-java-development-on-kubernetes/</guid><description>&lt;p&gt;今天来说说日常在Kubernetes开发Java项目遇到的问题.&lt;/p&gt;
+&lt;p&gt;当我们新建一个项目的时候, 总是面临需要新建manifest, 平时都是&lt;code&gt;copy+paste+modify&lt;/code&gt;. 能否以变成的方式来生成?&lt;/p&gt;
+&lt;p&gt;开发时的步骤也比较繁琐: &lt;code&gt;docker build&lt;/code&gt;, &lt;code&gt;docker push&lt;/code&gt;, &lt;code&gt;kubectl apple&lt;/code&gt;, &lt;code&gt;kubectl delete pod&lt;/code&gt;. 对于一个Java应用来说还多了一步编译. 操作一次还ok, 但是一天十几次总会有想吐的感觉. 这些步骤能否简化成一个命令, 甚至修改了代码自动就完成上面一系列的操作?&lt;/p&gt;
+&lt;p&gt;实现这些我们需要几个工具: &lt;a href="https://github.com/dekorateio/dekorate"&gt;dekorate&lt;/a&gt;, &lt;a href="https://github.com/GoogleContainerTools/jib"&gt;Jib&lt;/a&gt;, &lt;a href="https://github.com/GoogleContainerTools/skaffold"&gt;Skaffold&lt;/a&gt;. 其中Jib也在上一篇文章&lt;a href="https://atbug.com/build-docker-or-oci-image-with-jib-for-java/"&gt;使用Jib为Java应用构建镜像&lt;/a&gt;中介绍过.&lt;/p&gt;
+&lt;h2 id="dekorate"&gt;dekorate&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Dekorate is a collection of Java compile-time generators and decorators for Kubernetes/OpenShift manifests.
+Dekorate是Java编译时生成和装饰Kubernetes/OpenShift的manifests的工具&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="快速开始"&gt;快速开始&lt;/h3&gt;
+&lt;h4 id="1-通过使用spring-initializer生成一个项目spring-boot-222-并加入依赖"&gt;1. 通过使用&lt;a href="https://start.spring.io"&gt;Spring Initializer&lt;/a&gt;生成一个项目(Spring Boot 2.2.2), 并加入依赖:&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;io.dekorate&lt;span style="color:#f92672"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;kubernetes-spring-starter&lt;span style="color:#f92672"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;0.10.0&lt;span style="color:#f92672"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="2-加入一个简单的controller"&gt;2. 加入一个简单的&lt;code&gt;Controller&lt;/code&gt;:&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;/**
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt; * @author Addo.Zhang
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt; * @date 2019/12/22
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@RestController&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;DekorateExampleController&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@GetMapping&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; String &lt;span style="color:#a6e22e"&gt;hi&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Hello World&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="3-执行命令mvn-clean-install-然后在targetclassesmeta-infdekorate目录下可以找到kubernetesjson和kubernetesyml两个文件"&gt;3. 执行命令&lt;code&gt;mvn clean install&lt;/code&gt;, 然后在&lt;code&gt;target/classes/META-INF/dekorate&lt;/code&gt;目录下可以找到&lt;code&gt;kubernetes.json&lt;/code&gt;和&lt;code&gt;kubernetes.yml&lt;/code&gt;两个文件.&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;kubernetes.yml&lt;/code&gt;的内容:&lt;/p&gt;</description></item><item><title>Kubernetes — 持久卷</title><link>https://atbug.com/kubernetes-persistent-volumes/</link><pubDate>Sun, 20 Aug 2017 22:25:40 +0000</pubDate><guid>https://atbug.com/kubernetes-persistent-volumes/</guid><description>&lt;h1 id="persistent-volume"&gt;Persistent Volume&lt;/h1&gt;
+&lt;p&gt;译自&lt;a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/"&gt;Persistent Volumes&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="介绍"&gt;介绍&lt;/h2&gt;
+&lt;p&gt;管理存储是管理计算的独特问题。 PersistentVolume子系统为用户和管理员提供了一个API，其中提供了如何从如何使用存储提供存储的详细信息。为此，我们介绍两种新的API资源：PersistentVolume和PersistentVolumeClaim。&lt;/p&gt;
+&lt;p&gt;PersistentVolume（PV）是由管理员配置的集群中的一段存储。它是集群中的一种资源就像一个节点是一个集群的资源。 PV是类似Volumes的卷插件，但是具有独立于使用PV的任何单个pod的生命周期。该API对象捕获存储的实现细节，即NFS，iSCSI或云提供商特定的存储系统。&lt;/p&gt;
+&lt;p&gt;PersistentVolumeClaim（PVC）是用户存储的请求。它类似于pod。 Pod消耗节点资源，PVC消耗PV资源。Pods可以请求特定级别的资源（CPU和内存）。声明可以请求特定的大小和访问模式（例如，一次读写或者多次只读）。&lt;/p&gt;
+&lt;p&gt;虽然PersistentVolumeClaims允许用户使用抽象存储资源，但是常见的是，用户需要具有不同属性（如性能）的PersistentVolumes，用于不同的问题。 集群管理员需要能够提供多种彼此不同的PersistentVolumes，而不仅仅是大小和访问模式，而不会使用户了解这些卷的实现细节。 对于这些需求，有一个StorageClass资源。&lt;/p&gt;
+&lt;p&gt;StorageClass为管理员提供了一种描述他们提供的存储的“类”的方法。 不同的类可能映射到服务质量级别，或备份策略，或者由群集管理员确定的任意策略。 Kubernetes本身对于什么类别代表是不言而喻的。 这个概念有时在其他存储系统中称为“配置文件”。&lt;/p&gt;
+&lt;p&gt;请参阅&lt;a href="https://kubernetes.io/docs/user-guide/persistent-volumes/walkthrough/"&gt;详细演练与工作示例&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id="存储和声明的生命周期"&gt;存储和声明的生命周期&lt;/h2&gt;
+&lt;p&gt;PVs是集群中的资源；PVCs是对这种资源的声明，同时也扮演者对资源声明的检查。PVs和PVCs之前的交互遵循生命周期：供应、绑定、使用中、重新申请。&lt;/p&gt;
+&lt;p&gt;集群管理员创建多个PV。它们携带可供集群用户使用的真实存储的详细信息。它们存在于Kubernetes API中，可用于消费。&lt;/p&gt;
+&lt;h3 id="供应provisioning"&gt;供应(Provisioning)&lt;/h3&gt;
+&lt;p&gt;PVs会以两种方式供应：静态和动态。&lt;/p&gt;
+&lt;h4 id="静态"&gt;静态&lt;/h4&gt;
+&lt;p&gt;集群管理员创建多个PV。 它们携带可供集群用户使用的真实存储的详细信息。 它们存在于Kubernetes API中，可被使用。&lt;/p&gt;
+&lt;h4 id="动态"&gt;动态&lt;/h4&gt;
+&lt;p&gt;当管理员创建的静态PV都不匹配用户的PersistentVolumeClaim时，集群可能会尝试为PVC指定动态配置卷。 此配置基于StorageClasses：PVC必须指定一个类，并且管理员必须已创建并配置该类才能进行动态配置。 要求该类的声明有效地为自己禁用动态配置。&lt;/p&gt;
+&lt;h3 id="绑定binding"&gt;绑定(Binding)&lt;/h3&gt;
+&lt;p&gt;当用户创建、或已经创建了一个PersistenVolumenClaim并指定大小和访问类型。Master中的控制循环会检测新的PVC，找到一个匹配的PV（如果可能的话），并将它们绑定在一起。如果一个PV被动态地供应某个PVC，循环将总是把这个PV和该PVC绑定。否则，用户总是至少得到他们要求的内容，但是卷可能超出了要求。一旦绑定，PersistentVolumeClaim绑定是排他的，不管用于绑定它们的模式。&lt;/p&gt;
+&lt;p&gt;如果匹配的卷不存在，请求将无限期地保持。 随着匹配卷变得可用，请求将被绑定。 例如，提供许多50Gi PV的集群将不匹配要求100Gi的PVC。 当集群中添加100Gi PV时，可以绑定PVC。&lt;/p&gt;</description></item></channel></rss>

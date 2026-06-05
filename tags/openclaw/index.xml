@@ -1,20 +1,32 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>OpenClaw on 乱世浮生</title><link>https://atbug.com/tags/openclaw/</link><description>Recent content in OpenClaw on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 14 Apr 2026 21:34:47 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/openclaw/index.xml" rel="self" type="application/rss+xml"/><item><title>Agent 装 Agent：用 OpenClaw 安装 Hermes，顺手验证自我进化</title><link>https://atbug.com/ai-agent-installs-ai-agent-openclaw-hermes/</link><pubDate>Tue, 14 Apr 2026 21:34:47 +0800</pubDate><guid>https://atbug.com/ai-agent-installs-ai-agent-openclaw-hermes/</guid><description>TL;DR：用 OpenClaw 全程操控远程 VM，从 Terraform 建机器到安装配置 Hermes Agent，并在实测中触发了自我进化，生成了一个高质量 Skill。
-一、缘起 前几天，朋友向我安利了 Hermes Agent——由 Nous Research 出品的开源个人 AI 助手。他重点提到了一个特性：自我进化。agent 能在完成复杂任务后自动创建 Skill，在后续使用中持续迭代优化，形成一个闭合的学习循环。
-这个概念让我想起了自己一直在做的事情。
-我已经在多个 AI 工具中用 skill-creator skill 手动实现类似的目标——无论是 OpenClaw 这样的个人助手，还是 OpenCode 这样的 coding agent，都在用同一套方式：用户主动触发 Skill 的创建和修正，在使用过程中不断迭代，逐步提升 agent 的能力上限。我也研究过 HyperAgents，探索 agent 自我进化的可能性。</description></item><item><title>我让龙虾替我工作了 38 天，它做了什么？</title><link>https://atbug.com/openclaw-38-days-what-did-it-do/</link><pubDate>Tue, 10 Mar 2026 22:15:52 +0800</pubDate><guid>https://atbug.com/openclaw-38-days-what-did-it-do/</guid><description>Photo by James Lee on Pexels
-一个决定 一开年，OpenClaw 突然在技术圈出圈了。
-这是一个自托管的 AI agent 网关，装在服务器上，能把 Telegram、WhatsApp、iMessage 这些聊天软件直接接到 AI agent——发一条消息，agent 帮你处理邮件、文件、代码，像个永远在线的私人助理。
-出于好奇，1 月底我也装了一个。
-最初装在 MacBook 上，但考虑到隐私安全，本地机器上有太多个人数据，不想让 agent 有过多访问权限，索性找了一台公有云的 Ubuntu 虚拟机，把它部署上去。模型用的是 GitHub Copilot，这得益于微软 MVP 赠送的 Copilot Pro 订阅，算是物尽其用。
-就这样，第一个 agent 上线了。后来随着使用深入，发现有些事情需要专注写代码的，有些只需要轻量协助，agent 数量从 1 个慢慢加到了 3 个：Nova 管日常，Forge 专门写代码，assistant 跑腿打杂。</description></item><item><title>记忆不上云：mem9 + TiDB 打造 OpenClaw 私有记忆中枢</title><link>https://atbug.com/openclaw-private-memory-mem9-tidb-self-hosted/</link><pubDate>Mon, 09 Mar 2026 19:26:51 +0800</pubDate><guid>https://atbug.com/openclaw-private-memory-mem9-tidb-self-hosted/</guid><description>更新历史
-2026-03-09：初稿发布 2026-04-14：修正 docker-compose 配置（volume 路径、restart 策略、TIDB_ZERO 开关）；补充三个自建踩坑记录 Photo by Tweesak C. on Pexels
-记忆的代价 每次对话结束，AI agent 就会忘记一切。
-这不是比喻。OpenClaw 的默认 memory-core 把记忆写进本地 .md 文件，当文件积累到上百个，agent 没有能力在每次对话前全部扫描——记忆变成了需要你主动提示才能检索的档案馆。
-更根本的问题是：记忆无法跨 agent 共享。你告诉过主 agent 的偏好，coding agent 从零开始；每个 agent 都活在自己的信息孤岛里。
-理想的 agent 记忆系统应该满足四点：自动注入、跨 agent 共享、新记忆实时可用、数据留在本地。
-带着这四个要求，我开始寻找答案。这篇文章 介绍了 mem9 作为 AI agent 记忆方案的思路，给了我很大启发。但原文使用的是 mem9.</description></item><item><title>从需求到发布：使用 OpenClaw + Ralph Loop 自动化开发 Nexus MCP Server</title><link>https://atbug.com/openclaw-ralph-loop-automated-nexus-mcp-server-development/</link><pubDate>Wed, 04 Feb 2026 01:35:36 +0800</pubDate><guid>https://atbug.com/openclaw-ralph-loop-automated-nexus-mcp-server-development/</guid><description>TL;DR 使用 OpenClaw + Ralph Loop + OpenCode 组合，完成了 Nexus MCP Server 的全自动化开发。
-本文记录了从需求提出、Planning、Building，到遇到问题诊断、架构重构的完整过程，展示了 AI 辅助编码工具的实际效能。
-源码以及实现的脚本、Planing、Building 等文档均提交到 GitHub 仓库 addozhang/nexus-mcp-server。
-背景 今天在公司遇到一个问题：需要开发一个 Agent 来对比项目依赖细节，但远程仓库版本被删除导致用旧的 parent pom 构建失败。我想让 Agent 到 Nexus 仓库查找最接近的版本进行构建，以避免大跨度的版本升级引入新的问题。
-向来不喜造轮子，内网外网找了一圈才找到一个基于 Node 的开源版 brianveltman/sonatype-mcp，马上着手验证，然后倒在了安装依赖包：内网仓库缺少一个间接依赖的包。
-这就有了造轮子的借口了，装上 mcp-builder skill 马上 Vibe 一个。无奈模型有点弱鸡，稍微折腾一下，又没有太多时间草草收场。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>OpenClaw on 乱世浮生</title><link>https://atbug.com/tags/openclaw/</link><description>Recent content in OpenClaw on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Tue, 14 Apr 2026 21:34:47 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/openclaw/index.xml" rel="self" type="application/rss+xml"/><item><title>Agent 装 Agent：用 OpenClaw 安装 Hermes，顺手验证自我进化</title><link>https://atbug.com/ai-agent-installs-ai-agent-openclaw-hermes/</link><pubDate>Tue, 14 Apr 2026 21:34:47 +0800</pubDate><guid>https://atbug.com/ai-agent-installs-ai-agent-openclaw-hermes/</guid><description>&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;：用 OpenClaw 全程操控远程 VM，从 Terraform 建机器到安装配置 Hermes Agent，并在实测中触发了自我进化，生成了一个高质量 Skill。&lt;/p&gt;
+&lt;h2 id="一缘起"&gt;一、缘起&lt;/h2&gt;
+&lt;p&gt;前几天，朋友向我安利了 &lt;a href="https://hermes-agent.nousresearch.com"&gt;Hermes Agent&lt;/a&gt;——由 Nous Research 出品的开源个人 AI 助手。他重点提到了一个特性：&lt;strong&gt;自我进化&lt;/strong&gt;。agent 能在完成复杂任务后自动创建 Skill，在后续使用中持续迭代优化，形成一个闭合的学习循环。&lt;/p&gt;
+&lt;p&gt;这个概念让我想起了自己一直在做的事情。&lt;/p&gt;
+&lt;p&gt;我已经在多个 AI 工具中用 skill-creator skill 手动实现类似的目标——无论是 &lt;a href="https://openclaw.ai"&gt;OpenClaw&lt;/a&gt; 这样的个人助手，还是 &lt;a href="https://opencode.ai"&gt;OpenCode&lt;/a&gt; 这样的 coding agent，都在用同一套方式：用户主动触发 Skill 的创建和修正，在使用过程中不断迭代，逐步提升 agent 的能力上限。我也研究过 &lt;a href="https://atbug.com/hyperagents-deep-dive"&gt;HyperAgents&lt;/a&gt;，探索 agent 自我进化的可能性。&lt;/p&gt;
+&lt;p&gt;所以当朋友说“Hermes 能自动做这件事”时，我的第一反应不是兴奋，而是好奇：&lt;strong&gt;自动化和手动控制，哪种方式更有效？Hermes 的理念和我已经在做的事，差距到底有多大？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;决定装一个试试。但怎么装？用我的 AI agent 来装另一个 AI agent——这才是正确的打开方式。&lt;/p&gt;</description></item><item><title>我让龙虾替我工作了 38 天，它做了什么？</title><link>https://atbug.com/openclaw-38-days-what-did-it-do/</link><pubDate>Tue, 10 Mar 2026 22:15:52 +0800</pubDate><guid>https://atbug.com/openclaw-38-days-what-did-it-do/</guid><description>&lt;p&gt;&lt;em&gt;Photo by James Lee on Pexels&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id="一个决定"&gt;一个决定&lt;/h2&gt;
+&lt;p&gt;一开年，OpenClaw 突然在技术圈出圈了。&lt;/p&gt;
+&lt;p&gt;这是一个自托管的 AI agent 网关，装在服务器上，能把 Telegram、WhatsApp、iMessage 这些聊天软件直接接到 AI agent——发一条消息，agent 帮你处理邮件、文件、代码，像个永远在线的私人助理。&lt;/p&gt;
+&lt;p&gt;出于好奇，1 月底我也装了一个。&lt;/p&gt;
+&lt;p&gt;最初装在 MacBook 上，但考虑到隐私安全，本地机器上有太多个人数据，不想让 agent 有过多访问权限，索性找了一台公有云的 Ubuntu 虚拟机，把它部署上去。模型用的是 GitHub Copilot，这得益于微软 MVP 赠送的 Copilot Pro 订阅，算是物尽其用。&lt;/p&gt;
+&lt;p&gt;就这样，第一个 agent 上线了。后来随着使用深入，发现有些事情需要专注写代码的，有些只需要轻量协助，agent 数量从 1 个慢慢加到了 3 个：Nova 管日常，Forge 专门写代码，assistant 跑腿打杂。&lt;/p&gt;</description></item><item><title>记忆不上云：mem9 + TiDB 打造 OpenClaw 私有记忆中枢</title><link>https://atbug.com/openclaw-private-memory-mem9-tidb-self-hosted/</link><pubDate>Mon, 09 Mar 2026 19:26:51 +0800</pubDate><guid>https://atbug.com/openclaw-private-memory-mem9-tidb-self-hosted/</guid><description>&lt;p&gt;&lt;strong&gt;更新历史&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;2026-03-09：初稿发布&lt;/li&gt;
+&lt;li&gt;2026-04-14：修正 docker-compose 配置（volume 路径、restart 策略、TIDB_ZERO 开关）；补充三个自建踩坑记录&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;Photo by &lt;a href="https://www.pexels.com/@tweesak-c-390169687"&gt;Tweesak C.&lt;/a&gt; on &lt;a href="https://www.pexels.com/photo/lighthouse-at-sea-in-clear-blue-sky-14783334/"&gt;Pexels&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id="记忆的代价"&gt;记忆的代价&lt;/h2&gt;
+&lt;p&gt;每次对话结束，AI agent 就会忘记一切。&lt;/p&gt;
+&lt;p&gt;这不是比喻。OpenClaw 的默认 &lt;code&gt;memory-core&lt;/code&gt; 把记忆写进本地 &lt;code&gt;.md&lt;/code&gt; 文件，当文件积累到上百个，agent 没有能力在每次对话前全部扫描——记忆变成了需要你主动提示才能检索的档案馆。&lt;/p&gt;
+&lt;p&gt;更根本的问题是：&lt;strong&gt;记忆无法跨 agent 共享&lt;/strong&gt;。你告诉过主 agent 的偏好，coding agent 从零开始；每个 agent 都活在自己的信息孤岛里。&lt;/p&gt;
+&lt;p&gt;理想的 agent 记忆系统应该满足四点：自动注入、跨 agent 共享、新记忆实时可用、数据留在本地。&lt;/p&gt;
+&lt;p&gt;带着这四个要求，我开始寻找答案。&lt;a href="https://mp.weixin.qq.com/s/r4Ad0uvEp-J7hr7Y9jQ4LA"&gt;这篇文章&lt;/a&gt; 介绍了 mem9 作为 AI agent 记忆方案的思路，给了我很大启发。但原文使用的是 mem9.ai 云服务——记忆数据存在远端。考虑到 agent 的记忆里沉淀着大量个人习惯、工作偏好和私人决策，这些数据不应该离开本机。因此本文在此基础上进一步，把整套系统搬到本地自托管。&lt;/p&gt;</description></item><item><title>从需求到发布：使用 OpenClaw + Ralph Loop 自动化开发 Nexus MCP Server</title><link>https://atbug.com/openclaw-ralph-loop-automated-nexus-mcp-server-development/</link><pubDate>Wed, 04 Feb 2026 01:35:36 +0800</pubDate><guid>https://atbug.com/openclaw-ralph-loop-automated-nexus-mcp-server-development/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;使用 &lt;strong&gt;OpenClaw + Ralph Loop + OpenCode&lt;/strong&gt; 组合，完成了 Nexus MCP Server 的全自动化开发。&lt;/p&gt;
+&lt;p&gt;本文记录了从需求提出、Planning、Building，到遇到问题诊断、架构重构的完整过程，展示了 AI 辅助编码工具的实际效能。&lt;/p&gt;
+&lt;p&gt;源码以及实现的脚本、Planing、Building 等文档均提交到 GitHub 仓库 &lt;a href="https://github.com/addozhang/nexus-mcp-server"&gt;addozhang/nexus-mcp-server&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;今天在公司遇到一个问题：需要开发一个 Agent 来对比项目依赖细节，但远程仓库版本被删除导致用旧的 parent pom 构建失败。我想让 Agent 到 Nexus 仓库查找最接近的版本进行构建，以避免大跨度的版本升级引入新的问题。&lt;/p&gt;
+&lt;p&gt;向来不喜造轮子，内网外网找了一圈才找到一个基于 Node 的开源版 &lt;a href="https://github.com/brianveltman/sonatype-mcp"&gt;brianveltman/sonatype-mcp&lt;/a&gt;，马上着手验证，然后倒在了安装依赖包：内网仓库缺少一个间接依赖的包。&lt;/p&gt;
+&lt;p&gt;这就有了造轮子的借口了，装上 &lt;a href="https://github.com/anthropics/skills/tree/main/skills/mcp-builder" title="mcp-builder"&gt;mcp-builder&lt;/a&gt; skill 马上 Vibe 一个。无奈模型有点弱鸡，稍微折腾一下，又没有太多时间草草收场。&lt;/p&gt;
+&lt;p&gt;下班时间想起我周末已经配置了常用的 Coding Agent 和 Skill 的 &lt;a href="https://openclaw.ai/"&gt;OpenClaw&lt;/a&gt;，这几天空余时间除了创建几个自己要用的 Agent 和 Skill 外，还没整过稍大的活。这不，正好拿 Nexus MCP server 练练手，而且月初还有配额使用 Claude Opus 4.5 模型。&lt;/p&gt;</description></item></channel></rss>

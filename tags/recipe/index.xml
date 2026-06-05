@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Recipe on 乱世浮生</title><link>https://atbug.com/tags/recipe/</link><description>Recent content in Recipe on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sun, 01 Mar 2026 08:33:41 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/recipe/index.xml" rel="self" type="application/rss+xml"/><item><title>Spring Boot 2 升 3：两条命令搞定 95%，AI 收尾</title><link>https://atbug.com/openrewrite-recipe-first-spring-boot-2-to-3-migration/</link><pubDate>Sun, 01 Mar 2026 08:33:41 +0800</pubDate><guid>https://atbug.com/openrewrite-recipe-first-spring-boot-2-to-3-migration/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;一年多前，我在另一个迁移项目里尝试过 OpenRewrite，做了可行性验证，最终评估下来方案不合适，那个项目转而采用了 AI 的方式。顺着那次探索写了个系列，然后就搁置了。最近真正的迁移计划提上日程，翻出来一看——当时踩过的坑、记下来的东西，全都用上了。&lt;/p&gt;
+&lt;p&gt;任何学习和痛苦都不会白费，只是兑现的时间不一定。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="为什么迁移这么痛"&gt;为什么迁移这么痛&lt;/h2&gt;
+&lt;p&gt;Spring Boot 2 的 EOL 早已过去，但很多团队的升级计划还停在 Jira 的某个角落吃灰。不是不想升，是真的怕。&lt;/p&gt;
+&lt;p&gt;怕什么？怕的不是技术本身，而是规模。&lt;code&gt;javax.*&lt;/code&gt; 全部变成 &lt;code&gt;jakarta.*&lt;/code&gt;，Spring Security 配置 API 重写，WebMVC 和异步配置的适配器类被移除，JUnit 4 注解也换了一套。任何一个变化单独处理都不难，但加在一起，乘以整个代码库的文件数量，就成了一个让人望而却步的工程量——而且还是那种高度重复、极易出错、回归验证代价极高的工作。&lt;/p&gt;
+&lt;p&gt;这类变更有一个共同特征：&lt;strong&gt;规则清晰，但执行枯燥，且不能出错&lt;/strong&gt;。每一处 &lt;code&gt;javax.persistence.Entity&lt;/code&gt; 都应该改成 &lt;code&gt;jakarta.persistence.Entity&lt;/code&gt;，没有例外。这种工作本质上不需要人来做判断，它需要的是一种可以精确、批量、可审计地修改代码的机制。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://docs.openrewrite.org"&gt;OpenRewrite&lt;/a&gt; 就是为此而生的。&lt;/p&gt;
+&lt;h2 id="openrewrite-是什么"&gt;OpenRewrite 是什么&lt;/h2&gt;
+&lt;p&gt;OpenRewrite 是一个专为大规模代码变更设计的自动化重构引擎，最初由 Netflix 内部孵化，现在由 &lt;a href="https://moderne.io"&gt;Moderne&lt;/a&gt; 维护。它的核心思想是：把代码解析成一棵&lt;strong&gt;无损语义树（Lossless Semantic Tree，LST）&lt;/strong&gt;，在树上做精确变换，再把结果写回代码——全程保留原有的格式、注释和空白。&lt;/p&gt;
+&lt;p&gt;这是一个关键细节。普通的文本替换工具不理解代码语义，正则表达式不知道 &lt;code&gt;import javax.persistence.Entity&lt;/code&gt; 和字符串里写的 &lt;code&gt;&amp;quot;javax.persistence.Entity&amp;quot;&lt;/code&gt; 有什么区别。OpenRewrite 的 LST 是类型感知的，它知道每个标识符解析到哪个类、哪个方法，所以它的变更是精确的。&lt;/p&gt;</description></item></channel></rss>

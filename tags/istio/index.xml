@@ -1,17 +1,189 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Istio on 乱世浮生</title><link>https://atbug.com/tags/istio/</link><description>Recent content in Istio on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 15 Jul 2021 08:10:22 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/istio/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes 必备工具：2021</title><link>https://atbug.com/translation-kuberletes-essential-tools-2021/</link><pubDate>Thu, 15 Jul 2021 08:10:22 +0800</pubDate><guid>https://atbug.com/translation-kuberletes-essential-tools-2021/</guid><description>有别于前些天的文章 - 常用的几款工具让 Kubernetes 集群上的工作更容易 偏重于工具类来提升工作效率，今天这篇文章更加适合用来做选型时的参考。
-文档翻译自 Kubernetes Essential Tools: 2021，篇幅较长，做了部分增删。
-介绍 在本文中，我将尝试总结我最喜欢的 Kubernetes 工具，并特别强调最新的和鲜为人知但我认为会非常流行的工具。
-这只是我根据我的经验得出的个人清单，但为了避免偏见，我还将尝试提及每种工具的替代方案，以便你可以根据自己的需要进行比较和决定。我将尽可能缩短这篇文章并提供链接，以便你可以自行探索更多内容。我的目标是回答这个问题：“我如何在 Kubernetes 中做 X？” 通过描述不同软件开发任务的工具。
-K3D K3D 是我最喜欢的在笔记本电脑上运行 Kubernetes (K8s) 集群的方式。它非常轻巧且速度非常快。它是使用 Docker 围绕 K3S 的包装器。所以，你只需要 Docker 来运行它并且资源使用率非常低。唯一的问题是它不完全符合 K8s 标准，但这不应该是本地开发的问题。对于测试环境，你可以使用其他解决方案。K3D 比 Kind 快，但 Kind 完全兼容。
-备选 K3S 物联网或者边缘计算 Kind 完全兼容 Kubernetes 的备选 MicroK8s MiniKube Krew Krew 是管理的必备工具 Kubectl 插件，这是一个必须有任何 K8S 用户。我不会详细介绍超过 145 个可用插件，但至少安装 kubens 和 kubectx。</description></item><item><title>Kubernetes 上如何控制容器的启动顺序？</title><link>https://atbug.com/k8s-1.18-container-start-sequence-control/</link><pubDate>Fri, 30 Apr 2021 07:43:54 +0800</pubDate><guid>https://atbug.com/k8s-1.18-container-start-sequence-control/</guid><description>去年写过一篇博客：控制 Pod 内容器的启动顺序，分析了 TektonCD 的容器启动控制的原理。
-为什么要做容器启动顺序控制？我们都知道 Pod 中除了 init-container 之外，是允许添加多个容器的。类似 TektonCD 中 task 和 step 的概念就分别与 pod 和 container 对应，而 step 是按照顺序执行的。此外还有服务网格的场景，sidecar 容器需要在服务容器启动之前完成配置的加载，也需要对容器的启动顺序加以控制。否则，服务容器先启动，而 sidecar 还无法提供网络上的支持。
-现实 期望 到了这里肯定有同学会问，spec.containers[] 是一个数组，数组是有顺序的。Kubernetes 也确实是按照顺序来创建和启动容器，但是 容器启动成功，并不表示容器可以对外提供服务。
-在 Kubernetes 1.18 非正式版中曾在 Lifecycle 层面提供了对 sidecar 类型容器的 支持，但是最终该功能并没有落地。</description></item><item><title>服务网格平稳落地：Istio 中精准控制 Sidecar 的注入</title><link>https://atbug.com/how-to-control-istio-sidecar-injection/</link><pubDate>Wed, 21 Apr 2021 08:13:04 +0800</pubDate><guid>https://atbug.com/how-to-control-istio-sidecar-injection/</guid><description>为什么 说起服务网格，这幅图大家肯定不会陌生。这就是服务网格的网络，也是网格架构的终极形态。
-那在迁移到网格架构之前，我们的系统是什么样的？
-我们的系统在演进的过程中，不可避免的会遇到各种 0 到 1 过程中的中间态。比如下面这种，可以比较直观的看出 Istio 或者网格是部分覆盖的。这个过程中，我们需要平滑、可控的推进，才能在保障系统可用性的前提下进行架构的演进。
-怎么做 Sidecar 的注入分两种：手动和自动。
-手动 手动就是利用 Istio 的 cli 工具 istioctl kube-inject 对资源 yaml 进行修改：
-$ istioctl kube-inject -f samples/sleep/sleep.yaml | kubectl apply -f - serviceaccount/sleep created service/sleep created deployment.apps/sleep created 手动的方式比较适合开发阶段使用。</description></item><item><title>Minikube安装istio</title><link>https://atbug.com/install-istio-on-minikube/</link><pubDate>Fri, 17 Jan 2020 08:02:42 +0800</pubDate><guid>https://atbug.com/install-istio-on-minikube/</guid><description>准备 注意: istioctl的安装要使用安装里的, 不要是用homebrew里的. github issue
-curl -L https://istio.io/downloadIstio | sh - cd istio-1.4.2 cp bin/istioctl /usr/local/bin/istioctl 安装前检查 istioctl verify-install 如果检查没问题, 会看到Install Pre-Check passed! The cluster is ready for Istio installation.
-安装 istio有5种内建的安装配置1: remote, sds, default, demo, minimal
-istioctl profile list minimal: 使用istio的流量管理所需组件的最小化安装 default: 根据IstioControlPlane API的默认设置(建议用于生产部署)启用组件.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Istio on 乱世浮生</title><link>https://atbug.com/tags/istio/</link><description>Recent content in Istio on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Thu, 15 Jul 2021 08:10:22 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/istio/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes 必备工具：2021</title><link>https://atbug.com/translation-kuberletes-essential-tools-2021/</link><pubDate>Thu, 15 Jul 2021 08:10:22 +0800</pubDate><guid>https://atbug.com/translation-kuberletes-essential-tools-2021/</guid><description>&lt;p&gt;有别于前些天的文章 - &lt;a href="https://mp.weixin.qq.com/s/uU2zmT5yyVcKZ5XmLSRqtg"&gt;常用的几款工具让 Kubernetes 集群上的工作更容易&lt;/a&gt; 偏重于工具类来提升工作效率，今天这篇文章更加适合用来做选型时的参考。&lt;/p&gt;
+&lt;p&gt;文档翻译自 &lt;a href="https://itnext.io/kubernetes-essential-tools-2021-def12e84c572"&gt;Kubernetes Essential Tools: 2021&lt;/a&gt;，篇幅较长，做了部分增删。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="介绍"&gt;介绍&lt;/h2&gt;
+&lt;p&gt;在本文中，我将尝试总结我最喜欢的 &lt;a href="https://kubernetes.io/"&gt;Kubernetes&lt;/a&gt; 工具，并特别强调最新的和鲜为人知但我认为会非常流行的工具。&lt;/p&gt;
+&lt;p&gt;这只是我根据我的经验得出的个人清单，但为了避免偏见，我还将尝试提及每种工具的替代方案，以便你可以根据自己的需要进行比较和决定。我将尽可能缩短这篇文章并提供链接，以便你可以自行探索更多内容。我的目标是回答这个问题：“我如何在 Kubernetes 中做 X？” 通过描述不同软件开发任务的工具。&lt;/p&gt;
+&lt;h2 id="k3d"&gt;K3D&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://k3d.io/"&gt;K3D&lt;/a&gt; 是我最喜欢的在笔记本电脑上运行 Kubernetes (K8s) 集群的方式。它非常&lt;strong&gt;轻巧且&lt;/strong&gt;速度非常快。它是使用 &lt;strong&gt;Docker&lt;/strong&gt; 围绕 &lt;a href="https://k3s.io/"&gt;K3S&lt;/a&gt; 的包装器。所以，你只需要 Docker 来运行它并且资源使用率非常低。唯一的问题是&lt;strong&gt;它不完全符合 K8s 标准&lt;/strong&gt;，但这不应该是本地开发的问题。对于测试环境，你可以使用其他解决方案。K3D 比 Kind 快，但 Kind 完全兼容。&lt;/p&gt;
+&lt;h3 id="备选"&gt;备选&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://k3s.io/"&gt;&lt;strong&gt;K3S&lt;/strong&gt;&lt;/a&gt; 物联网或者边缘计算&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kind.sigs.k8s.io/"&gt;&lt;strong&gt;Kind&lt;/strong&gt;&lt;/a&gt; 完全兼容 Kubernetes 的备选&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://microk8s.io/"&gt;&lt;strong&gt;MicroK8s&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://minikube.sigs.k8s.io/docs/"&gt;&lt;strong&gt;MiniKube&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="krew"&gt;Krew&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://krew.sigs.k8s.io/"&gt;Krew&lt;/a&gt; 是管理的必备工具 &lt;strong&gt;Kubectl 插件&lt;/strong&gt;，这是一个必须有任何 K8S 用户。我不会详细介绍超过 145 个可用&lt;a href="https://krew.sigs.k8s.io/plugins/"&gt;插件&lt;/a&gt;，但至少安装 &lt;a href="https://github.com/ahmetb/kubectx"&gt;&lt;strong&gt;kubens&lt;/strong&gt;&lt;/a&gt; 和 &lt;a href="https://github.com/ahmetb/kubectx"&gt;&lt;strong&gt;kubectx&lt;/strong&gt;&lt;/a&gt;。&lt;/p&gt;</description></item><item><title>Kubernetes 上如何控制容器的启动顺序？</title><link>https://atbug.com/k8s-1.18-container-start-sequence-control/</link><pubDate>Fri, 30 Apr 2021 07:43:54 +0800</pubDate><guid>https://atbug.com/k8s-1.18-container-start-sequence-control/</guid><description>&lt;p&gt;去年写过一篇博客：&lt;a href="https://mp.weixin.qq.com/s/5UXhXpwPDBh2xuGKq9Nqig"&gt;控制 Pod 内容器的启动顺序&lt;/a&gt;，分析了 &lt;a href="https://github.com/tektoncd"&gt;TektonCD&lt;/a&gt; 的容器启动控制的原理。&lt;/p&gt;
+&lt;p&gt;为什么要做容器启动顺序控制？我们都知道 Pod 中除了 &lt;code&gt;init-container&lt;/code&gt; 之外，是允许添加多个容器的。类似 TektonCD 中 &lt;code&gt;task&lt;/code&gt; 和 &lt;code&gt;step&lt;/code&gt; 的概念就分别与 &lt;code&gt;pod&lt;/code&gt; 和 &lt;code&gt;container&lt;/code&gt; 对应，而 &lt;code&gt;step&lt;/code&gt; 是按照顺序执行的。此外还有服务网格的场景，sidecar 容器需要在服务容器启动之前完成配置的加载，也需要对容器的启动顺序加以控制。否则，服务容器先启动，而 sidecar 还无法提供网络上的支持。&lt;/p&gt;
+&lt;h3 id="现实"&gt;现实&lt;/h3&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/30/sidecarlifecycle1.gif" alt="sidecar-lifecycle-1"&gt;&lt;/p&gt;
+&lt;h3 id="期望"&gt;期望&lt;/h3&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/30/sidecarlifecycle2.gif" alt="sidecar-lifecycle-2"&gt;&lt;/p&gt;
+&lt;p&gt;到了这里肯定有同学会问，&lt;code&gt;spec.containers[]&lt;/code&gt; 是一个数组，数组是有顺序的。Kubernetes 也确实是按照顺序来创建和启动容器，但是 &lt;strong&gt;容器启动成功，并不表示容器可以对外提供服务&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;在 Kubernetes 1.18 非正式版中曾在 Lifecycle 层面提供了对 &lt;code&gt;sidecar 类型容器的&lt;/code&gt; 支持，但是最终该功能并&lt;a href="https://github.com/kubernetes/enhancements/issues/753#issuecomment-713471597"&gt;没有落地&lt;/a&gt;。&lt;/p&gt;</description></item><item><title>服务网格平稳落地：Istio 中精准控制 Sidecar 的注入</title><link>https://atbug.com/how-to-control-istio-sidecar-injection/</link><pubDate>Wed, 21 Apr 2021 08:13:04 +0800</pubDate><guid>https://atbug.com/how-to-control-istio-sidecar-injection/</guid><description>&lt;h2 id="为什么"&gt;为什么&lt;/h2&gt;
+&lt;p&gt;说起服务网格，这幅图大家肯定不会陌生。这就是服务网格的网络，也是网格架构的终极形态。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/21/cleanshot-20210420-at-2314142x.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;那在迁移到网格架构之前，我们的系统是什么样的？&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/21/cleanshot-20210420-at-2316432x.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;我们的系统在演进的过程中，不可避免的会遇到各种 0 到 1 过程中的中间态。比如下面这种，可以比较直观的看出 Istio 或者网格是部分覆盖的。这个过程中，我们需要平滑、可控的推进，才能在保障系统可用性的前提下进行架构的演进。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2021/04/21/cleanshot-20210420-at-2318242x.png" alt=""&gt;&lt;/p&gt;
+&lt;h2 id="怎么做"&gt;怎么做&lt;/h2&gt;
+&lt;p&gt;Sidecar 的注入分两种：手动和自动。&lt;/p&gt;
+&lt;h3 id="手动"&gt;手动&lt;/h3&gt;
+&lt;p&gt;手动就是利用 Istio 的 cli 工具 &lt;code&gt;istioctl kube-inject&lt;/code&gt; 对资源 yaml 进行修改：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ istioctl kube-inject -f samples/sleep/sleep.yaml | kubectl apply -f -
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;serviceaccount/sleep created
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;service/sleep created
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;deployment.apps/sleep created
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;手动的方式比较适合开发阶段使用。&lt;/p&gt;</description></item><item><title>Minikube安装istio</title><link>https://atbug.com/install-istio-on-minikube/</link><pubDate>Fri, 17 Jan 2020 08:02:42 +0800</pubDate><guid>https://atbug.com/install-istio-on-minikube/</guid><description>&lt;h2 id="准备"&gt;准备&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;注意: istioctl的安装要使用安装里的, 不要是用homebrew里的. &lt;a href="https://github.com/istio/istio/issues/19029"&gt;github issue&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -L https://istio.io/downloadIstio | sh -
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd istio-1.4.2
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp bin/istioctl /usr/local/bin/istioctl
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="安装前检查"&gt;安装前检查&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;istioctl verify-install
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果检查没问题, 会看到&lt;code&gt;Install Pre-Check passed! The cluster is ready for Istio installation.&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id="安装"&gt;安装&lt;/h2&gt;
+&lt;p&gt;istio有5种内建的安装配置&lt;sup id="fnref:1"&gt;&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref"&gt;1&lt;/a&gt;&lt;/sup&gt;: remote, sds, default, demo, minimal&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;istioctl profile list
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;minimal: 使用istio的流量管理所需组件的最小化安装&lt;/li&gt;
+&lt;li&gt;default: 根据IstioControlPlane API的默认设置(建议用于生产部署)启用组件. 您可以通过运行命令istioctl profile dump显示默认设置.&lt;/li&gt;
+&lt;li&gt;demo: 几乎安装所有的特性, 包括logging和tracing的比例为100%. 不适合生产环境, 负载太重&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;&lt;/th&gt;
+					&lt;th&gt;default&lt;/th&gt;
+					&lt;th&gt;demo&lt;/th&gt;
+					&lt;th&gt;minimal&lt;/th&gt;
+					&lt;th&gt;sds&lt;/th&gt;
+					&lt;th&gt;remote&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Core components&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-citadel&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-egressgateway&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-galley&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-ingressgateway&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-nodeagent&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-pilot&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-policy&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-sidecar-injector&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-telemetry&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Addons&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;grafana&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;istio-tracing&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;kiali&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;prometheus&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;X&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;code&gt;demo&lt;/code&gt; profile安装&lt;/p&gt;</description></item></channel></rss>

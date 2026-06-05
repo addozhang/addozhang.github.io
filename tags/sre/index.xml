@@ -1,7 +1,28 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SRE on 乱世浮生</title><link>https://atbug.com/tags/sre/</link><description>Recent content in SRE on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 17 Jun 2024 20:05:13 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/sre/index.xml" rel="self" type="application/rss+xml"/><item><title>K8sGPT+Ollama：免费的 Kubernetes 自动化诊断方案</title><link>https://atbug.com/k8sgpt-ollama-free-k8s-automation-diagnosis/</link><pubDate>Mon, 17 Jun 2024 20:05:13 +0800</pubDate><guid>https://atbug.com/k8sgpt-ollama-free-k8s-automation-diagnosis/</guid><description>周末检查博客草稿，发现了这篇。记得当时是与 Kubernetes 自动化诊断工具：k8sgpt-operator 一起写的，算算过去了一年之久，这拖延症也算是病入膏肓了。原本想使用 K8sGPT + LocalAI 的方案，由于之前试过 Ollama，感觉使用起来也更加友好，而且 Ollama 同样提供了 对 OpenAI API 的支持，索性改成用 Ollama 吧。
-介绍 k8sgpt-operator 的文章发布后，有小伙伴反馈 OpenAI 的使用门槛，这个问题确实比较棘手，但也不是不能解决。不过本文并不是介绍如何解决这种问题的，而是介绍 OpenAI 的替代方案： Ollama。
-对 k8sgpt 和 k8sgpt-operator 就不做过多介绍了，有兴趣的可以看回 上一篇，去年底 k8sgpt 进入了 CNCF Sandbox。
-1. 安装 Ollama Ollama 是一个开源的大模型工具，使用它可以在本地或云端轻松的安装和运行 多种流量的大模型。它的操作非常友好，只需简单的命令就能运行。在 macOS 上可以通过 homebrew 一键安装：</description></item><item><title>Kubernetes 自动化诊断工具：k8sgpt-operator</title><link>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</link><pubDate>Tue, 02 May 2023 17:33:28 +0800</pubDate><guid>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</guid><description>背景 在 Kubernetes 上，从部署 Deployment 到正常提供服务，整个流程可能会出现各种各样问题，有兴趣的可以浏览 Kubernetes Deployment 的故障排查可视化指南（2021 中文版）。从可视化指南也可能看出这些问题实际上都是有迹可循，根据错误信息基本很容易找到解决方法。随着 ChatGPT 的流行，基于 LLM 的文本生成项目不断涌现，k8sgpt 便是其中之一。
-k8sgpt 是一个扫描 Kubernetes 集群、诊断和分类问题的工具。它将 SRE 经验编入其分析器，并通过 AI 帮助提取并丰富相关的信息。
-其内置了大量的分析器：
-podAnalyzer pvcAnalyzer rsAnalyzer serviceAnalyzer eventAnalyzer ingressAnalyzer statefulSetAnalyzer deploymentAnalyzer cronJobAnalyzer nodeAnalyzer hpaAnalyzer（可选） pdbAnalyzer（可选） networkPolicyAnalyzer（可选） k8sgpt 的能力是通过 CLI 来提供的，通过 CLI 可以对集群中的错误进行快速的诊断。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SRE on 乱世浮生</title><link>https://atbug.com/tags/sre/</link><description>Recent content in SRE on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Mon, 17 Jun 2024 20:05:13 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/sre/index.xml" rel="self" type="application/rss+xml"/><item><title>K8sGPT+Ollama：免费的 Kubernetes 自动化诊断方案</title><link>https://atbug.com/k8sgpt-ollama-free-k8s-automation-diagnosis/</link><pubDate>Mon, 17 Jun 2024 20:05:13 +0800</pubDate><guid>https://atbug.com/k8sgpt-ollama-free-k8s-automation-diagnosis/</guid><description>&lt;p&gt;周末检查博客草稿，发现了这篇。记得当时是与 &lt;a href="https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/"&gt;Kubernetes 自动化诊断工具：k8sgpt-operator&lt;/a&gt; 一起写的，算算过去了一年之久，这拖延症也算是病入膏肓了。原本想使用 K8sGPT + &lt;a href="https://localai.io"&gt;LocalAI&lt;/a&gt; 的方案，由于之前试过 &lt;a href="https://ollama.com"&gt;Ollama&lt;/a&gt;，感觉使用起来也更加友好，而且 Ollama 同样提供了 &lt;a href="https://github.com/ollama/ollama/blob/main/docs/openai.md"&gt;对 OpenAI API 的支持&lt;/a&gt;，索性改成用 Ollama 吧。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;介绍 k8sgpt-operator 的文章发布后，有小伙伴反馈 OpenAI 的使用门槛，这个问题确实比较棘手，但也不是不能解决。不过本文并不是介绍如何解决这种问题的，而是介绍 OpenAI 的替代方案： Ollama。&lt;/p&gt;
+&lt;p&gt;对 k8sgpt 和 k8sgpt-operator 就不做过多介绍了，有兴趣的可以看回 &lt;a href="https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/"&gt;上一篇&lt;/a&gt;，去年底 &lt;a href="https://landscape.cncf.io/?item=observability-and-analysis--observability--k8sgpt"&gt;k8sgpt 进入了 CNCF Sandbox&lt;/a&gt;。&lt;/p&gt;
+&lt;h3 id="1-安装-ollama"&gt;1. 安装 Ollama&lt;/h3&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2024/06/17/Pasted%20image%2020240617065721.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;Ollama 是一个开源的大模型工具，使用它可以在本地或云端轻松的安装和运行 &lt;a href="https://ollama.com/library"&gt;多种流量的大模型&lt;/a&gt;。它的操作非常友好，只需简单的命令就能运行。在 macOS 上可以通过 homebrew 一键安装：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install ollama
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;当前最新的版本是 0.1.44。&lt;/p&gt;</description></item><item><title>Kubernetes 自动化诊断工具：k8sgpt-operator</title><link>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</link><pubDate>Tue, 02 May 2023 17:33:28 +0800</pubDate><guid>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</guid><description>&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;在 Kubernetes 上，从部署 Deployment 到正常提供服务，整个流程可能会出现各种各样问题，有兴趣的可以浏览 &lt;a href="https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/"&gt;Kubernetes Deployment 的故障排查可视化指南（2021 中文版）&lt;/a&gt;。从可视化指南也可能看出这些问题实际上都是有迹可循，根据错误信息基本很容易找到解决方法。随着 ChatGPT 的流行，基于 LLM 的文本生成项目不断涌现，&lt;a href="https://github.com/k8sgpt-ai/k8sgpt"&gt;k8sgpt&lt;/a&gt; 便是其中之一。&lt;/p&gt;
+&lt;p&gt;k8sgpt 是一个扫描 Kubernetes 集群、诊断和分类问题的工具。它将 SRE 经验编入其分析器，并通过 AI 帮助提取并丰富相关的信息。&lt;/p&gt;
+&lt;p&gt;其内置了大量的分析器：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;podAnalyzer&lt;/li&gt;
+&lt;li&gt;pvcAnalyzer&lt;/li&gt;
+&lt;li&gt;rsAnalyzer&lt;/li&gt;
+&lt;li&gt;serviceAnalyzer&lt;/li&gt;
+&lt;li&gt;eventAnalyzer&lt;/li&gt;
+&lt;li&gt;ingressAnalyzer&lt;/li&gt;
+&lt;li&gt;statefulSetAnalyzer&lt;/li&gt;
+&lt;li&gt;deploymentAnalyzer&lt;/li&gt;
+&lt;li&gt;cronJobAnalyzer&lt;/li&gt;
+&lt;li&gt;nodeAnalyzer&lt;/li&gt;
+&lt;li&gt;hpaAnalyzer（可选）&lt;/li&gt;
+&lt;li&gt;pdbAnalyzer（可选）&lt;/li&gt;
+&lt;li&gt;networkPolicyAnalyzer（可选）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;k8sgpt 的能力是通过 CLI 来提供的，通过 CLI 可以对集群中的错误进行快速的诊断。&lt;/p&gt;</description></item></channel></rss>

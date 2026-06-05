@@ -1,5 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mermaid on 乱世浮生</title><link>https://atbug.com/tags/mermaid/</link><description>Recent content in mermaid on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 24 May 2026 21:50:39 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/mermaid/index.xml" rel="self" type="application/rss+xml"/><item><title>告别截图：Obsidian 插件 Mermaid Exporter，一键导出高清流程图</title><link>https://atbug.com/obsidian-mermaid-exporter-export-png/</link><pubDate>Sun, 24 May 2026 21:50:39 +0800</pubDate><guid>https://atbug.com/obsidian-mermaid-exporter-export-png/</guid><description>TL;DR：Obsidian 插件，鼠标悬浮 Mermaid 图点一下，完整高清 PNG 直接保存，不截图、不失真。
-引言 在 Obsidian 里用 Mermaid 画流程图、时序图是件很顺手的事——写几行代码，图就渲染出来了。但要把这张图用到别处，事情就变麻烦了：截图有锯齿，主题色丢失，高 DPI 屏上一放大就糊。更头疼的是稍微复杂一点的图，一屏放不下，缩小截图再放大又失真，怎么弄都不满意。
-obsidian-mermaid-exporter 解决的就是这一个问题：把 Obsidian 渲染好的 Mermaid 图，原样导出为 PNG。
-核心功能 插件的设计很克制，只做一件事，但做得到位：
-WYSIWYG 导出 — 导出的就是你在 Obsidian 里看到的那张图，当前主题的配色、字体全部保留，不是重新渲染一遍 完整图形输出 — 无论图有多长多宽，完整导出，不裁切 可配置分辨率 — 支持 1x 到 4x 缩放，默认 2x，4x 适合高 DPI 屏或需要印刷质量的场景 无缝交互 — 鼠标悬浮到图上，导出按钮自动出现在右上角，紧挨着原生的「编辑」按钮，不破坏界面 双模式支持 — Live Preview 和 Reading 模式下均可使用 安装 &amp;amp; 使用 安装</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Mermaid on 乱世浮生</title><link>https://atbug.com/tags/mermaid/</link><description>Recent content in Mermaid on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sun, 24 May 2026 21:50:39 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/mermaid/index.xml" rel="self" type="application/rss+xml"/><item><title>告别截图：Obsidian 插件 Mermaid Exporter，一键导出高清流程图</title><link>https://atbug.com/obsidian-mermaid-exporter-export-png/</link><pubDate>Sun, 24 May 2026 21:50:39 +0800</pubDate><guid>https://atbug.com/obsidian-mermaid-exporter-export-png/</guid><description>&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;：Obsidian 插件，鼠标悬浮 Mermaid 图点一下，完整高清 PNG 直接保存，不截图、不失真。&lt;/p&gt;
+&lt;h2 id="引言"&gt;引言&lt;/h2&gt;
+&lt;p&gt;在 Obsidian 里用 Mermaid 画流程图、时序图是件很顺手的事——写几行代码，图就渲染出来了。但要把这张图用到别处，事情就变麻烦了：截图有锯齿，主题色丢失，高 DPI 屏上一放大就糊。更头疼的是稍微复杂一点的图，一屏放不下，缩小截图再放大又失真，怎么弄都不满意。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/addozhang/obsidian-mermaid-exporter"&gt;obsidian-mermaid-exporter&lt;/a&gt; 解决的就是这一个问题：把 Obsidian 渲染好的 Mermaid 图，原样导出为 PNG。&lt;/p&gt;
+&lt;h2 id="核心功能"&gt;核心功能&lt;/h2&gt;
+&lt;p&gt;插件的设计很克制，只做一件事，但做得到位：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;WYSIWYG 导出&lt;/strong&gt; — 导出的就是你在 Obsidian 里看到的那张图，当前主题的配色、字体全部保留，不是重新渲染一遍&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;完整图形输出&lt;/strong&gt; — 无论图有多长多宽，完整导出，不裁切&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;可配置分辨率&lt;/strong&gt; — 支持 1x 到 4x 缩放，默认 2x，4x 适合高 DPI 屏或需要印刷质量的场景&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;无缝交互&lt;/strong&gt; — 鼠标悬浮到图上，导出按钮自动出现在右上角，紧挨着原生的「编辑」按钮，不破坏界面&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;双模式支持&lt;/strong&gt; — Live Preview 和 Reading 模式下均可使用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="安装--使用"&gt;安装 &amp;amp; 使用&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;安装&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>

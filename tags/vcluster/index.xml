@@ -1,4 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>vCluster on 乱世浮生</title><link>https://atbug.com/tags/vcluster/</link><description>Recent content in vCluster on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 30 Aug 2024 16:52:12 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/vcluster/index.xml" rel="self" type="application/rss+xml"/><item><title>在 Cilium CNI 集群上运行 vCluster 虚拟集群</title><link>https://atbug.com/run-vcluster-on-cilium-cni-cluster/</link><pubDate>Fri, 30 Aug 2024 16:52:12 +0800</pubDate><guid>https://atbug.com/run-vcluster-on-cilium-cni-cluster/</guid><description>上周在 KubeCon China 2024 大会上，我和社区伙伴们作为志愿者在 Cilium 项目展台与用户交流。有位用户询问 Cilium 是否能与 vCluster 集成，当时未能给出明确答复，特地回来后进行了测试。
-答案是：在最新的 vCluster v0.20 中容器网络没有问题，但如果要在虚拟集群上使用 Cilium 的网络策略，则会受到限制。
-背景 什么是虚拟集群 虚拟集群是一种在现有 Kubernetes 集群（Host 集群）之上创建的轻量级 Kubernetes 集群。它提供了一个独立的 Kubernetes 环境，但实际上是通过共享 Host 集群的资源来实现的。这种方式允许多个虚拟集群运行在同一个物理集群中，为不同的团队或项目提供隔离的开发、测试和生产环境，而不需要为每个环境创建单独的物理集群。
-为什么要使用虚拟集群 多租户隔离：在一个物理集群中为不同团队或项目提供独立的 Kubernetes 环境，确保资源和安全性隔离。 开发与测试便利：开发人员可以快速创建和销毁与生产环境类似的虚拟集群，用于独立开发、测试和调试。 资源优化：通过共享基础设施提高资源利用率，减少硬件需求和管理开销。 灵活管理：虚拟集群允许独立配置、运行不同版本的 Kubernetes，有助于版本控制和灵活调整集群策略。 成本降低：减少维护多个物理集群的需求，优化资源分配，降低整体成本。 vCluster 简介 vCluster 是一种轻量级的虚拟集群解决方案，允许你在 Kubernetes 集群中创建和管理虚拟的 Kubernetes 集群。它是由 Loft Labs 开发的，用于多租户环境、开发测试环境以及简化复杂的 Kubernetes 集群管理。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>VCluster on 乱世浮生</title><link>https://atbug.com/tags/vcluster/</link><description>Recent content in VCluster on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Fri, 30 Aug 2024 16:52:12 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/vcluster/index.xml" rel="self" type="application/rss+xml"/><item><title>在 Cilium CNI 集群上运行 vCluster 虚拟集群</title><link>https://atbug.com/run-vcluster-on-cilium-cni-cluster/</link><pubDate>Fri, 30 Aug 2024 16:52:12 +0800</pubDate><guid>https://atbug.com/run-vcluster-on-cilium-cni-cluster/</guid><description>&lt;p&gt;上周在 KubeCon China 2024 大会上，我和社区伙伴们作为志愿者在 Cilium 项目展台与用户交流。有位用户询问 Cilium 是否能与 vCluster 集成，当时未能给出明确答复，特地回来后进行了测试。&lt;/p&gt;
+&lt;p&gt;答案是：在最新的 vCluster v0.20 中容器网络没有问题，但如果要在虚拟集群上使用 Cilium 的网络策略，则会受到限制。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;h3 id="什么是虚拟集群"&gt;什么是虚拟集群&lt;/h3&gt;
+&lt;p&gt;虚拟集群是一种在现有 Kubernetes 集群（Host 集群）之上创建的轻量级 Kubernetes 集群。它提供了一个独立的 Kubernetes 环境，但实际上是通过共享 Host 集群的资源来实现的。这种方式允许多个虚拟集群运行在同一个物理集群中，为不同的团队或项目提供隔离的开发、测试和生产环境，而不需要为每个环境创建单独的物理集群。&lt;/p&gt;
+&lt;h3 id="为什么要使用虚拟集群"&gt;为什么要使用虚拟集群&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;多租户隔离&lt;/strong&gt;：在一个物理集群中为不同团队或项目提供独立的 Kubernetes 环境，确保资源和安全性隔离。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;开发与测试便利&lt;/strong&gt;：开发人员可以快速创建和销毁与生产环境类似的虚拟集群，用于独立开发、测试和调试。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;资源优化&lt;/strong&gt;：通过共享基础设施提高资源利用率，减少硬件需求和管理开销。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;灵活管理&lt;/strong&gt;：虚拟集群允许独立配置、运行不同版本的 Kubernetes，有助于版本控制和灵活调整集群策略。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;成本降低&lt;/strong&gt;：减少维护多个物理集群的需求，优化资源分配，降低整体成本。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="vcluster-简介"&gt;vCluster 简介&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://www.vCluster.com/docs"&gt;vCluster&lt;/a&gt; 是一种轻量级的虚拟集群解决方案，允许你在 Kubernetes 集群中创建和管理虚拟的 Kubernetes 集群。它是由 Loft Labs 开发的，用于多租户环境、开发测试环境以及简化复杂的 Kubernetes 集群管理。&lt;/p&gt;</description></item></channel></rss>

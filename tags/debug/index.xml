@@ -1,5 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Debug on 乱世浮生</title><link>https://atbug.com/tags/debug/</link><description>Recent content in Debug on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 03 Apr 2026 11:17:31 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/debug/index.xml" rel="self" type="application/rss+xml"/><item><title>opencode-telegram-bot 无响应？可能是被 Telegram 限流了</title><link>https://atbug.com/opencode-telegram-bot-not-responding-telegram-rate-limit-429/</link><pubDate>Fri, 03 Apr 2026 11:17:31 +0800</pubDate><guid>https://atbug.com/opencode-telegram-bot-not-responding-telegram-rate-limit-429/</guid><description>用 opencode-telegram-bot 把 opencode 接入 Telegram 是个很方便的方案（详见 上一篇：用 Telegram 远程操控本地 OpenCode：opencode-telegram-bot 实战指南），但最近踩了个坑——bot 突然完全无响应，进程明明在跑，消息就是没有回应。
-问题现象 Bot 无响应的表现有两种：
-发消息没有任何回应，完全静默 Bot 返回 &amp;ldquo;🔴 已停止事件流，正在发送中止信号…等待代理停止。&amp;quot;，然后再无响应 第二种情况容易误导人，以为是 opencode 进程本身出了问题，实际上根因是一样的。
-一切看起来都正常：
-ps aux | grep -E &amp;#34;opencode|telegram&amp;#34; | grep -v grep 输出显示三个进程都在运行，opencode serve 也在监听 127.0.0.1:4096。但 Telegram 里发消息，毫无反应。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Debug on 乱世浮生</title><link>https://atbug.com/tags/debug/</link><description>Recent content in Debug on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Fri, 03 Apr 2026 11:17:31 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/debug/index.xml" rel="self" type="application/rss+xml"/><item><title>opencode-telegram-bot 无响应？可能是被 Telegram 限流了</title><link>https://atbug.com/opencode-telegram-bot-not-responding-telegram-rate-limit-429/</link><pubDate>Fri, 03 Apr 2026 11:17:31 +0800</pubDate><guid>https://atbug.com/opencode-telegram-bot-not-responding-telegram-rate-limit-429/</guid><description>&lt;p&gt;用 &lt;code&gt;opencode-telegram-bot&lt;/code&gt; 把 opencode 接入 Telegram 是个很方便的方案（详见 &lt;a href="https://atbug.com/opencode-telegram-bot-remote-control-guide/"&gt;上一篇：用 Telegram 远程操控本地 OpenCode：opencode-telegram-bot 实战指南&lt;/a&gt;），但最近踩了个坑——bot 突然完全无响应，进程明明在跑，消息就是没有回应。&lt;/p&gt;
+&lt;h2 id="问题现象"&gt;问题现象&lt;/h2&gt;
+&lt;p&gt;Bot 无响应的表现有两种：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;发消息没有任何回应，完全静默&lt;/li&gt;
+&lt;li&gt;Bot 返回 &amp;ldquo;🔴 已停止事件流，正在发送中止信号…等待代理停止。&amp;quot;，然后再无响应&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;第二种情况容易误导人，以为是 opencode 进程本身出了问题，实际上根因是一样的。&lt;/p&gt;
+&lt;p&gt;一切看起来都正常：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ps aux | grep -E &lt;span style="color:#e6db74"&gt;&amp;#34;opencode|telegram&amp;#34;&lt;/span&gt; | grep -v grep
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出显示三个进程都在运行，&lt;code&gt;opencode serve&lt;/code&gt; 也在监听 &lt;code&gt;127.0.0.1:4096&lt;/code&gt;。但 Telegram 里发消息，毫无反应。&lt;/p&gt;
+&lt;h2 id="排查过程"&gt;排查过程&lt;/h2&gt;
+&lt;h3 id="第一步确认端口"&gt;第一步：确认端口&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;lsof -i -P -n | grep opencode
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;opencode serve 正常监听，没问题。&lt;/p&gt;</description></item></channel></rss>

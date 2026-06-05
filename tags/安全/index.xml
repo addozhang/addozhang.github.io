@@ -1,33 +1,83 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>安全 on 乱世浮生</title><link>https://atbug.com/tags/%E5%AE%89%E5%85%A8/</link><description>Recent content in 安全 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 12 May 2026 20:55:25 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E5%AE%89%E5%85%A8/index.xml" rel="self" type="application/rss+xml"/><item><title>开源的透明度曾是护城河，AI 正在让它变成负担</title><link>https://atbug.com/ai-era-opensource-vulnerability-disclosure-breaking-down/</link><pubDate>Tue, 12 May 2026 20:55:25 +0800</pubDate><guid>https://atbug.com/ai-era-opensource-vulnerability-disclosure-breaking-down/</guid><description>TL;DR AI 正在同时击穿两种漏洞披露文化赖以成立的前提，开源软件的透明度优势正在变成安全负担，用户和维护者都面临前所未有的压力。
-一个“安静”的补丁，如何引爆一场安全危机 2026 年 4 月 29 日，Copy Fail（CVE-2026-31431）公开披露。这是一个潜伏近十年的 Linux 内核提权漏洞——一个 732 字节的 Python 脚本，能在 2017 年至 2026 年补丁合并前构建的几乎所有主流 Linux 发行版上获取 root 权限，不依赖竞态条件，不需要特定内核偏移，逻辑直白，100% 可靠复现。
-漏洞本身足够震撼。但更值得关注的，是它的“兄弟漏洞”Dirty Frag 的遭遇。
-Dirty Frag 由安全研究员 Hyunwoo Kim 发现，包含两个子漏洞——CVE-2026-43284（ESP 变体）和 CVE-2026-43500（RxRPC 变体），属于与 Copy Fail 同一类的漏洞。2026 年 4 月 30 日，Kim 按照 Linux 内核社区的惯例，将补丁提交到了 netdev 邮件列表——修复是公开的，但他没有声张漏洞的安全影响，寄希望于这个补丁能淹没在每天数以百计的 commit 流中，悄悄合并，给各发行版争取一些打补丁的时间。</description></item><item><title>Kubernetes externalIPs：已知六年的安全漏洞，终于要移除了</title><link>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</link><pubDate>Fri, 03 Apr 2026 08:12:20 +0800</pubDate><guid>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</guid><description>TL;DR Kubernetes Service 的 externalIPs 字段存在长达六年的中间人攻击漏洞（CVE-2020-8554），任何有 Service 创建权限的用户都可以劫持集群流量 &amp;ndash;v1.36 终于启动了正式的废弃流程。
-开篇：一条命令，劫持集群流量 想象这样一个场景。
-你的集群里有一个开发者，他拥有普通的 Service 创建权限 &amp;ndash; 这在大多数团队中再正常不过。他写了一段这样的配置：
-apiVersion: v1 kind: Service metadata: name: dns-intercept spec: selector: app: attacker-pod ports: - port: 53 protocol: UDP externalIPs: - 8.8.8.8 一条 kubectl apply，几秒钟后，集群内所有节点上发往 8.</description></item><item><title>【译】如何提升云原生应用的安全性</title><link>https://atbug.com/how-to-enhance-cloud-native-application-security/</link><pubDate>Mon, 26 Aug 2024 11:13:44 +0800</pubDate><guid>https://atbug.com/how-to-enhance-cloud-native-application-security/</guid><description>此文为原文翻译，仅供参考，不代表本人立场。翻译难免有疏漏，欢迎提出建议反馈。
-本文翻译自 Hazel Raoult 的 How to Optimize Security in Cloud-Native Applications。
-近年来，企业对云原生应用的依赖日益增加，这也使云原生应用成为攻击的首选目标。如今，企业的安全团队需要优先考虑这些资产的安全性，以防止大规模的服务中断和数据泄露。
-根据 IBM 2024 年《Cost of a Data Breach（数据泄露成本报告）》显示，目前 45%的网络攻击 是基于云的。2024 年 7 月，微软的 Azure 遭遇了一次重大的 DDoS 攻击，导致关键服务 停运近10小时。对于依赖这些服务来为客户提供不间断服务的企业来说，这种停机时间无疑会带来巨大的损失。
-基于这一背景，让我们探讨如何提升云原生应用的安全性，以防止类似情况的发生，并确保关键云服务的韧性和可靠性。
-用户控制优化 人为因素始终在数字资产（包括云原生应用程序）的安全中发挥重要作用。除非我们在不久的将来完全被机器取代，否则人类仍将在代码编写、配置管理以及最终的应用安全性方面做出重要决策。这是一种巨大的压力，因为一个小小的错误就可能导致严重的漏洞，进而让我们的云资产暴露在攻击和操作失误的风险之下。
-一个合理的解决方案是加强教育和培训，使开发人员和用户能够理解潜在风险，并学会实施强有力的安全协议和最佳实践。
-在技术措施方面，应重点关注强大的身份和访问管理（IAM）。最小权限原则是实现强 IAM 的首选方法。它确保用户被授予完成任务所需的最低访问权限，从而显着减少攻击面和帐户受损的风险。
-花时间为每个无服务器函数或容器创建最小角色或权限集。这样，即使云原生架构中的某个元素被攻破，造成的损害也将最小，且不会轻易扩散到其他组件。</description></item><item><title>译：在 Kubernetes 上实施零信任</title><link>https://atbug.com/implementing-zero-trust-on-kubernetes/</link><pubDate>Thu, 29 Dec 2022 12:42:40 +0800</pubDate><guid>https://atbug.com/implementing-zero-trust-on-kubernetes/</guid><description>本文翻译自 ContainerJournal 的 2022 年度文章之一 《Implementing Zero-Trust on Kubernetes》，作者 Deepak Goel 在文中分享了 Kubernetes 上实施零信任的三个最佳实践。
-作为云原生社区的基石，Kubernetes 帮助企业在生产环境中更高效地部署和管理容器。尽管 Kubernetes 最初设计时提供了基本的 安全功能，但广泛且迅速的采用以及日益复杂的威胁形势使 Kubernetes 更容易受到攻击。开发人员和安全专家当下的任务是扩展 Kubernetes 的内置安全性，以有效防范更复杂、更多样和更频繁的网络攻击。
-以往“信任但要验证”的方式已被证明对云计算复杂的分布式特性无效，因此 Kubernetes 必须转向“从不信任，始终验证”的零信任模型思想，为业务提供更大的保护。
-零信任模型的基本概念 基于“从不信任，始终验证”的原则，可以用三个基本概念来解释零信任模型：
-安全网络：始终认为网络是敌对的和有威胁的。网络上的内部和外部数据和信息不断暴露在安全威胁之下。 安全资源：网络上存在的任何信息源，无论位于何处，对其都应持怀疑态度。 身份验证：默认情况下不应信任来自内部或外部网络的用户、设备和流量。零信任应该基于使用正确的身份验证和授权的访问控制。 零信任的三个最佳实践 Kubernetes 提供了灵活性，既是优势但也增加了复杂性，为了在不同的网络环境中运行，为服务和工作负载引入了许多配置选项。Kubernetes 部署考虑以下三个零信任模型的最佳实践，以提升安全保护和工作效率。
-优化软件配置和访问权限 团队需要为服务和跨集群操作提供一致的配置。虽然 Kubernetes 提供了多种配置选项，但过多的选项会增加安全问题出现的几率。使用零信任框架，组织可以对服务进行持续验证并将其部署到多个集群，而不会危及任何安全性。通过在授予它们对应用程序和服务的任何安全权限之前仔细检查这些配置，组织可以加强分布式 Kubernetes 集群的安全性。</description></item><item><title>零信任安全：SPIFFE 和 SPIRE 通用身份验证的标准和实现</title><link>https://atbug.com/what-is-spiffe-and-spire/</link><pubDate>Thu, 15 Sep 2022 12:00:09 +0800</pubDate><guid>https://atbug.com/what-is-spiffe-and-spire/</guid><description>最近正在读 《Solving the Bottom Turtle》 这本书，这篇是对部分内容的总结和思考，由于内容较多，会分几篇来发。
-这本书的副标题是：
-a SPIFFE Way to Establish Trust in Your Infrastructure via Universal Identity. 通过通用身份以 SPIFFE 的方式在基础设施中建立信任。
-大家记住其中的有几个关键词：通用身份、SPIFFE 的方式、基础设施、建立信任。
-背景 零信任是一种异常火热的安全模型，在之前翻译的文章中 《零信任对 Kubernetes 意味着什么》，对什么是零信任、为什么要实施零信任，做了初步的介绍。
-过去几十年流行的边界安全模型，已经不在适合如今分布式的微服务架构、复杂多样的系统环境以及不可避免的人为失误。从零信任的原则来看，通过安全边界防护的人、系统和网络流量是不可信的，因为“你可能不是你”，身份不可信。
-可能有人会问不是有用户名密码、证书么？这些都可能存在泄露，尤其是时间越长泄露的概率越高（在安全领域，只有 0 和 100，所有做不到 100% 的安全，都将其视作 0。这也是笔者对零信任的浅薄理解）。
-零信任模型的核心是重塑身份的分配和验证方式，身份是构建零信任模型的基石。
-身份 现实世界的身份 在说系统身份之前，先说下现实中的身份。大家都有身份证（Identity Card），生活中用到身份证的场景也越来越多，很多的服务都会查验身份证。为什么身份证就能验证持有人的身份，首先身份证是由政府机构颁发的，在颁发前会查验过申请的人信息（证明你就是你），这个充分可信的；身份证本身做了防伪处理，有特定的查验手段很难被伪造。这里有几个定义：</description></item><item><title>译：零信任对 Kubernetes 意味着什么</title><link>https://atbug.com/translate-zero-trust-for-k8s/</link><pubDate>Thu, 08 Sep 2022 21:45:44 +0800</pubDate><guid>https://atbug.com/translate-zero-trust-for-k8s/</guid><description>这篇是 Buoyant 的创始人 William Morgan 文章《What Does Zero Trust Mean for Kubernetes?》 的翻译，文章很好的解释了什么是零信任、为什么要实施零信任，以及服务网格如何以最小的代码实现零信任。
-零信任是营销炒作，还是新的机会，各位看官你怎么看？
-要点
-零信任是一种被大量炒作的安全模型，但尽管存在营销噪音，但它对于具有安全意识的组织具有一些具体而直接的价值。 零信任的核心是，将授权从“在边界验证一次”转变为“随时随地验证”。 为此，零信任要求我们重新思考身份的概念，并摆脱基于位置的身份，例如 IP 地址。 Kubernetes 采用者在网络层实现零信任时具有明显的优势，这要归功于基于 Sidecar 的服务网格，它提供无需更改应用程序就可实现的最细粒度的身份验证和授权。 虽然服务网格可以提供帮助，但 Kubernetes 安全性仍然是一个复杂而微妙的话题，需要从多个层次进行了解。 零信任是一种位于现代安全实践前沿的强大的安全模型。这也是一个容易引起轰动和炒作的术语，因此很难消除噪音。那么，究竟什么是零信任，对于 Kubernetes，它究竟意味着什么？在本文中，我们将从工程的角度探讨什么是零信任，并构建一个基本框架来理解它对 Kubernetes 运维和安全团队等的影响。
-介绍 如果你正在构建现代云软件，无论是采用 Kubernetes 还是其他软件，可能都听说过“零信任”一词。零信任的安全模式变得如此重要，以至于美国联邦政府已经注意到：白宫最近发布了一份联邦零信任战略的备忘录，要求所有美国联邦机构在年底前满足特定的零信任安全标准。2024财年；国防部创建了零信任参考架构；美国国家安全局发布了一份Kubernetes 强化指南，专门描述了 Kubernetes 中零信任安全的最佳实践。
-随着这种噪音，零信任无疑吸引了很多营销关注。但尽管有噪音，零信任不仅仅是一个空洞的术语——它代表了对未来安全的一些深刻和变革性的想法。那么具体来说，什么是零信任，为什么它突然变得如此重要？零信任对 Kubernetes 用户意味着什么？</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>安全 on 乱世浮生</title><link>https://atbug.com/tags/%E5%AE%89%E5%85%A8/</link><description>Recent content in 安全 on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Tue, 12 May 2026 20:55:25 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E5%AE%89%E5%85%A8/index.xml" rel="self" type="application/rss+xml"/><item><title>开源的透明度曾是护城河，AI 正在让它变成负担</title><link>https://atbug.com/ai-era-opensource-vulnerability-disclosure-breaking-down/</link><pubDate>Tue, 12 May 2026 20:55:25 +0800</pubDate><guid>https://atbug.com/ai-era-opensource-vulnerability-disclosure-breaking-down/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;AI 正在同时击穿两种漏洞披露文化赖以成立的前提，开源软件的透明度优势正在变成安全负担，用户和维护者都面临前所未有的压力。&lt;/p&gt;
+&lt;h2 id="一个安静的补丁如何引爆一场安全危机"&gt;一个“安静”的补丁，如何引爆一场安全危机&lt;/h2&gt;
+&lt;p&gt;2026 年 4 月 29 日，&lt;a href="https://copy.fail/"&gt;Copy Fail&lt;/a&gt;（CVE-2026-31431）公开披露。这是一个潜伏近十年的 Linux 内核提权漏洞——一个 732 字节的 Python 脚本，能在 2017 年至 2026 年补丁合并前构建的几乎所有主流 Linux 发行版上获取 root 权限，不依赖竞态条件，不需要特定内核偏移，逻辑直白，100% 可靠复现。&lt;/p&gt;
+&lt;p&gt;漏洞本身足够震撼。但更值得关注的，是它的“兄弟漏洞”Dirty Frag 的遭遇。&lt;/p&gt;
+&lt;p&gt;Dirty Frag 由安全研究员 Hyunwoo Kim 发现，包含两个子漏洞——&lt;a href="https://nvd.nist.gov/vuln/detail/CVE-2026-43284"&gt;CVE-2026-43284&lt;/a&gt;（ESP 变体）和 &lt;a href="https://nvd.nist.gov/vuln/detail/CVE-2026-43500"&gt;CVE-2026-43500&lt;/a&gt;（RxRPC 变体），属于与 Copy Fail 同一类的漏洞。2026 年 4 月 30 日，Kim 按照 Linux 内核社区的惯例，将补丁提交到了 netdev 邮件列表——修复是公开的，但他没有声张漏洞的安全影响，寄希望于这个补丁能淹没在每天数以百计的 commit 流中，悄悄合并，给各发行版争取一些打补丁的时间。&lt;/p&gt;</description></item><item><title>Kubernetes externalIPs：已知六年的安全漏洞，终于要移除了</title><link>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</link><pubDate>Fri, 03 Apr 2026 08:12:20 +0800</pubDate><guid>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;Kubernetes Service 的 &lt;code&gt;externalIPs&lt;/code&gt; 字段存在长达六年的中间人攻击漏洞（&lt;a href="https://nvd.nist.gov/vuln/detail/CVE-2020-8554"&gt;CVE-2020-8554&lt;/a&gt;），任何有 Service 创建权限的用户都可以劫持集群流量 &amp;ndash;v1.36 终于启动了正式的废弃流程。&lt;/p&gt;
+&lt;h2 id="开篇一条命令劫持集群流量"&gt;开篇：一条命令，劫持集群流量&lt;/h2&gt;
+&lt;p&gt;想象这样一个场景。&lt;/p&gt;
+&lt;p&gt;你的集群里有一个开发者，他拥有普通的 Service 创建权限 &amp;ndash; 这在大多数团队中再正常不过。他写了一段这样的配置：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;dns-intercept&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;selector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;attacker-pod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;port&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;53&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;protocol&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;UDP&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;externalIPs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;8.8.8.8&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;一条 &lt;code&gt;kubectl apply&lt;/code&gt;，几秒钟后，集群内所有节点上发往 &lt;code&gt;8.8.8.8:53&lt;/code&gt; 的 DNS 查询，全部被悄悄转发到他控制的 Pod。&lt;/p&gt;
+&lt;p&gt;没有提权，没有漏洞利用，没有任何异常告警。完全合法的 Kubernetes 操作。&lt;/p&gt;</description></item><item><title>【译】如何提升云原生应用的安全性</title><link>https://atbug.com/how-to-enhance-cloud-native-application-security/</link><pubDate>Mon, 26 Aug 2024 11:13:44 +0800</pubDate><guid>https://atbug.com/how-to-enhance-cloud-native-application-security/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;此文为原文翻译，仅供参考，不代表本人立场。翻译难免有疏漏，欢迎提出建议反馈。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;本文翻译自 &lt;a href="https://cloudnativenow.com/author/hazel-raoult/"&gt;Hazel Raoult&lt;/a&gt; 的 &lt;a href="https://cloudnativenow.com/editorial-calendar/cloud-native-security/how-to-optimize-security-in-cloud-native-applications/"&gt;How to Optimize Security in Cloud-Native Applications&lt;/a&gt;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;近年来，企业对云原生应用的依赖日益增加，这也使云原生应用成为攻击的首选目标。如今，企业的安全团队需要优先考虑这些资产的安全性，以防止大规模的服务中断和数据泄露。&lt;/p&gt;
+&lt;p&gt;根据 IBM 2024 年《Cost of a Data Breach（数据泄露成本报告）》显示，目前 &lt;a href="https://www.ibm.com/reports/data-breach"&gt;45%的网络攻击&lt;/a&gt; 是基于云的。2024 年 7 月，微软的 Azure 遭遇了一次重大的 DDoS 攻击，导致关键服务 &lt;a href="https://www.forbes.com/sites/kateoflahertyuk/2024/07/31/microsoft-confirms-new-outage-was-triggered-by-cyberattack/"&gt;停运近10小时&lt;/a&gt;。对于依赖这些服务来为客户提供不间断服务的企业来说，这种停机时间无疑会带来巨大的损失。&lt;/p&gt;
+&lt;p&gt;基于这一背景，让我们探讨如何提升云原生应用的安全性，以防止类似情况的发生，并确保关键云服务的韧性和可靠性。&lt;/p&gt;
+&lt;h3 id="用户控制优化"&gt;用户控制优化&lt;/h3&gt;
+&lt;p&gt;人为因素始终在数字资产（包括云原生应用程序）的安全中发挥重要作用。除非我们在不久的将来完全被机器取代，否则人类仍将在代码编写、配置管理以及最终的应用安全性方面做出重要决策。这是一种巨大的压力，因为一个小小的错误就可能导致严重的漏洞，进而让我们的云资产暴露在攻击和操作失误的风险之下。&lt;/p&gt;
+&lt;p&gt;一个合理的解决方案是加强教育和培训，使开发人员和用户能够理解潜在风险，并学会实施强有力的安全协议和最佳实践。&lt;/p&gt;
+&lt;p&gt;在技术措施方面，应重点关注强大的身份和访问管理（IAM）。最小权限原则是实现强 IAM 的首选方法。它确保用户被授予完成任务所需的最低访问权限，从而显着减少攻击面和帐户受损的风险。&lt;/p&gt;
+&lt;p&gt;花时间为每个无服务器函数或容器创建最小角色或权限集。这样，即使云原生架构中的某个元素被攻破，造成的损害也将最小，且不会轻易扩散到其他组件。&lt;/p&gt;
+&lt;p&gt;这里需要避免的一个错误是将访问级别审查限制在不频繁的时间间隔。随着工作职责的变化（或解除），应持续监控和调整访问权限。定期评估和更新角色，以确保访问权限保持适当并与当前职责保持一致。&lt;/p&gt;
+&lt;h3 id="安全测试精简化"&gt;安全测试精简化&lt;/h3&gt;
+&lt;p&gt;云原生应用相较于传统开发的一个优势在于能够利用更细粒度的自动化安全测试。云原生环境可以利用持续集成和持续部署（CI/CD）流水线。这使开发人员能够将安全测试 &lt;a href="https://cloudnativenow.com/topics/revolutionizing-software-development-with-cloud-native-devsecops/"&gt;集成到开发的每个阶段&lt;/a&gt;，使其成为软件开发生命周期的基础组成部分，而不是事后的考虑。&lt;/p&gt;
+&lt;p&gt;有各种开源工具和应用安全服务可用于增强安全测试。自动化工具可以 &lt;a href="https://www.imperva.com/learn/application-security/application-security/"&gt;确保代码&lt;/a&gt; 没有错误配置和漏洞，并避免敏感数据的意外泄露。这些工具可以扫描已知的漏洞，检查是否符合安全最佳实践，甚至实时识别潜在的风险区域。&lt;/p&gt;</description></item><item><title>译：在 Kubernetes 上实施零信任</title><link>https://atbug.com/implementing-zero-trust-on-kubernetes/</link><pubDate>Thu, 29 Dec 2022 12:42:40 +0800</pubDate><guid>https://atbug.com/implementing-zero-trust-on-kubernetes/</guid><description>&lt;p&gt;本文翻译自 ContainerJournal 的 2022 年度文章之一 &lt;a href="https://containerjournal.com/features/implementing-zero-trust-on-kubernetes/"&gt;《Implementing Zero-Trust on Kubernetes》&lt;/a&gt;，作者 Deepak Goel 在文中分享了 Kubernetes 上实施零信任的三个最佳实践。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;作为云原生社区的基石，Kubernetes 帮助企业在生产环境中更高效地部署和管理容器。尽管 Kubernetes 最初设计时提供了基本的 &lt;a href="https://containerjournal.com/editorial-calendar/rsa/15-point-kubernetes-security-checklist/"&gt;安全功能&lt;/a&gt;，但广泛且迅速的采用以及日益复杂的威胁形势使 Kubernetes 更容易受到攻击。开发人员和安全专家当下的任务是扩展 Kubernetes 的内置安全性，以有效防范更复杂、更多样和更频繁的网络攻击。&lt;/p&gt;
+&lt;p&gt;以往“信任但要验证”的方式已被证明对云计算复杂的分布式特性无效，因此 &lt;a href="https://d2iq.com/resources/cheat-sheet/kubernetes-security"&gt;Kubernetes&lt;/a&gt; 必须转向“从不信任，始终验证”的零信任模型思想，为业务提供更大的保护。&lt;/p&gt;
+&lt;h2 id="零信任模型的基本概念"&gt;零信任模型的基本概念&lt;/h2&gt;
+&lt;p&gt;基于“从不信任，始终验证”的原则，可以用三个基本概念来解释零信任模型：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;安全网络&lt;/strong&gt;：始终认为网络是敌对的和有威胁的。网络上的内部和外部数据和信息不断暴露在安全威胁之下。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全资源&lt;/strong&gt;：网络上存在的任何信息源，无论位于何处，对其都应持怀疑态度。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;身份验证&lt;/strong&gt;：默认情况下不应信任来自内部或外部网络的用户、设备和流量。零信任应该基于使用正确的身份验证和授权的访问控制。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="零信任的三个最佳实践"&gt;零信任的三个最佳实践&lt;/h2&gt;
+&lt;p&gt;Kubernetes 提供了灵活性，既是优势但也增加了复杂性，为了在不同的网络环境中运行，为服务和工作负载引入了许多配置选项。Kubernetes 部署考虑以下三个零信任模型的最佳实践，以提升安全保护和工作效率。&lt;/p&gt;
+&lt;h3 id="优化软件配置和访问权限"&gt;优化软件配置和访问权限&lt;/h3&gt;
+&lt;p&gt;团队需要为服务和跨集群操作提供一致的配置。虽然 Kubernetes 提供了多种配置选项，但过多的选项会增加安全问题出现的几率。使用零信任框架，组织可以对服务进行持续验证并将其部署到多个集群，而不会危及任何安全性。通过在授予它们对应用程序和服务的任何安全权限之前仔细检查这些配置，组织可以加强分布式 Kubernetes 集群的安全性。&lt;/p&gt;
+&lt;p&gt;使用零信任模型提高 Kubernetes 安全性的另一种方法是只为软件提供运行所需的权限和功能。虽然确定软件所需的确切权限和功能并不是那么容易，但更好地了解这些元素可以降低安全风险。对于云端的容器编排环境，相比本地环境，赋予有限的权限和能力更为重要。 &lt;/p&gt;</description></item><item><title>零信任安全：SPIFFE 和 SPIRE 通用身份验证的标准和实现</title><link>https://atbug.com/what-is-spiffe-and-spire/</link><pubDate>Thu, 15 Sep 2022 12:00:09 +0800</pubDate><guid>https://atbug.com/what-is-spiffe-and-spire/</guid><description>&lt;p&gt;最近正在读 &lt;a href="https://spiffe.io/book/"&gt;《Solving the Bottom Turtle》 &lt;/a&gt; 这本书，这篇是对部分内容的总结和思考，由于内容较多，会分几篇来发。&lt;/p&gt;
+&lt;p&gt;这本书的副标题是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;a SPIFFE Way to Establish Trust in Your Infrastructure via Universal Identity.
+通过通用身份以 SPIFFE 的方式在基础设施中建立信任。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;大家记住其中的有几个关键词：通用身份、SPIFFE 的方式、基础设施、建立信任。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;零信任是一种异常火热的安全模型，在之前翻译的文章中 &lt;a href="https://mp.weixin.qq.com/s/DeNxBcDOs61MfHZfQphR8w"&gt;《零信任对 Kubernetes 意味着什么》&lt;/a&gt;，对什么是零信任、为什么要实施零信任，做了初步的介绍。&lt;/p&gt;
+&lt;p&gt;过去几十年流行的边界安全模型，已经不在适合如今分布式的微服务架构、复杂多样的系统环境以及不可避免的人为失误。从零信任的原则来看，通过安全边界防护的人、系统和网络流量是不可信的，因为“你可能不是你”，身份不可信。&lt;/p&gt;
+&lt;p&gt;可能有人会问不是有用户名密码、证书么？这些都可能存在泄露，尤其是时间越长泄露的概率越高（在安全领域，只有 0 和 100，所有做不到 100% 的安全，都将其视作 0。这也是笔者对零信任的浅薄理解）。&lt;/p&gt;
+&lt;p&gt;零信任模型的核心是重塑身份的分配和验证方式，身份是构建零信任模型的基石。&lt;/p&gt;
+&lt;h2 id="身份"&gt;身份&lt;/h2&gt;
+&lt;h3 id="现实世界的身份"&gt;现实世界的身份&lt;/h3&gt;
+&lt;p&gt;在说系统身份之前，先说下现实中的身份。大家都有身份证（Identity Card），生活中用到身份证的场景也越来越多，很多的服务都会查验身份证。为什么身份证就能验证持有人的身份，首先身份证是由政府机构颁发的，在颁发前会查验过申请的人信息（证明你就是你），这个充分可信的；身份证本身做了防伪处理，有特定的查验手段很难被伪造。这里有几个定义：&lt;/p&gt;</description></item><item><title>译：零信任对 Kubernetes 意味着什么</title><link>https://atbug.com/translate-zero-trust-for-k8s/</link><pubDate>Thu, 08 Sep 2022 21:45:44 +0800</pubDate><guid>https://atbug.com/translate-zero-trust-for-k8s/</guid><description>&lt;p&gt;这篇是 Buoyant 的创始人 William Morgan 文章&lt;a href="https://www.infoq.com/articles/zero-trust-k8s/"&gt;《What Does Zero Trust Mean for Kubernetes?》&lt;/a&gt; 的翻译，文章很好的解释了什么是零信任、为什么要实施零信任，以及服务网格如何以最小的代码实现零信任。&lt;/p&gt;
+&lt;p&gt;零信任是营销炒作，还是新的机会，各位看官你怎么看？&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;要点&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;零信任是一种被大量炒作的安全模型，但尽管存在营销噪音，但它对于具有安全意识的组织具有一些具体而直接的价值。&lt;/li&gt;
+&lt;li&gt;零信任的核心是，将授权从“在边界验证一次”转变为“随时随地验证”。&lt;/li&gt;
+&lt;li&gt;为此，零信任要求我们重新思考身份的概念，并摆脱基于位置的身份，例如 IP 地址。&lt;/li&gt;
+&lt;li&gt;Kubernetes 采用者在网络层实现零信任时具有明显的优势，这要归功于基于 Sidecar 的服务网格，它提供无需更改应用程序就可实现的最细粒度的身份验证和授权。&lt;/li&gt;
+&lt;li&gt;虽然服务网格可以提供帮助，但 Kubernetes 安全性仍然是一个复杂而微妙的话题，需要从多个层次进行了解。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Zero_trust_security_model"&gt;零信任&lt;/a&gt;是一种位于现代安全实践前沿的强大的安全模型。这也是一个容易引起轰动和炒作的术语，因此很难消除噪音。那么，究竟什么是零信任，对于 Kubernetes，它究竟意味着什么？在本文中，我们将从工程的角度探讨什么是零信任，并构建一个基本框架来理解它对 Kubernetes 运维和安全团队等的影响。&lt;/p&gt;
+&lt;h2 id="介绍"&gt;介绍&lt;/h2&gt;
+&lt;p&gt;如果你正在构建现代云软件，无论是采用 Kubernetes 还是其他软件，可能都听说过“零信任”一词。零信任的安全模式变得如此重要，以至于美国联邦政府已经注意到：白宫最近&lt;a href="https://www.whitehouse.gov/wp-content/uploads/2022/01/M-22-09.pdf"&gt;发布了一份联邦零信任战略的备忘录&lt;/a&gt;，要求所有美国联邦机构在年底前满足特定的零信任安全标准。2024财年；国防部创建了&lt;a href="https://dodcio.defense.gov/Portals/0/Documents/Library/(U)ZT_RA_v1.1(U)_Mar21.pdf"&gt;零信任参考架构&lt;/a&gt;；美国国家安全局发布了一份&lt;a href="https://media.defense.gov/2021/Aug/03/2002820425/-1/-1/0/CTR_Kubernetes_Hardening_Guidance_1.1_20220315.PDF"&gt;Kubernetes 强化指南&lt;/a&gt;，专门描述了 Kubernetes 中零信任安全的最佳实践。&lt;/p&gt;
+&lt;p&gt;随着这种噪音，零信任无疑吸引了很多营销关注。但尽管有噪音，零信任不仅仅是一个空洞的术语——它代表了对未来安全的一些深刻和变革性的想法。那么具体来说，什么是零信任，为什么它突然变得如此重要？零信任对 Kubernetes 用户意味着什么？&lt;/p&gt;</description></item></channel></rss>

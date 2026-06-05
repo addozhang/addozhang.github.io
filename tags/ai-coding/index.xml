@@ -1,14 +1,20 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI coding on 乱世浮生</title><link>https://atbug.com/tags/ai-coding/</link><description>Recent content in AI coding on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 05 Apr 2026 21:41:43 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/ai-coding/index.xml" rel="self" type="application/rss+xml"/><item><title>Harness Engineering 又来颠覆了——你们开发不写文档、没有研发流程？</title><link>https://atbug.com/harness-engineering-sdlc/</link><pubDate>Sun, 05 Apr 2026 21:41:43 +0800</pubDate><guid>https://atbug.com/harness-engineering-sdlc/</guid><description>TL;DR Harness Engineering 不是新范式，是软件工程基本功在 AI 时代的强制兑现——你欠的文档债、流程债、架构债，AI 会让你加倍还。
-颠覆的真相 AI coding 很火，Harness Engineering 这个词更火。
-OpenAI 用它造出了 100 万行代码，Anthropic 在探索让 Agent 自己迭代产品，Cursor 在用几百个 Agent 并行推进大型项目。每个人都在谈这是新范式、新方法论、软件工程的下一个时代。
-但拆开看，这些团队做的第一件事是什么？
-写文档。定流程。把架构约束编码进工具链。
-这不是新东西。这是你本来就该做、但一直没做好的事。
-AI coding 不会替你省掉软件工程的基本功——它会让你欠的债，加倍奉还。
-大家期待错了方向 AI coding 工具出来之前，大家最烦什么？
-写文档。开需求评审会。维护架构规范。定义 DoD。做 code review。这些事费时间、见效慢、没有人愿意当那个 &amp;quot; 非要搞流程 &amp;quot; 的人。</description></item><item><title>从需求到发布：使用 OpenClaw + Ralph Loop 自动化开发 Nexus MCP Server</title><link>https://atbug.com/openclaw-ralph-loop-automated-nexus-mcp-server-development/</link><pubDate>Wed, 04 Feb 2026 01:35:36 +0800</pubDate><guid>https://atbug.com/openclaw-ralph-loop-automated-nexus-mcp-server-development/</guid><description>TL;DR 使用 OpenClaw + Ralph Loop + OpenCode 组合，完成了 Nexus MCP Server 的全自动化开发。
-本文记录了从需求提出、Planning、Building，到遇到问题诊断、架构重构的完整过程，展示了 AI 辅助编码工具的实际效能。
-源码以及实现的脚本、Planing、Building 等文档均提交到 GitHub 仓库 addozhang/nexus-mcp-server。
-背景 今天在公司遇到一个问题：需要开发一个 Agent 来对比项目依赖细节，但远程仓库版本被删除导致用旧的 parent pom 构建失败。我想让 Agent 到 Nexus 仓库查找最接近的版本进行构建，以避免大跨度的版本升级引入新的问题。
-向来不喜造轮子，内网外网找了一圈才找到一个基于 Node 的开源版 brianveltman/sonatype-mcp，马上着手验证，然后倒在了安装依赖包：内网仓库缺少一个间接依赖的包。
-这就有了造轮子的借口了，装上 mcp-builder skill 马上 Vibe 一个。无奈模型有点弱鸡，稍微折腾一下，又没有太多时间草草收场。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI Coding on 乱世浮生</title><link>https://atbug.com/tags/ai-coding/</link><description>Recent content in AI Coding on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sun, 05 Apr 2026 21:41:43 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/ai-coding/index.xml" rel="self" type="application/rss+xml"/><item><title>Harness Engineering 又来颠覆了——你们开发不写文档、没有研发流程？</title><link>https://atbug.com/harness-engineering-sdlc/</link><pubDate>Sun, 05 Apr 2026 21:41:43 +0800</pubDate><guid>https://atbug.com/harness-engineering-sdlc/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;Harness Engineering 不是新范式，是软件工程基本功在 AI 时代的强制兑现——你欠的文档债、流程债、架构债，AI 会让你加倍还。&lt;/p&gt;
+&lt;h2 id="颠覆的真相"&gt;颠覆的真相&lt;/h2&gt;
+&lt;p&gt;AI coding 很火，Harness Engineering 这个词更火。&lt;/p&gt;
+&lt;p&gt;OpenAI 用它造出了 100 万行代码，Anthropic 在探索让 Agent 自己迭代产品，Cursor 在用几百个 Agent 并行推进大型项目。每个人都在谈这是新范式、新方法论、软件工程的下一个时代。&lt;/p&gt;
+&lt;p&gt;但拆开看，这些团队做的第一件事是什么？&lt;/p&gt;
+&lt;p&gt;写文档。定流程。把架构约束编码进工具链。&lt;/p&gt;
+&lt;p&gt;这不是新东西。这是你本来就该做、但一直没做好的事。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;AI coding 不会替你省掉软件工程的基本功——它会让你欠的债，加倍奉还。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="大家期待错了方向"&gt;大家期待错了方向&lt;/h2&gt;
+&lt;p&gt;AI coding 工具出来之前，大家最烦什么？&lt;/p&gt;
+&lt;p&gt;写文档。开需求评审会。维护架构规范。定义 DoD。做 code review。这些事费时间、见效慢、没有人愿意当那个 &amp;quot; 非要搞流程 &amp;quot; 的人。&lt;/p&gt;</description></item><item><title>从需求到发布：使用 OpenClaw + Ralph Loop 自动化开发 Nexus MCP Server</title><link>https://atbug.com/openclaw-ralph-loop-automated-nexus-mcp-server-development/</link><pubDate>Wed, 04 Feb 2026 01:35:36 +0800</pubDate><guid>https://atbug.com/openclaw-ralph-loop-automated-nexus-mcp-server-development/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;使用 &lt;strong&gt;OpenClaw + Ralph Loop + OpenCode&lt;/strong&gt; 组合，完成了 Nexus MCP Server 的全自动化开发。&lt;/p&gt;
+&lt;p&gt;本文记录了从需求提出、Planning、Building，到遇到问题诊断、架构重构的完整过程，展示了 AI 辅助编码工具的实际效能。&lt;/p&gt;
+&lt;p&gt;源码以及实现的脚本、Planing、Building 等文档均提交到 GitHub 仓库 &lt;a href="https://github.com/addozhang/nexus-mcp-server"&gt;addozhang/nexus-mcp-server&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;今天在公司遇到一个问题：需要开发一个 Agent 来对比项目依赖细节，但远程仓库版本被删除导致用旧的 parent pom 构建失败。我想让 Agent 到 Nexus 仓库查找最接近的版本进行构建，以避免大跨度的版本升级引入新的问题。&lt;/p&gt;
+&lt;p&gt;向来不喜造轮子，内网外网找了一圈才找到一个基于 Node 的开源版 &lt;a href="https://github.com/brianveltman/sonatype-mcp"&gt;brianveltman/sonatype-mcp&lt;/a&gt;，马上着手验证，然后倒在了安装依赖包：内网仓库缺少一个间接依赖的包。&lt;/p&gt;
+&lt;p&gt;这就有了造轮子的借口了，装上 &lt;a href="https://github.com/anthropics/skills/tree/main/skills/mcp-builder" title="mcp-builder"&gt;mcp-builder&lt;/a&gt; skill 马上 Vibe 一个。无奈模型有点弱鸡，稍微折腾一下，又没有太多时间草草收场。&lt;/p&gt;
+&lt;p&gt;下班时间想起我周末已经配置了常用的 Coding Agent 和 Skill 的 &lt;a href="https://openclaw.ai/"&gt;OpenClaw&lt;/a&gt;，这几天空余时间除了创建几个自己要用的 Agent 和 Skill 外，还没整过稍大的活。这不，正好拿 Nexus MCP server 练练手，而且月初还有配额使用 Claude Opus 4.5 模型。&lt;/p&gt;</description></item></channel></rss>

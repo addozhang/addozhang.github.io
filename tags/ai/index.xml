@@ -1,106 +1,317 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on 乱世浮生</title><link>https://atbug.com/tags/ai/</link><description>Recent content in AI on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 12 May 2026 20:55:25 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>开源的透明度曾是护城河，AI 正在让它变成负担</title><link>https://atbug.com/ai-era-opensource-vulnerability-disclosure-breaking-down/</link><pubDate>Tue, 12 May 2026 20:55:25 +0800</pubDate><guid>https://atbug.com/ai-era-opensource-vulnerability-disclosure-breaking-down/</guid><description>TL;DR AI 正在同时击穿两种漏洞披露文化赖以成立的前提，开源软件的透明度优势正在变成安全负担，用户和维护者都面临前所未有的压力。
-一个“安静”的补丁，如何引爆一场安全危机 2026 年 4 月 29 日，Copy Fail（CVE-2026-31431）公开披露。这是一个潜伏近十年的 Linux 内核提权漏洞——一个 732 字节的 Python 脚本，能在 2017 年至 2026 年补丁合并前构建的几乎所有主流 Linux 发行版上获取 root 权限，不依赖竞态条件，不需要特定内核偏移，逻辑直白，100% 可靠复现。
-漏洞本身足够震撼。但更值得关注的，是它的“兄弟漏洞”Dirty Frag 的遭遇。
-Dirty Frag 由安全研究员 Hyunwoo Kim 发现，包含两个子漏洞——CVE-2026-43284（ESP 变体）和 CVE-2026-43500（RxRPC 变体），属于与 Copy Fail 同一类的漏洞。2026 年 4 月 30 日，Kim 按照 Linux 内核社区的惯例，将补丁提交到了 netdev 邮件列表——修复是公开的，但他没有声张漏洞的安全影响，寄希望于这个补丁能淹没在每天数以百计的 commit 流中，悄悄合并，给各发行版争取一些打补丁的时间。</description></item><item><title>你的数据正在喂养 AI：从 Atlassian 公告，看科技平台的数据训练默认政策</title><link>https://atbug.com/your-data-is-feeding-ai-platform-training-policy/</link><pubDate>Wed, 29 Apr 2026 07:31:27 +0800</pubDate><guid>https://atbug.com/your-data-is-feeding-ai-platform-training-policy/</guid><description>TL;DR：Atlassian 宣布默认使用用户数据训练 AI，这不是意外，而是行业惯例。本文梳理海外和中国主流平台的数据训练政策，拆解背后的三个共同规律。
-一、Atlassian 的公告 2026 年 8 月 17 日，Atlassian 的一项隐私政策更新悄悄生效。
-对于数百万使用 Jira 和 Confluence 的团队而言，这意味着：你在 Confluence 里写的文档、Jira 里记录的需求和 Bug 描述，默认情况下可以被用于训练 Atlassian 的 AI 模型。
-公告关键条款分两层。第一层是元数据，免费和标准版用户无法退出；第二层是应用内容（Confluence 正文、Jira 描述和评论），默认开启，可以关闭，但完全退出需要升级到企业版。
-Atlassian 的措辞相当克制——“去标识化处理”“用于改进 AI 功能”“保障隐私安全”。这套话术你可能在其他地方见过，因为几乎每一家做同样事情的公司都在用同样的句式。
-官方 FAQ：https://www.atlassian.com/trust/ai/data-contribution/faqs
-二、这不是孤例，而是行业惯例 Atlassian 公告引发了一些讨论，但坦白说，它只是在做一件大多数同行早就在做的事。
-以下是海外主流平台的现状：
-平台 默认行为 退出方式 ChatGPT（免费/Plus） 默认开启 App 内设置关闭 GitHub Copilot（免费） 默认开启 设置关闭 LinkedIn 默认开启 可退出，但已收集数据不撤回 Slack 默认开启 邮件申请退出 Atlassian 默认开启 企业版才能完全退出 X/Twitter 默认开启 隐私设置关闭 Zoom 曾默认开启 2023 年因舆论压力撤回 几个值得单独说的细节：</description></item><item><title>平民价格用旗舰模型的窗口期结束了</title><link>https://atbug.com/ai-coding-tools-golden-window-is-over/</link><pubDate>Thu, 23 Apr 2026 19:20:27 +0800</pubDate><guid>https://atbug.com/ai-coding-tools-golden-window-is-over/</guid><description>TL;DR：2024 年底到 2025 年初，AI 编程工具曾以远低于成本的价格开放旗舰模型访问权限。那个窗口正在系统性地关闭，本文用完整的数据还原这个过程。
-2024 年底，你花 20 美元 订一个 Cursor Pro，可以全天调用 Claude Sonnet 写代码，500 次快速请求用完之后还有无限慢速请求兜底，真实 API 价值轻松超过 100 美元。同一时间，GitHub Copilot 10 美元/月，代码补全没有任何请求上限；Claude Pro 20 美元/月，几乎感受不到速率限制。
-那不是正常的市场定价，那是一场补贴战。
-现在回头看，2024 年底到 2025 年初是一段历史性的异常窗口。各平台用低于成本的价格抢占开发者心智，AI 编程工具的「真实价格」被人为压低了。那个窗口，正在系统性地关闭。
-黄金窗口期：那时候到底有多便宜 用数据说话。以下是窗口期内主要工具的实际权益：
-工具 价格 核心权益 时间节点 Cursor Pro 20 美元/月 500 次快速请求 + 无限慢速请求（Claude Sonnet/GPT-4o） ~2025 年 6 月前 GitHub Copilot Individual 10 美元/月 无限代码补全，无任何请求上限 2022 年 6 月上线 Windsurf Pro 10 美元/月 1000 次 Cascade agentic 步骤 2024 年 11 月 -12 月 Claude Pro 20 美元/月 几乎无感知的速率限制，实际可全天使用 ~2025 年初前 GLM Coding Lite 20 元/月（年付 240 元） 大量 Coding 请求配额 2025 年底 -2026 年 2 月前 阿里云 Qwen Lite 7.</description></item><item><title>AI：数字时代最后的效率压榨</title><link>https://atbug.com/ai-digital-era-efficiency-squeeze/</link><pubDate>Thu, 16 Apr 2026 20:14:25 +0800</pubDate><guid>https://atbug.com/ai-digital-era-efficiency-squeeze/</guid><description>不是新浪潮的开始，而是旧范式的收尾
-一、引子：三篇文章，一个问题 最近读到三篇文章，单独看各有意思，串起来读更有意思。
-第一篇来自前端开发者 Adam Argyle，标题直白：《AI 为什么在前端表现糟糕》。第二篇是宾夕法尼亚大学和波士顿大学两位学者发在 arXiv 上的论文：《AI 裁员陷阱》，用博弈论分析 AI 驱动的裁员潮为什么停不下来。第三篇来自未来研究者 Andrew Curry，标题更大胆：《AI 可能是这波数字浪潮的终结，而不是下一个重大事件》。
-三篇文章的作者背景各不相同，关注的问题也不一样，但放在一起，它们拼出了同一幅图景——AI 或许不是我们以为的那个故事。
-本文不讨论 AI 能不能、好不好，而是借这三篇文章尝试回答一个更基础的问题：在历史的坐标上，AI 到底处于什么位置？
-二、AI 做不好的事，暴露了它的本质 Adam Argyle 的 文章 写的是前端，但他列出的那些问题，后端开发者读起来会觉得分外熟悉。
-AI 很擅长脚手架、样板代码、token 迁移这类“高度重复、模式清晰”的工作。但一旦你走出这条铺好的路——想要一个定制交互、一套贴合业务的架构决策、一段真正考虑边界条件的逻辑——它就开始胡说了。越复杂，越糟糕。
-Argyle 总结了四个根本原因：训练数据太旧、不会真正“看”、不知道“为什么”、以及零环境控制。这四条放到后端同样成立，甚至更严重。微服务拆分的边界、分布式系统的一致性权衡、幂等性设计……这些“为什么”恰恰是工程里最有价值的部分，也是 AI 最无能为力的地方。
-训练数据旧这个问题，还有一个更隐蔽的维度——不只是数据“旧”，而是几乎没有。最新发布的 Kubernetes API、刚合并的特性、刚废弃的字段……这些信息在模型训练截止日之后才存在，LLM 原生不知道，只能靠 web search 打补丁。而这种情况会出现在每一个快速演进的技术栈里，不只是 Kubernetes。每一个“角落”都是一个盲区，盲区叠加盲区，最终的不确定性远比表面看起来大得多。</description></item><item><title>我让龙虾替我工作了 38 天，它做了什么？</title><link>https://atbug.com/openclaw-38-days-what-did-it-do/</link><pubDate>Tue, 10 Mar 2026 22:15:52 +0800</pubDate><guid>https://atbug.com/openclaw-38-days-what-did-it-do/</guid><description>Photo by James Lee on Pexels
-一个决定 一开年，OpenClaw 突然在技术圈出圈了。
-这是一个自托管的 AI agent 网关，装在服务器上，能把 Telegram、WhatsApp、iMessage 这些聊天软件直接接到 AI agent——发一条消息，agent 帮你处理邮件、文件、代码，像个永远在线的私人助理。
-出于好奇，1 月底我也装了一个。
-最初装在 MacBook 上，但考虑到隐私安全，本地机器上有太多个人数据，不想让 agent 有过多访问权限，索性找了一台公有云的 Ubuntu 虚拟机，把它部署上去。模型用的是 GitHub Copilot，这得益于微软 MVP 赠送的 Copilot Pro 订阅，算是物尽其用。
-就这样，第一个 agent 上线了。后来随着使用深入，发现有些事情需要专注写代码的，有些只需要轻量协助，agent 数量从 1 个慢慢加到了 3 个：Nova 管日常，Forge 专门写代码，assistant 跑腿打杂。</description></item><item><title>【译】代理精神病：我们是否正在集体失智？</title><link>https://atbug.com/agent-psychosis-are-we-going-insane/</link><pubDate>Sun, 15 Feb 2026 12:22:29 +0800</pubDate><guid>https://atbug.com/agent-psychosis-are-we-going-insane/</guid><description>读到一篇发人深省的文章：《Agent Psychosis: Are We Going Insane?》。坦白说，最初吸引我的正是这个充满张力的标题——&amp;ldquo;psychosis&amp;rdquo;（精神病）一词带着刺眼的隐喻，而文中提出的 &amp;ldquo;agent coding addiction&amp;rdquo;（代理编程成瘾）更如一记警钟，直击当下 AI 编程热潮中被我们刻意忽略的集体焦虑：当人与机器的边界日渐模糊，我们是否正在一种多巴胺驱动的幻觉中，悄然滑向某种技术性失智？
-译者注：本文作者 Armin Ronacher（Flask 框架创建者）以批判性视角探讨了当前 AI 编程代理的滥用现象。&amp;ldquo;Slop&amp;rdquo; 一词在文中指代缺乏人工监督、质量低下的 AI 生成代码；&amp;ldquo;vibeslop&amp;rdquo; 则特指仅凭 &amp;quot; 感觉 &amp;ldquo;（vibe）驱动、缺乏工程严谨性的代码产出。Gas Town 与 Beads 是 Steve Yegge 提出的实验性代理编程框架，其过度复杂的隐喻命名体系（如 Refinery/Mayor/Polecat）成为作者批评的焦点。
-以下是正文。
-你可以不使用 Refinery，甚至不使用 Witness 或 Deacon 来使用 Polecats。只需告诉 Mayor 关闭 rig，然后将工作分派给 polecats，并告知它们直接合并到 main 分支。或者 polecats 可以提交 MR，然后由 Mayor 手动合并。这完全取决于你。只有当你做了大量前期规范工作，并且有成堆的 Beads 需要通过长队列处理时，Refinery 才有用。</description></item><item><title>Ruler：多 AI 编程助手统一配置管理方案</title><link>https://atbug.com/ruler-unified-ai-coding-assistant-configuration/</link><pubDate>Fri, 30 Jan 2026 00:14:42 +0800</pubDate><guid>https://atbug.com/ruler-unified-ai-coding-assistant-configuration/</guid><description>TL;DR 当你需要频繁在 Kilocode、OpenCode、Claude、Codex、GitHub Copilot 等多个 AI 编程助手之间切换时，Ruler 是你的最佳选择：
-单一数据源：集中管理所有 AI 编程助手的 instructions 自动分发：一键将配置分发到各个编程助手的专属文件 MCP 配置管理：统一管理 Model Context Protocol 服务器配置 Skills 支持：集中管理并分发 Agent Skills 到各个工具 嵌套规则加载：支持复杂项目结构的分层配置管理 自动维护 .gitignore：保持项目目录整洁 背景：从混乱到标准化的演进 曾经的痛点 在我写《AGENTS.md：统一编码助手指令文件的新标准》那篇文章时，提到过 intellectronica/ruler 这个项目。当时实际上我并没有频繁使用这个工具，因为我主要使用的是单一的编程助手。
-但现在情况不同了。
-随着 AI 编程助手的爆发式增长，我需要频繁在多个工具之间切换：
-Kilocode - 日常编码和快速原型 Claude - 深度思考和算法优化 Codex - API 开发和文档生成 OpenCode - 开源项目贡献 每个工具都有自己的：</description></item><item><title>Obsidian Skills：让 AI 智能体精通 Obsidian 知识管理</title><link>https://atbug.com/obsidian-skills-mastering-knowledge-management-with-ai/</link><pubDate>Fri, 23 Jan 2026 21:12:54 +0800</pubDate><guid>https://atbug.com/obsidian-skills-mastering-knowledge-management-with-ai/</guid><description>TL;DR Obsidian Skills 不仅仅是一个技能包，它标志着 Agent Skills 生态正在从通用技能向垂直领域深度集成演进。过去，Agent Skills 主要侧重于任务类型的通用能力，比如代码审查、PDF 处理等广泛适用的场景。而 Obsidian Skills 的出现代表了一个重要转折点，工具官方开始主动拥抱 AI 代理，为自己的产品创建官方维护的专属技能包。这种垂直领域技能的价值在于深入理解工具的设计哲学，掌握最佳实践和惯用模式，与插件生态无缝对接，并能跟随工具版本同步更新，为用户提供权威且完整的解决方案。
-本文通过详细介绍 Obsidian Skills 的三个核心技能（Obsidian Markdown、Obsidian Bases、JSON Canvas），展示了 AI 智能体如何真正理解 Obsidian 的独特之处。两个实战案例进一步证明了这些技能的实用价值，通过 Base 技能管理阅读清单，通过 Canvas 技能可视化知识网络，让 AI 成为知识管理的得力助手。随着更多工具厂商跟进，垂直领域技能将成为 AI 代理与专业工具深度融合的标准模式，最终实现用自然语言操作复杂工具的愿景。
-引言：从 Agent Skills 到垂直领域应用 两周前，我写了一篇关于 Agent Skills 深度解析：为 AI 代理构建可复用的技能生态系统 的文章，探讨了 Agent Skills 规范如何让 AI 智能体获得模块化、可复用的能力。文章发布后，很多读者对这个生态的发展前景表示乐观。</description></item><item><title>Agent Skills 深度解析：为 AI 代理构建可复用的技能生态系统</title><link>https://atbug.com/agent-skills-reusable-ecosystem-for-ai-agents/</link><pubDate>Sat, 10 Jan 2026 19:10:36 +0800</pubDate><guid>https://atbug.com/agent-skills-reusable-ecosystem-for-ai-agents/</guid><description>背景 一个真实的故事 两周前，KiloCode 发布了 v4.141.0 版本，这个版本带来了一个重要特性：原生支持 Agent Skills。
-在此之前，我在 KiloCode 中使用 skills 需要在一个 main rule 中手动 list 所有技能。每次添加新技能都需要：
-&amp;lt;!-- 旧方式：在 main rule 中手动维护 --&amp;gt; # AVAILABLE SKILLS Skills are pre-packaged instructions. When a task matches a skill, use read_file to load the SKILL.</description></item><item><title>不止于网络：从 Cilium 2025年度报告，洞察云原生基础设施的六大演进</title><link>https://atbug.com/cilium-2025-report-6-infrastructure-trends/</link><pubDate>Sun, 21 Dec 2025 06:20:26 +0800</pubDate><guid>https://atbug.com/cilium-2025-report-6-infrastructure-trends/</guid><description>Cilium 项目始于 2015 年 12 月 16 日的第一次提交，已从一个实验性的 IPv6 容器网络项目成长为云原生世界的 CNI（容器网络接口）的事实标准。也正值 Cilium 的十周年，社区发布了 《Cilium 2025 年度报告》（PDF 原文）。
-CNCF 地位： Cilium 目前是 CNCF（云原生计算基金会）中贡献量第二大的项目，仅次于 Kubernetes。 市场占有率： 根据 Isovalent（Cilium 母公司）发布的 《2025 Kubernetes 网络现状报告》，Cilium 占据了超过 Cilium 目前是 CNCF（云原生计算基金会）中 的 CNI 部署份额，是第二名的两倍以上 。如果算上由 Cilium 驱动的托管服务（如 Azure CNI powered by Cilium 和 GKE Datapath V2），其覆盖率超过 60% 。 社区活跃度： 2025 年贡献了近 10,000 个 PR，年度开发活动较第一年增长了 55 倍 。 本文无意逐条复述报告内容。我们不妨将视线从具体数字上移开，转而透视这份行业风向标所揭示的云原生网络与安全核心趋势。希望能激发更多的思考与讨论。</description></item><item><title>Google ADK 深度探索（二）：不同语境下的专用上下文对象</title><link>https://atbug.com/google-adk-deep-dive-specialized-context-objects/</link><pubDate>Sat, 20 Dec 2025 16:43:07 +0800</pubDate><guid>https://atbug.com/google-adk-deep-dive-specialized-context-objects/</guid><description>在上一篇 《ADK 一等公民 Context 解析》 中，我们了解到上下文是智能体运行的核心。承载这些能力的核心容器是功能强大的 InvocationContext，但为提升安全性与易用性，ADK 对其进行了精细化的分类，为不同语境提供了粒度各异的专用上下文对象。
-要理解上下文分类的粒度，让我们重温一下 ADK 的核心理念：发送给 LLM 的“工作上下文（Working Context）”是一个更丰富、有状态系统的编译视图（Compiled View）。
-“上下文编译器” 在传统软件工程中，编译器将高级源代码转换为机器刻度的二级制文件，在编译过程中执行优化、类型检查和安全检查。类似地，ADK 运行时（Runtime）充当上下文编译器的角色。它摄取交互的“源代码“ &amp;ndash; 包括持久的会话状态（Session State）、临时的用户输入（User Instruction）、检索到的工件（Artifacts）、记忆库（Long-Term Knowledge）和系统指令（System Instruction）&amp;ndash; 并将他们”编译“成针对当前执行阶段量身定制的特定上下文对象。
-这个编译过程需要针对智能体系统的不同组件提供不同的接口（参考 前文）。负责渲染系统提示词的指令提供者（Instruction Provider）所需的访问权限，与设计用于修改数据库的工具或用于验证用户授权的回调（Callback）截然不同。ADK 的四种主要上下文类型 &amp;ndash; InvocationContext、ReadonlyContext、CallbackContext 和 ToolContext &amp;ndash; 代表了这些不同的接口。每种类型都强制执行最小权限原则（Principle of Least Priviledge），确保组件在最小化潜在的错误或安全漏洞“爆炸半径”的范围内执行。
-智能体状态的演变 从智能体的发展轨迹，我们也能窥探这种分离架构的必要性。早期的框架本质上将应用程序的整个状态转储到一个单一的对象中，并将这个“上帝对象（God Object）”传递给每个函数。这必然导致：</description></item><item><title>Google ADK 深度探索（一）：“一等公民”上下文 Context 解析</title><link>https://atbug.com/google-adk-deep-dive-first-class-context/</link><pubDate>Sun, 14 Dec 2025 22:05:52 +0800</pubDate><guid>https://atbug.com/google-adk-deep-dive-first-class-context/</guid><description>了解了 Google ADK 宏大的上下文架构设计（回顾上一篇文章），我们不禁要问：这些精妙的思想，最终是如何落地到一行行代码里的？
-本文将聚焦 ADK 中作为“一等公民”的上下文（Context）机制，详解其如何通过会话状态、数据传递、服务访问等核心功能，解决智能体开发中的状态维护、跨步骤协作和资源调度难题。无论是管理用户偏好的 session.state，还是按需加载的工件存储，抑或是身份跟踪的 InvocationContext，ADK 的上下文设计无不体现着一种理念：智能体的能力边界，本质上取决于其上下文管理的精度与效率。
-上下文（Context） 在智能体开发领域，一个日益凸显的挑战是上下文管理的复杂性。传统方法（如无限制地堆叠聊天历史或工具输出）会导致成本飙升、信号衰减甚至物理性性能瓶颈。而 ADK 的突破性在于——它将上下文从“被动拼接的文本”升级为系统化管理的架构核心，通过分层设计、动态编译和最小权限原则，实现了生产级智能体的高效运作。
-在 ADK 中，上下文（Context）指的是智能体及其工具在特定操作期间所能获取的关键信息。它也是有效处理当前任务或者会话所需的必要背景知识和资源。
-智能体有效运行需要的不只是最新的用户消息，上下文至关重要，通过上下文可以：
-维护状态 存储对话过程中多个步骤的详细信息（例如，用户偏好、上一步的结果），这些都通过**会话状态（session.state）**来管理。
-会话（Session）在 ADK 中是一个重要的概念，用于跟踪独立的对话。用户第一次与智能体交互时会创建一个 Session 对象，这个对象作为一个容器保存了与对话相关所有状态：
-历史记录（session.events）：与该对话相关的所有交互，包括用户输入、智能体响应、工具调用请求/结果等。记录的事件序列提供了交互的完整、按时间顺序的历史记录，对于调试、审计和逐步了解代理行为非常有价值。这些信息是不可变的，是由框架自身维护的。 会话状态（session.state）：从数据结构上看是一个包含键值对的集合（字典或者 Map），用于存储智能体有效执行需要用到的信息，比如记录用户偏好、跟踪多轮流程中的步骤、收集信息等。session.state 是可变的。 会话可以保存在内存（InMemorySessionService）、数据库（DatabaseSessionService、SqliteSessionService、PerAgentDatabaseSessionService）中，具体要看使用是哪种 SessionService 的实现了。比如最常见的 InMemorySessionService，从下面这行代码就很容易看出其储存结构了。
-#self.sessions: dict[str, dict[str, dict[str, Session]]] = {} session = self.</description></item><item><title>Spring AI 与 Google ADK 集成实战：基于 Azure OpenAI 的智能体开发探索</title><link>https://atbug.com/spring-ai-google-adk-integration-azure-openai-agent-development/</link><pubDate>Tue, 11 Nov 2025 17:11:38 +0800</pubDate><guid>https://atbug.com/spring-ai-google-adk-integration-azure-openai-agent-development/</guid><description>TL;DR 本文用于验证 Spring AI 与 Google ADK 集成的可能性，为未来的正式版本提供实践经验和架构参考。核心收获在于验证了分层设计的可行性：Spring AI 处理 AI 服务抽象，ADK 管理智能体生命周期，两者通过标准接口实现实验性衔接。
-需要注意的是，Google ADK 的 Spring AI 支持确实处于早期 SNAPSHOT 阶段，API 可能存在变更风险，但整体架构设计已经展现了良好的技术融合潜力。
-背景 在企业级 AI 应用开发领域，如何将 Spring 生态的强大企业级特性与现代化智能体开发框架有机结合一直是技术团队面临的核心挑战。尤其是在探索 Google ADK（Agent Development Kit）与 Spring AI 的集成可能性时，开发者往往面临技术选型、架构设计和兼容性测试的多重考量。传统 AI 应用开发需要手动处理复杂的模型集成、工具调用和会话管理，导致代码耦合度高、维护成本大。本文通过一个简单但完整的时间查询智能体，展示了 Spring AI 的 Azure OpenAI 集成与 Google ADK 的智能体框架的融合可能性。特别需要注意的是，Google ADK 的 Java 版本中，Spring AI 支持目前仍处于 0.</description></item><item><title>预算有限，效率拉满：为什么 Kilo Code 成了我的首选 Coding Agent</title><link>https://atbug.com/budget-efficiency-kilo-code-choice/</link><pubDate>Fri, 29 Aug 2025 08:09:55 +0800</pubDate><guid>https://atbug.com/budget-efficiency-kilo-code-choice/</guid><description>TL;DR 打开 Kilo Code 的官网，首先入眼的就是这句话“适用于 VS Code 的最佳 AI 编程助手”，也确实我目前在 VS Code 上用过的几款插件中，Kilo Code 的表现是最好的。
-写这篇文章的时候，我想到的是老板的那句话“有什么模型就用什么”。
-在有限的条件下，寻找最优的解。
-不乏有比 Kilo Code 更加优秀的工具，但往往需要更强的模型支持，或者更高的费用。投入和产出是成正比的，单次请求成本越高，慢慢地 Coding Agent 也有“氪金”的趋势。
-照此以往，可能在不远的将来，优秀的工具和高级的模型会成为奢侈品，成为少数大企业的专属。
-Kilo Code 作为站在巨人肩膀上（Cline + Roo Code）的存在，凭借着自身的优化和改进，成为了我目前的首选。
-Kilo Code 可以支持 30+ 模型提供商，同时本身也提供了收费的 Kilo API。通过 Kilo API 可以使用几十种模型，包括 OpenAI、Claude、Gemini、MoonShot、Qwen、DeepSeek、xAI 各家的通用模型和 Coding 模型。并且计费与各家费用一样，Kilo Code 本身不加价不收手续费。</description></item><item><title>AGENTS.md：统一编码助手指令文件的新标准</title><link>https://atbug.com/agents-md-unifying-coding-agent-instructions/</link><pubDate>Sun, 24 Aug 2025 09:06:50 +0800</pubDate><guid>https://atbug.com/agents-md-unifying-coding-agent-instructions/</guid><description>TL;DR 从此刻起，你的项目中除了 README.md 文件外，可能还会包含另一个 markdown 文件：AGENTS.md
-README.md：为人类设计，通常提供如项目介绍、安装指南、使用示例等信息。 AGENTS.md：为 Coding Agents 设计，提供额外的详细信息，如环境搭建、构建步骤、测试方法、代码规范、安全注意事项等。 背景 如果你经常在多种编程助手间来回切换，肯定会我将要说的问题深有体会。通常如果想要编程助手更好的工作、输出更高质量的代码，我们需要在项目中为其提供 instructions（指令 - 系统提示词）文件。比如 .cursor/rules、.clinerules、.github/copilot-instructions.md、claude.md、gemini.md。这些文件的内容通常类似，但各自的文件名和位置不同。即使类似 Cline、Roo Code、Kilo Code 这类同出一脉的编程助手，他们的目录名也各不相同。更不同说不同的编程助手了。
-通常我的做法是使用软连接。首先创建一个统一的 instructions 文件，再通过软连接将 .clinerules 和 .cursor/rules、.github/copilot-instructions.md 都链接到同一个文件。
-你也可以使用 intellectronica/ruler，ruler 可以将同一份 instructions 文件 .ruler/ 分发给多个编程助手，并更新 .gitignore 文件。
-久而久之，你将会收获一个混乱的项目目录（再加上 MCP 服务器的管理文件），即使用上软链接或者 ruler（只是降低了维护成本）。</description></item><item><title>【译】AI 是否绑架了云原生创新？</title><link>https://atbug.com/the-future-of-ai-and-cloud-native/</link><pubDate>Sat, 23 Aug 2025 07:18:25 +0800</pubDate><guid>https://atbug.com/the-future-of-ai-and-cloud-native/</guid><description>译者注：近三年来，AI 热潮席卷科技行业，相关话题无处不在。与 AI 相关的讨论已经渗透到科技领域的每个角落，看似没有 AI 故事的产品变得更难推广。这里的云原生可以换成任何其他技术领域，AI 的兴起是否也在影响它们的发展和关注度？欢迎大家留言讨论。
-在这个充满变革的时代，保持开放心态、持续学习和积极拥抱新技术至关重要。无论是 AI 还是云原生，唯有不断探索和实践，才能在技术浪潮中立于不败之地。让我们共同见证创新的力量，推动行业向前发展。
-本文翻译自 Alan Shimel 的 Has AI Hijacked Cloud-Native Innovation?。
-AI 似乎正在成为科技领域的绝对焦点，几乎占据了所有讨论空间。
-从董事会会议室到行业活动的走廊，AI 话题无处不在。它令人兴奋、颠覆且充满变革力量。然而，AI 的迅猛发展也可能让其他重要技术创新被忽视。我不禁思考：AI 是否正在劫持云原生？
-仅仅一两年前，云原生还是企业技术领域的明星。Kubernetes 话题热度不减，可观察性平台蓬勃发展，Backstage 推动着内部开发者门户，GitOps 流水线高效运转，CNAPs 日益智能，服务网格架构迅速普及。云原生不仅意味着迁移到公有云，更是应用现代化、混合与边缘部署，甚至裸机部署的核心战略。
-云原生的普及有其深层原因——它为团队带来了创新所需的灵活性、可扩展性和模块化能力，帮助企业保持竞争力。
-在 Techstrong，我们对云原生的发展充满信心，甚至将其作为核心虚拟活动的名称：Cloud Native Now – One for the Road。这充分体现了云原生理念在现代 IT 领域的深度影响力。</description></item><item><title>Agentic Mesh：增强现代企业系统中的自主 AI 代理</title><link>https://atbug.com/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems/</link><pubDate>Sun, 22 Jun 2025 19:19:37 +0800</pubDate><guid>https://atbug.com/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems/</guid><description>译者注：本文介绍了 Agentic Mesh（代理网格）这一新型 AI 架构，强调其在现代企业自动化中的作用。文章指出传统 AI 代理系统存在单点故障、扩展性差、协作能力弱等问题。Agentic Mesh 通过自组织、动态协作、角色分工和安全治理，实现 AI 代理的高效协作、自适应优化和可扩展性。文中还介绍了反思、工具使用、规划、多代理协作等智能设计模式，并举例说明其在企业助手、网络安全和金融分析等场景的应用，展望了 AI 自动化的未来趋势。
-阅读原文请跳转：https://medium.com/@vikram40441/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems-991fa6f36d6a
-AI 驱动的智能代理正迅速成为企业自动化的核心。德勤预计，到2025年，采用生成式AI的企业中将有25%部署AI代理，2027年将增长至50%。虽然这种趋势令人振奋，但也带来了一个重要问题：
-我们如何确保 AI Agent 具备可扩展性、适应性，并能无缝协作而不引发混乱？
-答案在于Agentic Mesh——一个结构化、动态且自我进化的 AI Agent 网络，能够自主发现、协作并优化任务。但在深入了解Agentic Mesh 是什么之前，先探讨传统 AI 架构的局限性，以及为何需要更先进的框架。
-为什么需要 Agentic Mesh？ 当前大多数企业仍依赖僵化的 AI 架构，Agent 各自为政或遵循预设流程。这些方式虽然可用，但随着企业 AI 自动化规模扩大，弊端日益显现。
-传统 AI 架构的问题 1.</description></item><item><title>我用 Vibe Coding 开发了一个量化交易程序</title><link>https://atbug.com/vibe-coding-quant-trading/</link><pubDate>Fri, 23 May 2025 22:04:03 +0800</pubDate><guid>https://atbug.com/vibe-coding-quant-trading/</guid><description>是的，你没看错，我确实用 Vibe Coding 写了一个量化交易程序。相信看到标题点进来的，再看到这么一句后，不免会冒出一个想法：“是谁给你的勇气写量化交易程序！”
-先澄清一下，这并不是一个“正经”的量化交易程序，而是为了参加公司 AI 编程 Hackathon 开发的一个简单量化交易程序。
-在比赛报名截止的前一天，我被拉进了编程小组。起初参加比赛纯属一时兴起，更没想到那几天工作和家里的事情都很忙，甚至连比赛的说明会和练习赛都没参加。到比赛的前一天，我还没能为小组贡献一行代码，甚至连比赛的细节都不清楚。
-可能是巧合，淘汰赛当天凌晨 5 点我就醒了。既然醒了，不如起床看看比赛的说明。看完说明后，我发现用 Vibe Coding 是个不错的选择。因为时间有限，Vibe Coding 可以让我更专注于问题本身，而不是实现细节。
-最终，我花了 2 个多小时搞定了这个量化交易程序，成绩自认为还不错。虽然因为某些原因小组赛没有晋级，但整个过程让我受益匪浅。
-在这里，我想分享一下这个量化交易程序的实现思路和方法。
-Vibe Coding 让我们先了解一下什么是 Vibe Coding。相信看完介绍后，你会明白是什么给了我写量化交易程序的勇气。
-Vibe Coding 是什么？ Vibe Coding，有些中文翻译为“氛围编程”，听起来可能有些抽象。
-这个概念最早由计算机科学家 Andrej Karpathy（OpenAI 联合创始人）于 2025 年 2 月提出。Vibe Coding 的核心思想是通过自然语言描述来生成代码，而不是通过传统的编程语言。它是一种基于自然语言的编程方法，允许用户通过自然语言描述，借助大模型工具生成代码。其目标是让编程变得更加简单和直观，尤其是对没有编程经验的人。</description></item><item><title>几个常用的 MCP Server 收录平台</title><link>https://atbug.com/mcp-server-directory-platforms/</link><pubDate>Tue, 29 Apr 2025 06:39:54 +0800</pubDate><guid>https://atbug.com/mcp-server-directory-platforms/</guid><description>在人工智能与各类技术深度融合的当下，MCP（Model Context Protocol）发展迅猛热度不减。服务器的多样性和功能性不断拓展。对个人用户、AI 爱好者而言，找到合适的 MCP Server 收录平台，能更高效地获取工具和资源。以下是一些常用的 MCP Server 的收录平台，供大家参考：
-mcp.so https://mcp.so/
-目前已收录 11185 个 MCP 服务器。
-该平台展示了众多特色 MCP 服务器，如与各类地图、数据库、软件集成的服务器，还有用于文本处理、图像生成等功能的服务器 。
-awesome-mcp-servers https://github.com/punkpeye/awesome-mcp-servers/
-目前已收录 4148 个 MCP 服务器。
-基于 GitHub 仓库的索引，展示了 MCP 服务器的相关信息。该仓库提供了多种语言版本的文档，包括英文、中文（简体和繁体）、日语、韩语、葡萄牙语、泰语等。分类详细、全面，涵盖了多种类型的 MCP 服务器。
-Glama MCP https://glama.ai/mcp/servers
-一个 web 平台，提供了 MCP 服务器的索引和搜索功能，收录的内容来自上面的 awesome-mcp-servers 仓库。</description></item><item><title>从抓包看 MCP：AI 工具调用背后的通信机制</title><link>https://atbug.com/mcp-communication-protocol-packet-analysis/</link><pubDate>Sat, 26 Apr 2025 16:44:57 +0800</pubDate><guid>https://atbug.com/mcp-communication-protocol-packet-analysis/</guid><description>TL;DR 通过抓包分析，我们清晰地了解了 MCP 通信的全过程：从建立 SSE 连接、三步初始化、工具调用操作到最终的连接终止。可以看出，MCP 基于简单的 SSE 协议搭建了一个功能强大的工具调用框架，使 AI 代理能够便捷地调用外部工具完成复杂任务。
-相比传统的接口调用方式，MCP 更加灵活，能够自动适应不同的工具集，让 AI 代理 &amp;quot; 即插即用 &amp;quot; 地使用各种服务能力，这也是其设计的精妙之处。
-当然，MCP 也并不是完美的，作为一个新兴的协议，它仍然在不断发展中。未来可能会有更多的功能和特性被添加进来，以满足更复杂的需求。
-背景 MCP 支持两种标准的传输实现：标准输入/输出（stdio）和 Server-Sent Event（下称 SSE）。stdio 基于命令行工具，多用于本地集成，通过进程通信来实现；SSE 基于客户端和服务器的网络通信，用于跨设备网络的通信场景。
-既然是用抓包来分析，我们就要选择使用 SSE 传输 MCP server，然后通过工具进行网络抓包分析。在抓包分析之前，我们必要对 SSE 协议进行简单的了解。
-SSE 协议 SSE 协议 是一种服务器推送技术，使客户端能够通过 HTTP 连接从服务器自动接受更新，通常用于服务器向客户端发送消息更新或者连续的数据流（流信息 streaming）。</description></item><item><title>K8sGPT+Ollama：免费的 Kubernetes 自动化诊断方案</title><link>https://atbug.com/k8sgpt-ollama-free-k8s-automation-diagnosis/</link><pubDate>Mon, 17 Jun 2024 20:05:13 +0800</pubDate><guid>https://atbug.com/k8sgpt-ollama-free-k8s-automation-diagnosis/</guid><description>周末检查博客草稿，发现了这篇。记得当时是与 Kubernetes 自动化诊断工具：k8sgpt-operator 一起写的，算算过去了一年之久，这拖延症也算是病入膏肓了。原本想使用 K8sGPT + LocalAI 的方案，由于之前试过 Ollama，感觉使用起来也更加友好，而且 Ollama 同样提供了 对 OpenAI API 的支持，索性改成用 Ollama 吧。
-介绍 k8sgpt-operator 的文章发布后，有小伙伴反馈 OpenAI 的使用门槛，这个问题确实比较棘手，但也不是不能解决。不过本文并不是介绍如何解决这种问题的，而是介绍 OpenAI 的替代方案： Ollama。
-对 k8sgpt 和 k8sgpt-operator 就不做过多介绍了，有兴趣的可以看回 上一篇，去年底 k8sgpt 进入了 CNCF Sandbox。
-1. 安装 Ollama Ollama 是一个开源的大模型工具，使用它可以在本地或云端轻松的安装和运行 多种流量的大模型。它的操作非常友好，只需简单的命令就能运行。在 macOS 上可以通过 homebrew 一键安装：</description></item><item><title>Kubernetes 自动化诊断工具：k8sgpt-operator</title><link>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</link><pubDate>Tue, 02 May 2023 17:33:28 +0800</pubDate><guid>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</guid><description>背景 在 Kubernetes 上，从部署 Deployment 到正常提供服务，整个流程可能会出现各种各样问题，有兴趣的可以浏览 Kubernetes Deployment 的故障排查可视化指南（2021 中文版）。从可视化指南也可能看出这些问题实际上都是有迹可循，根据错误信息基本很容易找到解决方法。随着 ChatGPT 的流行，基于 LLM 的文本生成项目不断涌现，k8sgpt 便是其中之一。
-k8sgpt 是一个扫描 Kubernetes 集群、诊断和分类问题的工具。它将 SRE 经验编入其分析器，并通过 AI 帮助提取并丰富相关的信息。
-其内置了大量的分析器：
-podAnalyzer pvcAnalyzer rsAnalyzer serviceAnalyzer eventAnalyzer ingressAnalyzer statefulSetAnalyzer deploymentAnalyzer cronJobAnalyzer nodeAnalyzer hpaAnalyzer（可选） pdbAnalyzer（可选） networkPolicyAnalyzer（可选） k8sgpt 的能力是通过 CLI 来提供的，通过 CLI 可以对集群中的错误进行快速的诊断。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on 乱世浮生</title><link>https://atbug.com/tags/ai/</link><description>Recent content in AI on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Tue, 12 May 2026 20:55:25 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>开源的透明度曾是护城河，AI 正在让它变成负担</title><link>https://atbug.com/ai-era-opensource-vulnerability-disclosure-breaking-down/</link><pubDate>Tue, 12 May 2026 20:55:25 +0800</pubDate><guid>https://atbug.com/ai-era-opensource-vulnerability-disclosure-breaking-down/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;AI 正在同时击穿两种漏洞披露文化赖以成立的前提，开源软件的透明度优势正在变成安全负担，用户和维护者都面临前所未有的压力。&lt;/p&gt;
+&lt;h2 id="一个安静的补丁如何引爆一场安全危机"&gt;一个“安静”的补丁，如何引爆一场安全危机&lt;/h2&gt;
+&lt;p&gt;2026 年 4 月 29 日，&lt;a href="https://copy.fail/"&gt;Copy Fail&lt;/a&gt;（CVE-2026-31431）公开披露。这是一个潜伏近十年的 Linux 内核提权漏洞——一个 732 字节的 Python 脚本，能在 2017 年至 2026 年补丁合并前构建的几乎所有主流 Linux 发行版上获取 root 权限，不依赖竞态条件，不需要特定内核偏移，逻辑直白，100% 可靠复现。&lt;/p&gt;
+&lt;p&gt;漏洞本身足够震撼。但更值得关注的，是它的“兄弟漏洞”Dirty Frag 的遭遇。&lt;/p&gt;
+&lt;p&gt;Dirty Frag 由安全研究员 Hyunwoo Kim 发现，包含两个子漏洞——&lt;a href="https://nvd.nist.gov/vuln/detail/CVE-2026-43284"&gt;CVE-2026-43284&lt;/a&gt;（ESP 变体）和 &lt;a href="https://nvd.nist.gov/vuln/detail/CVE-2026-43500"&gt;CVE-2026-43500&lt;/a&gt;（RxRPC 变体），属于与 Copy Fail 同一类的漏洞。2026 年 4 月 30 日，Kim 按照 Linux 内核社区的惯例，将补丁提交到了 netdev 邮件列表——修复是公开的，但他没有声张漏洞的安全影响，寄希望于这个补丁能淹没在每天数以百计的 commit 流中，悄悄合并，给各发行版争取一些打补丁的时间。&lt;/p&gt;</description></item><item><title>你的数据正在喂养 AI：从 Atlassian 公告，看科技平台的数据训练默认政策</title><link>https://atbug.com/your-data-is-feeding-ai-platform-training-policy/</link><pubDate>Wed, 29 Apr 2026 07:31:27 +0800</pubDate><guid>https://atbug.com/your-data-is-feeding-ai-platform-training-policy/</guid><description>&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;：Atlassian 宣布默认使用用户数据训练 AI，这不是意外，而是行业惯例。本文梳理海外和中国主流平台的数据训练政策，拆解背后的三个共同规律。&lt;/p&gt;
+&lt;h2 id="一atlassian-的公告"&gt;一、Atlassian 的公告&lt;/h2&gt;
+&lt;p&gt;2026 年 8 月 17 日，Atlassian 的一项隐私政策更新悄悄生效。&lt;/p&gt;
+&lt;p&gt;对于数百万使用 Jira 和 Confluence 的团队而言，这意味着：你在 Confluence 里写的文档、Jira 里记录的需求和 Bug 描述，默认情况下可以被用于训练 Atlassian 的 AI 模型。&lt;/p&gt;
+&lt;p&gt;公告关键条款分两层。第一层是元数据，免费和标准版用户无法退出；第二层是应用内容（Confluence 正文、Jira 描述和评论），默认开启，可以关闭，但完全退出需要升级到企业版。&lt;/p&gt;
+&lt;p&gt;Atlassian 的措辞相当克制——“去标识化处理”“用于改进 AI 功能”“保障隐私安全”。这套话术你可能在其他地方见过，因为几乎每一家做同样事情的公司都在用同样的句式。&lt;/p&gt;
+&lt;p&gt;官方 FAQ：https://www.atlassian.com/trust/ai/data-contribution/faqs&lt;/p&gt;
+&lt;h2 id="二这不是孤例而是行业惯例"&gt;二、这不是孤例，而是行业惯例&lt;/h2&gt;
+&lt;p&gt;Atlassian 公告引发了一些讨论，但坦白说，它只是在做一件大多数同行早就在做的事。&lt;/p&gt;
+&lt;p&gt;以下是海外主流平台的现状：&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;平台&lt;/th&gt;
+					&lt;th&gt;默认行为&lt;/th&gt;
+					&lt;th&gt;退出方式&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;ChatGPT（免费/Plus）&lt;/td&gt;
+					&lt;td&gt;默认开启&lt;/td&gt;
+					&lt;td&gt;App 内设置关闭&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;GitHub Copilot（免费）&lt;/td&gt;
+					&lt;td&gt;默认开启&lt;/td&gt;
+					&lt;td&gt;设置关闭&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;LinkedIn&lt;/td&gt;
+					&lt;td&gt;默认开启&lt;/td&gt;
+					&lt;td&gt;可退出，但已收集数据不撤回&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Slack&lt;/td&gt;
+					&lt;td&gt;默认开启&lt;/td&gt;
+					&lt;td&gt;邮件申请退出&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Atlassian&lt;/td&gt;
+					&lt;td&gt;默认开启&lt;/td&gt;
+					&lt;td&gt;企业版才能完全退出&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;X/Twitter&lt;/td&gt;
+					&lt;td&gt;默认开启&lt;/td&gt;
+					&lt;td&gt;隐私设置关闭&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Zoom&lt;/td&gt;
+					&lt;td&gt;曾默认开启&lt;/td&gt;
+					&lt;td&gt;2023 年因舆论压力撤回&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;几个值得单独说的细节：&lt;/p&gt;</description></item><item><title>平民价格用旗舰模型的窗口期结束了</title><link>https://atbug.com/ai-coding-tools-golden-window-is-over/</link><pubDate>Thu, 23 Apr 2026 19:20:27 +0800</pubDate><guid>https://atbug.com/ai-coding-tools-golden-window-is-over/</guid><description>&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;：2024 年底到 2025 年初，AI 编程工具曾以远低于成本的价格开放旗舰模型访问权限。那个窗口正在系统性地关闭，本文用完整的数据还原这个过程。&lt;/p&gt;
+&lt;p&gt;2024 年底，你花 20 美元 订一个 Cursor Pro，可以全天调用 Claude Sonnet 写代码，500 次快速请求用完之后还有无限慢速请求兜底，真实 API 价值轻松超过 100 美元。同一时间，GitHub Copilot 10 美元/月，代码补全没有任何请求上限；Claude Pro 20 美元/月，几乎感受不到速率限制。&lt;/p&gt;
+&lt;p&gt;那不是正常的市场定价，那是一场补贴战。&lt;/p&gt;
+&lt;p&gt;现在回头看，2024 年底到 2025 年初是一段历史性的异常窗口。各平台用低于成本的价格抢占开发者心智，AI 编程工具的「真实价格」被人为压低了。那个窗口，正在系统性地关闭。&lt;/p&gt;
+&lt;h2 id="黄金窗口期那时候到底有多便宜"&gt;黄金窗口期：那时候到底有多便宜&lt;/h2&gt;
+&lt;p&gt;用数据说话。以下是窗口期内主要工具的实际权益：&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;工具&lt;/th&gt;
+					&lt;th&gt;价格&lt;/th&gt;
+					&lt;th&gt;核心权益&lt;/th&gt;
+					&lt;th&gt;时间节点&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Cursor Pro&lt;/td&gt;
+					&lt;td&gt;20 美元/月&lt;/td&gt;
+					&lt;td&gt;500 次快速请求 + 无限慢速请求（Claude Sonnet/GPT-4o）&lt;/td&gt;
+					&lt;td&gt;~2025 年 6 月前&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;GitHub Copilot Individual&lt;/td&gt;
+					&lt;td&gt;10 美元/月&lt;/td&gt;
+					&lt;td&gt;无限代码补全，无任何请求上限&lt;/td&gt;
+					&lt;td&gt;2022 年 6 月上线&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Windsurf Pro&lt;/td&gt;
+					&lt;td&gt;10 美元/月&lt;/td&gt;
+					&lt;td&gt;1000 次 Cascade agentic 步骤&lt;/td&gt;
+					&lt;td&gt;2024 年 11 月 -12 月&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Claude Pro&lt;/td&gt;
+					&lt;td&gt;20 美元/月&lt;/td&gt;
+					&lt;td&gt;几乎无感知的速率限制，实际可全天使用&lt;/td&gt;
+					&lt;td&gt;~2025 年初前&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;GLM Coding Lite&lt;/td&gt;
+					&lt;td&gt;20 元/月（年付 240 元）&lt;/td&gt;
+					&lt;td&gt;大量 Coding 请求配额&lt;/td&gt;
+					&lt;td&gt;2025 年底 -2026 年 2 月前&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;阿里云 Qwen Lite&lt;/td&gt;
+					&lt;td&gt;7.9 元首月，40 元/月&lt;/td&gt;
+					&lt;td&gt;18000 次请求/月，支持多家旗舰模型&lt;/td&gt;
+					&lt;td&gt;2026 年 2 月 -4 月&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;「无限慢速请求」是理解当时价值的关键。Cursor 的慢速队列意味着你只要不急，可以不限量地调用 Claude Sonnet，20 美元/月换来的是真正的旗舰模型全天访问权。Augment Code 后来在公告里亲自说出了真相：有用户每小时发 335 个请求，持续整整 30 天，平台实际成本约 15000 美元，但该用户只付了 250 美元。&lt;/p&gt;</description></item><item><title>AI：数字时代最后的效率压榨</title><link>https://atbug.com/ai-digital-era-efficiency-squeeze/</link><pubDate>Thu, 16 Apr 2026 20:14:25 +0800</pubDate><guid>https://atbug.com/ai-digital-era-efficiency-squeeze/</guid><description>&lt;p&gt;&lt;em&gt;不是新浪潮的开始，而是旧范式的收尾&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id="一引子三篇文章一个问题"&gt;一、引子：三篇文章，一个问题&lt;/h2&gt;
+&lt;p&gt;最近读到三篇文章，单独看各有意思，串起来读更有意思。&lt;/p&gt;
+&lt;p&gt;第一篇来自前端开发者 Adam Argyle，标题直白：&lt;a href="https://nerdy.dev/why-ai-sucks-at-front-end"&gt;《AI 为什么在前端表现糟糕》&lt;/a&gt;。第二篇是宾夕法尼亚大学和波士顿大学两位学者发在 arXiv 上的论文：&lt;a href="https://arxiv.org/html/2603.20617v1"&gt;《AI 裁员陷阱》&lt;/a&gt;，用博弈论分析 AI 驱动的裁员潮为什么停不下来。第三篇来自未来研究者 Andrew Curry，标题更大胆：&lt;a href="https://thenextwavefutures.wordpress.com/2026/04/07/ai-end-digital-wave-technology-innovation-perez/"&gt;《AI 可能是这波数字浪潮的终结，而不是下一个重大事件》&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;三篇文章的作者背景各不相同，关注的问题也不一样，但放在一起，它们拼出了同一幅图景——&lt;strong&gt;AI 或许不是我们以为的那个故事。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;本文不讨论 AI 能不能、好不好，而是借这三篇文章尝试回答一个更基础的问题：&lt;strong&gt;在历史的坐标上，AI 到底处于什么位置？&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="二ai-做不好的事暴露了它的本质"&gt;二、AI 做不好的事，暴露了它的本质&lt;/h2&gt;
+&lt;p&gt;Adam Argyle 的 &lt;a href="https://nerdy.dev/why-ai-sucks-at-front-end"&gt;文章&lt;/a&gt; 写的是前端，但他列出的那些问题，后端开发者读起来会觉得分外熟悉。&lt;/p&gt;
+&lt;p&gt;AI 很擅长脚手架、样板代码、token 迁移这类“高度重复、模式清晰”的工作。但一旦你走出这条铺好的路——想要一个定制交互、一套贴合业务的架构决策、一段真正考虑边界条件的逻辑——它就开始胡说了。越复杂，越糟糕。&lt;/p&gt;
+&lt;p&gt;Argyle 总结了四个根本原因：训练数据太旧、不会真正“看”、不知道“为什么”、以及零环境控制。这四条放到后端同样成立，甚至更严重。微服务拆分的边界、分布式系统的一致性权衡、幂等性设计……这些“为什么”恰恰是工程里最有价值的部分，也是 AI 最无能为力的地方。&lt;/p&gt;
+&lt;p&gt;训练数据旧这个问题，还有一个更隐蔽的维度——&lt;strong&gt;不只是数据“旧”，而是几乎没有&lt;/strong&gt;。最新发布的 Kubernetes API、刚合并的特性、刚废弃的字段……这些信息在模型训练截止日之后才存在，LLM 原生不知道，只能靠 web search 打补丁。而这种情况会出现在每一个快速演进的技术栈里，不只是 Kubernetes。每一个“角落”都是一个盲区，盲区叠加盲区，最终的不确定性远比表面看起来大得多。&lt;/p&gt;</description></item><item><title>我让龙虾替我工作了 38 天，它做了什么？</title><link>https://atbug.com/openclaw-38-days-what-did-it-do/</link><pubDate>Tue, 10 Mar 2026 22:15:52 +0800</pubDate><guid>https://atbug.com/openclaw-38-days-what-did-it-do/</guid><description>&lt;p&gt;&lt;em&gt;Photo by James Lee on Pexels&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id="一个决定"&gt;一个决定&lt;/h2&gt;
+&lt;p&gt;一开年，OpenClaw 突然在技术圈出圈了。&lt;/p&gt;
+&lt;p&gt;这是一个自托管的 AI agent 网关，装在服务器上，能把 Telegram、WhatsApp、iMessage 这些聊天软件直接接到 AI agent——发一条消息，agent 帮你处理邮件、文件、代码，像个永远在线的私人助理。&lt;/p&gt;
+&lt;p&gt;出于好奇，1 月底我也装了一个。&lt;/p&gt;
+&lt;p&gt;最初装在 MacBook 上，但考虑到隐私安全，本地机器上有太多个人数据，不想让 agent 有过多访问权限，索性找了一台公有云的 Ubuntu 虚拟机，把它部署上去。模型用的是 GitHub Copilot，这得益于微软 MVP 赠送的 Copilot Pro 订阅，算是物尽其用。&lt;/p&gt;
+&lt;p&gt;就这样，第一个 agent 上线了。后来随着使用深入，发现有些事情需要专注写代码的，有些只需要轻量协助，agent 数量从 1 个慢慢加到了 3 个：Nova 管日常，Forge 专门写代码，assistant 跑腿打杂。&lt;/p&gt;</description></item><item><title>【译】代理精神病：我们是否正在集体失智？</title><link>https://atbug.com/agent-psychosis-are-we-going-insane/</link><pubDate>Sun, 15 Feb 2026 12:22:29 +0800</pubDate><guid>https://atbug.com/agent-psychosis-are-we-going-insane/</guid><description>&lt;p&gt;读到一篇发人深省的文章：&lt;a href="https://lucumr.pocoo.org/2026/1/18/agent-psychosis/"&gt;《Agent Psychosis: Are We Going Insane?》&lt;/a&gt;。坦白说，最初吸引我的正是这个充满张力的标题——&amp;ldquo;psychosis&amp;rdquo;（精神病）一词带着刺眼的隐喻，而文中提出的 &amp;ldquo;agent coding addiction&amp;rdquo;（代理编程成瘾）更如一记警钟，直击当下 AI 编程热潮中被我们刻意忽略的集体焦虑：当人与机器的边界日渐模糊，我们是否正在一种多巴胺驱动的幻觉中，悄然滑向某种技术性失智？&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;译者注&lt;/strong&gt;：本文作者 &lt;a href="https://lucumr.pocoo.org/about/"&gt;Armin Ronacher&lt;/a&gt;（Flask 框架创建者）以批判性视角探讨了当前 AI 编程代理的滥用现象。&amp;ldquo;Slop&amp;rdquo; 一词在文中指代缺乏人工监督、质量低下的 AI 生成代码；&amp;ldquo;vibeslop&amp;rdquo; 则特指仅凭 &amp;quot; 感觉 &amp;ldquo;（vibe）驱动、缺乏工程严谨性的代码产出。&lt;a href="https://github.com/steveyegge/gastown"&gt;Gas Town&lt;/a&gt; 与 &lt;a href="https://github.com/steveyegge/beads"&gt;Beads&lt;/a&gt; 是 &lt;a href="https://github.com/steveyegge"&gt;Steve Yegge&lt;/a&gt; 提出的实验性代理编程框架，其过度复杂的隐喻命名体系（如 Refinery/Mayor/Polecat）成为作者批评的焦点。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;以下是正文。&lt;/p&gt;
+&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;你可以不使用 Refinery，甚至不使用 Witness 或 Deacon 来使用 Polecats。只需告诉 Mayor 关闭 rig，然后将工作分派给 polecats，并告知它们直接合并到 main 分支。或者 polecats 可以提交 MR，然后由 Mayor 手动合并。这完全取决于你。只有当你做了大量前期规范工作，并且有成堆的 Beads 需要通过长队列处理时，Refinery 才有用。&lt;/p&gt;</description></item><item><title>Ruler：多 AI 编程助手统一配置管理方案</title><link>https://atbug.com/ruler-unified-ai-coding-assistant-configuration/</link><pubDate>Fri, 30 Jan 2026 00:14:42 +0800</pubDate><guid>https://atbug.com/ruler-unified-ai-coding-assistant-configuration/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;当你需要频繁在 Kilocode、OpenCode、Claude、Codex、GitHub Copilot 等多个 AI 编程助手之间切换时，&lt;a href="https://github.com/intellectronica/ruler"&gt;Ruler&lt;/a&gt; 是你的最佳选择：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;单一数据源&lt;/strong&gt;：集中管理所有 AI 编程助手的 instructions&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;自动分发&lt;/strong&gt;：一键将配置分发到各个编程助手的专属文件&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MCP 配置管理&lt;/strong&gt;：统一管理 Model Context Protocol 服务器配置&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Skills 支持&lt;/strong&gt;：集中管理并分发 Agent Skills 到各个工具&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;嵌套规则加载&lt;/strong&gt;：支持复杂项目结构的分层配置管理&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;自动维护 .gitignore&lt;/strong&gt;：保持项目目录整洁&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="背景从混乱到标准化的演进"&gt;背景：从混乱到标准化的演进&lt;/h2&gt;
+&lt;h3 id="曾经的痛点"&gt;曾经的痛点&lt;/h3&gt;
+&lt;p&gt;在我写《&lt;a href="https://atbug.com/agents-md-unifying-coding-agent-instructions/"&gt;AGENTS.md：统一编码助手指令文件的新标准&lt;/a&gt;》那篇文章时，提到过 &lt;a href="https://github.com/intellectronica/ruler"&gt;intellectronica/ruler&lt;/a&gt; 这个项目。当时实际上我并没有频繁使用这个工具，因为我主要使用的是单一的编程助手。&lt;/p&gt;
+&lt;p&gt;但现在情况不同了。&lt;/p&gt;
+&lt;p&gt;随着 AI 编程助手的爆发式增长，我需要频繁在多个工具之间切换：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Kilocode&lt;/strong&gt; - 日常编码和快速原型&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Claude&lt;/strong&gt; - 深度思考和算法优化&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Codex&lt;/strong&gt; - API 开发和文档生成&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;OpenCode&lt;/strong&gt; - 开源项目贡献&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;每个工具都有自己的：&lt;/p&gt;</description></item><item><title>Obsidian Skills：让 AI 智能体精通 Obsidian 知识管理</title><link>https://atbug.com/obsidian-skills-mastering-knowledge-management-with-ai/</link><pubDate>Fri, 23 Jan 2026 21:12:54 +0800</pubDate><guid>https://atbug.com/obsidian-skills-mastering-knowledge-management-with-ai/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;Obsidian Skills 不仅仅是一个技能包，它标志着 Agent Skills 生态正在从通用技能向垂直领域深度集成演进。过去，Agent Skills 主要侧重于任务类型的通用能力，比如代码审查、PDF 处理等广泛适用的场景。而 Obsidian Skills 的出现代表了一个重要转折点，工具官方开始主动拥抱 AI 代理，为自己的产品创建官方维护的专属技能包。这种垂直领域技能的价值在于深入理解工具的设计哲学，掌握最佳实践和惯用模式，与插件生态无缝对接，并能跟随工具版本同步更新，为用户提供权威且完整的解决方案。&lt;/p&gt;
+&lt;p&gt;本文通过详细介绍 Obsidian Skills 的三个核心技能（Obsidian Markdown、Obsidian Bases、JSON Canvas），展示了 AI 智能体如何真正理解 Obsidian 的独特之处。两个实战案例进一步证明了这些技能的实用价值，通过 Base 技能管理阅读清单，通过 Canvas 技能可视化知识网络，让 AI 成为知识管理的得力助手。随着更多工具厂商跟进，垂直领域技能将成为 AI 代理与专业工具深度融合的标准模式，最终实现用自然语言操作复杂工具的愿景。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="引言从-agent-skills-到垂直领域应用"&gt;引言：从 Agent Skills 到垂直领域应用&lt;/h2&gt;
+&lt;p&gt;两周前，我写了一篇关于 &lt;a href="https://atbug.com/agent-skills-reusable-ecosystem-for-ai-agents/"&gt;Agent Skills 深度解析：为 AI 代理构建可复用的技能生态系统&lt;/a&gt; 的文章，探讨了 Agent Skills 规范如何让 AI 智能体获得模块化、可复用的能力。文章发布后，很多读者对这个生态的发展前景表示乐观。&lt;/p&gt;</description></item><item><title>Agent Skills 深度解析：为 AI 代理构建可复用的技能生态系统</title><link>https://atbug.com/agent-skills-reusable-ecosystem-for-ai-agents/</link><pubDate>Sat, 10 Jan 2026 19:10:36 +0800</pubDate><guid>https://atbug.com/agent-skills-reusable-ecosystem-for-ai-agents/</guid><description>&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;h3 id="一个真实的故事"&gt;一个真实的故事&lt;/h3&gt;
+&lt;p&gt;两周前，&lt;a href="https://kilocode.ai"&gt;KiloCode&lt;/a&gt; 发布了 v4.141.0 版本，这个版本带来了一个重要特性：&lt;strong&gt;原生支持 &lt;a href="https://agentskills.io"&gt;Agent Skills&lt;/a&gt;&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;在此之前，我在 KiloCode 中使用 skills 需要在一个 main rule 中手动 list 所有技能。每次添加新技能都需要：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt;!-- 旧方式：在 main rule 中手动维护 --&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# AVAILABLE SKILLS
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Skills are pre-packaged instructions. When a task matches a skill,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;use read_file to load the SKILL.md and follow its instructions.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Available skills:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; **frontend-design**: Create distinctive UI components
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Location: ~/.kilocode/skills/frontend-design/SKILL.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; **code-review**: Automated code quality analysis
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Location: ~/.kilocode/skills/code-review/SKILL.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; **pdf-processing**: PDF manipulation toolkit
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Location: ~/.kilocode/skills/pdf-processing/SKILL.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;To use: read_file the location → follow instructions
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这种方式的问题显而易见：&lt;/p&gt;</description></item><item><title>不止于网络：从 Cilium 2025年度报告，洞察云原生基础设施的六大演进</title><link>https://atbug.com/cilium-2025-report-6-infrastructure-trends/</link><pubDate>Sun, 21 Dec 2025 06:20:26 +0800</pubDate><guid>https://atbug.com/cilium-2025-report-6-infrastructure-trends/</guid><description>&lt;p&gt;Cilium 项目始于 2015 年 12 月 16 日的第一次提交，已从一个实验性的 IPv6 容器网络项目成长为云原生世界的 &lt;em&gt;CNI（容器网络接口）的事实标准&lt;/em&gt;。也正值 Cilium 的十周年，社区发布了 &lt;a href="https://www.cncf.io/wp-content/uploads/2025/12/cilium-annual-report-2025-final.pdf"&gt;《Cilium 2025 年度报告》（PDF 原文）&lt;/a&gt;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;CNCF 地位：&lt;/strong&gt; Cilium 目前是 CNCF（云原生计算基金会）中&lt;strong&gt;贡献量第二大&lt;/strong&gt;的项目，仅次于 Kubernetes。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;市场占有率：&lt;/strong&gt; 根据 Isovalent（Cilium 母公司）发布的 &lt;a href="https://isovalent.com/blog/post/state-of-kubernetes-networking-report-2025/"&gt;《2025 Kubernetes 网络现状报告》&lt;/a&gt;，Cilium 占据了超过 &lt;strong&gt;Cilium 目前是 CNCF（云原生计算基金会）中&lt;/strong&gt; 的 CNI 部署份额，是第二名的两倍以上 。如果算上由 Cilium 驱动的托管服务（如 Azure CNI powered by Cilium 和 GKE Datapath V2），其覆盖率超过 &lt;strong&gt;60%&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;社区活跃度：&lt;/strong&gt; 2025 年贡献了近 10,000 个 PR，年度开发活动较第一年增长了 55 倍 。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;本文无意逐条复述报告内容。我们不妨将视线从具体数字上移开，转而透视这份行业风向标所揭示的云原生网络与安全核心趋势。希望能激发更多的思考与讨论。&lt;/p&gt;</description></item><item><title>Google ADK 深度探索（二）：不同语境下的专用上下文对象</title><link>https://atbug.com/google-adk-deep-dive-specialized-context-objects/</link><pubDate>Sat, 20 Dec 2025 16:43:07 +0800</pubDate><guid>https://atbug.com/google-adk-deep-dive-specialized-context-objects/</guid><description>&lt;p&gt;在上一篇 &lt;a href="https://atbug.com/google-adk-deep-dive-first-class-context/"&gt;《ADK 一等公民 Context 解析》&lt;/a&gt; 中，我们了解到上下文是智能体运行的核心。承载这些能力的核心容器是功能强大的 &lt;code&gt;InvocationContext&lt;/code&gt;，但为提升安全性与易用性，ADK 对其进行了&lt;strong&gt;精细化的分类&lt;/strong&gt;，为不同语境提供了粒度各异的专用上下文对象。&lt;/p&gt;
+&lt;p&gt;要理解上下文分类的粒度，让我们重温一下 ADK 的核心理念：发送给 LLM 的“工作上下文（Working Context）”是一个更丰富、有状态系统的&lt;strong&gt;编译视图（Compiled View）&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id="上下文编译器"&gt;“上下文编译器”&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2025/12/20/google-adk-compiled-view.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;在传统软件工程中，编译器将高级源代码转换为机器刻度的二级制文件，在编译过程中执行优化、类型检查和安全检查。类似地，ADK 运行时（Runtime）充当&lt;strong&gt;上下文编译器&lt;/strong&gt;的角色。它摄取交互的“源代码“ &amp;ndash; 包括持久的会话状态（Session State）、临时的用户输入（User Instruction）、检索到的工件（Artifacts）、记忆库（Long-Term Knowledge）和系统指令（System Instruction）&amp;ndash; 并将他们”编译“成针对当前执行阶段量身定制的特定上下文对象。&lt;/p&gt;
+&lt;p&gt;这个编译过程需要针对智能体系统的不同组件提供不同的接口（参考 &lt;a href="https://atbug.com/google-adk-deep-dive-first-class-context/"&gt;前文&lt;/a&gt;）。负责渲染系统提示词的指令提供者（Instruction Provider）所需的访问权限，与设计用于修改数据库的工具或用于验证用户授权的回调（Callback）截然不同。ADK 的四种主要上下文类型 &amp;ndash; &lt;code&gt;InvocationContext&lt;/code&gt;、&lt;code&gt;ReadonlyContext&lt;/code&gt;、&lt;code&gt;CallbackContext&lt;/code&gt; 和 &lt;code&gt;ToolContext&lt;/code&gt; &amp;ndash; 代表了这些不同的接口。每种类型都强制执行&lt;strong&gt;最小权限原则（Principle of Least Priviledge）&lt;/strong&gt;，确保组件在最小化潜在的错误或安全漏洞“爆炸半径”的范围内执行。&lt;/p&gt;
+&lt;h3 id="智能体状态的演变"&gt;智能体状态的演变&lt;/h3&gt;
+&lt;p&gt;从智能体的发展轨迹，我们也能窥探这种分离架构的必要性。早期的框架本质上将应用程序的整个状态转储到一个单一的对象中，并将这个“上帝对象（God Object）”传递给每个函数。这必然导致：&lt;/p&gt;</description></item><item><title>Google ADK 深度探索（一）：“一等公民”上下文 Context 解析</title><link>https://atbug.com/google-adk-deep-dive-first-class-context/</link><pubDate>Sun, 14 Dec 2025 22:05:52 +0800</pubDate><guid>https://atbug.com/google-adk-deep-dive-first-class-context/</guid><description>&lt;p&gt;了解了 Google ADK 宏大的上下文架构设计（&lt;a href="https://atbug.com/google-adk-efficient-context-aware-multi-agent-framework/"&gt;回顾上一篇文章&lt;/a&gt;），我们不禁要问：这些精妙的思想，最终是如何落地到一行行代码里的？&lt;/p&gt;
+&lt;p&gt;本文将聚焦 ADK 中作为“一等公民”的&lt;strong&gt;上下文（Context）机制&lt;/strong&gt;，详解其如何通过会话状态、数据传递、服务访问等核心功能，解决智能体开发中的状态维护、跨步骤协作和资源调度难题。无论是管理用户偏好的 &lt;code&gt;session.state&lt;/code&gt;，还是按需加载的工件存储，抑或是身份跟踪的 &lt;code&gt;InvocationContext&lt;/code&gt;，ADK 的上下文设计无不体现着一种理念：&lt;strong&gt;智能体的能力边界，本质上取决于其上下文管理的精度与效率&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id="上下文context"&gt;上下文（Context）&lt;/h2&gt;
+&lt;p&gt;在智能体开发领域，一个日益凸显的挑战是&lt;strong&gt;上下文管理的复杂性&lt;/strong&gt;。传统方法（如无限制地堆叠聊天历史或工具输出）会导致成本飙升、信号衰减甚至物理性性能瓶颈。而 ADK 的突破性在于——它将上下文从“被动拼接的文本”升级为&lt;strong&gt;系统化管理的架构核心&lt;/strong&gt;，通过分层设计、动态编译和最小权限原则，实现了生产级智能体的高效运作。&lt;/p&gt;
+&lt;p&gt;在 ADK 中，上下文（Context）指的是智能体及其工具在特定操作期间所能获取的关键信息。它也是有效处理当前任务或者会话所需的必要背景知识和资源。&lt;/p&gt;
+&lt;p&gt;智能体有效运行需要的不只是最新的用户消息，上下文至关重要，通过上下文可以：&lt;/p&gt;
+&lt;h3 id="维护状态"&gt;维护状态&lt;/h3&gt;
+&lt;p&gt;存储对话过程中多个步骤的详细信息（例如，用户偏好、上一步的结果），这些都通过**会话状态（&lt;code&gt;session.state&lt;/code&gt;）**来管理。&lt;/p&gt;
+&lt;p&gt;会话（Session）在 ADK 中是一个重要的概念，用于跟踪独立的对话。用户第一次与智能体交互时会创建一个 &lt;code&gt;Session&lt;/code&gt; 对象，这个对象作为一个容器保存了与对话相关所有状态：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;历史记录（&lt;code&gt;session.events&lt;/code&gt;）：与该对话相关的所有交互，包括用户输入、智能体响应、工具调用请求/结果等。记录的事件序列提供了交互的完整、按时间顺序的历史记录，对于调试、审计和逐步了解代理行为非常有价值。这些信息是不可变的，是由框架自身维护的。&lt;/li&gt;
+&lt;li&gt;会话状态（&lt;code&gt;session.state&lt;/code&gt;）：从数据结构上看是一个包含键值对的集合（字典或者 Map），用于存储智能体有效执行需要用到的信息，比如记录用户偏好、跟踪多轮流程中的步骤、收集信息等。&lt;code&gt;session.state&lt;/code&gt; 是可变的。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;会话可以保存在内存（&lt;code&gt;InMemorySessionService&lt;/code&gt;）、数据库（&lt;code&gt;DatabaseSessionService&lt;/code&gt;、&lt;code&gt;SqliteSessionService&lt;/code&gt;、&lt;code&gt;PerAgentDatabaseSessionService&lt;/code&gt;）中，具体要看使用是哪种 &lt;code&gt;SessionService&lt;/code&gt; 的实现了。比如最常见的 &lt;code&gt;InMemorySessionService&lt;/code&gt;，从下面这行代码就很容易看出其储存结构了。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#self.sessions: dict[str, dict[str, dict[str, Session]]] = {}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;session &lt;span style="color:#f92672"&gt;=&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sessions[app_name][user_id]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get(session_id)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;除了框架提供的实现外，我们可以通过实现 &lt;code&gt;SessionService&lt;/code&gt; 自定义会话的存储方式。&lt;/p&gt;</description></item><item><title>Spring AI 与 Google ADK 集成实战：基于 Azure OpenAI 的智能体开发探索</title><link>https://atbug.com/spring-ai-google-adk-integration-azure-openai-agent-development/</link><pubDate>Tue, 11 Nov 2025 17:11:38 +0800</pubDate><guid>https://atbug.com/spring-ai-google-adk-integration-azure-openai-agent-development/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;本文用于验证 Spring AI 与 Google ADK 集成的可能性，为未来的正式版本提供实践经验和架构参考。核心收获在于验证了分层设计的可行性：Spring AI 处理 AI 服务抽象，ADK 管理智能体生命周期，两者通过标准接口实现实验性衔接。&lt;/p&gt;
+&lt;p&gt;需要注意的是，Google ADK 的 Spring AI 支持确实处于早期 SNAPSHOT 阶段，API 可能存在变更风险，但整体架构设计已经展现了良好的技术融合潜力。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;在企业级 AI 应用开发领域，如何将 Spring 生态的强大企业级特性与现代化智能体开发框架有机结合一直是技术团队面临的核心挑战。尤其是在探索 &lt;a href="https://google.github.io/adk-docs/"&gt;Google ADK&lt;/a&gt;（Agent Development Kit）与 &lt;a href="https://docs.spring.io/spring-ai/reference/index.html"&gt;Spring AI&lt;/a&gt; 的集成可能性时，开发者往往面临技术选型、架构设计和兼容性测试的多重考量。传统 AI 应用开发需要手动处理复杂的模型集成、工具调用和会话管理，导致代码耦合度高、维护成本大。本文通过一个简单但完整的时间查询智能体，展示了 Spring AI 的 Azure OpenAI 集成与 Google ADK 的智能体框架的融合可能性。特别需要注意的是，Google ADK 的 Java 版本中，Spring AI 支持目前仍处于 0.3.1-SNAPSHOT 的早期阶段，这种集成具有明显的实验性质。项目源码可参考 &lt;a href="https://github.com/google/adk-java"&gt;adk-java&lt;/a&gt; 仓库。&lt;/p&gt;</description></item><item><title>预算有限，效率拉满：为什么 Kilo Code 成了我的首选 Coding Agent</title><link>https://atbug.com/budget-efficiency-kilo-code-choice/</link><pubDate>Fri, 29 Aug 2025 08:09:55 +0800</pubDate><guid>https://atbug.com/budget-efficiency-kilo-code-choice/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;打开 &lt;a href="https://kilocode.ai/"&gt;Kilo Code 的官网&lt;/a&gt;，首先入眼的就是这句话“适用于 VS Code 的最佳 AI 编程助手”，也确实我目前在 VS Code 上用过的几款插件中，Kilo Code 的表现是最好的。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;写这篇文章的时候，我想到的是老板的那句话“有什么模型就用什么”。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;在有限的条件下，寻找最优的解。&lt;/p&gt;
+&lt;p&gt;不乏有比 Kilo Code 更加优秀的工具，但往往需要更强的模型支持，或者更高的费用。投入和产出是成正比的，单次请求成本越高，慢慢地 Coding Agent 也有“氪金”的趋势。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;照此以往，可能在不远的将来，优秀的工具和高级的模型会成为奢侈品，成为少数大企业的专属。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Kilo Code 作为站在巨人肩膀上（Cline + Roo Code）的存在，凭借着自身的优化和改进，成为了我目前的首选。&lt;/p&gt;
+&lt;p&gt;Kilo Code 可以支持 30+ 模型提供商，同时本身也提供了收费的 Kilo API。通过 Kilo API 可以使用几十种模型，包括 OpenAI、Claude、Gemini、MoonShot、Qwen、DeepSeek、xAI 各家的通用模型和 Coding 模型。并且计费与各家费用一样，Kilo Code 本身不加价不收手续费。&lt;/p&gt;</description></item><item><title>AGENTS.md：统一编码助手指令文件的新标准</title><link>https://atbug.com/agents-md-unifying-coding-agent-instructions/</link><pubDate>Sun, 24 Aug 2025 09:06:50 +0800</pubDate><guid>https://atbug.com/agents-md-unifying-coding-agent-instructions/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;从此刻起，你的项目中除了 README.md 文件外，可能还会包含另一个 markdown 文件：AGENTS.md&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;README.md：为人类设计，通常提供如项目介绍、安装指南、使用示例等信息。&lt;/li&gt;
+&lt;li&gt;AGENTS.md：为 Coding Agents 设计，提供额外的详细信息，如环境搭建、构建步骤、测试方法、代码规范、安全注意事项等。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;如果你经常在多种编程助手间来回切换，肯定会我将要说的问题深有体会。通常如果想要编程助手更好的工作、输出更高质量的代码，我们需要在项目中为其提供 instructions（指令 - 系统提示词）文件。比如 &lt;code&gt;.cursor/rules&lt;/code&gt;、&lt;code&gt;.clinerules&lt;/code&gt;、&lt;code&gt;.github/copilot-instructions.md&lt;/code&gt;、&lt;code&gt;claude.md&lt;/code&gt;、&lt;code&gt;gemini.md&lt;/code&gt;。这些文件的内容通常类似，但各自的文件名和位置不同。即使类似 Cline、Roo Code、Kilo Code 这类同出一脉的编程助手，他们的目录名也各不相同。更不同说不同的编程助手了。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;通常我的做法是使用软连接。首先创建一个统一的 instructions 文件，再通过软连接将 &lt;code&gt;.clinerules&lt;/code&gt; 和 &lt;code&gt;.cursor/rules&lt;/code&gt;、&lt;code&gt;.github/copilot-instructions.md&lt;/code&gt; 都链接到同一个文件。&lt;/p&gt;
+&lt;p&gt;你也可以使用 &lt;a href="https://github.com/intellectronica/ruler"&gt;intellectronica/ruler&lt;/a&gt;，ruler 可以将同一份 instructions 文件 &lt;code&gt;.ruler/&lt;/code&gt; 分发给多个编程助手，并更新 .gitignore 文件。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;久而久之，你将会收获一个混乱的项目目录（再加上 MCP 服务器的管理文件），即使用上软链接或者 ruler（只是降低了维护成本）。&lt;/p&gt;</description></item><item><title>【译】AI 是否绑架了云原生创新？</title><link>https://atbug.com/the-future-of-ai-and-cloud-native/</link><pubDate>Sat, 23 Aug 2025 07:18:25 +0800</pubDate><guid>https://atbug.com/the-future-of-ai-and-cloud-native/</guid><description>&lt;p&gt;&lt;strong&gt;译者注&lt;/strong&gt;：近三年来，AI 热潮席卷科技行业，相关话题无处不在。与 AI 相关的讨论已经渗透到科技领域的每个角落，看似没有 AI 故事的产品变得更难推广。这里的云原生可以换成任何其他技术领域，AI 的兴起是否也在影响它们的发展和关注度？欢迎大家留言讨论。&lt;/p&gt;
+&lt;p&gt;在这个充满变革的时代，保持开放心态、持续学习和积极拥抱新技术至关重要。无论是 AI 还是云原生，唯有不断探索和实践，才能在技术浪潮中立于不败之地。让我们共同见证创新的力量，推动行业向前发展。&lt;/p&gt;
+&lt;p&gt;本文翻译自 Alan Shimel 的 &lt;a href="https://cloudnativenow.com/features/has-ai-hijacked-cloud-native-innovation/"&gt;Has AI Hijacked Cloud-Native Innovation?&lt;/a&gt;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;AI 似乎正在成为科技领域的绝对焦点，几乎占据了所有讨论空间。&lt;/p&gt;
+&lt;p&gt;从董事会会议室到行业活动的走廊，AI 话题无处不在。它令人兴奋、颠覆且充满变革力量。然而，AI 的迅猛发展也可能让其他重要技术创新被忽视。我不禁思考：AI 是否正在劫持云原生？&lt;/p&gt;
+&lt;p&gt;仅仅一两年前，云原生还是企业技术领域的明星。Kubernetes 话题热度不减，可观察性平台蓬勃发展，Backstage 推动着内部开发者门户，GitOps 流水线高效运转，CNAPs 日益智能，服务网格架构迅速普及。云原生不仅意味着迁移到公有云，更是应用现代化、混合与边缘部署，甚至裸机部署的核心战略。&lt;/p&gt;
+&lt;p&gt;云原生的普及有其深层原因——它为团队带来了创新所需的灵活性、可扩展性和模块化能力，帮助企业保持竞争力。&lt;/p&gt;
+&lt;p&gt;在 Techstrong，我们对云原生的发展充满信心，甚至将其作为核心虚拟活动的名称：&lt;a href="https://www.techstrongevents.com/cloud-native-now-2025/home?__hstc=181228792.add11cc03e8f37c31977527f3fb44533.1755902547536.1755902547536.1755902547536.1&amp;amp;__hssc=181228792.2.1755902547536&amp;amp;__hsfp=570170634"&gt;Cloud Native Now – One for the Road&lt;/a&gt;。这充分体现了云原生理念在现代 IT 领域的深度影响力。&lt;/p&gt;</description></item><item><title>Agentic Mesh：增强现代企业系统中的自主 AI 代理</title><link>https://atbug.com/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems/</link><pubDate>Sun, 22 Jun 2025 19:19:37 +0800</pubDate><guid>https://atbug.com/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems/</guid><description>&lt;p&gt;译者注：本文介绍了 Agentic Mesh（代理网格）这一新型 AI 架构，强调其在现代企业自动化中的作用。文章指出传统 AI 代理系统存在单点故障、扩展性差、协作能力弱等问题。Agentic Mesh 通过自组织、动态协作、角色分工和安全治理，实现 AI 代理的高效协作、自适应优化和可扩展性。文中还介绍了反思、工具使用、规划、多代理协作等智能设计模式，并举例说明其在企业助手、网络安全和金融分析等场景的应用，展望了 AI 自动化的未来趋势。&lt;/p&gt;
+&lt;p&gt;阅读原文请跳转：https://medium.com/@vikram40441/agentic-mesh-enhancing-autonomous-ai-agents-in-modern-enterprise-systems-991fa6f36d6a&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;AI 驱动的智能代理正迅速成为企业自动化的核心。&lt;a href="https://www.deloitte.com/global/en/about/press-room/deloitte-globals-2025-predictions-report.html"&gt;德勤预计，&lt;strong&gt;到2025年，采用生成式AI的企业中将有25%部署AI代理，2027年将增长至50%&lt;/strong&gt;&lt;/a&gt;。虽然这种趋势令人振奋，但也带来了一个重要问题：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;我们如何确保 AI Agent 具备可扩展性、适应性，并能无缝协作而不引发混乱？&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;答案在于&lt;strong&gt;Agentic Mesh&lt;/strong&gt;——一个结构化、动态且自我进化的 AI Agent 网络，能够自主发现、协作并优化任务。但在深入了解&lt;strong&gt;Agentic Mesh 是什么&lt;/strong&gt;之前，先探讨&lt;strong&gt;传统 AI 架构的局限性&lt;/strong&gt;，以及为何需要更先进的框架。&lt;/p&gt;
+&lt;h1 id="为什么需要-agentic-mesh"&gt;为什么需要 Agentic Mesh？&lt;/h1&gt;
+&lt;p&gt;当前大多数企业仍依赖&lt;strong&gt;僵化的 AI 架构&lt;/strong&gt;，Agent 各自为政或遵循预设流程。这些方式虽然可用，但&lt;strong&gt;随着企业 AI 自动化规模扩大，弊端日益显现&lt;/strong&gt;。&lt;/p&gt;
+&lt;h1 id="传统-ai-架构的问题"&gt;传统 AI 架构的问题&lt;/h1&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2025/06/22/8dab8e08a0983d0a20b7fedc76259875_MD5.png" alt=""&gt;&lt;/p&gt;</description></item><item><title>我用 Vibe Coding 开发了一个量化交易程序</title><link>https://atbug.com/vibe-coding-quant-trading/</link><pubDate>Fri, 23 May 2025 22:04:03 +0800</pubDate><guid>https://atbug.com/vibe-coding-quant-trading/</guid><description>&lt;p&gt;是的，你没看错，我确实用 Vibe Coding 写了一个量化交易程序。相信看到标题点进来的，再看到这么一句后，不免会冒出一个想法：“是谁给你的勇气写量化交易程序！”&lt;/p&gt;
+&lt;p&gt;先澄清一下，这并不是一个“正经”的量化交易程序，而是为了参加公司 AI 编程 Hackathon 开发的一个简单量化交易程序。&lt;/p&gt;
+&lt;p&gt;在比赛报名截止的前一天，我被拉进了编程小组。起初参加比赛纯属一时兴起，更没想到那几天工作和家里的事情都很忙，甚至连比赛的说明会和练习赛都没参加。到比赛的前一天，我还没能为小组贡献一行代码，甚至连比赛的细节都不清楚。&lt;/p&gt;
+&lt;p&gt;可能是巧合，淘汰赛当天凌晨 5 点我就醒了。既然醒了，不如起床看看比赛的说明。看完说明后，我发现用 Vibe Coding 是个不错的选择。因为时间有限，Vibe Coding 可以让我更专注于问题本身，而不是实现细节。&lt;/p&gt;
+&lt;p&gt;最终，我花了 2 个多小时搞定了这个量化交易程序，成绩自认为还不错。虽然因为某些原因小组赛没有晋级，但整个过程让我受益匪浅。&lt;/p&gt;
+&lt;p&gt;在这里，我想分享一下这个量化交易程序的实现思路和方法。&lt;/p&gt;
+&lt;h2 id="vibe-coding"&gt;Vibe Coding&lt;/h2&gt;
+&lt;p&gt;让我们先了解一下什么是 Vibe Coding。相信看完介绍后，你会明白是什么给了我写量化交易程序的勇气。&lt;/p&gt;
+&lt;h3 id="vibe-coding-是什么"&gt;Vibe Coding 是什么？&lt;/h3&gt;
+&lt;p&gt;Vibe Coding，有些中文翻译为“氛围编程”，听起来可能有些抽象。&lt;/p&gt;
+&lt;p&gt;这个概念最早由计算机科学家 Andrej Karpathy（OpenAI 联合创始人）于 2025 年 2 月提出。Vibe Coding 的核心思想是通过自然语言描述来生成代码，而不是通过传统的编程语言。它是一种基于自然语言的编程方法，允许用户通过自然语言描述，借助大模型工具生成代码。其目标是让编程变得更加简单和直观，尤其是对没有编程经验的人。&lt;/p&gt;</description></item><item><title>几个常用的 MCP Server 收录平台</title><link>https://atbug.com/mcp-server-directory-platforms/</link><pubDate>Tue, 29 Apr 2025 06:39:54 +0800</pubDate><guid>https://atbug.com/mcp-server-directory-platforms/</guid><description>&lt;p&gt;在人工智能与各类技术深度融合的当下，MCP（Model Context Protocol）发展迅猛热度不减。服务器的多样性和功能性不断拓展。对个人用户、AI 爱好者而言，找到合适的 MCP Server 收录平台，能更高效地获取工具和资源。以下是一些常用的 MCP Server 的收录平台，供大家参考：&lt;/p&gt;
+&lt;h3 id="mcpso"&gt;mcp.so&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://mcp.so/"&gt;https://mcp.so/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;目前已收录 11185 个 MCP 服务器。&lt;/p&gt;
+&lt;p&gt;该平台展示了众多特色 MCP 服务器，如与各类地图、数据库、软件集成的服务器，还有用于文本处理、图像生成等功能的服务器 。&lt;/p&gt;
+&lt;h3 id="awesome-mcp-servers"&gt;awesome-mcp-servers&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://github.com/punkpeye/awesome-mcp-servers/"&gt;https://github.com/punkpeye/awesome-mcp-servers/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;目前已收录 4148 个 MCP 服务器。&lt;/p&gt;
+&lt;p&gt;基于 GitHub 仓库的索引，展示了 MCP 服务器的相关信息。该仓库提供了多种语言版本的文档，包括英文、中文（简体和繁体）、日语、韩语、葡萄牙语、泰语等。分类详细、全面，涵盖了多种类型的 MCP 服务器。&lt;/p&gt;
+&lt;h3 id="glama-mcp"&gt;Glama MCP&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://glama.ai/mcp/servers"&gt;https://glama.ai/mcp/servers&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;一个 web 平台，提供了 MCP 服务器的索引和搜索功能，收录的内容来自上面的 awesome-mcp-servers 仓库。&lt;/p&gt;</description></item><item><title>从抓包看 MCP：AI 工具调用背后的通信机制</title><link>https://atbug.com/mcp-communication-protocol-packet-analysis/</link><pubDate>Sat, 26 Apr 2025 16:44:57 +0800</pubDate><guid>https://atbug.com/mcp-communication-protocol-packet-analysis/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;通过抓包分析，我们清晰地了解了 MCP 通信的全过程：从建立 SSE 连接、三步初始化、工具调用操作到最终的连接终止。可以看出，MCP 基于简单的 SSE 协议搭建了一个功能强大的工具调用框架，使 AI 代理能够便捷地调用外部工具完成复杂任务。&lt;/p&gt;
+&lt;p&gt;相比传统的接口调用方式，MCP 更加灵活，能够自动适应不同的工具集，让 AI 代理 &amp;quot; 即插即用 &amp;quot; 地使用各种服务能力，这也是其设计的精妙之处。&lt;/p&gt;
+&lt;p&gt;当然，MCP 也并不是完美的，作为一个新兴的协议，它仍然在不断发展中。未来可能会有更多的功能和特性被添加进来，以满足更复杂的需求。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;MCP 支持两种标准的传输实现：标准输入/输出（stdio）和 &lt;a href="https://en.wikipedia.org/wiki/Server-sent_events"&gt;Server-Sent Event&lt;/a&gt;（下称 SSE）。stdio 基于命令行工具，多用于本地集成，通过进程通信来实现；SSE 基于客户端和服务器的网络通信，用于跨设备网络的通信场景。&lt;/p&gt;
+&lt;p&gt;既然是用抓包来分析，我们就要选择使用 SSE 传输 MCP server，然后通过工具进行网络抓包分析。在抓包分析之前，我们必要对 SSE 协议进行简单的了解。&lt;/p&gt;
+&lt;h2 id="sse-协议"&gt;SSE 协议&lt;/h2&gt;
+&lt;p&gt;SSE 协议 是一种服务器推送技术，使客户端能够通过 HTTP 连接从服务器自动接受更新，通常用于服务器向客户端发送消息更新或者连续的数据流（流信息 streaming）。&lt;/p&gt;</description></item><item><title>K8sGPT+Ollama：免费的 Kubernetes 自动化诊断方案</title><link>https://atbug.com/k8sgpt-ollama-free-k8s-automation-diagnosis/</link><pubDate>Mon, 17 Jun 2024 20:05:13 +0800</pubDate><guid>https://atbug.com/k8sgpt-ollama-free-k8s-automation-diagnosis/</guid><description>&lt;p&gt;周末检查博客草稿，发现了这篇。记得当时是与 &lt;a href="https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/"&gt;Kubernetes 自动化诊断工具：k8sgpt-operator&lt;/a&gt; 一起写的，算算过去了一年之久，这拖延症也算是病入膏肓了。原本想使用 K8sGPT + &lt;a href="https://localai.io"&gt;LocalAI&lt;/a&gt; 的方案，由于之前试过 &lt;a href="https://ollama.com"&gt;Ollama&lt;/a&gt;，感觉使用起来也更加友好，而且 Ollama 同样提供了 &lt;a href="https://github.com/ollama/ollama/blob/main/docs/openai.md"&gt;对 OpenAI API 的支持&lt;/a&gt;，索性改成用 Ollama 吧。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;介绍 k8sgpt-operator 的文章发布后，有小伙伴反馈 OpenAI 的使用门槛，这个问题确实比较棘手，但也不是不能解决。不过本文并不是介绍如何解决这种问题的，而是介绍 OpenAI 的替代方案： Ollama。&lt;/p&gt;
+&lt;p&gt;对 k8sgpt 和 k8sgpt-operator 就不做过多介绍了，有兴趣的可以看回 &lt;a href="https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/"&gt;上一篇&lt;/a&gt;，去年底 &lt;a href="https://landscape.cncf.io/?item=observability-and-analysis--observability--k8sgpt"&gt;k8sgpt 进入了 CNCF Sandbox&lt;/a&gt;。&lt;/p&gt;
+&lt;h3 id="1-安装-ollama"&gt;1. 安装 Ollama&lt;/h3&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2024/06/17/Pasted%20image%2020240617065721.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;Ollama 是一个开源的大模型工具，使用它可以在本地或云端轻松的安装和运行 &lt;a href="https://ollama.com/library"&gt;多种流量的大模型&lt;/a&gt;。它的操作非常友好，只需简单的命令就能运行。在 macOS 上可以通过 homebrew 一键安装：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install ollama
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;当前最新的版本是 0.1.44。&lt;/p&gt;</description></item><item><title>Kubernetes 自动化诊断工具：k8sgpt-operator</title><link>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</link><pubDate>Tue, 02 May 2023 17:33:28 +0800</pubDate><guid>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</guid><description>&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;在 Kubernetes 上，从部署 Deployment 到正常提供服务，整个流程可能会出现各种各样问题，有兴趣的可以浏览 &lt;a href="https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/"&gt;Kubernetes Deployment 的故障排查可视化指南（2021 中文版）&lt;/a&gt;。从可视化指南也可能看出这些问题实际上都是有迹可循，根据错误信息基本很容易找到解决方法。随着 ChatGPT 的流行，基于 LLM 的文本生成项目不断涌现，&lt;a href="https://github.com/k8sgpt-ai/k8sgpt"&gt;k8sgpt&lt;/a&gt; 便是其中之一。&lt;/p&gt;
+&lt;p&gt;k8sgpt 是一个扫描 Kubernetes 集群、诊断和分类问题的工具。它将 SRE 经验编入其分析器，并通过 AI 帮助提取并丰富相关的信息。&lt;/p&gt;
+&lt;p&gt;其内置了大量的分析器：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;podAnalyzer&lt;/li&gt;
+&lt;li&gt;pvcAnalyzer&lt;/li&gt;
+&lt;li&gt;rsAnalyzer&lt;/li&gt;
+&lt;li&gt;serviceAnalyzer&lt;/li&gt;
+&lt;li&gt;eventAnalyzer&lt;/li&gt;
+&lt;li&gt;ingressAnalyzer&lt;/li&gt;
+&lt;li&gt;statefulSetAnalyzer&lt;/li&gt;
+&lt;li&gt;deploymentAnalyzer&lt;/li&gt;
+&lt;li&gt;cronJobAnalyzer&lt;/li&gt;
+&lt;li&gt;nodeAnalyzer&lt;/li&gt;
+&lt;li&gt;hpaAnalyzer（可选）&lt;/li&gt;
+&lt;li&gt;pdbAnalyzer（可选）&lt;/li&gt;
+&lt;li&gt;networkPolicyAnalyzer（可选）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;k8sgpt 的能力是通过 CLI 来提供的，通过 CLI 可以对集群中的错误进行快速的诊断。&lt;/p&gt;</description></item></channel></rss>

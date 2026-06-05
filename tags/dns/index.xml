@@ -1,9 +1,25 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DNS on 乱世浮生</title><link>https://atbug.com/tags/dns/</link><description>Recent content in DNS on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 15 Jul 2023 16:29:56 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/dns/index.xml" rel="self" type="application/rss+xml"/><item><title>追踪 Kubernetes 中的 DNS 查询</title><link>https://atbug.com/tracing-dns-queries-in-kubernetes/</link><pubDate>Sat, 15 Jul 2023 16:29:56 +0800</pubDate><guid>https://atbug.com/tracing-dns-queries-in-kubernetes/</guid><description>在过去的文章中，我们曾 追踪过 Kubernetes 中的网络数据包，这篇文章将追踪 Kubernetes 中的 DNS 查询。
-让我们以在 Pod 中解析 Service 完全限定域名（FQDN） foo.bar.svc.cluster.local 为例。
-在开始之前，先回顾下 DNS 的解析流程。
-DNS 的解析流程 简化版的 DNS 处理流程：
-DNS 客户端（如浏览器、应用程序或者设备）发送域名 example.com 的查询请求。 DNS 解析器收到请求，查询本地缓存，如果本地有记录且未过期会返回本地的记录。 如果本地缓存未命中，DNS 解析器将从 DNS 根服务器开始向下查询，首先是顶级域名（Top Level Domain, TLD） DNS 服务器（这里是 .com），一直向下直到可以解析 example.com 的服务器。 能够解析 example.</description></item><item><title>浅析 CoreDNS 的工作机制</title><link>https://atbug.com/analysis-of-the-working-mechanism-of-coredns/</link><pubDate>Sat, 15 Jul 2023 13:05:47 +0800</pubDate><guid>https://atbug.com/analysis-of-the-working-mechanism-of-coredns/</guid><description>CoreDNS 是一个开源的域名系统（DNS）服务器，用于将域名解析为 IP 地址以实现网络通信。它是一个用 Go 语言编写的可扩展 DNS 服务器，旨在取代传统的 DNS 服务器并提供更灵活、可配置的解析方案。
-CoreDNS 提供了模块化的插件系统，允许用户根据需求选择和组合插件，以定制 DNS 服务器的功能和行为。通过添加不同的插件，用户可以实现缓存、转发、重写、策略路由、服务发现等功能，从而满足各种复杂的域名解析需求。
-插件由设置（Setup）、**注册（Registration）和处理程序（Handler）**部分组成。
-Setup 程序解析配置和插件的指令。 Handler 是处理查询并实现所有逻辑的代码。 Registration 是在 CoreDNS 中注册插件 - 这在编译 CoreDNS 时完成。服务器可以使用所有注册的插件，每个服务器中配置哪些插件的决定在运行时进行，并在 CoreDNS 的配置文件 Corefile 中完成。 安装运行 在 macOS 上安装 CoreDNS：
-brew install coredns 可以执行 coredns -plugins 来查看已经安装的插件：</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DNS on 乱世浮生</title><link>https://atbug.com/tags/dns/</link><description>Recent content in DNS on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sat, 15 Jul 2023 16:29:56 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/dns/index.xml" rel="self" type="application/rss+xml"/><item><title>追踪 Kubernetes 中的 DNS 查询</title><link>https://atbug.com/tracing-dns-queries-in-kubernetes/</link><pubDate>Sat, 15 Jul 2023 16:29:56 +0800</pubDate><guid>https://atbug.com/tracing-dns-queries-in-kubernetes/</guid><description>&lt;p&gt;在过去的文章中，我们曾 &lt;a href="https://atbug.com/tracing-network-packets-in-kubernetes/"&gt;追踪过 Kubernetes 中的网络数据包&lt;/a&gt;，这篇文章将追踪 Kubernetes 中的 DNS 查询。&lt;/p&gt;
+&lt;p&gt;让我们以在 Pod 中解析 Service 完全限定域名（FQDN） &lt;code&gt;foo.bar.svc.cluster.local&lt;/code&gt; 为例。&lt;/p&gt;
+&lt;p&gt;在开始之前，先回顾下 DNS 的解析流程。&lt;/p&gt;
+&lt;h2 id="dns-的解析流程"&gt;DNS 的解析流程&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2023/07/15/dns-procedure.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;简化版的 DNS 处理流程：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;DNS 客户端（如浏览器、应用程序或者设备）发送域名 &lt;code&gt;example.com&lt;/code&gt; 的查询请求。&lt;/li&gt;
+&lt;li&gt;DNS 解析器收到请求，查询本地缓存，如果本地有记录且未过期会返回本地的记录。&lt;/li&gt;
+&lt;li&gt;如果本地缓存未命中，DNS 解析器将从 DNS 根服务器开始向下查询，首先是顶级域名（Top Level Domain, TLD） DNS 服务器（这里是 &lt;code&gt;.com&lt;/code&gt;），一直向下直到可以解析 &lt;code&gt;example.com&lt;/code&gt; 的服务器。&lt;/li&gt;
+&lt;li&gt;能够解析 &lt;code&gt;example.com&lt;/code&gt; 的服务器成为权威 DNS 名称服务器（Authoritative DNS name server），解析器访问该服务器并收到 IP 地址等相关信息，然后返回给给客户端。解析完成。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;从流程来看非常重要的一项配置就是上游 DNS 服务器，该配置位于 Pod 中。这里 Kubernetes 的集群 DNS 服务器正是扮演上游 DNS 服务器的角色，比如 &lt;a href="https://github.com/kubernetes/dns"&gt;kube-dns&lt;/a&gt;、&lt;a href="https://coredns.io"&gt;CoreDNS&lt;/a&gt;，二者均实现了 &lt;a href="https://github.com/kubernetes/dns/blob/master/docs/specification.md"&gt;Kubernetes 的基于 DNS 的服务发现规范&lt;/a&gt;。对 CoreDNS 感兴趣的，可以参考上一篇文章 &lt;a href="https://atbug.com/analysis-of-the-working-mechanism-of-coredns/"&gt;浅析 CoreDNS 的工作机制&lt;/a&gt;。&lt;/p&gt;</description></item><item><title>浅析 CoreDNS 的工作机制</title><link>https://atbug.com/analysis-of-the-working-mechanism-of-coredns/</link><pubDate>Sat, 15 Jul 2023 13:05:47 +0800</pubDate><guid>https://atbug.com/analysis-of-the-working-mechanism-of-coredns/</guid><description>&lt;p&gt;CoreDNS 是一个开源的域名系统（DNS）服务器，用于将域名解析为 IP 地址以实现网络通信。它是一个用 Go 语言编写的可扩展 DNS 服务器，旨在取代传统的 DNS 服务器并提供更灵活、可配置的解析方案。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2023/07/15/coredns.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;CoreDNS 提供了模块化的插件系统，允许用户根据需求选择和组合插件，以定制 DNS 服务器的功能和行为。通过添加不同的插件，用户可以实现缓存、转发、重写、策略路由、服务发现等功能，从而满足各种复杂的域名解析需求。&lt;/p&gt;
+&lt;p&gt;插件由&lt;strong&gt;设置（Setup）&lt;/strong&gt;、**注册（Registration）&lt;strong&gt;和&lt;/strong&gt;处理程序（Handler）**部分组成。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Setup 程序解析配置和插件的指令。&lt;/li&gt;
+&lt;li&gt;Handler 是处理查询并实现所有逻辑的代码。&lt;/li&gt;
+&lt;li&gt;Registration 是在 CoreDNS 中注册插件 - 这在编译 CoreDNS 时完成。服务器可以使用所有注册的插件，每个服务器中配置哪些插件的决定在运行时进行，并在 CoreDNS 的配置文件 Corefile 中完成。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="安装运行"&gt;安装运行&lt;/h2&gt;
+&lt;p&gt;在 macOS 上安装 CoreDNS：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install coredns
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;可以执行 &lt;code&gt;coredns -plugins &lt;/code&gt; 来查看已经安装的插件：&lt;/p&gt;</description></item></channel></rss>

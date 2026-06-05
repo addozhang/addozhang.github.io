@@ -1,12 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>harness-engineering on 乱世浮生</title><link>https://atbug.com/tags/harness-engineering/</link><description>Recent content in harness-engineering on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 27 May 2026 00:54:31 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/harness-engineering/index.xml" rel="self" type="application/rss+xml"/><item><title>从想法到发布：Harness Engineering 的一次完整实践</title><link>https://atbug.com/from-idea-to-release-harness-engineering-in-practice/</link><pubDate>Wed, 27 May 2026 00:54:31 +0800</pubDate><guid>https://atbug.com/from-idea-to-release-harness-engineering-in-practice/</guid><description>TLDR 《Harness Engineering 又来颠覆了》提出了三条原则，《蒸馏 Google 工程基因》介绍了 agent-skills——但「状态持久化」那条原则一直没有落地答案。这篇用一个真实项目 jk 走完一次：idea-refine 把模糊需求逼出三个核心设计决策，OpenSpec 把决策切成 17 组可执行任务并跨越多次 context 压缩，agent-skills 在关键节点自动介入。从「我想做个 Jenkins CLI」到 v0.1.0 发布，每一步都有凭据。
-一、两个未竟的问题 《Harness Engineering 又来颠覆了》结尾留了一个悬念：AI coding 不会替你省掉软件工程的基本功，它会让你欠的债加倍奉还。三条债：可见性、状态持久化、质量门禁。但怎么还，没说。
-《蒸馏 Google 工程基因》给出了一半答案：agent-skills 把高级工程师的判断力编码成 20 个结构化 skill，覆盖了质量门禁（TDD、code review、显式化假设），也覆盖了可见性（spec-driven-development 把假设和边界写进 repo，跟代码一起演化）。但有两个问题没有解决：
-状态持久化没有答案。 agent-skills 管的是「一次任务怎么做」，管不了「多次 session 之间项目状态怎么延续」。agent 没有记忆，context 会压缩，上一次做到哪里、踩了什么坑、下一步是什么——skill 本身解决不了这个问题。</description></item><item><title>Harness Engineering 又来颠覆了——你们开发不写文档、没有研发流程？</title><link>https://atbug.com/harness-engineering-sdlc/</link><pubDate>Sun, 05 Apr 2026 21:41:43 +0800</pubDate><guid>https://atbug.com/harness-engineering-sdlc/</guid><description>TL;DR Harness Engineering 不是新范式，是软件工程基本功在 AI 时代的强制兑现——你欠的文档债、流程债、架构债，AI 会让你加倍还。
-颠覆的真相 AI coding 很火，Harness Engineering 这个词更火。
-OpenAI 用它造出了 100 万行代码，Anthropic 在探索让 Agent 自己迭代产品，Cursor 在用几百个 Agent 并行推进大型项目。每个人都在谈这是新范式、新方法论、软件工程的下一个时代。
-但拆开看，这些团队做的第一件事是什么？
-写文档。定流程。把架构约束编码进工具链。
-这不是新东西。这是你本来就该做、但一直没做好的事。
-AI coding 不会替你省掉软件工程的基本功——它会让你欠的债，加倍奉还。
-大家期待错了方向 AI coding 工具出来之前，大家最烦什么？
-写文档。开需求评审会。维护架构规范。定义 DoD。做 code review。这些事费时间、见效慢、没有人愿意当那个 &amp;quot; 非要搞流程 &amp;quot; 的人。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Harness Engineering on 乱世浮生</title><link>https://atbug.com/tags/harness-engineering/</link><description>Recent content in Harness Engineering on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Wed, 27 May 2026 00:54:31 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/harness-engineering/index.xml" rel="self" type="application/rss+xml"/><item><title>从想法到发布：Harness Engineering 的一次完整实践</title><link>https://atbug.com/from-idea-to-release-harness-engineering-in-practice/</link><pubDate>Wed, 27 May 2026 00:54:31 +0800</pubDate><guid>https://atbug.com/from-idea-to-release-harness-engineering-in-practice/</guid><description>&lt;h2 id="tldr"&gt;TLDR&lt;/h2&gt;
+&lt;p&gt;《Harness Engineering 又来颠覆了》提出了三条原则，《蒸馏 Google 工程基因》介绍了 agent-skills——但「状态持久化」那条原则一直没有落地答案。这篇用一个真实项目 jk 走完一次：idea-refine 把模糊需求逼出三个核心设计决策，OpenSpec 把决策切成 17 组可执行任务并跨越多次 context 压缩，agent-skills 在关键节点自动介入。从「我想做个 Jenkins CLI」到 v0.1.0 发布，每一步都有凭据。&lt;/p&gt;
+&lt;h2 id="一两个未竟的问题"&gt;一、两个未竟的问题&lt;/h2&gt;
+&lt;p&gt;《&lt;a href="https://atbug.com/harness-engineering-sdlc/"&gt;Harness Engineering 又来颠覆了&lt;/a&gt;》结尾留了一个悬念：AI coding 不会替你省掉软件工程的基本功，它会让你欠的债加倍奉还。三条债：可见性、状态持久化、质量门禁。但怎么还，没说。&lt;/p&gt;
+&lt;p&gt;《&lt;a href="https://atbug.com/distilling-google-engineering-dna-agent-skills/"&gt;蒸馏 Google 工程基因&lt;/a&gt;》给出了一半答案：&lt;a href="https://github.com/addyosmani/agent-skills"&gt;agent-skills&lt;/a&gt; 把高级工程师的判断力编码成 20 个结构化 skill，覆盖了质量门禁（TDD、code review、显式化假设），也覆盖了可见性（&lt;a href="https://github.com/addyosmani/agent-skills/tree/main/skills/spec-driven-development"&gt;spec-driven-development&lt;/a&gt; 把假设和边界写进 repo，跟代码一起演化）。但有两个问题没有解决：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;状态持久化没有答案。&lt;/strong&gt; agent-skills 管的是「一次任务怎么做」，管不了「多次 session 之间项目状态怎么延续」。agent 没有记忆，context 会压缩，上一次做到哪里、踩了什么坑、下一步是什么——skill 本身解决不了这个问题。&lt;/p&gt;</description></item><item><title>Harness Engineering 又来颠覆了——你们开发不写文档、没有研发流程？</title><link>https://atbug.com/harness-engineering-sdlc/</link><pubDate>Sun, 05 Apr 2026 21:41:43 +0800</pubDate><guid>https://atbug.com/harness-engineering-sdlc/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;Harness Engineering 不是新范式，是软件工程基本功在 AI 时代的强制兑现——你欠的文档债、流程债、架构债，AI 会让你加倍还。&lt;/p&gt;
+&lt;h2 id="颠覆的真相"&gt;颠覆的真相&lt;/h2&gt;
+&lt;p&gt;AI coding 很火，Harness Engineering 这个词更火。&lt;/p&gt;
+&lt;p&gt;OpenAI 用它造出了 100 万行代码，Anthropic 在探索让 Agent 自己迭代产品，Cursor 在用几百个 Agent 并行推进大型项目。每个人都在谈这是新范式、新方法论、软件工程的下一个时代。&lt;/p&gt;
+&lt;p&gt;但拆开看，这些团队做的第一件事是什么？&lt;/p&gt;
+&lt;p&gt;写文档。定流程。把架构约束编码进工具链。&lt;/p&gt;
+&lt;p&gt;这不是新东西。这是你本来就该做、但一直没做好的事。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;AI coding 不会替你省掉软件工程的基本功——它会让你欠的债，加倍奉还。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="大家期待错了方向"&gt;大家期待错了方向&lt;/h2&gt;
+&lt;p&gt;AI coding 工具出来之前，大家最烦什么？&lt;/p&gt;
+&lt;p&gt;写文档。开需求评审会。维护架构规范。定义 DoD。做 code review。这些事费时间、见效慢、没有人愿意当那个 &amp;quot; 非要搞流程 &amp;quot; 的人。&lt;/p&gt;</description></item></channel></rss>

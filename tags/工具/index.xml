@@ -1,34 +1,159 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>工具 on 乱世浮生</title><link>https://atbug.com/tags/%E5%B7%A5%E5%85%B7/</link><description>Recent content in 工具 on 乱世浮生</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 26 Mar 2026 11:00:10 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml"/><item><title>命令行四件套：fd/rg/fzf/bat</title><link>https://atbug.com/cli-essentials-fd-rg-fzf-bat/</link><pubDate>Thu, 26 Mar 2026 11:00:10 +0800</pubDate><guid>https://atbug.com/cli-essentials-fd-rg-fzf-bat/</guid><description>TL;DR fd、ripgrep、fzf、bat 是四个现代命令行工具，分别替代 find、grep、cat，并额外引入交互式模糊搜索，组合起来尤其强大。
-引言 find、grep、cat 没有问题——它们工作了几十年，今天仍然能用。
-但 &amp;quot; 能用 &amp;quot; 和 &amp;quot; 好用 &amp;quot; 之间有距离。语法繁琐、输出没有高亮、速度在大型代码库下差强人意……这些摩擦日积月累，默默消耗效率。
-有四个工具可以直接替换它们，安装后几乎不需要学习成本：
-旧工具 新工具 核心优势 find fd 语法直观，自动忽略 .gitignore grep rg（ripgrep） 速度极快，输出友好 — fzf 给任何列表加上交互式模糊搜索 cat bat 语法高亮，自带行号和 Git 变更标记 fd —— 你不需要再记 find 的语法了 find 的语法是出了名的反人类：</description></item><item><title>Ruler：多 AI 编程助手统一配置管理方案</title><link>https://atbug.com/ruler-unified-ai-coding-assistant-configuration/</link><pubDate>Fri, 30 Jan 2026 00:14:42 +0800</pubDate><guid>https://atbug.com/ruler-unified-ai-coding-assistant-configuration/</guid><description>TL;DR 当你需要频繁在 Kilocode、OpenCode、Claude、Codex、GitHub Copilot 等多个 AI 编程助手之间切换时，Ruler 是你的最佳选择：
-单一数据源：集中管理所有 AI 编程助手的 instructions 自动分发：一键将配置分发到各个编程助手的专属文件 MCP 配置管理：统一管理 Model Context Protocol 服务器配置 Skills 支持：集中管理并分发 Agent Skills 到各个工具 嵌套规则加载：支持复杂项目结构的分层配置管理 自动维护 .gitignore：保持项目目录整洁 背景：从混乱到标准化的演进 曾经的痛点 在我写《AGENTS.md：统一编码助手指令文件的新标准》那篇文章时，提到过 intellectronica/ruler 这个项目。当时实际上我并没有频繁使用这个工具，因为我主要使用的是单一的编程助手。
-但现在情况不同了。
-随着 AI 编程助手的爆发式增长，我需要频繁在多个工具之间切换：
-Kilocode - 日常编码和快速原型 Claude - 深度思考和算法优化 Codex - API 开发和文档生成 OpenCode - 开源项目贡献 每个工具都有自己的：</description></item><item><title>几个常用的 MCP Server 收录平台</title><link>https://atbug.com/mcp-server-directory-platforms/</link><pubDate>Tue, 29 Apr 2025 06:39:54 +0800</pubDate><guid>https://atbug.com/mcp-server-directory-platforms/</guid><description>在人工智能与各类技术深度融合的当下，MCP（Model Context Protocol）发展迅猛热度不减。服务器的多样性和功能性不断拓展。对个人用户、AI 爱好者而言，找到合适的 MCP Server 收录平台，能更高效地获取工具和资源。以下是一些常用的 MCP Server 的收录平台，供大家参考：
-mcp.so https://mcp.so/
-目前已收录 11185 个 MCP 服务器。
-该平台展示了众多特色 MCP 服务器，如与各类地图、数据库、软件集成的服务器，还有用于文本处理、图像生成等功能的服务器 。
-awesome-mcp-servers https://github.com/punkpeye/awesome-mcp-servers/
-目前已收录 4148 个 MCP 服务器。
-基于 GitHub 仓库的索引，展示了 MCP 服务器的相关信息。该仓库提供了多种语言版本的文档，包括英文、中文（简体和繁体）、日语、韩语、葡萄牙语、泰语等。分类详细、全面，涵盖了多种类型的 MCP 服务器。
-Glama MCP https://glama.ai/mcp/servers
-一个 web 平台，提供了 MCP 服务器的索引和搜索功能，收录的内容来自上面的 awesome-mcp-servers 仓库。</description></item><item><title>使用 k3sup 一分钟快速搭建 K3s 集群</title><link>https://atbug.com/setup-k3s-cluster-with-k3sup-in-one-minute/</link><pubDate>Fri, 27 Oct 2023 04:55:13 +0800</pubDate><guid>https://atbug.com/setup-k3s-cluster-with-k3sup-in-one-minute/</guid><description>更新于 2025 年 3 月 1 日：完整脚本已添加更多功能，并提交至 GitHub 仓库 k3s-cluster-automation。
-​单命令集群部署：通过 SSH 一键部署含 1 个主节点 + N 个工作节点的 K3s 集群。 ​组件可定制化：可禁用非必要服务（如 Traefik 入口控制器、metrics-server 指标服务器等），实现轻量化部署。 ​多节点支持：通过环境变量 HOSTS 灵活配置节点列表。 ​版本控制：支持指定 K3s 版本（默认版本：v1.28.13+k3s1）。 ​Docker 集成：可选 Docker 运行时替代 containerd。 ​自动清理：一键移除集群所有组件，不留残留。 背景 在平时的工作中，为了方便在纯净的环境中进行测试，我经常需要在本地或者公有云环境中频繁地搭建和销毁集群。有时是在 我的 HomeLab 环境中，虽然 CPU 不强但胜在内存够大；后来有了微软 MVP 赠送的 Azure 额度之后，我也会经常在 Azure 虚拟机 中搭建，因为没有拉取镜像的网络问题。</description></item><item><title>使用 Docker 运行 FRR BGP</title><link>https://atbug.com/run-frr-bgp-with-docker/</link><pubDate>Wed, 30 Aug 2023 13:13:48 +0800</pubDate><guid>https://atbug.com/run-frr-bgp-with-docker/</guid><description>之前写 在 Kubernetes 集群中使用 MetalLB 作为 LoadBalancer（下）- BGP 时，我曾在 OpenWRT 安装 FRR 来进行了测试。需要 OpenWRT 的环境不免会有些繁琐，假如只是做些更简单的测试，比如从 FRR 所在服务器上进行 VIP 的访问，则是不需要 OpenWRT 的，仅仅部署 FRR 就足够了。
-今天我就尝试了直接使用 Docker 运行 FRR 来启动 BGP Router 进程，简单的几步即可实现，对环境要求非常低，只需要个 Docker 就行。如果你又更简单的方法，也请留言分享。
-配置 创建一个本地目录在管理 FRR 配置，这个目录将会挂载到容器中。
-mkdir frr 准备 FRR Daemon 的日志，开启 BGP daemon 进程。</description></item><item><title>使用 Fortio 做代理功能测试</title><link>https://atbug.com/use-fortio-for-proxy-test/</link><pubDate>Sat, 12 Aug 2023 01:11:46 +0800</pubDate><guid>https://atbug.com/use-fortio-for-proxy-test/</guid><description>介绍 Fortio 是一个用于微服务性能负载、性能、延迟测试和 Web UI 的工具。它通常与 Istio 和其他服务网格解决方案一起使用，但可以独立使用来测试网络延迟和 HTTP/gRPC 的负载特性。以下是关于 Fortio 的一些主要特点和信息：
-用途：Fortio 可以创建一个定制的负载（查询/秒或 qps）并记录请求延迟的直方图，以及每秒查询的百分位数。 多协议支持：虽然最初是为 HTTP/1.1 设计的，但 Fortio 还支持 HTTP/2, gRPC, TCP 和 UDP。 Web UI：Fortio 提供了一个 Web 界面，使用户能够从浏览器中轻松配置测试并查看结果的直方图和百分位数。 结果存储：可以将结果存储为 JSON 文件，便于进一步的分析和比较。 灵活性：支持多种请求负载模式，包括固定 qps、固定并发连接数和最大自动调整 qps。 轻量级：Fortio 是用 Go 编写的，可以作为一个单一的二进制文件轻松部署。 集成：Fortio 可以与 Istio、Prometheus 等工具集成，以提供更深入的性能分析和观察。 Fortio 作为服务器 fortio server &amp;amp; 08:24:40.</description></item><item><title>Obsidian 图片上传插件：Image Upload Toolkit</title><link>https://atbug.com/obsidian-plugin-image-upload-toolkit/</link><pubDate>Thu, 08 Jun 2023 20:03:19 +0800</pubDate><guid>https://atbug.com/obsidian-plugin-image-upload-toolkit/</guid><description>这篇文章主要来介绍下我开发的 Obsidian 图片上传插件 Image Upload Toolkit。
-背景 为什么开发这个插件？这还要从去年说起。
-去年我感觉到使用了 6 年的 Mweb Pro 已经无法满足我的需求了，这并不是说 Mweb 不是个好产品，反而过去几年中我经常向身边的朋友推荐这个产品。Mweb 是个非常好的产品，功能多、快捷键方便、界面也满足我个人的审美，而且买断制的付费也很有吸引力。
-随着这两年写的内容越来越多，Mweb 即使再多的功能也无法满足一些个性化的需求。就比如说内容自动排版，个人习惯中英文、数字间加上空格、段落间的空行，等等。这些都是 Mweb 这种封闭的产品无法实现的，尤其是对个人开发者（Mweb 是独立开发者开发的）来说，满足个性化需求的成本是非常大的。何况，众口难调。
-后面我陆续使用了 NotePlan、Notion 一段时间，Notion 我个人还算喜欢，但其仍是封闭的产品，很难对其进行扩展。
-正当我在朋友圈感慨时，有人推荐了 Obsidian。试用之后眼前一亮，这插件系统太强大了。比如上面的自动排版问题，使用 Linter 插件完美得到解决。
-于是乎，我通过安装多种插件、将快捷键改成与 Mweb 一致，几乎是平移到了 Obsidian，并收获了更多的功能。唯独令人遗憾的是无法复刻 Mweb 的图片上传功能（我一直用阿里云的 OSS 作为图床，使用 Mweb 可以自动上传并替换 markdown 语法中的图片地址），每次编辑完需要发布到博客前我都要复制到 Mweb 中上传。</description></item><item><title>kubectl foreach 在多个集群中执行 kubectl 命令</title><link>https://atbug.com/multi-clusters-operation-with-kubectl-foreach/</link><pubDate>Thu, 01 Dec 2022 08:04:02 +0800</pubDate><guid>https://atbug.com/multi-clusters-operation-with-kubectl-foreach/</guid><description>上周在写 K8s 多集群的流量调度 的 demo 部分时需要不停地在多个集群中安装组件、部署应用，或者执行各种命令。当时是通过 Linux shell 脚本并通过工具 kubectx 进行集群的切换，像这样：
-或者这样：
-操作繁琐，很是痛苦。
-今天偶然间发现了一个 kubectl 插件 kubectl foreach ，可以在多个集群（contexts）上执行 kubectl 命令。比如 kubectl foreach cluster-1 cluster-2 -- get po -n kube-system 。
-插件安装和使用很简单，通过 krew 进行安装：
-kubectl krew install foreach 使用也很简单：
-kubectl foreach -h Usage: kubectl foreach [OPTIONS] [PATTERN].</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>工具 on 乱世浮生</title><link>https://atbug.com/tags/%E5%B7%A5%E5%85%B7/</link><description>Recent content in 工具 on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Thu, 26 Mar 2026 11:00:10 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml"/><item><title>命令行四件套：fd/rg/fzf/bat</title><link>https://atbug.com/cli-essentials-fd-rg-fzf-bat/</link><pubDate>Thu, 26 Mar 2026 11:00:10 +0800</pubDate><guid>https://atbug.com/cli-essentials-fd-rg-fzf-bat/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;fd、ripgrep、fzf、bat 是四个现代命令行工具，分别替代 find、grep、cat，并额外引入交互式模糊搜索，组合起来尤其强大。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="引言"&gt;引言&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;find&lt;/code&gt;、&lt;code&gt;grep&lt;/code&gt;、&lt;code&gt;cat&lt;/code&gt; 没有问题——它们工作了几十年，今天仍然能用。&lt;/p&gt;
+&lt;p&gt;但 &amp;quot; 能用 &amp;quot; 和 &amp;quot; 好用 &amp;quot; 之间有距离。语法繁琐、输出没有高亮、速度在大型代码库下差强人意……这些摩擦日积月累，默默消耗效率。&lt;/p&gt;
+&lt;p&gt;有四个工具可以直接替换它们，安装后几乎不需要学习成本：&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;旧工具&lt;/th&gt;
+					&lt;th&gt;新工具&lt;/th&gt;
+					&lt;th&gt;核心优势&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;find&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;fd&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;语法直观，自动忽略 &lt;code&gt;.gitignore&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;grep&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;rg&lt;/code&gt;（ripgrep）&lt;/td&gt;
+					&lt;td&gt;速度极快，输出友好&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;—&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;fzf&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;给任何列表加上交互式模糊搜索&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;code&gt;cat&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;bat&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;语法高亮，自带行号和 Git 变更标记&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="fd--你不需要再记-find-的语法了"&gt;fd —— 你不需要再记 find 的语法了&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;find&lt;/code&gt; 的语法是出了名的反人类：&lt;/p&gt;</description></item><item><title>Ruler：多 AI 编程助手统一配置管理方案</title><link>https://atbug.com/ruler-unified-ai-coding-assistant-configuration/</link><pubDate>Fri, 30 Jan 2026 00:14:42 +0800</pubDate><guid>https://atbug.com/ruler-unified-ai-coding-assistant-configuration/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;当你需要频繁在 Kilocode、OpenCode、Claude、Codex、GitHub Copilot 等多个 AI 编程助手之间切换时，&lt;a href="https://github.com/intellectronica/ruler"&gt;Ruler&lt;/a&gt; 是你的最佳选择：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;单一数据源&lt;/strong&gt;：集中管理所有 AI 编程助手的 instructions&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;自动分发&lt;/strong&gt;：一键将配置分发到各个编程助手的专属文件&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MCP 配置管理&lt;/strong&gt;：统一管理 Model Context Protocol 服务器配置&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Skills 支持&lt;/strong&gt;：集中管理并分发 Agent Skills 到各个工具&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;嵌套规则加载&lt;/strong&gt;：支持复杂项目结构的分层配置管理&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;自动维护 .gitignore&lt;/strong&gt;：保持项目目录整洁&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="背景从混乱到标准化的演进"&gt;背景：从混乱到标准化的演进&lt;/h2&gt;
+&lt;h3 id="曾经的痛点"&gt;曾经的痛点&lt;/h3&gt;
+&lt;p&gt;在我写《&lt;a href="https://atbug.com/agents-md-unifying-coding-agent-instructions/"&gt;AGENTS.md：统一编码助手指令文件的新标准&lt;/a&gt;》那篇文章时，提到过 &lt;a href="https://github.com/intellectronica/ruler"&gt;intellectronica/ruler&lt;/a&gt; 这个项目。当时实际上我并没有频繁使用这个工具，因为我主要使用的是单一的编程助手。&lt;/p&gt;
+&lt;p&gt;但现在情况不同了。&lt;/p&gt;
+&lt;p&gt;随着 AI 编程助手的爆发式增长，我需要频繁在多个工具之间切换：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Kilocode&lt;/strong&gt; - 日常编码和快速原型&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Claude&lt;/strong&gt; - 深度思考和算法优化&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Codex&lt;/strong&gt; - API 开发和文档生成&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;OpenCode&lt;/strong&gt; - 开源项目贡献&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;每个工具都有自己的：&lt;/p&gt;</description></item><item><title>几个常用的 MCP Server 收录平台</title><link>https://atbug.com/mcp-server-directory-platforms/</link><pubDate>Tue, 29 Apr 2025 06:39:54 +0800</pubDate><guid>https://atbug.com/mcp-server-directory-platforms/</guid><description>&lt;p&gt;在人工智能与各类技术深度融合的当下，MCP（Model Context Protocol）发展迅猛热度不减。服务器的多样性和功能性不断拓展。对个人用户、AI 爱好者而言，找到合适的 MCP Server 收录平台，能更高效地获取工具和资源。以下是一些常用的 MCP Server 的收录平台，供大家参考：&lt;/p&gt;
+&lt;h3 id="mcpso"&gt;mcp.so&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://mcp.so/"&gt;https://mcp.so/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;目前已收录 11185 个 MCP 服务器。&lt;/p&gt;
+&lt;p&gt;该平台展示了众多特色 MCP 服务器，如与各类地图、数据库、软件集成的服务器，还有用于文本处理、图像生成等功能的服务器 。&lt;/p&gt;
+&lt;h3 id="awesome-mcp-servers"&gt;awesome-mcp-servers&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://github.com/punkpeye/awesome-mcp-servers/"&gt;https://github.com/punkpeye/awesome-mcp-servers/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;目前已收录 4148 个 MCP 服务器。&lt;/p&gt;
+&lt;p&gt;基于 GitHub 仓库的索引，展示了 MCP 服务器的相关信息。该仓库提供了多种语言版本的文档，包括英文、中文（简体和繁体）、日语、韩语、葡萄牙语、泰语等。分类详细、全面，涵盖了多种类型的 MCP 服务器。&lt;/p&gt;
+&lt;h3 id="glama-mcp"&gt;Glama MCP&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://glama.ai/mcp/servers"&gt;https://glama.ai/mcp/servers&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;一个 web 平台，提供了 MCP 服务器的索引和搜索功能，收录的内容来自上面的 awesome-mcp-servers 仓库。&lt;/p&gt;</description></item><item><title>使用 k3sup 一分钟快速搭建 K3s 集群</title><link>https://atbug.com/setup-k3s-cluster-with-k3sup-in-one-minute/</link><pubDate>Fri, 27 Oct 2023 04:55:13 +0800</pubDate><guid>https://atbug.com/setup-k3s-cluster-with-k3sup-in-one-minute/</guid><description>&lt;p&gt;&lt;strong&gt;更新于 2025 年 3 月 1 日&lt;/strong&gt;：完整脚本已添加更多功能，并提交至 GitHub 仓库 &lt;a href="https://github.com/addozhang/k3s-cluster-automation"&gt;k3s-cluster-automation&lt;/a&gt;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;​&lt;strong&gt;单命令集群部署&lt;/strong&gt;：通过 SSH 一键部署含 1 个主节点 + N 个工作节点的 K3s 集群。&lt;/li&gt;
+&lt;li&gt;​&lt;strong&gt;组件可定制化&lt;/strong&gt;：可禁用非必要服务（如 Traefik 入口控制器、metrics-server 指标服务器等），实现轻量化部署。&lt;/li&gt;
+&lt;li&gt;​&lt;strong&gt;多节点支持&lt;/strong&gt;：通过环境变量 &lt;code&gt;HOSTS&lt;/code&gt; 灵活配置节点列表。&lt;/li&gt;
+&lt;li&gt;​&lt;strong&gt;版本控制&lt;/strong&gt;：支持指定 K3s 版本（默认版本：&lt;code&gt;v1.28.13+k3s1&lt;/code&gt;）。&lt;/li&gt;
+&lt;li&gt;​&lt;strong&gt;Docker 集成&lt;/strong&gt;：可选 Docker 运行时替代 containerd。&lt;/li&gt;
+&lt;li&gt;​&lt;strong&gt;自动清理&lt;/strong&gt;：一键移除集群所有组件，不留残留。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;在平时的工作中，为了方便在纯净的环境中进行测试，我经常需要在本地或者公有云环境中频繁地搭建和销毁集群。有时是在 &lt;a href="https://atbug.com/deploy-vm-on-proxmox-with-terraform/"&gt;我的 HomeLab&lt;/a&gt; 环境中，虽然 CPU 不强但胜在内存够大；后来有了微软 MVP 赠送的 Azure 额度之后，我也会经常在 &lt;a href="https://atbug.com/create-azure-virtual-machine-with-terraform/"&gt;Azure 虚拟机&lt;/a&gt; 中搭建，因为没有拉取镜像的网络问题。&lt;/p&gt;</description></item><item><title>使用 Docker 运行 FRR BGP</title><link>https://atbug.com/run-frr-bgp-with-docker/</link><pubDate>Wed, 30 Aug 2023 13:13:48 +0800</pubDate><guid>https://atbug.com/run-frr-bgp-with-docker/</guid><description>&lt;p&gt;之前写 &lt;a href="https://atbug.com/load-balancer-service-with-metallb-bgp-mode/"&gt;在 Kubernetes 集群中使用 MetalLB 作为 LoadBalancer（下）- BGP&lt;/a&gt; 时，我曾在 OpenWRT 安装 FRR 来进行了测试。需要 OpenWRT 的环境不免会有些繁琐，假如只是做些更简单的测试，比如从 FRR 所在服务器上进行 VIP 的访问，则是不需要 OpenWRT 的，仅仅部署 FRR 就足够了。&lt;/p&gt;
+&lt;p&gt;今天我就尝试了直接使用 Docker 运行 FRR 来启动 BGP Router 进程，简单的几步即可实现，对环境要求非常低，只需要个 Docker 就行。如果你又更简单的方法，也请留言分享。&lt;/p&gt;
+&lt;h2 id="配置"&gt;配置&lt;/h2&gt;
+&lt;p&gt;创建一个本地目录在管理 FRR 配置，这个目录将会挂载到容器中。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir frr
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;准备 FRR Daemon 的日志，开启 BGP daemon 进程。&lt;/p&gt;</description></item><item><title>使用 Fortio 做代理功能测试</title><link>https://atbug.com/use-fortio-for-proxy-test/</link><pubDate>Sat, 12 Aug 2023 01:11:46 +0800</pubDate><guid>https://atbug.com/use-fortio-for-proxy-test/</guid><description>&lt;h2 id="介绍"&gt;介绍&lt;/h2&gt;
+&lt;p&gt;Fortio 是一个用于微服务性能负载、性能、延迟测试和 Web UI 的工具。它通常与 Istio 和其他服务网格解决方案一起使用，但可以独立使用来测试网络延迟和 HTTP/gRPC 的负载特性。以下是关于 Fortio 的一些主要特点和信息：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;用途&lt;/strong&gt;：Fortio 可以创建一个定制的负载（查询/秒或 qps）并记录请求延迟的直方图，以及每秒查询的百分位数。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;多协议支持&lt;/strong&gt;：虽然最初是为 HTTP/1.1 设计的，但 Fortio 还支持 HTTP/2, gRPC, TCP 和 UDP。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Web UI&lt;/strong&gt;：Fortio 提供了一个 Web 界面，使用户能够从浏览器中轻松配置测试并查看结果的直方图和百分位数。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;结果存储&lt;/strong&gt;：可以将结果存储为 JSON 文件，便于进一步的分析和比较。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;灵活性&lt;/strong&gt;：支持多种请求负载模式，包括固定 qps、固定并发连接数和最大自动调整 qps。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;轻量级&lt;/strong&gt;：Fortio 是用 Go 编写的，可以作为一个单一的二进制文件轻松部署。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;集成&lt;/strong&gt;：Fortio 可以与 Istio、Prometheus 等工具集成，以提供更深入的性能分析和观察。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="fortio-作为服务器"&gt;Fortio 作为服务器&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fortio server &amp;amp;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.002 r1 &lt;span style="color:#f92672"&gt;[&lt;/span&gt;INF&lt;span style="color:#f92672"&gt;]&lt;/span&gt; scli.go:117&amp;gt; Starting, command&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;Φορτίο&amp;#34;&lt;/span&gt;, version&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;1.59.0 h1:juuL/l3N/YyIP0P078YkkrtFfG4CaItqeZSkv5VnXCE= go1.20.7 arm64 darwin&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.003 r1 Fortio 1.59.0 tcp-echo server listening on tcp &lt;span style="color:#f92672"&gt;[&lt;/span&gt;::&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:8078
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.004 r1 Fortio 1.59.0 udp-echo server listening on udp &lt;span style="color:#f92672"&gt;[&lt;/span&gt;::&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:8078
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.004 r1 Fortio 1.59.0 grpc &lt;span style="color:#e6db74"&gt;&amp;#39;ping&amp;#39;&lt;/span&gt; server listening on tcp &lt;span style="color:#f92672"&gt;[&lt;/span&gt;::&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:8079
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.004 r1 Fortio 1.59.0 https redirector server listening on tcp &lt;span style="color:#f92672"&gt;[&lt;/span&gt;::&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:8081
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.004 r1 Fortio 1.59.0 http-echo server listening on tcp &lt;span style="color:#f92672"&gt;[&lt;/span&gt;::&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:8080
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.005 r1 Data directory is /Users/addo
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.005 r1 REST API on /fortio/rest/run, /fortio/rest/status, /fortio/rest/stop, /fortio/rest/dns
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.005 r1 Debug endpoint on /debug, Additional Echo on /debug/echo/, Flags on /fortio/flags, and Metrics on /debug/metrics
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	 UI started - visit:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		http://localhost:8080/fortio/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	 &lt;span style="color:#f92672"&gt;(&lt;/span&gt;or any host/ip reachable on this server&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.005 r1 &lt;span style="color:#f92672"&gt;[&lt;/span&gt;INF&lt;span style="color:#f92672"&gt;]&lt;/span&gt; fortio_main.go:292&amp;gt; All fortio 1.59.0 h1:juuL/l3N/YyIP0P078YkkrtFfG4CaItqeZSkv5VnXCE&lt;span style="color:#f92672"&gt;=&lt;/span&gt; go1.20.7 arm64 darwin servers started!
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Fortio 作为服务器运行是，默认会启动 &lt;code&gt;8078&lt;/code&gt;、&lt;code&gt;8079&lt;/code&gt;、&lt;code&gt;8081&lt;/code&gt;、&lt;code&gt;8080&lt;/code&gt; 四个端口，分别是 tcp echo、udp echo、grpc ping 以及 http echo。还可以通过 &lt;code&gt;http://localhost:8080/fortio/&lt;/code&gt; 访问内置的页面。&lt;/p&gt;</description></item><item><title>Obsidian 图片上传插件：Image Upload Toolkit</title><link>https://atbug.com/obsidian-plugin-image-upload-toolkit/</link><pubDate>Thu, 08 Jun 2023 20:03:19 +0800</pubDate><guid>https://atbug.com/obsidian-plugin-image-upload-toolkit/</guid><description>&lt;p&gt;这篇文章主要来介绍下我开发的 Obsidian 图片上传插件 &lt;a href="https://obsidian.md/plugins?id=image-upload-toolkit"&gt;Image Upload Toolkit&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;为什么开发这个插件？这还要从去年说起。&lt;/p&gt;
+&lt;p&gt;去年我感觉到使用了 6 年的 &lt;a href="https://www.mweb.im"&gt;Mweb Pro&lt;/a&gt; 已经无法满足我的需求了，这并不是说 Mweb 不是个好产品，反而过去几年中我经常向身边的朋友推荐这个产品。Mweb 是个非常好的产品，功能多、快捷键方便、界面也满足我个人的审美，而且买断制的付费也很有吸引力。&lt;/p&gt;
+&lt;p&gt;随着这两年写的内容越来越多，Mweb 即使再多的功能也无法满足一些个性化的需求。就比如说内容自动排版，个人习惯中英文、数字间加上空格、段落间的空行，等等。这些都是 Mweb 这种封闭的产品无法实现的，尤其是对个人开发者（Mweb 是独立开发者开发的）来说，满足个性化需求的成本是非常大的。何况，众口难调。&lt;/p&gt;
+&lt;p&gt;后面我陆续使用了 NotePlan、Notion 一段时间，Notion 我个人还算喜欢，但其仍是封闭的产品，很难对其进行扩展。&lt;/p&gt;
+&lt;p&gt;正当我在朋友圈感慨时，有人推荐了 &lt;a href="https://obsidian.md"&gt;Obsidian&lt;/a&gt;。试用之后眼前一亮，这插件系统太强大了。比如上面的自动排版问题，使用 &lt;a href="https://obsidian.md/plugins?id=obsidian-linter"&gt;Linter&lt;/a&gt; 插件完美得到解决。&lt;/p&gt;
+&lt;p&gt;于是乎，我通过安装多种插件、将快捷键改成与 Mweb 一致，几乎是平移到了 Obsidian，并收获了更多的功能。唯独令人遗憾的是无法复刻 Mweb 的图片上传功能（我一直用阿里云的 OSS 作为图床，使用 Mweb 可以自动上传并替换 markdown 语法中的图片地址），每次编辑完需要发布到博客前我都要复制到 Mweb 中上传。&lt;/p&gt;</description></item><item><title>kubectl foreach 在多个集群中执行 kubectl 命令</title><link>https://atbug.com/multi-clusters-operation-with-kubectl-foreach/</link><pubDate>Thu, 01 Dec 2022 08:04:02 +0800</pubDate><guid>https://atbug.com/multi-clusters-operation-with-kubectl-foreach/</guid><description>&lt;p&gt;上周在写 &lt;a href="https://mp.weixin.qq.com/s/RF--gLZtJlT0ijaPp1ZP7A"&gt;K8s 多集群的流量调度&lt;/a&gt; 的 demo 部分时需要不停地在多个集群中安装组件、部署应用，或者执行各种命令。当时是通过 Linux shell 脚本并通过工具 &lt;a href="https://github.com/ahmetb/kubectx"&gt;kubectx&lt;/a&gt; 进行集群的切换，像这样：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/11/30/16698057245782.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;或者这样：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2022/11/30/16698057245977.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;操作繁琐，很是痛苦。&lt;/p&gt;
+&lt;p&gt;今天偶然间发现了一个 kubectl 插件 &lt;a href="https://github.com/ahmetb/kubectl-foreach"&gt;&lt;code&gt;kubectl foreach&lt;/code&gt;&lt;/a&gt; ，可以在多个集群（&lt;code&gt;contexts&lt;/code&gt;）上执行 kubectl 命令。比如 &lt;code&gt;kubectl foreach cluster-1 cluster-2 -- get po -n kube-system&lt;/code&gt; 。&lt;/p&gt;
+&lt;p&gt;插件安装和使用很简单，通过 &lt;a href="https://krew.sigs.k8s.io/docs/user-guide/setup/install/"&gt;&lt;code&gt;krew&lt;/code&gt;&lt;/a&gt; 进行安装：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl krew install foreach
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;使用也很简单：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl foreach -h
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Usage:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; kubectl foreach &lt;span style="color:#f92672"&gt;[&lt;/span&gt;OPTIONS&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;PATTERN&lt;span style="color:#f92672"&gt;]&lt;/span&gt;... -- &lt;span style="color:#f92672"&gt;[&lt;/span&gt;KUBECTL_ARGS...&lt;span style="color:#f92672"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Patterns can be used to match context names from kubeconfig:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;(&lt;/span&gt;empty&lt;span style="color:#f92672"&gt;)&lt;/span&gt;: matches all contexts
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; NAME: matches context with exact name
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; /PATTERN/: matches context with regular expression
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ^NAME: remove context with exact name from the matched results
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ^/PATTERN/: remove contexts matching the regular expression from the results
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Options:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -c&lt;span style="color:#f92672"&gt;=&lt;/span&gt;NUM Limit parallel executions &lt;span style="color:#f92672"&gt;(&lt;/span&gt;default: 0, unlimited&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -I&lt;span style="color:#f92672"&gt;=&lt;/span&gt;VAL Replace VAL occurring in KUBECTL_ARGS with context name
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -q Disable and accept confirmation prompts &lt;span style="color:#f92672"&gt;(&lt;/span&gt;$KUBECTL_FOREACH_DISABLE_PROMPTS&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -h/--help Print help
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Examples:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# get nodes on contexts named a b c&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; kubectl foreach a b c -- get nodes
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# get nodes on all contexts named c0..9 except c1 (note the escaping)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; kubectl foreach &lt;span style="color:#e6db74"&gt;&amp;#39;/^c[0-9]/&amp;#39;&lt;/span&gt; ^c1	 -- get nodes
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# get nodes on all contexts that has &amp;#34;prod&amp;#34; but not &amp;#34;foo&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; kubectl foreach /prod/ ^/foo/ -- get nodes
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# use &amp;#39;kubectl tail&amp;#39; plugin to follow logs of pods in contexts named *test*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; kubectl foreach -I _ /test/ -- tail --context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;_ -l app&lt;span style="color:#f92672"&gt;=&lt;/span&gt;foo
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;接下来测试下，使用 &lt;a href="https://k3d.io"&gt;&lt;code&gt;k3d&lt;/code&gt;&lt;/a&gt; 创建 3 个集群 （k3d 貌似不支持同时创建多个集群，还是需要 for 脚本来操作）：&lt;/p&gt;</description></item></channel></rss>
