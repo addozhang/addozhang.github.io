@@ -5685,6 +5685,6 @@ loggerFactory = new Log4jLoggerFactory();
 [/java]&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;而Log4jLoggerAdapter实现了SLF4J的Logger接口，使用了Adapter模式对Log4j的Logger进行了封装并暴露了Logger的接口，Log4jLoggerFactory持有了Log4jLoggerAdapter的实例。&lt;/p&gt;</description></item><item><title>张晓辉</title><link>https://atbug.com/about/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://atbug.com/about/</guid><description>&lt;p&gt;英文名 Addo。&lt;/p&gt;
-&lt;p&gt;资深程序员，LF APAC 开源布道师，&lt;a href="https://www.cncf.io/people/ambassadors/"&gt;CNCF Ambassador&lt;/a&gt;，&lt;a href="http://cloudnative.to/"&gt;云原生社区&lt;/a&gt;管委会成员，公众号“云原生指北”作者，微软 Azure MVP。&lt;/p&gt;
+&lt;p&gt;资深程序员，LF APAC 开源布道师，&lt;a href="https://www.cncf.io/people/ambassadors/"&gt;CNCF Ambassador&lt;/a&gt;，微软 Azure MVP，公众号“乱世不浮生”作者。&lt;/p&gt;
 &lt;p&gt;曾任职于汇丰软件、唯品会、数人云、小鹏汽车，有多年的微服务和基础架构实践经验，主要工作涉及微服务、容器、Kubernetes、DevOps 等。&lt;/p&gt;
 &lt;p&gt;这里所有的文章都会同步发送到公众号：乱世不浮生。&lt;/p&gt;</description></item></channel></rss>
