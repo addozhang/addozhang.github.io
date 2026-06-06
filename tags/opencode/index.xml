@@ -7,11 +7,11 @@
 &lt;/ol&gt;
 &lt;p&gt;第二种情况容易误导人，以为是 opencode 进程本身出了问题，实际上根因是一样的。&lt;/p&gt;
 &lt;p&gt;一切看起来都正常：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ps aux | grep -E &lt;span style="color:#e6db74"&gt;&amp;#34;opencode|telegram&amp;#34;&lt;/span&gt; | grep -v grep
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;ps aux &lt;span class="p"&gt;|&lt;/span&gt; grep -E &lt;span class="s2"&gt;&amp;#34;opencode|telegram&amp;#34;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; grep -v grep
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出显示三个进程都在运行，&lt;code&gt;opencode serve&lt;/code&gt; 也在监听 &lt;code&gt;127.0.0.1:4096&lt;/code&gt;。但 Telegram 里发消息，毫无反应。&lt;/p&gt;
 &lt;h2 id="排查过程"&gt;排查过程&lt;/h2&gt;
 &lt;h3 id="第一步确认端口"&gt;第一步：确认端口&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;lsof -i -P -n | grep opencode
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;lsof -i -P -n &lt;span class="p"&gt;|&lt;/span&gt; grep opencode
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;opencode serve 正常监听，没问题。&lt;/p&gt;</description></item><item><title>用 Telegram 远程操控本地 OpenCode：opencode-telegram-bot 实战指南</title><link>https://atbug.com/opencode-telegram-bot-remote-control-guide/</link><pubDate>Wed, 18 Mar 2026 06:49:12 +0800</pubDate><guid>https://atbug.com/opencode-telegram-bot-remote-control-guide/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
 &lt;p&gt;用 opencode-telegram-bot，把 Telegram 变成本地 OpenCode 的远程终端。配置不超过 10 分钟，无需开放端口，代码不离开本地。适合个人电脑长期在家、需要随时远程驱动本地 AI 编码环境的场景。&lt;/p&gt;
 &lt;hr&gt;

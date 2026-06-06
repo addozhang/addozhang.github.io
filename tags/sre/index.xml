@@ -5,7 +5,7 @@
 &lt;h3 id="1-安装-ollama"&gt;1. 安装 Ollama&lt;/h3&gt;
 &lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2024/06/17/Pasted%20image%2020240617065721.png" alt=""&gt;&lt;/p&gt;
 &lt;p&gt;Ollama 是一个开源的大模型工具，使用它可以在本地或云端轻松的安装和运行 &lt;a href="https://ollama.com/library"&gt;多种流量的大模型&lt;/a&gt;。它的操作非常友好，只需简单的命令就能运行。在 macOS 上可以通过 homebrew 一键安装：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install ollama
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;brew install ollama
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;当前最新的版本是 0.1.44。&lt;/p&gt;</description></item><item><title>Kubernetes 自动化诊断工具：k8sgpt-operator</title><link>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</link><pubDate>Tue, 02 May 2023 17:33:28 +0800</pubDate><guid>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</guid><description>&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
 &lt;p&gt;在 Kubernetes 上，从部署 Deployment 到正常提供服务，整个流程可能会出现各种各样问题，有兴趣的可以浏览 &lt;a href="https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/"&gt;Kubernetes Deployment 的故障排查可视化指南（2021 中文版）&lt;/a&gt;。从可视化指南也可能看出这些问题实际上都是有迹可循，根据错误信息基本很容易找到解决方法。随着 ChatGPT 的流行，基于 LLM 的文本生成项目不断涌现，&lt;a href="https://github.com/k8sgpt-ai/k8sgpt"&gt;k8sgpt&lt;/a&gt; 便是其中之一。&lt;/p&gt;
 &lt;p&gt;k8sgpt 是一个扫描 Kubernetes 集群、诊断和分类问题的工具。它将 SRE 经验编入其分析器，并通过 AI 帮助提取并丰富相关的信息。&lt;/p&gt;

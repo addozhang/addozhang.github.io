@@ -21,5 +21,5 @@
 &lt;/ul&gt;
 &lt;h2 id="安装运行"&gt;安装运行&lt;/h2&gt;
 &lt;p&gt;在 macOS 上安装 CoreDNS：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install coredns
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;brew install coredns
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;可以执行 &lt;code&gt;coredns -plugins &lt;/code&gt; 来查看已经安装的插件：&lt;/p&gt;</description></item></channel></rss>

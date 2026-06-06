@@ -9,7 +9,7 @@
 &lt;p&gt;我将生成的内容挂在了 &lt;a href="https://gist.github.com/addozhang/82b172a4276acd073329e5deab272f18"&gt;gist&lt;/a&gt; 上了，不想花费时间生成的可以直接复制。&lt;/p&gt;
 &lt;h2 id="准备环境"&gt;准备环境&lt;/h2&gt;
 &lt;h3 id="1-安装依赖的工具"&gt;1. 安装依赖的工具&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install coreutils wget cmake libtool go automake ninja clang-format
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;brew install coreutils wget cmake libtool go automake ninja clang-format
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-bazel"&gt;2. bazel&lt;/h3&gt;
 &lt;p&gt;使用 homebrew 进行安装： &lt;code&gt;brew install bazel&lt;/code&gt; 即可&lt;/p&gt;
 &lt;p&gt;安装问运行编译测试下：&lt;code&gt;bazel build //source/exe:envoy-static&lt;/code&gt;，提示版本太高。&lt;/p&gt;

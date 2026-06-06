@@ -2,5 +2,5 @@
 &lt;p&gt;今天我就尝试了直接使用 Docker 运行 FRR 来启动 BGP Router 进程，简单的几步即可实现，对环境要求非常低，只需要个 Docker 就行。如果你又更简单的方法，也请留言分享。&lt;/p&gt;
 &lt;h2 id="配置"&gt;配置&lt;/h2&gt;
 &lt;p&gt;创建一个本地目录在管理 FRR 配置，这个目录将会挂载到容器中。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir frr
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;mkdir frr
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;准备 FRR Daemon 的日志，开启 BGP daemon 进程。&lt;/p&gt;</description></item></channel></rss>

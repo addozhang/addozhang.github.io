@@ -32,21 +32,21 @@
 &lt;p&gt;Sidecar 的注入分两种：手动和自动。&lt;/p&gt;
 &lt;h3 id="手动"&gt;手动&lt;/h3&gt;
 &lt;p&gt;手动就是利用 Istio 的 cli 工具 &lt;code&gt;istioctl kube-inject&lt;/code&gt; 对资源 yaml 进行修改：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ istioctl kube-inject -f samples/sleep/sleep.yaml | kubectl apply -f -
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;serviceaccount/sleep created
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;service/sleep created
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;deployment.apps/sleep created
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;$ istioctl kube-inject -f samples/sleep/sleep.yaml &lt;span class="p"&gt;|&lt;/span&gt; kubectl apply -f -
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;serviceaccount/sleep created
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;service/sleep created
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;deployment.apps/sleep created
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;手动的方式比较适合开发阶段使用。&lt;/p&gt;</description></item><item><title>Minikube安装istio</title><link>https://atbug.com/install-istio-on-minikube/</link><pubDate>Fri, 17 Jan 2020 08:02:42 +0800</pubDate><guid>https://atbug.com/install-istio-on-minikube/</guid><description>&lt;h2 id="准备"&gt;准备&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;注意: istioctl的安装要使用安装里的, 不要是用homebrew里的. &lt;a href="https://github.com/istio/istio/issues/19029"&gt;github issue&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -L https://istio.io/downloadIstio | sh -
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd istio-1.4.2
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp bin/istioctl /usr/local/bin/istioctl
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;curl -L https://istio.io/downloadIstio &lt;span class="p"&gt;|&lt;/span&gt; sh -
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; istio-1.4.2
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;cp bin/istioctl /usr/local/bin/istioctl
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="安装前检查"&gt;安装前检查&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;istioctl verify-install
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;istioctl verify-install
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果检查没问题, 会看到&lt;code&gt;Install Pre-Check passed! The cluster is ready for Istio installation.&lt;/code&gt;&lt;/p&gt;
 &lt;h2 id="安装"&gt;安装&lt;/h2&gt;
 &lt;p&gt;istio有5种内建的安装配置&lt;sup id="fnref:1"&gt;&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref"&gt;1&lt;/a&gt;&lt;/sup&gt;: remote, sds, default, demo, minimal&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;istioctl profile list
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;istioctl profile list
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;minimal: 使用istio的流量管理所需组件的最小化安装&lt;/li&gt;
 &lt;li&gt;default: 根据IstioControlPlane API的默认设置(建议用于生产部署)启用组件. 您可以通过运行命令istioctl profile dump显示默认设置.&lt;/li&gt;

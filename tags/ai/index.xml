@@ -166,23 +166,23 @@
 &lt;h3 id="一个真实的故事"&gt;一个真实的故事&lt;/h3&gt;
 &lt;p&gt;两周前，&lt;a href="https://kilocode.ai"&gt;KiloCode&lt;/a&gt; 发布了 v4.141.0 版本，这个版本带来了一个重要特性：&lt;strong&gt;原生支持 &lt;a href="https://agentskills.io"&gt;Agent Skills&lt;/a&gt;&lt;/strong&gt;。&lt;/p&gt;
 &lt;p&gt;在此之前，我在 KiloCode 中使用 skills 需要在一个 main rule 中手动 list 所有技能。每次添加新技能都需要：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt;!-- 旧方式：在 main rule 中手动维护 --&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# AVAILABLE SKILLS
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Skills are pre-packaged instructions. When a task matches a skill,
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;use read_file to load the SKILL.md and follow its instructions.
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Available skills:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; **frontend-design**: Create distinctive UI components
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Location: ~/.kilocode/skills/frontend-design/SKILL.md
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; **code-review**: Automated code quality analysis
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Location: ~/.kilocode/skills/code-review/SKILL.md
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; **pdf-processing**: PDF manipulation toolkit
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Location: ~/.kilocode/skills/pdf-processing/SKILL.md
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;To use: read_file the location → follow instructions
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&amp;lt;!-- 旧方式：在 main rule 中手动维护 --&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="gh"&gt;# AVAILABLE SKILLS
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Skills are pre-packaged instructions. When a task matches a skill,
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;use read_file to load the SKILL.md and follow its instructions.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Available skills:
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;-&lt;/span&gt; **frontend-design**: Create distinctive UI components
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; Location: ~/.kilocode/skills/frontend-design/SKILL.md
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;-&lt;/span&gt; **code-review**: Automated code quality analysis
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; Location: ~/.kilocode/skills/code-review/SKILL.md
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;-&lt;/span&gt; **pdf-processing**: PDF manipulation toolkit
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; Location: ~/.kilocode/skills/pdf-processing/SKILL.md
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;To use: read_file the location → follow instructions
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这种方式的问题显而易见：&lt;/p&gt;</description></item><item><title>不止于网络：从 Cilium 2025年度报告，洞察云原生基础设施的六大演进</title><link>https://atbug.com/cilium-2025-report-6-infrastructure-trends/</link><pubDate>Sun, 21 Dec 2025 06:20:26 +0800</pubDate><guid>https://atbug.com/cilium-2025-report-6-infrastructure-trends/</guid><description>&lt;p&gt;Cilium 项目始于 2015 年 12 月 16 日的第一次提交，已从一个实验性的 IPv6 容器网络项目成长为云原生世界的 &lt;em&gt;CNI（容器网络接口）的事实标准&lt;/em&gt;。也正值 Cilium 的十周年，社区发布了 &lt;a href="https://www.cncf.io/wp-content/uploads/2025/12/cilium-annual-report-2025-final.pdf"&gt;《Cilium 2025 年度报告》（PDF 原文）&lt;/a&gt;。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;CNCF 地位：&lt;/strong&gt; Cilium 目前是 CNCF（云原生计算基金会）中&lt;strong&gt;贡献量第二大&lt;/strong&gt;的项目，仅次于 Kubernetes。&lt;/li&gt;
@@ -210,8 +210,8 @@
 &lt;li&gt;会话状态（&lt;code&gt;session.state&lt;/code&gt;）：从数据结构上看是一个包含键值对的集合（字典或者 Map），用于存储智能体有效执行需要用到的信息，比如记录用户偏好、跟踪多轮流程中的步骤、收集信息等。&lt;code&gt;session.state&lt;/code&gt; 是可变的。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;会话可以保存在内存（&lt;code&gt;InMemorySessionService&lt;/code&gt;）、数据库（&lt;code&gt;DatabaseSessionService&lt;/code&gt;、&lt;code&gt;SqliteSessionService&lt;/code&gt;、&lt;code&gt;PerAgentDatabaseSessionService&lt;/code&gt;）中，具体要看使用是哪种 &lt;code&gt;SessionService&lt;/code&gt; 的实现了。比如最常见的 &lt;code&gt;InMemorySessionService&lt;/code&gt;，从下面这行代码就很容易看出其储存结构了。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#self.sessions: dict[str, dict[str, dict[str, Session]]] = {}&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;session &lt;span style="color:#f92672"&gt;=&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sessions[app_name][user_id]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get(session_id)
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;#self.sessions: dict[str, dict[str, dict[str, Session]]] = {}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;session&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sessions&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;app_name&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="n"&gt;user_id&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;session_id&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;除了框架提供的实现外，我们可以通过实现 &lt;code&gt;SessionService&lt;/code&gt; 自定义会话的存储方式。&lt;/p&gt;</description></item><item><title>Spring AI 与 Google ADK 集成实战：基于 Azure OpenAI 的智能体开发探索</title><link>https://atbug.com/spring-ai-google-adk-integration-azure-openai-agent-development/</link><pubDate>Tue, 11 Nov 2025 17:11:38 +0800</pubDate><guid>https://atbug.com/spring-ai-google-adk-integration-azure-openai-agent-development/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
 &lt;p&gt;本文用于验证 Spring AI 与 Google ADK 集成的可能性，为未来的正式版本提供实践经验和架构参考。核心收获在于验证了分层设计的可行性：Spring AI 处理 AI 服务抽象，ADK 管理智能体生命周期，两者通过标准接口实现实验性衔接。&lt;/p&gt;
 &lt;p&gt;需要注意的是，Google ADK 的 Spring AI 支持确实处于早期 SNAPSHOT 阶段，API 可能存在变更风险，但整体架构设计已经展现了良好的技术融合潜力。&lt;/p&gt;
@@ -294,7 +294,7 @@
 &lt;h3 id="1-安装-ollama"&gt;1. 安装 Ollama&lt;/h3&gt;
 &lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2024/06/17/Pasted%20image%2020240617065721.png" alt=""&gt;&lt;/p&gt;
 &lt;p&gt;Ollama 是一个开源的大模型工具，使用它可以在本地或云端轻松的安装和运行 &lt;a href="https://ollama.com/library"&gt;多种流量的大模型&lt;/a&gt;。它的操作非常友好，只需简单的命令就能运行。在 macOS 上可以通过 homebrew 一键安装：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install ollama
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;brew install ollama
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;当前最新的版本是 0.1.44。&lt;/p&gt;</description></item><item><title>Kubernetes 自动化诊断工具：k8sgpt-operator</title><link>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</link><pubDate>Tue, 02 May 2023 17:33:28 +0800</pubDate><guid>https://atbug.com/automatic-diagnosis-of-kubernetes-clusters-using-k8sgpt-operator/</guid><description>&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
 &lt;p&gt;在 Kubernetes 上，从部署 Deployment 到正常提供服务，整个流程可能会出现各种各样问题，有兴趣的可以浏览 &lt;a href="https://atbug.com/troubleshooting-kubernetes-deployment-zh-v2/"&gt;Kubernetes Deployment 的故障排查可视化指南（2021 中文版）&lt;/a&gt;。从可视化指南也可能看出这些问题实际上都是有迹可循，根据错误信息基本很容易找到解决方法。随着 ChatGPT 的流行，基于 LLM 的文本生成项目不断涌现，&lt;a href="https://github.com/k8sgpt-ai/k8sgpt"&gt;k8sgpt&lt;/a&gt; 便是其中之一。&lt;/p&gt;
 &lt;p&gt;k8sgpt 是一个扫描 Kubernetes 集群、诊断和分类问题的工具。它将 SRE 经验编入其分析器，并通过 AI 帮助提取并丰富相关的信息。&lt;/p&gt;

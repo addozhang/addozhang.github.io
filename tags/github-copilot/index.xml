@@ -38,12 +38,12 @@
 &lt;/table&gt;
 &lt;hr&gt;
 &lt;h2 id="环境准备"&gt;环境准备&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 克隆 demo 仓库&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/addozhang/copilot-sdk-demo
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd copilot-sdk-demo
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 安装依赖&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install -r requirements.txt
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# 克隆 demo 仓库&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;git clone https://github.com/addozhang/copilot-sdk-demo
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; copilot-sdk-demo
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# 安装依赖&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;pip install -r requirements.txt
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;前置条件：已安装并登录 &lt;code&gt;gh-copilot&lt;/code&gt; CLI（详见 &lt;a href="https://atbug.com/github-copilot-sdk-quickstart-build-first-ai-agent/"&gt;入门篇&lt;/a&gt;）。&lt;/p&gt;</description></item><item><title>深入 GitHub Copilot SDK：架构设计与进阶应用</title><link>https://atbug.com/dive-into-github-copilot-sdk-architecture-and-advanced/</link><pubDate>Sat, 14 Feb 2026 20:06:16 +0800</pubDate><guid>https://atbug.com/dive-into-github-copilot-sdk-architecture-and-advanced/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
 &lt;p&gt;在完成了 &lt;a href="https://atbug.com/github-copilot-sdk-quickstart-build-first-ai-agent/"&gt;GitHub Copilot SDK 入门：五分钟构建你的第一个 AI Agent&lt;/a&gt; 后，本文将带你深入理解 SDK 的底层设计：&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;核心架构&lt;/strong&gt;：&lt;/p&gt;

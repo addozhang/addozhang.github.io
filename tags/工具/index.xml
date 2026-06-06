@@ -84,7 +84,7 @@
 &lt;p&gt;今天我就尝试了直接使用 Docker 运行 FRR 来启动 BGP Router 进程，简单的几步即可实现，对环境要求非常低，只需要个 Docker 就行。如果你又更简单的方法，也请留言分享。&lt;/p&gt;
 &lt;h2 id="配置"&gt;配置&lt;/h2&gt;
 &lt;p&gt;创建一个本地目录在管理 FRR 配置，这个目录将会挂载到容器中。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir frr
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;mkdir frr
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;准备 FRR Daemon 的日志，开启 BGP daemon 进程。&lt;/p&gt;</description></item><item><title>使用 Fortio 做代理功能测试</title><link>https://atbug.com/use-fortio-for-proxy-test/</link><pubDate>Sat, 12 Aug 2023 01:11:46 +0800</pubDate><guid>https://atbug.com/use-fortio-for-proxy-test/</guid><description>&lt;h2 id="介绍"&gt;介绍&lt;/h2&gt;
 &lt;p&gt;Fortio 是一个用于微服务性能负载、性能、延迟测试和 Web UI 的工具。它通常与 Istio 和其他服务网格解决方案一起使用，但可以独立使用来测试网络延迟和 HTTP/gRPC 的负载特性。以下是关于 Fortio 的一些主要特点和信息：&lt;/p&gt;
 &lt;ol&gt;
@@ -97,20 +97,20 @@
 &lt;li&gt;&lt;strong&gt;集成&lt;/strong&gt;：Fortio 可以与 Istio、Prometheus 等工具集成，以提供更深入的性能分析和观察。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id="fortio-作为服务器"&gt;Fortio 作为服务器&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fortio server &amp;amp;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.002 r1 &lt;span style="color:#f92672"&gt;[&lt;/span&gt;INF&lt;span style="color:#f92672"&gt;]&lt;/span&gt; scli.go:117&amp;gt; Starting, command&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;Φορτίο&amp;#34;&lt;/span&gt;, version&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;1.59.0 h1:juuL/l3N/YyIP0P078YkkrtFfG4CaItqeZSkv5VnXCE= go1.20.7 arm64 darwin&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.003 r1 Fortio 1.59.0 tcp-echo server listening on tcp &lt;span style="color:#f92672"&gt;[&lt;/span&gt;::&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:8078
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.004 r1 Fortio 1.59.0 udp-echo server listening on udp &lt;span style="color:#f92672"&gt;[&lt;/span&gt;::&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:8078
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.004 r1 Fortio 1.59.0 grpc &lt;span style="color:#e6db74"&gt;&amp;#39;ping&amp;#39;&lt;/span&gt; server listening on tcp &lt;span style="color:#f92672"&gt;[&lt;/span&gt;::&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:8079
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.004 r1 Fortio 1.59.0 https redirector server listening on tcp &lt;span style="color:#f92672"&gt;[&lt;/span&gt;::&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:8081
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.004 r1 Fortio 1.59.0 http-echo server listening on tcp &lt;span style="color:#f92672"&gt;[&lt;/span&gt;::&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:8080
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.005 r1 Data directory is /Users/addo
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.005 r1 REST API on /fortio/rest/run, /fortio/rest/status, /fortio/rest/stop, /fortio/rest/dns
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.005 r1 Debug endpoint on /debug, Additional Echo on /debug/echo/, Flags on /fortio/flags, and Metrics on /debug/metrics
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	 UI started - visit:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		http://localhost:8080/fortio/
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	 &lt;span style="color:#f92672"&gt;(&lt;/span&gt;or any host/ip reachable on this server&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;08:24:40.005 r1 &lt;span style="color:#f92672"&gt;[&lt;/span&gt;INF&lt;span style="color:#f92672"&gt;]&lt;/span&gt; fortio_main.go:292&amp;gt; All fortio 1.59.0 h1:juuL/l3N/YyIP0P078YkkrtFfG4CaItqeZSkv5VnXCE&lt;span style="color:#f92672"&gt;=&lt;/span&gt; go1.20.7 arm64 darwin servers started!
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;fortio server &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;08:24:40.002 r1 &lt;span class="o"&gt;[&lt;/span&gt;INF&lt;span class="o"&gt;]&lt;/span&gt; scli.go:117&amp;gt; Starting, &lt;span class="nv"&gt;command&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;Φορτίο&amp;#34;&lt;/span&gt;, &lt;span class="nv"&gt;version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;1.59.0 h1:juuL/l3N/YyIP0P078YkkrtFfG4CaItqeZSkv5VnXCE= go1.20.7 arm64 darwin&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;08:24:40.003 r1 Fortio 1.59.0 tcp-echo server listening on tcp &lt;span class="o"&gt;[&lt;/span&gt;::&lt;span class="o"&gt;]&lt;/span&gt;:8078
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;08:24:40.004 r1 Fortio 1.59.0 udp-echo server listening on udp &lt;span class="o"&gt;[&lt;/span&gt;::&lt;span class="o"&gt;]&lt;/span&gt;:8078
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;08:24:40.004 r1 Fortio 1.59.0 grpc &lt;span class="s1"&gt;&amp;#39;ping&amp;#39;&lt;/span&gt; server listening on tcp &lt;span class="o"&gt;[&lt;/span&gt;::&lt;span class="o"&gt;]&lt;/span&gt;:8079
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;08:24:40.004 r1 Fortio 1.59.0 https redirector server listening on tcp &lt;span class="o"&gt;[&lt;/span&gt;::&lt;span class="o"&gt;]&lt;/span&gt;:8081
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;08:24:40.004 r1 Fortio 1.59.0 http-echo server listening on tcp &lt;span class="o"&gt;[&lt;/span&gt;::&lt;span class="o"&gt;]&lt;/span&gt;:8080
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;08:24:40.005 r1 Data directory is /Users/addo
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;08:24:40.005 r1 REST API on /fortio/rest/run, /fortio/rest/status, /fortio/rest/stop, /fortio/rest/dns
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;08:24:40.005 r1 Debug endpoint on /debug, Additional Echo on /debug/echo/, Flags on /fortio/flags, and Metrics on /debug/metrics
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;	 UI started - visit:
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;		http://localhost:8080/fortio/
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;	 &lt;span class="o"&gt;(&lt;/span&gt;or any host/ip reachable on this server&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;08:24:40.005 r1 &lt;span class="o"&gt;[&lt;/span&gt;INF&lt;span class="o"&gt;]&lt;/span&gt; fortio_main.go:292&amp;gt; All fortio 1.59.0 h1:juuL/l3N/YyIP0P078YkkrtFfG4CaItqeZSkv5VnXCE&lt;span class="o"&gt;=&lt;/span&gt; go1.20.7 arm64 darwin servers started!
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Fortio 作为服务器运行是，默认会启动 &lt;code&gt;8078&lt;/code&gt;、&lt;code&gt;8079&lt;/code&gt;、&lt;code&gt;8081&lt;/code&gt;、&lt;code&gt;8080&lt;/code&gt; 四个端口，分别是 tcp echo、udp echo、grpc ping 以及 http echo。还可以通过 &lt;code&gt;http://localhost:8080/fortio/&lt;/code&gt; 访问内置的页面。&lt;/p&gt;</description></item><item><title>Obsidian 图片上传插件：Image Upload Toolkit</title><link>https://atbug.com/obsidian-plugin-image-upload-toolkit/</link><pubDate>Thu, 08 Jun 2023 20:03:19 +0800</pubDate><guid>https://atbug.com/obsidian-plugin-image-upload-toolkit/</guid><description>&lt;p&gt;这篇文章主要来介绍下我开发的 Obsidian 图片上传插件 &lt;a href="https://obsidian.md/plugins?id=image-upload-toolkit"&gt;Image Upload Toolkit&lt;/a&gt;。&lt;/p&gt;
 &lt;h2 id="背景"&gt;背景&lt;/h2&gt;
 &lt;p&gt;为什么开发这个插件？这还要从去年说起。&lt;/p&gt;
@@ -125,35 +125,35 @@
 &lt;p&gt;操作繁琐，很是痛苦。&lt;/p&gt;
 &lt;p&gt;今天偶然间发现了一个 kubectl 插件 &lt;a href="https://github.com/ahmetb/kubectl-foreach"&gt;&lt;code&gt;kubectl foreach&lt;/code&gt;&lt;/a&gt; ，可以在多个集群（&lt;code&gt;contexts&lt;/code&gt;）上执行 kubectl 命令。比如 &lt;code&gt;kubectl foreach cluster-1 cluster-2 -- get po -n kube-system&lt;/code&gt; 。&lt;/p&gt;
 &lt;p&gt;插件安装和使用很简单，通过 &lt;a href="https://krew.sigs.k8s.io/docs/user-guide/setup/install/"&gt;&lt;code&gt;krew&lt;/code&gt;&lt;/a&gt; 进行安装：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl krew install foreach
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;kubectl krew install foreach
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;使用也很简单：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl foreach -h
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Usage:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; kubectl foreach &lt;span style="color:#f92672"&gt;[&lt;/span&gt;OPTIONS&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;PATTERN&lt;span style="color:#f92672"&gt;]&lt;/span&gt;... -- &lt;span style="color:#f92672"&gt;[&lt;/span&gt;KUBECTL_ARGS...&lt;span style="color:#f92672"&gt;]&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Patterns can be used to match context names from kubeconfig:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;(&lt;/span&gt;empty&lt;span style="color:#f92672"&gt;)&lt;/span&gt;: matches all contexts
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; NAME: matches context with exact name
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; /PATTERN/: matches context with regular expression
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ^NAME: remove context with exact name from the matched results
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ^/PATTERN/: remove contexts matching the regular expression from the results
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Options:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -c&lt;span style="color:#f92672"&gt;=&lt;/span&gt;NUM Limit parallel executions &lt;span style="color:#f92672"&gt;(&lt;/span&gt;default: 0, unlimited&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -I&lt;span style="color:#f92672"&gt;=&lt;/span&gt;VAL Replace VAL occurring in KUBECTL_ARGS with context name
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -q Disable and accept confirmation prompts &lt;span style="color:#f92672"&gt;(&lt;/span&gt;$KUBECTL_FOREACH_DISABLE_PROMPTS&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -h/--help Print help
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Examples:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# get nodes on contexts named a b c&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; kubectl foreach a b c -- get nodes
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# get nodes on all contexts named c0..9 except c1 (note the escaping)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; kubectl foreach &lt;span style="color:#e6db74"&gt;&amp;#39;/^c[0-9]/&amp;#39;&lt;/span&gt; ^c1	 -- get nodes
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# get nodes on all contexts that has &amp;#34;prod&amp;#34; but not &amp;#34;foo&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; kubectl foreach /prod/ ^/foo/ -- get nodes
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# use &amp;#39;kubectl tail&amp;#39; plugin to follow logs of pods in contexts named *test*&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; kubectl foreach -I _ /test/ -- tail --context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;_ -l app&lt;span style="color:#f92672"&gt;=&lt;/span&gt;foo
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;kubectl foreach -h
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Usage:
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; kubectl foreach &lt;span class="o"&gt;[&lt;/span&gt;OPTIONS&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;PATTERN&lt;span class="o"&gt;]&lt;/span&gt;... -- &lt;span class="o"&gt;[&lt;/span&gt;KUBECTL_ARGS...&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Patterns can be used to match context names from kubeconfig:
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="o"&gt;(&lt;/span&gt;empty&lt;span class="o"&gt;)&lt;/span&gt;: matches all contexts
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; NAME: matches context with exact name
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; /PATTERN/: matches context with regular expression
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ^NAME: remove context with exact name from the matched results
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ^/PATTERN/: remove contexts matching the regular expression from the results
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Options:
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; -c&lt;span class="o"&gt;=&lt;/span&gt;NUM Limit parallel executions &lt;span class="o"&gt;(&lt;/span&gt;default: 0, unlimited&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; -I&lt;span class="o"&gt;=&lt;/span&gt;VAL Replace VAL occurring in KUBECTL_ARGS with context name
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; -q Disable and accept confirmation prompts &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$KUBECTL_FOREACH_DISABLE_PROMPTS&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; -h/--help Print &lt;span class="nb"&gt;help&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Examples:
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="c1"&gt;# get nodes on contexts named a b c&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; kubectl foreach a b c -- get nodes
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="c1"&gt;# get nodes on all contexts named c0..9 except c1 (note the escaping)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; kubectl foreach &lt;span class="s1"&gt;&amp;#39;/^c[0-9]/&amp;#39;&lt;/span&gt; ^c1	 -- get nodes
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="c1"&gt;# get nodes on all contexts that has &amp;#34;prod&amp;#34; but not &amp;#34;foo&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; kubectl foreach /prod/ ^/foo/ -- get nodes
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="c1"&gt;# use &amp;#39;kubectl tail&amp;#39; plugin to follow logs of pods in contexts named *test*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; kubectl foreach -I _ /test/ -- tail --context&lt;span class="o"&gt;=&lt;/span&gt;_ -l &lt;span class="nv"&gt;app&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;foo
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;接下来测试下，使用 &lt;a href="https://k3d.io"&gt;&lt;code&gt;k3d&lt;/code&gt;&lt;/a&gt; 创建 3 个集群 （k3d 貌似不支持同时创建多个集群，还是需要 for 脚本来操作）：&lt;/p&gt;</description></item></channel></rss>

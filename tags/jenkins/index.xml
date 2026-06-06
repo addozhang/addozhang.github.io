@@ -19,46 +19,46 @@
 &lt;p&gt;&lt;code&gt;Manage Jenkins / Configure Global Security / Configure Global Security&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src="http://7xvxng.com1.z0.glb.clouddn.com/15241955282214.jpg" alt=""&gt;&lt;/p&gt;</description></item><item><title>启用Jenkins CLI</title><link>https://atbug.com/jenkins-cli-enable/</link><pubDate>Mon, 09 Apr 2018 11:16:38 +0000</pubDate><guid>https://atbug.com/jenkins-cli-enable/</guid><description>&lt;p&gt;Jenkins CLI提供了SSH和Client模式.&lt;/p&gt;
 &lt;p&gt;Docker运行Jenkins&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yml" data-lang="yml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;3&amp;#39;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;jenkins&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;jenkins/jenkins:alpine&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;8080&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;8080&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;50000&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;50000&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;46059&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;46059&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;note: 以为是docker运行, ssh端口设置选用了固定端口.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-yml" data-lang="yml"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;version&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;3&amp;#39;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;services&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;jenkins&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;jenkins/jenkins:alpine&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;ports&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="m"&gt;8080&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="m"&gt;8080&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="m"&gt;50000&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="m"&gt;50000&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="m"&gt;46059&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="m"&gt;46059&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;volumes&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="s2"&gt;&amp;#34;/Users/addo/DevApps/Docker/data/jenkins:/var/jenkins_home&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;note: 以为是docker运行, ssh端口设置选用了固定端口.&lt;/p&gt;
 &lt;h3 id="client"&gt;Client&lt;/h3&gt;
 &lt;p&gt;从&lt;code&gt;http://JENKINS_URL/cli&lt;/code&gt;页面下载client jar&lt;/p&gt;
 &lt;p&gt;使用方法:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;java -jar jenkins-cli.jar -s http://localhost:8080/ help
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;java -jar jenkins-cli.jar -s http://localhost:8080/ &lt;span class="nb"&gt;help&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;构建:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;java -jar jenkins-cli.jar -s http://localhost:8080/ build JOB &lt;span style="color:#f92672"&gt;[&lt;/span&gt;-c&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;-f&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;-p&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;-r N&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;-s&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;-v&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;-w&lt;span style="color:#f92672"&gt;]&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Starts a build, and optionally waits &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; a completion.
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Aside from general scripting use, this command can be
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used to invoke another job from within a build of one job.
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;With the -s option, this command changes the exit code based on
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;the outcome of the build &lt;span style="color:#f92672"&gt;(&lt;/span&gt;exit code &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; indicates a success&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;and interrupting the command will interrupt the job.
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;With the -f option, this command changes the exit code based on
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;the outcome of the build &lt;span style="color:#f92672"&gt;(&lt;/span&gt;exit code &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; indicates a success&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;however, unlike -s, interrupting the command will not interrupt
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;the job &lt;span style="color:#f92672"&gt;(&lt;/span&gt;exit code &lt;span style="color:#ae81ff"&gt;125&lt;/span&gt; indicates the command was interrupted&lt;span style="color:#f92672"&gt;)&lt;/span&gt;.
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;With the -c option, a build will only run &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; there has been
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;an SCM change.
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; JOB : Name of the job to build
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -c : Check &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; SCM changes before starting the build, and &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; there&lt;span style="color:#960050;background-color:#1e0010"&gt;&amp;#39;&lt;/span&gt;s no
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; change, exit without doing a build
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -f : Follow the build progress. Like -s only interrupts are not passed
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; through to the build.
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -p : Specify the build parameters in the key&lt;span style="color:#f92672"&gt;=&lt;/span&gt;value format.
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -s : Wait &lt;span style="color:#66d9ef"&gt;until&lt;/span&gt; the completion/abortion of the command. Interrupts are passed
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; through to the build.
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -v : Prints out the console output of the build. Use with -s
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -w : Wait &lt;span style="color:#66d9ef"&gt;until&lt;/span&gt; the start of the command
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;java -jar jenkins-cli.jar -s http://localhost:8080/ build JOB &lt;span class="o"&gt;[&lt;/span&gt;-c&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;-f&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;-p&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;-r N&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;-s&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;-v&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;-w&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Starts a build, and optionally waits &lt;span class="k"&gt;for&lt;/span&gt; a completion.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Aside from general scripting use, this &lt;span class="nb"&gt;command&lt;/span&gt; can be
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;used to invoke another job from within a build of one job.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;With the -s option, this &lt;span class="nb"&gt;command&lt;/span&gt; changes the &lt;span class="nb"&gt;exit&lt;/span&gt; code based on
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;the outcome of the build &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;exit&lt;/span&gt; code &lt;span class="m"&gt;0&lt;/span&gt; indicates a success&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;and interrupting the &lt;span class="nb"&gt;command&lt;/span&gt; will interrupt the job.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;With the -f option, this &lt;span class="nb"&gt;command&lt;/span&gt; changes the &lt;span class="nb"&gt;exit&lt;/span&gt; code based on
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;the outcome of the build &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;exit&lt;/span&gt; code &lt;span class="m"&gt;0&lt;/span&gt; indicates a success&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;however, unlike -s, interrupting the &lt;span class="nb"&gt;command&lt;/span&gt; will not interrupt
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;the job &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;exit&lt;/span&gt; code &lt;span class="m"&gt;125&lt;/span&gt; indicates the &lt;span class="nb"&gt;command&lt;/span&gt; was interrupted&lt;span class="o"&gt;)&lt;/span&gt;.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;With the -c option, a build will only run &lt;span class="k"&gt;if&lt;/span&gt; there has been
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;an SCM change.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; JOB : Name of the job to build
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; -c : Check &lt;span class="k"&gt;for&lt;/span&gt; SCM changes before starting the build, and &lt;span class="k"&gt;if&lt;/span&gt; there&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;s no
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; change, &lt;span class="nb"&gt;exit&lt;/span&gt; without doing a build
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; -f : Follow the build progress. Like -s only interrupts are not passed
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; through to the build.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; -p : Specify the build parameters in the &lt;span class="nv"&gt;key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;value format.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; -s : Wait &lt;span class="k"&gt;until&lt;/span&gt; the completion/abortion of the command. Interrupts are passed
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; through to the build.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; -v : Prints out the console output of the build. Use with -s
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; -w : Wait &lt;span class="k"&gt;until&lt;/span&gt; the start of the &lt;span class="nb"&gt;command&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="ssh"&gt;SSH&lt;/h3&gt;
 &lt;p&gt;启用SSH, 使用随机端口. 也可以使用固定端口:&lt;/p&gt;</description></item><item><title>Jenkins - 解决execute shell中启动的进程被在Job退出时被杀死问题</title><link>https://atbug.com/resolve-process-be-killed-after-jenkins-job-done/</link><pubDate>Thu, 15 Mar 2018 17:00:25 +0000</pubDate><guid>https://atbug.com/resolve-process-be-killed-after-jenkins-job-done/</guid><description>&lt;p&gt;因为&lt;a href="https://wiki.jenkins.io/display/JENKINS/ProcessTreeKiller"&gt;ProcessTreeKiller&lt;/a&gt;的存在, 构建过程中使用shell启动的进程在Job完成时都会被kill掉.&lt;/p&gt;
 &lt;p&gt;各种搜索以及&lt;a href="https://wiki.jenkins.io/display/JENKINS/ProcessTreeKiller"&gt;ProcessTreeKiller&lt;/a&gt;提供的解决方式是修改&lt;code&gt;BUILD_ID&lt;/code&gt;和添加&lt;code&gt; -Dhudson.util.ProcessTree.disable=true&lt;/code&gt;都无法解决.&lt;/p&gt;

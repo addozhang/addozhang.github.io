@@ -2,23 +2,23 @@
 &lt;h3 id="一个真实的故事"&gt;一个真实的故事&lt;/h3&gt;
 &lt;p&gt;两周前，&lt;a href="https://kilocode.ai"&gt;KiloCode&lt;/a&gt; 发布了 v4.141.0 版本，这个版本带来了一个重要特性：&lt;strong&gt;原生支持 &lt;a href="https://agentskills.io"&gt;Agent Skills&lt;/a&gt;&lt;/strong&gt;。&lt;/p&gt;
 &lt;p&gt;在此之前，我在 KiloCode 中使用 skills 需要在一个 main rule 中手动 list 所有技能。每次添加新技能都需要：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt;!-- 旧方式：在 main rule 中手动维护 --&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# AVAILABLE SKILLS
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Skills are pre-packaged instructions. When a task matches a skill,
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;use read_file to load the SKILL.md and follow its instructions.
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Available skills:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; **frontend-design**: Create distinctive UI components
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Location: ~/.kilocode/skills/frontend-design/SKILL.md
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; **code-review**: Automated code quality analysis
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Location: ~/.kilocode/skills/code-review/SKILL.md
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; **pdf-processing**: PDF manipulation toolkit
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Location: ~/.kilocode/skills/pdf-processing/SKILL.md
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;To use: read_file the location → follow instructions
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&amp;lt;!-- 旧方式：在 main rule 中手动维护 --&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="gh"&gt;# AVAILABLE SKILLS
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Skills are pre-packaged instructions. When a task matches a skill,
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;use read_file to load the SKILL.md and follow its instructions.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Available skills:
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;-&lt;/span&gt; **frontend-design**: Create distinctive UI components
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; Location: ~/.kilocode/skills/frontend-design/SKILL.md
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;-&lt;/span&gt; **code-review**: Automated code quality analysis
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; Location: ~/.kilocode/skills/code-review/SKILL.md
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;-&lt;/span&gt; **pdf-processing**: PDF manipulation toolkit
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; Location: ~/.kilocode/skills/pdf-processing/SKILL.md
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;To use: read_file the location → follow instructions
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这种方式的问题显而易见：&lt;/p&gt;</description></item><item><title>一条命令搞定！存量 Spring REST 服务秒变 MCP 服务</title><link>https://atbug.com/one-command-to-convert-legacy-spring-rest-services-to-mcp-services/</link><pubDate>Sat, 05 Apr 2025 23:43:59 +0800</pubDate><guid>https://atbug.com/one-command-to-convert-legacy-spring-rest-services-to-mcp-services/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
 &lt;p&gt;在 AI 技术浪潮中，MCP 为服务集成带来了创新性思路，LLM 与 MCP 的组合更是为存量 API 服务注入新活力。&lt;/p&gt;
 &lt;p&gt;本文先阐述基于 Spring AI MCP 开发 MCP 服务的详细步骤，随后引入 OpenRewrite 框架及其 &lt;a href="https://github.com/addozhang/spring-rest-to-mcp"&gt;spring-rest-to-mcp&lt;/a&gt; 工具，实现 Spring REST 服务到 MCP 服务的自动化转换。&lt;/p&gt;
