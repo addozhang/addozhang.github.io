@@ -8,7 +8,7 @@
 &lt;li&gt;&lt;a href="https://atbug.com/macos-native-apple-container-architecture/"&gt;macOS 原生容器 Apple Container 架构解析&lt;/a&gt;——深入 Virtualization Framework、网络栈、文件系统的底层实现&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://atbug.com/apple-container-evolution-seven-months-journey/"&gt;Apple Container 0.8.0：从初生到成熟的七个月演进之路&lt;/a&gt;——七个月九个版本的演进，0.7.1 数据完整性危机，以及生产就绪的分级评估&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;读完这三篇，你对 Apple Container 的印象大概是：每个容器独立一个 VM，&lt;code&gt;container run nginx:latest&lt;/code&gt; 起来就是一个跑在 VM 里的 nginx 进程，用法和 Docker 接近。&lt;/p&gt;</description></item><item><title>Kubernetes externalIPs：已知六年的安全漏洞，终于要移除了</title><link>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</link><pubDate>Fri, 03 Apr 2026 08:12:20 +0800</pubDate><guid>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;读完这四篇，你对 Apple Container 的印象大概是：每个容器独立一个 VM，&lt;code&gt;container run nginx:latest&lt;/code&gt; 起来就是一个跑在 VM 里的 nginx 进程，用法和 Docker 接近。&lt;/p&gt;</description></item><item><title>Kubernetes externalIPs：已知六年的安全漏洞，终于要移除了</title><link>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</link><pubDate>Fri, 03 Apr 2026 08:12:20 +0800</pubDate><guid>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
 &lt;p&gt;Kubernetes Service 的 &lt;code&gt;externalIPs&lt;/code&gt; 字段存在长达六年的中间人攻击漏洞（&lt;a href="https://nvd.nist.gov/vuln/detail/CVE-2020-8554"&gt;CVE-2020-8554&lt;/a&gt;），任何有 Service 创建权限的用户都可以劫持集群流量 &amp;ndash;v1.36 终于启动了正式的废弃流程。&lt;/p&gt;
 &lt;h2 id="开篇一条命令劫持集群流量"&gt;开篇：一条命令，劫持集群流量&lt;/h2&gt;
 &lt;p&gt;想象这样一个场景。&lt;/p&gt;
