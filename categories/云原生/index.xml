@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>云原生 on 乱世浮生</title><link>https://atbug.com/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/</link><description>Recent content in 云原生 on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Wed, 10 Jun 2026 22:26:14 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/index.xml" rel="self" type="application/rss+xml"/><item><title>Apple Container Machine：把 Linux 搬进 Mac</title><link>https://atbug.com/apple-container-machine-linux-dev-environment/</link><pubDate>Wed, 10 Jun 2026 22:26:14 +0800</pubDate><guid>https://atbug.com/apple-container-machine-linux-dev-environment/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;container machine&lt;/code&gt; 是 Apple Container 里容易被忽视的另一半：不是跑一个进程，而是跑一个完整的 Linux 开发环境，自动挂载你的 macOS &lt;code&gt;$HOME&lt;/code&gt;，支持 &lt;code&gt;systemd&lt;/code&gt;，用法更接近 WSL2 而不是 Docker。&lt;/p&gt;
 &lt;h2 id="从货箱到书房container-machine-是什么"&gt;从货箱到书房：Container Machine 是什么&lt;/h2&gt;
-&lt;p&gt;这个系列已经写了三篇：&lt;/p&gt;
+&lt;p&gt;这个系列已经写了四篇：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://atbug.com/apple-containerization-framework-macos-release/"&gt;苹果发布 Containerization Framework：开启 macOS 容器化新纪元&lt;/a&gt;——讲框架本身，为什么每个容器独立一个轻量 VM，和 Docker Desktop、Kata Containers 的架构差异&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://atbug.com/apple-container-hands-on/"&gt;Apple Container 开箱实践&lt;/a&gt;——Container CLI 入门，安装、拉镜像、&lt;code&gt;container run&lt;/code&gt;、DNS，对照 Docker CLI 逐条对比&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/macos-native-apple-container-architecture/"&gt;macOS 原生容器 Apple Container 架构解析&lt;/a&gt;——深入 Virtualization Framework、网络栈、文件系统的底层实现&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://atbug.com/apple-container-evolution-seven-months-journey/"&gt;Apple Container 0.8.0：从初生到成熟的七个月演进之路&lt;/a&gt;——七个月九个版本的演进，0.7.1 数据完整性危机，以及生产就绪的分级评估&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;读完这三篇，你对 Apple Container 的印象大概是：每个容器独立一个 VM，&lt;code&gt;container run nginx:latest&lt;/code&gt; 起来就是一个跑在 VM 里的 nginx 进程，用法和 Docker 接近。&lt;/p&gt;</description></item><item><title>Kubernetes externalIPs：已知六年的安全漏洞，终于要移除了</title><link>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</link><pubDate>Fri, 03 Apr 2026 08:12:20 +0800</pubDate><guid>https://atbug.com/kubernetes-externalips-security-vulnerability-deprecation/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
