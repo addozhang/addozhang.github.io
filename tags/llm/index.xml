@@ -10,9 +10,10 @@
 &lt;p&gt;问题在于：这个渗透，是有条件的。电气化能扩散，是因为物理域本身欢迎电力——它降低了摩擦，没有引入新的不确定性。LLM 的扩散遇到的是相反的情况：越深入现实域，不确定性越高，而不是越低。&lt;/p&gt;
 &lt;p&gt;所以科技叙事的后半句“长期低估”，成立的前提是技术能扩散。这个前提在 LLM 范式下，需要被单独论证，不能从历史规律里直接借用。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;需要说明的是：本文讨论的是当前主流 AI 范式——以 LLM 为代表的统计学习路径。不是对所有可能的 AI 路径下判断，而是对这条路径的效用边界做评估。&lt;/strong&gt;&lt;/p&gt;
-&lt;h3 id="二卖的不是产品是胜率"&gt;二、卖的不是产品，是“胜率”&lt;/h3&gt;
-&lt;p&gt;AI 投资的 ROI 至今无定论。已经投入了数千亿美元，如果收益真实，账应该早就可以算清楚了。这个落差本身就是信号。&lt;/p&gt;
-&lt;p&gt;真正诚实的说法是：&lt;strong&gt;现在相当大一部分 AI 投资，本质是期权，不是对当下效率的投资&lt;/strong&gt;——押注的是“如果通用 AI 某天成立，先投的人拿到的是入场券”。期权可以合理地在很长时间内看不到传统意义上的回报，这本身无可厚非。&lt;/p&gt;</description></item><item><title>价格差了 20 倍，效果却差得有限：大模型的价格墙正在松动</title><link>https://atbug.com/llm-price-wall-breaking-down/</link><pubDate>Mon, 08 Jun 2026 00:00:00 +0800</pubDate><guid>https://atbug.com/llm-price-wall-breaking-down/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;h3 id="二卖的不是产品是胜率"&gt;二、卖的不是产品，是&amp;quot;胜率&amp;quot;&lt;/h3&gt;
+&lt;p&gt;先说清楚一件事：泡沫本身就是对价值的证明。资本不会给零价值的东西吹泡沫——AI 有真实价值，这正是泡沫能够形成的前提。没有未来、没有价值的行业，在资本市场连泡沫都没有资格产生。&lt;/p&gt;
+&lt;p&gt;争议不在于&amp;quot;有没有价值&amp;quot;，而在于**&amp;ldquo;在哪个域里值多少&amp;rdquo;**。定价打到了&amp;quot;AI 能渗透整个现实域&amp;quot;的预期上，但真实效用域可能只有符号空间——这两个量级的落差，才是问题所在。&lt;/p&gt;
+&lt;p&gt;AI 投资的 ROI 至今无定论。已经投入了数千亿美元，如果收益真实，账应该早就可以算清楚了。这个落差本身就是信号。&lt;/p&gt;</description></item><item><title>价格差了 20 倍，效果却差得有限：大模型的价格墙正在松动</title><link>https://atbug.com/llm-price-wall-breaking-down/</link><pubDate>Mon, 08 Jun 2026 00:00:00 +0800</pubDate><guid>https://atbug.com/llm-price-wall-breaking-down/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
 &lt;p&gt;同一份代码审计任务，MiniMax M3 花 $0.07 找到 13 个问题，Claude Opus 4.8 最贵一档花 $3.39 也不过找到 15 个——便宜模型正在逼近专有模型的能力边界，这个趋势值得每个重度使用 LLM 的开发者认真对待。&lt;/p&gt;
 &lt;h2 id="引言"&gt;引言&lt;/h2&gt;
 &lt;p&gt;大模型的定价，一直有一道隐形的逻辑：贵的就是好的，好的就该贵。&lt;/p&gt;
