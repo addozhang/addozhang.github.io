@@ -1,4 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on 乱世浮生</title><link>https://atbug.com/categories/ai/</link><description>Recent content in AI on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Wed, 24 Jun 2026 20:55:28 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>Loop Engineering 的代价：LLM 可用性是工程用 Token 买出来的</title><link>https://atbug.com/llm-agent-usability-token-cost/</link><pubDate>Wed, 24 Jun 2026 20:55:28 +0800</pubDate><guid>https://atbug.com/llm-agent-usability-token-cost/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on 乱世浮生</title><link>https://atbug.com/categories/ai/</link><description>Recent content in AI on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Thu, 25 Jun 2026 20:03:54 +0800</lastBuildDate><atom:link href="https://atbug.com/categories/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>Loop Engineering 的边界与悖论</title><link>https://atbug.com/loop-engineering-boundary-paradox/</link><pubDate>Thu, 25 Jun 2026 20:03:54 +0800</pubDate><guid>https://atbug.com/loop-engineering-boundary-paradox/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;Loop Engineering 的天花板不是 token，是工程师的判断力。而 Loop Engineering 本身正在削弱这个判断力。&lt;/p&gt;
+&lt;h2 id="一loop-为什么在某些场景特别好用"&gt;一、Loop 为什么在某些场景特别好用&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://lucumr.pocoo.org/2026/6/23/the-coming-loop/"&gt;Armin Ronacher&lt;/a&gt;——Flask 的作者，也是 Loop Engineering 的早期实践者——整理过几个他认为 loop 真正有效的场景：代码移植、性能探索、安全扫描、研究探索。&lt;/p&gt;
+&lt;p&gt;这些场景乍看起来没什么共同点，但仔细看，它们共享同一个结构：&lt;strong&gt;这类产物不用被长期维护，或者可以被机械化验证。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;代码移植是等价变换——把 Zig 写的东西搬到 Rust，行为不变，有现成测试套件做裁判，通过就是通过，不通过就是不通过。性能探索是跑 benchmark 数字，更高就是更好。安全扫描是模式匹配，命中就是命中。研究探索的产物——发现报告、PoC、demo——本来就是一次性的，没有长期维护的预期，人看一眼觉得有价值就算完。内部工具、脚本、自动化辅助类产物也在这个范围里——不跑在生产关键路径上，容错空间大，跑坏了代价有限。&lt;/p&gt;
+&lt;p&gt;这些场景的验证器都有一个共同特点：&lt;strong&gt;给出二元信号&lt;/strong&gt;——非此即彼，没有灰色地带，可以被机械化检测，不依赖人的判断。loop 只需要一个能驱动下一次迭代的信号，信号清晰，loop 就能稳定收敛。&lt;/p&gt;
+&lt;h2 id="二为什么其他场景-loop-会失控"&gt;二、为什么其他场景 loop 会失控&lt;/h2&gt;
+&lt;p&gt;老代码库有个俗称：屎山。&lt;/p&gt;
+&lt;p&gt;人在屎山上开发，通常是一锹一锹地加——每次改动范围有限，知道自己在哪里挖，也知道哪里不该乱动，反而会比较慎重。但 AI 在屎山上跑 loop，是另一回事。&lt;/p&gt;
+&lt;p&gt;Ronacher 直接描述了他观察到的模型倾向：生成的代码过于保守、过于复杂、推理范围过于局部。模型倾向于观察局部故障并添加局部防御——不是找到根本原因，而是在出问题的地方再包一层。它们回避强不变量，用回退方案替代杜绝错误状态的设计，重复代码，用更多机制掩盖设计缺陷。&lt;/p&gt;
+&lt;p&gt;单次执行时，这些倾向还算可控。一个有经验的工程师 review 一下，能看出问题。&lt;/p&gt;</description></item><item><title>Loop Engineering 的代价：LLM 可用性是工程用 Token 买出来的</title><link>https://atbug.com/llm-agent-usability-token-cost/</link><pubDate>Wed, 24 Jun 2026 20:55:28 +0800</pubDate><guid>https://atbug.com/llm-agent-usability-token-cost/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
 &lt;p&gt;从 Prompt 到 Loop，四个工程阶段每一步都在用更多 token 换更高可用性。这不是模型在变聪明，是工程在替模型还债。&lt;/p&gt;
 &lt;h2 id="一从像会到真做完"&gt;一、从「像会」到「真做完」&lt;/h2&gt;
 &lt;p&gt;LLM 让很多人产生过同一个错觉：它看起来什么都会。&lt;/p&gt;
