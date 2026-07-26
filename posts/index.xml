@@ -1,4 +1,14 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 乱世浮生</title><link>https://atbug.com/posts/</link><description>Recent content in Posts on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sat, 27 Jun 2026 20:20:51 +0800</lastBuildDate><atom:link href="https://atbug.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>从聊天窗口到工作台：这半年，我的 Agent 工作流换了一代</title><link>https://atbug.com/agent-workflow-transition/</link><pubDate>Sat, 27 Jun 2026 20:20:51 +0800</pubDate><guid>https://atbug.com/agent-workflow-transition/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 乱世浮生</title><link>https://atbug.com/posts/</link><description>Recent content in Posts on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Mon, 27 Jul 2026 06:26:27 +0800</lastBuildDate><atom:link href="https://atbug.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Anthropic 删了 80% 提示词，但你不能照做</title><link>https://atbug.com/context-engineering-public-vs-private-knowledge/</link><pubDate>Mon, 27 Jul 2026 06:26:27 +0800</pubDate><guid>https://atbug.com/context-engineering-public-vs-private-knowledge/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;Anthropic 砍掉了 Claude Code 系统提示词的 80% 以上，编码评测没有可测量的损失。&lt;/p&gt;
+&lt;p&gt;但这句话真正证明的，是那 80% 本来就没在传递信息——它是给弱模型打的补丁，不是知识。&lt;/p&gt;
+&lt;p&gt;一个团队能删掉多少提示词，度量的不是模型有多强，是他们之前写了多少废话。&lt;/p&gt;
+&lt;p&gt;模型学到的是世界的公共部分。你的规则里装的是私有部分——“我们周五不发版”、“这个库禁用”、“这个仓库的类型全在一个文件里”。这些从没进过任何语料库，模型再强也补不上。&lt;/p&gt;
+&lt;p&gt;该薄的是公共部分，该厚的是私有部分。而按 token 数砍，砍掉的往往正好是后者。&lt;/p&gt;
+&lt;h2 id="一一份被当成指引的实验报告"&gt;一、一份被当成指引的实验报告&lt;/h2&gt;
+&lt;p&gt;Anthropic 最近发了一篇文章——&lt;a href="https://claude.com/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models"&gt;The new rules of context engineering for Claude 5 generation models&lt;/a&gt;，讲他们如何为新一代模型重做上下文工程。核心事实只有一句：他们把 Claude Code 的系统提示词删掉了 80% 以上，在自己的编码评测集上没有观察到可测量的损失。&lt;/p&gt;
+&lt;p&gt;文章顺势列了六条“已经过时的最佳实践”：&lt;/p&gt;
+&lt;p&gt;给模型定死规则，改成让模型自己判断；给工具用法示例，改成把语义设计进接口；把信息全部前置塞满，改成按需分批加载；重要的话说三遍，改成说一次并放进工具描述；记忆写进 CLAUDE.md，改成让模型自动存取；用简单的 markdown 写规格，改成给它测试套件、代码、评分标准这类更丰富的引用。&lt;/p&gt;
+&lt;p&gt;这六条单独看都不难接受。真正值得停下来的地方，是他们删掉的&lt;strong&gt;具体是什么&lt;/strong&gt;。&lt;/p&gt;</description></item><item><title>从聊天窗口到工作台：这半年，我的 Agent 工作流换了一代</title><link>https://atbug.com/agent-workflow-transition/</link><pubDate>Sat, 27 Jun 2026 20:20:51 +0800</pubDate><guid>https://atbug.com/agent-workflow-transition/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
 &lt;p&gt;快到年中了。回头看，这半年我换掉的不只是云上的主力 Agent，也把入口从聊天窗口换成了工作台：Hermes 在云上做中枢，OpenCode 留在本地做 coding，Discord 则第一次让多 session 工作流真正成立。&lt;/p&gt;
 &lt;h2 id="背景"&gt;背景&lt;/h2&gt;
 &lt;p&gt;回头看，这半年真正变的不是某个 Agent，而是我和 Agent 协作的整个结构。&lt;/p&gt;
