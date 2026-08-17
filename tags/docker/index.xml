@@ -1,4 +1,14 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on 乱世浮生</title><link>https://atbug.com/tags/docker/</link><description>Recent content in Docker on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Fri, 14 Aug 2026 22:12:59 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>Docker Sandboxes 工作区怎么接：Direct、Clone 和它们的边界</title><link>https://atbug.com/docker-sandboxes-workspace-modes/</link><pubDate>Fri, 14 Aug 2026 22:12:59 +0800</pubDate><guid>https://atbug.com/docker-sandboxes-workspace-modes/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on 乱世浮生</title><link>https://atbug.com/tags/docker/</link><description>Recent content in Docker on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Mon, 17 Aug 2026 21:40:54 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>Docker Sandboxes 的隔离例外：共享 Skills 与宿主机 MCP</title><link>https://atbug.com/docker-sandboxes-skills-mcp/</link><pubDate>Mon, 17 Aug 2026 21:40:54 +0800</pubDate><guid>https://atbug.com/docker-sandboxes-skills-mcp/</guid><description>&lt;p&gt;&lt;strong&gt;Docker Sandboxes 实测系列（共 5 篇）&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/docker-sandboxes-quickstart/"&gt;Docker Sandboxes 上手：从安装到第一次跑 Agent&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/docker-sandboxes-workspace-modes/"&gt;Docker Sandboxes 工作区怎么接：Direct、Clone 和它们的边界&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Docker Sandboxes 的隔离例外：共享 Skills 与宿主机 MCP（&lt;strong&gt;本篇&lt;/strong&gt;）&lt;/li&gt;
+&lt;li&gt;Docker Sandboxes 的凭证：host 代理转发，不进 microVM&lt;/li&gt;
+&lt;li&gt;Docker Sandboxes 的网络策略：balanced 挡住了什么，怎么放行一条例外&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;官方给 sandbox 划了五层隔离：Hypervisor、网络、Docker Engine、workspace、凭证。前两篇讲的读写工作区、宿主机 Docker 碰不到，都在这五层里。&lt;/p&gt;
+&lt;p&gt;但还有两处不算隔离穿透，是设计上就主动开放的边界例外：共享 Skills store，Claude 默认以读写方式挂载，多个 sandbox 因此共用同一份可被互相改写的技能；宿主机侧的 MCP Gateway，本地 stdio 类型的 MCP Server 实际跑在你的 Mac 上，不在 microVM 里——Agent 通过它调用的能力，隔离边界覆盖不到。&lt;/p&gt;</description></item><item><title>Docker Sandboxes 工作区怎么接：Direct、Clone 和它们的边界</title><link>https://atbug.com/docker-sandboxes-workspace-modes/</link><pubDate>Fri, 14 Aug 2026 22:12:59 +0800</pubDate><guid>https://atbug.com/docker-sandboxes-workspace-modes/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
 &lt;p&gt;Direct 模式下，工作区以读写方式挂进 sandbox，Agent 改的文件立刻出现在 Mac 上，适合人在旁边、和 Agent 改同一棵树；代价是 Agent 也能删掉或弄乱这棵树。&lt;/p&gt;
 &lt;p&gt;Clone 模式（&lt;code&gt;--clone&lt;/code&gt;）反过来：宿主机仓库只读挂载，Agent 在 sandbox 内部一份私有 clone 里改、commit。宿主机看不到实时变化，要主动 &lt;code&gt;git fetch sandbox-&amp;lt;name&amp;gt;&lt;/code&gt; 才能拿到提交；删除 sandbox 前不 fetch，未保存的提交跟着一起没。这是官方建议无人值守场景优先验证的模式，不是 Direct 的可选装饰。&lt;/p&gt;
 &lt;h2 id="上一篇留的边界"&gt;上一篇留的边界&lt;/h2&gt;
