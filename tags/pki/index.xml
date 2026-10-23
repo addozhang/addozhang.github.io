@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>PKI on 乱世浮生</title><link>https://atbug.com/tags/pki/</link><description>Recent content in PKI on 乱世浮生</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Fri, 23 Oct 2026 09:58:02 +0800</lastBuildDate><atom:link href="https://atbug.com/tags/pki/index.xml" rel="self" type="application/rss+xml"/><item><title>CA 私钥可以被猜中之后：从 eMudhra 事件看证书信任链</title><link>https://atbug.com/emudhra-ca-certificate-trust-chain/</link><pubDate>Fri, 23 Oct 2026 09:58:02 +0800</pubDate><guid>https://atbug.com/emudhra-ca-certificate-trust-chain/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;从 eMudhra 弱私钥事件，弄懂 CA 如何签发证书、浏览器如何建立信任，以及吊销为何不总能阻断风险。&lt;/p&gt;
+&lt;p&gt;2026 年 10 月，一位研究人员发现，&lt;a href="https://emudhra.com/"&gt;eMudhra&lt;/a&gt; 的八张中间 CA 证书对应的私钥弱到可以从公开证书中恢复。六张用于 TLS，另外两张用于代码签名。Mozilla 在收到报告后独立恢复了这些私钥，确认问题出在密钥生成，而不是签名算法被攻破。&lt;/p&gt;
+&lt;p&gt;我最初想弄明白的不是事件有多轰动，而是一个更基础的问题：**为什么掌握一把中间 CA 的私钥，就可能冒充与它没有业务关系的网站？**要回答它，得先把证书的签发和验证走一遍。&lt;/p&gt;
+&lt;h2 id="网站证书签发流程"&gt;网站证书签发流程&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2026/10/23/emudhra-certificate-issuance.svg" alt="网站证书签发流程：网站生成密钥对，提交证书签名请求，CA 核验域名控制权，由中间 CA 私钥签署证书"&gt;&lt;/p&gt;
+&lt;h2 id="浏览器建立信任的流程"&gt;浏览器建立信任的流程&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://atbug.oss-cn-hangzhou.aliyuncs.com/2026/10/23/emudhra-certificate-trust.svg" alt="浏览器验证证书链：收到网站证书和中间 CA 证书，逐层验签，检查信任库与证书状态，任一步骤失败则拒绝连接"&gt;&lt;/p&gt;
+&lt;h2 id="弱密钥进入签发流程"&gt;弱密钥进入签发流程&lt;/h2&gt;
+&lt;p&gt;这八把私钥对应 P-384 椭圆曲线，本应从很大的合法范围内随机选取；Mozilla 发现它们的数值全部小于 256。公开证书中已有公钥，只需逐一尝试这个很小范围内的候选私钥，算出对应公钥并比对，就能恢复私钥。问题不在于 P-384 不安全，而在于实际选出的私钥几乎没有不可猜测性。&lt;/p&gt;
+&lt;p&gt;这也解释了风险的范围：网站私钥泄露，通常首先影响该网站；一个不受域名范围限制的 TLS 中间 CA 私钥泄露，则可能被用来为任意域名签发假证书。攻击者还需要拦截或控制用户连接才能实际冒充网站；CA 私钥本身不能直接解密过去记录的 HTTPS 流量。&lt;/p&gt;</description></item></channel></rss>
