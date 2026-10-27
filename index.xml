@@ -4,7 +4,7 @@
 &lt;p&gt;去年底写 &lt;a href="https://atbug.com/authzen-future-standard-for-authorization-model-interactions/"&gt;《AuthZen 工作组：打造统一的授权模型交互标准》&lt;/a&gt; 的时候，重新梳理了一遍 XACML 的授权模型：PEP 拦截请求、PDP 对照策略决策、PIP 补充属性、PAP 管理策略——这套 2013 年标准化的四组件模型，到今天还是几乎所有授权系统的骨架。&lt;/p&gt;
 &lt;p&gt;更早的 2022 年，还写过一篇 &lt;a href="https://atbug.com/what-is-spiffe-and-spire/"&gt;SPIFFE 和 SPIRE&lt;/a&gt;——workload 身份的标准与实现，是读《Solving the Bottom Turtle》时的总结与思考。零信任最热的那两年，也翻译过一批当时流行的文章：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="https://atbug.com/translation-access-management-reference-architecture/"&gt;云上细粒度访问管理的参考架构&lt;/a&gt;（2021，译）——VPN 和堡垒主机的三不足，以及理想架构的三原则&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://atbug.com/translation-access-management-reference-architecture/"&gt;云上细粒度访问管理的参考架构&lt;/a&gt;（2021）——VPN 和堡垒主机的三不足，以及理想架构的三原则&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://atbug.com/the-access-proxy-notes/"&gt;《BeyondCorp Part III: The Access Proxy》解读&lt;/a&gt;（2022）——Google 访问代理的认证、授权与集中日志&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://atbug.com/translate-zero-trust-for-k8s/"&gt;零信任对 Kubernetes 意味着什么&lt;/a&gt; 与 &lt;a href="https://atbug.com/implementing-zero-trust-on-kubernetes/"&gt;在 Kubernetes 上实施零信任&lt;/a&gt;（2022，译）——K8s 场景两篇&lt;/li&gt;
 &lt;/ul&gt;
